@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" />
+
+	<!-- 数据库链接URL、用户名、密码 -->
+	<context id="jdbc-test">
+
+		<!-- suppressAllComments 默认是false 此属性用于指定在生成的代码是否将包括任何注释。如果设置为true 则不生成注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!-- 数据库链接URL、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/jhj" userId="root"
+			password="root1qaz" />
+
+		<!-- 解决数字转换问题 -->
+		<javaTypeResolver>
+			<!-- 只有一个属于forceBigDecimals，默认false。 如果字段精确超过0，生成BigDecimal 如果字段精确是0，总长度10-18生成Long;
+				如果字段精确是0，总长5-9生成Integer; 如果字段精确是0，总长小于5生成Short; 如果forceBigDecimals为true,统一生成BigDecimal -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.jhj.po.model.survey"
+			targetProject="jhj-dao">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+		<!-- 生成的映射文件包名和位置 -->
+		<sqlMapGenerator targetPackage="com.jhj.po.xml.survey"
+			targetProject="jhj-dao">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- 生成DAO的包名和位置 -->
+		<javaClientGenerator targetPackage="com.jhj.po.dao.survey"
+			targetProject="jhj-dao" type="XMLMAPPER">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+		<!-- 问卷调查，题库
+		<table schema="jhj" tableName="survey_bank"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="bank_id" property="bankId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		问卷调查，题目表
+		<table schema="jhj" tableName="survey_question"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="q_id" property="qId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="bank_id" property="bankId" javaType="java.lang.Long"  jdbcType="NUMERIC"/>		
+			<columnOverride column="is_multi" property="isMulti" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="is_first" property="isFirst" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="before_q_id" property="beforeQId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="next_q_id" property="nextQId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		问卷调查，选项 
+		<table schema="jhj" tableName="survey_question_option"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="q_id" property="qId" javaType="java.lang.Long"  jdbcType="NUMERIC"/>
+			<columnOverride  column="bank_id" property="bankId" javaType="java.lang.Long"  jdbcType="NUMERIC"/>
+			<columnOverride  column="related_q_id" property="realtedQId" javaType="java.lang.Long"  jdbcType="NUMERIC"/>
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table> 
+		
+		 问卷调查，选项关联的服务 
+		<table schema="jhj" tableName="survey_content"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="content_id" property="contentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="service_id" property="serviceId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="measurement" property="measurement" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="content_child_type" property="contentChildType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		
+		 问卷调查     用户与选项的关联关系表   :  在  generatorConfig-user.xml
+		
+		问卷调查   服务大类
+		<table schema="jhj" tableName="survey_service"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="service_id" property="serviceId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		 问卷调查， 选项和下一题的关联关系表 
+		<table schema="jhj" tableName="survey_option_ref_next_q"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="qId" property="qId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		问卷调查  选项和 附加内容关联关系表
+		<table schema="jhj" tableName="survey_option_ref_content"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="qId" property="qId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		
+		TODO 
+		<table schema="jhj" tableName="survey_content_ref_personl"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="contentId" property="qId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="option_id" property="optionId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="content_id" property="contentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		
+			问卷调查,服务的子服务-->
+		 <table schema="jhj" tableName="survey_content_child"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="content_id" property="contentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		  
+		 <!-- 
+		 <table schema="jhj" tableName="survey_user"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="age" property="age" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="sex" property="sex" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		
+		 <table schema="jhj" tableName="survey_user_ref_question"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="q_id" property="qId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="option_id" property="optionId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="content_id" property="contentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="times" property="times" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="content_child_id" property="contentChildId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		  
+		
+		 	 <table schema="jhj" tableName="survey_user_ref_recommend"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="content_id" property="contentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="times" property="times" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="content_child_id" property="contentChildId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		 -->
+	</context>
+</generatorConfiguration>

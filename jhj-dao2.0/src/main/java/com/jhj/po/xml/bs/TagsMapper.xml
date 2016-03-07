@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.TagsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.Tags">
+		<id column="tag_id" property="tagId" jdbcType="NUMERIC" />
+		<result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+		<result column="tag_type" property="tagType" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="is_enable" property="isEnable" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		tag_id, tag_name, tag_type, add_time, is_enable
+	</sql>
+	
+	<select id="selectTagNamesByTagIds" resultType="java.lang.String" parameterType="java.lang.Long">
+		select
+			tag_name
+		from tags
+		where tag_id in
+		 <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+        	#{item}
+   		 </foreach>
+	</select>
+
+
+
+<select id="selectByTagName" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select 
+	<include refid="Base_Column_List" />
+	from tags
+	where tag_name = #{tagName,jdbcType=VARCHAR}
+
+</select>
+<select id="selectList" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select 
+	<include refid="Base_Column_List" />
+	from tags
+	
+
+</select>
+
+ <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.TagSearchVo">
+  	select
+    <include refid="Base_Column_List" />
+    from tags
+ 	where 1=1 
+    <if test="tagType ==0 or tagType == 1 or tagType == 2 ">
+		and tag_type = #{tagType,jdbcType=NUMERIC}
+	</if>
+     <if test="tagName != null and tagName !='' ">
+		and tag_name like '%${tagName}%'
+	</if>	
+    order by add_time desc    
+
+  </select>
+  
+  
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Short">
+		select
+		<include refid="Base_Column_List" />
+		from tags
+		where tag_type = #{tagType,jdbcType=NUMERIC}
+		<!-- <if test="tagType == 0 or tagType == 1 or tagType == 2 ">
+			and tag_type = #{tagType,jdbcType=NUMERIC}
+		</if> -->
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tags
+		where tag_id = #{tagId,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="selectByIds" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tags
+		where tag_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from tags
+		where tag_id = #{tagId,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.bs.Tags">
+		insert into tags (tag_id, tag_name, tag_type,
+		add_time, is_enable)
+		values (#{tagId,jdbcType=NUMERIC}, #{tagName,jdbcType=VARCHAR}, #{tagType,jdbcType=NUMERIC},
+		#{addTime,jdbcType=NUMERIC}, #{isEnable,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.Tags">
+		insert into tags
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="tagId != null">
+				tag_id,
+			</if>
+			<if test="tagName != null">
+				tag_name,
+			</if>
+			<if test="tagType != null">
+				tag_type,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="isEnable != null">
+				is_enable,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="tagId != null">
+				#{tagId,jdbcType=NUMERIC},
+			</if>
+			<if test="tagName != null">
+				#{tagName,jdbcType=VARCHAR},
+			</if>
+			<if test="tagType != null">
+				#{tagType,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="isEnable != null">
+				#{isEnable,jdbcType=NUMERIC},
+			</if>
+		</trim>
+		
+		<!-- 配置mysql主键自增 -->
+    <selectKey keyProperty="tagId" resultType="Long" order="AFTER">
+
+			select LAST_INSERT_ID() 
+
+	</selectKey>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.Tags">
+		update tags
+		<set>
+			<if test="tagName != null">
+				tag_name = #{tagName,jdbcType=VARCHAR},
+			</if>
+			<if test="tagType != null">
+				tag_type = #{tagType,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="isEnable != null">
+				is_enable = #{isEnable,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where tag_id = #{tagId,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.Tags">
+		update tags
+		set tag_name = #{tagName,jdbcType=VARCHAR},
+		tag_type = #{tagType,jdbcType=NUMERIC},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		is_enable = #{isEnable,jdbcType=NUMERIC}
+		where tag_id = #{tagId,jdbcType=NUMERIC}
+	</update>
+</mapper>

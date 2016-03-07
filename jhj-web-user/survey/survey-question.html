@@ -1,0 +1,89 @@
+	<div data-page="survey-question-page" class="page" >
+		<div class="page-content" >
+				
+				<div  style="margin-top:15px;background:#F8F8F8;" class="list-block" id="questionDisplay">
+					
+				</div>
+				
+				<div class="page-content">
+					<div class="list-block" id="optionDisplay" style="background:#fff;">
+						
+					
+					</div> 
+				</div>
+						
+			<!-- 题目模板 -->
+			<div style="margin:0;display:none" class="list-block" >
+					<ul  id="questionTemplate">
+						<li>
+							<input type="hidden" id="questionId" value="{questionId}">
+							<!-- 隐藏域判断是第一题还是之后的题 -->
+							<input type="hidden" id="isFirst" value="{isFirst}">
+							<div class="item-content">
+								<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+									<div class="item-title" >{questionTitle}</div>
+								</div>
+							</div>
+						</li>
+					<ul>
+			 </div> 
+			
+			
+			<!-- 选项模板 -->
+			<div class="page-content" style="margin:0;display:none">
+				<div class="list-block">
+				
+				  <!-- 单选题模板 -->	
+				  <ul  id="optionTemplateRadio">
+				    <li>
+				      	<label class="label-radio item-content">
+				        	<input type="radio" name="optionNo" >
+				        	<input type="hidden" id="realOptionNo" value="{optionNo}">
+					        <div class="item-media">
+					          <i class="icon icon-form-radio"></i>
+					        </div>
+					        <div class="item-inner">
+					          <div class="item-title" >{optionNo}&nbsp;&nbsp;&nbsp;{optionStr}</div> 
+					        </div>
+				      	</label>
+				    </li>
+				  </ul>
+				  
+				  <!-- 多选题模板 -->
+				  <ul  id="optionTemplateCheckbox">
+				    <li>
+				      	<label class="label-radio item-content">
+				        	<input type="checkbox" name="optionNo" >
+				        	<input type="hidden" id="realOptionNo" value="{optionNo}">
+					        <div class="item-media">
+					          <i class="icon icon-form-radio"></i>
+					        </div>
+					        <div class="item-inner"  >
+					          <div class="item-title">{optionNo}&nbsp;&nbsp;&nbsp;{optionStr}</div> 
+					        </div>
+				      	</label>
+				    </li>
+				  </ul>
+				  
+				 </div>
+			  </div>
+			
+			 <div class="row">
+			 
+			  <!-- <div class="col-50 " id="previousDiv"  >
+			    <a href="#" id="previousQuestion"  class="button button-big button-red shendu-submit1">上一题</a>
+			  </div> -->
+			  
+			  <div class="col-50" id="nextDiv" style="margin-left:27%">
+			    <a href="#" id="nextQuestion"  class="button button-big button-green shendu-submit2">下一题</a>
+			  </div>
+			  
+			  <div class="col-50" id="endDiv" style="display:none;margin-left:27%;">
+			    <a href="#" id="endQuestion"  class="button button-big button-green shendu-submit2">提交问卷</a>
+			  </div>
+			  
+			</div> 
+			
+		</div>	
+	</div>
+	

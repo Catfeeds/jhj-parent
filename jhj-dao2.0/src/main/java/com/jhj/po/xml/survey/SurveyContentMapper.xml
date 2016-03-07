@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyContentMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyContent" >
+    <id column="content_id" property="contentId" jdbcType="NUMERIC" />
+    <result column="service_id" property="serviceId" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="price_description" property="priceDescription" jdbcType="VARCHAR" />
+    <result column="item_unit" property="itemUnit" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="content_child_description" property="contentChildDescription" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="measurement" property="measurement" jdbcType="NUMERIC" />
+    <result column="enable" property="enable" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+    <result column="content_child_type" property="contentChildType" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    content_id, service_id, name, price, unit_price, price_description, item_unit, description, 
+    content_child_description, remark, measurement, enable, add_time, update_time, content_child_type
+  </sql>
+  
+  <!-- 所有基础 家政 服务, TODO 写死了 在 survey_service表 -->
+  <select id="selectAmContent" resultType="java.lang.Long">
+  	select
+	content_id
+	from  survey_content
+  	where	
+  	1=1 
+  	and 
+  		enable = 1
+  	and
+  		service_id in(18,19,20)
+  </select>
+  
+  
+  <!-- 所有基础 家政 服务,  写死了 在 survey_service表 -->
+  <select id="selectDeepContent" resultType="java.lang.Long">
+  	select
+	content_id
+	from  survey_content
+  	where	
+  	1=1 
+  	and 
+  		enable = 1
+  	and
+  		service_id = 17
+  </select>
+  
+  <!-- 所有基础 家政 服务, TODO 写死了 在 survey_service表 -->
+  <select id="selectBaseContent" resultType="java.lang.Long">
+  	select
+	content_id
+	from  survey_content
+  	where	
+  	1=1 
+  	and 
+  		enable = 1
+  	and
+  		service_id = 16
+  </select>
+  
+  <!-- 按照 子服务类型得到 不同的 服务 -->
+  <select id="selectByChildType" resultType="java.lang.Long" >
+  	select
+	content_id
+	from  survey_content
+  	where	
+  	1=1 and enable = 1
+  	<if test="childType !=null ">
+	 	and  content_child_type = #{childType,jdbcType=NUMERIC}	
+  	</if>	
+  </select>
+  
+  <!-- 得到  子服务是单选的 服务 的 id -->
+  <select id="selectBoxChildContent" resultType="java.lang.Long">
+	select
+	content_id
+	from  survey_content
+  	where
+  	content_child_type = 2
+  	and 
+  	enable = 1
+  </select>
+  
+  <!-- 得到 所有的 "单项服务"(不包含子服务和 子服务是 单选的) 的 id -->
+  <select id="selectSingalContent" resultType="java.lang.Long">
+  	select
+	content_id
+	from  survey_content
+  	where
+  	content_child_type in (0,1)
+  	and
+  	enable = 1
+  </select>
+  
+  <!-- 得到 不同 计费方式的 服务的  id的集合, 按年、按月、按次 -->
+  <select id="selectContentIdByMeasurement" resultType="java.lang.Long" >
+	select
+	content_id
+	from  survey_content	  
+  	where  1=1
+    <if test="measurement !=null">
+		and measurement = #{measurement,jdbcType=NUMERIC}   	
+    </if>
+  </select>
+  
+  <!-- 得到所有的 免费服务 -->
+  <select id="selectFreeContent" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_content
+    where 
+    enable = 1
+    and
+    measurement = 3
+  </select>
+  
+  <!-- 根据id 集合 ,得到对应的服务 -->
+  <select id="selectByIdList" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_content
+    where 
+    enable = 1
+    and
+    content_id in	
+	   <foreach item="item" index="index" collection="list" 
+                   open="(" separator="," close=")">
+                  #{item}
+	   </foreach>
+  </select>
+  
+  
+  <!-- 得到所有附加服务内容 ,除了 赠送服务-->
+  <select id="selectAllContent" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from survey_content
+    where 
+    enable = 1
+    and
+    measurement in (0,1,2)
+  </select>
+  
+  <!-- 根据Id得到  附加服务内容 -->	
+  <select id="selectByIds" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_content
+    where 
+    enable = 1
+    and
+    content_id in	
+	   <foreach item="item" index="index" collection="array" 
+                   open="(" separator="," close=")">
+                  #{item}
+	   </foreach>
+  </select>
+  	  
+   <!-- 问卷调查, 服务内容列表 -->
+  <select id="selectByListPage" resultMap="BaseResultMap" >
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_content
+    where enable = 1
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_content
+    where content_id = #{contentId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_content
+    where content_id = #{contentId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyContent" >
+    insert into survey_content (content_id, service_id, name, 
+      price, unit_price, price_description, 
+      item_unit, description, content_child_description, 
+      remark, measurement, enable, 
+      add_time, update_time, content_child_type
+      )
+    values (#{contentId,jdbcType=NUMERIC}, #{serviceId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{unitPrice,jdbcType=DECIMAL}, #{priceDescription,jdbcType=VARCHAR}, 
+      #{itemUnit,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{contentChildDescription,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{measurement,jdbcType=NUMERIC}, #{enable,jdbcType=NUMERIC}, 
+      #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}, #{contentChildType,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyContent" >
+    insert into survey_content
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contentId != null" >
+        content_id,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="unitPrice != null" >
+        unit_price,
+      </if>
+      <if test="priceDescription != null" >
+        price_description,
+      </if>
+      <if test="itemUnit != null" >
+        item_unit,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="contentChildDescription != null" >
+        content_child_description,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="measurement != null" >
+        measurement,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="contentChildType != null" >
+        content_child_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contentId != null" >
+        #{contentId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="priceDescription != null" >
+        #{priceDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="itemUnit != null" >
+        #{itemUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="contentChildDescription != null" >
+        #{contentChildDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="measurement != null" >
+        #{measurement,jdbcType=NUMERIC},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+      <if test="contentChildType != null" >
+        #{contentChildType,jdbcType=NUMERIC},
+      </if>
+    </trim>
+    
+    <selectKey keyProperty="contentId" resultType="long">
+            select LAST_INSERT_ID()
+        </selectKey>
+    
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyContent" >
+    update survey_content
+    <set >
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        unit_price = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="priceDescription != null" >
+        price_description = #{priceDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="itemUnit != null" >
+        item_unit = #{itemUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="contentChildDescription != null" >
+        content_child_description = #{contentChildDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="measurement != null" >
+        measurement = #{measurement,jdbcType=NUMERIC},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+      <if test="contentChildType != null" >
+        content_child_type = #{contentChildType,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where content_id = #{contentId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyContent" >
+    update survey_content
+    set service_id = #{serviceId,jdbcType=NUMERIC},
+      name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      unit_price = #{unitPrice,jdbcType=DECIMAL},
+      price_description = #{priceDescription,jdbcType=VARCHAR},
+      item_unit = #{itemUnit,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      content_child_description = #{contentChildDescription,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      measurement = #{measurement,jdbcType=NUMERIC},
+      enable = #{enable,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC},
+      content_child_type = #{contentChildType,jdbcType=NUMERIC}
+    where content_id = #{contentId,jdbcType=NUMERIC}
+  </update>
+</mapper>

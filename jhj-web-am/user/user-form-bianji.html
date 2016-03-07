@@ -1,0 +1,90 @@
+
+<div class="pages">
+	<div data-page="user-form-bianji-page" class="page"
+		style="background-color: #E5E5E5E !important; overflow: auto;">
+		<div class="page-content" style="margin: 0; color: #999; padding-bottom: 44px !important;height:792px!important;">
+			<form id="user-form-bianji" class="list-block store-data">
+				<ul style="background: #F8F8F8">
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">用户名:</div>
+								<div class="item-xx">
+									<span type="text" id="name" name="name" maxLength="10" readonly></span>
+								    <input type="hidden" name="name" id="name" />
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">手机号：</div>
+							<div class="item-xx">
+								<span type="text" name="mobile" id="mobile" placeholder="电话" maxLength="11" readonly></span>
+								<input type="hidden" name="mobile" id="mobile" />
+
+							</div>
+						</div>
+					</li>
+					<li>
+						<a href="#" id="sexSelect" class="item-link smart-select"  data-back-on-select="true">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">性&nbsp;&nbsp;&nbsp;&nbsp;别:</div>
+									<div class="item-after item-after-select-label" >请选择性别</div>
+									
+									
+									
+								</div>
+							</div>
+									<select name="sex" id="sex">
+										<option value="" selected>请选择性别</option>
+										<option value="0">男</option>
+										<option value="1">女</option>
+									</select>
+						</a>
+					</li>
+
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">地&nbsp;&nbsp;&nbsp;&nbsp;址:</div>
+
+								<div class="item-xx-label" id="userAddr" style="width:75%;"></div>
+							</div>
+						</div> 
+					</li>
+					
+					 <li>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title label">标&nbsp;&nbsp;&nbsp;&nbsp;签:</div>
+                          
+                          <div class="item-xx-label" name="tagNames" id="tagNames" style="margin-right:10%;color:#666;float:left;"></div>
+						  <input type="hidden" id="tag_ids" name="tag_ids" value=""/>
+                        </div>
+                      </div>
+                    </li>
+					
+					<li class="item-content">
+						<div class="item-inner">
+							<div class="item-title label" style="margin-top:-61px;">备&nbsp;&nbsp;&nbsp;&nbsp;注：</div>
+							<div class="item-xx" style="width:75%;">
+								<textarea rows="5" id="remarks" name="remarks" placeholder="可在这里用文字描述您的服务要求：" maxLength="200"></textarea>
+							</div>
+						</div>
+					</li>
+
+                    
+                    </ul> 
+			</form>
+			
+			
+			
+			<a href="#" id="user-kehuzl-submit" class="button active kehuzl-submit"
+				style="background: #FFA500; border: 1px solid #FFA500;">确定修改</a>
+		</div>
+	</div>
+</div>
+
+

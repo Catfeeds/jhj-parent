@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.university.StudyQuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.university.StudyQuestion" >
+    <id column="q_id" property="qId" jdbcType="NUMERIC" />
+    <result column="bank_id" property="bankId" jdbcType="NUMERIC" />
+    <result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_multi" property="isMulti" jdbcType="NUMERIC" />
+    <result column="is_need" property="isNeed" jdbcType="NUMERIC" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    q_id, bank_id, service_type_id, title, description, is_multi, is_need, answer, add_time
+  </sql>
+  
+  <!-- app 根据题库加载题库下的所有题目 -->
+  <select id="selectByBankId" resultType="java.lang.Long" parameterType="java.lang.Long">
+  	select 
+  		q_id
+    from 
+    	study_question
+  	where
+  		bank_id = #{bankId,jdbcType=NUMERIC}
+  </select>
+  
+  
+  <!-- 平台-大学-题目管理   -->
+  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.university.QuestionSearchVo" >
+  	select 
+    <include refid="Base_Column_List" />
+    from study_question
+  	where 1=1
+  	<if test="serviceTypeId !=null and serviceTypeId !='' ">
+  		and service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+  	</if>
+  	<if test="bankId !=null and bankId !='' ">
+  		and bank_id = #{bankId,jdbcType=NUMERIC}
+  	</if>	
+	<if test="isNeed !=null and isNeed !='' ">
+  		and is_need = #{isNeed,jdbcType=NUMERIC}
+  	</if>
+  
+  </select>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from study_question
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from study_question
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.university.StudyQuestion" >
+    insert into study_question (q_id, bank_id, service_type_id, 
+      title, description, is_multi, 
+      is_need, answer, add_time
+      )
+    values (#{qId,jdbcType=NUMERIC}, #{bankId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC}, 
+      #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{isMulti,jdbcType=NUMERIC}, 
+      #{isNeed,jdbcType=NUMERIC}, #{answer,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  
+  <insert id="insertSelective"   parameterType="com.jhj.po.model.university.StudyQuestion" >
+    insert into study_question
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="qId != null" >
+        q_id,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="isMulti != null" >
+        is_multi,
+      </if>
+      <if test="isNeed != null" >
+        is_need,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="qId != null" >
+        #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isMulti != null" >
+        #{isMulti,jdbcType=NUMERIC},
+      </if>
+      <if test="isNeed != null" >
+        #{isNeed,jdbcType=NUMERIC},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+    
+         <selectKey keyProperty="qId" resultType="long">
+            select LAST_INSERT_ID()
+     </selectKey>
+    
+    
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.StudyQuestion" >
+    update study_question
+    <set >
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isMulti != null" >
+        is_multi = #{isMulti,jdbcType=NUMERIC},
+      </if>
+      <if test="isNeed != null" >
+        is_need = #{isNeed,jdbcType=NUMERIC},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.StudyQuestion" >
+    update study_question
+    set bank_id = #{bankId,jdbcType=NUMERIC},
+      service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      title = #{title,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      is_multi = #{isMulti,jdbcType=NUMERIC},
+      is_need = #{isNeed,jdbcType=NUMERIC},
+      answer = #{answer,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </update>
+</mapper>

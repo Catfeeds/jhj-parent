@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+    <bean id="conversion-service" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
+
+
+    <!-- 配置自定义过滤 -->
+    <mvc:interceptors>
+    	<!-- 如果不定义 mvc:mapping path 将拦截所有的URL请求 --> 
+	        <bean class="com.jhj.filters.RequestParamFilter"></bean>
+    </mvc:interceptors>
+
+	<!-- 开启controller注解支持 -->
+    <!-- use-default-filters="false" 只扫描指定的注解 -->
+    <context:component-scan base-package="com.jhj.action.**,
+    									  com.jhj.action.app.**,
+    									  com.jhj.action.app.dict.**,
+    									  com.jhj.action.app.order.**,
+    									  com.jhj.action.app.user.**,
+    									  com.jhj.action.app.sec.**
+    									  com.jhj.action.wx.**"
+    									 use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- bean name view resolver-->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>
+    <!-- 根据客户端的不同的请求决定不同的 view进行响应, 如 /blog/1.json /blog/1.xml -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver" p:order="1">
+        <!-- 设置为true以忽略对Accept Header的支持-->
+
+		<!-- 设置为true以忽略对Accept Header的支持 -->
+		<property name="ignoreAcceptHeader" value="true" />
+
+		<!-- 在没有扩展名时即: "/blog/1" 时的默认展现形式 -->
+		<property name="defaultContentType" value="text/html" />
+
+        <!-- 用于开启 /userinfo/123?format=json 的支持 -->
+        <property name="favorParameter" value="false"/>
+        <property name="mediaTypes">  <!--favorPathExtension, favorParameter是true时才起作用  -->
+            <map>
+               <entry key="html" value="text/html" />
+               <entry key="json" value="application/json" />
+            </map>
+         </property>
+
+         <property name="viewResolvers">
+            <list>
+               <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                  <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+                  <property name="contentType" value="text/html"/>
+                  <property name="prefix" value="/"/>
+                  <property name="suffix" value=".jsp"/>
+               </bean>
+           </list>
+        </property>
+
+		<property name="defaultViews">
+			<list>
+				<!-- for application/json -->
+				<bean
+					class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+					<!-- 不采用 mapName:{mapResult}方式返回， 而是直接 {mapResult} 返回 -->
+					<property name="extractValueFromSingleKeyModel" value="true" />
+
+					<!-- 驼峰命名变成下划线 userName -> user_name -->
+					<property name="objectMapper">
+						<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+							<property name="propertyNamingStrategy">
+								<bean
+									class="com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+
+    </bean>
+
+
+
+</beans>

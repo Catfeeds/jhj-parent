@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyQuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyQuestion" >
+    <id column="q_id" property="qId" jdbcType="NUMERIC" />
+    <result column="bank_id" property="bankId" jdbcType="NUMERIC" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="is_multi" property="isMulti" jdbcType="NUMERIC" />
+    <result column="before_q_id" property="beforeQId" jdbcType="NUMERIC" />
+    <result column="next_q_id" property="nextQId" jdbcType="NUMERIC" />
+    <result column="is_first" property="isFirst" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    q_id, bank_id, title, is_multi, before_q_id, next_q_id, is_first, add_time
+  </sql>
+  
+  <!-- 得到第一题 -->
+  <select id="selectFirstQuestion" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_question
+  	where
+  	is_first = 0
+  </select>
+  
+  <!-- 问题题目 列表 -->
+  <select id="selectByListPage" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from survey_question
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_question
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_question
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyQuestion" >
+    insert into survey_question (q_id, bank_id, title, 
+      is_multi, before_q_id, next_q_id, 
+      is_first, add_time)
+    values (#{qId,jdbcType=NUMERIC}, #{bankId,jdbcType=NUMERIC}, #{title,jdbcType=VARCHAR}, 
+      #{isMulti,jdbcType=NUMERIC}, #{beforeQId,jdbcType=NUMERIC}, #{nextQId,jdbcType=NUMERIC}, 
+      #{isFirst,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyQuestion" >
+    insert into survey_question
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="qId != null" >
+        q_id,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="isMulti != null" >
+        is_multi,
+      </if>
+      <if test="beforeQId != null" >
+        before_q_id,
+      </if>
+      <if test="nextQId != null" >
+        next_q_id,
+      </if>
+      <if test="isFirst != null" >
+        is_first,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="qId != null" >
+        #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="isMulti != null" >
+        #{isMulti,jdbcType=NUMERIC},
+      </if>
+      <if test="beforeQId != null" >
+        #{beforeQId,jdbcType=NUMERIC},
+      </if>
+      <if test="nextQId != null" >
+        #{nextQId,jdbcType=NUMERIC},
+      </if>
+      <if test="isFirst != null" >
+        #{isFirst,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+    
+    <selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="qId">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+    
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyQuestion" >
+    update survey_question
+    <set >
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="isMulti != null" >
+        is_multi = #{isMulti,jdbcType=NUMERIC},
+      </if>
+      <if test="beforeQId != null" >
+        before_q_id = #{beforeQId,jdbcType=NUMERIC},
+      </if>
+      <if test="nextQId != null" >
+        next_q_id = #{nextQId,jdbcType=NUMERIC},
+      </if>
+      <if test="isFirst != null" >
+        is_first = #{isFirst,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyQuestion" >
+    update survey_question
+    set bank_id = #{bankId,jdbcType=NUMERIC},
+      title = #{title,jdbcType=VARCHAR},
+      is_multi = #{isMulti,jdbcType=NUMERIC},
+      before_q_id = #{beforeQId,jdbcType=NUMERIC},
+      next_q_id = #{nextQId,jdbcType=NUMERIC},
+      is_first = #{isFirst,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where q_id = #{qId,jdbcType=NUMERIC}
+  </update>
+</mapper>

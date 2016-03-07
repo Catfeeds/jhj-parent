@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyOptionRefNextQMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyOptionRefNextQ" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="qId" property="qId" jdbcType="NUMERIC" />
+    <result column="option_id" property="optionId" jdbcType="VARCHAR" />
+    <result column="option_no" property="optionNo" jdbcType="VARCHAR" />
+    <result column="related_q_id" property="relatedQId" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, qId, option_id, option_no, related_q_id, add_time
+  </sql>
+	
+  <!-- 删除 该题目下 选项和下一题的 关联关系 -->	
+  <delete id="deleteByQId" parameterType="java.lang.Long">
+  	delete from survey_option_ref_next_q
+    where qId = #{qId,jdbcType=NUMERIC}
+  </delete>	
+	
+	
+  <!-- 根据选择的题目与选项,得到 相关的下一题-->	
+  <select id="selectNextQ" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_option_ref_next_q
+    where 
+    qId = #{qId,jdbcType=NUMERIC}
+    and
+    option_no = #{optionStr,jdbcType=VARCHAR}
+  </select>	  
+  
+  <!-- TODO（忘了在哪用了。。）  根据题目，得到该题目下    所有选项与下一题的关联关系，若查询结果为空，则去题目表，找到默认的下一题 -->
+  <select id="selectByQId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_option_ref_next_q
+    where qId = #{qId,jdbcType=NUMERIC}
+  
+  </select>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_option_ref_next_q
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_option_ref_next_q
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyOptionRefNextQ" >
+    insert into survey_option_ref_next_q (id, qId, option_id, 
+      option_no, related_q_id, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{qId,jdbcType=NUMERIC}, #{optionId,jdbcType=VARCHAR}, 
+      #{optionNo,jdbcType=VARCHAR}, #{relatedQId,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyOptionRefNextQ" >
+    insert into survey_option_ref_next_q
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="qId != null" >
+        qId,
+      </if>
+      <if test="optionId != null" >
+        option_id,
+      </if>
+      <if test="optionNo != null" >
+        option_no,
+      </if>
+      <if test="relatedQId != null" >
+        related_q_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="qId != null" >
+        #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="optionId != null" >
+        #{optionId,jdbcType=VARCHAR},
+      </if>
+      <if test="optionNo != null" >
+        #{optionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedQId != null" >
+        #{relatedQId,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+    
+    <selectKey keyProperty="qId" resultType="long">
+            select LAST_INSERT_ID()
+    </selectKey>
+    
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyOptionRefNextQ" >
+    update survey_option_ref_next_q
+    <set >
+      <if test="qId != null" >
+        qId = #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="optionId != null" >
+        option_id = #{optionId,jdbcType=VARCHAR},
+      </if>
+      <if test="optionNo != null" >
+        option_no = #{optionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedQId != null" >
+        related_q_id = #{relatedQId,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyOptionRefNextQ" >
+    update survey_option_ref_next_q
+    set qId = #{qId,jdbcType=NUMERIC},
+      option_id = #{optionId,jdbcType=VARCHAR},
+      option_no = #{optionNo,jdbcType=VARCHAR},
+      related_q_id = #{relatedQId,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>叮当到家</title>
+<link rel="stylesheet" href="css/framework7.css">
+<link rel="stylesheet" href="css/framework7.themes.css">
+<link rel="stylesheet" href="css/my-app.css">
+
+</head>
+<body>
+	<!-- Status bar overlay for fullscreen mode-->
+
+	<!-- Views-->
+	<div class="views">
+		<!-- Your main view, should have "view-main" class-->
+		<div class="view view-main" style="padding-bottom:50px!important;">
+
+			<!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+			<div class="pages navbar-through toolbar-through">
+				<!-- Page, data-page contains page name-->
+				<div data-page="index" class="page" style="overflow:auto;">
+					<!-- Scrollable page content-->
+					<div class="page-content" style="margin:0;height:792px!important;">
+
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- Bottom Toolbar-->
+
+			<div class="toolbar tabbar tabbar-labels layout-dark"style="position:fixed;overflow:hidden">
+				<div class="toolbar-inner-jhj">
+
+					<a id="toolbar-order" href="#" onclick="toolBarHref('order/order-list.html', 'toolbar-order');" class="no-animation link active" style="color:#EF7B00">
+						<i class="icon demo-icon-list"></i>
+						 <span class="tabbar-label" style="margin-top:10px;">订单</span>
+					</a> 
+					
+					<a id="toolbar-user" href="#" onclick="toolBarHref('user/user-list.html', 'toolbar-user');" class="no-animation link">
+						<i class="icon demo-icon-user"></i>
+						<span class="tabbar-label" style="margin-top:10px;">客户</span>
+					</a>
+					
+					<a id="toolbar-remind" href="#" onclick="toolBarHref('order/remind/remind-list.html', 'toolbar-remind');" class="no-animation link">
+						<i class="icon demo-icon-tixing"></i>
+						<span class="tabbar-label" style="margin-top:10px;">提醒</span>
+					</a>
+					
+					<a id="toolbar-mine" href="#" onclick="toolBarHref('mine/mine.html', 'toolbar-mine');" class="no-animation link">
+						<i class="icon demo-icon-my"></i>
+						<span class="tabbar-label" style="margin-top:10px;">我的</span>
+					</a>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- Path to Framework7 Library JS-->
+
+	<script type="text/javascript" src="js/framework7.min.js"></script>
+
+	<!-- 时间戳类库 -->
+	<script type="text/javascript" src="js/lib/moment-with-locales.min.js"></script>
+
+	<script type="text/javascript" src="js/utils.js"></script>
+
+	<!-- Path to your app js-->
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/login.js"></script>
+	<script type="text/javascript" src="js/require-data.js"></script>
+	<!--助理_我的,查看助理详细信息 -->
+	<script type="text/javascript" src="js/mine/mine.js"></script>
+	<!-- 助理端，我的 ,查看管辖阿姨-->
+	<script type="text/javascript" src="js/mine/staff-list.js"></script> 
+	
+	<!--订单列表  -->
+	<script type="text/javascript" src="js/order/order-list.js"></script>
+	<!--订单详情 -->
+	<script type="text/javascript" src="js/order/order-view-1.js"></script>
+	<script type="text/javascript" src="js/order/order-view-2.js"></script>
+	<!--订单调整 -->
+	<script type="text/javascript" src="js/order/alter-order.js"></script>
+	<script type="text/javascript" src="js/order/alter-order-view-1.js"></script>
+
+	<!-- 助理端，保洁类订单详情 -->
+	<script type="text/javascript" src="js/order/order-view-0.js"></script>
+	
+	<!-- 客户列表 -->
+	<script type="text/javascript" src="js/user/user-list.js"></script>
+
+	<!-- 客户列表详情 -->
+	<script type="text/javascript" src="js/user/user-form-xiangqing.js"></script>
+	
+	<!-- 客户详情修改 -->
+	<script type="text/javascript" src="js/user/user-form-bianji.js"></script>
+	
+	<!--   客户地址列表 -->
+    <script type="text/javascript" src="js/user/mine-addr-list.js"></script>  
+<!--     <script type="text/javascript" src="js/user/mine.js"></script> 
+ -->	
+	<!-- 助理添加用户地址 -->
+	<script type="text/javascript"  src="js/user/mine-add-addrs.js"></script>  
+    
+    <!-- 提醒   列表页-->
+    <script type="text/javascript" src="js/order/remind/remind-list.js"></script>
+    <script type="text/javascript" src="js/order/remind/remind-detail.js"></script>
+</body>
+</html>

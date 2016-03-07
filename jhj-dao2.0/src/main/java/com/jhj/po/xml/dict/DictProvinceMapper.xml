@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.dict.DictProvinceMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictProvince" >
+    <id column="province_id" property="provinceId" jdbcType="NUMERIC" />
+    <result column="zip_code" property="zipCode" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="is_enable" property="isEnable" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    province_id, zip_code, name, is_enable
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dict_province
+    where province_id = #{provinceId,jdbcType=NUMERIC}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_province
+    order by province_id asc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dict_province
+    where province_id = #{provinceId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.dict.DictProvince" >
+    insert into dict_province (province_id, zip_code, name, 
+      is_enable)
+    values (#{provinceId,jdbcType=NUMERIC}, #{zipCode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{isEnable,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictProvince" >
+    insert into dict_province
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="provinceId != null" >
+        province_id,
+      </if>
+      <if test="zipCode != null" >
+        zip_code,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="isEnable != null" >
+        is_enable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="provinceId != null" >
+        #{provinceId,jdbcType=NUMERIC},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnable != null" >
+        #{isEnable,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictProvince" >
+    update dict_province
+    <set >
+      <if test="zipCode != null" >
+        zip_code = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnable != null" >
+        is_enable = #{isEnable,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where province_id = #{provinceId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictProvince" >
+    update dict_province
+    set zip_code = #{zipCode,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      is_enable = #{isEnable,jdbcType=NUMERIC}
+    where province_id = #{provinceId,jdbcType=NUMERIC}
+  </update>
+</mapper>

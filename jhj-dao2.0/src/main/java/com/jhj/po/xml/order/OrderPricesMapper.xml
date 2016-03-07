@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.order.OrderPricesMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderPrices" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="order_id" property="orderId" jdbcType="NUMERIC" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="NUMERIC" />
+    <result column="coupon_id" property="couponId" jdbcType="NUMERIC" />
+    <result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
+    <result column="order_pay" property="orderPay" jdbcType="DECIMAL" />
+    <result column="order_pay_back" property="orderPayBack" jdbcType="DECIMAL" />
+    <result column="order_pay_back_fee" property="orderPayBackFee" jdbcType="DECIMAL" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, mobile, order_id, order_no, pay_type, coupon_id, order_money, order_pay, 
+    order_pay_back, order_pay_back_fee, add_time, update_time
+  </sql>
+  
+  <!-- 一个订单 的流水： 订单总金额 减  退款金额 加 退款手续费 -->
+ <select id="selectByOrderNoList" resultType="java.math.BigDecimal">
+ 	
+	 	select 
+	   	sum(order_money + order_pay_back_fee - order_pay_back)
+	    from order_prices
+	    where
+	 	order_no in 
+	 	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+	　　　　#{item}  
+	　　</foreach> 
+ 
+ </select>
+ 
+ 	<!-- 营业额 --> 
+ <!-- <select id="selectByOrderIdList" parameterType="java.lang.Long" resultType="java.math.BigDecimal">
+		SELECT 
+			sum(order_money)
+		FROM order_prices 
+		WHERE
+	 	order_id in 
+	 	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+	　　　　#{item}  
+	　　</foreach> 
+</select> -->
+  
+ <select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+ 	 select 
+    <include refid="Base_Column_List" />
+    from order_prices
+    where
+ 	order_no = #{orderNo,jdbcType=VARCHAR}
+ </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_prices
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="selectByOrderIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from order_prices
+		where order_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+
+		order by add_time asc
+	</select>
+   <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	select
+	<include refid="Base_Column_List" />
+	from order_prices
+	where order_id = #{orderId,jdbcType=NUMERIC}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_prices
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.order.OrderPrices" >
+    insert into order_prices (id, user_id, mobile, 
+      order_id, order_no, pay_type, 
+      coupon_id, order_money, order_pay, 
+      order_pay_back, order_pay_back_fee, add_time, 
+      update_time)
+    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, 
+      #{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, #{payType,jdbcType=NUMERIC}, 
+      #{couponId,jdbcType=NUMERIC}, #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL}, 
+      #{orderPayBack,jdbcType=DECIMAL}, #{orderPayBackFee,jdbcType=DECIMAL}, #{addTime,jdbcType=NUMERIC}, 
+      #{updateTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderPrices" >
+    insert into order_prices
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="couponId != null" >
+        coupon_id,
+      </if>
+      <if test="orderMoney != null" >
+        order_money,
+      </if>
+      <if test="orderPay != null" >
+        order_pay,
+      </if>
+      <if test="orderPayBack != null" >
+        order_pay_back,
+      </if>
+      <if test="orderPayBackFee != null" >
+        order_pay_back_fee,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=NUMERIC},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=NUMERIC},
+      </if>
+      <if test="couponId != null" >
+        #{couponId,jdbcType=NUMERIC},
+      </if>
+      <if test="orderMoney != null" >
+        #{orderMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPay != null" >
+        #{orderPay,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPayBack != null" >
+        #{orderPayBack,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPayBackFee != null" >
+        #{orderPayBackFee,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderPrices" >
+    update order_prices
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=NUMERIC},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=NUMERIC},
+      </if>
+      <if test="couponId != null" >
+        coupon_id = #{couponId,jdbcType=NUMERIC},
+      </if>
+      <if test="orderMoney != null" >
+        order_money = #{orderMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPay != null" >
+        order_pay = #{orderPay,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPayBack != null" >
+        order_pay_back = #{orderPayBack,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPayBackFee != null" >
+        order_pay_back_fee = #{orderPayBackFee,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderPrices" >
+    update order_prices
+    set user_id = #{userId,jdbcType=NUMERIC},
+      mobile = #{mobile,jdbcType=CHAR},
+      order_id = #{orderId,jdbcType=NUMERIC},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=NUMERIC},
+      coupon_id = #{couponId,jdbcType=NUMERIC},
+      order_money = #{orderMoney,jdbcType=DECIMAL},
+      order_pay = #{orderPay,jdbcType=DECIMAL},
+      order_pay_back = #{orderPayBack,jdbcType=DECIMAL},
+      order_pay_back_fee = #{orderPayBackFee,jdbcType=DECIMAL},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  
+  
+</mapper>

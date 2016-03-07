@@ -1,0 +1,33 @@
+<div class="pages">
+	<!-- Page, data-page contains page name-->
+	<div data-page="user-list-page" class="page" style="overflow:auto;">
+
+		<div class="page-content"  style="min-height:500px;　height:auto!important;padding-bottom:60px!important;">
+
+			<div class="list-block qcards-list card-user-list">
+				<ul style="background: #EFEFF4;">
+
+				</ul>
+			</div>
+			
+			<div id="am-user-more">
+				<a href="#" id="am-user-list-more" class="button active list-more">点击加载更多</a>
+			</div>
+			
+			<div class="list-block media-list" id="user-list-part" style="display: none">
+				<a class="order-info-link" href="#" onclick="hrefToUserView({user_id})">
+
+					<li class="list-card">
+						<div class="list-card11">
+
+							<div class="list-card11-1">手机号：{mobile}</div>
+							<div class="list-card11-2">地址：{service_addr}</div>
+							<div class="list-card11-3">服务次数：{service_times}</div>
+						</div>
+				</li>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyService" >
+    <id column="service_id" property="serviceId" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="enable" property="enable" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    service_id, name, enable, add_time
+  </sql>
+  
+  
+  <!-- 平台。 问卷调查。服务类别列表 -->
+  <select id="selectByListPage" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from survey_service
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_service
+    where service_id = #{serviceId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_service
+    where service_id = #{serviceId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyService" >
+    insert into survey_service (service_id, name, enable, 
+      add_time)
+    values (#{serviceId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, 
+      #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyService" >
+    insert into survey_service
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyService" >
+    update survey_service
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where service_id = #{serviceId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyService" >
+    update survey_service
+    set name = #{name,jdbcType=VARCHAR},
+      enable = #{enable,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where service_id = #{serviceId,jdbcType=NUMERIC}
+  </update>
+</mapper>

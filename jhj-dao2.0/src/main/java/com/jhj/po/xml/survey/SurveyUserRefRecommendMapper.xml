@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyUserRefRecommendMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyUserRefRecommend" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="content_id" property="contentId" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="result_no" property="resultNo" jdbcType="VARCHAR" />
+    <result column="times" property="times" jdbcType="NUMERIC" />
+    <result column="content_child_id" property="contentChildId" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, content_id, add_time, result_no, times, content_child_id
+  </sql>
+  
+  <!-- 根据用户 id, 删除该用户 的 所有记录 -->
+  <delete id="deleteByUserId" parameterType="java.lang.Long">
+  	 delete from survey_user_ref_recommend
+   	 where 
+   	 user_id = #{userId,jdbcType=NUMERIC}
+  </delete>
+  
+  <!--  -->
+  <select id="selectByUserIdAndContentId" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_user_ref_recommend
+  	where
+  	content_id = #{contentId,jdbcType=NUMERIC}
+  	and
+  	user_id = #{userId,jdbcType=NUMERIC}
+  </select>
+  
+  
+  <!-- 根据userId 得到 该用户的 所有调查记录 -->
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_user_ref_recommend
+  	where	
+  	user_id = #{userId,jdbcType=NUMERIC}
+  </select>
+  
+  <!-- 根据 标识 得到 每组调查结果 -->
+  <select id="selectByResultNo" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_user_ref_recommend
+    where
+    result_no in
+    <foreach item="item" index="index" collection="list" 
+              open="(" separator="," close=")">
+             #{item}
+	</foreach>	
+  </select>
+  
+  <!-- 列表展示 调查结果 -->
+  <select id="selectUserIdByListPage" resultType="java.lang.Long">
+  	select 
+  	DISTINCT	user_id
+    from survey_user_ref_recommend
+    order by add_time desc
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_user_ref_recommend
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_user_ref_recommend
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyUserRefRecommend" >
+    insert into survey_user_ref_recommend (id, user_id, content_id, 
+      add_time, result_no, times, 
+      content_child_id)
+    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{contentId,jdbcType=NUMERIC}, 
+      #{addTime,jdbcType=NUMERIC}, #{resultNo,jdbcType=VARCHAR}, #{times,jdbcType=NUMERIC}, 
+      #{contentChildId,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective"   parameterType="com.jhj.po.model.survey.SurveyUserRefRecommend" >
+    insert into survey_user_ref_recommend
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="contentId != null" >
+        content_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="resultNo != null" >
+        result_no,
+      </if>
+      <if test="times != null" >
+        times,
+      </if>
+      <if test="contentChildId != null" >
+        content_child_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="contentId != null" >
+        #{contentId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="resultNo != null" >
+        #{resultNo,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        #{times,jdbcType=NUMERIC},
+      </if>
+      <if test="contentChildId != null" >
+        #{contentChildId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+   <!--   <selectKey keyProperty="id" resultType="long">
+            select LAST_INSERT_ID()
+     </selectKey> -->
+    
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyUserRefRecommend" >
+    update survey_user_ref_recommend
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="contentId != null" >
+        content_id = #{contentId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="resultNo != null" >
+        result_no = #{resultNo,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        times = #{times,jdbcType=NUMERIC},
+      </if>
+      <if test="contentChildId != null" >
+        content_child_id = #{contentChildId,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyUserRefRecommend" >
+    update survey_user_ref_recommend
+    set user_id = #{userId,jdbcType=NUMERIC},
+      content_id = #{contentId,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      result_no = #{resultNo,jdbcType=VARCHAR},
+      times = #{times,jdbcType=NUMERIC},
+      content_child_id = #{contentChildId,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

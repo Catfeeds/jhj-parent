@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffOnlineMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffOnline" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+    <result column="is_work" property="isWork" jdbcType="NUMERIC" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, staff_id, is_work, lat, lng, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_online
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  
+   <select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_online
+    where staff_id = #{staffId,jdbcType=NUMERIC}
+    order by add_time desc limit 1
+  </select>
+  
+  <select id="selectByStaffIdLimitTwo" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_online
+    where staff_id = #{staffId,jdbcType=NUMERIC}
+    order by add_time desc limit 2
+  </select>
+  <!--查找开工 or 不开工的集合-->
+  <select id="selectByIsWork" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_online
+    where  1=1 and is_work = #{isWork,jdbcType=NUMERIC} 
+    order by add_time desc limit 1
+  </select>
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from org_staff_online
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffOnline" >
+    insert into org_staff_online (id, staff_id, is_work, 
+      lat, lng, add_time)
+    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{isWork,jdbcType=NUMERIC}, 
+      #{lat,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffOnline" >
+    insert into org_staff_online
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="staffId != null" >
+        staff_id,
+      </if>
+      <if test="isWork != null" >
+        is_work,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="staffId != null" >
+        #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="isWork != null" >
+        #{isWork,jdbcType=NUMERIC},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffOnline" >
+    update org_staff_online
+    <set >
+      <if test="staffId != null" >
+        staff_id = #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="isWork != null" >
+        is_work = #{isWork,jdbcType=NUMERIC},
+      </if>
+      <if test="lat != null" >
+        lat = #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        lng = #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffOnline" >
+    update org_staff_online
+    set staff_id = #{staffId,jdbcType=NUMERIC},
+      is_work = #{isWork,jdbcType=NUMERIC},
+      lat = #{lat,jdbcType=VARCHAR},
+      lng = #{lng,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

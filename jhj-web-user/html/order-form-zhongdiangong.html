@@ -1,0 +1,121 @@
+<meta charset="utf-8">
+<meta name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title></title>
+<link rel="stylesheet" href="../css/framework7.css">
+<link rel="stylesheet" href="../css/framework7.themes.css">
+<link rel="stylesheet" href="../css/my-app.css">
+<style type="text/css">
+
+#l-map{height:300px;width:100%;}
+#r-result{width:100%;}
+</style>
+<div class="pages">
+	<!-- Page, data-page contains page name-->
+	<div data-page="order-form-zhongdiangong-page" class="page">
+		<!-- Scrollable page content-->
+		<div class="page-content">
+		
+		<form id="orderHour-Form"  > 
+
+			<input type="hidden" id="userId" name="userId" value="">
+			<input type="hidden" name="serviceType" value="1">
+			<input type="hidden" name="orderFrom" value="0">
+			<input type="hidden" name="serviceContent" value="">
+			<input type="hidden" id="serviceAddons" name ="serviceAddons" value="">
+
+
+				<div style="margin: 0" class="list-block chongzhi-qingchu">
+					<ul style="margin-top:15px;">
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">服务时间：</div>
+									<input type="text" id="serviceDate" name="serviceDate" style="width: auto; font-size: 22px !important">
+
+								</div>
+							</div>
+						</li>
+						
+						 <li>   
+								<a href="#" class="item-link smart-select" id="addrSelect"  data-open-in="popup"  
+									data-back-on-select="true"   data-back-text="返回">
+									
+								 	 <div class="item-content" id="addsss">
+								          <div class="item-inner">
+								            <div class="item-title">服务地址:</div>
+								          </div>
+									</div>
+									
+									<select name="addrId" id="address" >
+										<option value="">请选择服务地址</option>
+									</select> 
+								</a> 
+						</li> 
+						
+						<li>
+								 <a href="#" class="item-link smart-select" data-back-on-select="true">
+								 	
+								 	<div class="item-content">
+								          <div class="item-inner">
+								            <div class="item-title">服务时长:</div>
+								            <div class="item-after" ></div>
+								          </div>
+								     </div>
+
+									<select name="serviceHour">
+										  <option value="" selected>请选择服务时长</option>
+										  <option value="2" >2小时</option>
+										  <option value="3">3小时</option>
+										  <option value="4">4小时</option>
+									</select>
+								</a>
+						</li>
+					</ul>
+				</div>
+			
+				
+
+			<!-- <div class="content-block-title">Content block title</div> -->
+
+			<div class="content-block zdg-xq" >
+				<p><input style="width:10%;font-size:18px;border:0;background:#E8E8E8;margin-left:10px;" value="30" id="price"> 元/小时，两小时起
+				<!-- <a href="" >更多详情</a>	  -->      
+				</p>
+
+			</div>
+
+			<div class="content-block"style="padding:0;margin:0;">
+				<div class="row"style="background:#F8F8F8;margin-left:0;">
+				 	<div class="col-30"style="width:33.3333333%;text-align:center;" >
+							<input type="hidden" value="" id="zuofanId">
+							<img src="../img/icons/zuofan.png" name="tag"  />
+							<input type="hidden" value=""  id="zuofanPrice">
+							<div class="col-30" >中餐制作</div>
+					</div>
+					<div class="col-30"style="width:33.3333333%;text-align:center;" >
+							<input type="hidden" value="" id="xiyiId">
+							<img src="../img/icons/xiyi.png" name="tag" />
+							<input type="hidden" value="" id="xiyiPrice">
+							<div class="col-30" >洗衣熨烫</div>
+					</div>
+					<div class="col-30"style="width:33.3333333%;text-align:center;" >
+							<input type="hidden" value="" id="qingjieId">
+							<img src="../img/icons/baojie.png" name="tag"  />
+							<input type="hidden" value="" id="qingjiePrice">
+							<div class="col-30" >清洁用品</div>
+					</div> 					
+				</div>  
+			</div>
+			
+			<div class="content-block"style="background:0;margin:0;padding:0;">
+				<a href="#" id="submitOrder" class="button active shendu-submit">提交订单</a>
+			</div>	
+				
+					
+			</form>	
+		</div>
+	</div>
+</div>

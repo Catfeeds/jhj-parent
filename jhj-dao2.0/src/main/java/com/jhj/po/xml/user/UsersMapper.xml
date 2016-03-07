@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.user.UsersMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.user.Users">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="province_name" property="provinceName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="3rd_type" property="thirdType" jdbcType="VARCHAR" />
+		<result column="openid" property="openid" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="head_img" property="headImg" jdbcType="VARCHAR" />
+		<result column="rest_money" property="restMoney" jdbcType="NUMERIC" />
+		<result column="score" property="score" jdbcType="NUMERIC" />
+		<result column="user_type" property="userType" jdbcType="NUMERIC" />
+		<result column="add_from" property="addFrom" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, province_name, mobile, 3rd_type, openid, name, sex, head_img, rest_money, score,
+		user_type, remarks,add_from, add_time, update_time
+	</sql>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from users
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	<select id="selectByMobile" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from users
+		where mobile = #{mobile,jdbcType=CHAR}
+	</select>
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from users
+		where 1=1
+		<if test="mobile != null">
+			and mobile like CONCAT('%','${mobile}','%' )
+		</if>
+		<if test="userIdList != null">
+			and id in
+			<foreach item="item" index="index" collection="userIdList" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		order by add_time desc
+	</select>
+  
+	<select id="selectByListPages" resultMap="BaseResultMap" parameterType="com.jhj.vo.UserSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from users
+		where 1=1
+		<if test="mobile != null and mobile !='' ">
+			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		<if test="name != null and name !='' ">
+			and name like CONCAT('%','${name}','%')
+		</if>
+		<if test="addFrom != null">
+			and add_from =#{addFrom,jdbcType=NUMERIC}
+		</if>
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		order by add_time desc
+	</select>
+	
+	<select id="selectByUserIds" resultMap="BaseResultMap" parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from users
+		where id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		order by add_time asc
+	</select>
+	<select id="selectByUserIdPage" resultMap="BaseResultMap" parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from users
+		where id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		order by add_time asc
+	</select>
+
+	<!-- 用户有余额的总钱数 -->
+	<select id="selectUserAllResyMoneyByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+	 SELECT
+	 	 FROM_UNIXTIME(add_time, "%c-%e") AS series, SUM(rest_money) AS totalMoney 
+	 FROM
+	 	users where 1 = 1  
+	 <!-- <if test="startTime !=null">
+		<![CDATA[ and add_time >= #{startTime}]]>
+	 </if> -->
+	 <if test="endTime !=null">
+		<![CDATA[ and add_time <= #{endTime}]]>
+	 </if>
+	 <if test="status != null">
+		and order_status in
+		<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	 </if> 
+	 GROUP BY series ORDER BY series ASC
+	</select>
+
+<select id="selectUserAllResyMoneyByMonth" resultMap="ChartMap"
+		parameterType="com.jhj.vo.chart.ChartSearchVo">
+ SELECT FROM_UNIXTIME(add_time, "%c") AS series, SUM(rest_money) AS totalMoney FROM
+ users where 1 = 1  
+<!--  <if test="startTime !=null">
+<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		<if test="status != null">
+					and order_status in
+					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if> 
+ GROUP BY series ORDER BY series ASC
+</select>
+
+<select id="selectUserAllResyMoneyByQuarter" resultMap="ChartMap"
+		parameterType="com.jhj.vo.chart.ChartSearchVo">
+ SELECT 
+ CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+ SUM(rest_money) AS totalMoney FROM
+ users where 1 = 1  
+ <!-- <if test="startTime !=null">
+<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		<if test="status != null">
+					and order_status in
+					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if> 
+ GROUP BY series ORDER BY series ASC
+</select>
+	
+	<select id="totalByUserIds" resultType="java.util.HashMap" parameterType="java.util.List">
+		select id, count(*) as total
+		from users
+		where id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		group by id
+		order by id desc
+	</select>
+	<resultMap id="ChartMap" type="com.jhj.vo.chart.ChartMapVo">
+		<result column="name" property="name"  />
+		<result column="series" property="series"  />
+		<result column="total" property="total" />
+		
+		<result column="totalMoney" property="totalMoney"/>
+	</resultMap>
+	<resultMap id="ChartMap2" type="com.jhj.vo.chart.ChartMapVo">
+		<result column="series" property="series"  />
+		<result column="total" property="total" />
+	</resultMap>
+	<!--市场用户图表-按天统计-->
+	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT name, series, COUNT(*) AS total FROM 
+		(SELECT add_from AS name, 
+		       FROM_UNIXTIME(add_time, "%c-%e") AS series
+		 FROM users
+		 WHERE 1=1 
+ 		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if> ) as T
+			GROUP BY name, series ORDER BY series ASC
+	</select>
+	<!-- 统计新增用户id按天统计 -->
+	<select id="statUserIdsByDay" resultMap="ChartMap2" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT  series , count(*) AS total FROM 
+		(SELECT  FROM_UNIXTIME(add_time, "%c-%e") AS series
+		 FROM users
+		 WHERE 1=1 
+ 		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if> ) as T
+			GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="getUserIds" resultMap="BaseResultMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT  	
+		<include refid="Base_Column_List" />
+		 FROM users
+		 WHERE 1=1 
+ 		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+	</select>
+	<!-- 统计新增用户id按月统计 -->
+	<select id="statUserIdsByMonth" resultMap="ChartMap2" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT series, count(*) AS total FROM 
+		(SELECT FROM_UNIXTIME(add_time, "%c") AS series
+		 FROM users
+		 WHERE 1=1 
+ 		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if> ) as T
+			GROUP BY series ORDER BY series ASC
+	</select>
+	<!-- 统计新增用户id按季度统计 -->
+	<select id="statUserIdsByQuarter" resultMap="ChartMap2" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT series, count(*) AS total FROM 
+		(SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) AS series
+		 FROM users
+		 WHERE 1=1 
+ 		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if> ) as T
+			GROUP BY series ORDER BY series ASC
+	</select>
+	<!-- 市场用户图表-按月统计 -->
+	<select id="statByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+	SELECT name, series, COUNT(*) AS total FROM 
+		(SELECT add_from AS name, 
+		       FROM_UNIXTIME(add_time, "%c") AS series
+		 FROM users
+		 WHERE 1=1 
+ 		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if> ) as T
+			GROUP BY name, series ORDER BY series ASC
+	</select>	
+	<!-- 市场用户图表-按季度统计 -->
+	<select id="statByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+	SELECT name, series, COUNT(*) AS total FROM 
+		(SELECT add_from AS name, 
+		        CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) AS series
+		 FROM users
+		 WHERE 1=1 
+ 		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if> ) as T
+			GROUP BY name, series ORDER BY series ASC
+	</select>
+	<!--统计某段时间之前的用户数量-->		
+	<select id="statUserTotal" resultMap="ChartMap">
+		SELECT COUNT(*) AS total
+			   FROM users
+	</select>		
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from users
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.user.Users">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into users (id, province_name, mobile,
+		3rd_type, openid, name,
+		sex, head_img, rest_money,
+		score, user_type,remarks, add_from,
+		add_time, update_time)
+		values (#{id,jdbcType=NUMERIC}, #{provinceName,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR},
+		#{thirdType,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{sex,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{restMoney,jdbcType=NUMERIC},
+		#{score,jdbcType=NUMERIC}, #{userType,jdbcType=NUMERIC},  #{remarks,jdbcType=VARCHAR},#{addFrom,jdbcType=NUMERIC},
+		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.user.Users">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into users
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="provinceName != null">
+				province_name,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="thirdType != null">
+				3rd_type,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="headImg != null">
+				head_img,
+			</if>
+			<if test="restMoney != null">
+				rest_money,
+			</if>
+			<if test="score != null">
+				score,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="addFrom != null">
+				add_from,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="provinceName != null">
+				#{provinceName,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=CHAR},
+			</if>
+			<if test="thirdType != null">
+				#{thirdType,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="headImg != null">
+				#{headImg,jdbcType=VARCHAR},
+			</if>
+			<if test="restMoney != null">
+				#{restMoney,jdbcType=NUMERIC},
+			</if>
+			<if test="score != null">
+				#{score,jdbcType=NUMERIC},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=NUMERIC},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="addFrom != null">
+				#{addFrom,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.Users">
+		update users
+		<set>
+			<if test="provinceName != null">
+				province_name = #{provinceName,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=CHAR},
+			</if>
+			<if test="thirdType != null">
+				3rd_type = #{thirdType,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				openid = #{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="headImg != null">
+				head_img = #{headImg,jdbcType=VARCHAR},
+			</if>
+			<if test="restMoney != null">
+				rest_money = #{restMoney,jdbcType=NUMERIC},
+			</if>
+			<if test="score != null">
+				score = #{score,jdbcType=NUMERIC},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=NUMERIC},
+			</if>
+			
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="addFrom != null">
+				add_from = #{addFrom,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.Users">
+		update users
+		set province_name = #{provinceName,jdbcType=VARCHAR},
+		mobile = #{mobile,jdbcType=CHAR},
+		3rd_type = #{thirdType,jdbcType=VARCHAR},
+		openid = #{openid,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		sex = #{sex,jdbcType=VARCHAR},
+		head_img = #{headImg,jdbcType=VARCHAR},
+		rest_money = #{restMoney,jdbcType=NUMERIC},
+		score = #{score,jdbcType=NUMERIC},
+		user_type = #{userType,jdbcType=NUMERIC},
+		remarks = #{remarks,jdbcType=VARCHAR}
+		add_from = #{addFrom,jdbcType=NUMERIC},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 用户个数统计 -->
+	 <select id="statTotalUser" resultType="java.lang.Integer" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT 
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE 1=1
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+	</select>	
+	<!--某段时间之前用户的个数 -->	
+	 <select id="statTotalUserByStatTime" resultType="java.lang.Integer" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT 
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE 1=1
+		<if test="startTime !=null">
+			<![CDATA[ and add_time < #{startTime}]]>
+		</if>
+	</select>	
+	<!-- 用户有余额人数统计	 -->
+		 <select id="userResyMoneyByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series, 
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money > 0
+		
+		
+		<!-- <if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c") AS series,  
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt; 0
+	<!-- 	<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money > 0
+		<!-- <if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	
+	<!-- 用户余额不足200的人数 -->
+	
+		 <select id="userResyMoneyLessTwoByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series, 
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt; 0 and rest_money &lt; 200
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyLessTwoByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c") AS series,  
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt; 0 and rest_money &lt; 200
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyLessTwoByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt; 0 and rest_money &lt; 200
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<!-- 用户余额不足1000的人数 -->
+	
+		 <select id="userResyMoneyLessThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series, 
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt;0 and rest_money &lt; 1000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyLessThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c") AS series,  
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt;0 and rest_money &lt; 1000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyLessThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt;0 and rest_money &lt; 1000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	
+	<!-- 用户余额大于3000的人数 -->
+	
+		 <select id="userResyMoneyThreeThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series, 
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money > 3000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyThreeThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c") AS series,  
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money  > 3000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyThreeThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money  > 3000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	
+	<!-- 用户余额在1000和3000之间的人数 -->
+	
+		 <select id="userResyMoneyBetweenByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series, 
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyBetweenByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c") AS series,  
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+	
+		GROUP BY series ORDER BY series ASC
+	</select>
+	<select id="userResyMoneyBetweenByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+			   COUNT(*) AS total 
+			   FROM users
+		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	
+	
+	
+</mapper>

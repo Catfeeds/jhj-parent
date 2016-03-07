@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffsMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffs" >
+    <id column="staff_id" property="staffId" jdbcType="NUMERIC" />
+    <result column="am_id" property="amId" jdbcType="NUMERIC" />
+    <result column="province_id" property="provinceId" jdbcType="NUMERIC" />
+    <result column="city_id" property="cityId" jdbcType="NUMERIC" />
+    <result column="region_id" property="regionId" jdbcType="NUMERIC" />
+    <result column="org_id" property="orgId" jdbcType="NUMERIC" />
+    <result column="staff_type" property="staffType" jdbcType="NUMERIC" />
+    <result column="status" property="status" jdbcType="NUMERIC" />
+    <result column="sex" property="sex" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="DATE" />
+    <result column="work_year" property="workYear" jdbcType="NUMERIC" />
+    <result column="card_id" property="cardId" jdbcType="VARCHAR" />
+    <result column="nation" property="nation" jdbcType="VARCHAR" />
+    <result column="edu" property="edu" jdbcType="VARCHAR" />
+    <result column="astro" property="astro" jdbcType="NUMERIC" />
+    <result column="blood_type" property="bloodType" jdbcType="VARCHAR" />
+    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+    <result column="intro" property="intro" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    staff_id,  am_id,province_id, city_id, region_id, org_id, staff_type, status, sex,
+    name, mobile, tel, addr, birth, work_year, card_id, nation, edu, astro, blood_type, 
+    head_img, intro, add_time, update_time
+  </sql>
+  
+  <!-- 取出 可以  推送消息的 服务人员,安卓设备,有cid -->
+  <select id="selectAbleToSendMsgStaff" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from org_staffs
+  	where 
+  		staff_id in 
+  		(select 
+  			user_id 
+  		from 
+  			user_push_bind 
+  		where 
+  		device_type = 'android')
+  </select>
+  
+  
+  <select id="selectAmByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where 
+  		staff_type = 0 
+  		and
+		staff_id = #{staffId,jdbcType = NUMERIC}  		
+  </select>	
+	
+  <select id="selectAllStaff" resultMap="BaseResultMap" >
+	    select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where 
+  		staff_type = 0 
+  		and 
+  		status = 1
+  </select>	
+	
+  <select id="selectStaffByOrgId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where 
+  		staff_type = 0 
+  		and 
+  		status = 1
+  		and
+  		org_id = #{orgId,jdbcType = NUMERIC}
+  		
+  </select>	
+  <!-- 查找可用的服务人员 or 助理 -->
+  <select id="selectStaffByStaffType" resultMap="BaseResultMap" >
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where 
+  		status = 1
+  </select>	
+  <select id="selectHourAuthStaff" resultMap="BaseResultMap" >
+  		select 
+  		<include refid="Base_Column_List" />
+  		from org_staffs where staff_id in
+    	(
+    	select distinct auth.staff_id from org_staff_auth as auth
+    		where auth.service_type_id in (0,14) and 
+    		auth.aut_status = 1
+    	);
+  </select>	
+  <select id="selectAmAuthStaff" resultMap="BaseResultMap" >
+  		select 
+  		<include refid="Base_Column_List" />
+  		from org_staffs where staff_id in
+    	(
+    	select distinct auth.staff_id from org_staff_auth as auth 
+    		where auth.service_type_id in (0,12) and 
+    		auth.aut_status = 1
+    	);
+  </select>	
+	
+  <select id="selectStaffByAmId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where 
+  		staff_type = 0 and
+		 am_id = #{amId,jdbcType=NUMERIC}
+		
+  </select>
+  
+  <select id="selectAllAm" resultMap="BaseResultMap">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where 
+  		staff_type = 1
+  </select>
+  
+   <select id="selectByOrgId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where  status = 1   and
+  		org_id = #{orgId,jdbcType=NUMERIC}
+  </select>
+  
+   <select id="selectAmByOrgId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where 
+  		org_id = #{orgId,jdbcType=NUMERIC}
+  		and staff_type = 1 and status = 1
+  </select>  
+  
+   <select id="selectByOrgIdAndType" resultMap="BaseResultMap" parameterType="com.jhj.vo.StaffSearchVo">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+ 		where 1=1 
+ 		<if test="orgId != null" >
+ 			and org_id = #{orgId}
+ 		</if>
+	    <if test="staffType != null" >
+			and staff_type = #{staffType}
+		</if>
+  </select>    
+  
+  <select id="selectByMobile" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where
+  		mobile = #{mobile,jdbcType=CHAR}
+  </select>
+ 
+  <select id="selectByCardId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where
+  		card_id = #{cardId,jdbcType=VARCHAR}
+  		
+  </select>
+  
+  <select id="selectOrgIdByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select
+  		<include refid="Base_Column_List" />
+  		from org_staffs
+  		where
+  		staff_id = #{staffId,jdbcType=NUMERIC}
+  		
+  </select>
+  
+   <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.StaffSearchVo">
+  	select
+    <include refid="Base_Column_List" />
+    from org_staffs
+ 	where 1=1 
+    <if test="staffType == 0 or staffType == 1 ">
+		and staff_type = #{staffType}
+	</if>
+     <if test="name != null and name !='' ">
+		and name like '%${name}%'
+	</if>
+	<if test="sex == 0 or sex == 1 ">
+		and sex = #{sex}
+	</if>
+	<if test="mobile !=null and mobile !='' ">
+		and mobile like '%${mobile}%' 
+	</if>
+	<if test="amId !=null and amId !='' ">
+		and am_id like '%${amId}%' 
+	</if>	
+	<if test="orgId !=null and orgId !='' ">
+		and org_id = #{orgId,jdbcType=NUMERIC}
+	</if>
+      
+    order by add_time desc    
+
+  </select>
+  
+  <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staffs 
+    where staff_id in
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+        #{item}
+    </foreach>
+   order by add_time asc
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from org_staffs
+    order by add_time desc
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staffs
+    where staff_id = #{staffId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from org_staffs
+    where staff_id = #{staffId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffs" >
+    insert into org_staffs (staff_id, am_id, province_id, 
+      city_id, region_id, org_id, 
+      staff_type, status, sex, 
+      name, mobile, tel, addr, 
+      birth, work_year, card_id, 
+      nation, edu, astro, 
+      blood_type, head_img, intro, 
+      add_time, update_time)
+    values (#{staffId,jdbcType=NUMERIC}, #{amId,jdbcType=NUMERIC}, #{provinceId,jdbcType=NUMERIC}, 
+      #{cityId,jdbcType=NUMERIC}, #{regionId,jdbcType=NUMERIC}, #{orgId,jdbcType=NUMERIC}, 
+      #{staffType,jdbcType=NUMERIC}, #{status,jdbcType=NUMERIC}, #{sex,jdbcType=NUMERIC}, 
+      #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{tel,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, 
+      #{birth,jdbcType=DATE}, #{workYear,jdbcType=NUMERIC}, #{cardId,jdbcType=VARCHAR}, 
+      #{nation,jdbcType=VARCHAR}, #{edu,jdbcType=VARCHAR}, #{astro,jdbcType=NUMERIC}, 
+      #{bloodType,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffs" >
+    insert into org_staffs
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="staffId != null" >
+        staff_id,
+      </if>
+      <if test="amId != null" >
+        am_id,
+      </if>
+      <if test="provinceId != null" >
+        province_id,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="regionId != null" >
+        region_id,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="staffType != null" >
+        staff_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="birth != null" >
+        birth,
+      </if>
+      <if test="workYear != null" >
+        work_year,
+      </if>
+      <if test="cardId != null" >
+        card_id,
+      </if>
+      <if test="nation != null" >
+        nation,
+      </if>
+      <if test="edu != null" >
+        edu,
+      </if>
+      <if test="astro != null" >
+        astro,
+      </if>
+      <if test="bloodType != null" >
+        blood_type,
+      </if>
+      <if test="headImg != null" >
+        head_img,
+      </if>
+      <if test="intro != null" >
+        intro,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="staffId != null" >
+        #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="amId != null" >
+        #{amId,jdbcType=NUMERIC},
+      </if>
+      <if test="provinceId != null" >
+        #{provinceId,jdbcType=NUMERIC},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=NUMERIC},
+      </if>
+      <if test="regionId != null" >
+        #{regionId,jdbcType=NUMERIC},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=NUMERIC},
+      </if>
+      <if test="staffType != null" >
+        #{staffType,jdbcType=NUMERIC},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=NUMERIC},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null" >
+        #{birth,jdbcType=DATE},
+      </if>
+      <if test="workYear != null" >
+        #{workYear,jdbcType=NUMERIC},
+      </if>
+      <if test="cardId != null" >
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="edu != null" >
+        #{edu,jdbcType=VARCHAR},
+      </if>
+      <if test="astro != null" >
+        #{astro,jdbcType=NUMERIC},
+      </if>
+      <if test="bloodType != null" >
+        #{bloodType,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null" >
+        #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="intro != null" >
+        #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+     <!-- 配置mysql主键自增 -->
+    <selectKey keyProperty="staffId" resultType="Long" order="AFTER">
+
+			select LAST_INSERT_ID() 
+
+	</selectKey>
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffs" >
+    update org_staffs
+    <set >
+      <if test="amId != null" >
+        am_id = #{amId,jdbcType=NUMERIC},
+      </if>
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=NUMERIC},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=NUMERIC},
+      </if>
+      <if test="regionId != null" >
+        region_id = #{regionId,jdbcType=NUMERIC},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=NUMERIC},
+      </if>
+      <if test="staffType != null" >
+        staff_type = #{staffType,jdbcType=NUMERIC},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=NUMERIC},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null" >
+        birth = #{birth,jdbcType=DATE},
+      </if>
+      <if test="workYear != null" >
+        work_year = #{workYear,jdbcType=NUMERIC},
+      </if>
+      <if test="cardId != null" >
+        card_id = #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        nation = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="edu != null" >
+        edu = #{edu,jdbcType=VARCHAR},
+      </if>
+      <if test="astro != null" >
+        astro = #{astro,jdbcType=NUMERIC},
+      </if>
+      <if test="bloodType != null" >
+        blood_type = #{bloodType,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null" >
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="intro != null" >
+        intro = #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where staff_id = #{staffId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffs" >
+    update org_staffs
+    set am_id = #{amId,jdbcType=NUMERIC},
+      province_id = #{provinceId,jdbcType=NUMERIC},
+      city_id = #{cityId,jdbcType=NUMERIC},
+      region_id = #{regionId,jdbcType=NUMERIC},
+      org_id = #{orgId,jdbcType=NUMERIC},
+      staff_type = #{staffType,jdbcType=NUMERIC},
+      status = #{status,jdbcType=NUMERIC},
+      sex = #{sex,jdbcType=NUMERIC},
+      name = #{name,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=CHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      birth = #{birth,jdbcType=DATE},
+      work_year = #{workYear,jdbcType=NUMERIC},
+      card_id = #{cardId,jdbcType=VARCHAR},
+      nation = #{nation,jdbcType=VARCHAR},
+      edu = #{edu,jdbcType=VARCHAR},
+      astro = #{astro,jdbcType=NUMERIC},
+      blood_type = #{bloodType,jdbcType=VARCHAR},
+      head_img = #{headImg,jdbcType=VARCHAR},
+      intro = #{intro,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where staff_id = #{staffId,jdbcType=NUMERIC}
+  </update>
+</mapper>

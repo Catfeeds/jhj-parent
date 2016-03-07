@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhj.po.dao.bs.DictCouponsMapper">
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.DictCoupons">
+    <id column="id" jdbcType="NUMERIC" property="id" />
+    <result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+    <result column="card_passwd" jdbcType="VARCHAR" property="cardPasswd" />
+    <result column="value" jdbcType="DECIMAL" property="value" />
+    <result column="max_value" jdbcType="DECIMAL" property="maxValue" />
+    <result column="coupon_type" jdbcType="NUMERIC" property="couponType" />
+    <result column="rang_type" jdbcType="NUMERIC" property="rangType" />
+    <result column="rang_from" jdbcType="SMALLINT" property="rangFrom" />
+    <result column="service_type" jdbcType="VARCHAR" property="serviceType" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="rang_month" jdbcType="NUMERIC" property="rangMonth" />
+    <result column="from_date" jdbcType="DATE" property="fromDate" javaType="java.util.Date"/>
+    <result column="to_date" jdbcType="DATE" property="toDate" javaType="java.util.Date"/>
+    <result column="add_time" jdbcType="NUMERIC" property="addTime" />
+    <result column="update_time" jdbcType="NUMERIC" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, card_no, card_passwd, value, max_value,coupon_type, rang_type, rang_from, service_type, introduction,
+    description, rang_month,from_date,to_date,add_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_coupons
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="selectByCouponType" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_coupons
+    where coupon_type = #{couponType,jdbcType=NUMERIC}
+  </select>
+
+  <select id="selectByIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_coupons
+    where id in
+ 	<foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+        #{item}
+    </foreach>
+
+    order by add_time asc
+  </select>
+
+  <select id="selectByCardPasswd" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_coupons
+    where card_passwd = #{cardPasswd,jdbcType=VARCHAR}
+  </select>
+	<!-- 根据优惠券的id和密码查询 -->
+  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_coupons
+    where 1=1
+      <if test="cardNo != null" >
+        and card_no like CONCAT('%','${cardNo}','%' )
+      </if>
+
+      <if test="cardPasswd != null" >
+        and card_passwd like CONCAT('%','${cardPasswd}','%' )
+      </if>
+      <if test="couponType != null" >
+        and coupon_type = #{couponType,jdbcType=NUMERIC}
+      </if>
+     <if test="startDate !=null">
+		<![CDATA[ and add_time >= #{startDate,jdbcType=NUMERIC}]]>
+	</if>
+	<if test="endDate !=null">
+		<![CDATA[ and add_time  <= #{endDate,jdbcType=NUMERIC}]]>
+	</if>
+    order by add_time desc
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_coupons
+    order by card_no desc
+  </select>
+
+  <select id="selectAllByCardNo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_coupons
+    order by card_no desc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from dict_coupons
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.bs.DictCoupons">
+    insert into dict_coupons (id, card_no, card_passwd,
+      value,max_value rang_type, rang_from,
+      service_type, introduction, description,
+      rang_month,from_date,to_date,add_time, update_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{cardNo,jdbcType=VARCHAR}, #{cardPasswd,jdbcType=VARCHAR},
+      #{value,jdbcType=DECIMAL}, #{maxValue,jdbcType=DECIMAL},, #{couponType,jdbcType=NUMERIC}, #{rangType,jdbcType=NUMERIC},
+      #{rangFrom,jdbcType=SMALLINT},#{serviceType,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+      #{rangMonth,jdbcType=NUMERIC}, #{fromDate,jdbcType=DATE}, #{toDate,jdbcType=DATE}, #{addTime,jdbcType=NUMERIC},
+      #{updateTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.DictCoupons">
+    insert into dict_coupons
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cardNo != null">
+        card_no,
+      </if>
+      <if test="cardPasswd != null">
+        card_passwd,
+      </if>
+      <if test="value != null">
+        value,
+      </if>
+      <if test="maxValue != null">
+        max_value,
+      </if>
+      <if test="couponType != null">
+        coupon_type,
+      </if>
+      <if test="rangType != null">
+        rang_type,
+      </if>
+      <if test="rangFrom != null">
+        rang_from,
+      </if>
+      <if test="serviceType != null">
+        service_type,
+      </if>
+      <if test="introduction != null">
+        introduction,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="rangMonth != null">
+        rang_month,
+      </if>
+      <if test="fromDate != null">
+        from_date,
+      </if>
+      <if test="toDate != null">
+        to_date,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="cardNo != null">
+        #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardPasswd != null">
+        #{cardPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=DECIMAL},
+      </if>
+      <if test="maxValue != null">
+        #{maxValue,jdbcType=NUMERIC},
+      </if>
+      <if test="couponType != null">
+        #{couponType,jdbcType=NUMERIC},
+      </if>
+      <if test="rangType != null">
+        #{rangType,jdbcType=NUMERIC},
+      </if>
+      <if test="rangFrom != null">
+        #{rangFrom,jdbcType=SMALLINT},
+      </if>
+      <if test="serviceType != null">
+        #{serviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="rangMonth != null">
+        #{rangMonth,jdbcType=NUMERIC},
+      </if>
+      <if test="fromDate != null">
+        #{fromDate,jdbcType=DATE},
+      </if>
+      <if test="toDate != null">
+        #{toDate,jdbcType=DATE},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.DictCoupons">
+    update dict_coupons
+    <set>
+      <if test="cardNo != null">
+        card_no = #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardPasswd != null">
+        card_passwd = #{cardPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        value = #{value,jdbcType=DECIMAL},
+      </if>
+      <if test="maxValue != null">
+        max_value = #{maxValue,jdbcType=DECIMAL},
+      </if>
+      <if test="couponType != null">
+        coupon_type = #{couponType,jdbcType=NUMERIC},
+      </if>
+      <if test="rangType != null">
+        rang_type = #{rangType,jdbcType=NUMERIC},
+      </if>
+      <if test="rangFrom != null">
+        rang_from = #{rangFrom,jdbcType=SMALLINT},
+      </if>
+      <if test="serviceType != null">
+        service_type = #{serviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="rangMonth != null">
+        rang_month = #{rangMonth,jdbcType=NUMERIC},
+      </if>
+      <if test="fromDate != null">
+        from_date = #{fromDate,jdbcType=DATE},
+      </if>
+      <if test="toDate != null">
+        to_date = #{toDate,jdbcType=DATE},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.DictCoupons">
+    update dict_coupons
+    set card_no = #{cardNo,jdbcType=VARCHAR},
+      card_passwd = #{cardPasswd,jdbcType=VARCHAR},
+      value = #{value,jdbcType=DECIMAL},
+      max_value = #{maxValue,jdbcType=DECIMAL},
+      coupon_type = #{couponType,jdbcType=NUMERIC},
+      rang_type = #{rangType,jdbcType=NUMERIC},
+      rang_from = #{rangFrom,jdbcType=SMALLINT},
+      service_type = #{serviceType,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      rang_month = #{rangMonth,jdbcType=NUMERIC},
+      from_date = #{fromDate,jdbcType=DATE},
+      to_date = #{toDate,jdbcType=DATE},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

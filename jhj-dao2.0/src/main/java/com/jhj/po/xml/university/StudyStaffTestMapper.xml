@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.university.StudyStaffTestMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.university.StudyStaffTest" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+    <result column="service_type_id" property="serviceTypeId" jdbcType="INTEGER" />
+    <result column="bank_id" property="bankId" jdbcType="NUMERIC" />
+    <result column="q_id" property="qId" jdbcType="NUMERIC" />
+    <result column="test_answer" property="testAnswer" jdbcType="VARCHAR" />
+    <result column="is_right" property="isRight" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, staff_id, service_type_id, bank_id, q_id, test_answer, is_right, add_time
+  </sql>
+  
+  <resultMap type="com.jhj.vo.university.DaoStaffTestMapVo" id="universityTestMapVo">
+  	<result column="latestStaffId" property="latestStaffId"/>
+    <result column="latestBankId" property="latestBankId" />
+  	<result column="latestAddTime" property="latestAddTime" />
+  </resultMap>
+  
+  <select id="selectLatestTimeByStaffId" resultMap="universityTestMapVo" parameterType="java.lang.Long" >
+  	 select
+  	 	staff_id AS latestStaffId,
+  	 	bank_id AS latestBankId,
+  	 	MAX(add_time) AS latestAddTime 
+  	 from	
+  	 	 study_staff_test
+  	 where
+  	 	staff_id = #{staffId,jdbcType=NUMERIC}
+  	 GROUP BY 
+  	 	latestStaffId,latestBankId  
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from study_staff_test
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from study_staff_test
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.university.StudyStaffTest" >
+    insert into study_staff_test (id, staff_id, service_type_id, 
+      bank_id, q_id, test_answer, 
+      is_right, add_time)
+    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=INTEGER}, 
+      #{bankId,jdbcType=NUMERIC}, #{qId,jdbcType=NUMERIC}, #{testAnswer,jdbcType=VARCHAR}, 
+      #{isRight,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.university.StudyStaffTest" >
+    insert into study_staff_test
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="staffId != null" >
+        staff_id,
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="qId != null" >
+        q_id,
+      </if>
+      <if test="testAnswer != null" >
+        test_answer,
+      </if>
+      <if test="isRight != null" >
+        is_right,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="staffId != null" >
+        #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        #{serviceTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="qId != null" >
+        #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="testAnswer != null" >
+        #{testAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="isRight != null" >
+        #{isRight,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.StudyStaffTest" >
+    update study_staff_test
+    <set >
+      <if test="staffId != null" >
+        staff_id = #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="qId != null" >
+        q_id = #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="testAnswer != null" >
+        test_answer = #{testAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="isRight != null" >
+        is_right = #{isRight,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.StudyStaffTest" >
+    update study_staff_test
+    set staff_id = #{staffId,jdbcType=NUMERIC},
+      service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+      bank_id = #{bankId,jdbcType=NUMERIC},
+      q_id = #{qId,jdbcType=NUMERIC},
+      test_answer = #{testAnswer,jdbcType=VARCHAR},
+      is_right = #{isRight,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.orderReview.JhjSettingMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.orderReview.JhjSetting" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="setting_type" property="settingType" jdbcType="VARCHAR" />
+    <result column="setting_value" property="settingValue" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, setting_type, setting_value, add_time
+  </sql>
+  
+  <select id="selectByListPage" resultMap="BaseResultMap" >
+  	 select 
+    	<include refid="Base_Column_List" />
+     from jhj_setting
+     order by add_time desc
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from jhj_setting
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  
+  <select id="selectBySettingType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from jhj_setting
+    where setting_type = #{settingType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from jhj_setting
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.orderReview.JhjSetting" >
+    insert into jhj_setting (id, name, setting_type, 
+      setting_value, add_time)
+    values (#{id,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{settingType,jdbcType=VARCHAR}, 
+      #{settingValue,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.orderReview.JhjSetting" >
+    insert into jhj_setting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="settingType != null" >
+        setting_type,
+      </if>
+      <if test="settingValue != null" >
+        setting_value,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="settingType != null" >
+        #{settingType,jdbcType=VARCHAR},
+      </if>
+      <if test="settingValue != null" >
+        #{settingValue,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+    
+     <selectKey keyProperty="id" resultType="long">
+            select LAST_INSERT_ID()
+     </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.orderReview.JhjSetting" >
+    update jhj_setting
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="settingType != null" >
+        setting_type = #{settingType,jdbcType=VARCHAR},
+      </if>
+      <if test="settingValue != null" >
+        setting_value = #{settingValue,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.orderReview.JhjSetting" >
+    update jhj_setting
+    set name = #{name,jdbcType=VARCHAR},
+      setting_type = #{settingType,jdbcType=VARCHAR},
+      setting_value = #{settingValue,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

@@ -1,0 +1,58 @@
+<div class="pages">
+	<!-- Page, data-page contains page name-->
+	<div data-page="history-user-page" class="page" style="overflow:auto;background:#E5E5E5;">
+		<!-- Scrollable page content-->
+		<div class="page-content" >
+		
+		<form id="history-user-form"  > 
+				
+				<!-- 此处将用户来源设置为 3,表示来自 手动录入 -->
+				<input type="hidden" name= "addFrom" value="3">
+
+				<div style="margin: 0" class="list-block">
+					<ul style="margin-top:15px;background:#F8F8F8;">
+						
+						<li>
+						 	<div class="item-content">
+						          <div class="item-inner">
+						            <div class="item-title label" style="width:90%;">注册时间：</div>
+						            <div class="item-xx" style="width:65%;">
+						            	<input type="text" name="serviceDate" id="remindServiceDate">
+						            </div>
+						          </div>
+						     </div>
+						</li>
+						
+						<li>
+							<div class="item-content">
+								<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+									<div class="item-title label">用户姓名:</div>
+									<div class="item-xx">
+										<input type="text" name="userName" >
+									</div>
+								</div>
+							</div>
+						</li>
+					
+						<li>
+							<div class="item-content">
+								<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+									<div class="item-title label">用户手机号:</div>
+									<div class="item-xx">
+										<input type="text" name="mobile" >
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			
+			
+			<div class="content-block"style="background:0;margin:0;padding:0;" >
+				<a href="#" id="historyUserNext" class="button active shendu-submit">下一步</a>
+			</div>	
+					
+			</form>	
+		</div>
+	</div>
+</div>

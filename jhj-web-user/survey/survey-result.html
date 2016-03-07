@@ -1,0 +1,147 @@
+<div data-page="survey-result-page" class="page"style="background-color:#E5E5E5!important;overflow:auto">
+		<div class="page-content"style="margin:0;">
+		
+		<div class="list-block"	id="resultDiv">
+		  <ul>
+		    <li class="accordion-item" id="baseAccordionItem">
+		    	<a href="#" class="item-content item-link">
+			        <div class="item-inner">
+			          <div class="item-title">基础订制服务 </div>
+			        </div>
+		        </a>
+		       <div class="accordion-item-content">
+					<div class="content-block" >
+					
+				    	 <div   class="list-block chongzhi-qingchu" style="margin:0;">
+				    	 	
+				    	 	<ul>
+					          <li class="item-content" style="border:0;">
+					            <div class="item-inner" style="padding:0!important;">
+					               <div class="item-title" style="width:45%;">
+					               		<a href="#"  class="button button-fill color-gray">点击取消选中</a>
+					               </div>
+					               <a href="#" id="contentPrice"  class="item-xx feed_back_money"  style="font-size:16px;width:18%;">单价</a>
+					            	<div class="content-block" style="padding:0;" >
+										<p style="margin:0;">
+											<span id="contentTimes" style="color:#666;">
+												次数
+											</span>
+										</p>
+								  	</div>
+									<div class="content-block" style="padding:0;" id="contentDiv">
+										<p style="margin:0;" >
+											<a href="#"  id="changeThisTimes"  class="button button-fill color-gray">调整</a>
+										</p>
+									 </div>	
+					             </div>
+							  </li>
+							</ul>
+				    	 	
+				    	 
+			                <ul id="baseDisplay">
+			             	   
+	             		 	 </ul>
+             		   	 </div> 
+             		   	 
+            		</div>
+     	 		</div>
+		    </li>
+		    
+		    
+		    <li class="accordion-item"><a href="#" class="item-content item-link">
+		        <div class="item-inner">
+		          <div class="item-title">推荐服务</div>
+		        </div></a>
+		      <div class="accordion-item-content">
+		        <div class="content-block">
+		        
+		        	<div class="list-block chongzhi-qingchu" style="margin:0;">
+		                <ul id="recommendDisplay">
+		             	   
+             		 	 </ul>
+             		 </div>
+		        </div>
+		      </div>
+		    </li>
+		    
+		    
+		    <li class="accordion-item"><a href="#" class="item-content item-link">
+		        <div class="item-inner">
+		          <div class="item-title">免费服务</div>
+		        </div></a>
+		      <div class="accordion-item-content">
+		        <div class="content-block">
+		        
+		        	<div class="list-block chongzhi-qingchu" style="margin:0;">
+		                <ul id="freeDisplay">
+		             	   
+             		 	 </ul>
+             		 </div>
+		        </div>
+		      </div>
+		    </li>
+		    
+		  </ul>
+		</div>
+		
+<a href="#" id="submitResult"  class="button active shendu-submit">提交结果</a>
+
+
+		
+	<!-- 基础服务模板 -->
+	<div style="display:none;">
+	<ul id="baseContentTemplate">
+          <li class="item-content" style="border:0;">
+            <div class="item-inner" style="padding:0!important;">
+               <div class="item-title" style="width:45%;">
+               		<a href="#" id="contentName"  onclick="changeColor(this)" class="button button-fill color-green">{contentName}</a>
+               </div>
+               <a href="#" id="contentPrice"  class="item-xx feed_back_money"  style="font-size:16px;width:18%;">{price}元</a>
+            	<div class="content-block" style="padding:0;width:18%" id="timesDiv" >
+					<p style="margin:0;">
+						<!-- 单选题的子服务id -->
+						<input type="hidden" id="childRadioContentId" value="{childRadioContentId}">
+						<span id="contentTimes" style="color:#666;">
+							{defaultTimes}
+						</span>
+					</p>
+			  	</div>
+				<div class="content-block" style="padding:0;" id="contentDiv">
+					<p style="margin:0;" >
+	               		<!-- 该服务对应的id,方便取值 -->
+						<input type="hidden" id="contentId" value="{contentId}">	               		
+						<!-- 该服务是否有 子服务 -->
+						<input type="hidden" id="contentChildType" value="{contentChildType}">
+						
+						<a href="#" onclick="changeThisTimes(this)" id="changeThisTimes"  class="button button-fill color-orange">调整</a>
+						
+					</p>
+				 </div>	
+             </div>
+		  </li>
+	</ul>
+	</div>
+	
+	<!-- 子服务模板 -->	
+	<div style="display:none">
+		<ul id="childReplace">
+		
+		</ul>
+	</div>	
+	
+	<!-- 免费服务模板 -->
+	<div style="display:none;">
+		<ul id="freeContentTemplate">
+	          <li class="item-content" style="border:0;">
+	            <div class="item-inner" style="padding:0!important;">
+	               <div class="item-title" style="width:45%;">
+	               		<a href="#" id="freeContentName"  class="button button-fill color-green">{contentName}</a>
+	               </div>
+	             </div>
+			  </li>
+		</ul>
+	</div>
+		
+	</div>
+</div>
+	

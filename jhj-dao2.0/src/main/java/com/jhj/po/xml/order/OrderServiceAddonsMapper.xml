@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.order.OrderServiceAddonsMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderServiceAddons" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="order_id" property="orderId" jdbcType="NUMERIC" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="service_addon_id" property="serviceAddonId" jdbcType="NUMERIC" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="item_unit" property="itemUnit" jdbcType="VARCHAR" />
+    <result column="item_num" property="itemNum" jdbcType="SMALLINT" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, order_no, user_id, service_addon_id, price, item_unit, item_num,add_time
+  </sql>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_service_addons
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="selectByOrderNo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from order_service_addons
+		where order_no = #{orderNo,jdbcType=VARCHAR}
+	</select>
+	<resultMap id="ChartMap" type="com.jhj.vo.chart.ChartMapVo">
+		<result column="name" property="name"  />
+		<result column="series" property="series"  />
+		<result column="total" property="total" />
+	</resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_service_addons
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <delete id="deleteByOrderNo" parameterType="java.lang.String" >
+    delete from order_service_addons
+    where order_no = #{orderNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.order.OrderServiceAddons" >
+    insert into order_service_addons (id, order_id, order_no, 
+      user_id, service_addon_id, price, 
+      item_unit, item_num, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=NUMERIC}, #{serviceAddonId,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL}, 
+      #{itemUnit,jdbcType=VARCHAR}, #{itemNum,jdbcType=SMALLINT},  #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderServiceAddons" >
+    insert into order_service_addons
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="serviceAddonId != null" >
+        service_addon_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="itemUnit != null" >
+        item_unit,
+      </if>
+      <if test="itemNum != null" >
+        item_num,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=NUMERIC},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceAddonId != null" >
+        #{serviceAddonId,jdbcType=NUMERIC},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="itemUnit != null" >
+        #{itemUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="itemNum != null" >
+        #{itemNum,jdbcType=SMALLINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderServiceAddons" >
+    update order_service_addons
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=NUMERIC},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceAddonId != null" >
+        service_addon_id = #{serviceAddonId,jdbcType=NUMERIC},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="itemUnit != null" >
+        item_unit = #{itemUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="itemNum != null" >
+        item_num = #{itemNum,jdbcType=SMALLINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderServiceAddons" >
+    update order_service_addons
+    set order_id = #{orderId,jdbcType=NUMERIC},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=NUMERIC},
+      service_addon_id = #{serviceAddonId,jdbcType=NUMERIC},
+      price = #{price,jdbcType=DECIMAL},
+      item_unit = #{itemUnit,jdbcType=VARCHAR},
+      item_num = #{itemNum,jdbcType=SMALLINT},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

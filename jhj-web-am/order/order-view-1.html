@@ -1,0 +1,123 @@
+<div class="pages" style="background: #E5E5E5" >
+	<!-- Page, data-page contains page name-->
+
+	<div data-page="order-view-page1" class="page" style="overflow-y:auto;">
+		<!-- Scrollable page content-->
+		<div class="page-content" style="margin:0;height:792px!important;">
+			<div class="xqlb-neirong"style="margin:0 auto;font-size:18px;">
+				<span id="order_type_name" name="order_type_name">{{order_type_name}}</span>
+				<p id="order_status_name">{{order_status_name}}</p>
+			</div>
+			<div id="order-deep-view" class="list-block" style="margin:0 auto!important;">
+				<ul  style="background: #F8F8F8">
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">订单号:</div>
+								<div class="item-xx-label">
+									<span >{{order_no}}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+					{{#js_compare "this.order_status === 1"}}
+					<li id="adjust_button">
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label"></div>
+								<div class="item-xx" style="color: #666">
+									<div class="row">
+										<div class="col-50">
+											<a href="#" class=" ddxq-tiiaozheng button button-big button-red " >调整订单</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					{{/js_compare}}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">服务时间:</div>
+								<div class="item-xx-label">
+									<span >{{service_date_str}}</span>
+
+								</div>
+							</div>
+						</div>
+
+					</li>
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">服务地址:</div>
+								<div class="item-xx-label" style="width:75%;">
+									<span >{{service_addr}}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+					
+					{{#each list}}
+					{{#js_compare "this.order_id > 0"}}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label" style="width: 33%;">{{service_addon_name}}:</div>
+								<div class="item-xx-label">
+									<ul class="ddtz-jiamubiao1"style="padding-left:0;margin-left:4px!important;">
+										<span id="item_uint" name="item_uint">￥{{price}}/{{item_unit}}</span>
+										<span id="item_num" name="item_num">{{item_num}}</span>
+									</ul>
+								
+								</div>
+							</div>
+						</div>
+					</li>
+					{{/js_compare}}
+					{{/each}}
+					
+					{{#js_compare "this.introduction != null"}}
+					<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">优惠券:</div>
+							<div class="item-xx-label">
+								<span >{{introduction}}</span>
+							</div>
+						</div>
+					</div>
+					</li>
+					{{/js_compare}}
+					
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">订单金额:</div>
+								<div class="item-xx-label">
+									<span >￥{{order_money}}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">备注:</div>
+								<div class="item-xx-label" style="width:75%;">
+									<span >{{remarks}}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+					
+
+					
+				</ul>
+			</div>
+			<a href="tel:{{mobile}}" onclick="if({{mobile}}!=null){return confirm('确定拨打用户电话:{{mobile}}？')}"class="button active hjyh-submit external">呼叫用户</a>
+
+		</div>
+	</div>
+</div>

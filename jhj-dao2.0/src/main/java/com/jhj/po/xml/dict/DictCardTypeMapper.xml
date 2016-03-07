@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.dict.DictCardTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictCardType" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="card_value" property="cardValue" jdbcType="DECIMAL" />
+    <result column="card_pay" property="cardPay" jdbcType="DECIMAL" />
+    <result column="gift_id" property="giftId" jdbcType="NUMERIC" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, card_value, card_pay, gift_id, description, add_time
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_card_type
+    order by id asc
+  </select>
+  
+  <select id="selectByNameAndOtherId" resultMap="BaseResultMap"
+		parameterType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from dict_card_type
+		where 1=1
+
+		<if test="name != null" >
+			and name = #{name,jdbcType=VARCHAR}
+		</if>
+
+		<if test="id != null" >
+		     and id != #{id,jdbcType=NUMERIC}
+		 </if>
+		 limit 1
+	</select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_card_type
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dict_card_type
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.dict.DictCardType" >
+    insert into dict_card_type (id, name, card_value,
+      card_pay, gift_id, description, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{cardValue,jdbcType=DECIMAL},
+      #{cardPay,jdbcType=DECIMAL}, #{giftId,jdbcType=NUMERIC}
+      #{description,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictCardType" >
+    insert into dict_card_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="cardValue != null" >
+        card_value,
+      </if>
+      <if test="cardPay != null" >
+        card_pay,
+      </if>
+      <if test="giftId != null" >
+        gift_id,
+      </if>      
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cardValue != null" >
+        #{cardValue,jdbcType=DECIMAL},
+      </if>
+      <if test="cardPay != null" >
+        #{cardPay,jdbcType=DECIMAL},
+      </if>
+      <if test="giftId != null" >
+        #{giftId,jdbcType=NUMERIC},
+      </if>       
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictCardType" >
+    update dict_card_type
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cardValue != null" >
+        card_value = #{cardValue,jdbcType=DECIMAL},
+      </if>
+      <if test="cardPay != null" >
+        card_pay = #{cardPay,jdbcType=DECIMAL},
+      </if>
+      <if test="giftId != null" >
+        gift_id = #{giftId,jdbcType=NUMERIC},
+      </if>       
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictCardType" >
+    update dict_card_type
+    set name = #{name,jdbcType=VARCHAR},
+      card_value = #{cardValue,jdbcType=DECIMAL},
+      card_pay = #{cardPay,jdbcType=DECIMAL},
+      description = #{description,jdbcType=VARCHAR},
+      gift_id = #{giftId,jdbcType=NUMERIC}
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

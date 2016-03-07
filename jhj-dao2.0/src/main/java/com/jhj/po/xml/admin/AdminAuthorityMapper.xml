@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.admin.AdminAuthorityMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.admin.AdminAuthority" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="version" property="version" jdbcType="NUMERIC" />
+    <result column="enable" property="enable" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="level_code" property="levelCode" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="NUMERIC" />
+    <result column="the_value" property="theValue" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="match_url" property="matchUrl" jdbcType="VARCHAR" />
+    <result column="item_icon" property="itemIcon" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, version, enable, name, level_code, position, the_value, url, match_url, item_icon,
+    parent_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_authority
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+
+  <select id="selectMaxId"  resultType="java.lang.Integer">
+    select
+    	max(id)
+    from admin_authority
+  </select>
+
+  <select id="selectByIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from admin_authority
+    where id in
+ 	<foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+        #{item}
+    </foreach>
+
+    order by id asc
+  </select>
+  <select id="selectByParentId" resultMap="BaseResultMap"  parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+     from admin_authority
+    where parent_id = #{parentId,jdbcType=NUMERIC}
+	</select>
+<!-- 查出所有的孩子节点权限 -->
+  <select id="selectChildAdminAuthorities" resultMap="BaseResultMap" >
+    select a.*
+     from admin_authority a,admin_authority b
+     where b.parent_id= '0' and a.parent_id = b.id
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from admin_authority
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <!--根据partnerId删除节点  -->
+  <delete id="deleteByPartnerId" parameterType="java.lang.Long" >
+    delete from admin_authority
+    where parent_id = #{parent_id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.admin.AdminAuthority" >
+    insert into admin_authority (id, version, enable,
+      name, level_code, position,
+      the_value, url, match_url,
+      item_icon, parent_id)
+    values (#{id,jdbcType=NUMERIC}, #{version,jdbcType=NUMERIC}, #{enable,jdbcType=NUMERIC},
+      #{name,jdbcType=VARCHAR}, #{levelCode,jdbcType=VARCHAR}, #{position,jdbcType=NUMERIC},
+      #{theValue,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{matchUrl,jdbcType=VARCHAR},
+      #{itemIcon,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.admin.AdminAuthority" >
+    insert into admin_authority
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="levelCode != null" >
+        level_code,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="theValue != null" >
+        the_value,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="matchUrl != null" >
+        match_url,
+      </if>
+      <if test="itemIcon != null" >
+        item_icon,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=NUMERIC},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="levelCode != null" >
+        #{levelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=NUMERIC},
+      </if>
+      <if test="theValue != null" >
+        #{theValue,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="matchUrl != null" >
+        #{matchUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="itemIcon != null" >
+        #{itemIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.admin.AdminAuthority" >
+    update admin_authority
+    <set >
+      <if test="version != null" >
+        version = #{version,jdbcType=NUMERIC},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="levelCode != null" >
+        level_code = #{levelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=NUMERIC},
+      </if>
+      <if test="theValue != null" >
+        the_value = #{theValue,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="matchUrl != null" >
+        match_url = #{matchUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="itemIcon != null" >
+        item_icon = #{itemIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.admin.AdminAuthority" >
+    update admin_authority
+    set version = #{version,jdbcType=NUMERIC},
+      enable = #{enable,jdbcType=NUMERIC},
+      name = #{name,jdbcType=VARCHAR},
+      level_code = #{levelCode,jdbcType=VARCHAR},
+      position = #{position,jdbcType=NUMERIC},
+      the_value = #{theValue,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      match_url = #{matchUrl,jdbcType=VARCHAR},
+      item_icon = #{itemIcon,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

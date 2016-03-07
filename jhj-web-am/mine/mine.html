@@ -1,0 +1,118 @@
+<div data-page="am-mine-page" class="page navbar-fixed"
+	style="background-color:#E5E5E5E!important;overflow:auto">
+	<div class="page-content" style="margin:0;height:792px!important;">
+		<div class="my-img">
+			{{#js_compare "this.head_img =='' "}}
+				<img src="./img/i-f7.png" alt="">
+			{{/js_compare}}
+			
+			{{#js_compare "this.head_img !='' "}}
+				<img src="{{head_img}}" alt="">
+			{{/js_compare}}
+			
+			
+			<span id="nameStaff">{{name}}</span>
+			<p id="sumMoney">本月流水￥{{sum_money}}元</p>
+		</div>
+		<div class="list-block" style="margin: 0 auto;">
+			<ul style="background: #F8F8F8;">
+			
+				<li class="item-content" style="border: 0">
+					<div class="item-inner">
+						<div class="item-title labels label" >所属门店:</div>
+						<div class="item-xx-label" >
+							<span id="orgName-span" >{{org_name}}</span>
+						</div>
+					</div>
+				</li>
+				
+				<li class="item-content">
+					<div class="item-inner">
+						<div class="item-title labels label" >身份证号:</div>
+						<div class="item-xx-label" >
+							<span id="cardId-span" >{{card_id}}</span>
+						</div>
+					</div>
+				</li>
+				
+				<li class="item-content">
+					<div class="item-inner">
+						<div class="item-title  label" >年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄:</div>
+						<div class="item-xx-label"  >
+							<span id="age" >{{real_age}}岁</span>
+						</div>
+					</div>
+				</li>
+				
+				<li class="item-content">
+					<div class="item-inner">
+						<div class="item-title  label" >星&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;座:</div>
+						<div class="item-xx-label"  >
+							<span id="astro-span" >{{astro_name}}</span>
+						</div>
+					</div>
+				</li>
+				
+				 
+				 {{#js_compare "this.sex == 0"}}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别:</div>
+								<div class="item-xx-label">
+									<span id="sex-span">男</span>
+								</div>
+							</div>
+						</div>
+					</li>
+                     {{/js_compare}}
+                     {{#js_compare "this.sex == 1"}}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别:</div>
+								<div class="item-xx-label">
+									<span id="sex-span">女</span>
+								</div>
+							</div>
+						</div>
+					</li>
+                     {{/js_compare}}
+				 
+				<li class="item-content">
+					<div class="item-inner">
+						<div class="item-title  label" >血&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:</div>
+						<div class="item-xx-label"  >
+							<span >{{blood_type}}</span>
+						</div>
+					</div>
+				</li>
+				
+				<li class="item-content">
+						<div class="item-inner">
+							<div class="item-title  label" >技&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;能:</div>
+							<div class="item-xx-label" >
+								{{#each tag_list}}
+                            		<a href="#" >{{tag_name}}</a>
+                            	{{/each}}
+							</div>
+						</div>
+				</li>
+				
+				<li class="item-content">
+					<div class="item-inner">
+						<div class="item-title label">自我评价:</div>
+						<div class="item-xx-label" style="width:75%;">
+							<span id="intro-span" >{{intro}}</span>
+						</div>
+					</div>
+				</li>
+				
+			</ul>
+		</div>
+		<a href="#" id="getStaffDetial" class="button active kehuzl-submit"
+			style="background: #FFA500; border: 1px solid #FFA500;">查看管理阿姨</a>	
+			<a href="#"  id="sec-logout" class="button active  kehuzl-submit" style="border:1px solid #007AFF;">退出当前账号</a>
+	</div>
+</div>
+</div>

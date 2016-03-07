@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.msg.MsgReadedMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.msg.MsgReaded" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_type" property="userType" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="msg_id" property="msgId" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_type, user_id, msg_id, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from msg_readed
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  
+  <select id="selectByUserIdAndMsgId" resultMap="BaseResultMap"  >
+  select 
+    <include refid="Base_Column_List" />
+    from msg_readed
+    where user_id = #{0}
+    and msg_id = #{1}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from msg_readed
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.msg.MsgReaded" >
+    insert into msg_readed (id, user_type, user_id, 
+      msg_id, add_time)
+    values (#{id,jdbcType=NUMERIC}, #{userType,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, 
+      #{msgId,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.msg.MsgReaded" >
+    insert into msg_readed
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="msgId != null" >
+        msg_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.msg.MsgReaded" >
+    update msg_readed
+    <set >
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="msgId != null" >
+        msg_id = #{msgId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.msg.MsgReaded" >
+    update msg_readed
+    set user_type = #{userType,jdbcType=NUMERIC},
+      user_id = #{userId,jdbcType=NUMERIC},
+      msg_id = #{msgId,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

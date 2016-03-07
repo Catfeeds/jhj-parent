@@ -1,0 +1,50 @@
+<div class="pages">
+	<div data-page="order-remind-list-page" class="page" style="overflow:auto;background:#E5E5E5;">
+		<div class="page-content" id="nowScroll" style="min-height:500px;height:auto!important;padding-bottom:60px!important;">
+			  <div class="dangqian-list">
+              	<div class="dangqian-box" id="btn-order-now">我的提醒</div>
+              	<div class="history-box" id="btn-order-history">历史提醒</div>
+              	
+              </div>
+			
+				<!-- 当前订单，  在 同一个  tabs展示两个 tab ，无限滚动会有问题。
+				
+				选择 将  当前 订单  和 历史订单做成两个 单独 的页面
+			 -->
+			
+			
+				<div class="list-block" id="card-remind-list">
+					<ul style="background:#E5E5E5;">
+	
+					</ul>
+				</div>
+				<div id="more">
+					<a href="#" id="order-remind-more" class="button active hjyh-submit">点击加载更多</a>
+				</div>
+			
+			
+			
+	
+	
+			<!-- 每块 card的展示内容  模板 -->
+			 <div id="order-remind-list" style="display: none">
+				<!--  card即为连接，跳转到订单详情-->
+				<a class="order-info-link" href="#" onclick="hrefToRemindView('{order_no}')">
+					<li class="list-card">
+						<div class="list-card1">
+	
+							{order_type_name}
+							<p style="margin:0;margin-right: 30px;color:#ED6B00;float:right;">{order_status_name}</p>
+							
+						</div>
+						<div class="list-card2">
+							<div class="list-card2-1">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题：{service_content}</div>
+							<div class="list-card2-2">提醒时间：{service_date}</div>
+						</div>
+					</li>
+				</a>
+			</div>
+		</div>	
+	</div>
+</div>
+	

@@ -1,0 +1,92 @@
+<div data-page="survey-result-price-page" class="page" style="background-color:#E5E5E5!important;overflow:auto">
+	
+	<div class="page-content"style="margin:0;">
+		<div style="margin:0" class="list-block">
+			<ul style="margin-top:15px;background:#F8F8F8;">
+				<li>
+					<div class="item-content">
+						<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+							<div class="item-title">价位汇总</div>
+						</div>
+					</div>
+				</li>
+			<ul>
+		</div>
+		
+		<div style="margin:0" class="list-block">
+				<ul style="margin-top:15px;background:#F8F8F8;">
+					<li>
+						<div class="item-content">
+							<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+								<div class="item-title">预计年消费</div>
+								<div class="item-title" id="sumPrice"></div>
+							</div>
+						</div>
+					</li>
+				<ul>
+		</div>
+		
+		<!-- 年支付 -->
+		<input type="hidden" id="yearDiscountPrice" value="">
+		<input type="hidden" id="yearPriceByMonth" value="">
+		
+		<!-- 半年支付  -->
+		<input type="hidden" id="quarterDiscountPrice" value="">
+		<input type="hidden" id="quarterPriceByMonth" value="">
+		
+		<!-- 月支付 -->
+		<input type="hidden" id="monthDiscountPrice" value="">
+		<input type="hidden" id="monthPriceByMonth" value="">
+		
+		
+		
+		<div style="margin:0" class="list-block">
+			<ul style="margin-top:15px;background:#F8F8F8;">
+				<li>
+					<div class="item-content">
+						<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+							<div class="item-title label">付款方式</div>
+							<div class="item-xx">
+								 
+								 <select name="payTypeSelect">
+							              <option id="monthRadio" value="">月付(推荐)</option>
+							              <option id="quarterRadio" value="">半年</option>
+							              <option id="yearRadio" value="">年付</option>
+							     </select>
+							</div>
+						</div>
+					</div>
+				</li>
+			<ul>
+		</div>
+				
+		<div style="margin:0" class="list-block">
+			<ul style="margin-top:15px;background:#F8F8F8;">
+				<li>
+					<div class="item-content">
+						<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+							<div class="item-title">优惠价格</div>
+							<div class="item-title" id="discountPrice"></div>
+						</div>
+					</div>
+				</li>
+			<ul>
+		</div>
+		
+		<div style="margin:0" class="list-block">
+			<ul style="margin-top:15px;background:#F8F8F8;">
+				<li>
+					<div class="item-content">
+						<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+							<div class="item-title">每月消费</div>
+							<div class="item-title" id="monthPrice"></div>
+						</div>
+					</div>
+				</li>
+			<ul>
+		</div>
+			
+		<a href="#" id="completeSurvey"  class="button active shendu-submit">完成订制</a>
+	
+	</div>
+</div>

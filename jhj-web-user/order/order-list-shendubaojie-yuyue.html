@@ -1,0 +1,92 @@
+
+<!-- Status bar overlay for full screen mode (PhoneGap) -->
+<div class="statusbar-overlay"></div>
+<!-- Views -->
+<div class="views">
+	<!-- Your main view, should have "view-main" class -->
+	<div class="view view-main">
+		<!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
+		<div class="pages navbar-through toolbar-through">
+			<!-- Page, "data-page" contains page name -->
+			<div data-page="order-list-shendubaojie-yuyue" class="page"
+				style="background: #E5E5E5; overflow: auto;">
+				<!-- Scrollable page content -->
+				<div class="page-content shendu-fl">
+					<form id="order-exp-clean-form">
+						<div class="shendu-miaoshu">请确认你的服务项目</div>
+						<div class="shendu-fl-yy">
+							<div class="list-block">
+								<!-- First group-->
+								<div class="list-group">
+									<ul>
+										{{#each list}}
+										<li class="item-content" id="order-list-part">
+											<div class="item-inner">
+												<div class="item-title label">{{name}}</div>
+												<div class="item-xx">{{default_num}}
+													{{item_unit}}(￥{{price}}/{{item_unit}})</div>
+											</div>
+										</li> 
+										{{/each}}
+										<li class="item-content" style="background: #F8F8F8;">
+											<div class="item-inner">
+												<div class="item-title label">参考价</div>
+												<div class="item-xx">
+													￥ <input readonly="readonly"
+														style="width: 35%; font-size: 18px; border: 0; background: #F8F8F8; margin-left: 10px;"
+														value="0" id="order_price">
+												</div>
+											</div>
+										</li>
+								</div>
+							</div>
+							</ul>
+							<a href="order/shendu-list-shuoming.html"><p style="font-size: 18px; color: #999; padding-left: 15px;">点击此处查看服务内容</p>
+							<div class="list-block"></a>
+								<ul>
+									<div class="item-content">
+										<div class="item-inner">
+											<div class="item-title label">服务时间:</div>
+											<div class="item-xx">
+												<span class="item-xx" id="serviceDateSelect" name="serviceDateSelect" style="word-wrap:break-word;" onclick="serviceDateSelect()"></span>
+												<input type="hidden" id="serviceDate" name="serviceDate" value="">
+											</div>
+										</div>
+									</div>
+									</li>
+									</li>
+									<li>
+										<a href="user/mine-addr-list.html" class="item-link"
+										id="addrSelect">
+
+											<div class="item-content" id="addsss">
+												<div class="item-inner">
+													<div class="item-title label">服务地址:</div>
+													<!-- 原来的id  addrName 与钟点工页面  有冲突，替换为独立的 id -->
+													<div class="item-xx" id="shendubaojiAddrName"style="margin-left:10px;width:65%;word-wrap:break-word;">请选择服务地址</div>
+												</div>
+											</div> <input type="hidden" id="addr_ids" name="addr_id" value="">
+										</a>
+									</li>
+									</li>
+
+									<li class="item-content">
+										<div class="item-inner">
+											<div class="item-title label" style="margin-top: -61px;">备&nbsp;&nbsp;&nbsp;&nbsp;注:</div>
+											<div class="item-xx" style="width:65%;">
+												<textarea rows="4" id="exp_clean_remarks" name="remarks"
+													placeholder="备注" maxLength="200"></textarea>
+											</div>
+										</div>
+									</li>
+
+								</ul>
+							</div>
+						</div>
+						<a href="#" id="order-exp-clean-submit"class="button active shendu-submit">预约</a>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.user.UserLoginedMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.user.UserLogined" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="login_from" property="loginFrom" jdbcType="NUMERIC" />
+    <result column="login_ip" property="loginIp" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <resultMap id="ChartMap" type="com.jhj.vo.chart.ChartMapVo">
+		<result column="series" property="series"  />
+		<result column="total" property="total" />
+	</resultMap>
+	
+ <!-- 有过登录记录的 用户的 手机号的 集合 （无重复） -->
+   <select id="selectDistinctAll" resultType="java.lang.String">
+   	 select
+   		DISTINCT mobile
+   	 from 
+   	 	user_logined	
+   
+   </select>	
+	
+	
+  <sql id="Base_Column_List" >
+    id, user_id, mobile, login_from, login_ip, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_logined
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_logined
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.user.UserLogined" >
+    insert into user_logined (id, user_id, mobile, 
+      login_from, login_ip, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, 
+      #{loginFrom,jdbcType=NUMERIC}, #{loginIp,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.user.UserLogined" >
+    insert into user_logined
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="loginFrom != null" >
+        login_from,
+      </if>
+      <if test="loginIp != null" >
+        login_ip,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="loginFrom != null" >
+        #{loginFrom,jdbcType=NUMERIC},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.UserLogined" >
+    update user_logined
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="loginFrom != null" >
+        login_from = #{loginFrom,jdbcType=NUMERIC},
+      </if>
+      <if test="loginIp != null" >
+        login_ip = #{loginIp,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.UserLogined" >
+    update user_logined
+    set user_id = #{userId,jdbcType=NUMERIC},
+      mobile = #{mobile,jdbcType=CHAR},
+      login_from = #{loginFrom,jdbcType=NUMERIC},
+      login_ip = #{loginIp,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+             <!--  当月活跃总人数-->
+   <select id="selectUserLoginTotalByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series, 
+			   COUNT(*) AS total 
+			   FROM user_logined
+		WHERE 1=1
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	   <select id="selectUserLoginTotalByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c") AS series, 
+			   COUNT(*) AS total 
+			   FROM user_logined
+		WHERE 1=1
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+	   <select id="selectUserLoginTotalByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+			   COUNT(*) AS total 
+			   FROM user_logined
+		WHERE 1=1
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		GROUP BY series ORDER BY series ASC
+	</select>
+        <!--截止到当前活跃总人数-->
+   <select id="selectUserAllLoginTotalByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series, 
+			   COUNT(*) AS total 
+			   FROM user_logined
+		WHERE 1=1
+		<!-- <if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		ORDER BY series ASC
+	</select>
+	   <select id="selectUserAllLoginTotalByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT FROM_UNIXTIME(add_time, "%c") AS series, 
+			   COUNT(*) AS total 
+			   FROM user_logined
+		WHERE 1=1
+		<!-- <if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		 ORDER BY series ASC
+	</select>
+	   <select id="selectUserAllLoginTotalByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+			   COUNT(*) AS total 
+			   FROM user_logined
+		WHERE 1=1
+		<!-- <if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if> -->
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+				
+		ORDER BY series ASC
+	</select>
+  
+  
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.university.StudyLearningMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.university.StudyLearning" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jhj.po.model.university.StudyLearning" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, service_type_id, add_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  
+  <!-- 得到所有的 培训资料 对象 -->
+  <select id="selectAllLearning" resultMap="ResultMapWithBLOBs"> 
+  	select 
+	    <include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	from study_learning
+  </select>
+  
+  
+  <!-- 根据 服务类型，得到 对应的 培训资料 -->
+  <select id="selectByServiceTypeId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long">
+  	select 
+	    <include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	from study_learning
+	where
+		service_type_id = #{serviceTypeId,jdbcType=NUMERIC}    
+  </select>
+  
+  
+  <!-- 平台：培训学习列表 -->
+  <select id="selectByListPage" resultMap="ResultMapWithBLOBs">
+  	  	select 
+	    <include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	    from study_learning
+  		order by add_time desc
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from study_learning
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from study_learning
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.university.StudyLearning" >
+    insert into study_learning (id, service_type_id, add_time, 
+      content)
+    values (#{id,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.university.StudyLearning" >
+    insert into study_learning
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.StudyLearning" >
+    update study_learning
+    <set >
+      <if test="serviceTypeId != null" >
+        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jhj.po.model.university.StudyLearning" >
+    update study_learning
+    set service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.StudyLearning" >
+    update study_learning
+    set service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

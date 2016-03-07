@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyUserRefQuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyUserRefQuestion" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="q_id" property="qId" jdbcType="NUMERIC" />
+    <result column="option_id" property="optionId" jdbcType="NUMERIC" />
+    <result column="content_id" property="contentId" jdbcType="NUMERIC" />
+    <result column="result_no" property="resultNo" jdbcType="VARCHAR" />
+    <result column="times" property="times" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="content_child_id" property="contentChildId" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, q_id, option_id, content_id, result_no, times, add_time, content_child_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_user_ref_question
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_user_ref_question
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyUserRefQuestion" >
+    insert into survey_user_ref_question (id, user_id, q_id, 
+      option_id, content_id, result_no, 
+      times, add_time, content_child_id
+      )
+    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{qId,jdbcType=NUMERIC}, 
+      #{optionId,jdbcType=NUMERIC}, #{contentId,jdbcType=NUMERIC}, #{resultNo,jdbcType=VARCHAR}, 
+      #{times,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{contentChildId,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyUserRefQuestion" >
+    insert into survey_user_ref_question
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="qId != null" >
+        q_id,
+      </if>
+      <if test="optionId != null" >
+        option_id,
+      </if>
+      <if test="contentId != null" >
+        content_id,
+      </if>
+      <if test="resultNo != null" >
+        result_no,
+      </if>
+      <if test="times != null" >
+        times,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="contentChildId != null" >
+        content_child_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="qId != null" >
+        #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="optionId != null" >
+        #{optionId,jdbcType=NUMERIC},
+      </if>
+      <if test="contentId != null" >
+        #{contentId,jdbcType=NUMERIC},
+      </if>
+      <if test="resultNo != null" >
+        #{resultNo,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        #{times,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="contentChildId != null" >
+        #{contentChildId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyUserRefQuestion" >
+    update survey_user_ref_question
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="qId != null" >
+        q_id = #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="optionId != null" >
+        option_id = #{optionId,jdbcType=NUMERIC},
+      </if>
+      <if test="contentId != null" >
+        content_id = #{contentId,jdbcType=NUMERIC},
+      </if>
+      <if test="resultNo != null" >
+        result_no = #{resultNo,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        times = #{times,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="contentChildId != null" >
+        content_child_id = #{contentChildId,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyUserRefQuestion" >
+    update survey_user_ref_question
+    set user_id = #{userId,jdbcType=NUMERIC},
+      q_id = #{qId,jdbcType=NUMERIC},
+      option_id = #{optionId,jdbcType=NUMERIC},
+      content_id = #{contentId,jdbcType=NUMERIC},
+      result_no = #{resultNo,jdbcType=VARCHAR},
+      times = #{times,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      content_child_id = #{contentChildId,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

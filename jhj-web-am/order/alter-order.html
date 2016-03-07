@@ -1,0 +1,64 @@
+<!-- We don't need full layout here, because this page will be parsed with Ajax-->
+<!-- Top Navbar-->
+
+<div class="pages"style="background:#E5E5E5">
+	<!-- Page, data-page contains page name-->
+	<div data-page="alter-order-page" class="page"style="background-color:#E5E5E5E!important;overflow:auto;">
+		<!-- Scrollable page content-->
+		<div class="page-content"style="margin:0;">
+				<div class="xqlb-neirong">
+					<span id="order_type_name_for_am"></span>
+					<p id="order_status_name_for_am"></p>
+				</div>		
+			<form id="order-alert-form" class="list-block">
+				<ul class="ddxq-xx"style="background:#F8F8F8">
+					<li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">订单号:</div>
+				          <div class="item-xx">
+				          	
+				          	<input type="text"  id="order_no" name="order_no" placeholder="订单号" readonly="readonly" style = "padding-bottom:0;">
+				          	
+				          </div>
+				        </div>
+				      </div>
+				    </li>
+				    <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label"style="margin-top:-60px;">服务要求:</div>
+				          <div class="item-xx" style="width:75%;">
+									<textarea  rows="5" type="text"  id="service_content" name="service_content" placeholder="服务要求" maxLength="200"></textarea>
+				          </div>
+				        </div>
+				      </div>
+				    </li>
+
+				  <!--   <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label"style="width:90px;">优惠券:</div>
+				          <div class="item-xx" style="margin-right:110px;color:#666">
+				            使用20元优惠券
+				          </div>
+				        </div>
+				      </div>
+				    </li> -->
+				    <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">订单金额:</div>
+				           <div class="item-xx">
+								<input type="text" id="order_money" name="order_money" maxlength="5" onkeyup="clearNoNum(this)" placeholder="订单金额">
+				          </div>
+				        </div>
+				      </div>
+				    </li>
+				</ul>
+			</form>
+			<a href="#" id="order-adjust-submit" class="button active kehuzl-submit">确认调整</a>
+<!-- 			<a href="#" class="button active ddxq1-submit">呼叫用户</a>
+ -->		</div>
+	</div>
+</div>

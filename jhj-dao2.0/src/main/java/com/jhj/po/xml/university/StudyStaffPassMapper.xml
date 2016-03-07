@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.university.StudyStaffPassMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.university.StudyStaffPass" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+    <result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+    <result column="bank_id" property="bankId" jdbcType="NUMERIC" />
+    <result column="total_need" property="totalNeed" jdbcType="NUMERIC" />
+    <result column="total_right" property="totalRight" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, staff_id, service_type_id, bank_id, total_need, total_right, add_time, update_time
+  </sql>
+  
+  <!-- 根据staffId 和 serviceTypeId 得到 ，服务人员某个类别的考试情况-->
+  <select id="selectByStaffIdAndServiceTypeId" resultMap="BaseResultMap" >
+  	select 
+    <include refid="Base_Column_List" />
+    from study_staff_pass
+    where 
+    	staff_id = #{staffId,jdbcType=NUMERIC}
+    and
+    	service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+  </select>
+  
+  <!-- 根据 staffId，查找所有 服务类别的 考试情况 -->
+  <select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+    <include refid="Base_Column_List" />
+    from study_staff_pass
+    where 
+    	staff_id = #{staffId,jdbcType=NUMERIC}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from study_staff_pass
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from study_staff_pass
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.university.StudyStaffPass" >
+    insert into study_staff_pass (id, staff_id, service_type_id, 
+      bank_id, total_need, total_right, 
+      add_time, update_time)
+    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC}, 
+      #{bankId,jdbcType=NUMERIC}, #{totalNeed,jdbcType=NUMERIC}, #{totalRight,jdbcType=NUMERIC}, 
+      #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.university.StudyStaffPass" >
+    insert into study_staff_pass
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="staffId != null" >
+        staff_id,
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="totalNeed != null" >
+        total_need,
+      </if>
+      <if test="totalRight != null" >
+        total_right,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="staffId != null" >
+        #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="totalNeed != null" >
+        #{totalNeed,jdbcType=NUMERIC},
+      </if>
+      <if test="totalRight != null" >
+        #{totalRight,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.StudyStaffPass" >
+    update study_staff_pass
+    <set >
+      <if test="staffId != null" >
+        staff_id = #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="totalNeed != null" >
+        total_need = #{totalNeed,jdbcType=NUMERIC},
+      </if>
+      <if test="totalRight != null" >
+        total_right = #{totalRight,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.StudyStaffPass" >
+    update study_staff_pass
+    set staff_id = #{staffId,jdbcType=NUMERIC},
+      service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      bank_id = #{bankId,jdbcType=NUMERIC},
+      total_need = #{totalNeed,jdbcType=NUMERIC},
+      total_right = #{totalRight,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

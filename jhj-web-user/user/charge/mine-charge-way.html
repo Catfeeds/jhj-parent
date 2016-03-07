@@ -1,0 +1,63 @@
+
+<div class="pages">
+	<div data-page="mine-charge-way" class="page navbar-fixed" style="background-color: #E5E5E5E !important;">
+		<div class="page-content" style="margin: 0; color: #999;">
+			<span class="fangshiwenzi">信息核对</span>
+			<form id="order-view" class="list-block" style="margin: 0 auto!important;">
+				<ul style="background: #F8F8F8">
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">充值账户:</div>
+								<div class="item-xx">
+									<span id="mobile"></span>
+								</div>
+							</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">充值金额:</div>
+								<div class="item-xx">
+									<span id="card_pay_view"></span>元
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+			<span class="fangshiwenzi">支付方式</span>
+              <div id="order-view" class="list-block chongzhi-qingchu"style="margin:0 auto!important;">
+                <ul style="background:#F8F8F8">
+                    <!-- <li>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title label"style="width:196px!important;line-height:20px;">
+                            <img src="img/icons/weixin.png" alt=""style="height:40px;margin-left:-5px;">
+                            <div style="float:left;margin-left:110px;margin-top:-36px;">微信支付</div>
+                          </div>
+                          <div style="margin-right:10px;color:#666">
+                            <img src="img/icons/duigou-green.png" alt="">
+                          </div>
+                        </div>
+                      </div>
+                    </li> -->
+                    <li>
+						<label class="label-checkbox item-content"style="background:#F8F8F8;">
+							<div class="item-media"><img src="img/icons/weixin.png"style="width:50px;"></div>
+							<div class="item-inner">
+								<div class="item-title"style="margin-left:-26px;color:#000;">微信支付</div>
+								<input type="hidden"  value="2"/>
+								<img  src="img/icons/duigou-green.png" id="order_pay_type" name="order_pay_type"/> 
+							</div>
+						</label>
+					</li>
+                </ul>
+              </div>
+              <a href="#" class="button active my-submit chongzhi-submit"style="background:#5EA6EE;border:1px solid #5EA6EE;">确认支付</a>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.user.UserSmsTokenMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.user.UserSmsToken" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="sms_type" property="loginFrom" jdbcType="NUMERIC" />
+    <result column="sms_token" property="smsToken" jdbcType="CHAR" />
+    <result column="is_suceess" property="isSuceess" jdbcType="NUMERIC" />
+    <result column="sms_return" property="smsReturn" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, mobile, sms_type, sms_token, is_suceess, sms_return, add_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_sms_token
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="selectByMobileAndType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_sms_token
+    where mobile = #{mobile} and sms_type = #{userType}
+    ORDER BY add_time DESC
+    LIMIT 0,1
+  </select>
+<!--     <select id="selectUserSmsTokenByMobile" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select
+  		<include refid="Base_Column_List" />
+  		from user_sms_token
+  		where
+  		mobile = #{mobile,jdbcType=CHAR}
+  </select> -->
+  
+     <select id="selectUserSmsTokenByMobile" resultMap="BaseResultMap" parameterType="com.jhj.vo.UsersSmsTokenVo">
+  	select
+    <include refid="Base_Column_List" />
+    from user_sms_token
+ 	where 1=1 
+ 
+	<if test="mobile !=null and mobile !='' ">
+		and mobile like '%${mobile}%' 
+	</if>
+
+      
+    order by add_time desc    
+
+  </select>
+   <select id="selectAll" resultMap="BaseResultMap" parameterType="com.jhj.vo.UsersSmsTokenVo">
+  	select
+    <include refid="Base_Column_List" />
+    from user_sms_token
+ 	where 1=1 
+    order by add_time desc    
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_sms_token
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.user.UserSmsToken" >
+    insert into user_sms_token (id, user_id, mobile, 
+      sms_type, sms_token, is_suceess, 
+      sms_return, add_time, update_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, 
+      #{loginFrom,jdbcType=NUMERIC}, #{smsToken,jdbcType=CHAR}, #{isSuceess,jdbcType=NUMERIC}, 
+      #{smsReturn,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.user.UserSmsToken" >
+    insert into user_sms_token
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="loginFrom != null" >
+        sms_type,
+      </if>
+      <if test="smsToken != null" >
+        sms_token,
+      </if>
+      <if test="isSuceess != null" >
+        is_suceess,
+      </if>
+      <if test="smsReturn != null" >
+        sms_return,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="loginFrom != null" >
+        #{loginFrom,jdbcType=NUMERIC},
+      </if>
+      <if test="smsToken != null" >
+        #{smsToken,jdbcType=CHAR},
+      </if>
+      <if test="isSuceess != null" >
+        #{isSuceess,jdbcType=NUMERIC},
+      </if>
+      <if test="smsReturn != null" >
+        #{smsReturn,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.UserSmsToken" >
+    update user_sms_token
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="loginFrom != null" >
+        sms_type = #{loginFrom,jdbcType=NUMERIC},
+      </if>
+      <if test="smsToken != null" >
+        sms_token = #{smsToken,jdbcType=CHAR},
+      </if>
+      <if test="isSuceess != null" >
+        is_suceess = #{isSuceess,jdbcType=NUMERIC},
+      </if>
+      <if test="smsReturn != null" >
+        sms_return = #{smsReturn,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.UserSmsToken" >
+    update user_sms_token
+    set user_id = #{userId,jdbcType=NUMERIC},
+      mobile = #{mobile,jdbcType=CHAR},
+      sms_type = #{loginFrom,jdbcType=NUMERIC},
+      sms_token = #{smsToken,jdbcType=CHAR},
+      is_suceess = #{isSuceess,jdbcType=NUMERIC},
+      sms_return = #{smsReturn,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

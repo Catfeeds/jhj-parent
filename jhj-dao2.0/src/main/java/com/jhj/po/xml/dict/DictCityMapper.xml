@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhj.po.dao.dict.DictCityMapper">
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictCity">
+    <id column="city_id" jdbcType="NUMERIC" property="cityId" />
+    <result column="zip_code" jdbcType="VARCHAR" property="zipCode" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="province_id" jdbcType="NUMERIC" property="provinceId" />
+    <result column="is_enable" jdbcType="NUMERIC" property="isEnable" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    city_id, zip_code, name, province_id, is_enable
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dict_city
+    where city_id = #{cityId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from dict_city
+    where city_id = #{cityId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.dict.DictCity">
+    insert into dict_city (city_id, zip_code, name, 
+      province_id, is_enable)
+    values (#{cityId,jdbcType=NUMERIC}, #{zipCode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{provinceId,jdbcType=NUMERIC}, #{isEnable,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictCity">
+    insert into dict_city
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cityId != null">
+        city_id,
+      </if>
+      <if test="zipCode != null">
+        zip_code,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="provinceId != null">
+        province_id,
+      </if>
+      <if test="isEnable != null">
+        is_enable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cityId != null">
+        #{cityId,jdbcType=NUMERIC},
+      </if>
+      <if test="zipCode != null">
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null">
+        #{provinceId,jdbcType=NUMERIC},
+      </if>
+      <if test="isEnable != null">
+        #{isEnable,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictCity">
+    update dict_city
+    <set>
+      <if test="zipCode != null">
+        zip_code = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null">
+        province_id = #{provinceId,jdbcType=NUMERIC},
+      </if>
+      <if test="isEnable != null">
+        is_enable = #{isEnable,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where city_id = #{cityId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictCity">
+    update dict_city
+    set zip_code = #{zipCode,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      province_id = #{provinceId,jdbcType=NUMERIC},
+      is_enable = #{isEnable,jdbcType=NUMERIC}
+    where city_id = #{cityId,jdbcType=NUMERIC}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dict_city
+    order by city_id asc
+  </select>
+</mapper>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.order.OrderCardsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderCards">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="card_order_no" property="cardOrderNo" jdbcType="VARCHAR" />
+		<result column="card_type" property="cardType" jdbcType="NUMERIC" />
+		<result column="card_money" property="cardMoney" jdbcType="DECIMAL" />
+		<result column="card_pay" property="cardPay" jdbcType="DECIMAL" />
+		<result column="pay_type" property="payType" jdbcType="NUMERIC" />
+		<result column="order_status" property="orderStatus" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, mobile, card_order_no, card_type, card_money,
+		card_pay, pay_type, order_status,
+		add_time, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from order_cards
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+
+	<select id="selectByOrderCardsNo" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from order_cards
+		where card_order_no = #{cardOrderNo,jdbcType=VARCHAR}
+	</select>
+	<!-- 查询用户所有未使用的充值卡列表 -->
+	<select id="selectNoPayByUserId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from order_cards
+		where user_id = #{userId,jdbcType=NUMERIC} and
+		order_status =0
+	</select>
+	<resultMap id="ChartMap" type="com.jhj.vo.chart.ChartMapVo">
+		<result column="name" property="name" />
+		<result column="series" property="series" />
+		<result column="total" property="total" />
+
+		<result column="totalMoney" property="totalMoney" />
+	</resultMap>
+	<!-- *****************充值卡销售图表 **************** -->
+<select id="saleCardByDay" resultMap="ChartMap"
+		parameterType="com.jhj.vo.chart.ChartSearchVo">
+ SELECT card_type AS name,FROM_UNIXTIME(add_time, "%c-%e") AS series, SUM(card_money) AS totalMoney FROM
+ order_cards where 1 = 1  
+ <if test="startTime !=null">
+<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		<if test="status != null">
+					and order_status in
+					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if> 
+ GROUP BY name, series ORDER BY series ASC
+</select>
+<select id="saleCardByMonth" resultMap="ChartMap"
+		parameterType="com.jhj.vo.chart.ChartSearchVo">
+ SELECT card_type AS name,FROM_UNIXTIME(add_time, "%c") AS series, SUM(card_money) AS totalMoney FROM
+ order_cards where 1 = 1  
+ <if test="startTime !=null">
+<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		<if test="status != null">
+					and order_status in
+					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if> 
+ GROUP BY name, series ORDER BY series ASC
+</select>
+<select id="saleCardByQuarter" resultMap="ChartMap"
+		parameterType="com.jhj.vo.chart.ChartSearchVo">
+ SELECT card_type AS name,
+ CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+ SUM(card_money) AS totalMoney FROM
+ order_cards where 1 = 1  
+ <if test="startTime !=null">
+<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		<if test="status != null">
+					and order_status in
+					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if> 
+ GROUP BY name, series ORDER BY series ASC
+</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		order_cards
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.order.OrderCards">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into order_cards (id, user_id, mobile,
+		card_order_no, card_type,
+		card_money,
+		card_pay, pay_type, order_status,
+		add_time, update_time)
+		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
+		#{mobile,jdbcType=CHAR},
+		#{cardOrderNo,jdbcType=VARCHAR},
+		#{cardType,jdbcType=NUMERIC}, #{cardMoney,jdbcType=DECIMAL},
+		#{cardPay,jdbcType=DECIMAL}, #{payType,jdbcType=NUMERIC},
+		#{orderStatus,jdbcType=NUMERIC},
+		#{addTime,jdbcType=NUMERIC},
+		#{updateTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderCards">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into order_cards
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="cardOrderNo != null">
+				card_order_no,
+			</if>
+			<if test="cardType != null">
+				card_type,
+			</if>
+			<if test="cardMoney != null">
+				card_money,
+			</if>
+			<if test="cardPay != null">
+				card_pay,
+			</if>
+			<if test="payType != null">
+				pay_type,
+			</if>
+			<if test="orderStatus != null">
+				order_status,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=CHAR},
+			</if>
+			<if test="cardOrderNo != null">
+				#{cardOrderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				#{cardType,jdbcType=NUMERIC},
+			</if>
+			<if test="cardMoney != null">
+				#{cardMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="cardPay != null">
+				#{cardPay,jdbcType=DECIMAL},
+			</if>
+			<if test="payType != null">
+				#{payType,jdbcType=NUMERIC},
+			</if>
+			<if test="orderStatus != null">
+				#{orderStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderCards">
+		update order_cards
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=CHAR},
+			</if>
+			<if test="cardOrderNo != null">
+				card_order_no = #{cardOrderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType,jdbcType=NUMERIC},
+			</if>
+			<if test="cardMoney != null">
+				card_money = #{cardMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="cardPay != null">
+				card_pay = #{cardPay,jdbcType=DECIMAL},
+			</if>
+			<if test="payType != null">
+				pay_type = #{payType,jdbcType=NUMERIC},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderCards">
+		update order_cards
+		set user_id = #{userId,jdbcType=NUMERIC},
+		mobile =
+		#{mobile,jdbcType=CHAR},
+		card_order_no
+		=
+		#{cardOrderNo,jdbcType=VARCHAR},
+		card_type =
+		#{cardType,jdbcType=NUMERIC},
+		card_money =
+		#{cardMoney,jdbcType=DECIMAL},
+		card_pay = #{cardPay,jdbcType=DECIMAL},
+		pay_type = #{payType,jdbcType=NUMERIC},
+		order_status =
+		#{orderStatus,jdbcType=NUMERIC},
+		add_time =
+		#{addTime,jdbcType=NUMERIC},
+		update_time =
+		#{updateTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+</mapper>

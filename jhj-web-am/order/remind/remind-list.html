@@ -1,0 +1,34 @@
+
+<div class="pages">
+	<div data-page="am-remind-list-page" class="page" style="overflow:auto;">
+
+		<div class="page-content "  style="min-height:500px;　height:auto!important;padding-bottom:60px!important;">
+			<div class="list-block cards-list card-remind-list">
+				<ul>
+
+				</ul>
+			</div>
+			<div id="am-more">
+				<a href="#" id="remind-am-list-more" class="button active list-more">点击加载更多</a>
+			</div>
+			
+			<div class="list-block media-list" id="remind-am-list-part" style="display: none">
+				<a class="order-info-link" href="#" onclick="hrefToAmRemindView('{order_no}')">
+				<li class="list-card">
+					<div class="list-card1">
+						{order_type_name}
+						<p style="margin:0;margin-right: 30px;color:#ED6B00;float:right;">{order_status_name}</p>
+					
+					</div>
+					<div class="list-card2">
+						<div class="list-card2-1">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题：{service_content}</div>
+						<div class="list-card2-2">提醒时间：{service_date}</div>
+					</div>
+				</li>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+

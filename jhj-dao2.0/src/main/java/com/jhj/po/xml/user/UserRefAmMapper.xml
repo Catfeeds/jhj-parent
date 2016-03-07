@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.user.UserRefAmMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.user.UserRefAm">
+		<result column="id" property="id" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="status" property="status" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, staff_id,status,add_time
+	</sql>
+	
+	<delete id="delectByStaffId"  parameterType="java.util.HashMap">
+		delete
+		from user_ref_am
+		where
+		staff_id = #{oldAmId,jdbcType=NUMERIC}
+		and
+		user_id in
+		<foreach collection="array" item="item" index="index"
+            open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+	</delete>
+	
+	<select id="selectByUserIdAndAmId" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		select 
+		<include refid="Base_Column_List" />
+		from user_ref_am
+		where
+		staff_id = #{oldAmId,jdbcType=NUMERIC}
+		and
+		user_id in
+		<foreach collection="array" item="item" index="index"
+            open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+	
+	</select>
+	
+	<select id="selectAllUserByAmId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select 
+		<include refid="Base_Column_List" />
+		from user_ref_am
+		where staff_id = #{amId,jdbcType=NUMERIC} 
+	
+	</select>
+	
+	<select id="selectByUserId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_ref_am
+		where user_id = #{userId,jdbcType=NUMERIC}
+	</select>
+<!-- <select id="selectUserListByAmId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select 
+		<include refid="Base_Column_List" />
+		from user_ref_am
+		where am_id = #{amId,jdbcType=NUMERIC} 
+	</select> -->
+	
+	<select id="selectUserListByAmId" resultMap="BaseResultMap"
+		parameterType="com.jhj.vo.AmSearchListVo">
+		select
+		<include refid="Base_Column_List" />
+		from user_ref_am
+		where 1=1
+		
+		<if test="staffId != null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>	
+				
+		<if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>		
+		
+		order by add_time desc
+	</select>
+	
+	<select id="totalByAmIds" resultType="java.util.HashMap" parameterType="java.util.List">	    
+	    SELECT * FROM
+			(select T1.staff_id,
+			(CASE WHEN T2.total is null THEN 0 ELSE T2.total END) as total FROM
+				(
+					SELECT staff_id FROM org_staffs 
+					where staff_id in
+					 	<foreach item="item" index="index" collection="list"
+					             open="(" separator="," close=")">
+					        #{item}
+					    </foreach>
+			
+				) as T1
+				
+				left join
+				
+				(select staff_id, count(*) as total from user_ref_am
+				 where staff_id in
+				 	<foreach item="item" index="index" collection="list"
+				             open="(" separator="," close=")">
+				        #{item}
+				    </foreach>
+				 group by staff_id
+				) as T2
+			on T1.staff_id = T2.staff_id
+		) as T
+		order by total asc
+	</select>	
+	
+	<insert id="insert" parameterType="com.jhj.po.model.user.UserRefAm">
+		insert into user_ref_am (id, user_id, staff_id,
+		status, add_time)
+		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
+		#{staffId,jdbcType=NUMERIC},
+		#{status,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.user.UserRefAm">
+		insert into user_ref_am
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+		
+		 <!-- 配置mysql主键自增 -->
+    <selectKey keyProperty="id" resultType="Long" order="AFTER">
+
+			select LAST_INSERT_ID() 
+
+	</selectKey>
+	</insert>
+</mapper>

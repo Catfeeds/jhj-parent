@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.dict.DictSeniorTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictSeniorType" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="senior_pay" property="seniorPay" jdbcType="DECIMAL" />
+    <result column="valid_month" property="validMonth" jdbcType="SMALLINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, senior_pay, valid_month, description, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_senior_type
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dict_senior_type
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.dict.DictSeniorType" >
+    insert into dict_senior_type (id, name, senior_pay,
+      valid_month, description, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{seniorPay,jdbcType=DECIMAL},
+      #{validMonth,jdbcType=NUMERIC}, #{description,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictSeniorType" >
+    insert into dict_senior_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="seniorPay != null" >
+        senior_pay,
+      </if>
+      <if test="validMonth != null" >
+        valid_month,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="seniorPay != null" >
+        #{seniorPay,jdbcType=DECIMAL},
+      </if>
+      <if test="validMonth != null" >
+        #{valid_month,jdbcType=SMALLINT},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictSeniorType" >
+    update dict_senior_type
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="seniorPay != null" >
+        senior_pay = #{seniorPay,jdbcType=DECIMAL},
+      </if>
+      <if test="validMonth != null" >
+        valid_month = #{validMonth,jdbcType=SMALLINT},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictSeniorType" >
+    update dict_senior_type
+    set name = #{name,jdbcType=VARCHAR},
+      senior_pay = #{seniorPay,jdbcType=DECIMAL},
+      valid_month = #{validMonth,jdbcType=SMALLINT},
+      description = #{description,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

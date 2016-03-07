@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhj.po.dao.orderReview.JhjOrderReviewMapper">
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.orderReview.JhjOrderReview">
+    <id column="id" jdbcType="NUMERIC" property="id" />
+    <result column="staff_no" jdbcType="VARCHAR" property="staffNo" />
+    <result column="service_date" jdbcType="NUMERIC" property="serviceDate" />
+    <result column="service_hour" jdbcType="VARCHAR" property="serviceHour" />
+    <result column="arrive_on_time" jdbcType="NUMERIC" property="arrriveOnTime" />
+    <result column="clean_review" jdbcType="NUMERIC" property="cleanReview" />
+    <result column="service_detail" jdbcType="NUMERIC" property="serviceDetail" />
+    <result column="appearance" jdbcType="NUMERIC" property="appearance" />
+    <result column="after_service" jdbcType="NUMERIC" property="afterService" />
+    <result column="over_all_review" jdbcType="NUMERIC" property="overAllReview" />
+    <result column="add_time" jdbcType="NUMERIC" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, staff_no, service_date, service_hour, arrive_on_time, clean_review, service_detail, 
+    appearance, after_service, over_all_review, add_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from jhj_order_review
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from jhj_order_review
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.orderReview.JhjOrderReview">
+    insert into jhj_order_review (id, staff_no, service_date, 
+      service_hour, arrive_on_time, clean_review, 
+      service_detail, appearance, after_service, 
+      over_all_review, add_time)
+    values (#{id,jdbcType=NUMERIC}, #{staffNo,jdbcType=VARCHAR}, #{serviceDate,jdbcType=NUMERIC}, 
+      #{serviceHour,jdbcType=VARCHAR}, #{arrriveOnTime,jdbcType=NUMERIC}, #{cleanReview,jdbcType=NUMERIC}, 
+      #{serviceDetail,jdbcType=NUMERIC}, #{appearance,jdbcType=NUMERIC}, #{afterService,jdbcType=NUMERIC}, 
+      #{overAllReview,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.orderReview.JhjOrderReview">
+    insert into jhj_order_review
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="staffNo != null">
+        staff_no,
+      </if>
+      <if test="serviceDate != null">
+        service_date,
+      </if>
+      <if test="serviceHour != null">
+        service_hour,
+      </if>
+      <if test="arrriveOnTime != null">
+        arrive_on_time,
+      </if>
+      <if test="cleanReview != null">
+        clean_review,
+      </if>
+      <if test="serviceDetail != null">
+        service_detail,
+      </if>
+      <if test="appearance != null">
+        appearance,
+      </if>
+      <if test="afterService != null">
+        after_service,
+      </if>
+      <if test="overAllReview != null">
+        over_all_review,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="staffNo != null">
+        #{staffNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceDate != null">
+        #{serviceDate,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceHour != null">
+        #{serviceHour,jdbcType=VARCHAR},
+      </if>
+      <if test="arrriveOnTime != null">
+        #{arrriveOnTime,jdbcType=NUMERIC},
+      </if>
+      <if test="cleanReview != null">
+        #{cleanReview,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceDetail != null">
+        #{serviceDetail,jdbcType=NUMERIC},
+      </if>
+      <if test="appearance != null">
+        #{appearance,jdbcType=NUMERIC},
+      </if>
+      <if test="afterService != null">
+        #{afterService,jdbcType=NUMERIC},
+      </if>
+      <if test="overAllReview != null">
+        #{overAllReview,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+     <selectKey keyProperty="id" resultType="Long" order="AFTER">
+
+			select LAST_INSERT_ID() 
+
+	</selectKey>
+    
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.orderReview.JhjOrderReview">
+    update jhj_order_review
+    <set>
+      <if test="staffNo != null">
+        staff_no = #{staffNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceDate != null">
+        service_date = #{serviceDate,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceHour != null">
+        service_hour = #{serviceHour,jdbcType=VARCHAR},
+      </if>
+      <if test="arrriveOnTime != null">
+        arrive_on_time = #{arrriveOnTime,jdbcType=NUMERIC},
+      </if>
+      <if test="cleanReview != null">
+        clean_review = #{cleanReview,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceDetail != null">
+        service_detail = #{serviceDetail,jdbcType=NUMERIC},
+      </if>
+      <if test="appearance != null">
+        appearance = #{appearance,jdbcType=NUMERIC},
+      </if>
+      <if test="afterService != null">
+        after_service = #{afterService,jdbcType=NUMERIC},
+      </if>
+      <if test="overAllReview != null">
+        over_all_review = #{overAllReview,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.orderReview.JhjOrderReview">
+    update jhj_order_review
+    set staff_no = #{staffNo,jdbcType=VARCHAR},
+      service_date = #{serviceDate,jdbcType=NUMERIC},
+      service_hour = #{serviceHour,jdbcType=VARCHAR},
+      arrive_on_time = #{arrriveOnTime,jdbcType=NUMERIC},
+      clean_review = #{cleanReview,jdbcType=NUMERIC},
+      service_detail = #{serviceDetail,jdbcType=NUMERIC},
+      appearance = #{appearance,jdbcType=NUMERIC},
+      after_service = #{afterService,jdbcType=NUMERIC},
+      over_all_review = #{overAllReview,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

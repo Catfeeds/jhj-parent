@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+
+<!-- 	 <classPathEntry location="C:\software\sonatype-work\nexus\storage\central\mysql\mysql-connector-java\5.1.33\mysql-connector-java-5.1.33.jar" />
+ -->
+
+ <!--    <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" /> -->
+   <!--  <classPathEntry location="D:/workspace/jar/mysql-connector-java-5.1.33.jar" /> -->
+
+    <classPathEntry location="D:/workspace/jar/mysql-connector-java-5.1.33.jar" />
+	<!-- <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" /> -->
+<!-- 		 <classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" />
+ -->
+		<!--  <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" /> -->
+	<!-- 数据库链接URL、用户名、密码 -->
+	<context id="jdbc-test">
+
+		<!-- suppressAllComments 默认是false 此属性用于指定在生成的代码是否将包括任何注释。如果设置为true 则不生成注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!-- 数据库链接URL、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/jhj" userId="root"
+			password="root1qaz" />
+		<!-- 解决数字转换问题 -->
+		<javaTypeResolver>
+			<!-- 只有一个属于forceBigDecimals，默认false。 如果字段精确超过0，生成BigDecimal 如果字段精确是0，总长度10-18生成Long;
+				如果字段精确是0，总长5-9生成Integer; 如果字段精确是0，总长小于5生成Short; 如果forceBigDecimals为true,统一生成BigDecimal -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.jhj.po.model.socials"
+			targetProject="jhj-dao">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+		<!-- 生成的映射文件包名和位置 -->
+		<sqlMapGenerator targetPackage="com.jhj.po.xml.socials"
+			targetProject="jhj-dao">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- 生成DAO的包名和位置 -->
+		<javaClientGenerator targetPackage="com.jhj.po.dao.socials"
+			targetProject="jhj-dao" type="XMLMAPPER">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+		<!-- 社区活动表-->
+		<table schema="jhj" tableName="socials"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="is_publish" property="isPublish" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		<!--社区活动呼叫记录表 -->
+		<table schema="jhj" tableName="social_call"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="social_id" property="socialId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+
+	</context>
+</generatorConfiguration>

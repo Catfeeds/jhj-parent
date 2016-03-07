@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.log.LogRequestParamsMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.log.LogRequestParams" >
+    <result column="id" property="id" jdbcType="NUMERIC" />
+    <result column="request_type" property="requestType" jdbcType="VARCHAR" />
+    <result column="params" property="params" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <insert id="insert" parameterType="com.jhj.po.model.log.LogRequestParams" >
+    insert into log_request_params (id, request_type, params,
+      add_time)
+    values (#{id,jdbcType=NUMERIC}, #{requestType,jdbcType=VARCHAR}, #{params,jdbcType=VARCHAR},
+      #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.log.LogRequestParams" >
+    insert into log_request_params
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="requestType != null" >
+        request_type,
+      </if>
+      <if test="params != null" >
+        params,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="requestType != null" >
+        #{requestType,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null" >
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+</mapper>

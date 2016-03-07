@@ -1,0 +1,159 @@
+<div class="pages">
+	<!-- Page, data-page contains page name-->
+	<div data-page="history-zhongdiangong-page" class="page" style="overflow:auto;background:#E5E5E5;">
+		<!-- Scrollable page content-->
+		<div class="page-content" >
+		
+		<form id="history-zhongdiangong-form"  class="store-data"> 
+
+			<input type="hidden" id="userId" name="userId" value="">
+			<input type="hidden" name="serviceType" value="1">
+		
+			<input type="hidden" name="orderType" value="0">
+		
+			<input type="hidden" name="orderFrom" value="1">
+			<input type="hidden" id="addrId" name="addrId" value="">
+
+			<input type="hidden" id="amId" name="amId" value="">
+			<input type="hidden" id="logInUserId" name="logInUserId">
+
+
+
+
+				<div style="margin: 0" class="list-block">
+					<ul style="margin-top:15px;background:#F8F8F8;">
+						<li>
+							<div class="item-content">
+								<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+									<div class="item-title label">服务开始时间:</div>
+									<div class="item-xx">
+										<input type="text" name="serviceDateStart" id="remindServiceDate">
+									</div>
+								</div>
+							</div>
+						</li>
+						
+						
+						 <li>   
+								<a href="user/mine-addr-list.html" class="item-link" id="addrSelect">
+									
+								 	 <div class="item-content" >
+								          <div class="item-inner">
+								            <div class="item-title label">服务地址:</div>
+								            <div class="item-xx-label" style="padding:0 0 0 10px;width:65%;"  id="defaultAddrName">
+												<span class="item-xx" id="addrName" name="addrName" style="word-wrap:break-word;">请选择服务地址</span>
+											</div>
+								          </div>
+									</div>
+								</a> 
+						</li> 
+						
+						<li>
+								 <a href="#" id="hourSelect" class="item-link smart-select"  data-back-on-select="true">
+								 	
+								 	<div class="item-content">
+								          <div class="item-inner">
+								            <div class="item-title label">服务时长:</div>
+								            <div class="item-xx-label">
+												<span class="item-after"style="max-width:90%;padding:0 0 0 3px;">请选择服务时长</span>
+											</div>
+								          </div>
+								     </div>
+
+									<select name="serviceHour">
+										  <option value="" selected>请选择服务时长</option>
+										  <option value="2" style="width:163px;">2小时</option>
+										  <option value="3" style="width:163px;">3小时</option>
+										  <option value="4" style="width:163px;">4小时</option>
+									</select>
+								</a>
+						</li>
+						
+						
+						<li>
+							<a href="#"  class="item-link smart-select"  data-back-on-select="true">
+								 	
+								 	<div class="item-content">
+								          <div class="item-inner">
+								            <div class="item-title label">服务人员:</div>
+								            <div class="item-xx-label">
+												<span class="item-after"style="max-width:90%;padding:0 0 0 3px;">请选择服务人员</span>
+											</div>
+								          </div>
+								     </div>
+
+									<select id="staffSelect" name="staffId" >
+										
+									</select>
+							</a>
+						</li>
+						
+						
+						<li>
+							<a href="#"  class="item-link smart-select"  data-back-on-select="true">
+								 	
+								 	<div class="item-content">
+								          <div class="item-inner">
+								            <div class="item-title label">优惠券:</div>
+								            <div class="item-xx-label">
+												<span class="item-after"style="max-width:90%;padding:0 0 0 3px;">请选择优惠券</span>
+											</div>
+								          </div>
+								     </div>
+
+									<select id="couponSelect" name="couponId">
+										<option value="">选择优惠券</option>
+										<!-- 本地测试数据，dict_coupon表中的 第一条记录 -->
+										<option value="3591">首单30元</option>
+									</select>
+							</a>
+							
+							
+						</li>
+						
+						<li>
+							<div class="item-content">
+								<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+									<div class="item-title label">总金额:</div>
+									<div class="item-xx">
+										<input type="text" name="orderMoney" value="">
+									</div>
+								</div>
+							</div>
+						</li>
+						
+						<li>
+							<div class="item-content">
+								<div class="item-inner" style="padding-top:0;padding-bottom:0;">
+									<div class="item-title label">实际金额:</div>
+									<div class="item-xx">
+										<input type="text" name="realMoney" value="">
+									</div>
+								</div>
+							</div>
+						</li>
+						
+						
+						
+						<li class="item-content">
+							<div class="item-inner">
+							<div class="item-title label" style="margin-top:-61px;">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</div>
+								<div class="item-xx" style="width:70%;">
+									<textarea class="resizable" id="remarks" name="remarks" placeholder="服务要求,最多200字" maxLength="200" style="width:90%;"></textarea>
+								</div>
+							</div>
+						</li>
+						
+					</ul>
+				</div>
+			
+			
+			<div class="content-block"style="background:0;margin:0;padding:0;" >
+				<a href="#" id="historyHourOrderSubmit" class="button active shendu-submit">提交订单</a>
+			</div>	
+				
+					
+			</form>	
+		</div>
+	</div>
+</div>

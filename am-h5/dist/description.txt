@@ -1,0 +1,1 @@
+当前文件夹是一个完整的独立的 alert弹出框优化插件，名字叫 sweetalert2-master.js

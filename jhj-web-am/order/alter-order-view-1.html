@@ -1,0 +1,121 @@
+<div class="pages" style="background: #E5E5E5;">
+	<!-- Page, data-page contains page name-->
+	<div data-page="alter-order-1-page" class="page" style="overflow:auto;">
+		<!-- Scrollable page content-->
+		<div class="page-content" style="margin:0;height:792px!important;">
+			<div class="xqlb-neirong">
+				<span id="order_type_name_alter" name="order_type_name">{{order_type_name}}</span>
+				<p id="order_status_name_alter" >{{order_status_name}}</p>
+			</div>
+			<div id="alter-order-1-view" class="list-block deep-list-block">
+				<ul class="ddxq-xx" style="background: #F8F8F8">
+					<li>
+						<div class="item-content">
+							<div class="item-inner" >
+							<div class="item-title label">订&nbsp;&nbsp;单&nbsp;&nbsp;号:</div>
+								<div class="item-xx-label" >
+									<input type="hidden" name="order_no" value="{{order_no}}"/>
+									<span >{{order_no}}</span>
+								</div>
+						 	</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="item-content">
+							<div class="item-inner" >
+							<div class="item-title label">服务时间:</div>
+								<div class="item-xx-label" >
+									<span >{{service_date_str}}</span>
+								</div>
+						 	</div>
+						</div>
+					</li>
+					<li id="service_addr_li">
+						<div class="item-content">
+							<div class="item-inner" >
+							<div class="item-title label">服务地址:</div>
+								<div class="item-xx-label" style="width:65%;">
+									<span >{{service_addr}}</span>	
+								</div>
+						 	</div>
+						</div>
+					</li>
+					
+					{{#js_compare "this.introduction != null"}}
+					<li>
+						<div class="item-content">
+							<div class="item-inner" >
+							<div class="item-title label">优&nbsp;&nbsp;惠&nbsp;&nbsp;券:</div>
+								<div class="item-xx-label" >
+									<span >{{introduction}}</span>
+								</div>
+						 	</div>
+						</div>
+					</li>
+					{{/js_compare}}
+					
+					{{#each list}}
+					
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label" >{{service_addon_name}}：</div>
+								<div class="item-xx" style="margin-right: -10px; color: #666">
+									<div class="item-content" style="width:180px;">
+											<input type="hidden" id="service_addon_id" name="service_addon_id" value="{{service_addon_id}}"/>
+											<input id="min" name="min" type="button" onclick="onSubItemNum($$(this).parent())" value="-" class="bjdd-jianhao">
+											{{#js_compare "this.order_id > 0"}}
+											<input id="item_num" name="item_num" value="{{item_num}}" 
+												maxLength="3" 
+												ondragenter="return false"
+												onkeyup="value=ValidateNumber(this,value);setTotal();" style="width:30px;" type="tel"/> 
+												
+											{{/js_compare}}
+											
+											{{#js_compare "this.order_id === 0"}}
+											<input id="item_num" name="item_num" value="0" 
+												maxLength="3" 
+												ondragenter="return false"
+												onkeyup="value=ValidateNumber(this,value);setTotal();" style="width:30px;" type="tel"/> 
+												
+											{{/js_compare}}
+											<input id="add" type="button" name="add" type="button" value="+" onclick="onAddItemNum($$(this).parent())"class="bjdd-jiahao">
+											<span id="item_uint" name="item_uint">({{price}}￥/{{item_unit}})</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>					
+					{{/each}}
+					
+					<li>
+						<div class="item-content">
+							<div class="item-inner" >
+							<div class="item-title label">实际金额:</div>
+								<div class="item-xx-label" >
+									<input type="hidden" id="order_money_input" name="order_money" readonly="readonly" value="{{order_money}}" placeholder="实际订单金额">
+									<!-- <span id="order_moneys_span" name="order_moneys">￥{{order_money}}</span>	 -->
+									<input type="text" id="order_moneys_span" onkeyup="clearNoNum(this)" maxlength="5" name="order_moneys" value="{{order_money}}" >
+								</div>
+						 	</div>
+						</div>
+					</li>
+					<li>
+						<div class="item-content">
+							<div class="item-inner" >
+							<div class="item-title label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</div>
+								<div class="item-xx-label" style="width:65%;">
+									<span >{{remarks}}</span>	
+								</div>
+						 	</div>
+						</div>
+					</li>
+				</ul>
+				
+			</div>
+			
+			<a href="#" id="order-clean-submit" class="button active hjyh-submit">确认调整</a>
+		</div>
+	</div>
+</div>

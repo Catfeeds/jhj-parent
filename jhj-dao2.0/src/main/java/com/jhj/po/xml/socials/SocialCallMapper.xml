@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.socials.SocialCallMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.socials.SocialCall" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="social_id" property="socialId" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="user_mobile" property="userMobile" jdbcType="CHAR" />
+    <result column="am_id" property="amId" jdbcType="NUMERIC" />
+    <result column="am_mobile" property="amMobile" jdbcType="CHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, social_id, user_id, user_mobile, am_id, am_mobile, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from social_call
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="selectBySocialsIdAndUserId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from social_call
+    where social_id = #{0} and user_id=#{1}
+  </select>
+  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.SocialsSearchVo">
+  	select
+    <include refid="Base_Column_List" />
+    from social_call
+ 	where 1=1 
+     <if test="userMobile != null and userMobile !='' ">
+		and user_mobile like '%${userMobile}%'
+	</if>
+    order by add_time desc    
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from social_call
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.socials.SocialCall" >
+    insert into social_call (id, social_id, user_id, 
+      user_mobile, am_id, am_mobile, 
+      add_time)
+    values (#{id,jdbcType=NUMERIC}, #{socialId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, 
+      #{userMobile,jdbcType=CHAR}, #{amId,jdbcType=NUMERIC}, #{amMobile,jdbcType=CHAR}, 
+      #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.socials.SocialCall" >
+    insert into social_call
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="socialId != null" >
+        social_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userMobile != null" >
+        user_mobile,
+      </if>
+      <if test="amId != null" >
+        am_id,
+      </if>
+      <if test="amMobile != null" >
+        am_mobile,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="socialId != null" >
+        #{socialId,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="userMobile != null" >
+        #{userMobile,jdbcType=CHAR},
+      </if>
+      <if test="amId != null" >
+        #{amId,jdbcType=NUMERIC},
+      </if>
+      <if test="amMobile != null" >
+        #{amMobile,jdbcType=CHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.socials.SocialCall" >
+    update social_call
+    <set >
+      <if test="socialId != null" >
+        social_id = #{socialId,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="userMobile != null" >
+        user_mobile = #{userMobile,jdbcType=CHAR},
+      </if>
+      <if test="amId != null" >
+        am_id = #{amId,jdbcType=NUMERIC},
+      </if>
+      <if test="amMobile != null" >
+        am_mobile = #{amMobile,jdbcType=CHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.socials.SocialCall" >
+    update social_call
+    set social_id = #{socialId,jdbcType=NUMERIC},
+      user_id = #{userId,jdbcType=NUMERIC},
+      user_mobile = #{userMobile,jdbcType=CHAR},
+      am_id = #{amId,jdbcType=NUMERIC},
+      am_mobile = #{amMobile,jdbcType=CHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

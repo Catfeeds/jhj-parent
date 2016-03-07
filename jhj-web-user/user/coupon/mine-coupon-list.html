@@ -1,0 +1,65 @@
+<!-- We don't need full layout here, because this page will be parsed with Ajax-->
+<!-- Top Navbar-->
+
+<div class="pages"style="background:0">
+	<!-- Page, data-page contains page name-->
+	<div data-page="mine-coupon-list-page" class="page"style="background-color:#E5E5E5E!important;overflow:auto">
+		<!-- Scrollable page content-->
+		<div class="page-content" >
+			<div class="content-block"style="background:#F8F8F8;width:100%!important;height:60px;padding:0;margin:0;">
+		      <div class="row">
+		        <div class="col-66">
+		        	<input type="text" id="cardPasswdItem" placeholder="请输入兑换码"class="yhq-duihuanma">
+		        </div>
+		        <div class="col-33 yhq-duihuanma-btn" id="user-coupon-exchange-button">兑换</div>
+		      </div>
+		    </div>
+		    {{#each data}}
+			<div class="yhq-daijinquan">
+				<div class="yhq-daijinquan-jiage">
+					<div class="content-block" style="margin:5px 0;">
+					  <a href="#" class="item-link" id="selectCouponLink" >
+				      <div class="row" style="margin-top:5px;">
+				      	<!--2015年10月28日15:46:47   之前按照 价格 区分优惠券，现改为按 ‘订单类型’划分 -->
+				        <div class="col-33 yhq-duihuanma-btn1"
+				        style="{{#js_compare "this.service_type === '0' "}}background:#EF7B00;border:1px solid #EF7B00;{{/js_compare}}
+							 {{#js_compare "this.service_type === '1' "}}background:#CD98CC;border:1px solid #CD98CC;{{/js_compare}} 
+							 {{#js_compare "this.service_type === '2'"}}background:#99CC33;border:1px solid #99CC33;{{/js_compare}}
+							 {{#js_compare "this.service_type === '6' "}}background:#FFCC01;border:1px solid #FFCC01;{{/js_compare}}">
+					      {{#js_compare "this.service_type === '0' "}}
+					      		 <img src="img/icons/youhuiquan-zdg1.png" alt=""style="width:30px; margin-top: 8px;">
+					      {{/js_compare}}
+					      {{#js_compare "this.service_type === '1'"}}
+					      		 <img src="img/icons/youhuiquan-sdbj.png" alt=""style="width:30px; margin-top: 8px;">
+					      {{/js_compare}}
+					      {{#js_compare "this.service_type === '2'"}}
+					      		 <img src="img/icons/youhuiquan-zhuli1.png" alt=""style="height:30px; margin-top: 8px;">
+					      {{/js_compare}}
+					      {{#js_compare "this.service_type === '6'"}}
+					      		 <img src="img/icons/youhuiquan-huafei.png" alt=""style="height:30px; margin-top: 8px;">
+					      {{/js_compare}}
+				      	
+				      		<p style="margin-top:-56px;"> ￥{{value}}</p>	
+				        </div>
+				        <div class="col-66">
+				        	
+				        	<ul class="yhq-duihuanma1">
+				        		<li id="introduction">{{introduction}}</li>
+				        		<li>有效期至:{{to_date_str}}</li>
+				        		<li>消费满{{max_value}}元可用</li>
+				        		<input type="hidden" name="user_coupon_id" id="user_coupon_id" value="{{id}}"/>
+				        		<input type="hidden" name="service_type" id="service_type" value="{{service_type}}"/>
+				        		<input type="hidden" name="max_value" id="max_value" value="{{max_value}}"/>
+				        		<input type="hidden" name="user_coupon_value" id="user_coupon_value" value="{{value}}"/>
+				        	</ul>
+				        	
+				        </div>
+				      </div>
+				      </a>
+				    </div>
+				</div>
+				{{/each}}
+			</div>
+		</div>
+	</div>
+</div>

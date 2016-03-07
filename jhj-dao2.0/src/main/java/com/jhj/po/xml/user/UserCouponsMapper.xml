@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.user.UserCouponsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.user.UserCoupons">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="coupon_id" property="couponId" jdbcType="NUMERIC" />
+		<result column="value" jdbcType="DECIMAL" property="value" />
+		<result column="gift_id" property="giftId" jdbcType="NUMERIC" />
+		<result column="service_type" property="serviceType" jdbcType="VARCHAR" />
+		<result column="from_date" jdbcType="DATE" property="fromDate" javaType="java.util.Date" />
+		<result column="to_date" jdbcType="DATE" property="toDate" javaType="java.util.Date" />
+		<result column="is_used" property="isUsed" jdbcType="NUMERIC" />
+		<result column="used_time" property="usedTime" jdbcType="NUMERIC" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, coupon_id, value, gift_id, service_type, from_date,to_date, is_used, used_time, order_no, add_time
+	</sql>
+	
+	<!--查询 该用户的  “注册大礼包”，判断是否已经发放过该礼包 -->
+	<select id="selectLoginGift" resultType="java.lang.Long" parameterType="java.lang.Long">
+		select 
+			DISTINCT gift_id
+		from 
+			user_coupons
+		where  1=1
+		 <if test="userId !=null and userId !='' ">
+			and user_id = #{userId,jdbcType}
+		 </if>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_coupons
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	<!--根据userId查询出用户   截止到今天  有效的优惠券列表 -->
+	<select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_coupons
+		where user_id= #{userId,jdbcType=NUMERIC} and is_used = 0
+		AND UNIX_TIMESTAMP(to_date) > UNIX_TIMESTAMP(NOW())
+		order by value, to_date asc;
+	</select>
+	
+	<select id="selectAllByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_coupons
+		where user_id= #{userId,jdbcType=NUMERIC}
+		AND UNIX_TIMESTAMP(to_date) > UNIX_TIMESTAMP(NOW())
+		order by value, to_date asc;
+	</select>
+	<!--根据优惠券couponId进行查询 -->
+	<select id="selectByCouponId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_coupons
+		where coupon_id= #{couponId,jdbcType=NUMERIC}
+	</select>
+	<!--根据orderNo查询用户优惠券 -->
+	<select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from user_coupons
+		where order_no= #{orderNo,jdbcType=NUMERIC}
+	</select>
+	<!--查询userId用户是否兑换couponId优惠券 -->
+	<select id="selectByCouponIdAndUserId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_coupons
+		where coupon_id= #{0}
+		and user_id =#{1}
+	</select>
+	<!--对于唯一类型优惠券，判断是否有其他用户兑换 -->
+	<select id="selectByCouponIdNotUserId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_coupons
+		where coupon_id= #{0} and user_id !=#{1}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from user_coupons
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.user.UserCoupons">
+		insert into user_coupons (id, user_id, coupon_id, value, 
+		gift_id, service_type, from_date,to_date, is_used,
+		used_time, order_no, add_time
+		)
+		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{couponId,jdbcType=NUMERIC},
+		#{value,jdbcType=DECIMAL},
+		#{giftId,jdbcType=NUMERIC}, #{serviceType,jdbcType=VARCHAR}, #{fromDate,jdbcType=DATE}, #{toDate,jdbcType=DATE},
+		#{isUsed,jdbcType=NUMERIC},
+		#{usedTime,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<!-- 设置 主键自增， useGeneratedKeys="true"  -->
+	<insert id="insertSelective" useGeneratedKeys="true" parameterType="com.jhj.po.model.user.UserCoupons">
+		insert into user_coupons
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="couponId != null">
+				coupon_id,
+			</if>
+			<if test="value != null">
+		        value,
+		    </if>
+			<if test="giftId != null">
+				gift_id,
+			</if>
+			<if test="serviceType != null">
+				service_type,
+			</if>
+			<if test="fromDate != null">
+				from_date,
+			</if>
+			<if test="toDate != null">
+				to_date,
+			</if>
+			<if test="isUsed != null">
+				is_used,
+			</if>
+			<if test="usedTime != null">
+				used_time,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="couponId != null">
+				#{couponId,jdbcType=NUMERIC},
+			</if>
+			<if test="value != null">
+		        #{value,jdbcType=DECIMAL},
+		    </if>
+			<if test="giftId != null">
+				#{giftId,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceType != null">
+				#{serviceType,jdbcType=VARCHAR},
+			</if>
+			<if test="fromDate != null">
+				#{fromDate,jdbcType=DATE},
+			</if>
+			<if test="toDate != null">
+				#{toDate,jdbcType=DATE},
+			</if>
+			<if test="isUsed != null">
+				#{isUsed,jdbcType=NUMERIC},
+			</if>
+			<if test="usedTime != null">
+				#{usedTime,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+		
+		 <!-- 配置mysql主键自增 ,这段在插入时 有 bug
+	    <selectKey keyProperty="id" resultType="java.lang.Long" order="AFTER">
+	
+				select LAST_INSERT_ID() 
+	
+		</selectKey>
+		-->
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.UserCoupons">
+		update user_coupons
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="couponId != null">
+				coupon_id = #{couponId,jdbcType=NUMERIC},
+			</if>
+			<if test="value != null">
+		        value = #{value,jdbcType=DECIMAL},
+		    </if>
+			<if test="giftId != null">
+				gift_id = #{giftId,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceType != null">
+				service_type = #{serviceType,jdbcType=VARCHAR},
+			</if>
+			<if test="fromDate != null">
+				from_date = #{fromDate,jdbcType=DATE},
+			</if>
+			<if test="toDate != null">
+				to_date = #{toDate,jdbcType=DATE},
+			</if>
+			<if test="isUsed != null">
+				is_used = #{isUsed,jdbcType=NUMERIC},
+			</if>
+			<if test="usedTime != null">
+				used_time = #{usedTime,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.UserCoupons">
+		update user_coupons
+		set user_id = #{userId,jdbcType=NUMERIC},
+		coupon_id = #{couponId,jdbcType=NUMERIC},
+		value = #{value,jdbcType=DECIMAL},
+		gift_id = #{giftId,jdbcType=NUMERIC},
+		service_type = #{serviceType,jdbcType=VARCHAR},
+		from_date = #{fromDate,jdbcType=DATE},
+		to_date = #{toDate,jdbcType=DATE},
+		is_used = #{isUsed,jdbcType=NUMERIC},
+		used_time = #{usedTime,jdbcType=NUMERIC},
+		order_no = #{orderNo,jdbcType=VARCHAR},
+		add_time = #{addTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+</mapper>

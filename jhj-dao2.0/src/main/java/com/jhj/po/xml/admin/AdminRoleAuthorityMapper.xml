@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.admin.AdminRoleAuthorityMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.admin.AdminRoleAuthority" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="role_id" property="roleId" jdbcType="NUMERIC" />
+    <result column="authority_id" property="authorityId" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_id, authority_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_role_authority
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+
+  <select id="selectByRoleAndAuthority" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_role_authority
+    where role_id = #{roleId,jdbcType=NUMERIC}
+     and authority_id = #{authorityId,jdbcType=NUMERIC}
+  </select>
+
+  <select id="selectByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_role_authority
+    where role_id = #{role_id,jdbcType=NUMERIC}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_role_authority
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from admin_role_authority
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+
+  <delete id="deleteByRoleId" parameterType="java.lang.Long" >
+    delete from admin_role_authority
+    where role_id = #{roleId,jdbcType=NUMERIC}
+  </delete>
+
+  <insert id="insert" parameterType="com.jhj.po.model.admin.AdminRoleAuthority" >
+    insert into admin_role_authority (id, role_id, authority_id
+      )
+    values (#{id,jdbcType=NUMERIC}, #{roleId,jdbcType=NUMERIC}, #{authorityId,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.admin.AdminRoleAuthority" >
+    insert into admin_role_authority
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="authorityId != null" >
+        authority_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=NUMERIC},
+      </if>
+      <if test="authorityId != null" >
+        #{authorityId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.admin.AdminRoleAuthority" >
+    update admin_role_authority
+    <set >
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=NUMERIC},
+      </if>
+      <if test="authorityId != null" >
+        authority_id = #{authorityId,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.admin.AdminRoleAuthority" >
+    update admin_role_authority
+    set role_id = #{roleId,jdbcType=NUMERIC},
+      authority_id = #{authorityId,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

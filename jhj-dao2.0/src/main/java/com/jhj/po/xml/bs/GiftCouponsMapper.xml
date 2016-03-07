@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.GiftCouponsMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.GiftCoupons" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="gift_id" property="giftId" jdbcType="NUMERIC" />
+    <result column="coupon_id" property="couponId" jdbcType="NUMERIC" />
+    <result column="num" property="num" jdbcType="SMALLINT" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, gift_id, coupon_id, num, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from gift_coupons
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="selectByGiftId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from gift_coupons
+    where gift_id = #{giftId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from gift_coupons
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+<!--根据couponId删除数据  -->
+  <delete id="deleteByCouponId" parameterType="java.lang.Long" >
+    delete from gift_coupons
+    where coupon_id = #{couponId,jdbcType=NUMERIC}
+  </delete>
+  <delete id="deleteByGiftId" parameterType="java.lang.Long" >
+    delete from gift_coupons
+    where gift_id = #{giftId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.bs.GiftCoupons" >
+    insert into gift_coupons (id, gift_id, coupon_id, 
+      num, add_time)
+    values (#{id,jdbcType=NUMERIC}, #{giftId,jdbcType=NUMERIC}, #{couponId,jdbcType=NUMERIC}, 
+      #{num,jdbcType=SMALLINT}, #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.GiftCoupons" >
+    insert into gift_coupons
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="giftId != null" >
+        gift_id,
+      </if>
+      <if test="couponId != null" >
+        coupon_id,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="giftId != null" >
+        #{giftId,jdbcType=NUMERIC},
+      </if>
+      <if test="couponId != null" >
+        #{couponId,jdbcType=NUMERIC},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=SMALLINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.GiftCoupons" >
+    update gift_coupons
+    <set >
+      <if test="giftId != null" >
+        gift_id = #{giftId,jdbcType=NUMERIC},
+      </if>
+      <if test="couponId != null" >
+        coupon_id = #{couponId,jdbcType=NUMERIC},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=SMALLINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.GiftCoupons" >
+    update gift_coupons
+    set gift_id = #{giftId,jdbcType=NUMERIC},
+      coupon_id = #{couponId,jdbcType=NUMERIC},
+      num = #{num,jdbcType=SMALLINT},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

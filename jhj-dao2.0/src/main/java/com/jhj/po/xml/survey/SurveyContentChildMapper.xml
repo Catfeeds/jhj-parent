@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyContentChildMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyContentChild" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="content_id" property="contentId" jdbcType="NUMERIC" />
+    <result column="option_str" property="optionStr" jdbcType="VARCHAR" />
+    <result column="option_no" property="optionNo" jdbcType="VARCHAR" />
+    <result column="child_price" property="childPrice" jdbcType="DECIMAL" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, content_id, option_str, option_no, child_price, add_time
+  </sql>
+  
+  
+  <!-- 修改时，先删除，所有的子服务，在添加 -->
+  <select id="deleteByContentId" parameterType="java.lang.Long">
+  	delete from survey_content_child
+    where 
+    content_id = #{contentId,jdbcType=NUMERIC}
+  </select>
+  
+  
+  <!-- 根据服务内容id, 得到 是 选择题 的 子服务内容 -->
+  <select id="selectByContentId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  	 select 
+    <include refid="Base_Column_List" />
+    from survey_content_child
+    where content_id = #{contentId,jdbcType=NUMERIC}
+    order by option_no asc
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_content_child
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_content_child
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyContentChild" >
+    insert into survey_content_child (id, content_id, option_str, 
+      option_no, child_price, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{contentId,jdbcType=NUMERIC}, #{optionStr,jdbcType=VARCHAR}, 
+      #{optionNo,jdbcType=VARCHAR}, #{childPrice,jdbcType=DECIMAL}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyContentChild" >
+    insert into survey_content_child
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="contentId != null" >
+        content_id,
+      </if>
+      <if test="optionStr != null" >
+        option_str,
+      </if>
+      <if test="optionNo != null" >
+        option_no,
+      </if>
+      <if test="childPrice != null" >
+        child_price,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="contentId != null" >
+        #{contentId,jdbcType=NUMERIC},
+      </if>
+      <if test="optionStr != null" >
+        #{optionStr,jdbcType=VARCHAR},
+      </if>
+      <if test="optionNo != null" >
+        #{optionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="childPrice != null" >
+        #{childPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyContentChild" >
+    update survey_content_child
+    <set >
+      <if test="contentId != null" >
+        content_id = #{contentId,jdbcType=NUMERIC},
+      </if>
+      <if test="optionStr != null" >
+        option_str = #{optionStr,jdbcType=VARCHAR},
+      </if>
+      <if test="optionNo != null" >
+        option_no = #{optionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="childPrice != null" >
+        child_price = #{childPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyContentChild" >
+    update survey_content_child
+    set content_id = #{contentId,jdbcType=NUMERIC},
+      option_str = #{optionStr,jdbcType=VARCHAR},
+      option_no = #{optionNo,jdbcType=VARCHAR},
+      child_price = #{childPrice,jdbcType=DECIMAL},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

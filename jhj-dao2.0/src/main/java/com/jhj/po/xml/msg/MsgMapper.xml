@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.msg.MsgMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.msg.Msg" >
+    <id column="msg_id" property="msgId" jdbcType="NUMERIC" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="goto_url" property="gotoUrl" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="NUMERIC" />
+    <result column="send_time" property="sendTime" jdbcType="NUMERIC" />
+    <result column="is_send" property="isSend" jdbcType="NUMERIC" />
+    <result column="is_enable" property="isEnable" jdbcType="NUMERIC" />
+    <result column="app_type" property="appType" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jhj.po.model.msg.Msg" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    msg_id, title, summary,content, goto_url, user_type, send_time, is_send, is_enable, app_type, 
+    add_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  
+  <!-- 根据用户类型得到 需要   定时发送的消息 (尚未发送 is_send为0 )-->
+  <select id="selectTimeMsgByUserType" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Short">
+  	 select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from msg	
+  	where
+		send_time != 0 	
+	and
+		is_send == 0			
+	and
+		user_type = #{userType,jdbcType=NUMERIC}
+  </select>
+  
+  <!-- 根据用户类型得到 需要   立即发送的消息 -->
+  <select id="selectRightNowMsgByUserType" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Short">
+  	 select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from msg	
+  	where
+		send_time == 0 				
+	and
+		is_send == 0
+	and	
+  		user_type = #{userType,jdbcType=NUMERIC}		
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from msg
+    where msg_id = #{msgId,jdbcType=NUMERIC}
+  </select>
+  
+  <!-- <select id="selectUserListByUserType" resultMap="ResultMapWithBLOBs" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from msg
+    where user_type = #{userType} and msg_id not in
+     (select msg_id from msg_readed where user_id = #{userId})  order by add_time desc
+  </select> -->
+  
+  <select id="selectUserListByUserType" resultMap="BaseResultMap"
+  parameterType="com.jhj.vo.MsgSearchVo">
+		select
+		 <include refid="Base_Column_List" />
+		from msg where 1=1
+		<if test="userType !='' and userType !=null ">
+			 	and user_type = #{userType}
+	    </if>
+		and msg_id not in (
+			 SELECT 
+			 msg_id from msg_readed
+			 where 1=1
+			 <if test="userId !='' and userId !=null ">
+			 	and user_id = #{userId}
+			 </if>
+		)	
+		order by add_time desc
+	</select>
+	
+	<select id="selectListPageBySearchVo" resultMap="BaseResultMap"
+  parameterType="com.jhj.vo.MsgSearchVo">
+		select
+		 <include refid="Base_Column_List" />
+		from msg where 1=1
+		<if test="userType !='' and userType !=null ">
+			 	and user_type = #{userType}
+	    </if>
+		order by add_time desc
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from msg
+    where msg_id = #{msgId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.msg.Msg" >
+    insert into msg (msg_id, title, summary,
+      goto_url, user_type, send_time, 
+      is_send, is_enable, app_type, 
+      add_time, content)
+    values (#{msgId,jdbcType=NUMERIC}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR},
+      #{gotoUrl,jdbcType=VARCHAR}, #{userType,jdbcType=NUMERIC}, #{sendTime,jdbcType=NUMERIC}, 
+      #{isSend,jdbcType=NUMERIC}, #{isEnable,jdbcType=NUMERIC}, #{appType,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=NUMERIC}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.msg.Msg" >
+    insert into msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        msg_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="gotoUrl != null" >
+        goto_url,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="isSend != null" >
+        is_send,
+      </if>
+      <if test="isEnable != null" >
+        is_enable,
+      </if>
+      <if test="appType != null" >
+        app_type,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        #{msgId,jdbcType=NUMERIC},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="gotoUrl != null" >
+        #{gotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=NUMERIC},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=NUMERIC},
+      </if>
+      <if test="isSend != null" >
+        #{isSend,jdbcType=NUMERIC},
+      </if>
+      <if test="isEnable != null" >
+        #{isEnable,jdbcType=NUMERIC},
+      </if>
+      <if test="appType != null" >
+        #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.msg.Msg" >
+    update msg
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="gotoUrl != null" >
+        goto_url = #{gotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=NUMERIC},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=NUMERIC},
+      </if>
+      <if test="isSend != null" >
+        is_send = #{isSend,jdbcType=NUMERIC},
+      </if>
+      <if test="isEnable != null" >
+        is_enable = #{isEnable,jdbcType=NUMERIC},
+      </if>
+      <if test="appType != null" >
+        app_type = #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where msg_id = #{msgId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jhj.po.model.msg.Msg" >
+    update msg
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      goto_url = #{gotoUrl,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=NUMERIC},
+      send_time = #{sendTime,jdbcType=NUMERIC},
+      is_send = #{isSend,jdbcType=NUMERIC},
+      is_enable = #{isEnable,jdbcType=NUMERIC},
+      app_type = #{appType,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where msg_id = #{msgId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.msg.Msg" >
+    update msg
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      goto_url = #{gotoUrl,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=NUMERIC},
+      send_time = #{sendTime,jdbcType=NUMERIC},
+      is_send = #{isSend,jdbcType=NUMERIC},
+      is_enable = #{isEnable,jdbcType=NUMERIC},
+      app_type = #{appType,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where msg_id = #{msgId,jdbcType=NUMERIC}
+  </update>
+</mapper>

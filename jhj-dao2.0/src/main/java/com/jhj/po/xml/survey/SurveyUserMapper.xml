@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyUserMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyUser" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="NUMERIC" />
+    <result column="sex" property="sex" jdbcType="NUMERIC" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_name, age, sex, mobile, add_time
+  </sql>
+  
+  <select id="selectByIdList" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_user  as aaa
+    where 1=1
+    and
+     aaa.id in
+      <foreach collection="list" item="employeeId" index="index"
+            open="(" close=")" separator=",">
+            #{employeeId}
+      </foreach>
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_user
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_user
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyUser" >
+    insert into survey_user (id, user_name, age, 
+      sex, mobile, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{userName,jdbcType=VARCHAR}, #{age,jdbcType=NUMERIC}, 
+      #{sex,jdbcType=NUMERIC}, #{mobile,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyUser" >
+    insert into survey_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=NUMERIC},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+    <selectKey keyProperty="id" resultType="long">
+            select LAST_INSERT_ID()
+     </selectKey>
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyUser" >
+    update survey_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=NUMERIC},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=NUMERIC},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyUser" >
+    update survey_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      age = #{age,jdbcType=NUMERIC},
+      sex = #{sex,jdbcType=NUMERIC},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.university.StudyQuestionOptionMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.university.StudyQuestionOption" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="q_id" property="qId" jdbcType="NUMERIC" />
+    <result column="bank_id" property="bankId" jdbcType="NUMERIC" />
+    <result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, q_id, bank_id, service_type_id, no, title
+  </sql>
+  
+  <!-- 根据主键 批量 删除 -->
+  <delete id="deleteByIdList" parameterType="java.util.List">
+    delete from study_question_option
+    where 1=1
+    and id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    
+  </delete>
+ 
+  
+  
+  <!-- 根据题目 得到对应的所有选项 ,根据  A B C 正序排列-->
+  <select id="selectByQId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  	 select 
+     <include refid="Base_Column_List" />
+     from study_question_option
+  	 where 
+  	 q_id = #{qId,jdbcType=NUMERIC}
+  	 order by no asc
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from study_question_option
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from study_question_option
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.university.StudyQuestionOption" >
+    insert into study_question_option (id, q_id, bank_id, 
+      service_type_id, no, title
+      )
+    values (#{id,jdbcType=NUMERIC}, #{qId,jdbcType=NUMERIC}, #{bankId,jdbcType=NUMERIC}, 
+      #{serviceTypeId,jdbcType=NUMERIC}, #{no,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective"  parameterType="com.jhj.po.model.university.StudyQuestionOption" >
+    insert into study_question_option
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="qId != null" >
+        q_id,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="qId != null" >
+        #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.StudyQuestionOption" >
+    update study_question_option
+    <set >
+      <if test="qId != null" >
+        q_id = #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="no != null" >
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.StudyQuestionOption" >
+    update study_question_option
+    set q_id = #{qId,jdbcType=NUMERIC},
+      bank_id = #{bankId,jdbcType=NUMERIC},
+      service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      no = #{no,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

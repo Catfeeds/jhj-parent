@@ -1,0 +1,121 @@
+	<div data-page="order-service-charge-page" class="page"style="background-color:#E5E5E5E!important;overflow:auto">
+		<!-- Scrollable page content-->
+		<div class="page-content"style="margin:0;">
+			<form id="order-service-charge-form" style="color:#666;">
+				<input type="hidden" name="userId" id="userId" value="">
+				<input type="hidden" name="orderType" id="orderType" value="6">
+				<input type="hidden" name="payType" id="payType"  value="2">
+				<input type="hidden" name="serviceType"  value="11">
+				<input type="hidden" name="orderFrom" value="1">
+				
+				<input type="hidden" name="realMoney" id="paramRealMoney" value="">
+				<!-- <input type="hidden" name="couponId" value="0">  -->
+				
+				<div class="list-block">
+					<div class="list-group">
+						<ul>
+							<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label" >充值号码:</div>
+										<div class="item-xx-label">
+											<input type="text" maxlength="11" placeholder="支持全国三网手机号" name="chargeMobile" id="chargeMobile" />
+										</div>
+									</div>
+								</div>
+							</li>
+							
+							<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label" >确认号码:</div>
+										<div class="item-xx-label">
+											<input type="text" maxlength="11" placeholder="再次输入充值号码" id="reChargeMobile" />
+										</div>
+									</div>
+								</div>
+							</li>
+							
+							<li>
+								 <a href="#" class="item-link smart-select"  data-back-on-select="true">
+								 	<div class="item-content">
+								          <div class="item-inner">
+								            <div class="item-title label">充值面值:</div>
+								            <div class="item-xx-label">
+												<span class="item-after" id="selectMoney" style="max-width:90%;padding:0 0 0 3px;">20</span>
+											</div>
+								          </div>
+								     </div>
+									
+									<!-- 最低实际价格 -->
+									
+									<!-- 测试 
+									<input type="hidden" id="selectTwenty" value="1">
+									-->
+									<input type="hidden" id="selectFivty" value="49.8"/>
+									<input type="hidden" id="selectOneHundred" value="99.6"/>
+									<input type="hidden" id="selectTwoHundred" value="199.3"/>
+									
+									<select name="chargeMoney" id="chargeMoney">
+										  <option value="" >充值金额(元)</option>
+										  <option value="20" selected>20</option> 
+										 <!--  <option value="2">2</option> -->
+										  <option value="30" >30</option>
+										  <option value="50" >50</option>
+										  <option value="100">100</option>
+										  <option value="200">200</option>
+									</select>
+								</a>
+							</li>
+							
+							 <li>
+								<a href="#" id="selectCoupon" class="item-link">
+									<div class="item-content">
+										<div class="item-inner">
+											<div class="item-title label" >优&nbsp;&nbsp;惠&nbsp;&nbsp;券:</div>
+											<div class="item-xx-label" style="padding:0 0 0 8px;">
+													<span class="item-xx" id="couponSelect">请选择</span>
+											</div>
+											<input type="hidden" name="couponId" id="user_coupon_id" value=""/>
+										</div>
+									</div> 
+								</a>
+							</li> 
+							
+							<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label" >实际支付:</div>
+										<div class="item-xx-label">
+											<!--  input type="text" id="realMoney" name="realMoney" value=""/>
+											-->
+											
+											<span id="realMoney"></span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</form>
+			
+			  <span class="fangshiwenzi">支付方式</span>
+              <div class="list-block chongzhi-qingchu"style="margin:0 auto!important;">
+                <ul style="background:#F8F8F8">
+                    <li>
+						<label class="label-checkbox item-content"style="background:#F8F8F8;">
+							<div class="item-media"><img src="img/icons/weixin.png"style="width:50px;"></div>
+							<div class="item-inner">
+								<div class="item-title"style="margin-left:-26px;color:#000;">微信支付</div>
+								<img  src="img/icons/duigou-green.png"/> 
+							</div>
+						</label>
+					</li>
+                </ul>
+              </div>
+			
+			<a href="#" id="submitAtOnce"  class="button active shendu-submit">立即充值</a>
+			
+		</div>
+	</div>

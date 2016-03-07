@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffTagsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffTags">
+		<result column="id" property="id" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="tag_id" property="tagId" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, staff_id, tag_id, add_time
+	</sql>
+
+
+	<select id="selectTagIdsByStaId" resultType="java.lang.Long" parameterType="java.lang.Long">
+		select
+		tag_id
+		from org_staff_tags
+		where
+		staff_id = #{staffId,jdbcType =NUMERIC}
+	</select>
+
+	<select id="selectByStaffIds" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_tags
+		where staff_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		order by staff_id asc
+	</select>
+
+	<delete id="deleteByStaffId" parameterType="java.lang.Long">
+		delete
+		from org_staff_tags
+		where
+		staff_id = #{staff_id, jdbcType =NUMERIC}
+	</delete>
+
+	<select id="selectByStaffId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_tags
+		where staff_id = #{staffId,jdbcType=NUMERIC}
+	</select>
+
+	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffTags">
+		insert into org_staff_tags (id, staff_id, tag_id,
+		add_time)
+		values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC},
+		#{tagId,jdbcType=NUMERIC},
+		#{addTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffTags">
+		insert into org_staff_tags
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="tagId != null">
+				tag_id,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="tagId != null">
+				#{tagId,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+
+		<!-- 配置mysql主键自增 -->
+		<selectKey keyProperty="id" resultType="Long" order="AFTER">
+
+			select LAST_INSERT_ID()
+
+		</selectKey>
+	</insert>
+</mapper>

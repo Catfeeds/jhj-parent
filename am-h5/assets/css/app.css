@@ -1,0 +1,19 @@
+/* Write your styles */
+img {box-sizing: border-box;/* v2.3 开始移除以下代码，详见 #502 *//* max-width: 100%;height: auto;*/vertical-align: middle;border: 0;}
+.jhj-tuijian-back{}
+.jhj-tuijian-back img{width:20px;margin-top:3px;}
+.jhj-big-btn{width:80%;background:#EE7A00;border-color:#EE7A00;border-radius:10px;}
+.jhj-tuijian-input{border-color:#EE7A00;width:70%;}
+.jhj-tuijian-input1{width:90%;font-size:12px;color:#999;}
+.jhj-tuijian-caozuo{background:#fff;}
+.am-panel-bd{padding:0 1.25rem;color:#999;}
+.jhj-tuijian-shuoming{background-color:#fff!important;}
+.jhj-cstspan{color:#fff;width:30px;height:30px;background:#D1D6DA;text-align: center;line-height:28px;font-size:22px;font-weight:bold;float:left;margin-top:-3px;border-radius:5px;}
+.jhj-cstp{margin:0;color:#999;}
+.jhj-small-btn{margin-left:10px;background-color: #fff;color:#999;color:#999;border:1px solid #EF7B00!important;}
+.jhj-small-btn1{background-color: #EF7B00!important;color:#fff;right:10px;border:1px solid #EF7B00!important;}
+.jhj-cstspan1{color:#fff;background: #EF7B00;}
+.jhj-tongguopng{width:60px;margin:auto;display:block;}
+.jhj-dddx{height:60px;}
+.jhj-dddxspan1{line-height:60px;float:left;}
+.jhj-dddxspan2{line-height:60px;float:right;color:#EE7A00;}

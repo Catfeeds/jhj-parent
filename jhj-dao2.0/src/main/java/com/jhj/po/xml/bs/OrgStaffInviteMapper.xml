@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffInviteMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffInvite" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+    <result column="invite_mobile" property="inviteMobile" jdbcType="CHAR" />
+    <result column="invite_staff_id" property="inviteStaffId" jdbcType="NUMERIC" />
+    <result column="invite_order_count" property="inviteOrderCount" jdbcType="NUMERIC" />
+    <result column="invite_status" property="inviteStatus" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, staff_id, invite_mobile, invite_staff_id, invite_order_count, invite_status, 
+    add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_invite
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  
+  <select id="selectByInviteStaffIdAndStatus" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_invite
+    where invite_staff_id > 0 and invite_status = 0
+  </select>
+  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffFinanceSearchVo">
+  	select
+    <include refid="Base_Column_List" />
+    from org_staff_invite
+ 	where 1=1 
+    order by add_time desc    
+  </select>
+   <select id="selectByMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_invite
+    where invite_mobile = #{inviteMobile,jdbcType=NUMERIC}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from org_staff_invite
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffInvite" >
+    insert into org_staff_invite (id, staff_id, invite_mobile, 
+      invite_staff_id, invite_order_count, invite_status, 
+      add_time)
+    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{inviteMobile,jdbcType=CHAR}, 
+      #{inviteStaffId,jdbcType=NUMERIC}, #{inviteOrderCount,jdbcType=NUMERIC}, #{inviteStatus,jdbcType=NUMERIC}, 
+      #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffInvite" >
+    insert into org_staff_invite
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="staffId != null" >
+        staff_id,
+      </if>
+      <if test="inviteMobile != null" >
+        invite_mobile,
+      </if>
+      <if test="inviteStaffId != null" >
+        invite_staff_id,
+      </if>
+      <if test="inviteOrderCount != null" >
+        invite_order_count,
+      </if>
+      <if test="inviteStatus != null" >
+        invite_status,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="staffId != null" >
+        #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="inviteMobile != null" >
+        #{inviteMobile,jdbcType=CHAR},
+      </if>
+      <if test="inviteStaffId != null" >
+        #{inviteStaffId,jdbcType=NUMERIC},
+      </if>
+      <if test="inviteOrderCount != null" >
+        #{inviteOrderCount,jdbcType=NUMERIC},
+      </if>
+      <if test="inviteStatus != null" >
+        #{inviteStatus,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffInvite" >
+    update org_staff_invite
+    <set >
+      <if test="staffId != null" >
+        staff_id = #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="inviteMobile != null" >
+        invite_mobile = #{inviteMobile,jdbcType=CHAR},
+      </if>
+      <if test="inviteStaffId != null" >
+        invite_staff_id = #{inviteStaffId,jdbcType=NUMERIC},
+      </if>
+      <if test="inviteOrderCount != null" >
+        invite_order_count = #{inviteOrderCount,jdbcType=NUMERIC},
+      </if>
+      <if test="inviteStatus != null" >
+        invite_status = #{inviteStatus,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffInvite" >
+    update org_staff_invite
+    set staff_id = #{staffId,jdbcType=NUMERIC},
+      invite_mobile = #{inviteMobile,jdbcType=CHAR},
+      invite_staff_id = #{inviteStaffId,jdbcType=NUMERIC},
+      invite_order_count = #{inviteOrderCount,jdbcType=NUMERIC},
+      invite_status = #{inviteStatus,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

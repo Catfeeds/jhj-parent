@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>叮当到家</title>
+<link rel="stylesheet" href="../css/framework7.css">
+<link rel="stylesheet" href="../css/framework7.themes.css">
+<link rel="stylesheet" href="../css/my-app.css">
+
+</head>
+<body>
+	<!-- Status bar overlay for fullscreen mode-->
+	<div class="statusbar-overlay"></div>
+	<!-- Panels overlay-->
+	<div class="panel-overlay"></div>
+
+
+
+	<!-- Views-->
+	<div class="views">
+
+		<!-- Your main view, should have "view-main" class-->
+		<div class="view view-main">
+
+			<!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+			<div class="pages navbar-through toolbar-through">
+				<!-- Page, data-page contains page name-->
+				<div data-page="index" class="page"style="overflow:auto;">
+					<!-- Scrollable page content-->
+					<div class="page-content  shouye-bg" style="margin:0;padding:0;height:712px;">
+						<div class="swiper-container">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide"style="height:168px;">
+									<img src="../img/tmp/1.png">
+								</div>
+							</div>
+							<!-- <div class="swiper-pagination"></div> -->
+						</div>
+						
+						<div class="content-block shouye-neirong">
+						      <div class="row no-gutter">
+						        <div class="col-50">
+						        	<div class="row btn">
+										<div class="col-100"><img src="../img/icons/yingji-2x.png"style="width:24%;" /></div>
+										<div class="col-100">应急</div>
+									</div>
+						        </div>
+						        <div class="col-50">
+						        	<div class="row btn">
+										<div class="col-100"><img src="../img/icons/chongzhi-2x.png"style="width:24%;" /></div>
+										<div class="col-100">充值</div>
+									</div>
+						        </div>
+						      </div> 
+						      <div class="row no-gutter">
+						        <div class="col-50">
+						        	<div class="row btn">
+										<div class="col-100">
+											<a href="order/order-jingpai.html" class="no-animation link"> 
+												<img src="../img/icons/jingpai-2x.png" style="width:36%"/>
+											</a>
+										</div>
+										<div class="col-100"style="color:#666!important">金牌家政</div>
+									</div>
+						        </div>
+						        <div class="col-50">
+						        	<div class="row btn">
+										<div class="col-100">
+											<a href="order/order-am.html" class="no-animation link"> 
+												<img src="../img/icons/jiatingzhuli-2x.png" style="width:36%" />
+											</a>
+										</div>
+									<div class="col-100"style="color:#666;">家庭助理</div>
+									</div>
+								</div>
+						      </div>
+						      <div class="row no-gutter">
+						        <div class="col-50">
+						        	<div class="row btn">
+										<div class="col-100">
+											<a href="order/order-am.html" class="no-animation link"> 
+												<img src="../img/icons/shangcheng-2x.png" style="width:36%" />
+											</a>
+										</div>
+									<div class="col-100"style="color:#666;">网上商城</div>
+									</div>
+						        </div>
+						        <div class="col-50">
+						        	<div class="row btn">
+										<div class="col-100">
+											<img src="../img/icons/huodong-2x.png"  style="width:36%"/>
+										</div>
+										<div class="col-100"style="color:#666">社区活动</div>
+									</div>
+						        </div>
+						      </div>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Bottom Toolbar-->
+			
+			<div class="toolbar tabbar tabbar-labels">
+			    <div class="toolbar-inner-jhj">
+			        <a href="index.html" class="no-animation link" style="color:#FF7E00">
+			            <i class="icon toolbar-icon-index"style="width:25px;"></i>
+			            <span class="tabbar-label">首页</span>
+			        </a>
+			       <!--  <a id="order-list" href="order/order-list.html" class="no-animation link">
+			            <i class="icon demo-icon-2"></i>
+			            <span class="tabbar-label">订单</span>
+			        </a> -->
+			        
+			        <a id="order-hour-list" href="order/order-hour-now-list.html" class="no-animation link">
+			            <i class="icon demo-icon-2"></i>
+			            <span class="tabbar-label">用户订单</span>
+			        </a>
+			        
+			        <a id="order-hour-list" href="order/order-hour-old-list.html" class="no-animation link">
+			            <i class="icon demo-icon-2"></i>
+			            <span class="tabbar-label">历史订单</span>
+			        </a>
+			        
+			        <a id="am-list" href="order/order-list.html" class="no-animation link">
+			            <i class="icon demo-icon-3"></i>
+			            <span class="tabbar-label">助理</span>
+			        </a>
+			        <a href="user/mine.html" class="no-animation link"> 
+			            <i class="icon demo-icon-4"></i>
+			            <span class="tabbar-label">我的</span>
+			        </a>
+		    	</div>
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- Path to Framework7 Library JS-->
+	
+	<script type="text/javascript" src="js/framework7.min.js"></script>
+	
+	<!-- 时间戳类库 -->
+	<script type="text/javascript" src="js/lib/moment-with-locales.min.js"></script>
+	
+	<!-- Path to your app js-->
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/login.js"></script>
+	<script type="text/javascript" src="js/require-data.js"></script>
+	<script type="text/javascript" src="js/utils.js"></script>
+	
+ 	<!-- 用户地址列表显示-->
+	<script type="text/javascript" src="js/user/mine.js"></script>  
+	<script type="text/javascript" src="js/user/mine-addr-list.js"></script>  
+	
+	<!-- 用户添加地址 -->
+	<script type="text/javascript"  src="js/user/mine-add-addrs.js"></script>  
+	
+	<!-- 钟点工提交订单页面 js -->	
+	<script type="text/javascript" src="js/order/order-form-zhongdiangong.js"></script>
+	<!-- 钟点工支付页面 -->
+	<script type="text/javascript" src="js/order/order-form-zhongdiangong-pay.js"></script>
+	<!-- 用户版，当前订单列表 -->
+	<script type="text/javascript" src="js/order/order-hour-now-list.js"></script>
+	<!-- 用户版，历史订单列表 -->
+	<script type="text/javascript" src="js/order/order-hour-old-list.js"></script>
+	<!-- 钟点工-订单详情 -->
+	<script type="text/javascript" src="js/order/order-view-0.js"></script>
+	<!-- 用户预约订单 -->
+	<script type="text/javascript" src="js/order/order-am.js"></script>
+
+	<script type="text/javascript" src="js/order/order-am-faqiyuyue.js"></script>
+
+	<!-- 用户兑换优惠券 -->
+	<script type="text/javascript"  src="js/user/mine-coupon-list.js"></script>  
+	
+	<!-- 深度保洁附加服务选择 -->
+	<script type="text/javascript"  src="js/order/order-list-shendubaojiezl.js"></script>  
+	<script type="text/javascript"  src="js/order/order-list-shendubaojie-yuyue.js"></script>  
+	
+
+</body>
+</html>

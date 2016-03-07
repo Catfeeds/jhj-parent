@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.survey.SurveyQuestionOptionMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.survey.SurveyQuestionOption" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="q_id" property="qId" jdbcType="NUMERIC" />
+    <result column="bank_id" property="bankId" jdbcType="NUMERIC" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="related_q_id" property="realtedQId" jdbcType="NUMERIC" />
+    <result column="related_content_id" property="relatedContentId" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, q_id, bank_id, title, no, related_q_id, related_content_id, add_time, update_time
+  </sql>
+	
+  <select id="selectOneByQIdAndNo" resultMap="BaseResultMap" >
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_question_option 
+  	where 
+    q_id = #{qId,jdbcType=NUMERIC}
+    and
+    no = #{optionNo,jdbcType=VARCHAR}
+  </select>  	
+	  
+  <!-- 根据题目 id 和  选中的 序号，得到选项id -->
+  <select id="selectByQIdAndNo" resultMap="BaseResultMap"  parameterType="java.util.Map">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_question_option as  a
+  	where 
+  	a.q_id = #{qId,jdbcType=NUMERIC}
+  	and
+	a.no in  	
+  	<foreach collection="myList" item="item" index="index" open="(" close=")" separator=",">
+     #{item}
+  	</foreach>	
+  
+  </select>
+  
+  <!-- 根据主键 批量 删除 -->
+  <delete id="deleteByIdList" parameterType="java.util.List">
+    delete from survey_question_option
+    where 1=1
+    and id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    
+  </delete>
+  
+  <!-- 根据题目得到，该题目的所有选项 ,并按 abc 排序-->
+  <select id="selectByQId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+    <include refid="Base_Column_List" />
+    from survey_question_option
+  	where 
+  	q_id = #{qId,jdbcType=NUMERIC}
+  	order by no asc
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from survey_question_option
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from survey_question_option
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyQuestionOption" >
+    insert into survey_question_option (id, q_id, bank_id, 
+      title, no, related_q_id, 
+      related_content_id, add_time, update_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{qId,jdbcType=NUMERIC}, #{bankId,jdbcType=NUMERIC}, 
+      #{title,jdbcType=VARCHAR}, #{no,jdbcType=VARCHAR}, #{realtedQId,jdbcType=NUMERIC}, 
+      #{relatedContentId,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyQuestionOption" >
+    insert into survey_question_option
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="qId != null" >
+        q_id,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="realtedQId != null" >
+        related_q_id,
+      </if>
+      <if test="relatedContentId != null" >
+        related_content_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="qId != null" >
+        #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="realtedQId != null" >
+        #{realtedQId,jdbcType=NUMERIC},
+      </if>
+      <if test="relatedContentId != null" >
+        #{relatedContentId,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyQuestionOption" >
+    update survey_question_option
+    <set >
+      <if test="qId != null" >
+        q_id = #{qId,jdbcType=NUMERIC},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null" >
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="realtedQId != null" >
+        related_q_id = #{realtedQId,jdbcType=NUMERIC},
+      </if>
+      <if test="relatedContentId != null" >
+        related_content_id = #{relatedContentId,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.survey.SurveyQuestionOption" >
+    update survey_question_option
+    set q_id = #{qId,jdbcType=NUMERIC},
+      bank_id = #{bankId,jdbcType=NUMERIC},
+      title = #{title,jdbcType=VARCHAR},
+      no = #{no,jdbcType=VARCHAR},
+      related_q_id = #{realtedQId,jdbcType=NUMERIC},
+      related_content_id = #{relatedContentId,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

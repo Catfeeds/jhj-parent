@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.dict.DictAdMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictAd" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="no" property="No" jdbcType="NUMERIC" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="goto_url" property="gotoUrl" jdbcType="VARCHAR" />
+    <result column="ad_type" property="adType" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+    <result column="enable" property="enable" jdbcType="NUMERIC" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, no, img_url, goto_url, ad_type, add_time, update_time,enable
+  </sql>
+
+  <select id="selectByAdType"  resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_ad
+    where ad_type = #{adType,jdbcType=NUMERIC} and enable = 1 
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_ad
+    order by id asc
+  </select>
+
+<select id="selectByListPage" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_ad
+    order by id asc
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_ad
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dict_ad
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.dict.DictAd" >
+    insert into dict_ad (id, no, img_url,
+      goto_url, ad_type, add_time,
+      update_time,enable)
+    values (#{id,jdbcType=NUMERIC}, #{No,jdbcType=NUMERIC},  #{imgUrl,jdbcType=VARCHAR},
+      #{gotoUrl,jdbcType=VARCHAR}, #{adType,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC},
+      #{updateTime,jdbcType=NUMERIC},#{enable,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictAd" >
+    insert into dict_ad
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="No != null" >
+        no,
+      </if>
+      <if test="imgUrl != null" >
+        img_url,
+      </if>
+      <if test="gotoUrl != null" >
+        goto_url,
+      </if>
+      <if test="adType != null" >
+        ad_type,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+       <if test="enable != null" >
+        enable
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="No != null" >
+        #{No,jdbcType=NUMERIC},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gotoUrl != null" >
+        #{gotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="adType != null" >
+        #{adType,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+       <if test="enable != null" >
+        #{enable,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictAd" >
+    update dict_ad
+    <set >
+      <if test="No != null" >
+        no = #{No,jdbcType=NUMERIC},
+      </if>
+      <if test="imgUrl != null" >
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gotoUrl != null" >
+        goto_url = #{gotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="adType != null" >
+        ad_type = #{adType,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+        <if test="enable != null" >
+        enable = #{enable,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictAd" >
+    update dict_ad
+    set no = #{No,jdbcType=NUMERIC},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      goto_url = #{gotoUrl,jdbcType=VARCHAR},
+      ad_type = #{adType,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC},
+      enable = #{enable,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

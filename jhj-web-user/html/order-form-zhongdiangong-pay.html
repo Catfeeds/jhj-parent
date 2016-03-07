@@ -1,0 +1,124 @@
+<meta charset="utf-8">
+<meta name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title></title>
+<link rel="stylesheet" href="../css/framework7.css">
+<link rel="stylesheet" href="../css/framework7.themes.css">
+<link rel="stylesheet" href="../css/my-app.css">
+<style type="text/css">
+
+#l-map{height:300px;width:100%;}
+#r-result{width:100%;}
+</style>
+<div class="pages">
+	<!-- Page, data-page contains page name-->
+	<div data-page="orderHour-pay-page" class="page"style="overflow:auto;">
+		<!-- Scrollable page content-->
+		<div class="page-content" style="margin: 0;padding: 0;background: #E5E5E5;height:842px;">
+
+			<form id="orderHour-pay-form">
+				<div class="list-block chongzhi-qingchu">
+					<ul>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">总计：</div>
+									<p id="order-money-label"></p>
+								</div>
+							</div>
+						</li>
+
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">服务时间：</div>
+									<p id="service-date-label"></p>
+								</div>
+							</div>
+						</li>
+
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">服务地址：</div>
+									<p id="service-addr-label"></p>
+								</div>
+							</div>
+						</li>
+
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">备注：</div>
+									<p id="remark-label"></p>
+								</div>
+							</div>
+						</li>
+				</div>
+				<br />
+				<div style="margin: 0" class="list-block chongzhi-qingchu">
+					<ul>
+
+						<li>
+							<a href="#" class="item-link  smart-select" data-back-on-select="true" data-back-text="返回">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title">优惠券:</div>
+										<div class="item-after" id="couponSelect"></div>
+									</div>
+								</div> 
+								<select name="couponId" id="couponId">
+									<option value="0">请选择优惠券面额</option>
+								</select>
+							</a>
+						</li>
+
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">实际金额：</div>
+									<p id="real-order-money-label"></p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div class="list-block chongzhi-qingchu">
+					<ul>
+						<!-- Single chekbox item -->
+						<li><label class="label-checkbox item-content"> 
+								<div class="item-media"><img src="../img/icons/zhanghuyue.png"style="margin-left:10px;"></div>
+								<div class="item-inner">
+									<div class="item-title"style="margin-left:-16px;">账号余额</div>
+									<input type="checkbox" id="order_pay_type" name="order_pay_type" value="0" checked="checked" />
+									<div class="item-media">
+										<i class="icon icon-form-checkbox"></i>
+									</div>
+								</div>
+							</label>
+						</li>
+						<!-- Another chekbox item -->
+						<li><label class="label-checkbox item-content"> 
+								
+								<div class="item-media"><img src="../img/icons/weixin-2x.png"style="width:50px;"></div>
+								<div class="item-inner">
+									<div class="item-title"style="margin-left:-26px;">微信支付</div>
+									<input type="checkbox" id="order_pay_type" name="order_pay_type" value="1"  />
+									<div class="item-media">
+										<i class="icon icon-form-checkbox"></i>
+									</div>
+								</div>
+							</label>
+						</li>
+					</ul>
+				</div>
+
+
+			</form>
+			<a href="#"class="button active shendu-submit">支付</a>
+		</div>
+	</div>
+</div>

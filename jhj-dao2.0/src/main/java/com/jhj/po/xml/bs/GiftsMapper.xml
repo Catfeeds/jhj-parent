@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.GiftsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.Gifts">
+		<id column="gift_id" property="giftId" jdbcType="NUMERIC" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="range_month" property="rangeMonth" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		gift_id, name, range_month, add_time, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from gifts
+		where gift_id = #{giftId,jdbcType=NUMERIC}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gifts
+		order by add_time desc
+	</select>
+
+	<select id="selectByIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gifts
+		where gift_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+
+		order by add_time asc
+	</select>
+
+	<!-- -->
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from gifts
+		where 1=1
+		<if test="name != null">
+			and name like CONCAT('%','${name}','%' )
+		</if>
+		order by add_time desc
+	</select>
+	<select id="selectByNameAndOtherId" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from gifts
+		where 1=1
+
+		<if test="name != null">
+			and name = #{name,jdbcType=VARCHAR}
+		</if>
+
+		<if test="giftId != null">
+			and gift_id != #{giftId,jdbcType=NUMERIC}
+		</if>
+		limit 1
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from gifts
+		where gift_id = #{giftId,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.bs.Gifts">
+		insert into gifts (gift_id, name, range_month,
+		add_time, update_time)
+		values (#{giftId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{rangeMonth,jdbcType=NUMERIC},
+		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="giftId" parameterType="com.jhj.po.model.bs.Gifts">
+		insert into gifts
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="giftId != null">
+				gift_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="rangeMonth != null">
+				range_month,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="giftId != null">
+				#{giftId,jdbcType=NUMERIC},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="rangeMonth != null">
+				#{rangeMonth,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.Gifts">
+		update gifts
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="rangeMonth != null">
+				range_month = #{rangeMonth,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where gift_id = #{giftId,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.Gifts">
+		update gifts
+		set name = #{name,jdbcType=VARCHAR},
+		range_month = #{rangeMonth,jdbcType=NUMERIC},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=NUMERIC}
+		where gift_id = #{giftId,jdbcType=NUMERIC}
+	</update>
+</mapper>

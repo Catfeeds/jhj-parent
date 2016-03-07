@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.university.StudyBankMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.university.StudyBank" >
+    <id column="bank_id" property="bankId" jdbcType="NUMERIC" />
+    <result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="total_need" property="totalNeed" jdbcType="NUMERIC" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="random_q_num" property="randomQNum" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bank_id, service_type_id, name, total_need, description, add_time, random_q_num
+  </sql>
+  
+  <!-- 二级联动，根据服务类别得到 题库 -->
+  <select id="selectBankByServiceType" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	 select 
+     <include refid="Base_Column_List" />
+     from study_bank
+  	 where 
+     service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+  </select>
+  
+  
+  <!-- 平台-叮当大学-题库列表 -->
+  <select id="selectByListPage" resultMap="BaseResultMap">
+  	 select 
+     <include refid="Base_Column_List" />
+     from study_bank
+  	 order by add_time desc
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from study_bank
+    where bank_id = #{bankId,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from study_bank
+    where bank_id = #{bankId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.university.StudyBank" >
+    insert into study_bank (bank_id, service_type_id, name, 
+      total_need, description, add_time, 
+      random_q_num)
+    values (#{bankId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, 
+      #{totalNeed,jdbcType=NUMERIC}, #{description,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, 
+      #{randomQNum,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.university.StudyBank" >
+    insert into study_bank
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="totalNeed != null" >
+        total_need,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="randomQNum != null" >
+        random_q_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        #{bankId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNeed != null" >
+        #{totalNeed,jdbcType=NUMERIC},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="randomQNum != null" >
+        #{randomQNum,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.StudyBank" >
+    update study_bank
+    <set >
+      <if test="serviceTypeId != null" >
+        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNeed != null" >
+        total_need = #{totalNeed,jdbcType=NUMERIC},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="randomQNum != null" >
+        random_q_num = #{randomQNum,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where bank_id = #{bankId,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.StudyBank" >
+    update study_bank
+    set service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      name = #{name,jdbcType=VARCHAR},
+      total_need = #{totalNeed,jdbcType=NUMERIC},
+      description = #{description,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      random_q_num = #{randomQNum,jdbcType=NUMERIC}
+    where bank_id = #{bankId,jdbcType=NUMERIC}
+  </update>
+</mapper>

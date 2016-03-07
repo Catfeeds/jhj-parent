@@ -1,0 +1,46 @@
+<div class="pages" style="background: #E5E5E5;">
+	<div data-page="survey-result-child-page" class="page" style="overflow:auto;">
+		<div class="page-content" style="margin:0;height:792px!important;">
+			<div id="childContentFormDiv"  class="list-block deep-list-block store-data"  >
+				
+				<!-- 父级服务内容的 id -->
+				<input type="hidden" id="contentId" value="">
+				
+				<ul id="childDisplay"  style="background: #F8F8F8" >
+				
+				</ul>
+				
+				<!-- 模板。virtual list -->
+				<ul	 id="childContentTemplate"	 class="ddxq-xx" style="display:none;background: #F8F8F8">
+					
+					<li>
+						<div class="item-content">
+							
+							<div class="item-inner">
+								<div class="item-title label" style="width:65%!important;" >{contentName}：</div>
+								<div class="item-xx" style="margin-right: -10px; color: #666">
+									<div class="item-content" style="width:100px;">
+											<input type="hidden" id="childContentId" value="{id}"/>
+											<input id="min" name="min" type="button" onclick="onSubItemNum($$(this).parent())" value="-" class="bjdd-jianhao">
+											
+											<input id="item_num" name="item_num" value="{number}" 
+												maxLength="3" 
+												ondragenter="return false"
+												onkeyup="value=ValidateNumber(this,value);" style="width:30px;" type="tel"/> 
+											
+											<input id="add" type="button" name="add" type="button" value="+" onclick="onAddItemNum($$(this).parent())"class="bjdd-jiahao">
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>					
+				</ul>
+			
+				
+			</div>
+			<a href="#" id="confirmChangeTimes" class="button active shendu-submit">确认调整</a>
+			
+		</div>
+	</div>
+</div>
+

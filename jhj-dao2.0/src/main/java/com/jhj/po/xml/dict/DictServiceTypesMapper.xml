@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.dict.DictServiceTypesMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictServiceTypes" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="tips" property="tips" jdbcType="VARCHAR" />
+    <result column="subhead_huodong" property="subheadHuodong" jdbcType="VARCHAR" />
+    <result column="subhead_am" property="subheadAm" jdbcType="VARCHAR" />
+    <result column="service_relative" property="serviceRelative" jdbcType="VARCHAR" />
+    <result column="service_feature" property="serviceFeature" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="dis_price" property="disPrice" jdbcType="DECIMAL" />
+    <result column="desc_url" property="descUrl" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+    <result column="enable" property="enable" jdbcType="NUMERIC" />
+    <result column="degree_type" property="degreeType" jdbcType="NUMERIC" />
+    <result column="to_date" property="toDate" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, keyword, tips, subhead_huodong, subhead_am, service_relative, service_feature, 
+    price, dis_price, desc_url, add_time, update_time, enable, degree_type, to_date
+  </sql>
+  
+  
+  <select id="selectByServiceType" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		 select
+	     <include refid="Base_Column_List" />
+	     from dict_service_types
+	     where 
+	     id = #{serviceType}
+  </select>
+  
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_service_types
+    order by id asc
+  </select>
+
+  <select id="selectByListPage" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from dict_service_types
+    order by id asc
+  </select>
+  
+  	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from dict_service_types
+		where name = #{name,jdbcType=VARCHAR}
+	</select>
+
+  	<select id="selectByNameAndOtherId" resultMap="BaseResultMap"
+		parameterType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from dict_service_types
+		where 1=1
+
+		<if test="name != null" >
+			and name = #{name,jdbcType=VARCHAR}
+		</if>
+
+		<if test="id != null" >
+		     and id != #{id,jdbcType=NUMERIC}
+		 </if>
+		 limit 1
+	</select>
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from dict_service_types
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dict_service_types
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.dict.DictServiceTypes" >
+    insert into dict_service_types (id, name, keyword, 
+      tips, subhead_huodong, subhead_am, 
+      service_relative, service_feature, price, 
+      dis_price, desc_url, add_time, 
+      update_time, enable, degree_type, 
+      to_date)
+    values (#{id,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, 
+      #{tips,jdbcType=VARCHAR}, #{subheadHuodong,jdbcType=VARCHAR}, #{subheadAm,jdbcType=VARCHAR}, 
+      #{serviceRelative,jdbcType=VARCHAR}, #{serviceFeature,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{disPrice,jdbcType=DECIMAL}, #{descUrl,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, 
+      #{updateTime,jdbcType=NUMERIC}, #{enable,jdbcType=NUMERIC}, #{degreeType,jdbcType=NUMERIC}, 
+      #{toDate,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictServiceTypes" >
+    insert into dict_service_types
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="keyword != null" >
+        keyword,
+      </if>
+      <if test="tips != null" >
+        tips,
+      </if>
+      <if test="subheadHuodong != null" >
+        subhead_huodong,
+      </if>
+      <if test="subheadAm != null" >
+        subhead_am,
+      </if>
+      <if test="serviceRelative != null" >
+        service_relative,
+      </if>
+      <if test="serviceFeature != null" >
+        service_feature,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="disPrice != null" >
+        dis_price,
+      </if>
+      <if test="descUrl != null" >
+        desc_url,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="degreeType != null" >
+        degree_type,
+      </if>
+      <if test="toDate != null" >
+        to_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="tips != null" >
+        #{tips,jdbcType=VARCHAR},
+      </if>
+      <if test="subheadHuodong != null" >
+        #{subheadHuodong,jdbcType=VARCHAR},
+      </if>
+      <if test="subheadAm != null" >
+        #{subheadAm,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceRelative != null" >
+        #{serviceRelative,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceFeature != null" >
+        #{serviceFeature,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="disPrice != null" >
+        #{disPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="descUrl != null" >
+        #{descUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="degreeType != null" >
+        #{degreeType,jdbcType=NUMERIC},
+      </if>
+      <if test="toDate != null" >
+        #{toDate,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictServiceTypes" >
+    update dict_service_types
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="tips != null" >
+        tips = #{tips,jdbcType=VARCHAR},
+      </if>
+      <if test="subheadHuodong != null" >
+        subhead_huodong = #{subheadHuodong,jdbcType=VARCHAR},
+      </if>
+      <if test="subheadAm != null" >
+        subhead_am = #{subheadAm,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceRelative != null" >
+        service_relative = #{serviceRelative,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceFeature != null" >
+        service_feature = #{serviceFeature,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="disPrice != null" >
+        dis_price = #{disPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="descUrl != null" >
+        desc_url = #{descUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="degreeType != null" >
+        degree_type = #{degreeType,jdbcType=NUMERIC},
+      </if>
+      <if test="toDate != null" >
+        to_date = #{toDate,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictServiceTypes" >
+    update dict_service_types
+    set name = #{name,jdbcType=VARCHAR},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      tips = #{tips,jdbcType=VARCHAR},
+      subhead_huodong = #{subheadHuodong,jdbcType=VARCHAR},
+      subhead_am = #{subheadAm,jdbcType=VARCHAR},
+      service_relative = #{serviceRelative,jdbcType=VARCHAR},
+      service_feature = #{serviceFeature,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      dis_price = #{disPrice,jdbcType=DECIMAL},
+      desc_url = #{descUrl,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC},
+      enable = #{enable,jdbcType=NUMERIC},
+      degree_type = #{degreeType,jdbcType=NUMERIC},
+      to_date = #{toDate,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

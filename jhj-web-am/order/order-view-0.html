@@ -1,0 +1,121 @@
+<div class="pages"style="background:0">
+	<!-- Page, data-page contains page name-->
+	<div data-page="am-order-hour-view-0-page" class="page"style="overflow:auto;">
+		<!-- Scrollable page content-->
+		<div class="page-content" style="padding-bottom:40px;height:900px;">
+			<div class="ddxq-neirong" style="font-size:18px;">
+				<span style="padding-top:30px;margin-left:15px;">{{order_type_name}}</span>
+				<p style="margin-top:-20px;">{{order_status_name}}</p>
+			</div>
+			
+			<form id="orderAmHourView" class="list-block" >
+				
+				<input type="hidden" id="orderStatus" value="{{orderStatus}}">
+				
+				<div style="margin: 15px auto;" class="list-block">
+				<ul class="ddxq-xx"style="background:#F8F8F8">
+					 <li>
+				      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-title label">订&nbsp;&nbsp;单&nbsp;&nbsp;号:</div>
+					          <div class="item-xx-label">
+					            	<span >{{order_no}}</span>
+					          </div>
+					        </div>
+				      </div>
+				    </li>
+					
+					 <li>
+						<div class="item-content">
+					       <div class="item-inner">
+					          <div class="item-title label">服务人员:</div>
+					          <div class="item-xx-label">
+					            	<span id="staffName-span">{{staff_name}}</span>
+					          </div>
+					        </div>
+					      </div>
+					 </li>		
+					 
+				    <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">服务时间:</div>
+				          <div class="item-xx-label">
+					            <span >{{service_date}}</span>
+					      </div>
+				        </div>
+				      </div>
+				    </li>
+				    
+				    <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">服务地址:</div>
+				          <div class="item-xx-label" style="width:75%;">
+					            <span >{{addr_name}}</span>
+					      </div>
+				        </div>
+				      </div>
+				    </li>
+				    
+				    <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">服务时长:</div>
+				           <div class="item-xx-label">
+					            <span >{{service_hour}}小时</span>
+					      </div>
+				        </div>
+				      </div>
+				    </li>
+				    
+				    <li id="couponLi">
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">优&nbsp;&nbsp;惠&nbsp;&nbsp;券:</div>
+				          <div class="item-xx-label">
+					            <span >为您节省了￥{{coupon_value}}</span>
+					      </div>
+				        </div>
+				      </div>
+				    </li>
+				    
+				    <li id="realMoneyLi">
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label" style="width:126px">支付金额:</div>
+				          <div class="item-xx-label">
+					            <span >￥{{order_pay}}</span>
+					      </div>
+				        </div>
+				      </div>
+				    </li>
+				    
+				    <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">服务内容:</div>
+				           <div class="item-xx-label">
+					            <span >{{service_content}}</span>
+					      </div>
+				        </div>
+				      </div>
+				    </li>
+				    
+				    <li>
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-title label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</div>
+				           <div class="item-xx-label" style="width:75%;">
+					            <span >{{remarks}}</span>
+					      </div>
+				        </div>
+				      </div>
+				    </li>
+				</ul>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+

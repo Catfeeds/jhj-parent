@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+<!--     <classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" />
+ --><classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" />
+
+	<!-- 数据库链接URL、用户名、密码 -->
+	<context id="jdbc-test">
+
+		<!-- suppressAllComments 默认是false 此属性用于指定在生成的代码是否将包括任何注释。如果设置为true 则不生成注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!-- 数据库链接URL、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/jhj2.0" userId="root"
+			password="root1qaz" />
+
+		<!-- 解决数字转换问题 -->
+		<javaTypeResolver>
+			<!-- 只有一个属于forceBigDecimals，默认false。 如果字段精确超过0，生成BigDecimal 如果字段精确是0，总长度10-18生成Long;
+				如果字段精确是0，总长5-9生成Integer; 如果字段精确是0，总长小于5生成Short; 如果forceBigDecimals为true,统一生成BigDecimal -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.jhj.po.model.orderReview"
+			targetProject="jhj-dao2.0">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+		<!-- 生成的映射文件包名和位置 -->
+		<sqlMapGenerator targetPackage="com.jhj.po.xml.orderReview"
+			targetProject="jhj-dao2.0">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- 生成DAO的包名和位置 -->
+		<javaClientGenerator targetPackage="com.jhj.po.dao.orderReview"
+			targetProject="jhj-dao2.0" type="XMLMAPPER">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+<table schema="jhj" tableName="jhj_order_review"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="service_date" property="serviceDate" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="arrive_on_time" property="arrriveOnTime" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="clean_review" property="cleanReview" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="service_detail" property="serviceDetail" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="appearance" property="appearance" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="after_service" property="afterService" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="over_all_review" property="overAllReview" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		<table schema="jhj2.0" tableName="jhj_setting"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		
+	</context>
+</generatorConfiguration>

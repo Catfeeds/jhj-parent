@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<!--  
+	  <classPathEntry location="C:\workspace\java\libs\mysql-connector-java-5.1.5-bin.jar" />
+    -->
+	<!-- <classPathEntry location="D:/workspace/work/java/libs/mysql-connector-java-5.1.33.jar" /> -->
+	
+	<classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" /> 
+
+
+	<!-- 数据库链接URL、用户名、密码 -->
+	<context id="jdbc-test">
+
+		<!-- suppressAllComments 默认是false 此属性用于指定在生成的代码是否将包括任何注释。如果设置为true 则不生成注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!-- 数据库链接URL、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/jhj" userId="root"
+			password="root1qaz" />
+
+		<!-- 解决数字转换问题 -->
+		<javaTypeResolver>
+			<!-- 只有一个属于forceBigDecimals，默认false。 如果字段精确超过0，生成BigDecimal 如果字段精确是0，总长度10-18生成Long;
+				如果字段精确是0，总长5-9生成Integer; 如果字段精确是0，总长小于5生成Short; 如果forceBigDecimals为true,统一生成BigDecimal -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.jhj.po.model.dict"
+			targetProject="jhj-dao2.0">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+		<!-- 生成的映射文件包名和位置 -->
+		<sqlMapGenerator targetPackage="com.jhj.po.xml.dict"
+			targetProject="jhj-dao2.0">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- 生成DAO的包名和位置 -->
+		<javaClientGenerator targetPackage="com.jhj.po.dao.dict"
+			targetProject="jhj-dao2.0" type="XMLMAPPER">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+		<!-- 省份表 
+		<table schema="jhj" tableName="dict_province"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="province_id" property="provinceId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="is_enable" property="isEnable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		
+		城市表
+		<table schema="jhj" tableName="dict_city"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="city_id" property="cityId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="province_id" property="provinceId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="is_enable" property="isEnable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>			
+		
+		区县表 
+		<table schema="jhj" tableName="dict_region"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="region_id" property="regionId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="city_id" property="cityId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="province_id" property="provinceId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="is_enable" property="isEnable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>		
+		
+		
+		充值卡类型表 
+		<table schema="jhj" tableName="dict_card_type"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+
+
+		广告配置表 
+		<table schema="jhj" tableName="dict_ad"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="service_type" property="serviceType" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+
+			<columnOverride  column="no" property="No" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		
+		服务附加类型配置表 
+		<table schema="jhj" tableName="dict_service_addons"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="service_addon_id" property="serviceAddonId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="service_type" property="serviceType" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		
+		<table schema="jhj" tableName="dict_service_types"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="degree_type" property="degreeType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="to_date" property="toDate" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		
+		
+	 
+			 2015-11-26 18:00:20  dict_degree_type  
+			 针对, 助理类型下 的 各种 新增  业务类型的  分类 ， 比如分成  限时活动、核心业务、特色业务等等~~ 
+		
+		<table schema="jhj" tableName="dict_degree_type"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		 -->
+		
+		<!-- 2016年2月22日10:45:02   app相关参数配置 --> 
+		<table schema="jhj" tableName="jhj_setting"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+		 
+		 
+	</context>
+</generatorConfiguration>

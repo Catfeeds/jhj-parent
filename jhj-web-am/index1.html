@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>叮当到家</title>
+<link rel="stylesheet" href="css/framework7.min.css">
+<link rel="stylesheet" href="css/framework7.themes.min.css">
+<link rel="stylesheet" href="css/my-app.min.css?t=764f1791">
+
+</head>
+<body>
+	<!-- Status bar overlay for fullscreen mode-->
+
+	<!-- Views-->
+	<div class="views">
+		<!-- Your main view, should have "view-main" class-->
+		<div class="view view-main" style="padding-bottom:50px!important;">
+
+			<!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
+			<div class="pages navbar-through toolbar-through">
+				<!-- Page, data-page contains page name-->
+				<div data-page="index" class="page">
+					<!-- Scrollable page content-->
+					<div class="page-content">
+
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- Bottom Toolbar-->
+
+			<div class="toolbar tabbar tabbar-labels layout-dark"style="position:fixed;overflow:hidden">
+				<div class="toolbar-inner-jhj">
+
+					<a id="toolbar-order" href="#" onclick="toolBarHref('order/order-list.html', 'toolbar-order');" class="no-animation link active" style="color:#EF7B00">
+						<i class="icon demo-icon-list"></i>
+						 <span class="tabbar-label" style="margin-top:10px;">订单</span>
+					</a> 
+					
+					<a id="toolbar-user" href="#" onclick="toolBarHref('user/user-list.html', 'toolbar-user');" class="no-animation link">
+						<i class="icon demo-icon-user"></i>
+						<span class="tabbar-label" style="margin-top:10px;">客户</span>
+					</a>
+					
+					<a id="toolbar-remind" href="#" onclick="toolBarHref('order/remind/remind-list.html', 'toolbar-remind');" class="no-animation link">
+						<i class="icon demo-icon-tixing"></i>
+						<span class="tabbar-label" style="margin-top:10px;">提醒</span>
+					</a>
+					
+					<a id="toolbar-mine" href="" onclick="toolBarHref('mine/mine.html', 'toolbar-mine');" class="no-animation link">
+						<i class="icon demo-icon-my"></i>
+						<span class="tabbar-label" style="margin-top:10px;">我的</span>
+					</a>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- Path to Framework7 Library JS-->
+
+
+	<script type="text/javascript" src="js/framework7.min.js"></script>
+	<script type="text/javascript" src="js/u-lib.min.js"></script>
+	<script type="text/javascript" src="js/u-main.min.js?t=b74384f9"></script>
+	<script type="text/javascript" src="js/u.min.js?t=80b64e0e"></script>
+    
+</body>
+</html>
