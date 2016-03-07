@@ -6,7 +6,7 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.vo.OrgSearchVo;
 
 public interface OrgsMapper {
-    int deleteByPrimaryKey(Long orgId);
+	int deleteByPrimaryKey(Long orgId);
 
     int insert(Orgs record);
 
@@ -26,4 +26,7 @@ public interface OrgsMapper {
     
     
     Orgs selectByPoiAddress(String poiAddress);
+    
+    //2016年3月7日14:50:14  小组管理
+    List<Orgs> selectGroupsByListPage();
 }

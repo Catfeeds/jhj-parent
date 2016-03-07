@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
-	<!--  
-	  <classPathEntry location="C:\workspace\java\libs\mysql-connector-java-5.1.5-bin.jar" />
-    -->
-    <!-- <classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" /> -->
-
-<classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" />
+     <classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" /> 
 
 	<!-- 数据库链接URL、用户名、密码 -->
 	<context id="jdbc-test">
@@ -18,7 +13,7 @@
 
 		<!-- 数据库链接URL、用户名、密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/jhj" userId="root"
+			connectionURL="jdbc:mysql://localhost:3306/jhj2.1" userId="root"
 			password="root1qaz" />
 
 		<!-- 解决数字转换问题 -->
@@ -47,7 +42,6 @@
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 
-		<!-- 门店表  orgs
 		<table schema="jhj" tableName="orgs"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
@@ -62,10 +56,10 @@
 			<columnOverride  column="org_status" property="orgStatus" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="org_type" property="orgType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 		</table>
-		-->
-		<!-- 员工表  org_staffs-->
-	<!-- 	<table schema="jhj" tableName="org_staffs"
+		<!-- 
+			<table schema="jhj" tableName="org_staffs"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
 			enableUpdateByPrimaryKey="true"
@@ -87,9 +81,8 @@
 			<columnOverride column="astro" property="astro" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-		</table> -->
-		
-		<!-- 标签表 tags
+		</table> 
+		标签表 tags
 		<table schema="jhj" tableName="tags"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
@@ -149,7 +142,6 @@
 			<columnOverride  column="coupon_id" property="couponId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 		</table>
-		
 		-->
 		
 	</context>

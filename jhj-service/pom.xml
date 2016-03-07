@@ -5,23 +5,23 @@
 	<parent>
 		<groupId>com.jhj</groupId>
 		<artifactId>jhj-parent2.1</artifactId>
-		<version>2.1.0-SNAPSHOT</version>
+		<version>2.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>jhj-service</artifactId>
 	<name>jhj-service</name>
+	<version>2.1-SNAPSHOT</version>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<spring.version>4.1.1.RELEASE</spring.version>
 	</properties>
   
 	<dependencies>
-
 		<dependency>
 			<groupId>com.jhj</groupId>
 			<artifactId>jhj-utils</artifactId>
 			<version>2.1-SNAPSHOT</version>
 		</dependency>
-
+ 
 		<dependency>
 			<groupId>com.jhj</groupId>
 			<artifactId>jhj-dao</artifactId>

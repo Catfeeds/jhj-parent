@@ -35,4 +35,7 @@ public interface OrgsService {
     List<Orgs> selectByOrgName(String orgName);
     
     Orgs selectByPoiAddress(String poiAddress);
+    
+    //2016年3月7日14:50:14  小组管理
+    List<Orgs> selectGroupsByListPage();
 }

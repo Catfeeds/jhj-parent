@@ -45,10 +45,10 @@
                           <table class="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
-		                              <th >城市</th>
-		                              <th >门店名称</th>
-		                              <th >门店地址</th>
-		                              <th >电话</th>
+		                              <th>城市</th>
+		                              <th>小组名称</th>
+		                              <th>小组地址</th>
+		                              <th>电话</th>
 		                              <th>店长</th>
                                   	  <th>创建时间</th>
                                   	  <th>状态</th>
@@ -75,6 +75,12 @@
 										</c:choose>
 									</td>
 							<td>
+									<button id="btn_update"
+										onClick="btn_update('bs/orgForm?orgId=${org.orgId}')"
+										class="btn btn-primary btn-xs" title="修改">
+										<i class="icon-pencil"></i>
+									</button>
+									
 									<button id="btn_update"
 										onClick="btn_update('bs/orgForm?orgId=${org.orgId}')"
 										class="btn btn-primary btn-xs" title="修改">

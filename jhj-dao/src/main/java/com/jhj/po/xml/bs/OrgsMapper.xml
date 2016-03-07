@@ -20,12 +20,21 @@
     <result column="org_status" property="orgStatus" jdbcType="NUMERIC" />
     <result column="add_time" property="addTime" jdbcType="NUMERIC" />
     <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+    <result column="org_type" property="orgType" jdbcType="NUMERIC" />
   </resultMap>
   <sql id="Base_Column_List" >
     org_id, org_name, org_addr, org_tel, org_owner, org_owner_tel, poi_latitude, poi_longitude, 
     poi_type, poi_name, poi_address, poi_city, poi_uid, poi_phone, poi_post_code, org_status, 
-    add_time, update_time
+    add_time, update_time, org_type
   </sql>
+  
+  <!-- 2016年3月7日15:13:16  小组管理,列表 -->
+  <select id="selectGroupsByListPage" resultMap="BaseResultMap" >
+  	select
+    <include refid="Base_Column_List" />
+    from orgs
+  	order by add_time desc
+  </select>	
 	
   <select id="selectByPoiAddress" resultMap="BaseResultMap" parameterType="java.lang.String">
   	select
@@ -75,15 +84,15 @@
       poi_latitude, poi_longitude, poi_type, 
       poi_name, poi_address, poi_city, 
       poi_uid, poi_phone, poi_post_code, 
-      org_status, add_time, update_time
-      )
+      org_status, add_time, update_time, 
+      org_type)
     values (#{orgId,jdbcType=NUMERIC}, #{orgName,jdbcType=VARCHAR}, #{orgAddr,jdbcType=VARCHAR}, 
       #{orgTel,jdbcType=VARCHAR}, #{orgOwner,jdbcType=VARCHAR}, #{orgOwnerTel,jdbcType=VARCHAR}, 
       #{poiLatitude,jdbcType=VARCHAR}, #{poiLongitude,jdbcType=VARCHAR}, #{poiType,jdbcType=NUMERIC}, 
       #{poiName,jdbcType=VARCHAR}, #{poiAddress,jdbcType=VARCHAR}, #{poiCity,jdbcType=VARCHAR}, 
       #{poiUid,jdbcType=VARCHAR}, #{poiPhone,jdbcType=VARCHAR}, #{poiPostCode,jdbcType=VARCHAR}, 
-      #{orgStatus,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}
-      )
+      #{orgStatus,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}, 
+      #{orgType,jdbcType=NUMERIC})
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.bs.Orgs" >
     insert into orgs
@@ -142,6 +151,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="orgType != null" >
+        org_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orgId != null" >
@@ -198,13 +210,15 @@
       <if test="updateTime != null" >
         #{updateTime,jdbcType=NUMERIC},
       </if>
+      <if test="orgType != null" >
+        #{orgType,jdbcType=NUMERIC},
+      </if>
     </trim>
     
-    <!-- 配置mysql主键自增 -->
+      <!-- 配置mysql主键自增 -->
     <selectKey keyProperty="orgId" resultType="Long" order="AFTER">
 
 			select LAST_INSERT_ID() 
-
 	</selectKey>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.Orgs" >
@@ -261,6 +275,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=NUMERIC},
       </if>
+      <if test="orgType != null" >
+        org_type = #{orgType,jdbcType=NUMERIC},
+      </if>
     </set>
     where org_id = #{orgId,jdbcType=NUMERIC}
   </update>
@@ -282,7 +299,8 @@
       poi_post_code = #{poiPostCode,jdbcType=VARCHAR},
       org_status = #{orgStatus,jdbcType=NUMERIC},
       add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC}
+      update_time = #{updateTime,jdbcType=NUMERIC},
+      org_type = #{orgType,jdbcType=NUMERIC}
     where org_id = #{orgId,jdbcType=NUMERIC}
   </update>
 </mapper>

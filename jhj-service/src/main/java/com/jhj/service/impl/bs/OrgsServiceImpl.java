@@ -95,6 +95,7 @@ public class OrgsServiceImpl implements OrgsService {
 		orgs.setAddTime(TimeStampUtil.getNow()/1000);
 		orgs.setUpdateTime(0L);
 		
+		
 		return orgs;
 	}
 
@@ -107,5 +108,11 @@ public class OrgsServiceImpl implements OrgsService {
 	public Orgs selectByPoiAddress(String poiAddress) {
 		return orgsMapper.selectByPoiAddress(poiAddress);
 	}
-
+	
+	
+	@Override
+	public List<Orgs> selectGroupsByListPage() {
+		
+		return null;
+	}
 }
