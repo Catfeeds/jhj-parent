@@ -4,7 +4,7 @@
 	<groupId>com.jhj</groupId>
 	<artifactId>jhj-parent2.1</artifactId>
 	<packaging>pom</packaging>
-	<version>2.1-SNAPSHOT</version>
+	<version>2.1.0-SNAPSHOT</version>
 	<name>jhj-parent</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
