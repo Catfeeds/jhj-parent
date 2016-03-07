@@ -4,12 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.jhj</groupId>
-    <artifactId>jhj-parent2.0</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <artifactId>jhj-parent2.1</artifactId>
+    <version>2.1-SNAPSHOT</version>
   </parent>
   <groupId>com.jhj</groupId>
-  <artifactId>jhj-app2.0</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <artifactId>jhj-app</artifactId>
+  <version>2.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>jhj-app Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -23,20 +23,20 @@
 
 		<dependency>
 			<groupId>com.jhj</groupId>
-			<artifactId>jhj-utils2.0</artifactId>
-			<version>2.0-SNAPSHOT</version>
+			<artifactId>jhj-utils</artifactId>
+			<version>2.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.jhj</groupId>
-			<artifactId>jhj-dao2.0</artifactId>
-			<version>2.0-SNAPSHOT</version>
+			<artifactId>jhj-dao</artifactId>
+			<version>2.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.jhj</groupId>
-			<artifactId>jhj-service2.0</artifactId>
-			<version>2.0-SNAPSHOT</version>
+			<artifactId>jhj-service</artifactId>
+			<version>2.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
