@@ -11,19 +11,14 @@
 <html>
 <head>
 	<title>服务人员表单</title>
-
 <!--common css for all pages-->
 <%@ include file="../shared/importCss.jsp"%>
-
 
 <link
 	href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
 	rel="stylesheet" type="text/css" />
 
-
-
 </head>
-
 <body>
 
 	<section id="container">
