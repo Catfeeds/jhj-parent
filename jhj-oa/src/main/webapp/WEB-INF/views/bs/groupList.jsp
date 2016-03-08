@@ -46,8 +46,6 @@
 		                              <th>城市</th>
 		                              <th>小组名称</th>
 		                              <th>小组地址</th>
-		                             <!--  <th>电话</th> -->
-		                             <!--  <th>店长</th> -->
                                   	  <th>创建时间</th>
                                   	  <th>状态</th>
                                   	  <th>操作</th>
@@ -59,8 +57,6 @@
 									<td>${ org.poiCity }</td>
 									<td>${ org.orgName }</td>
 									<td>${ org.poiCity}${ org.poiAddress }${ org.orgAddr }</td>
-									<%-- <td>${ org.orgTel }</td> --%>
-							<%-- 		<td>${ org.orgOwner }</td> --%>
 									<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${org.addTime * 1000}"/></td>
 									<td>
 										<c:choose>

@@ -75,25 +75,6 @@
 										</div>
 									</div>
 									
-									<%-- <div class="form-group required">
-										<label class="col-md-2 control-label">店长*</label>
-										<div class="col-md-5">
-											<form:input path="orgOwner" class="form-control" placeholder="店长"
-												maxLength="32" />
-											<form:errors path="orgOwner" class="field-has-error"></form:errors>
-										</div>
-									</div>
-									
-									<div class="form-group required">
-
-										<label class="col-md-2 control-label">店长电话*</label>
-										<div class="col-md-5">
-											<form:input path="orgOwnerTel" class="form-control" placeholder="店长电话"
-												maxLength="32" />
-											<form:errors path="orgOwnerTel" class="field-has-error"></form:errors>
-										</div>
-									</div> --%>
-									
 									<div class="form-group required">
 												<label class="col-md-2 control-label">小组地址*</label>
 												<!-- <input type="text"  id="location" style="margin-left:15px;border:thin solid gray"/>
