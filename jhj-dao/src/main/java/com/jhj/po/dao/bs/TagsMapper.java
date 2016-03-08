@@ -20,7 +20,8 @@ public interface TagsMapper {
     
     List<Tags> selectByIds(List<Long> tagIds);
     
-    List<Tags> selectAll(Short tagType);
+    //2016年3月7日17:15:02 修改为 取得全部标签，跟员工类型不再关联
+    List<Tags> selectAll();
     
     List<Tags> selectByListPage(TagSearchVo tagSearchVo);
     

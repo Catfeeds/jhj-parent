@@ -1,13 +1,3 @@
-//$(function(){
-//	
-//	var staffId =  $("#staffId").val();
-//	
-//	//如果是新增页面，则隐藏审核 div
-//	if(staffId == 0){
-//		$$("#authStatusDiv").hide();
-//	}
-//	
-//})();
 
 /*
  * 表单校验

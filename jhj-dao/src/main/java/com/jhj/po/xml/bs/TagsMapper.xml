@@ -56,14 +56,10 @@
   </select>
   
   
-	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Short">
+	<select id="selectAll" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from tags
-		where tag_type = #{tagType,jdbcType=NUMERIC}
-		<!-- <if test="tagType == 0 or tagType == 1 or tagType == 2 ">
-			and tag_type = #{tagType,jdbcType=NUMERIC}
-		</if> -->
 	</select>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgsMapper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
@@ -95,6 +96,7 @@ public class OrgsServiceImpl implements OrgsService {
 		orgs.setAddTime(TimeStampUtil.getNow()/1000);
 		orgs.setUpdateTime(0L);
 		
+		orgs.setOrgType(Constants.ORG_OR_GROUP_0);	// 0 = 门店  1= 小组
 		
 		return orgs;
 	}
@@ -113,6 +115,6 @@ public class OrgsServiceImpl implements OrgsService {
 	@Override
 	public List<Orgs> selectGroupsByListPage() {
 		
-		return null;
+		return orgsMapper.selectGroupsByListPage();
 	}
 }

@@ -1,9 +1,5 @@
 package com.jhj.action.bs;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -12,10 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,10 +47,9 @@ import com.jhj.service.bs.TagsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.bs.OrgStaffVo;
-import com.jhj.vo.dict.DictAdVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.RandomUtil;
+import com.meijia.utils.ImgServerUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -168,10 +162,13 @@ public class OrgStaffsAssistantController extends BaseController {
 		
 		OrgStaffVo orgStaffVo = orgStaAsService.initOrgStaffVo();
 		
-		// 0表示阿姨
-		Short tagType = 1;
-		// 标签列表 小胡，这个地方要注意tag分类型，服务人员和助理人员.
-		List<Tags> tagList = tagService.selectAll(tagType);
+		
+		//标签列表
+		
+		/*
+		 *  2016-3-7 17:16:24  修改为 不再与员工类型相关，都取得全部标签 
+		 */
+		List<Tags> tagList = tagService.selectAll();
 
 		OrgStaffs orgStaffs = orgStaAsService.initOrgStaffs();
 
@@ -189,10 +186,8 @@ public class OrgStaffsAssistantController extends BaseController {
 			//如果是新增，需要处理 几种 下拉框的 默认值
 			orgStaffVo.setNation("0");
 			orgStaffVo.setEdu("0");
-			orgStaffVo.setBloodType("0");
+			orgStaffVo.setBloodType("o"); //默认设置为o型血
 		}
-		
-		
 		
 		model.addAttribute("tagList", tagList);
 		model.addAttribute("orgStaffVoModel", orgStaffVo);
@@ -241,37 +236,26 @@ public class OrgStaffsAssistantController extends BaseController {
 				MultipartFile file = multiRequest.getFile(iter.next());
 				if (file != null && !file.isEmpty()) {
 
+					//在图片服务器上的 图片 存放位置
+                	String url = Constants.IMG_SERVER_HOST + "/upload/";
+                	
 					String fileName = file.getOriginalFilename();
-					String extensionName = fileName.substring(fileName
-							.lastIndexOf(".") + 1);
-					// 新的图片文件名 = 获取时间戳+随机六位数+"."图片扩展名
-					String before = TimeStampUtil.getNow()
-							+ String.valueOf(RandomUtil.randomNumber());
-					String newFileName = String.valueOf(before + "."
-							+ extensionName);
-					// 获取系统发布后upload路径
-					FileUtils.copyInputStreamToFile(file.getInputStream(),
-							new File(path, newFileName));
-					String imgUrl = "/jhj-oa/upload/headImg/" + newFileName;
-					/*
-					 * 设置数据库存储字段的值
-					 */
+					String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+					fileType = fileType.toLowerCase();
+					String sendResult = ImgServerUtil.sendPostBytes(url, file.getBytes(), fileType);
+					
+					ObjectMapper mapper = new ObjectMapper();
+
+					HashMap<String, Object> o = mapper.readValue(sendResult, HashMap.class);
+
+					String ret = o.get("ret").toString();
+
+					HashMap<String, String> info = (HashMap<String, String>) o.get("info");
+
+					String imgUrl = Constants.IMG_SERVER_HOST + "/" + info.get("md5").toString();
+
 					orgStaffs.setHeadImg(imgUrl);
-
-					// 生成缩略图
-					BufferedImage bufferedImage1 = new BufferedImage(60, 60,
-							BufferedImage.TYPE_INT_BGR);
-					BufferedImage bufferedImage = ImageIO.read(file
-							.getInputStream());
-					Image image = bufferedImage.getScaledInstance(60, 60,
-							Image.SCALE_DEFAULT);
-					bufferedImage1.getGraphics().drawImage(image, 0, 0, null);
-					String newFileName1 = String.valueOf(before + "_small."
-							+ extensionName);
-
-					FileOutputStream out = new FileOutputStream(path + "/"
-							+ newFileName1);
-					ImageIO.write(bufferedImage1, "jpg", out);// 把图片输出
+					
 				}
 			}
 		}
@@ -331,8 +315,6 @@ public class OrgStaffsAssistantController extends BaseController {
 			}
 		}
 		
-		
-		
 		return "redirect:/bs/am-list";
 	}
 
@@ -349,7 +331,6 @@ public class OrgStaffsAssistantController extends BaseController {
 		if (orgId > 0) {
 			allAmList = orgStaAsService.selectAmByOrgId(orgId);
 		}
-		
 		
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, allAmList);

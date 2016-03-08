@@ -61,8 +61,8 @@ public class TagsServiceImpl implements TagsService {
 	}
 
 	@Override
-	public List<Tags> selectAll(Short tagType) {
-		return tagsMapper.selectAll(tagType);
+	public List<Tags> selectAll() {
+		return tagsMapper.selectAll();
 	}
 
 	@Override

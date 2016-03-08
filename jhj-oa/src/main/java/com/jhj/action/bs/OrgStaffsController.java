@@ -130,10 +130,12 @@ public class OrgStaffsController extends BaseController {
 		 //门店列表
 		List<Orgs> orgList = orgService.selectAll();
 		
-		//0表示阿姨
-		Short tagType = 0;
-		//标签列表 
-		List<Tags> tagList = tagService.selectAll(tagType);
+		//标签列表
+		
+		/*
+		 *  2016-3-7 17:16:24  修改为 不再与员工类型相关，都取得全部标签 
+		 */
+		List<Tags> tagList = tagService.selectAll();
 
 		OrgStaffs orgStaffs = orgStaffsService.initOrgStaffs();
 		

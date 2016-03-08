@@ -36,14 +36,15 @@ public class OrgSelectTag extends SimpleTagSupport {
     			WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(((PageContext) getJspContext()).getServletContext());
     			orgService = springContext.getBean(OrgsService.class);
     	        
-
+    			
+    			//2016年3月7日17:07:55  修改为 选择 “小组”，不再支持 门店，在 mappper.xml文件中已设置  org_type =1
         		List<Orgs> orgList = orgService.selectAll();
 
             StringBuffer orgSelect = new StringBuffer();
             orgSelect.append("<select id = \"orgId\" name=\"orgId\" class=\"form-control\">" );
 
             if (hasAll.equals("1")) {
-            	orgSelect.append("<option value='0' >请选择门店</option>");
+            	orgSelect.append("<option value='0' >请选择小组</option>");
             }
 
             Orgs item = null;

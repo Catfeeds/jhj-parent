@@ -5,7 +5,7 @@ import java.util.List;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.vo.OrgSearchVo;
 
-public interface OrgsMapper {
+public interface CopyOfOrgsMapper {
 	int deleteByPrimaryKey(Long orgId);
 
     int insert(Orgs record);
@@ -18,7 +18,6 @@ public interface OrgsMapper {
 
     int updateByPrimaryKey(Orgs record);
     
-    //2016年3月8日10:11:48  该方法已修改为取得 所有“小组”，不再支持门店
     List<Orgs> selectAll();
     
     List<Orgs> selectByListPage(OrgSearchVo orgSearchVo);

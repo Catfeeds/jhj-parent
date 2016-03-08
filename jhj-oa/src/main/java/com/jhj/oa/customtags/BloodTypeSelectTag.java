@@ -16,10 +16,20 @@ import com.meijia.utils.OneCareUtil;
  *		
  *		血型选择
  */
+/**
+ *
+ * @author :hulj
+ * @Date : 2016年3月8日上午10:51:06
+ * @Description: TODO
+ *
+ */
 public class BloodTypeSelectTag extends SimpleTagSupport {
 	
 	private String bloodTypeId ;
 
+	 // 是否包含全部，  0 = 不包含  1= 包含
+    private String hasAll =  "1";
+	
 	public BloodTypeSelectTag() {
 	}
 	
@@ -31,16 +41,20 @@ public class BloodTypeSelectTag extends SimpleTagSupport {
 
             StringBuffer bloodTypeSelect = new StringBuffer();
             bloodTypeSelect.append("<select id = \"bloodType\" name=\"bloodType\" class=\"form-control\">");
-
+            
+            if (hasAll.equals("1")) {
+            	bloodTypeSelect.append("<option value='0' >请选择血型</option>");
+            }
+            
             String item = null;
             String selected = "";
             for(int i = 0;  i<list.size();  i++) {
                 item = list.get(i);
                 selected = "";
-                if (bloodTypeId != null && i==Short.valueOf(bloodTypeId)) {
+                if (bloodTypeId != null && item.equals(bloodTypeId)) {
                 	selected = "selected=\"selected\"";
                 }
-                bloodTypeSelect.append("<option value='" +i + "' " + selected + ">" + item + "</option>");
+                bloodTypeSelect.append("<option value='" +item + "' " + selected + ">" + item + "</option>");
             }
             bloodTypeSelect.append("</select>");
             getJspContext().getOut().write(bloodTypeSelect.toString());
@@ -61,6 +75,20 @@ public class BloodTypeSelectTag extends SimpleTagSupport {
 	 */
 	public void setBloodTypeId(String bloodTypeId) {
 		this.bloodTypeId = bloodTypeId;
+	}
+
+	/**
+	 * @return the hasAll
+	 */
+	public String getHasAll() {
+		return hasAll;
+	}
+
+	/**
+	 * @param hasAll the hasAll to set
+	 */
+	public void setHasAll(String hasAll) {
+		this.hasAll = hasAll;
 	}
 
 	

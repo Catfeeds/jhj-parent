@@ -62,44 +62,13 @@
 					 
 					<input type="hidden" id="selectAmId" value="${orgStaffVoFormModel.amId}">
 					
-					<c:choose>
-						<c:when test="${loginOrgId == 0 }">
-							<div class="form-group required">
-								<label class="col-md-2 control-label">所属门店*</label>
-								<div class="col-md-5">
-									<orgSelectTag:select selectId="${orgStaffVoFormModel.orgId }" />
-								</div>
+						<div class="form-group required">
+							<label class="col-md-2 control-label">选择小组*</label>
+							<div class="col-md-5">
+								<orgSelectTag:select selectId="${orgStaffVoFormModel.orgId }" />
 							</div>
+						</div>
 							
-							<div class="form-group" >
-									<label class="col-md-2 control-label">绑定助理*</label> 
-									<div class="col-md-5" >
-										 <select name="amId" path="amId" id="amId" class="form-control">
-											<option value="0">请选择助理</option>
-										</select> 
-									</div>
-							</div>
-						</c:when>
-						<c:otherwise>
-							 <div class="form-group" >
-									<label class="col-md-2 control-label">绑定助理*</label> 
-									<div class="col-md-5" >
-										
-										<input type="hidden" name="orgId" value="${loginOrgId }">
-										
-										<select name="amId" path="amIdDian" id= "amIdDian" class="form-control">
-										 	<option value="0">请选择助理</option>
-											<c:forEach items="${orgStaffVoFormModel.nowOrgAmList }" var="orgAm">
-													<option value="${orgAm.staffId }">${orgAm.name }</option>											
-											</c:forEach>
-										</select>
-									</div>
-							</div>
-							
-						</c:otherwise>
-					</c:choose> 
-					 
-						
 						<div class="form-group required">
 
 							<label class="col-md-2 control-label">姓名*</label>
@@ -190,7 +159,7 @@
 								<label class="col-md-2 control-label">标签</label>
 								<div class="col-md-5" id="allTag" >
 									<c:forEach items="${tagList }" var="tag">
-										<input type="button" name="tagName" value="${tag.tagName }" id="${tag.tagId }" onclick="setTagButton()" class="btn btn-default">
+										<input type="button" style="margin-top:10px;" name="tagName" value="${tag.tagName }" id="${tag.tagId }" onclick="setTagButton()" class="btn btn-default">
 									</c:forEach>
 								</div> 
 						</div> 

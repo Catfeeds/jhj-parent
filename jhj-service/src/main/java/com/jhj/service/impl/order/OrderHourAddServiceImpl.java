@@ -401,7 +401,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectByServiceAddonIds(serviceAddonIds);
 		
 		//获得所有tags的名称.
-		List<Tags> tagList = tagService.selectAll((short) 0);
+		List<Tags> tagList = tagService.selectAll();
 		
 		List<Long> tagIds = new ArrayList<Long>();
 		//tags名称与选择的服务类型进行比较.

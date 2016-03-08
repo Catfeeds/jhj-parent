@@ -86,13 +86,6 @@ $("#orgStaffAsForm_btn").click(function(form) {
 	 * 
 	 */
 	
-//	var orgId = $("#orgId").val();
-//	
-//	if(orgId == 0){
-//		
-//		alert("请选择门店");
-//		return false;
-//	}
 
 	if (confirm("确认要保存吗?")) {
 		

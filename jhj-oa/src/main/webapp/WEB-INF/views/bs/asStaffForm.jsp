@@ -61,30 +61,18 @@
 
 					<form:hidden path="staffId" />
 					
-					<input type="hidden" name="tagIds" id="tagIds" value="${orgStaffVoModel.tagIds }"/>
-
-					
+					<input type="hidden" name="tagIds" id="tagIds" value="${orgStaffVoModel.tagIds }">
 					<input type="hidden" name="authIds" id="authIds" value="${orgStaffVoModel.authIds }">
 					
 					<div class="form-body required">
-						<!-- 当前登录角色 的 orgId，店长或 admin -->
-						<input type="hidden" name="loginOrgId" value="${loginOrgId }">
-						<c:choose>
-							<c:when test="${loginOrgId == 0 }">
-								<!-- 如果当前登录的是 admin ，门店id为选中 的 id -->
-								<div class="form-group required">
-									<label class="col-md-2 control-label">所属门店*</label>
-									<div class="col-md-5">
-										<orgSelectTag:select selectId="${orgStaffVoModel.orgId }" />
-									</div>
-								</div>
-							</c:when>
-							<c:otherwise> 
-								<!-- 如果当前登录的是 店长 ，门店id 为当前店长 id -->
-								<input type="hidden" name="orgId" id="orgId" value=" ${loginOrgId  }">							
-							</c:otherwise>
-						</c:choose>
-
+							
+						<div class="form-group required">	 
+							<label class="col-md-2 control-label">选择小组*</label>
+							<div class="col-md-5">
+								<orgSelectTag:select selectId="${orgStaffVoModel.orgId }" />
+							</div>
+						</div>
+						
 						<div class="form-group required">
 
 							<label class="col-md-2 control-label">姓名*</label>
@@ -168,7 +156,7 @@
 						</div>
 						
 						
-						<input type="hidden" id="citySelectedId" value="${orgStaffVoModel.cityId}" />
+						<input type="hidden" id="citySelectedId" value="${orgStaffVoModel.cityId}" >
 						<div class="form-group required">
 								<label class="col-md-2 control-label" >户口所在省份:</label> 
 								<div class="col-md-5">
@@ -211,7 +199,7 @@
 								<label class="col-md-2 control-label">标签</label>
 								<div class="col-md-5" id="allTag" >
 									<c:forEach items="${tagList }" var="tag">
-										<input type="button" name="tagName" value="${tag.tagName }" id="${tag.tagId }" onclick="setTagButton()" class="btn btn-default">
+										<input type="button" style="margin-top:10px;" name="tagName" value="${tag.tagName }" id="${tag.tagId }" onclick="setTagButton()" class="btn btn-default">
 									</c:forEach>
 								</div> 
 						</div> 
@@ -284,9 +272,6 @@
 							</div>
 						</div>
 						
-						
-						
-						<br />
 						<div class="form-actions fluid">
 							<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
 								<button type="submit" id="orgStaffAsForm_btn" class="btn btn-success">保存</button>

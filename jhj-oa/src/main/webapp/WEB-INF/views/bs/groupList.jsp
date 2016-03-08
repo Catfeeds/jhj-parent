@@ -7,7 +7,7 @@
 	<%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
 <html>
   <head>
- 	<title>门店信息列表</title>
+ 	<title>小组信息列表</title>
 	<!-- common css for all pages -->
 	<%@ include file="../shared/importCss.jsp"%>
 	<!-- css for this page -->
@@ -36,7 +36,7 @@
                           	<h4>小组信息</h4>
                           	
 	                          	<div class="pull-right" >
-	                          		<button onClick="btn_add('bs/orgForm?orgId=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
+	                          		<button onClick="btn_add('group/groupForm?orgId=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
 	                    		</div>      
                           </header>
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
@@ -44,10 +44,10 @@
                               <thead>
                               <tr>
 		                              <th>城市</th>
-		                              <th>门店名称</th>
-		                              <th>门店地址</th>
-		                              <th>电话</th>
-		                              <th>店长</th>
+		                              <th>小组名称</th>
+		                              <th>小组地址</th>
+		                             <!--  <th>电话</th> -->
+		                             <!--  <th>店长</th> -->
                                   	  <th>创建时间</th>
                                   	  <th>状态</th>
                                   	  <th>操作</th>
@@ -59,8 +59,8 @@
 									<td>${ org.poiCity }</td>
 									<td>${ org.orgName }</td>
 									<td>${ org.poiCity}${ org.poiAddress }${ org.orgAddr }</td>
-									<td>${ org.orgTel }</td>
-									<td>${ org.orgOwner }</td>
+									<%-- <td>${ org.orgTel }</td> --%>
+							<%-- 		<td>${ org.orgOwner }</td> --%>
 									<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${org.addTime * 1000}"/></td>
 									<td>
 										<c:choose>
@@ -74,9 +74,15 @@
 									</td>
 							<td>
 									<button id="btn_update"
-										onClick="btn_update('bs/orgForm?orgId=${org.orgId}')"
+										onClick="btn_update('group/groupForm?orgId=${org.orgId}')"
 										class="btn btn-primary btn-xs" title="修改">
 										<i class="icon-pencil"></i>
+									</button>
+									
+									<button id="btn_update"
+										onClick="btn_update('group/groupStaffList?orgId=${org.orgId}')"
+										class="btn btn-primary btn-xs" title="查看小组成员">
+										<i class="icon-search"></i>
 									</button>
 							</td>
 						</tr>
@@ -86,7 +92,7 @@
                       </section>
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="orgsModel"/>
-	        				<c:param name="urlAddress" value="/bs/group-list"/>
+	        				<c:param name="urlAddress" value="/group/group-list"/>
 	       			  </c:import>
                   </div>
               </div>

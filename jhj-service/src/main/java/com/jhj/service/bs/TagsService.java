@@ -25,7 +25,7 @@ public interface TagsService {
 
     int updateByPrimaryKey(Tags record);
         
-    List<Tags> selectAll(Short tagType);
+    List<Tags> selectAll();
     
     List<Tags> selectByListPage(TagSearchVo tagSearchVo,int pageNo,int pageSize);
 

@@ -141,11 +141,6 @@
   </section>
     <!--common script for all pages-->
     <%@ include file="../shared/importJs.jsp"%>
-    
-
-
-    
-  
 
   </body>
 </html>
