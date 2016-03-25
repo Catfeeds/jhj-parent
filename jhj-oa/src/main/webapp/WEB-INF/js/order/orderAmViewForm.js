@@ -1,33 +1,33 @@
-$(document).ready(function() {
-	// 根据 url 参数 ，控制 div 是否显示
-	var url = window.location.search;
-	// url 参数 最后 一位 即为 派工状态。
-	var disStatu = url.charAt(url.length - 1);
-	$("#pickAddr").val("");
-	
-	// 当订单状态=1(已预约)，显示地图
-	if (disStatu == 1 || disStatu == null || disStatu =="" ) {
-		$("#addrMap").show();
-	} else {
-		$("#addrMap").hide();
-	}
-	$("#containers").hide();
-	var flag = $("#flag").val();
-	if (flag == 0) {
-		$("#staffList").hide();
-	} else {
-		$("#staffList").show();
-	}
-	var disStatus = $("#disStatus").val();
-	if (disStatu == 0 || disStatu == 1) {
-		$("#staffDispatch").hide();
-	} else {
-		$("#staffDispatch").show();
-	}
+//$(document).ready(function() {
+//	// 根据 url 参数 ，控制 div 是否显示
+//	var url = window.location.search;
+//	// url 参数 最后 一位 即为 派工状态。
+//	var disStatu = url.charAt(url.length - 1);
+//	$("#pickAddr").val("");
+//	
+//	// 当订单状态=1(已预约)，显示地图
+//	if (disStatu == 1 || disStatu == null || disStatu =="" ) {
+//		$("#addrMap").show();
+//	} else {
+//		$("#addrMap").hide();
+//	}
+//	$("#containers").hide();
+//	var flag = $("#flag").val();
+//	if (flag == 0) {
+//		$("#staffList").hide();
+//	} else {
+//		$("#staffList").show();
+//	}
+//	var disStatus = $("#disStatus").val();
+//	if (disStatu == 0 || disStatu == 1) {
+//		$("#staffDispatch").hide();
+//	} else {
+//		$("#staffDispatch").show();
+//	}
+//
+//});
 
-});
-
-$("select[name='userAddrKey']").click(function() {
+$("select[name='userAddrKey']").on('change',function() {
 	var userAddr = $('#userAddrKey option:selected').val();
 	if (userAddr == undefined || userAddr == "") return false;
 	var v = userAddr.split("=");
@@ -37,13 +37,17 @@ $("select[name='userAddrKey']").click(function() {
 	var latitude = v[3];
 	$("#poiLongitude").val(longtitude);
 	$("#poiLatitude").val(latitude);
-	$("#pickAddrName").val(pickAddrName);
-	$("#pickAddrName").attr("placeholder", pickAddrName);
-	$("#pickAddr").val(pickAddr);
-	$("#pickAddr").attr("placeholder", pickAddr);
+//	$("#pickAddrName").val(pickAddrName);
+//	$("#pickAddrName").attr("placeholder", pickAddrName);
+//	$("#pickAddr").val(pickAddr);
+//	$("#pickAddr").attr("placeholder", pickAddr);
 	$("#addrNum").show();
 	
 	
+	/*
+	 * jhj2.1  存储 地址名称
+	 */
+	$("#dyanmicPickAddrName").val(pickAddrName);
 	
 	/*
 	 * 选择 常用地址 后, 也 发送请求 ,加载 最新可用的 员工列表
@@ -54,40 +58,15 @@ $("select[name='userAddrKey']").click(function() {
 
 });
 
-$("#viewForm").click(function(form) {
-	// 单选按钮，不用处理 ,框架根据 name自动提交
-	if (confirm("确认要派工吗?")) {
-		if ($('#viewForm').validate().form()) {
-			var val = $('input:radio[name="staffId"]:checked').val();
-			if (val == null) {
-				alert("请选择派工人员");
-				return false;
-			} else {
-				$('#viewForm').submit();
-			}
-		}
-	} else {
-		return false;
-	}
+//员工 按钮 处理,单选效果， 点击当前，其余变灰
+$(document).on("click",".popovers",function(k,v){
+	
+  $(this).parent().find("button").attr("class","btn btn-default popovers");
+  $(this).attr("class","btn btn-success popovers");
+  
 });
 
-$("#chooseStaff").click(function() {
-	var localName = $("#pickAddrName").val();
-	var addrName = $("#pickAddr").val();
-	var poiLatitude = $("#poiLatitude").val();
-	var poiLongitude = $("#poiLatitude").val();
-	console.log("lat = " + poiLatitude);
-	console.log("lng = " + poiLongitude);
-	if (localName == null || localName == "" || poiLatitude == "" || poiLongitude == "") {
-		alert("请输入服务地址");
-		return;
-	}
-	if (addrName == null || addrName == "") {
-		alert("请输入服务地址门牌号");
-	}
-	$('#amView').attr("action", "order-am-staff");
-	$("#amView").submit();
-});
+
 
 // baiduMap 相关
 var map = new BMap.Map("containers");// 初始化地图
@@ -105,27 +84,25 @@ var ac = new BMap.Autocomplete( // 建立一个自动完成的对象
 	"location" : map
 });
 
-ac.addEventListener("onhighlight", function(e) { // 鼠标放在下拉列表上的事件
-	var str = "";
-	var _value = e.fromitem.value;
-	var value = "";
-	if (e.fromitem.index > -1) {
-		value = _value.province + _value.city + _value.district + _value.street
-				+ _value.business;
-	}
-	str = "FromItem<br />index = " + e.fromitem.index + "<br />value = "
-			+ value;
 
-	value = "";
-	if (e.toitem.index > -1) {
-		_value = e.toitem.value;
-		value = _value.province + _value.city + _value.district + _value.street
-				+ _value.business;
-	}
-	str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = "
-			+ value;
-	G("searchResultPanel").innerHTML = str;
-});
+//ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+//	var str = "";
+//	var _value = e.fromitem.value;
+//	var value = "";
+//	if (e.fromitem.index > -1) {
+//		value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+//	}    
+//	str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+//	
+//	value = "";
+//	if (e.toitem.index > -1) {
+//		_value = e.toitem.value;
+//		value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+//		
+//	}     
+//	str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+//	G("searchResultPanel").innerHTML = str;
+//});
 
 var myValue;
 
@@ -133,15 +110,19 @@ var myValue;
  *  智能 提示搜索 后 , 点击选中 某一个 目标结果的   事件
  */
 ac.addEventListener("onconfirm", function(e) { 
-	var _value = e.item.value;
-
-	myValue = _value.province + _value.city + _value.district + _value.street
-			+ _value.business;
-	G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index
-			+ "<br />myValue = " + myValue;
-
-	setPlace();
 	
+	var _value = e.item.value;
+	myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+	G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+	
+	
+	/*
+	 * jhj2.1  点击确认后, 保存地址名称
+	 */
+	
+	$("#dyanmicPickAddrName").val(myValue);
+	
+	setPlace();
 });
 
 /*
@@ -150,7 +131,6 @@ ac.addEventListener("onconfirm", function(e) {
 function setPlace() {
 	function myFun() {
 		var pp = local.getResults().getPoi(0).point; // 获取第一个智能搜索的结果
-		if (pp) {
 			
 			$("#poiLongitude").val(pp.lng);
 			$("#poiLatitude").val(pp.lat);
@@ -160,9 +140,6 @@ function setPlace() {
 			 */ 
 			loadProperStaffForAmOrder();
 			
-		} else {
-			alert("请您输入正确可识别的地址！");
-		}
 	}
 	var local = new BMap.LocalSearch(map, { // 智能搜索
 		onSearchComplete : myFun
@@ -266,7 +243,6 @@ function loadProperStaffForAmOrder(){
 					button.appendChild(input2);
 					
 					$("#displayProperStaff").append(button);	
-					
 				}
 			}
 			return false;
@@ -275,6 +251,106 @@ function loadProperStaffForAmOrder(){
 			alert("网络错误");
 		}
 	})
-	
 }
 
+/*
+ *  提交 派工结果
+ * 
+ */
+
+$('#viewForm').on('click',function(){
+	
+	var orderStatus =  $("#orderStatus").val();
+	
+	//只有 已支付 和  已派工  的订单，可以有  调整派工操作
+	
+	if(orderStatus != 1 && orderStatus != 2){
+		
+		alert("只有 已预约 或 已派工状态的 订单 ,可以进行调整 派工操作");
+		return false;
+	}
+	
+	//门牌号
+	var addrNum = $("#pickAddr").val();
+	
+	if(addrNum == ""){
+		
+		alert("您还没有输入具体门派号哦");
+		
+		return false;
+	}
+	
+	
+	var orderId = $("#id").val();
+	var fromLat = $("#poiLatitude").val();
+	var fromLng = $("#poiLongitude").val();
+	var userAddrName = $("#dyanmicPickAddrName").val()+addrNum;
+	
+	// 人工  选择的 派工 人员.如果没选。默认为0
+	var selectStaffId = 0;
+	
+	//距离 数字。。省去处理派工时，重新查表，计算距离
+	var distanceValue = 0;
+	
+	$(".popovers").each(function(k,v){
+		
+		if($(this).attr("class").indexOf("btn-success") > 0){
+			
+			selectStaffId = $(this).find("#selectStaffId").val();
+			
+			distanceValue = $(this).find("#distanceValue").val();
+		}
+	});
+	
+	$.ajax({
+		type:'post',
+		url:'/jhj-oa/new_dispatch/submit_manu_am_order_result.json',
+		data:{
+		  		"orderId":orderId,
+		  		"fromLat":fromLat,
+		  		"fromLng":fromLng,
+		  "selectStaffId":selectStaffId,	
+		  	  "distance" :distanceValue,
+		   "userAddrName":userAddrName,
+		},
+		dataType:'json',
+		success:function(data,status,xhr){
+			
+			alert("保存成功");
+			
+			var rootPath = getRootPath();
+			window.location.replace(rootPath+"/order/order-am-list");
+		},error:function(){
+			alert("网络错误");
+		}
+	})
+	
+});
+
+function getRootPath() {
+    var strFullPath = window.document.location.href;
+    var strPath = window.document.location.pathname;
+    var pos = strFullPath.indexOf(strPath);
+    var prePath = strFullPath.substring(0, pos);
+    var postPath = strPath.substring(0, strPath.substr(1).indexOf('/') + 1);
+    return (prePath + postPath);
+}
+
+
+
+//页面加载时， 回显 已选中的 派工结果
+var selectStaff = function(){
+	
+	$(".popovers").each(function(k,v){
+			
+		var selectStaffId = $(this).find("#selectStaffId").val();
+		
+		var staffId = $("#staffId").val();
+		if(selectStaffId == staffId){
+			
+			$(this).attr("class","btn btn-success popovers");
+		}
+	});
+}
+
+window.onload = selectStaff;

@@ -46,40 +46,33 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			<section class="panel"> <form:form
-				modelAttribute="oaOrderSearchVoModel" action="order-am-list"
-				method="GET">
-				<header class="panel-heading">
+			<section class="panel"> 
 				<h4>数据搜索</h4>
-				<div>
-					<%-- 服务类型：
-	                     					<form:select path="orderType">
-	                     							<option value="">请选择订单类型</option>
-	                     							<form:option value="0">钟点工</form:option>
-	                     							<form:option value="1">深度保洁</form:option>
-	                     							<form:option value="2">助理预约单</form:option>
-	                     					</form:select> --%>
-					订单状态：
-					<form:select path="orderStatus">
-						<option value="">请选择订单状态</option>
-						<form:option value="0">已取消</form:option>
-						<form:option value="1">已预约</form:option>
-						<form:option value="2">已派工</form:option>
-						<form:option value="3">已确认</form:option>
-						<form:option value="4">已支付</form:option>
-						<form:option value="5">开始服务</form:option>
-						<form:option value="7">完成服务</form:option>
-						<form:option value="9">已关闭</form:option>
-					</form:select>
-
-					<c:if test="${loginOrgId == 0 }">
-											选择门店:
-											<orgSelectTag:select />
-					</c:if>
-					<input type="submit" value="搜索">
-				</div></div>
-		</header>
-		</form:form>
+				<form:form modelAttribute="oaOrderSearchVoModel" action="order-am-list" class="form-inline"
+					method="GET">
+					<div class="form-group">
+						订单状态：
+						<form:select path="orderStatus" class="form-control">
+							<option value="">请选择订单状态</option>
+							<form:option value="0">已取消</form:option>
+							<form:option value="1">已预约</form:option>
+							<form:option value="2">已派工</form:option>
+							<form:option value="3">已确认</form:option>
+							<form:option value="4">已支付</form:option>
+							<form:option value="5">开始服务</form:option>
+							<form:option value="7">完成服务</form:option>
+							<form:option value="9">已关闭</form:option>
+						</form:select>
+					</div>
+					<div class="form-group">
+						<c:if test="${loginOrgId == 0 }">
+								选择门店:<orgSelectTag:select />
+						</c:if>
+					</div>	
+						<button type="submit" class="btn btn-primary" >搜索</button>
+				</div>
+			</form:form>
+			</header>
 
 		<hr
 			style="width: 100%; color: black; height: 1px; background-color: black;" />
@@ -88,7 +81,6 @@
 		<h4>助理订单列表</h4>
 		</header>
 
-		<!--  <button id="exportExcel" class="btn btn-success">导出Excel</button> -->
 
 		<table class="table table-striped table-advance table-hover"
 			id="table2excel">
@@ -120,16 +112,11 @@
 
 							<td><orderTypeNameTag:orderTypeId
 									orderTypeId="${item.orderType }" /></td>
-							<%-- <td><timestampTag:timestamp patten="yyyy-MM-dd"
-									t="${item.serviceDate * 1000}" /></td> --%>
-
 
 							<td>${ item.mobile }</td>
 							<td>${ item.orderAddress }</td>
-							<td>${ item.staffName } <%-- ${ sta.value } --%>
+							<td>${ item.staffName } 
 							</td>
-						<%-- 	<td>${ item.disStatusName } 
-							</td> --%>
 
 							<td><orderVoStatusTag:orderstatus
 									orderStatus="${item.orderStatus }"
@@ -142,11 +129,6 @@
 									class="btn btn-primary btn-xs" title="订单详情">
 									<i class=" icon-ambulance"></i>
 								</button></td>
-							<%-- <td>
-							       			<button id="btn_update" onClick="btn_update('msg/msgForm?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
-	                                  		<button id="btn_del" onClick="btn_del('/account/delete/${item.id}')" class="btn btn-danger btn-xs"  title="删除"><i class="icon-trash "></i></button>
-                                  	   
-							       		</td> --%>
 						</tr>
 					</c:forEach>
 				</c:forEach>
@@ -170,8 +152,6 @@
 	<!--common script for all pages-->
 	<%@ include file="../shared/importJs.jsp"%>
 
-	<%-- <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
-	<!--script for this page-->
 	<script type="text/javascript"
 		src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
 

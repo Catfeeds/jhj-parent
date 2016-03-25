@@ -69,22 +69,6 @@ public class NewOrderDisController extends BaseController {
 	private UserPushBindService bindService;
 	
 	
-	/*
-	 *  提交  手动派工 结果
-	 */
-	
-	@RequestMapping(value = "new_dis_for_order",method = RequestMethod.POST)
-	public String manuDisStaForOrder(Model model,
-			@RequestParam("orderId")Long orderId,
-			@RequestParam(value = "fromLat",required = false,defaultValue = "")String fromLat,
-			@RequestParam(value = "fromLng",required = false,defaultValue = "")String fromLng,
-			@RequestParam("properStaffId")Long properStaffId){
-		
-		
-		
-		return "";
-	}
-	
 	/**
 	 * 
 	 *  @Title: loadProperStaffListForBase
@@ -111,8 +95,7 @@ public class NewOrderDisController extends BaseController {
 		
 		//对于  钟点工订单, 只有订单状态为    "已支付" 或  "已派工",可以进行 调整派工
 		if(orderStatus  == Constants.ORDER_HOUR_STATUS_2
-					|| orderStatus == Constants.ORDER_HOUR_STATUS_3
-				){
+					|| orderStatus == Constants.ORDER_HOUR_STATUS_3){
 			
 			 list = newDisService.getAbleStaffList(orderId, newServiceDate);
 		}
@@ -139,10 +122,8 @@ public class NewOrderDisController extends BaseController {
 		//更新为 已派工
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
 		
-		orderSevice.updateByPrimaryKeySelective(order);
 		
 		//更新派工表.发送通知
-		
 		/*
 		 *  2016年3月24日18:02:07 
 		 *  		
@@ -174,7 +155,18 @@ public class NewOrderDisController extends BaseController {
 			dispatchs.setUserAddrDistance(distanceValue);
 		}
 		
-		disService.updateByPrimaryKeySelective(dispatchs);
+		Short orderStatus = order.getOrderStatus();
+		
+		
+		//对于  钟点工订单, 只有订单状态为    "已支付" 或  "已派工",可以进行 调整派工
+		if(orderStatus  == Constants.ORDER_HOUR_STATUS_2
+				|| orderStatus == Constants.ORDER_HOUR_STATUS_3){
+		
+			//更新 派工表
+			disService.updateByPrimaryKeySelective(dispatchs);
+			//更新订单表
+			orderSevice.updateByPrimaryKeySelective(order);
+		}
 		
 		//发推送 消息 TODO
 		
@@ -205,17 +197,116 @@ public class NewOrderDisController extends BaseController {
 		
 		List<Long> staIdList = newDisService.autoDispatchForAmOrder(fromLat, fromLng, orders.getServiceType());
 		
-		List<OrgStaffsNewVo> list = newDisService.getTheNearestStaff(fromLat, fromLng, staIdList);
+		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
 		
 		Short orderStatus = orders.getOrderStatus();
 		
 		//对于 助理 类 订单，只有在  '已预约','已派工' 两种状态 可以 修改 派工人员
 		if(orderStatus  == Constants.ORDER_AM_STATUS_1
 					|| orderStatus == Constants.ORDER_AM_STATUS_2){
-			
 			list = newDisService.getTheNearestStaff(fromLat, fromLng, staIdList);
 		}
-		
 		return list;
 	}
+	
+	/**
+	 * 
+	 *  @Title: submitManuAmOrderResult
+	  * @Description: 
+	  * 	  提交 助理 订单 手动派工结果	
+	  * @param orderId	
+	  *
+	  * @param fromLat	 用户的地址 经纬度
+	  * @param fromLng	 
+	  * 
+	  * @param staffId   被选中的服务人员
+	  * @param distance  被选中服务人员,距离用户地址的 距离 数字,(更新派工表字段使用)
+	  * 
+	  * @param userAddrName  与用户沟通后确定的服务地址
+	  * @throws
+	 */
+	@RequestMapping(value = "/submit_manu_am_order_result.json",method = RequestMethod.POST)
+	public AppResultData<Object> submitManuAmOrderResult(
+			@RequestParam("orderId")Long orderId,
+			@RequestParam("fromLat")String fromLat,
+			@RequestParam("fromLng")String fromLng,
+			@RequestParam("selectStaffId")Long staffId,
+			@RequestParam("userAddrName")String userAddrName,
+			@RequestParam("distance")int distance){
+		
+		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
+		
+		Orders order = orderSevice.selectbyOrderId(orderId);
+		
+		//修改的 只是 有效派工的订单
+		List<OrderDispatchs> list = disService.selectByNoAndDisStatus(order.getOrderNo(), Constants.ORDER_DIS_ENABLE);
+		
+		
+		OrderDispatchs dispatchs = disService.initOrderDisp();
+		
+		//如果可以查出记录。表示未 修改 派工, 否则是 手动新增派工
+		if(list.size() <= 0){
+			
+			// 如果没有派工记录。。表示是 新增派工
+			
+			dispatchs.setUserId(order.getUserId());
+			dispatchs.setMobile(order.getMobile());
+			dispatchs.setOrderId(orderId);
+			dispatchs.setOrderNo(order.getOrderNo());
+			dispatchs.setServiceDate(order.getServiceDate());
+			dispatchs.setServiceDatePre(order.getServiceDate()-3600);
+			dispatchs.setRemarks(order.getRemarks());
+			//默认3小时服务时长
+			dispatchs.setServiceHours((short)3); 
+			
+		}else{
+			
+			//有派工记录。表示 是 修改 派工
+			dispatchs = list.get(0);	
+		}
+		
+		dispatchs.setPickAddrName(userAddrName);
+		dispatchs.setPickAddrLat(fromLat);
+		dispatchs.setPickAddrLng(fromLng);
+		
+		//助理派工表。。。这里两个距离 :   距用户/取货地址  距离 设置 为同一个值了、、
+		dispatchs.setPickDistance(distance);
+		dispatchs.setUserAddrDistance(distance);
+		
+		OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
+		
+		dispatchs.setOrgId(staffs.getOrgId());
+		dispatchs.setStaffId(staffId);
+		dispatchs.setStaffMobile(staffs.getMobile());
+		dispatchs.setStaffName(staffs.getName());
+		dispatchs.setDispatchStatus(Constants.ORDER_DIS_ENABLE);
+		
+		Short orderStatus = order.getOrderStatus();
+		
+		//对于 助理 类 订单，只有在  '已预约','已派工' 两种状态 可以 修改 派工人员
+		
+		if(orderStatus  == Constants.ORDER_AM_STATUS_1){
+			
+			//如果订单状态是 已预约。 手动增加派工
+			
+			//插入 派工表
+			disService.insertSelective(dispatchs);
+			
+			//更新 order_status
+			order.setOrderStatus(Constants.ORDER_AM_STATUS_2);
+			order.setUpdateTime(TimeStampUtil.getNowSecond());
+			
+			orderSevice.updateByPrimaryKeySelective(order);
+			
+		}
+				
+		if(orderStatus == Constants.ORDER_AM_STATUS_2){
+			
+			// 已派工。 修改派工表
+			disService.updateByPrimaryKeySelective(dispatchs);
+		}
+		
+		return resultData;
+	}
+	
 }
