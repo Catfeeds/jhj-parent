@@ -49,12 +49,13 @@ public class OaOrderListVo extends Orders {
 	
 	private String cityName;		//城市名称
 	
-	private String orderDate;		//下单时间，传String 参数
+	
+	private String orderDate;		//下单时间
 	
 	
 	private List<OrgStaffs> staffList;	// 当前门店 下 的  阿姨 列表
 	
-	private Long staffId;				
+	private Long staffId;			// 对于  已经有 派工的 订单， 则 该字段表示  已派工的 服务人员id	
 	
 	private Map<Long, String> staMap;	// 列表展示
 	
@@ -64,7 +65,7 @@ public class OaOrderListVo extends Orders {
 	
 	private Short disStatus;	//派工状态
 	
-	private List<OrgStaffsNewVo> voList;
+	private List<OrgStaffsNewVo> voList;	// 可用 服务人员  VO 
 
 	private String poiLongitude;//钟点工取货地址经度
 	
@@ -83,9 +84,16 @@ public class OaOrderListVo extends Orders {
 	private String userAddrKey;//用户选中地址
 	
 	
+	private String serviceDateStr;	//服务时间 字符串，页面需要
 	
 	
 	
+	public String getServiceDateStr() {
+		return serviceDateStr;
+	}
+	public void setServiceDateStr(String serviceDateStr) {
+		this.serviceDateStr = serviceDateStr;
+	}
 	public String getUserAddrKey() {
 		return userAddrKey;
 	}
@@ -208,6 +216,7 @@ public class OaOrderListVo extends Orders {
 	public void setPayTypeName(String payTypeName) {
 		this.payTypeName = payTypeName;
 	}
+	
 	public String getOrderDate() {
 		return orderDate;
 	}

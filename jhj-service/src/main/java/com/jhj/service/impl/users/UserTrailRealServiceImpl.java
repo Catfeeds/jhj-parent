@@ -1,6 +1,8 @@
 package com.jhj.service.impl.users;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +80,11 @@ public class UserTrailRealServiceImpl implements UserTrailRealService {
 		return userTrailRealMapper.selectByUserIdAndType(userId,userType);
 	}
 
-	
+	@Override
+	public List<UserTrailReal> selectLatestPositionForUser(List<Long> userIdList) {
+		
+		return userTrailRealMapper.selectLatestPositionForUser(userIdList);
+	}
 }
 	
 

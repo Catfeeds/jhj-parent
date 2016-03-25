@@ -21,6 +21,7 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
@@ -32,6 +33,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderServiceAddonsService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.StaffSearchVo;
@@ -92,6 +94,8 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 	@Autowired
     private DictServiceAddonsMapper dictSerAddonMapper;
 	
+	@Autowired
+	private PartnerServiceTypeService partService;
 	
 	/**
 	 * 传参 ：  用户 地址 id(找门店) ,   用户Id(找差评)
@@ -442,4 +446,27 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		return matchStaffIds;
 	}
 	
+	
+	/**
+	 * 	2016年3月14日18:04:49 
+	 * 
+	 * 		jhj2.1 得到 保洁服务  订单价格
+	 * 
+	 */
+	@Override
+	public OrderPrices getNewOrderPrice(Long serviceType) {
+		
+		OrderPrices prices = orderPricesService.initOrderPrices();
+		
+		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+		
+		// 单项服务的 价格
+		BigDecimal price = type.getPrice();
+		
+		// 保洁服务的 服务时间 都为 3小时
+		prices.setOrderMoney(price.multiply(new BigDecimal(3)));
+		prices.setOrderPay(price.multiply(new BigDecimal(3)));
+		
+		return prices;
+	}
 }

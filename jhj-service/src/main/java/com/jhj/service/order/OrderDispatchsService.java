@@ -43,4 +43,8 @@ public interface OrderDispatchsService {
 	OrderDispatchs selectByOrderId(Long orderId);
 	
 	List<OrderDispatchs> selectByNoAndDisStatus(String orderNo,Short disStatus);
+	
+	
+	//jhj2.1   服务人员 当天的派工数
+	Long getTodayOrderNumForTheSta(Long staffId);
 }

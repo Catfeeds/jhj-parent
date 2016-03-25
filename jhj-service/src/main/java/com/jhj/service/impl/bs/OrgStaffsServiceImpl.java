@@ -3,6 +3,7 @@ package com.jhj.service.impl.bs;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,10 +15,15 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.jhj.common.Constants;
+import com.jhj.po.dao.bs.OrgStaffSkillMapper;
 import com.jhj.po.dao.bs.OrgStaffsMapper;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
+import com.jhj.po.dao.university.PartnerServiceTypeMapper;
+import com.jhj.po.model.admin.AdminAuthority;
+import com.jhj.po.model.admin.AdminRoleAuthority;
 import com.jhj.po.model.bs.OrgStaffAuth;
+import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
@@ -38,8 +44,12 @@ import com.jhj.service.university.StudyStaffPassQueryService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.StaffSearchVo;
+import com.jhj.vo.bs.NewPartnerServiceVo;
+import com.jhj.vo.bs.NewStaffFormVo;
+import com.jhj.vo.bs.NewStaffListVo;
 import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
+import com.jhj.vo.bs.StaffSkillVo;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -96,6 +106,18 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	@Autowired
 	private OrgStaffAuthService authService;
 	
+	@Autowired
+	private OrgStaffSkillMapper skillMapper;
+	
+	@Autowired
+	private PartnerServiceTypeMapper partServiceMapper;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
+	
+	
+	
+	
 	@Override
 	public int deleteByPrimaryKey(Long staffId) {
 		return orgStaMapper.deleteByPrimaryKey(staffId);
@@ -131,14 +153,14 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		return orgStaMapper.selectAll();
 	}
 
-	@Override
-	public List<OrgStaffs> selectByListPage(StaffSearchVo staffSearchVo, int pageNo, int pageSize) {
-
-		PageHelper.startPage(pageNo, pageSize);
-		List<OrgStaffs> lists = orgStaMapper.selectByListPage(staffSearchVo);
-		// PageInfo result = new PageInfo(lists);
-		return lists;
-	}
+//	@Override
+//	public List<OrgStaffs> selectByListPage(StaffSearchVo staffSearchVo, int pageNo, int pageSize) {
+//
+//		PageHelper.startPage(pageNo, pageSize);
+//		List<OrgStaffs> lists = orgStaMapper.selectByListPage(staffSearchVo);
+//		// PageInfo result = new PageInfo(lists);
+//		return lists;
+//	}
 
 	@Override
 	public OrgStaffs initOrgStaffs() {
@@ -147,7 +169,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 		orgStaffs.setStaffId(0L);
 		
-		orgStaffs.setAmId(0L);
+//		orgStaffs.setAmId(0L);
 		orgStaffs.setProvinceId(0L);
 		orgStaffs.setCityId(0L);
 		orgStaffs.setRegionId(0L);
@@ -170,7 +192,11 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		orgStaffs.setIntro("");
 		orgStaffs.setAddTime(TimeStampUtil.getNow() / 1000);
 		orgStaffs.setUpdateTime(0L);
-
+		
+		
+		orgStaffs.setParentOrgId(0L);
+		orgStaffs.setLevel((short)1); //员工等级  1=1级 2=2级 3=3级 4=4级
+		
 		return orgStaffs;
 	}
 
@@ -182,18 +208,18 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	/*
 	 * 传入  服务人员 对象。。得到对应的 助理人员 姓名
 	 */
-	@Override
-	public String getAmName(OrgStaffs orgStaff){
-		
-		Long amId = orgStaff.getAmId();
-		OrgStaffs staff = orgStaMapper.selectByPrimaryKey(amId);
-		
-		String amName = "";
-		if(staff != null){
-			amName = staff.getName();
-		}
-		return amName;
-	}
+//	@Override
+//	public String getAmName(OrgStaffs orgStaff){
+//		
+//		Long amId = orgStaff.getAmId();
+//		OrgStaffs staff = orgStaMapper.selectByPrimaryKey(amId);
+//		
+//		String amName = "";
+//		if(staff != null){
+//			amName = staff.getName();
+//		}
+//		return amName;
+//	}
 	
 	
 	/*
@@ -202,16 +228,16 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	@Override
 	public OrgStaffVo genOrgStaffVo(OrgStaffs orgStaff) {
 
-//		OrgStaffVo orgStaffVo = new OrgStaffVo();
 		
 		OrgStaffVo orgStaffVo = initOrgStaffVo();
 		
 		BeanUtils.copyProperties(orgStaff, orgStaffVo);
 		
-		//设置员工 对应的  助理名称
-		String amName = getAmName(orgStaff);
-		orgStaffVo.setAmName(amName);
+//		//设置员工 对应的  助理名称
+//		String amName = getAmName(orgStaff);
+//		orgStaffVo.setAmName(amName);
 //		orgStaffVo.setAmId(orgStaff.getStaffId());
+		
 		
 		String tagNames = "";
 		String tagIds = "";
@@ -219,72 +245,80 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		Long staffId = orgStaff.getStaffId();
 		List<Tags> tags = new ArrayList<Tags>();
 
-		if (staffId > 0L) {
-			// 根据staffId查找对应的 tagId
-			List<OrgStaffTags> staffTags = orgStaTagService.selectByStaffId(staffId);
-			// 处理 form中 标签的 显示 和传值
-			List<Long> tagIdList = new ArrayList<Long>();
-			for (OrgStaffTags item : staffTags) {
-				tagIdList.add(item.getTagId());
-				tagIds += item.getTagId().toString() + ",";
-			}
-			//处理 列表中 标签字段的 展示
-			if (tagIdList.size() > 0) {
-				tags = tagService.selectByIds(tagIdList);
-				for (Tags item : tags) {
-					// 查找 tagId对应的 tagName
-					tagNames += item.getTagName() + " ";
-				}				
-			}
-		}
 		
-		//设置 列表页，门店字段	
+//		if (staffId > 0L) {
+//			// 根据staffId查找对应的 tagId
+//			List<OrgStaffTags> staffTags = orgStaTagService.selectByStaffId(staffId);
+//			// 处理 form中 标签的 显示 和传值
+//			List<Long> tagIdList = new ArrayList<Long>();
+//			for (OrgStaffTags item : staffTags) {
+//				tagIdList.add(item.getTagId());
+//				tagIds += item.getTagId().toString() + ",";
+//			}
+//			//处理 列表中 标签字段的 展示
+//			if (tagIdList.size() > 0) {
+//				tags = tagService.selectByIds(tagIdList);
+//				for (Tags item : tags) {
+//					// 查找 tagId对应的 tagName
+//					tagNames += item.getTagName() + " ";
+//				}				
+//			}
+//		}
+		
+		// 云店名称
 		Long orgId = orgStaff.getOrgId();
+		
 		Orgs orgs = orgService.selectByPrimaryKey(orgId);
 		if(orgs!=null){
-			
 			orgStaffVo.setOrgName(orgs.getOrgName());
-		}else{
-			orgStaffVo.setOrgName("");
 		}
+		
+		//云店 对应的门店名称
+		Long parentOrgId = orgStaff.getParentOrgId();
+		
+		Orgs orgs2 = orgService.selectByPrimaryKey(parentOrgId);
+		if(orgs2!=null){
+			orgStaffVo.setParentOrgName(orgs2.getOrgName());
+		}
+		
 		
 		String cityName = dictService.getCityName(orgStaff.getCityId());
 	    String provinceName = dictService.getProvinceName(orgStaff.getProvinceId());
 	    //设置列表页，籍贯字段
 	    orgStaffVo.setHukou(provinceName+" "+cityName);		
 	    
-	    //助理收入: 
-	    
-	    List<Orders> amOrderList = orderMapper.selectAllAmOrder(staffId);
-	    
-	    List<Long> orderIdList = new ArrayList<Long>();
-		
-		BigDecimal sumMoney  = new BigDecimal(0);
-		
-		if(amOrderList.size()>0){
-			for (Orders order : amOrderList) {
-				orderIdList.add(order.getId());
-			}
-			
-			List<OrderPrices> priceList = orderPriceMapper.selectByOrderIds(orderIdList);
-			
-			//本月流水（订单总额 + 退款手续费 - 退款）的总和
-			
-			for (OrderPrices orderPrices : priceList) {
-				
-				BigDecimal orderMoney = orderPrices.getOrderMoney();
-				
-				BigDecimal orderPayBackFee = orderPrices.getOrderPayBackFee();
-				
-				BigDecimal orderPayBack = orderPrices.getOrderPayBack();
-				
-				BigDecimal subtract = orderMoney.add(orderPayBackFee).subtract(orderPayBack);
-				
-				sumMoney = MathBigDeciamlUtil.add(sumMoney, subtract);
-			}
-		}
-		
-		orgStaffVo.setAmSumMoney(sumMoney);
+//	    //助理收入: 
+//	    
+//	    List<Orders> amOrderList = orderMapper.selectAllAmOrder(staffId);
+//	    
+//	    List<Long> orderIdList = new ArrayList<Long>();
+//		
+//		BigDecimal sumMoney  = new BigDecimal(0);
+//		
+//		if(amOrderList.size()>0){
+//			for (Orders order : amOrderList) {
+//				orderIdList.add(order.getId());
+//			}
+//			
+//			List<OrderPrices> priceList = orderPriceMapper.selectByOrderIds(orderIdList);
+//			
+//			//本月流水（订单总额 + 退款手续费 - 退款）的总和
+//			
+//			for (OrderPrices orderPrices : priceList) {
+//				
+//				BigDecimal orderMoney = orderPrices.getOrderMoney();
+//				
+//				BigDecimal orderPayBackFee = orderPrices.getOrderPayBackFee();
+//				
+//				BigDecimal orderPayBack = orderPrices.getOrderPayBack();
+//				
+//				BigDecimal subtract = orderMoney.add(orderPayBackFee).subtract(orderPayBack);
+//				
+//				sumMoney = MathBigDeciamlUtil.add(sumMoney, subtract);
+//			}
+//		}
+//		
+//		orgStaffVo.setAmSumMoney(sumMoney);
 	    
 		orgStaffVo.setTagList(tags);
 		orgStaffVo.setTagNames(tagNames);
@@ -324,13 +358,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 				secInfoVo.setCityName(cityNameString);
 			}
 			
-			//SecRef3rd secRef3rd = this.selectBySecIdForIm(orgStaffs.getStaffId());
-			/*secInfoVo.setImUserName(secRef3rd.getUsername());
-			secInfoVo.setImPassword(secRef3rd.getPassword());*/
-			
-
 			return secInfoVo;
-
 		}
 	
 	@Override
@@ -391,30 +419,30 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		return orgStaMapper.selectAllAm();
 	}
 
-	@Override
-	public List<OrgStaffs> selectStaffByAmIdListPage(Long amId, int pageNo, int pageSize) {
-		
-		PageHelper.startPage(pageNo, pageSize);
-		
-		StaffSearchVo searchVo = new StaffSearchVo();
-		
-		searchVo.setAmId(amId);
-		
-		List<OrgStaffs> list = orgStaMapper.selectByListPage(searchVo);
-		
-		
-		return list;
-	}
+//	@Override
+//	public List<OrgStaffs> selectStaffByAmIdListPage(Long amId, int pageNo, int pageSize) {
+//		
+//		PageHelper.startPage(pageNo, pageSize);
+//		
+//		StaffSearchVo searchVo = new StaffSearchVo();
+//		
+//		searchVo.setAmId(amId);
+//		
+//		List<OrgStaffs> list = orgStaMapper.selectByListPage(searchVo);
+//		
+//		
+//		return list;
+//	}
 
 	@Override
 	public List<OrgStaffs> selectStaffByOrgId(Long orgId) {
 		return orgStaMapper.selectStaffByOrgId(orgId);
 	}
 
-	@Override
-	public List<OrgStaffs> selectStaffByAmId(Long amId) {
-		return orgStaMapper.selectStaffByAmId(amId);
-	}
+//	@Override
+//	public List<OrgStaffs> selectStaffByAmId(Long amId) {
+//		return orgStaMapper.selectStaffByAmId(amId);
+//	}
 
 	@Override
 	public OrgStaffVo initOrgStaffVo() {
@@ -426,7 +454,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffs, orgStaffVo);
 		
 		orgStaffVo.setAmName("");
-		orgStaffVo.setOrgName("");
+		orgStaffVo.setOrgName("");	//云店名称
 		orgStaffVo.setTagList(new ArrayList<Tags>());
 		orgStaffVo.setTagNames("");
 		orgStaffVo.setTagId("");
@@ -438,6 +466,9 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		
 		//2016年1月22日17:44:45 ,认证 审核相关
 		orgStaffVo.setAuthList(new ArrayList<StaffAuthVo>());
+		
+		//2016年3月9日15:37:31  一级门店名称
+		orgStaffVo.setParentOrgName("");
 		
 		return orgStaffVo;
 	}
@@ -475,7 +506,6 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		
 		List<StaffAuthVo> authList = new ArrayList<StaffAuthVo>();
 		
-		
 		//1.身份认证
 		String name = orgStaffs.getName();
 		String cardId = orgStaffs.getCardId();
@@ -496,7 +526,6 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		
 		// 录入 身份认证
 		authList.add(authVo1);
-		
 		
 		Long staffId = orgStaffs.getStaffId();
 		
@@ -573,5 +602,122 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	@Override
 	public List<OrgStaffs> selectAbleToSendMsgStaff() {
 		return orgStaMapper.selectAbleToSendMsgStaff();
+	}
+
+	@Override
+	public List<OrgStaffs> selectNewStaffList(StaffSearchVo searchVo) {
+		return orgStaMapper.selectNewStaffList(searchVo);
+	}
+
+	@Override
+	public NewStaffListVo transToNewStaffListVo(OrgStaffs staffs) {
+		
+		NewStaffListVo listVo = new NewStaffListVo();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, listVo);
+		
+		//1. 门店名称
+		Long parentOrgId = staffs.getParentOrgId();
+		Orgs orgs = orgService.selectByPrimaryKey(parentOrgId);
+		
+		if(orgs!=null){
+			listVo.setParentOrgName(orgs.getOrgName());
+		}
+		
+		
+		//2.云店名称
+		Long orgId = staffs.getOrgId();
+		Orgs orgs2 = orgService.selectByPrimaryKey(orgId);
+		
+		listVo.setOrgName(orgs2.getOrgName());
+		
+		//3.籍贯
+		String cityName = dictService.getCityName(staffs.getCityId());
+	    String provinceName = dictService.getProvinceName(staffs.getProvinceId());
+	    
+	    listVo.setNativePlace(provinceName+" "+cityName);
+	    
+		return listVo;
+	}
+	
+	@Override
+	public NewStaffFormVo transToNewStaffFormVo(Long staffId) {
+		
+		NewStaffFormVo formVo = initFormVo();
+		
+		OrgStaffs orgStaff = initOrgStaffs();
+		
+		if(staffId !=null && staffId >0L){
+			
+			orgStaff = selectByPrimaryKey(staffId);
+			
+			BeanUtilsExp.copyPropertiesIgnoreNull(orgStaff, formVo);
+			
+			
+			//2016年1月22日18:15:28     该服务人员的认证相关信息
+			List<StaffAuthVo> authList = getAuthListForStaff(orgStaff);
+			
+			formVo.setAuthList(authList);
+			
+			//2016年1月22日18:46:10  已通过认证的项目 id  （身份认证 id为0）
+			String authIds = makeAuthSuccessIds(orgStaff);
+			
+			formVo.setAuthIds(authIds);
+			
+		}
+		
+		List<PartnerServiceType> partServiceList = formVo.getPartServiceList();
+		
+		List<OrgStaffSkill> selectByStaffId = skillMapper.selectByStaffId(staffId);
+		
+		for (Iterator iterator = selectByStaffId.iterator(); iterator.hasNext();) {
+			OrgStaffSkill orgStaffSkill = (OrgStaffSkill) iterator.next();
+			
+			if(orgStaffSkill !=null){
+				partServiceList.add(partServiceMapper.selectByPrimaryKey(orgStaffSkill.getServiceTypeId()));
+			}
+		}
+		
+		return formVo;
+	}
+	
+	@Override
+	public NewStaffFormVo initFormVo() {
+			
+		OrgStaffs staffs = initOrgStaffs();
+		NewStaffFormVo formVo = new NewStaffFormVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, formVo);
+		
+		formVo.setPartServiceList(new ArrayList<PartnerServiceType>());
+		formVo.setAuthIds("");
+		formVo.setAuthList(new ArrayList<StaffAuthVo>());
+		
+		formVo.setSkillId(0L);
+		
+		//formVo.set。。
+		
+		return formVo;
+	}
+	
+	@Override
+	public Map<Long, String> selectSkillEntity() {
+		
+		Map<Long,String> map = new HashMap<Long, String>();
+		
+		List<PartnerServiceType> list = partServiceMapper.selectAllNoChildService();
+		
+		for (PartnerServiceType partnerServiceType : list) {
+			map.put(partnerServiceType.getServiceTypeId(), partnerServiceType.getName());
+		}
+		
+		return map;
+	}
+	
+	@Override
+	public List<Long> getProperStaffByOrgAndServiceType(Long orgId, Long serviceTypeId) {
+		
+		List<Long> list = orgStaMapper.getProperStaffByOrgAndServiceType(orgId, serviceTypeId);
+		
+		return list;
 	}
 }

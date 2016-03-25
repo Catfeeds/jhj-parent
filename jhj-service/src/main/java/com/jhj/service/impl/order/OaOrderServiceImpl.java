@@ -2,6 +2,7 @@ package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -38,6 +40,7 @@ import com.jhj.vo.OaOrderSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
@@ -75,6 +78,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 	@Autowired
 	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 
+	//jhj2.1  派工service
+	@Autowired
+	private NewDispatchStaffService newDisStaService;
+	
+	
 	@Override
 	public List<Orders> selectVoByListPage(OaOrderSearchVo oaOrderSearchVo, int pageNo, int pageSize) {
 
@@ -276,8 +284,16 @@ public class OaOrderServiceImpl implements OaOrderService {
 		Long addTime = orders.getAddTime();
 		
 		String date = DateUtil.getDefaultDate(addTime * 1000);
+		
 		// 下单时间
 		oaOrderListVo.setOrderDate(date);
+		
+		Long serviceDate = orders.getServiceDate();
+		
+		//服务时间
+		String date1 = DateUtil.getDefaultDate(serviceDate * 1000);
+		
+		oaOrderListVo.setServiceDateStr(date1);
 		
 		// 订单状态名称
 		String orderStausName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(),orders.getOrderStatus());
@@ -307,6 +323,26 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (userAddrs != null) {
 			oaOrderListVo.setOrderAddress(userAddrs.getName()+""+userAddrs.getAddr());
 		}
+		
+		/*
+		 * 2016年3月23日19:05:58  jhj2.1     基础保洁类订单 新的基本派工逻辑
+		 */
+		List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orders.getId(),orders.getServiceDate());
+		
+		Long addrId = orders.getAddrId();
+		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
+		
+		/*
+		 * 设置一个 默认值。。解决 mybatis list参数size为0
+		 */
+		if(staIdList.size() == 0){
+			staIdList.add(0, 0L);
+		}
+	    //可用 服务人员 VO
+		List<OrgStaffsNewVo> staVoList = newDisStaService.getTheNearestStaff(addrs.getLatitude(), addrs.getLongitude(), staIdList);
+		
+		oaOrderListVo.setVoList(staVoList);
+		
 		// 查找对应订单有效派工
 		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
 		// 有派工记录 的订单，则展示当前 阿姨
@@ -377,15 +413,15 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}*/
 		
 		//5.用户常用地址列表显示
-				Map<String, String> userAddrMap = new HashMap<String, String>();
-				List<UserAddrs> userAddrsList = userAddrService.selectByUserId(userId);
-				if(userAddrsList!=null && userAddrsList.size()>0){
-					for (UserAddrs addr : userAddrsList) {
-						userAddrMap.put(addr.getName()+"="+addr.getAddr()+"="+addr.getLongitude()+"="+addr.getLatitude()
-							,addr.getName()+addr.getAddr());
-					}
-				}
-				oaOrderListVo.setUserAddrMap(userAddrMap);
+		Map<String, String> userAddrMap = new HashMap<String, String>();
+		List<UserAddrs> userAddrsList = userAddrService.selectByUserId(userId);
+		if(userAddrsList!=null && userAddrsList.size()>0){
+			for (UserAddrs addr : userAddrsList) {
+				userAddrMap.put(addr.getName()+"="+addr.getAddr()+"="+addr.getLongitude()+"="+addr.getLatitude()
+					,addr.getName()+addr.getAddr());
+			}
+		}
+		oaOrderListVo.setUserAddrMap(userAddrMap);
 		// 查找对应订单有效派工
 		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
 		// 有派工记录 的订单，则展示 当前 阿姨
@@ -450,6 +486,8 @@ public class OaOrderServiceImpl implements OaOrderService {
 			}
 		}
 		oaOrderListVo.setUserAddrMap(userAddrMap);
+		
+		
 		//6.查找对应订单有效派工,显示派工信息
 		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
 		for (OrderDispatchs orDis : orderDisList) {

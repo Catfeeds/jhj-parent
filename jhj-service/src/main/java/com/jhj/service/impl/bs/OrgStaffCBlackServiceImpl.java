@@ -1,5 +1,6 @@
 package com.jhj.service.impl.bs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,25 @@ public class OrgStaffCBlackServiceImpl implements OrgStaffBlackService {
 		return orgStaffBlackMapper.selectByStaffIdAndType(staffId);
 	}
 
-
+	@Override
+	public List<Long> selectAllBadRateStaffId() {
+		
+		List<OrgStaffBlack> list = selectAllBadRateStaff();
+		
+		List<Long> idList = new ArrayList<Long>();
+		
+		if(list.size() > 0){
+			for (OrgStaffBlack orgStaffBlack : list) {
+				
+				idList.add(orgStaffBlack.getStaffId());
+			}
+		}
+		
+		return idList;
+	}
 	
+	@Override
+	public List<OrgStaffBlack> selectAllBadRateStaff() {
+		return orgStaffBlackMapper.selectAllBadRateStaff();
+	}
 }

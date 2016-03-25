@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.GroupSearchVo;
 
 /**
  *
@@ -23,10 +24,10 @@ public interface OrgsService {
     Orgs selectByPrimaryKey(Long orgId);
 
     int updateByPrimaryKeySelective(Orgs record);
-
+    
     int updateByPrimaryKey(Orgs record);
     
-    List<Orgs> selectAll();
+//    List<Orgs> selectAll();
     
     PageInfo selectByListPage(OrgSearchVo orgSearchVo,int pageNo,int pageSize);
     
@@ -37,5 +38,14 @@ public interface OrgsService {
     Orgs selectByPoiAddress(String poiAddress);
     
     //2016年3月7日14:50:14  小组管理
-    List<Orgs> selectGroupsByListPage();
+    List<Orgs> selectGroupsByListPage(GroupSearchVo searchVo);
+    
+  //选择所有门店,一级门店
+    List<Orgs> selectOrgsNoParent();
+    
+  //选择所有 云店
+    List<Orgs> selectCloudOrgs();
+    
+    //根据云店，得到对应的上级门店
+    Orgs selectOrgByCloudOrg(Long orgId);
 }

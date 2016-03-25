@@ -19,12 +19,22 @@ public class OrgStaffsNewVo extends OrgStaffs{
 	//线路距离(文本描述)
 	private String distanceText;
 	
-	
 	//距离时间(单位为秒)
 	private int durationValue;
 	
 	//距离时间(文本描述)
 	private String durationText;
+	
+	private Long todayOrderNum;			// 2016年3月23日19:13:05   该人员当天的 派工单量
+	
+	
+	public Long getTodayOrderNum() {
+		return todayOrderNum;
+	}
+
+	public void setTodayOrderNum(Long todayOrderNum) {
+		this.todayOrderNum = todayOrderNum;
+	}
 
 	public String getLat() {
 		return lat;

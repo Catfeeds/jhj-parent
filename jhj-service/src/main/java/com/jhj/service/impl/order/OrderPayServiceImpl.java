@@ -1,9 +1,10 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,11 +17,13 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
+import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
@@ -88,10 +91,13 @@ public class OrderPayServiceImpl implements OrderPayService {
 	@Autowired
 	private UserPushBindService bindService;
 	
+	@Autowired
+	private NewDispatchStaffService newDisStaService;
+	
 	/**
 	 * 钟点工订单支付成功,后续通知功能
 	 * 1. 进行派工操作
-	 * 2. 进行发送短信呢
+	 * 2. 进行发送短信
 	 * @param isChangeDispatch  是否换人，如果是换人，则需要将原有派工取消，再重新派工.
 	 */
 	@Override
@@ -114,22 +120,36 @@ public class OrderPayServiceImpl implements OrderPayService {
 		}
 		
 		Users u = userService.getUserById(userId);
+		
+		List<OrgStaffs> staList = new ArrayList<OrgStaffs>();
+		
 		//实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
 		if (orgStaffsNewVos.isEmpty()) {
-//			orgStaffs = orderHourAddservice.getBestOrgStaff(userId, order.getId());
-			Long startTime = order.getServiceDate();
-			Long endTime = startTime+order.getServiceHour()*3600;
-			//jhj2.0派工逻辑
-			orgStaffsNewVos = dispatchStaffFromOrderService.getNewBestStaffForHour(startTime, endTime, order.getAddrId(), orderId);
+//			Long startTime = order.getServiceDate();
+//			Long endTime = startTime+order.getServiceHour()*3600;
+//			//jhj2.0派工逻辑
+//			orgStaffsNewVos = dispatchStaffFromOrderService.getNewBestStaffForHour(startTime, endTime, order.getAddrId(), orderId);
+			
+			List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orderId, order.getServiceDate());
+			
+			staList = orgStaffService.selectByids(staIdList);
+			
 		}
 		
-		if (orgStaffsNewVos.isEmpty()) return false;
+//		if (orgStaffsNewVos.isEmpty()) return false;
+		
+		if(staList.isEmpty()) return false;
+		
+		//乱序
+		Collections.shuffle(staList);
+		
+		//取第一个
+		OrgStaffs staff = staList.get(0);
 		
 		//随机取一个阿姨.
-		Random r = new Random();
-		int index = r.nextInt(orgStaffsNewVos.size());
-		OrgStaffsNewVo orgStaffsNewVo = orgStaffsNewVos.get(index);
-//		OrgStaffs orgStaff = orgStaffsNewVos.get(index);
+//		Random r = new Random();
+//		int index = r.nextInt(orgStaffsNewVos.size());
+//		OrgStaffsNewVo orgStaffsNewVo = orgStaffsNewVos.get(index);
 		
 		OrderDispatchs orderDispatchs = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
 		
@@ -145,17 +165,36 @@ public class OrderPayServiceImpl implements OrderPayService {
 		orderDispatchs.setServiceHours(order.getServiceHour());
 		
 		//更新服务人员与用户地址距离
-		orderDispatchs.setUserAddrDistance(orgStaffsNewVo.getDistanceValue());
+//TODO		orderDispatchs.setUserAddrDistance(orgStaffsNewVo.getDistanceValue());
+		
+		Long staffId = staff.getStaffId();
+		
+		Long addrId = order.getAddrId();
+		
+		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
+		
+		String latitude = userAddrs.getLatitude();
+		
+		String longitude = userAddrs.getLongitude();
+		
+		int distance = newDisStaService.getLatestDistance(latitude, longitude, staffId);
+		
+		orderDispatchs.setUserAddrDistance(distance);
 		
 		//工作人员相关
-		orderDispatchs.setStaffId(orgStaffsNewVo.getStaffId());
-		orderDispatchs.setStaffName(orgStaffsNewVo.getName());
-		orderDispatchs.setStaffMobile(orgStaffsNewVo.getMobile());
-		orderDispatchs.setAmId(orgStaffsNewVo.getAmId());
-				
-		orderDispatchService.insert(orderDispatchs);
+		//orderDispatchs.setStaffId(orgStaffsNewVo.getStaffId());
+		//orderDispatchs.setStaffName(orgStaffsNewVo.getName());
+		//orderDispatchs.setStaffMobile(orgStaffsNewVo.getMobile());
 		
-		order.setAmId(orgStaffsNewVo.getStaffId());//更新订单中助理Id
+		orderDispatchs.setStaffId(staff.getStaffId());
+		orderDispatchs.setStaffName(staff.getName());
+		orderDispatchs.setStaffMobile(staff.getMobile());
+		
+//		orderDispatchs.setAmId(orgStaffsNewVo.getAmId());
+				
+		orderDispatchService.insertSelective(orderDispatchs);
+		
+//		order.setAmId(orgStaffsNewVo.getStaffId());//更新订单中助理Id
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);//更新订单状态---已派工
 		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付 的助理单，需要用到这个 修改时间
 		ordersService.updateByPrimaryKeySelective(order);
@@ -175,11 +214,15 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		//2)派工成功，为服务人员发送推送消息---推送消息
 		if(orderDispatchs.getDispatchStatus()==1){
-			dispatchStaffFromOrderService.pushToStaff(orgStaffsNewVo.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
+//			dispatchStaffFromOrderService.pushToStaff(orgStaffsNewVo.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
+			
+			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 		}
 		//2.1)派工成功,为服务人员发送短信
-		SmsUtil.SendSms(orgStaffsNewVo.getMobile(),  "64746", contentForUser);
+//		SmsUtil.SendSms(orgStaffsNewVo.getMobile(),  "64746", contentForUser);
 
+		SmsUtil.SendSms(staff.getMobile(), "64746", contentForUser);
+		
 		//3)支付完成用户rest_money<60发短信---发送短信
 		Users user =userService.selectByUsersId(userId);
 		BigDecimal restMoney = user.getRestMoney();
@@ -238,10 +281,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 			String[] content = new String[] {};
 			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
 				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
-				}
+		}
 		
 		//2016年1月30日10:39:32  用户支付完  助理订单后，给助理推送消息
-		
 		Long amId = orderDispatchs.getStaffId();
 		
 		UserPushBind userPushBind = bindService.selectByUserId(amId);
@@ -353,45 +395,10 @@ public class OrderPayServiceImpl implements OrderPayService {
 				 */
 				System.out.println(" !!====!!======recharge fail=====!!=====!!:"+ message);
 				
-//				System.out.println("");
 			}
-//			JSONObject dataJson = jsonObject.getJSONObject("Data");
-//			//商户订单id,  此处传的 是 orderNo ： 服务商文档要求参数，必须 8~32位，故而此处传的是  orderNo
-//			String userOrderNo = dataJson.getString("UserOrderId");
-//			String state = dataJson.getString("State");
-//			
-//			//State： 订单状态（0为充值中，1为成功，其他为失败）
-//			
-//			if(userOrderNo.equals(orderNo) && state.equals("1")){
-//				//充值成功
-//				//修改订单状态,
-//				order.setOrderStatus(Constants.ORDER_STATUS_14);
-//				ordersService.updateByPrimaryKeySelective(order);
-//				
-//				//记录订单日志.
-//				OrderLog orderLog = orderLogService.initOrderLog(order);
-//				orderLogService.insert(orderLog);
-//			}else if(userOrderNo.equals(orderNo) && state.equals("0")){
-//				//充值中
-//				return 0;
-//			}else {
-//				//充值失败
-//				order.setOrderStatus(Constants.ORDER_STATUS_15);
-//				
-//				ordersService.updateByPrimaryKeySelective(order);
-//				
-//				//记录订单日志.
-//				OrderLog orderLog = orderLogService.initOrderLog(order);
-//				orderLogService.insert(orderLog);
-//				
-//				return Constants.ERROR_102;
-//			}
-//		
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}	
 	
 }

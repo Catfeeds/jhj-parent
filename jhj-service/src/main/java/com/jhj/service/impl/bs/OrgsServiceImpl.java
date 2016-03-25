@@ -12,6 +12,7 @@ import com.jhj.po.dao.bs.OrgsMapper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -96,7 +97,7 @@ public class OrgsServiceImpl implements OrgsService {
 		orgs.setAddTime(TimeStampUtil.getNow()/1000);
 		orgs.setUpdateTime(0L);
 		
-		orgs.setOrgType(Constants.ORG_OR_GROUP_0);	// 0 = 门店  1= 小组
+		orgs.setParentId(0L); // 默认是 一级门店，即上级门店 id = 0
 		
 		return orgs;
 	}
@@ -113,8 +114,23 @@ public class OrgsServiceImpl implements OrgsService {
 	
 	
 	@Override
-	public List<Orgs> selectGroupsByListPage() {
+	public List<Orgs> selectGroupsByListPage(GroupSearchVo searchVo) {
 		
-		return orgsMapper.selectGroupsByListPage();
+		return orgsMapper.selectGroupsByListPage(searchVo);
+	}
+
+	@Override
+	public List<Orgs> selectOrgsNoParent() {
+		return orgsMapper.selectOrgsNoParent();
+	}
+
+	@Override
+	public List<Orgs> selectCloudOrgs() {
+		return orgsMapper.selectCloudOrgs();
+	}
+	
+	@Override
+	public Orgs selectOrgByCloudOrg(Long orgId) {
+		return orgsMapper.selectOrgByCloudOrg(orgId);
 	}
 }

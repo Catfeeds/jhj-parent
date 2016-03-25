@@ -3,6 +3,7 @@ package com.jhj.service.university;
 import java.util.List;
 
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.vo.bs.NewPartnerServiceVo;
 import com.jhj.vo.university.OaPartnerServiceTypeVo;
 
 public interface PartnerServiceTypeService {
@@ -41,4 +42,16 @@ public interface PartnerServiceTypeService {
      */
     List<PartnerServiceType> selectNoParentServiceObj(); 
     
+    /**
+     * jhj 2.1 
+     * 		
+     *  得到服务及其子服务
+     */
+    List<NewPartnerServiceVo> getTreeList();
+    
+    NewPartnerServiceVo	transServiceToTree(Long id);
+    
+    NewPartnerServiceVo initVo();
+    
+    List<PartnerServiceType> selectByParentId(Long id);
 }

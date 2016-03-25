@@ -39,5 +39,9 @@ public interface OrgStaffBlackService {
 	List<OrgStaffBlack> selectVoByListPage(OrgStaffBlackSearchVo searchVo,
 			int pageNo, int pageSize);*/
 
-
+	
+	//差评 服务人员 集合
+	List<Long> selectAllBadRateStaffId();
+	
+	List<OrgStaffBlack> selectAllBadRateStaff();
 }

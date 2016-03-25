@@ -1,5 +1,7 @@
 package com.jhj.service.users;
 
+import java.util.List;
+
 import com.jhj.po.model.user.UserTrailReal;
 
 public interface UserTrailRealService {
@@ -19,5 +21,8 @@ public interface UserTrailRealService {
     UserTrailReal initUserTrailReal();
 
 	UserTrailReal selectByUserIdAndType(Long userId, short userType);
-
+	
+	//得到  参数集合中，每个用户 最新时间的 位置 
+	List<UserTrailReal> selectLatestPositionForUser(List<Long> userIdList);
+	
 }

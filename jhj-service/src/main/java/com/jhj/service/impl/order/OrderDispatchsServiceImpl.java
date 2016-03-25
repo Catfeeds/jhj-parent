@@ -134,5 +134,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		return orderDisMapper.selectByNoAndDisStatus(orderNo, disStatus);
 	}	
 
-
+	@Override
+	public Long getTodayOrderNumForTheSta(Long staffId) {
+		return orderDisMapper.getTodayOrderNumForTheSta(staffId);
+	}
 }

@@ -21,8 +21,8 @@ public class OrgStaffVo extends OrgStaffs  {
 	
 	
 	private String amName;
+
 	
-	private String orgName;
 	
 	private List<Tags> tagList;
 	
@@ -53,6 +53,18 @@ public class OrgStaffVo extends OrgStaffs  {
 	//2016年1月22日18:44:46 已经通过认证的 项目 id，从 org_staff_auth表获得
 	private String authIds;
 	
+	//2016年3月9日15:35:20  云店名称 （二级店。）
+	private String orgName;
+	
+	//2016年3月9日15:35:52  一级门店名称
+	private String parentOrgName;
+	
+	public String getParentOrgName() {
+		return parentOrgName;
+	}
+	public void setParentOrgName(String parentOrgName) {
+		this.parentOrgName = parentOrgName;
+	}
 	public String getAuthIds() {
 		return authIds;
 	}

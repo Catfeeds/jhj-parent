@@ -262,6 +262,10 @@ public class Constants {
 	public static short ORG_OR_GROUP_0 = 0;	//门店
 	public static short ORG_OR_GROUP_1 = 1; //小组
 	
+	
+	//2016年3月24日18:07:28  派工表，该条 派工记录 是否有效
+	public static Short ORDER_DIS_ENABLE = 1;
+	public static Short ORDER_DIS_DISABLE = 0;
 }
 
 
