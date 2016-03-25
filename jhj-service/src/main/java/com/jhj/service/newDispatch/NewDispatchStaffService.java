@@ -38,7 +38,6 @@ public interface NewDispatchStaffService {
 	 */
 	List<OrgStaffsNewVo> getTheNearestStaff(String fromLat,String fromLng,List<Long> staIdList);
 	
-	NewAutoDisStaffVo displayAllProperStaff(Long orderId,String fromLat,String fromLng);
 		
 	//被选中的 服务人员 与  用户 地址的 距离
 	int getLatestDistance(String userLat,String userLon, Long staffId);

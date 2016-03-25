@@ -307,59 +307,6 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	}
 	
 	
-	/**
-	 * 运营平台--手动派工
-	 */
-	@Override
-	public NewAutoDisStaffVo displayAllProperStaff(Long orderId,String fromLat,String fromLng) {
-		
-		Orders order = orderService.selectbyOrderId(orderId);
-		
-		Short orderType = order.getOrderType();
-		
-		
-		OrderDispatchs orderDispatchs = dispatchService.selectByOrderId(orderId);
-		
-		NewAutoDisStaffVo staffVo = new NewAutoDisStaffVo();
-		
-		BeanUtilsExp.copyPropertiesIgnoreNull(orderDispatchs, staffVo);
-		/*
-		 * 如果是 基础保洁类 订单, 已经有 服务地址
-		 * 
-		 * 1、 注***:  如果 不能 自动 派工 , 表示 不能派工。。
-		 * 	
-		 * 		因为 之前的自动派工 已经 是 从 所有 符合 基础 派工条件的 云店中,选择所有可用的 员工
-		 * 
-		 * 2、 '换人', 返回所有可用 员工 VO
-		 */	
-		if(orderDispatchs.getStaffId() != null && orderType == Constants.ORDER_TYPE_0){
-				
-			List<Long> list2 = autoDispatchForBaseOrder(orderId);
-				
-			List<OrgStaffsNewVo> list = getTheNearestStaff(fromLat, fromLng, list2);
-				
-			staffVo.setStaffList(list);
-		}
-		
-		/*
-		 * 如果是  助理类 订单, 
-		 * 
-		 * 	1. 新订单,未派工 ,没有服务地址 ,  返回空集合
-		 * 
-		 *  2. 已经手动派工, 再次修改 , 返回可用列表
-		 */
-		
-		if(orderDispatchs.getStaffId() != null && orderType == Constants.ORDER_TYPE_2){
-				
-			List<Long> staffIdList = autoDispatchForAmOrder(fromLat, fromLng, order.getServiceType());
-				
-			List<OrgStaffsNewVo> list = getTheNearestStaff(fromLat, fromLng, staffIdList);
-				
-			staffVo.setStaffList(list);
-		}
-		
-		return staffVo;
-	}
 	
 	/*
 	 *  更新  用户与  “派工后选中”的 服务人员 的  最新距离
