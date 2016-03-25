@@ -100,10 +100,11 @@ public class BaiduMapUtil {
 			JSONArray elements = result.getJSONArray("elements");
 			
 			BaiduPoiVo vo = null;
-			
+			 
+				
 			for (int i = 0; i < elements.length(); i++) {
 				JSONObject element = elements.getJSONObject(i);
-
+				
 				JSONObject duration = element.getJSONObject("duration");
 				JSONObject distance = element.getJSONObject("distance");
 				
@@ -115,9 +116,8 @@ public class BaiduMapUtil {
 					vo.setDurationValue(duration.getInt("value"));
 					resultAddrs.add(vo);
 				}
-			
 			}
-
+				
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
