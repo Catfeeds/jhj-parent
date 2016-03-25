@@ -257,8 +257,13 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		Orgs item = null;
 		try {
 			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
-			BaiduPoiVo baiduPoiVo = BaiduMapUtil.getMinDest(destList, 10000, 3600);
-
+			List<BaiduPoiVo> baiduPoiVos = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			BaiduPoiVo baiduPoiVo = null;
+			
+			if (!baiduPoiVos.isEmpty()) {
+				baiduPoiVo = baiduPoiVos.get(0);
+			}
+			
 			for (int i =0; i < orgList.size(); i++) {
 				item = orgList.get(i);
 				/*

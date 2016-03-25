@@ -20,7 +20,7 @@ public interface OrgsMapper {
     int updateByPrimaryKey(Orgs record);
     
     //2016年3月8日10:11:48  该方法已修改为取得 所有“小组”，不再支持门店
-//    List<Orgs> selectAll();
+    List<Orgs> selectAll();
     
     List<Orgs> selectByListPage(OrgSearchVo orgSearchVo);
     

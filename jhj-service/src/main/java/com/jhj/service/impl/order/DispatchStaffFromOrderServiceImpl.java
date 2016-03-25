@@ -355,7 +355,13 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList);
 			List<BaiduPoiVo> baiduPoiVos = new ArrayList<BaiduPoiVo>();
 			
-			BaiduPoiVo baiduPoiVo = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			baiduPoiVos = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			
+			BaiduPoiVo baiduPoiVo = null;
+			if (!baiduPoiVos.isEmpty()) {
+				baiduPoiVo = baiduPoiVos.get(0);
+			}
+			
 			for (int i =0; i < userTrailReals.size(); i++) {
 				item = userTrailReals.get(i);
 				 //4.如果 某个 服务人员 的经纬度 ，和 util中计算出的 经纬度 一致。。则为 符合条件的服务人员
@@ -422,7 +428,14 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList);
 			List<BaiduPoiVo> baiduPoiVos = new ArrayList<BaiduPoiVo>();
 			
-			BaiduPoiVo baiduPoiVo = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			baiduPoiVos = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			
+			BaiduPoiVo baiduPoiVo = null;
+			if (!baiduPoiVos.isEmpty()) {
+				baiduPoiVo = baiduPoiVos.get(0);
+			}
+
+			
 			for (int i =0; i < userTrailReals.size(); i++) {
 				item = userTrailReals.get(i);
 				//4.如果 某个 服务人员 的经纬度 ，和 util中计算出的 经纬度 一致。。则为 符合条件的服务人员
@@ -622,7 +635,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 
 		orderDispatchs.setStaffName(orgStaff.getName());
 		orderDispatchs.setMobile(orgStaff.getMobile());
-		orderDispatchs.setAmId(orgStaff.getAmId());
+//		orderDispatchs.setAmId(orgStaff.getAmId());
 				
 		orderDispatchService.insert(orderDispatchs);
 		
@@ -659,7 +672,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 
 		orderDispatchs.setStaffName(orgStaff.getName());
 		orderDispatchs.setStaffMobile(orgStaff.getMobile());
-		orderDispatchs.setAmId(orgStaff.getAmId());
+//		orderDispatchs.setAmId(orgStaff.getAmId());
 				
 		orderDispatchService.insert(orderDispatchs);
 		
@@ -699,7 +712,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orderDispatchs.setStaffId(orgStaff.getStaffId());
 		orderDispatchs.setStaffName(orgStaff.getName());
 		orderDispatchs.setStaffMobile(orgStaff.getMobile());
-		orderDispatchs.setAmId(orgStaff.getAmId());
+//		orderDispatchs.setAmId(orgStaff.getAmId());
 		
 		//助理订单派工保存服务地址(经纬度+地址名称+门牌号)
 		orderDispatchs.setPickAddrName(pickAddrName);

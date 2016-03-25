@@ -27,7 +27,7 @@ public interface OrgsService {
     
     int updateByPrimaryKey(Orgs record);
     
-//    List<Orgs> selectAll();
+    List<Orgs> selectAll();
     
     PageInfo selectByListPage(OrgSearchVo orgSearchVo,int pageNo,int pageSize);
     

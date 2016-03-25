@@ -1,5 +1,6 @@
 package com.jhj.action.app.user;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +115,8 @@ public class UserGetAmController extends BaseController {
 		
 		
 		
-		List<OrgStaffs> staffList = orgStaffService.selectStaffByAmIdListPage(amId, page, Constants.PAGE_MAX_NUMBER);
+//		List<OrgStaffs> staffList = orgStaffService.selectStaffByAmIdListPage(amId, page, Constants.PAGE_MAX_NUMBER);
+		List<OrgStaffs> staffList = new ArrayList<OrgStaffs>();
 		result.setData(staffList);
 		
 		return result;
