@@ -28,7 +28,7 @@ public class DateUtil {
 	 * 返回固定格式的日期
 	 */
 	public static String getDefaultDate(Object date){
-		SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_PATTERN);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		return sdf.format(date);
 	}
 	/**
@@ -649,6 +649,8 @@ public class DateUtil {
 //		System.out.println(Collections.frequency(matchList, 2L));
 //		System.out.println(Collections.frequency(matchList, 3L));
 		
-	
+		Long convTimeStampToDate = convTimeStampToDate(1458727667L);
+		
+		System.out.println(convTimeStampToDate);
 	}
 }

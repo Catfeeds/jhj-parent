@@ -2,6 +2,7 @@ package com.meijia.utils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -855,37 +856,13 @@ public class OneCareUtil {
 		
 		List<String> list = new ArrayList<String>();
 		
-		list.add("A");
-		list.add("B");
-		list.add("C");
-		list.add("D");
-		list.add("E");
-		list.add("F");
-		list.add("G");
+		String[] array = {
+					"A","B","C","D","E","F","G",
+					"H","I","J","K","L","M","N",
+					"O","P","Q",	"R","S","T",
+					"U","V","W",	"X","Y","Z"};
 		
-		list.add("H");
-		list.add("I");
-		list.add("J");
-		list.add("K");
-		list.add("L");
-		list.add("M");
-		list.add("N");
-		
-		list.add("O");
-		list.add("P");
-		list.add("Q");
-		
-		list.add("R");
-		list.add("S");
-		list.add("T");
-		
-		list.add("U");
-		list.add("V");
-		list.add("W");
-		
-		list.add("X");
-		list.add("Y");
-		list.add("Z");
+		list = Arrays.asList(array);
 		
 		return list;
 	}
@@ -988,5 +965,21 @@ public class OneCareUtil {
 		return ratio;
 	}
 	
+	
+	/*
+	 * 2016年3月9日17:45:50     员工级别
+	 */
+	public static List<String> getStaffLevel(){
+		
+		List<String> list = new ArrayList<String>();
+		
+		list.add(0,"1");
+		list.add(1,"2");
+		list.add(2,"3");
+		list.add(3,"4");
+		
+		
+		return list;
+	}
 	
 }

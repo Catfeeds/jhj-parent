@@ -119,7 +119,6 @@ public class BaiduMapUtil {
 			}
 
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -130,7 +129,7 @@ public class BaiduMapUtil {
 	/*
 	 * 对结果集排序，索引为0的 第一个对象，即为最近距离的 
 	 */
-	public static BaiduPoiVo  getMinDest(List<BaiduPoiVo> resultAddrs, int maxDistance, int maxDuration){
+	public static List<BaiduPoiVo>  getMinDest(List<BaiduPoiVo> resultAddrs, int maxDistance, int maxDuration){
 		
 		if (maxDistance <= 0 ) maxDistance = 10000;
 		if (maxDuration <= 0 ) maxDuration = 3600;
@@ -153,17 +152,27 @@ public class BaiduMapUtil {
 				}
 			});
 		}
+
 		
-		//排序之后
-		BaiduPoiVo baiduPoiVo  = initBaiduPoiVo();
+//		排序之后
+//		BaiduPoiVo baiduPoiVo  = initBaiduPoiVo();
+//		
+//		if(firstList.size() > 0){
+//			
+//			baiduPoiVo = firstList.get(0);
+//		}
 		
-		if(firstList.size() > 0){
-			
-			baiduPoiVo = firstList.get(0);
-		}
-		
-		
-		return baiduPoiVo;
+		/*
+		 *  2016年3月17日11:48:27  
+		 *  	
+		 *  	自动派工时, 
+		 *  		1>如果在 距离最近。时间最短的门店 不能找到 合适的 服务人员		
+		 *  			则 循环 符合条件的 下一家云店, 继续派工
+		 *  
+		 *  		2>同时, 也可以供  后台 客服人员，手动派工时 使用 云店
+		 *  		
+		 */
+		return firstList;
 	}
 	
 	private static BaiduPoiVo initBaiduPoiVo(){
