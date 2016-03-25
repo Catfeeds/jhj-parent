@@ -70,12 +70,16 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	@Override
 	public List<Long> autoDispatchForAmOrder(String lat,String lon,Long serviceTye) {
 		
-		List<Long> staffIdList = new ArrayList<Long>();
+		
+		//返回  所有云店的 所有可用 服务人员
+		List<Long> properStaIdList = new ArrayList<Long>();
 		
 		//符合时间、距离的 云店
 		List<Orgs> orgList = getMatchOrgId(lat, lon);
 			
 		for (int i = 0; i < orgList.size(); i++) {
+			
+			List<Long> staffIdList = new ArrayList<Long>();
 			
 			Orgs org = orgList.get(i);
 			
@@ -88,9 +92,11 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			
 			//最终 符合条件的 服务人员
 			staffIdList.removeAll(blackIdList);
+			
+			properStaIdList.addAll(staffIdList);
 		}
 			
-		return staffIdList;
+		return properStaIdList;
 	}
 	
 	/**

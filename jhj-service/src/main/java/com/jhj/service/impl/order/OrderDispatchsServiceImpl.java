@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.service.order.OrderDispatchsService;
@@ -80,7 +81,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		dispatchs.setStaffMobile("");
 		dispatchs.setRemarks("");
 		dispatchs.setAmId(0L);
-		dispatchs.setDispatchStatus((short)1); //??派工状态 默认有效吧？
+		dispatchs.setDispatchStatus(Constants.ORDER_DIS_ENABLE); //??派工状态 默认有效吧？
 	    dispatchs.setPickAddrName("");
 	    dispatchs.setPickAddrLat("");
 	    dispatchs.setPickAddrLng("");
