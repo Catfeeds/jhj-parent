@@ -422,23 +422,59 @@ public class OaOrderServiceImpl implements OaOrderService {
 			}
 		}
 		oaOrderListVo.setUserAddrMap(userAddrMap);
-		// 查找对应订单有效派工
-		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
-		// 有派工记录 的订单，则展示 当前 阿姨
-		for (OrderDispatchs orDis : orderDisList) {
-			oaOrderListVo.setStaffName(orDis.getStaffName());
-			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
-			oaOrderListVo.setStaffId(orDis.getStaffId());
+		
+		
+		/*
+		 * 2016年3月23日19:05:58  jhj2.1     助理类订单 新的基本派工逻辑
+		 */
+		List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orders.getId(),orders.getServiceDate());
+		
+		Long addrId = orders.getAddrId();
+		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
+		
+		if(addrs != null){
+			
+		 	staIdList = newDisStaService.autoDispatchForAmOrder(addrs.getLatitude(), addrs.getLongitude(), orders.getServiceType());
 		}
-		Long startTime = orders.getServiceDate();
-		Long endTime = (startTime + orders.getServiceHour() * 3600);
-
-		if (orders.getOrderStatus() == 1) {//预约状态显示确认派工
-			// 根据 派工逻辑 ，找出 这条 订单 的 符合条件的 阿姨
-			List<OrgStaffsNewVo> staffList = dispatchStaffFromOrderService.getNewBestStaffForAm(startTime, endTime,poiLongitude,poiLatitude, orders.getId());
-			// 保存可选的派工人员
-			oaOrderListVo.setVoList(staffList);
+		/*
+		 * 设置一个 默认值。。解决 mybatis list参数size为0
+		 */
+		if(staIdList.size() == 0){
+			staIdList.add(0, 0L);
 		}
+	    //可用 服务人员 VO
+		List<OrgStaffsNewVo> staVoList = newDisStaService.getTheNearestStaff(addrs.getLatitude(), addrs.getLongitude(), staIdList);
+		
+		oaOrderListVo.setVoList(staVoList);
+		
+//		// 查找对应订单有效派工
+//		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
+//		// 有派工记录 的订单，则展示当前 阿姨
+//		for (OrderDispatchs orDis : orderDisList) {
+//			oaOrderListVo.setStaffName(orDis.getStaffName());
+//			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
+//			oaOrderListVo.setStaffId(orDis.getStaffId());
+//		}
+//		
+//		
+//		
+//		// 查找对应订单有效派工
+//		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
+//		// 有派工记录 的订单，则展示 当前 阿姨
+//		for (OrderDispatchs orDis : orderDisList) {
+//			oaOrderListVo.setStaffName(orDis.getStaffName());
+//			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
+//			oaOrderListVo.setStaffId(orDis.getStaffId());
+//		}
+//		Long startTime = orders.getServiceDate();
+//		Long endTime = (startTime + orders.getServiceHour() * 3600);
+//
+//		if (orders.getOrderStatus() == 1) {//预约状态显示确认派工
+//			// 根据 派工逻辑 ，找出 这条 订单 的 符合条件的 阿姨
+//			List<OrgStaffsNewVo> staffList = dispatchStaffFromOrderService.getNewBestStaffForAm(startTime, endTime,poiLongitude,poiLatitude, orders.getId());
+//			// 保存可选的派工人员
+//			oaOrderListVo.setVoList(staffList);
+//		}
 		return oaOrderListVo;
 	}
 	@Override
@@ -487,18 +523,47 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}
 		oaOrderListVo.setUserAddrMap(userAddrMap);
 		
+		/*
+		 * 2016年3月23日19:05:58  jhj2.1     助理类订单 新的基本派工逻辑
+		 */
 		
-		//6.查找对应订单有效派工,显示派工信息
-		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
-		for (OrderDispatchs orDis : orderDisList) {
-			oaOrderListVo.setStaffName(orDis.getStaffName());
-			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
-			oaOrderListVo.setPickAddrName(orDis.getPickAddrName());
-			oaOrderListVo.setPickAddr(orDis.getPickAddr());
-			oaOrderListVo.setUserAddrDistance(orDis.getUserAddrDistance());
-			oaOrderListVo.setDisStatus(orDis.getDispatchStatus());
-			oaOrderListVo.setStaffId(orDis.getStaffId());
+		List<OrderDispatchs> list = orderDisService.selectByNoAndDisStatus(orderNo, Constants.ORDER_DIS_ENABLE);
+		
+		List<Long> staIdList = new ArrayList<Long>();
+		
+		List<OrgStaffsNewVo> staVoList = new ArrayList<OrgStaffsNewVo>();
+		
+		if(list.size() > 0){
+			
+			OrderDispatchs dispatchs = list.get(0);
+			
+			staIdList =  newDisStaService.autoDispatchForAmOrder(
+							dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), orders.getServiceType());
+			
+			
+			/*
+			 * 设置一个 默认值。。解决 mybatis list参数size为0
+			 */
+			if(staIdList.size() == 0){
+				staIdList.add(0, 0L);
+			}
+			
+		    //可用 服务人员 VO
+			staVoList = newDisStaService.getTheNearestStaff(dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), staIdList);
 		}
+		oaOrderListVo.setVoList(staVoList);
+		
+//		//6.查找对应订单有效派工,显示派工信息
+//		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
+//		for (OrderDispatchs orDis : orderDisList) {
+//			oaOrderListVo.setStaffName(orDis.getStaffName());
+//			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
+//			oaOrderListVo.setPickAddrName(orDis.getPickAddrName());
+//			oaOrderListVo.setPickAddr(orDis.getPickAddr());
+//			oaOrderListVo.setUserAddrDistance(orDis.getUserAddrDistance());
+//			oaOrderListVo.setDisStatus(orDis.getDispatchStatus());
+//			oaOrderListVo.setStaffId(orDis.getStaffId());
+//		}
 		return oaOrderListVo;
 	}
 	
@@ -679,8 +744,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 查找出无效派工
 		List<OrderDispatchs> disList_no = orderDisService.selectByNoAndDisStatus(orderNo, (short) 0);
 
-		if (null != disList_yes && disList_yes.size() > 0) {
+		if (disList_yes !=null && disList_yes.size() > 0) {
 			OrderDispatchs orderDispatchs= disList_yes.get(0);
+			
+			oaOrderListVo.setStaffId(orderDispatchs.getStaffId());
+			
 			oaOrderListVo.setDisStatusName("有效");
 			oaOrderListVo.setStaffName(orderDispatchs.getStaffName());
 			if(orders.getOrderType()==Constants.ORDER_TYPE_2){//助理订单服务地址从派工表获取
