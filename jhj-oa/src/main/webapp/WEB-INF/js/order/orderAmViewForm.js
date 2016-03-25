@@ -142,11 +142,6 @@ ac.addEventListener("onconfirm", function(e) {
 
 	setPlace();
 	
-	/*
-	 * jhj2.1  在设置完 新的  坐标位置后, 再 发起请求
-	 */ 
-	loadProperStaffForAmOrder();
-	
 });
 
 /*
@@ -159,6 +154,11 @@ function setPlace() {
 			
 			$("#poiLongitude").val(pp.lng);
 			$("#poiLatitude").val(pp.lat);
+			
+			/*
+			 * jhj2.1  在设置完 新的  坐标位置后, 再 发起请求
+			 */ 
+			loadProperStaffForAmOrder();
 			
 		} else {
 			alert("请您输入正确可识别的地址！");
@@ -189,11 +189,6 @@ function loadProperStaffForAmOrder(){
 	
 	var orderId = $("#id").val();
 	
-	alert(poiLat);
-	alert(poiLng);
-	
-	
-	return false;
 	$.ajax({
 		type:'post',
 		url:'/jhj-oa/new_dispatch/load_staff_for_am_order.json',
@@ -276,9 +271,8 @@ function loadProperStaffForAmOrder(){
 			}
 			return false;
 			
-			
 		},error:function(){
-			
+			alert("网络错误");
 		}
 	})
 	

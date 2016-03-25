@@ -68,64 +68,6 @@ public class NewOrderDisController extends BaseController {
 	@Autowired	
 	private UserPushBindService bindService;
 	
-	/**
-	 * 
-	 *  @Title: toDisStaForOrder
-	  * @Description: 
-			跳转到订单明细页. 动态展示 派工信息	
-	  * @param orderId
-	  * @return String    返回类型
-	  * @throws
-	 */
-	
-	@RequestMapping(value = "new_dis_for_order",method = RequestMethod.GET)
-	public String toDisStaForOrder(Model model,@RequestParam("orderId")Long orderId){
-		
-		if(orderId == null || orderId <= 0L){
-			
-			return "";
-		}
-		
-		OrderDispatchs dispatchs = disService.selectByOrderId(orderId);
-		
-		NewAutoDisStaffVo autoDisStaffVo = new NewAutoDisStaffVo();
-		
-		BeanUtilsExp.copyPropertiesIgnoreNull(dispatchs, autoDisStaffVo);
-		
-		Long staffId = dispatchs.getStaffId();
-		
-		/*
-		 * 基础保洁订单
-		 *  1. 如果是 未 完成 派工, 根据 派工逻辑,表示 无任何 可用 派工
-		 *  2. 如果是 已经派工, 需要 修改 派工人员
-		 * 
-		 * 助理类订单
-		 *  1. 新订单, 客服 第一次 手动派工
-		 *  2. 已派工, 修改 派工人员
-		 *  
-		 *  分析: 
-		 *  	对于 两种订单的第一种情况, 无需返回    可用员工 VO
-		 *  	对于 第二种情况,需要 回显 员工VO	
-		 */
-		
-		if(staffId > 0){
-			
-			Orders order = orderSevice.selectByPrimaryKey(orderId);
-			
-			UserAddrs userAddrs = userAddrService.selectByPrimaryKey(order.getAddrId());
-			
-			String fromLat = userAddrs.getLatitude();
-			
-			String fromLng = userAddrs.getLongitude();
-			
-			autoDisStaffVo = newDisService.displayAllProperStaff(orderId, fromLat, fromLng);
-		}
-		
-		model.addAttribute("disStaffVoModel", autoDisStaffVo);
-		
-		return "newDisOrder/orderDispatch";
-	}
-	
 	
 	/*
 	 *  提交  手动派工 结果
