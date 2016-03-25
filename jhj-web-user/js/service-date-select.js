@@ -10,9 +10,6 @@ function serviceDateSelect() {
 	var tomorrowStr = moment().add(1,'days').format('YYYY-MM-DD');
 	var nowHour = moment().hour();
 	
-
-
-
 //	var nowHour = 12;
 	if (nowHour >= 16) {
 		start = 1;
@@ -23,38 +20,41 @@ function serviceDateSelect() {
 		serviceDateValues.push(tempDay);
 	}	
 	
-	
-	
 	var serviceHoursValues = [];
 	var defaultServiceHoursValues = [];
 	// 可选 小时 的  最大范围 （考虑 时长）， 为  6 ~ 19
-	for (var i =6; i < 20; i++) {
-		var tempHour = moment({ hour:i}).format('HH');
-		defaultServiceHoursValues.push(tempHour);
+	for (var i =8; i < 20; i++) {
+		
+		if(i != 12 && i != 17){
+			var tempHour = moment({ hour:i}).format('HH');
+			defaultServiceHoursValues.push(tempHour);
+		}
 	}
 	
 	if(nowHour >= 0 && nowHour < 7){
-		serviceHoursValues = [10,11,12,13,14,15,16,17,18,19];
+		serviceHoursValues = [10,11,13,14,15,16,18,19];
 	} 
 
-	if(nowHour > 6 && nowHour <= 12){
-		
+	if(nowHour > 8 && nowHour < 12){
 		for (i = nowHour + 4; i < 19; i++) {
 			tempHour = moment({ hour:i}).format('HH');
-			serviceHoursValues.push(tempHour);
+			
+			if(tempHour != 12){
+				serviceHoursValues.push(tempHour);
+			}
 		}
 	}
 	
 	if(nowHour >12 && nowHour <= 15){
-		serviceHoursValues = [17,18,19];
+		serviceHoursValues = [18,19];
 	}
 	
 	if(nowHour >= 16 && nowHour <= 19){
-		serviceHoursValues = [6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+		serviceHoursValues = [8,9,10,11,13,14,15,16,18,19];
 	}
 	
 	if(nowHour > 19 && nowHour <=23){
-		serviceHoursValues = [10,11,12,13,14,15,16,17,18,19]; 
+		serviceHoursValues = [10,11,13,14,15,16,18,19]; 
 	}
 	
 	var serviceMins = ["00", "30"];
@@ -87,17 +87,14 @@ function serviceDateSelect() {
 		closeOnOverlay : true,
 //		readonly : true,		
 		tap : true,
-		
 		wheels: wheel,
                
        formatResult: function (data) {
-    	    // Sample result: "6 ft 8 in"
     	    return data[0] + ' ' + data[1] + ':' + data[2];
     	},
     	
        	validate: function (html, index, time, dir, inst) {
     		selectedDate = inst._tempWheelArray[0];
-//    		console.log(tomorrowStr + "===" + selectedDate);
     		if (index == 0 ) {
     			if  (todayStr == selectedDate) {
     				wheel[0][1].values = serviceHoursValues;
@@ -111,8 +108,6 @@ function serviceDateSelect() {
     				inst.settings.wheels = wheel;
             		inst.changeWheel([1]);
     			}
-//    			console.log(wheel);
-    			
     		}
     	},
     	
@@ -120,10 +115,5 @@ function serviceDateSelect() {
     		$$("#serviceDateSelect").html(valueText);
     		$$("#serviceDate").val(valueText);
 		}
-    	
-    	
 	});
-	
-	
-	
 }

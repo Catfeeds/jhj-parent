@@ -118,15 +118,6 @@ myApp.onPageInit('login', function (page) {
         return false;
 	});
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	 //登录
     $$('#login_btn').on('click', function(e){
     	
@@ -239,8 +230,6 @@ myApp.onPageInit('login', function (page) {
     	    }
         });
 
-
-        
         return false;
     });	
 	

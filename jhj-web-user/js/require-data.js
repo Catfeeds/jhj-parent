@@ -8,8 +8,11 @@
  * 		决定: 去掉检测，每次用户点击进入微网站,都去获得最新的 资源~ 可能会增加 几十 Kb的 网络开销~	
  *    
  */
-serviceTypeList();
-serviceTypeAddonsList();
+//serviceTypeList();
+//serviceTypeAddonsList();
+
+
+//partnerServiceTypeList(); 
 
 //检测
 //if (localStorage.getItem('service_type_list') == null) {
@@ -19,8 +22,8 @@ serviceTypeAddonsList();
 //}
 
 //检测用户是否已有相应的助理
-console.log(localStorage.getItem('am_id') );
-console.log(localStorage.getItem('am_mobile') );
+//console.log(localStorage.getItem('am_id') );
+//console.log(localStorage.getItem('am_mobile') );
 if (localStorage.getItem('am_id') == null || localStorage.getItem('am_mobile') == null) {
 	getAm();
 }
@@ -193,4 +196,29 @@ function getAm() {
 	});
 }
 
+
+/**
+ *  2016年3月14日16:53:31  新首页，加载 服务类别
+ */
+function partnerServiceTypeList() {
+	$$.ajax({
+		type : "GET",
+		url : siteAPIPath + "partService/part_service_tree_list.json?",
+		dataType : "json",
+		cache : true,
+		statusCode : {
+			200 : partServiceTreeSuccess,
+			400 : ajaxError,
+			500 : ajaxError
+		}
+	});
+}
+
+function partServiceTreeSuccess(data, textStatus, jqXHR) {
+	var result = JSON.parse(data.response);
+	
+	var serviceTypeList = JSON.stringify(result.data);
+	
+	localStorage.setItem('part_service_type_tree_list', serviceTypeList);
+}
 

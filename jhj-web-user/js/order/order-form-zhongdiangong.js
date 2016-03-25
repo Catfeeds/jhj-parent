@@ -1,6 +1,15 @@
 myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 	
 	
+	var serviceTypeId = $$("#serviceType").val();
+	
+	var paramServiceTypeId =  page.query.serviceType;
+	
+	if(paramServiceTypeId != undefined){
+		$$("#serviceType").val(paramServiceTypeId);
+	}
+	
+	
 	var userId = localStorage['user_id'];
 	$$("#userId").val(userId);
 	
@@ -13,10 +22,8 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 	}
 	
 	if (addrName != undefined) {
-//		$$("#addrName").html(addrName);
 		
 		$$("#defaultAddrName").html(addrName);
-//		$$("#addrName").text(addrName);
 	}
 	
 	//设置默认地址
@@ -34,73 +41,16 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 	serviceDateSelect();
 	
 	/*
-	 * 回显   日期时间、选择的价格
+	 * 回显   日期时间
 	 */
 	var dateTwo = sessionStorage.getItem("serviceDate");
 	if(dateTwo != null){
-		$$("#serviceDate").html(dateTwo);
+		$$("#serviceDateSelect").html(dateTwo);
 	}
-	
-	var priceTwo = sessionStorage.getItem('sumPrice');
-	if(!isNaN(priceTwo)){
-		if(priceTwo == '' || priceTwo == null){
-			priceTwo = 30;
-		}
-		$$("#price").html(priceTwo+"元/小时,两小时起");
-	}
-	
-		
-	/*
-	 * 动态选择附加服务，以及 单价变化
-	 */	
-		
-	// 附加服务 Id 的 字符串
-	var tagIds = "";
-	// 已选附加服务的 总价/小时
-	var price = "";
-	//点击图片变色效果。 有一定的局限性（需要是 .png 格式  、选中后的图片名需要是    xxx-2x.png 、 未选中的图片名需要是  xxx.png ）
-	$$("img[src$='.png']").on('click',function(e) {
-		
-		var arr =  $$(this).attr("src").split(".");
-		 
-		if(arr[0].endWith("-2x")){
-			$$(this).attr("src",arr[0].replace("-2x","")+".png");
-		}else{
-			$$(this).attr("src",arr[0]+"-2x"+".png");
-		}
-		
-		getTagAndPriceSelect();
-		
-	});
-	
-	// 回显后 提交订单 也需要 遍历 所有 选中的 图片（代码块位置 必须在 提交前，否则tagIds，会被覆盖）
-	function getTagAndPriceSelect(){
-		price = $$("#price").attr("value");
-		tagIds = $$("#serviceAddons").attr("value");
-		
-		$$("img[name = tag]").each(function(key, index) {
-			
-			//被选中的图片
-			if ($$(this).attr("src").indexOf("-2x")>0) {
-				tagIds = tagIds + $$(this).prev().val() + ",";
-				/*
-				 *数字 求和,动态 改变价格
-				 */
-				price = Number(price) + Number($$(this).next().attr("value"));
-			}
-		});	
-		if (tagIds != "") {
-			tagIds = tagIds.substring(0, tagIds.length - 1);
-		}
-		$$("#price").html(price+"元/小时,两小时起");
-		
-	}
-
 	
 	/*
 	 * 提交订单
 	 */
-	
 	$$("#submitOrder").click(function(){
 		
 		//表单校验不通过，不能提交
@@ -108,16 +58,10 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 			return false;
 		}
 		
-		
-		//提交时，再次 遍历 （回显时，没有触发click）
-		getTagAndPriceSelect();
-		
 		// 文档要求： post请求，必须是 formData类型
 		var formData = myApp.formToJSON('#orderHour-Form');
-		formData.serviceAddons = tagIds;
 		
 		//处理 日期。。传给后台 string 类型 的 秒值，时间戳
-		//去除警告：moment construction falls back to js Date
 		formData.serviceDate =  moment(formData.serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 		
 		
@@ -148,10 +92,6 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 			
 			sessionStorage.removeItem("serviceDate");
 			
-			sessionStorage.removeItem("sumPrice");
-			
-			sessionStorage.removeItem("serviceAddons");
-			
 			myApp.formDeleteData("orderHour-Form");
 			
 			/*
@@ -161,7 +101,7 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 			 * 		在 进行 支付 操作的时候，再给出提示，是否有可以服务的阿姨
 			 */
 			var successUrl = "order/order-form-zhongdiangong-pay.html";
-//			successUrl +="?order_no="+resul9
+			
 			mainView.router.loadPage(successUrl);
 			
 		 },
@@ -171,73 +111,14 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		});
 	});
 
-	var serTypeList = JSON.parse(localStorage.getItem("service_type_addons_list"));
-	
-	for (var i = 0; i < serTypeList.length; i++) {
-		var item =  serTypeList[i];
-		
-		if(item.name == "做饭"){
-			$$("#zuofanPrice").val(item.price);
-			$$("#zuofanId").val(item.service_addon_id);
-		}
-		if(item.name == "洗衣"){
-			$$("#xiyiPrice").val(item.price);
-			$$("#xiyiId").val(item.service_addon_id);
-		}
-		if(item.name == "清洁用品"){
-			$$("#qingjiePrice").val(item.price);
-			$$("#qingjieId").val(item.service_addon_id);
-		}
-	}
-	
-	/*
-	 * 只有在  页面第一次加载 完成之后，才会有  回显 图片 的要求
-	 */
-	var addonIds = sessionStorage.getItem('serviceAddons');
-	if(addonIds != null){
-		$$("img[name = tag]").each(function(key, index) {
-			
-			var addonId =  $$(this).prev().val();
-			
-			var arr =  $$(this).attr("src").split(".");
-			
-			if(addonIds.indexOf(addonId) >= 0){
-				$$(this).attr("src",arr[0]+"-2x"+".png");
-			}
-		});	
-	}
-	
 	
 	// 点击 服务地址 按钮时，将 页面 变化过的值，保存在本地
 	$$("#addrSelect").on('click',function(){
-		
 		//保存已选择的   服务时间
 		sessionStorage.setItem('serviceDate',$$("#serviceDate").val());
-		//保存已选择 的 附加服务Id及 价格
-		
-		var tagIdss = "";
-		var pricess = "";
-		
-		var aPrice = $$("#price").attr("value");
-		
-		$$("img[name = tag]").each(function(key, index) {
-			
-			//被选中的图片
-			if ($$(this).attr("src").indexOf("-2x")>0) {
-				tagIdss = tagIds + $$(this).prev().val() + ",";
-				/*
-				 *数字 求和,动态 改变价格
-				 */
-				aPrice = Number(aPrice) + Number($$(this).next().attr("value"));
-			}
-		});	
-		
-		sessionStorage.setItem('serviceAddons',tagIdss);
-		sessionStorage.setItem('sumPrice',aPrice);
 	});
 	
 });
-
 
 //表单校验
 function formValidation(){
@@ -254,23 +135,23 @@ function formValidation(){
 	//现实日期的 年月日
 	var realDate = moment().format("YYYYMMDD");
 	
-	//服务时长
-	var serviceHourSelect = formDatas.serviceHour;
-	var reg =/[\u4E00-\u9FA5]/g;
-	var hour = serviceHourSelect.replace(reg,"");
+//	//服务时长
+//	var serviceHourSelect = formDatas.serviceHour;
+//	var reg =/[\u4E00-\u9FA5]/g;
+//	var hour = serviceHourSelect.replace(reg,"");
 	
 	//当前整点小时数
 	var nowHour = moment().hour();
 	
 	//选择的时间 小于 当前时间
 	if(Number(hourSelect) <= nowHour && daySelect == realDate){
-		alert("现在时间："+ moment().format("YYYY-MM-DD HH:MM ")+"\r\n"+"请选择合适的服务时间");
+		myApp.alert("现在时间："+ moment().format("YYYY-MM-DD HH:MM ")+"\r\n"+"请选择合适的服务时间");
 		return false;
 	}
 	
-	
-	if(Number(hourSelect)+Number(hour) > 21){
-		alert("服务结束时间超过21点,无法提供服务");
+	//服务时间 固定为了 3小时
+	if(Number(hourSelect)+3 > 21){
+		myApp.alert("服务结束时间超过21点,无法提供服务");
 		return false;
 	}
 	
@@ -281,10 +162,6 @@ function formValidation(){
 		return false;
 	}
 	
-	if(formDatas.serviceHour == ""){
-		alert("请选择服务时长");
-		return false;
-	}
 	return true;
 }
 

@@ -1,13 +1,12 @@
 
-<div class="pages">
-	<!-- Page, data-page contains page name-->
 	<div data-page="order-am-faqiyuyue-page" class="page" style="background:#E5E5E5;overflow:auto;">
 		<!-- Scrollable page content-->
 		<div class="page-content"style="margin:0;padding-bottom:40px;" >
 			<form id="order-am-faqiyuyue-form" class="list-block">
-			
+				
+				<input type="hidden" name="serviceType" id="serviceType" value="">
+				
 				<ul>
-				    <!-- 服务名称 -->
 					 <li class="accordion-item">
 					 	<a href="#" class="item-content item-link">
 				        	<div class="item-inner">
@@ -16,51 +15,24 @@
 				        </a>
 				        <div class="accordion-item-content">
 				        	<div class="content-block">
-				         	  <p id="service_type_tips"></p>
+				         	  <p id="servicePrice"></p>
 				        	</div>
 				        </div>
 				    </li>
 					
-					<!-- 服务范围 ,2015-11-25 16:05:49 新增的 5中显示 服务范围-->
-					<li class="accordion-item" id = "service_around_li">
+					<li class="accordion-item">
 					 	<a href="#" class="item-content item-link">
 				        	<div class="item-inner">
-				         		 <div class="item-title" >服务范围</div>
+				         		 <div class="item-title" >服务介绍</div>
 				        	</div>
 				        </a>
 				        <div class="accordion-item-content">
 				        	<div class="content-block">
-				         	  <p id="service_around"></p>
+				         	  <p id="serviceIntro"></p>
 				        	</div>
 				        </div>
 				    </li>
-					
-					<!-- 价格说明 可以一行 内显示的 服务类型 -->
-					<li id="priceIntroSimple" >
-						<div class="item-content">
-							<div class="item-inner">
-								<div class="card-content-inner"style="padding-left:0!important;">
-									<p id="order-am-faqiyuyue-page-price"></p>
-							    </div>
-							</div>
-						</div>
-					</li>
-					
-					<!-- 价格说明不能在同一行显示，使用手风琴布局，需要手动修改js -->
-					<li class="accordion-item" id="priceIntroComplex">
-					 	<a href="#" class="item-content item-link">
-				        	<div class="item-inner">
-				         		 <div class="item-title">价格明细</div>
-				        	</div>
-				        </a>
-				        <div class="accordion-item-content">
-				        	<div class="content-block" id="order-am-faqiyuyue-page-price-complex">
-				         	  
-				        	</div>
-				        </div>
-				    </li>
-					
-					
+			
 				</ul>
 			
 			
@@ -73,11 +45,7 @@
 				<ul> 
 					<li class="align-top">
 				      <div class="item-content" style="padding:0;background:#E5E5E5;">
-
-				          <!-- <div class="item-input" style="width:100%!important"> -->
-				            <textarea rows="5" id="service_content" name="service_content" placeholder="可在这里用文字描述您的服务要求:" style="height:160px;"></textarea>
-				          <!-- </div> -->
-                
+				            <textarea rows="5" id="serviceContent" name="service_content" placeholder="可以在这里用文字描述您的服务要求:" style="height:160px;"></textarea>
 				      </div>
 				    </li>
 				</ul>
@@ -86,4 +54,3 @@
 			</form>
 		</div>
 	</div>
-</div>

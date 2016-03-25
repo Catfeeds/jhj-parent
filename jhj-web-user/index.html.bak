@@ -14,59 +14,165 @@
 
 </head>
 <body>
+	<!-- Status bar overlay for fullscreen mode-->
 	<div class="statusbar-overlay"></div>
+	<!-- Panels overlay-->
 	<div class="panel-overlay"></div>
 
+
+
+	<!-- Views-->
 	<div class="views">
 
+		<!-- Your main view, should have "view-main" class-->
 		<div class="view view-main" style="padding-bottom:50px!important;">
 
+			<!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
 			<div class="pages navbar-through toolbar-through">
-				<div data-page="index" class="page beijing-index"style="overflow:auto;">
-					<div class="page-content" style="margin:0;padding-bottom:80px;">
-						<div class="weather-index">
-							<iframe name="weather_inc" src="http://i.tianqi.com/index.php?c=code&id=6" width="110" height="80" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="margin-top:15px;"></iframe>
-							<div class="xiantiao-weather-index"></div>
-							<a href="order/remind/order-remind-tixing.html"><div class="tixing-index">提<br>醒</div></a>
+				<!-- Page, data-page contains page name-->
+				<div data-page="index" class="page"style="overflow:auto;background:#E5E5E5;">
+					<!-- Scrollable page content-->
+					<div class="page-content" style="margin:0;">
+						<div class="yijianhujiao row" style="background:#fff;height:30px;">
+								<p class="yijianhujiao-word" style="float:left;margin:0;margin-left:5%;margin-top:3px;color:#5EA6EE;">北京</p>
+								
+								<div style="height:30px;width:50%;" class="swiper-container swiper-vertical">
+								    <div class="swiper-wrapper">
+								      <div class="swiper-slide" style="background:#fff;margin-top:3px;color:#666;"><span>全网最低话费充值</span></div>
+								      <div class="swiper-slide" style="background:#fff;color:#666;"><span>叮当超市爆款商品</span></div>
+								      <div class="swiper-slide" style="background:#fff;color:#666;"><span>家庭助理按需服务</span></div>
+								      <div class="swiper-slide" style="background:#fff;color:#666;"><span>叮当提醒一生难忘</span></div>
+								    </div>
+							  </div>
+								
+								
+								<a href="tel:01056429112" class="external"><img src="img/tmp/phone-index.png" style="float:right;width:29px;margin-right:5px;margin-top:-30px;"/></a>
 						</div>
-						<a href="order/fiveservice/jinpaibaojie.html?firstServiceType=23" class="mincircle">
-							<img src="img/newindex/jpbj-index.png" alt="">
-							<p>金牌保洁</p>
-							<div class="xiabiaoxian"></div>
-						</a>
-						<a href="order/fiveservice/jinpaibaojie.html?firstServiceType=24" class="mincircle">
-							<img src="img/newindex/cnsf-index.png" alt="">
-							<p>厨娘烧饭</p>
-							<div class="xiabiaoxian"></div>
-						</a>
-						<a href="order/fiveservice/tiexinjiashi.html?firstServiceType=25" class="mincircle">
-							<img src="img/newindex/txjs-index.png" alt="">
-							<p>贴心家事</p>
-							<div class="xiabiaoxian"></div>
-						</a>
-						<a href="order/fiveservice/shenduyanghu.html?firstServiceType=26" class="mincircle">
-							<img src="img/newindex/sdyh-index.png" alt="">
-							<p>深度养护</p>
-							<div class="xiabiaoxian"></div>
-						</a>
-						<a href="order/fiveservice/qiyefuwu.html?firstServiceType=27" class="mincircle">
-							<img src="img/newindex/bmfw-index.png" alt="">
-							<p>企业服务</p>
-							<div class="xiabiaoxian"></div>
-						</a>
-						<div class="circle-index">
+						<div style="height:150px;"class="swiper-container ad-swiper">
+
+						</div>
+						
+						<div class="shouye-xg1">
+							
+							<ul class="shouye-xiuzheng1" style="border-right:1px solid #eee;">
+								<a href="order/order-jinpai.html" class="no-animation link"> 
+								
+								<li style="color:#0099CC;font-size:18px;font-weight: bold;">金牌家政</li>
+								<li style="margin-top:20px;">到家服务</li>
+								
+								<li><img src="./img/icons/jinpaijiazheng.png" alt=""></li>
+								</a>
+							</ul>
+							
+							
+							
+							
+							<ul class="shouye-xiuzheng1">
+								<a href="order/order-am.html" class="no-animation link">
+								
+								<li style="color:#FD8200;font-size:18px;font-weight: bold;">家庭助理</li>
+								<li style="margin-top:20px;">按需服务</li>
+								<li><img src="img/tmp/jiatinzhuli-x1.png" style="width:63px;height:70px;margin-left:30px;"></li>
+								</a>
+							</ul>
+						</div>
+						
+						
+						<div class="shouye-xg">
+							<ul class="shouye-xiuzheng">
+								<a href="order/remind/order-remind-tixing.html" class="no-animation link"> 
+								<li><img src="img/tmp/daiban-index1.png"></li>
+								<li>
+									<span>提醒</span>
+								</li>
+								</a>
+							</ul>
+							<ul class="shouye-xiuzheng" style="position:relative;">
+								<a href="xianshi-huodong.html" class="no-animation link"> 
+								<li>
+									<!-- <img alt="" src="./img/gif/caitiao.png" style="height:58px;top:0;left:0;position:absolute;"> -->
+									<img src="./img/icons/xianshihuodong.png" alt="">
+								</li>
+								<li>
+									<span><font color="red" style="font-size:14px;" >超值套餐</font></span>
+								</li>
+								</a>
+							</ul>
+							
+							<ul class="shouye-xiuzheng">
+								<a href="user/charge/mine-charge-list.html" >
+									<li><img src="img/tmp/chongzhi-index.png"></li>
+									<li>
+										<span>会员充值</span>
+									</li>
+								</a>
+							</ul>
+							
+							<ul class="shouye-xiuzheng">
+							 <a id="huafei" href="user/serviceCharge/order-service-charge.html" class="no-animation link">     
+								<!--<a id="huafei" href="#" onclick="goToHuaFei()" class="no-animation link"> -->
+								<li>
+									<img src="img/tmp/huafeichongzhi.png" alt="">
+								</li>
+								<li>
+									<span>话费充值</span>
+								</li>
+							</ul>
+							
+							
+							<ul class="shouye-xiuzheng">
+								<a href="http://kdt.im/OZjLSAKoJ" class="no-animation link external">
+								<li>
+									<img src="img/tmp/wangshangshangcheng-2x.png" alt="">
+								</li>
+								<li>
+									<span>限时特卖</span>
+								</li>
+								</a>
+							</ul>
+							<ul class="shouye-xiuzheng">
+								<a href="huodong-list.html" class="no-animation link">
+								<li>
+									<img src="img/tmp/shequhuodong-2x.png" alt="">
+								</li>
+								<li>
+									<span>社区活动</span>
+								</li>
+								</a>
+							</ul>
+							<!--<ul class="shouye-xiuzheng">
+								<a href="order/alcohol/order-alcohol.html" class="no-animation link">
+								<li>
+									<img src="img/icons/songjiuyewu.png" alt="">
+								</li>
+								<li>
+									<span>送酒业务</span>
+								</li>
+								</a>
+							</ul>-->
+							
+							<ul class="shouye-xiuzheng">
+								<a href="survey/survey-user.html" class="no-animation link">
+								<li>
+									<img src="img/icons/wenjuandiaocha.png" alt="">
+								</li>
+								<li>
+									<span>问卷调查</span>
+								</li>
+								</a>
+							</ul>
 							
 						</div>
-						<a href="survey/survey-user.html">
-							<div class="personal-index">
-								<img src="img/newindex/dzfw-index.png" alt="">
-								<p>定制服务</p>
-							</div>
-						</a>
+						
 					</div>
 				</div>
 			</div>
 		</div>
+
+
+
+
+			<!-- Bottom Toolbar-->
 			
 			<div class="toolbar tabbar tabbar-labels">
 			    <div class="toolbar-inner-jhj">
@@ -75,19 +181,19 @@
 			            <span class="tabbar-label">首页</span>
 			        </a>
 			        
-			        <a href="#" id="toolbar-order" onclick="toolBarHref('user/user-am-detail.html', 'toolbar-order');"  class="no-animation link" style="color:#FFF">
+			        <a href="#" id="toolbar-order" onclick="toolBarHref('order/order-hour-now-list.html', 'toolbar-order');"  class="no-animation link" style="color:#FFF">
 			            <i class="icon toolbar-icon-order"></i>
-			            <span class="tabbar-label">助理</span>
+			            <span class="tabbar-label">订单</span>
 			        </a>
 			        			        
-			        <a href="huodong-list.html" id="toolbar-am" onclick="toolBarHref('index.html', 'toolbar-am')" class="no-animation link" style="color:#FFF">
+			        <a href="#" id="toolbar-am" onclick="toolBarHref('user/user-am-detail.html', 'toolbar-am')" class="no-animation link" style="color:#FFF">
 			            <i class="icon toolbar-icon-zhuli"></i>
-			            <span class="tabbar-label">活动</span>
+			            <span class="tabbar-label">助理</span>
 			        </a>
 			        
-			        <a id="toolbar-remind" href="#" onclick="toolBarHref('index.html', 'toolbar-remind');" style="color:#FFF" class="no-animation link">
+			        <a id="toolbar-remind" href="#" onclick="toolBarHref('order/remind/order-remind-list.html', 'toolbar-remind');" style="color:#FFF" class="no-animation link">
 						<i class="icon toolbar-icon-tixing"></i>
-						<span class="tabbar-label">商城</span>
+						<span class="tabbar-label">提醒</span>
 					</a>
 			        
 			        <a href="#" id="toolbar-mine" onclick="toolBarHref('user/mine.html', 'toolbar-mine')" class="no-animation link" style="color:#FFF"> 
@@ -99,8 +205,12 @@
 
 		</div>
 
+
+
+	<!-- Path to Framework7 Library JS-->
 	
 	<script type="text/javascript" src="js/framework7.min.js"></script>
+	
 	
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="js/lib/moment-with-locales.min.js"></script>
@@ -116,10 +226,6 @@
 	<script type="text/javascript" src="js/utils.js"></script>
 	<!-- 时间选择js-->
 	<script type="text/javascript" src="js/service-date-select.js"></script>
-	
-	<!-- 历史订单录入相关js -->	
-	<script type="text/javascript" src="js/history-service-date-select.js"></script>
-	
 		
  	<!-- 用户地址列表显示-->
 	<script type="text/javascript" src="js/user/mine.js"></script>  
@@ -206,10 +312,5 @@
     <script type="text/javascript" src="js/survey/survey-result.js"></script>
     <script type="text/javascript" src="js/survey/survey-result-child.js"></script>
     <script type="text/javascript" src="js/survey/survey-result-price.js"></script>
-    
-    
-    <script type="text/javascript" src="js/order/fiveservice/jinpaibaojie.js"></script>
-    <script type="text/javascript" src="js/order/fiveservice/tiexinjiashi.js"></script>
-    
 </body>
 </html>

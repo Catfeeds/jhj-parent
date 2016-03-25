@@ -1,20 +1,16 @@
-<div class="pages">
-	<!-- Page, data-page contains page name-->
-	<div data-page="order-form-zhongdiangong-page" class="page" style="overflow:auto;background:#E5E5E5;">
+	<div data-page="jinpai-order-page" class="page" style="overflow:auto;background:#E5E5E5;">
 		<!-- Scrollable page content-->
 		<div class="page-content" >
 		
 		<form id="orderHour-Form"  class="store-data"> 
 
 			<input type="hidden" id="userId" name="userId" value="">
-			<input type="hidden" name="serviceType" id="serviceType" value="">
+			<input type="hidden" name="serviceType" value="1">
 			<input type="hidden" name="orderFrom" value="1">
 			<input type="hidden" name="serviceContent" value="">
-				
-			<!-- 服务时长固定3小时 -->	
-			<input type="hidden" name="serviceHour" value="3">
 			<input type="hidden" id="serviceAddons" name ="serviceAddons" value="">
 			<input type="hidden" id="addrId" name="addrId" value="">
+
 
 				<div style="margin: 0" class="list-block">
 					<ul style="margin-top:15px;background:#F8F8F8;">
@@ -40,22 +36,33 @@
 								            <div class="item-xx-label" style="padding:0 0 0 10px;width:65%;"  id="defaultAddrName">
 												<span class="item-xx" id="addrName" name="addrName" style="word-wrap:break-word;">请选择服务地址</span>
 											</div>
-								           <!--  <div class="item-after item-after-select-label" id="addrName" name="addrName" >请选择服务地址</div> -->
 								          </div>
 									</div>
 								</a> 
 						</li> 
 						
 						<li>
-							<div class="item-content">
-								<div class="item-inner">
-									<div class="item-title label">服务时长:</div>
-									<div class="item-xx" >
-										<span>3小时</span>
+						 	<div class="item-content">
+						          <div class="item-inner">
+						            <div class="item-title label">服务时长:</div>
+						            <div class="item-xx-label">
+										<span class="item-after" style="margin-left:-5px">3小时</span>
 									</div>
-								</div>
-							</div>
+						          </div>
+						     </div>
 						</li>
+						
+						<li>
+						 	<div class="item-content">
+						          <div class="item-inner">
+						            <div class="item-title label">服务价格:</div>
+						            <div class="item-xx-label">
+										<span class="item-after" style="margin-left:-5px">99元</span>
+									</div>
+						          </div>
+						     </div>
+						</li>
+						
 						
 						<li class="item-content">
 							<div class="item-inner">
@@ -66,20 +73,10 @@
 							</div>
 						</li>
 						
-						<!-- <li>
-							<div class="item-content">
-								<div class="item-inner">
-									<div class="item-title label">服务介绍:</div>
-									<div class="item-xx" >
-										<span name="aa">哈哈哈</span>
-									</div>
-								</div>
-							</div>
-						</li> -->
 						
 					</ul>
 				</div>
-			
+				
 			<div class="content-block"style="background:0;margin:0;padding:0;" >
 				<a href="#" id="submitOrder" class="button active shendu-submit">提交订单</a>
 			</div>	
@@ -87,4 +84,3 @@
 			</form>	
 		</div>
 	</div>
-</div>

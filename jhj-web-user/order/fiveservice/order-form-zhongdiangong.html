@@ -7,14 +7,12 @@
 		<form id="orderHour-Form"  class="store-data"> 
 
 			<input type="hidden" id="userId" name="userId" value="">
-			<input type="hidden" name="serviceType" id="serviceType" value="">
+			<input type="hidden" name="serviceType" value="1">
 			<input type="hidden" name="orderFrom" value="1">
 			<input type="hidden" name="serviceContent" value="">
-				
-			<!-- 服务时长固定3小时 -->	
-			<input type="hidden" name="serviceHour" value="3">
 			<input type="hidden" id="serviceAddons" name ="serviceAddons" value="">
 			<input type="hidden" id="addrId" name="addrId" value="">
+
 
 				<div style="margin: 0" class="list-block">
 					<ul style="margin-top:15px;background:#F8F8F8;">
@@ -47,14 +45,25 @@
 						</li> 
 						
 						<li>
-							<div class="item-content">
-								<div class="item-inner">
-									<div class="item-title label">服务时长:</div>
-									<div class="item-xx" >
-										<span>3小时</span>
-									</div>
-								</div>
-							</div>
+								 <a href="#" id="hourSelect" class="item-link smart-select"  data-back-on-select="true">
+								 	
+								 	<div class="item-content">
+								          <div class="item-inner">
+								            <div class="item-title label">服务时长:</div>
+								            <div class="item-xx-label">
+												<span class="item-after"style="max-width:90%;padding:0 0 0 3px;">3小时</span>
+											</div>
+								            <!-- <div class="item-after item-after-select-label" >请选择服务时长</div> -->
+								          </div>
+								     </div>
+
+									<!-- <select name="serviceHour">
+										  <option value="" selected>请选择服务时长</option>
+										  <option value="2" style="width:163px;">2小时</option>
+										  <option value="3" style="width:163px;">3小时</option>
+										  <option value="4" style="width:163px;">4小时</option>
+									</select> -->
+								</a>
 						</li>
 						
 						<li class="item-content">
@@ -66,20 +75,21 @@
 							</div>
 						</li>
 						
-						<!-- <li>
-							<div class="item-content">
-								<div class="item-inner">
-									<div class="item-title label">服务介绍:</div>
-									<div class="item-xx" >
-										<span name="aa">哈哈哈</span>
-									</div>
+						<!-- <li class="item-content">
+							<div class="item-inner">
+							<div class="item-title label">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价:</div>
+							<div class="content-block zdg-xq" >
+								<p id="price" value="30" style="margin:0;">30元/小时,两小时起</p>
+							</div>
+								<div class="item-xx">
+									 <p id="price"  value="30">30元/小时,两小时起</p>
 								</div>
 							</div>
 						</li> -->
 						
 					</ul>
 				</div>
-			
+				
 			<div class="content-block"style="background:0;margin:0;padding:0;" >
 				<a href="#" id="submitOrder" class="button active shendu-submit">提交订单</a>
 			</div>	
