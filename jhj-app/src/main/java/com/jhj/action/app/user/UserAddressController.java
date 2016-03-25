@@ -191,22 +191,22 @@ public class UserAddressController extends BaseController {
 		}
 		
 		//分配助理
-		userAddrsService.allotAm(userAddrs.getId());
-		UserAddrsVo userAddrsVo = new UserAddrsVo();
-		try {
-			BeanUtils.copyProperties(userAddrsVo, userAddrs);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		UserRefAm userRefAm = userRefAmService.selectByAmId(userId);
-		if(userRefAm !=null){
-			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(userRefAm.getStaffId());
-			if(orgStaffs !=null){
-				userAddrsVo.setAmMobile(orgStaffs.getMobile());
-			}
-		}
+//		userAddrsService.allotAm(userAddrs.getId());
+//		UserAddrsVo userAddrsVo = new UserAddrsVo();
+//		try {
+//			BeanUtils.copyProperties(userAddrsVo, userAddrs);
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		} catch (InvocationTargetException e) {
+//			e.printStackTrace();
+//		}
+//		UserRefAm userRefAm = userRefAmService.selectByAmId(userId);
+//		if(userRefAm !=null){
+//			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(userRefAm.getStaffId());
+//			if(orgStaffs !=null){
+//				userAddrsVo.setAmMobile(orgStaffs.getMobile());
+//			}
+//		}
 		
 		AppResultData<UserAddrs> result = new AppResultData<UserAddrs>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, userAddrsVo);
