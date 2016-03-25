@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,7 +99,8 @@ public class OrgStaffsController extends BaseController {
 			staffSearchVo.setOrgId(Long.parseLong(org));
 		}
 		
-		List<OrgStaffs> list = orgStaffsService.selectByListPage(staffSearchVo, pageNo, pageSize);
+//		List<OrgStaffs> list = orgStaffsService.selectByListPage(staffSearchVo, pageNo, pageSize);
+		List<OrgStaffs> list = new ArrayList<OrgStaffs>();
 		//tagnames
 		OrgStaffs orgStaff = null;
 		for (int i = 0; i < list.size(); i++) {

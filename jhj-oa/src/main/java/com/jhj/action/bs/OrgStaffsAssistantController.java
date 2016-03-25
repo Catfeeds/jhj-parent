@@ -118,7 +118,9 @@ public class OrgStaffsAssistantController extends BaseController {
 		}
 		
 		
-		List<OrgStaffs> orgStaAslist = orgStaAsService.selectByListPage(staffSearchVo, pageNo, pageSize);
+//		List<OrgStaffs> orgStaAslist = orgStaAsService.selectByListPage(staffSearchVo, pageNo, pageSize);
+		List<OrgStaffs> orgStaAslist = new ArrayList<OrgStaffs>();
+		
 		OrgStaffs orgStaff = null;
 		for (int i = 0; i < orgStaAslist.size(); i++) {
 			orgStaff = orgStaAslist.get(i);
