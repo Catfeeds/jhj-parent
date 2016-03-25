@@ -628,9 +628,10 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		//2.云店名称
 		Long orgId = staffs.getOrgId();
 		Orgs orgs2 = orgService.selectByPrimaryKey(orgId);
-		
-		listVo.setOrgName(orgs2.getOrgName());
-		
+		listVo.setOrgName("");
+		if (orgs2 != null) {
+			listVo.setOrgName(orgs2.getOrgName());
+		}
 		//3.籍贯
 		String cityName = dictService.getCityName(staffs.getCityId());
 	    String provinceName = dictService.getProvinceName(staffs.getProvinceId());
