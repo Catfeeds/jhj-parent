@@ -1,6 +1,7 @@
 package com.jhj.vo.staff;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class OrgStaffsVo {
 	
@@ -23,6 +24,8 @@ private Long staffId;
 	private Long totalOrder;
 	
 	private BigDecimal totalIncoming;
+	
+	private List<String> skills;
 
 	public Long getStaffId() {
 		return staffId;
@@ -102,6 +105,14 @@ private Long staffId;
 
 	public void setTotalIncoming(BigDecimal totalIncoming) {
 		this.totalIncoming = totalIncoming;
+	}
+
+	public List<String> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(List<String> skills) {
+		this.skills = skills;
 	}
 	
 	

@@ -3,6 +3,7 @@ package com.jhj.action.app.staff;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +20,16 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffCash;
 import com.jhj.po.model.bs.OrgStaffFinance;
+import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.service.bs.OrgStaffFinanceService;
+import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.OrderQuerySearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceAppVo;
 import com.jhj.vo.staff.OrgStaffsVo;
@@ -51,6 +56,12 @@ public class StaffQueryController extends BaseController {
 	
 	@Autowired
 	private OrgStaffCashService orgStaffCashService;
+	
+	@Autowired
+	private OrgStaffSkillService orgStaffSkillService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
 	/**
 	 * 我的接口
 	 * @param request
@@ -97,6 +108,15 @@ public class StaffQueryController extends BaseController {
 		//当月收入
 		BigDecimal totalIncoming = orderQueryService.getTotalOrderIncomeMoney(searchVo);
 		vo.setTotalIncoming(totalIncoming);
+		
+		//获取技能信息
+		List<String> skills = new ArrayList<String>();
+		List<OrgStaffSkill> hasSkills = orgStaffSkillService.selectByStaffId(staffId);
+		for (OrgStaffSkill item : hasSkills) {
+			PartnerServiceType serviceType = partService.selectByPrimaryKey(item.getServiceTypeId());
+			skills.add(serviceType.getName());
+		}
+		vo.setSkills(skills);
 		
 		result.setData(vo);
 		return result;

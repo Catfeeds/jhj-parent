@@ -110,78 +110,46 @@ public class OrderController extends BaseController {
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
 
 		StaffOrderVo vo = new StaffOrderVo();
-		// 最近两条记录
-		List<OrgStaffOnline> list = orgStaffOnlineService
-				.selectByStaffIdLimitTwo(staffId);
-		// 最近一条记录
-		OrgStaffOnline orgStaffOnline = orgStaffOnlineService
-				.selectByStaffId(staffId);
-		if (list == null || orgStaffOnline == null) {
+		vo.setStaffId(staffId);
+		// 总订单数
+		vo.setTotalOrder(0L);
+		// 在线小时数
+		vo.setTotalOnline(0L);
+		// 今日流水
+		vo.setTotalOrderMoney(new BigDecimal(0L));
+		// 今日收入
+		vo.setTotalIncoming(new BigDecimal(0L));
+		//开工标志 0=收工 1=开工(如果表中记录为空，则默认为收工状态)
+		vo.setIsWork((short)1);
 
-			vo.setStaffId(staffId);
-			// 总订单数
-			vo.setTotalOrder(0L);
-			// 在线小时数
-			vo.setTotalOnline(0L);
-			// 今日流水
-			vo.setTotalOrderMoney(new BigDecimal(0L));
-			// 今日收入
-			vo.setTotalIncoming(new BigDecimal(0L));
-			//开工标志 0=收工 1=开工(如果表中记录为空，则默认为收工状态)
-			vo.setIsWork((short)0);
-			result.setData(vo);
-
-			return result;
-		}
-		//开工标志 0=收工 1=开工
-		vo.setIsWork(orgStaffOnline.getIsWork());
-		// 查询条件
+		
 		OrderQuerySearchVo searchVo = new OrderQuerySearchVo();
 		searchVo.setStaffId(staffId);
 		searchVo.setOrderStatus((short) 7);
-
-		if (orgStaffOnline.getIsWork() == 1) {
-			Long startTime = orgStaffOnline.getAddTime();
-			Long endTime = TimeStampUtil.getNowSecond();
-			searchVo.setStartTime(startTime);
-			searchVo.setEndTime(endTime);
-		}
+		
+		Long startTime = TimeStampUtil.getBeginOfToday();
+		Long endTime = TimeStampUtil.getEndOfToday();
+			
+		searchVo.setStartTime(startTime);
+		searchVo.setEndTime(endTime);
+		
 	
 		
-		if (orgStaffOnline.getIsWork() == 0) {
-			for (int i = 1; i < list.size(); i++) {
-				OrgStaffOnline record = list.get(i);
-				if (record.getIsWork() == 1) {
-					Long startTime = record.getAddTime();
-					Long endTime = orgStaffOnline.getAddTime();
-					searchVo.setStartTime(startTime);
-					searchVo.setEndTime(endTime);
-				}
-			}
-		}
+		
 		vo.setStaffId(staffId);
 		
 		// 工作小时数
-		Long totalOnline = TimeStampUtil.compareTimeStr(
-				searchVo.getStartTime(), searchVo.getEndTime());
-		vo.setTotalOnline(totalOnline/3600);
-		//当日0点的时间
-		//Long startTime = DateUtil.getTimesmorning();
-		//当日12点的时间
-		//Long endTime = DateUtil.getTimesnight();
-		//searchVo.setStartTime(startTime);
-		//searchVo.setEndTime(endTime);
+		vo.setTotalOnline((long) 0);
+		
 		// 订单总数
 		Long totalOrder = orderQueryService.getTotalOrderCount(searchVo);
 		vo.setTotalOrder(totalOrder);
 		
 		// 订单总金额
-		BigDecimal totalOrderMoney = orderQueryService
-				.getTotalOrderMoney(searchVo);
+		BigDecimal totalOrderMoney = orderQueryService.getTotalOrderMoney(searchVo);
 		vo.setTotalOrderMoney(totalOrderMoney);
 		// 订单收入总金额
-		BigDecimal totalOrderIncoming = orderQueryService
-				.getTotalOrderIncomeMoney(searchVo);
+		BigDecimal totalOrderIncoming = orderQueryService.getTotalOrderIncomeMoney(searchVo);
 		vo.setTotalIncoming(totalOrderIncoming);
 		
 		result.setData(vo);
