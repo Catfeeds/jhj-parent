@@ -117,10 +117,16 @@ public class StaffQueryController extends BaseController {
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
 	    
 		OrgStaffFinance orgStaffFinance = orgStaffFinanceService.selectByStaffId(staffId);
+		
+		OrgStaffFinanceAppVo vo = new OrgStaffFinanceAppVo();
+		
+		vo.setTotalCash(new BigDecimal(0));
+		vo.setTotalDept(new BigDecimal(0));
 		if (orgStaffFinance == null) {
+			result.setData(vo);
 			return result;
 		}
-		OrgStaffFinanceAppVo vo = new OrgStaffFinanceAppVo();
+		
 		
 		//BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(orgStaffFinance.getTotalCash());
 		//总提现金额
