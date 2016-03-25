@@ -58,10 +58,9 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	      },
 	      success: function (data, status, xhr){
 				
-				var result = JSON.parse(data);
-				var service = result.data;
-				
-				//TODO 
+//				var result = JSON.parse(data);
+//				var service = result.data;
+				myApp.alert("预约成功");
 				mainView.loadPage.router("index.html")
 			},
 			error: function(status,xhr){
