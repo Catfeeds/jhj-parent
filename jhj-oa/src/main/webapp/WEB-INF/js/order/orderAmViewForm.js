@@ -53,8 +53,9 @@ $("select[name='userAddrKey']").on('change',function() {
 	 * 选择 常用地址 后, 也 发送请求 ,加载 最新可用的 员工列表
 	 */
 	
-	loadProperStaffForAmOrder();
+//	setPlace();
 	
+	loadProperStaffForAmOrder();
 
 });
 
@@ -85,24 +86,24 @@ var ac = new BMap.Autocomplete( // 建立一个自动完成的对象
 });
 
 
-//ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
-//	var str = "";
-//	var _value = e.fromitem.value;
-//	var value = "";
-//	if (e.fromitem.index > -1) {
-//		value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-//	}    
-//	str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
-//	
-//	value = "";
-//	if (e.toitem.index > -1) {
-//		_value = e.toitem.value;
-//		value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-//		
-//	}     
-//	str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
-//	G("searchResultPanel").innerHTML = str;
-//});
+ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+	var str = "";
+	var _value = e.fromitem.value;
+	var value = "";
+	if (e.fromitem.index > -1) {
+		value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+	}    
+	str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+	
+	value = "";
+	if (e.toitem.index > -1) {
+		_value = e.toitem.value;
+		value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		
+	}     
+	str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+	G("searchResultPanel").innerHTML = str;
+});
 
 var myValue;
 
@@ -129,7 +130,8 @@ ac.addEventListener("onconfirm", function(e) {
  * 	在 搜索结果 选中 某一地址时,  获得 改地址 的 经纬度,保存在 隐藏域
 */
 function setPlace() {
-	function myFun() {
+	function myFuns() {
+		
 		var pp = local.getResults().getPoi(0).point; // 获取第一个智能搜索的结果
 			
 			$("#poiLongitude").val(pp.lng);
@@ -141,11 +143,38 @@ function setPlace() {
 			loadProperStaffForAmOrder();
 			
 	}
-	var local = new BMap.LocalSearch(map, { // 智能搜索
-		onSearchComplete : myFun
+	var local = new BMap.LocalSearch(map, { //智能搜索
+		  onSearchComplete: myFuns
 	});
 	local.search(myValue);
 }
+
+//function setPlace(){
+//	map.clearOverlays();    //清除地图上所有覆盖物
+//	function myFun(){
+//		var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+//		map.centerAndZoom(pp, 18);
+//		
+//		
+//		//jhj2.1 使用搜索后,设置 选中 目标地点的 坐标
+//		$("#poiLongitude").val(pp.lng);
+//		$("#poiLatitude").val(pp.lat);
+//		
+//		loadProperStaffForAmOrder();
+//		
+//		var marker = new BMap.Marker(pp);
+//		map.addOverlay(new BMap.Marker(pp));    //添加标注
+//		marker.enableDragging();
+//		
+//	}
+//	var local = new BMap.LocalSearch(map, { //智能搜索
+//	  onSearchComplete: myFun
+//	});
+//	local.search(myValue);
+//}
+
+
+
 
 /*
  *  在 选择地址后 ,ajax 加载 可用的 服务人员

@@ -47,11 +47,11 @@
 
 								<form:hidden path="orgId" />
 								<form:hidden path="addTime"/>	
-								<form:input path="poiLatitude" id="poiLatitude"/>
-								<form:input path="poiLongitude" id="poiLongitude"/>
+								<form:hidden path="poiLatitude" id="poiLatitude"/>
+								<form:hidden path="poiLongitude" id="poiLongitude"/>
 								
-								<form:input path="poiAddress" id="poiAddress"/>
-								<form:input path="poiCity" id="poiCity"/>
+								<form:hidden path="poiAddress" id="poiAddress"/>
+								<form:hidden path="poiCity" id="poiCity"/>
 								
 								<div class="form-body">
 
@@ -96,9 +96,6 @@
 									
 									<div class="form-group required">
 												<label class="col-md-2 control-label">门店地址*</label>
-												<!-- <input type="text"  id="location" style="margin-left:15px;border:thin solid gray"/>
-												<input value="搜索" id="search" name="search" type="button" onclick="searchs();"/> -->
-												
 												请输入:<input type="text" id="suggestId" size="20" value="请输入位置" style="width:150px;" />
    											<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 												
@@ -115,25 +112,6 @@
 											<form:errors path="orgAddr" class="field-has-error"></form:errors>
 										</div>
 									</div>
-									
-									<%-- <div class="form-group required">
-										<label class="col-md-2 control-label">按次计费服务</label>
-										<div class="col-md-5">
-										    <button type="button"
-											    data-original-title="员工信息" 
-											    data-content="预计到达用时: ${orgsModel.orgName } &#10;
-											    	                        今日派单数:${orgsModel.orgOwnerTel } &#10;
-											    	                        距用户地址距离:${orgsModel.orgAddr } " 
-											    data-placement="top" 
-											    data-trigger="hover" 
-											    class="btn btn-success popovers">
-													
-												我叫胡林江													    
-											</button>
-											
-										</div>
-									</div> --%>
-									
 									
 									<div class="form-group required">
 										<label class="col-md-2 control-label">门店状态</label>
@@ -197,7 +175,7 @@
     
     	<!-- 引入百度地图API,其中   申请的密钥   ak 和主机 ip绑定， -->
 	<script type="text/javascript" 
-		src="http://api.map.baidu.com/api?v=1.5&ak=2sshjv8D4AOoOzozoutVb6WT">
+		src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT">
 	</script>
     <script type="text/javascript"	src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
 	<script type="text/javascript"  src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>

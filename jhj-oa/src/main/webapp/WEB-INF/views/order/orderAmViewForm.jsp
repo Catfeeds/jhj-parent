@@ -54,6 +54,7 @@
 					
 					<form:hidden path="orderStatus"/>
 					
+					<form:hidden path="staffId"/>
 					<div class="form-body">
 					
 						<div class="form-group ">
@@ -194,7 +195,7 @@
 							</div>
 
 							<div class="form-group" id="addrNum">
-								<label class="col-md-2 control-label">地址门牌号</label>
+								<label class="col-md-2 control-label">地址门牌号*</label>
 								<div class="col-md-5">
 									<form:input path="pickAddr" class="form-control" maxLength="30"
 										placeholder="请输入门牌号" />
@@ -268,9 +269,7 @@
 	<!--script for this page-->
 	<!-- 引入百度地图API,其中   申请的密钥   ak 和主机 ip绑定， -->
 	<script type="text/javascript"
-		src="http://api.map.baidu.com/api?v=1.5&ak=2sshjv8D4AOoOzozoutVb6WT">
-		
-	</script>
+		src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>
 	<script type="text/javascript"
 		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
 	<script type="text/javascript"
