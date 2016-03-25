@@ -47,7 +47,13 @@ public class MyTest {
 //		System.out.println(map.toString());
 		
 		
-		System.out.println(Long.valueOf(null));
+		Integer i1 = 127;
+		
+		Integer i2 = new Integer(500);
+		
+		Integer i3 = 127;
+		
+		System.out.println(i1 == i3);
 		
 	}
 }

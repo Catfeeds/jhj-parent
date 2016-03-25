@@ -137,9 +137,7 @@ public class OrderAmController extends BaseController {
 			@RequestParam("user_id") Long userId,
 			@RequestParam("service_type") Long serviceType,
 			@RequestParam("service_content") String serviceContent,
-			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom
-
-	) {
+			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom){
 
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -165,13 +163,6 @@ public class OrderAmController extends BaseController {
 			return result;
 		}
 
-		// todo 根据userId 找到对应的am_id 表为 user_ref_am, 如果没有am_id, 返回错误.
-		/*UserRefAm userRefAm = orderRefAmService.selectByAmId(userId);
-		Long amId = userRefAm.getStaffId();
-		if (amId == 0) {
-			result.setMsg(ConstantMsg.ERROR_100_MSG);
-			return result;
-		}*/
 
 		// 调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
@@ -181,9 +172,6 @@ public class OrderAmController extends BaseController {
 		// 保存订单信息
 		Orders order = ordersService.initOrders();
 
-		// todo 这里要把am_id加到 order
-		// order.setId(id);
-//		order.setAmId(amId);
 		order.setMobile(u.getMobile());
 		order.setUserId(u.getId());
 		order.setServiceType(serviceType);

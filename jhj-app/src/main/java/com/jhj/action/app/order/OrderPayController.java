@@ -21,6 +21,8 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
+import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
@@ -74,6 +76,12 @@ public class OrderPayController extends BaseController {
 	@Autowired
 	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 
+	@Autowired
+	private NewDispatchStaffService newDisStaService;
+	
+	@Autowired
+	private OrgStaffsService orgStaService;
+	
 	// 17.订单支付前接口
 	/**
 	 * @param mobile true string 手机号 
@@ -109,8 +117,6 @@ public class OrderPayController extends BaseController {
 			result.setMsg(ConstantMsg.HAVE_PAY);
 			return result;
 		}
-		
-		
 
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
 		
@@ -143,7 +149,6 @@ public class OrderPayController extends BaseController {
 		orderPrice.setOrderMoney(orderPrice.getOrderMoney());
 		
 		
-		
 		if (orderPayType.equals(Constants.PAY_TYPE_0)) {
 			//1.先判断用户余额是否够支付
 			if(u.getRestMoney().compareTo(orderPay) < 0) {
@@ -153,35 +158,29 @@ public class OrderPayController extends BaseController {
 			}
 		}		
 		
-		//todo 判断当前是否有满足条件阿姨，没有则返回提示信息.
+		//判断当前是否有满足条件阿姨，没有则返回提示信息.
 		Short orderType = order.getOrderType();
 		List<OrgStaffs> orgStaffs = new ArrayList<OrgStaffs>();
 		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
-
+		
+		
+		// jhj2.1 基础保洁类订单
 		if (orderType.equals(Constants.ORDER_TYPE_0)) {
 			
-			Long addrId = order.getAddrId();
-			
-		/*	Orgs orgs = orderHourAddservice.getMatchOrgId(addrId);
-			
-			if(BeanUtilsExp.isNullOrEmpty(orgs)){
-				//未找到 符合 地址条件的  门店，给出提示， 错误码 设置 为 101
-				result.setStatus(Constants.ERROR_101);
-				return result;
-			}*/
-			
-//			orgStaffs = orderHourAddservice.getBestOrgStaff(userId, order.getId());
-			Long startTime = order.getServiceDate();
-			Long endTime = startTime+order.getServiceHour()*3600;
+//			Long addrId = order.getAddrId();
+//			
+//			Long startTime = order.getServiceDate();
+//			Long endTime = startTime+order.getServiceHour()*3600;
 			//jhj2.0派工逻辑
-			orgStaffsNewVos = dispatchStaffFromOrderService.getNewBestStaffForHour(startTime, endTime, order.getAddrId(), orderId);
-			if (orgStaffsNewVos.isEmpty()) {
-				
-				//2015-10-16 16:10:34   新需求： 无可用派工,让用户联系助理, 此处用 102 错误码，区分这种情况
-				result.setStatus(Constants.ERROR_102);
-				result.setMsg("当前无可用的派工,请更换您的服务时间.");
-				return result;				
-			}
+//			orgStaffsNewVos = dispatchStaffFromOrderService.getNewBestStaffForHour(startTime, endTime, order.getAddrId(), orderId);
+			
+//			if (orgStaffsNewVos.isEmpty()) {
+//				
+//				//2015-10-16 16:10:34   新需求： 无可用派工,让用户联系助理, 此处用 102 错误码，区分这种情况
+//				result.setStatus(Constants.ERROR_102);
+//				result.setMsg("当前无可用的派工,请更换您的服务时间.");
+//				return result;				
+//			}
 		}
 		
 		orderPrice.setOrderPay(orderPay);
@@ -202,7 +201,26 @@ public class OrderPayController extends BaseController {
 			u.setUpdateTime(updateTime);
 			userService.updateByPrimaryKeySelective(u);
 			
-			order.setOrderStatus(Constants.ORDER_AM_STATUS_4);//已支付
+			
+			/**
+			 * 2016年3月24日19:11:16  
+			 * 		
+			 * 		修改已支付 状态时。。  
+			 * 
+			 * 	jhj2.1	钟点工(基础保洁类) 修改为 2、  助理单修改为 4
+			 */
+			
+			//TODO  jhj2.1  订单 类型？？？
+			if(order.getOrderType() == Constants.ORDER_TYPE_2){
+				
+				order.setOrderStatus(Constants.ORDER_AM_STATUS_4);//已支付
+			}
+			
+			if(order.getOrderType() == Constants.ORDER_TYPE_0){
+				
+				order.setOrderStatus(Constants.ORDER_HOUR_STATUS_2);//已支付
+			}
+			
 			
 			// 修改 24小时已支付 的助理单，需要用到这个 修改时间
 			order.setUpdateTime(TimeStampUtil.getNowSecond());
@@ -218,6 +236,8 @@ public class OrderPayController extends BaseController {
 			//订单支付成功后
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
 				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
+				
+//				List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orderId);
 			}
 			
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {

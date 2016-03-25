@@ -18,8 +18,8 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
-import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
@@ -31,6 +31,7 @@ import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserRefAmService;
@@ -89,6 +90,9 @@ public class OrderHourAddController extends BaseController {
     @Autowired
     private ServiceAddonsService serviceAddonsService;       
 	
+    @Autowired
+    private PartnerServiceTypeService partService;
+    
 	@RequestMapping(value = "post_hour", method = RequestMethod.POST)
 	public AppResultData<Object> submitOrder(
 			@RequestParam("userId") Long userId,
@@ -133,12 +137,18 @@ public class OrderHourAddController extends BaseController {
 		order.setUserId(userId);
 		order.setAmId(userRefAm.getStaffId());
 		order.setServiceType(serviceType);
-//		order.setServiceContent(serviceContent);
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);
 		order.setServiceHour(serviceHour);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);//钟点工未支付
 		order.setOrderNo(orderNo);
+		
+		/*
+		 * 2016年3月14日17:54:37  可直接设置为保洁
+		 */
+		PartnerServiceType partnerServiceType = partService.selectByPrimaryKey(serviceType);
+		
+		order.setServiceContent(partnerServiceType.getName());
 		
 		order.setRemarks(remarks);
 		
@@ -152,7 +162,8 @@ public class OrderHourAddController extends BaseController {
 		
 		//设置订单总金额。插入 order_prices表
 		
-		OrderPrices orderPrices =  orderHourAddservice.getOrderPriceSum(serviceType, serviceAddons, serviceHour);
+		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(serviceType);
+		
 		orderPrices.setUserId(userId);
 		orderPrices.setOrderId(order.getId());
 		orderPrices.setMobile(u.getMobile());
@@ -160,57 +171,6 @@ public class OrderHourAddController extends BaseController {
 		
 		orderPricesService.insert(orderPrices);
 		
-	
-		
-		//如果有附加服务类型，需要存储到order_service_addons表.
-		if (!StringUtil.isEmpty(serviceAddons)) {
-			String[] serviceAddonArray = StringUtil.convertStrToArray(serviceAddons);
-			
-			List<Long> serviceAddonIds = new ArrayList<Long>();
-			for (int i = 0; i < serviceAddonArray.length; i++) {
-				if (!StringUtil.isEmpty(serviceAddonArray[i])) {
-					Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
-					serviceAddonIds.add(serviceAddonId);
-				}
-			}
-			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectByServiceAddonIds(serviceAddonIds);
-			
-			
-			
-			for (int i = 0; i < serviceAddonArray.length; i++) {	
-				Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
-				
-				OrderServiceAddons record = orderServiceAddonsService.initOrderServiceAddons();
-				
-				record.setOrderId(order.getId());
-				record.setOrderNo(order.getOrderNo());
-				record.setServiceAddonId(serviceAddonId);
-				record.setUserId(userId);
-				
-				//订单表 。服务内容字段
-				String serviceContents = "保洁  ";
-				
-				
-				for (DictServiceAddons item : dictServiceAddons) {
-					if (item.getServiceAddonId().equals(serviceAddonId)) {
-						record.setItemNum(item.getDefaultNum());
-						record.setItemUnit(item.getItemUnit());
-						record.setPrice(item.getPrice());
-					}
-					
-					serviceContents += item.getName() +" ";
-				}
-				
-				
-				orderServiceAddonsService.insert(record);
-				order.setServiceContent(serviceContents);
-			}
-		}else{
-			order.setServiceContent("保洁");
-		}
-		ordersService.updateByPrimaryKeySelective(order);
-		
-
 		/*
 		 * 2.插入订单日志表  order_log
 		 */
@@ -222,6 +182,8 @@ public class OrderHourAddController extends BaseController {
 		
 		return result;
 	}
+	
+	
 	/*
 	 * 
 	 * 用户版-钟点工 --提交订单 页面加载，调用这个接口
