@@ -7,34 +7,24 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.StringUtil;
 
 
 /**
  *
  * @author :hulj
  * @Date : 2015年7月13日下午3:52:07
- * @Description: TODO
+ * @Description: 
  *
  */
 public class NationTypeSelectTag extends SimpleTagSupport{
 	
-	private String nameId;
-	/**
-	 * @return the nameId
-	 */
-	public String getNameId() {
-		return nameId;
-	}
-
-	/**
-	 * @param nameId the nameId to set
-	 */
-	public void setNameId(String nameId) {
-		this.nameId = nameId;
-	}
-
+	private String nationName;
+	
+	 // 是否包含全部，  0 = 不包含  1= 包含
+    private String hasAll =  "1";
+	
 	public NationTypeSelectTag() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -46,12 +36,17 @@ public class NationTypeSelectTag extends SimpleTagSupport{
             StringBuffer nationTypeSelect = new StringBuffer();
             nationTypeSelect.append("<select id = \"nameId\" name=\"nation\" class=\"form-control\">");
 
-            String item = null;
+            if (hasAll.equals("1")) {
+            	nationTypeSelect.append("<option value='' >请选择民族</option>");
+            }
+            
+            
+            String item = "";
             String selected = "";
             for(int i = 0;  i<optionList.size();  i++) {
                 item = optionList.get(i);
                 selected = "";
-                if (nameId != null && i==Integer.valueOf(nameId)) {
+                if (!StringUtil.isEmpty(nationName) && i == (Integer.parseInt(nationName))) {
                 	selected = "selected=\"selected\"";
                 }
                 nationTypeSelect.append("<option value='" +i + "' " + selected + ">" + item + "</option>");
@@ -62,4 +57,22 @@ public class NationTypeSelectTag extends SimpleTagSupport{
             e.printStackTrace();
         }
     }
+
+	public String getNationName() {
+		return nationName;
+	}
+
+	public void setNationName(String nationName) {
+		this.nationName = nationName;
+	}
+
+	public String getHasAll() {
+		return hasAll;
+	}
+
+	public void setHasAll(String hasAll) {
+		this.hasAll = hasAll;
+	}
+	
+	
 }

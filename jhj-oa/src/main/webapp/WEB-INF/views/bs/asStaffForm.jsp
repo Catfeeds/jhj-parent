@@ -11,7 +11,7 @@
 <!-- 民族选择标签 -->
 <%@ taglib prefix="nationSelectTag" uri="/WEB-INF/tags/nationTypeSelect.tld" %>
 <!-- 门店选择标签 -->
-<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
+<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
  <!-- 星座选择标签 -->
 <%@ taglib prefix="astroSelectTag" uri="/WEB-INF/tags/astroSelect.tld" %> 
 <!-- 血型选择标签 -->
@@ -67,9 +67,9 @@
 					<div class="form-body required">
 							
 						<div class="form-group required">	 
-							<label class="col-md-2 control-label">选择小组*</label>
+							<label class="col-md-2 control-label">选择云店*</label>
 							<div class="col-md-5">
-								<orgSelectTag:select selectId="${orgStaffVoModel.orgId }" />
+								<cloudOrgSelectTag:select selectId="${orgStaffVoModel.orgId }"/>
 							</div>
 						</div>
 						

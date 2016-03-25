@@ -47,11 +47,11 @@
 
 								<form:hidden path="orgId" />
 								<form:hidden path="addTime"/>	
-								<form:hidden path="poiLatitude" id="poiLatitude"/>
-								<form:hidden path="poiLongitude" id="poiLongitude"/>
+								<form:input path="poiLatitude" id="poiLatitude"/>
+								<form:input path="poiLongitude" id="poiLongitude"/>
 								
-								<form:hidden path="poiAddress" id="poiAddress"/>
-								<form:hidden path="poiCity" id="poiCity"/>
+								<form:input path="poiAddress" id="poiAddress"/>
+								<form:input path="poiCity" id="poiCity"/>
 								
 								<div class="form-body">
 
@@ -115,6 +115,25 @@
 											<form:errors path="orgAddr" class="field-has-error"></form:errors>
 										</div>
 									</div>
+									
+									<%-- <div class="form-group required">
+										<label class="col-md-2 control-label">按次计费服务</label>
+										<div class="col-md-5">
+										    <button type="button"
+											    data-original-title="员工信息" 
+											    data-content="预计到达用时: ${orgsModel.orgName } &#10;
+											    	                        今日派单数:${orgsModel.orgOwnerTel } &#10;
+											    	                        距用户地址距离:${orgsModel.orgAddr } " 
+											    data-placement="top" 
+											    data-trigger="hover" 
+											    class="btn btn-success popovers">
+													
+												我叫胡林江													    
+											</button>
+											
+										</div>
+									</div> --%>
+									
 									
 									<div class="form-group required">
 										<label class="col-md-2 control-label">门店状态</label>

@@ -33,7 +33,7 @@
                   <div class="col-lg-12">
                       <section class="panel">
                           <header class="panel-heading">
-                          	<h4>小组信息</h4>
+                          	<h4>门店管理</h4>
                           	
 	                          	<div class="pull-right" >
 	                          		<button onClick="btn_add('bs/orgForm?orgId=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
@@ -77,6 +77,12 @@
 										onClick="btn_update('bs/orgForm?orgId=${org.orgId}')"
 										class="btn btn-primary btn-xs" title="修改">
 										<i class="icon-pencil"></i>
+									</button>
+									
+									<button id="btn_update"
+										onClick="btn_update('group/group_list?orgId=${org.orgId}')"
+										class="btn btn-primary btn-xs" title="查看云店">
+										<i class="icon-search"></i>
 									</button>
 							</td>
 						</tr>

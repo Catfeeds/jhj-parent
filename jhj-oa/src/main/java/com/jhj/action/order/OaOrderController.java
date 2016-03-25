@@ -118,7 +118,7 @@ public class OaOrderController extends BaseController {
 	 * @param oaOrderSearchVo
 	 * @return
 	 */
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "/order-hour-list", method = RequestMethod.GET)
 	public String getOrderHourList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo){
 	
@@ -333,14 +333,12 @@ public class OaOrderController extends BaseController {
 		
 		PageInfo result = new PageInfo(orderList);	
 		
-		
 		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
 		
 		return "order/orderDelList";
 	}
-	
 	
 	
 	
@@ -578,9 +576,6 @@ public class OaOrderController extends BaseController {
 			orgStaffs.setStaffId(staffId);
 			List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
 			orgStaffsNewVos.add(orgStaffsNewVo);
-//			List<OrgStaffs> orgStaffsList = new ArrayList<OrgStaffs>();
-			
-//			orgStaffsList.add(orgStaffs);
 			
 			orderPayService.orderPaySuccessToDoForHour(userId, id, orgStaffsNewVos, isChange);
 		}

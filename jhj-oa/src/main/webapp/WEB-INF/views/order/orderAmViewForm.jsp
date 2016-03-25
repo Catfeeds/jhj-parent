@@ -47,10 +47,10 @@
 					<form:hidden path="orderNo" />
 					<form:hidden path="flag" />
 					<form:hidden path="disStatus" />
-					<form:hidden path="poiLatitude" id="poiLatitude" />
-					<form:hidden path="poiLongitude" id="poiLongitude" />
-					<input type="hidden" name="pickAddrsName" value="${oaOrderListVoModel.pickAddrName }">
-					<input type="hidden" name="pickAddrs" value="${oaOrderListVoModel.pickAddr }">
+					<form:input path="poiLatitude"/>
+					<form:input path="poiLongitude"/>
+					<input type="text" name="pickAddrsName" value="${oaOrderListVoModel.pickAddrName }">
+					<input type="text" name="pickAddrs" value="${oaOrderListVoModel.pickAddr }">
 					<div class="form-body">
 						<div class="form-group ">
 
@@ -72,7 +72,19 @@
 								<form:errors path="orderDate" class="field-has-error"></form:errors>
 							</div>
 						</div>
+						
+						<div class="form-group">
 
+							<label class="col-md-2 control-label">服务时间</label>
+							<div class="col-md-5">
+								<form:input path="serviceDateStr" class="form-control form_datetime" readonly="true" />
+							</div>
+							
+							<div class="col-md-5">
+								<font color="red">tip*:如果没有可用服务人员,可尝试修改 服务地址</font>
+							</div>
+						</div>
+						
 						<div class="form-group">
 
 							<label class="col-md-2 control-label">用户手机号</label>
@@ -84,17 +96,14 @@
 						</div>
 						
 						<div class="form-group">
-
 							<label class="col-md-2 control-label">备注</label>
 							<div class="col-md-5">
-
-								<form:textarea path="remarks" rows="5" cols="60" readonly="true" />
+								<form:textarea path="remarks" rows="5" cols="30" readonly="true" />
 							</div>
 						</div>
 						
 
 						<div class="form-group">
-
 							<label class="col-md-2 control-label">订单状态</label>
 							<div class="col-md-5">
 								<form:input path="orderStatusName" class="form-control"
@@ -178,13 +187,57 @@
 							</div>
 
 							<div class="form-group" id="addrNum">
-								<label class="col-md-2 control-label"></label>
+								<label class="col-md-2 control-label">地址门牌号</label>
 								<div class="col-md-5">
 									<form:input path="pickAddr" class="form-control" maxLength="30"
 										placeholder="请输入门牌号" />
 								</div>
 							</div>
-
+							
+							<div class="form-group required">
+								<label class="col-md-2 control-label">可选派工人员信息</label>
+								<div class="col-md-5" id="displayProperStaff">
+								
+									 <c:if test="${oaOrderListVoModel.voList.size() > 0 }" >
+										<c:forEach items="${oaOrderListVoModel.voList }" var="staffVo">
+										    <button id="successStaff" type="button" style="margin-top:10px"
+											    data-original-title="参考信息" 
+											    data-content="预计到达用时:${staffVo.durationText } &nbsp;&nbsp;&nbsp;
+											    			         今日派单数:${staffVo.todayOrderNum } &nbsp;&nbsp;&nbsp;
+											    	                      距用户地址距离:${staffVo.distanceText }" 
+											    data-placement="top" 
+											    data-trigger="hover" 
+											    class="btn btn-default popovers">
+													
+												${staffVo.name }	
+												
+											<input  type="hidden" id="selectStaffId" name="selectStaffId" 
+													value="${staffVo.staffId }">											    
+													
+											<input type="hidden" id="distanceValue" value="${staffVo.distanceValue }">		
+											</button>
+										</c:forEach>
+									 </c:if>
+								 
+									 <c:if test="${oaOrderListVoModel.voList.size() <= 0 }">
+										  <button type="button" id="failStaff" style="margin-top:10px" disabled
+											    data-original-title="员工信息" 
+											    data-content="预计到达用时: 无
+											    	                        今日派单数: 无
+											    	                        距用户地址距离: 无" 
+											    data-placement="top" 
+											    data-trigger="hover" 
+											    class="btn btn-default popovers">
+												
+												暂无可用派工											
+											</button>
+									 </c:if>	
+								</div>
+						</div>
+							
+							
+						<!-- ----------------------------------- -->	
+							
 							<button style="margin-left: 229px" id="chooseStaff" type="button"
 								class="btn btn-success">选择派工人员</button>
 							<br />

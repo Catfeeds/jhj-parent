@@ -14,7 +14,17 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
 
 
-public class OrgSelectTag extends SimpleTagSupport {
+/**
+ * 
+ *
+ * @author :hulj
+ * @Date : 2016年3月8日下午7:03:35
+ * @Description: 
+ * 		
+ * 	云店选择
+ *
+ */
+public class CloudOrgSelectTag extends SimpleTagSupport {
 
     private String selectId = "0";
 
@@ -24,7 +34,7 @@ public class OrgSelectTag extends SimpleTagSupport {
 
 	private OrgsService orgService;
 
-    public OrgSelectTag() {
+    public CloudOrgSelectTag() {
     	
     	
     }
@@ -33,19 +43,16 @@ public class OrgSelectTag extends SimpleTagSupport {
     public void doTag() throws JspException, IOException {
         try {
 
-    			WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(((PageContext) getJspContext()).getServletContext());
-    			orgService = springContext.getBean(OrgsService.class);
+			WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(((PageContext) getJspContext()).getServletContext());
+			orgService = springContext.getBean(OrgsService.class);
     	        
-    			
-        	List<Orgs> orgList = orgService.selectOrgsNoParent();
+        	List<Orgs> orgList = orgService.selectCloudOrgs();
 
             StringBuffer orgSelect = new StringBuffer();
-            
-            //对于 “云店管理”时 用到的 门店选择会有用
-            orgSelect.append("<select id = \"parentId\" name=\"parentId\" class=\"form-control\">" );
+            orgSelect.append("<select id = \"orgId\" name=\"orgId\" class=\"form-control\">" );
 
             if (hasAll.equals("1")) {
-            	orgSelect.append("<option value='0' >请选择门店</option>");
+            	orgSelect.append("<option value='0' >请选择云店</option>");
             }
 
             Orgs item = null;
@@ -82,9 +89,5 @@ public class OrgSelectTag extends SimpleTagSupport {
 	public void setSelectId(String selectId) {
 		this.selectId = selectId;
 	}
-
-
-
-
 
 }

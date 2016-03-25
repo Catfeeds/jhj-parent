@@ -141,29 +141,27 @@ var gc = new BMap.Geocoder();//地址解析类
 
  
 //信息窗口
-	function showLocationInfo(pt, rs){
-	    var opts = {
-	      width : 250,     //信息窗口宽度
-	      height: 100,     //信息窗口高度
-	      title : "当前位置"  //信息窗口标题
-	    }
-	     
-	    var addComp = rs.addressComponents;
-	    var addr = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber + "<br/>";
-	    addr += "纬度: " + pt.lat + ", " + "经度：" + pt.lng;
-	    //alert(addr);
-	    
-	    //var searchTxt = document.getElementById("suggestId").value; 
-	    document.getElementById("poiAddress").value = addComp.district 
-					+ addComp.street  + addComp.streetNumber; 
-			document.getElementById("poiCity").value =  addComp.city;
-	     
-	    var infoWindow = new BMap.InfoWindow(addr, opts);  //创建信息窗口对象
-	    marker.openInfoWindow(infoWindow);
-	}
+function showLocationInfo(pt, rs){
+    var opts = {
+      width : 250,     //信息窗口宽度
+      height: 100,     //信息窗口高度
+      title : "当前位置"  //信息窗口标题
+    }
+     
+    var addComp = rs.addressComponents;
+    var addr = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber + "<br/>";
+    addr += "纬度: " + pt.lat + ", " + "经度：" + pt.lng;
+    //alert(addr);
+    
+    //var searchTxt = document.getElementById("suggestId").value; 
+    document.getElementById("poiAddress").value = addComp.district 
+				+ addComp.street  + addComp.streetNumber; 
+		document.getElementById("poiCity").value =  addComp.city;
+     
+    var infoWindow = new BMap.InfoWindow(addr, opts);  //创建信息窗口对象
+    marker.openInfoWindow(infoWindow);
+}
  
- 
-
 //搜索提示
 	function G(id) {
 		return document.getElementById(id);
@@ -187,6 +185,13 @@ var gc = new BMap.Geocoder();//地址解析类
 			if (e.toitem.index > -1) {
 				_value = e.toitem.value;
 				value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+				
+				
+				// jhj2.1 地址 名称
+				$("#poiAddress").val(_value.district +  _value.street +  _value.business);
+				$("#poiCity").val(_value.city);
+				
+				
 			}     
 			str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
 			G("searchResultPanel").innerHTML = str;
@@ -199,6 +204,7 @@ var gc = new BMap.Geocoder();//地址解析类
 			G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
 			
 			setPlace();
+			
 		});
 
 		function setPlace(){
@@ -206,6 +212,12 @@ var gc = new BMap.Geocoder();//地址解析类
 			function myFun(){
 				var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
 				map.centerAndZoom(pp, 18);
+				
+				
+				//jhj2.1 使用搜索后,设置 选中 目标地点的 坐标
+				$("#poiLongitude").val(pp.lng);
+				$("#poiLatitude").val(pp.lat);
+				
 				
 				var marker = new BMap.Marker(pp);
 				map.addOverlay(new BMap.Marker(pp));    //添加标注
@@ -253,3 +265,4 @@ var gc = new BMap.Geocoder();//地址解析类
     
 //修改页面一加载就回显地图位置
 window.onload = hhh;
+

@@ -12,7 +12,7 @@
 		<tag-class>com.jhj.oa.customtags.DegreeTypeSelectTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<name>degreeId</name>
+			<name>edu</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

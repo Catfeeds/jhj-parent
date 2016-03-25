@@ -2,9 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@ include file="../shared/taglib.jsp"%>
-	<%@ include file="../shared/importCss.jsp"%>
-	
-	<%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
+<%@ include file="../shared/importCss.jsp"%>
+
+<%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
+<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld" %>
 <html>
   <head>
  	<title>小组信息列表</title>
@@ -32,14 +33,24 @@
               <div class="row">
                   <div class="col-lg-12">
                       <section class="panel">
-                          <header class="panel-heading">
-                          	<h4>小组信息</h4>
+                      	   <form:form class="form-inline" modelAttribute="groupSearchVoModel" action="group_list" method="GET">
+	                         <header class="panel-heading">
+	                         	<h4>数据搜索</h4>
+									<div class="form-group">
+										上级门店:
+										<orgSelectTag:select selectId="${groupSearchVoModel.parentId}"/>
+                          			</div>	
+									<button type="submit" class="btn btn-primary" >搜索</button>															                         	
+	                         </header>
+                           </form:form>   
+                           
+                          	<h4>云店信息</h4>
                           	
 	                          	<div class="pull-right" >
 	                          		<button onClick="btn_add('group/groupForm?orgId=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
 	                    		</div>      
                           </header>
-                          <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+                          
                           <table class="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
@@ -76,7 +87,7 @@
 									</button>
 									
 									<button id="btn_update"
-										onClick="btn_update('group/groupStaffList?orgId=${org.orgId}')"
+										onClick="btn_update('newbs/new_staff_list?orgId=${org.orgId}')"
 										class="btn btn-primary btn-xs" title="查看小组成员">
 										<i class="icon-search"></i>
 									</button>

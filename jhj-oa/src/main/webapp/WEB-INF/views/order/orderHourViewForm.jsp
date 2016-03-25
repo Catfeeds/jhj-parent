@@ -16,7 +16,7 @@
 	type="text/css" />
 
 <link
-	href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
+	href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>"
 	rel="stylesheet" type="text/css" />
 </head>
 
@@ -43,7 +43,23 @@
 					<form:hidden path="id"/>
 					<form:hidden path="userId"/>
 					<form:hidden path="orderNo" />
+					
+					<form:hidden path="orderStatus"/>
+					
+					<form:hidden path="staffId"/>
+					
 					<div class="form-body">
+					
+						<div class="form-group ">
+							
+								<div class="col-md-5">
+									<c:if test="${oaOrderListVoModel.orderStatus != 2 && oaOrderListVoModel.orderStatus !=3}">
+												<font color="red">只有 订单状态为  已支付 或  已派工,才可以进行 派工操作 </font>
+									</c:if>
+									
+								</div>
+						</div>
+						
 						<div class="form-group ">
 						
 							<label class="col-md-2 control-label">姓名</label>
@@ -65,14 +81,28 @@
 							</div>
 						</div>
 						
-						<div class="form-group">
+						<%-- <div class="form-group">
 
 							<label class="col-md-2 control-label">下单时间</label>
 							<div class="col-md-5">
+								<form:input path="orderDate" class="form-control form_datetime" readonly="true" />
+							</div>
 							
-								<form:input path="orderDate" class="form-control"
-									maxLength="32" readonly="true"/>
-								<form:errors path="orderDate" class="field-has-error"></form:errors>
+							<div class="col-md-5">
+								<font color="red">tip*:如果没有可用服务人员,可尝试更改服务时间</font>
+							</div>
+						</div>
+						 --%>
+						
+						<div class="form-group">
+
+							<label class="col-md-2 control-label">服务时间</label>
+							<div class="col-md-5">
+								<form:input path="serviceDateStr" class="form-control form_datetime" readonly="true" />
+							</div>
+							
+							<div class="col-md-5">
+								<font color="red">tip*:如果没有可用服务人员,可尝试更改服务时间</font>
 							</div>
 						</div>
 						
@@ -144,7 +174,50 @@
 							</div>
 						</div>
 						
-					<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
+						
+						<div class="form-group required">
+								<label class="col-md-2 control-label">可选派工人员信息</label>
+								<div class="col-md-5" id="displayProperStaff">
+								
+									 <c:if test="${oaOrderListVoModel.voList.size() > 0 }" >
+										<c:forEach items="${oaOrderListVoModel.voList }" var="staffVo">
+										    <button id="successStaff" type="button" style="margin-top:10px"
+											    data-original-title="参考信息" 
+											    data-content="预计到达用时:${staffVo.durationText } &nbsp;&nbsp;&nbsp;
+											    			         今日派单数:${staffVo.todayOrderNum } &nbsp;&nbsp;&nbsp;
+											    	                      距用户地址距离:${staffVo.distanceText }" 
+											    data-placement="top" 
+											    data-trigger="hover" 
+											    class="btn btn-default popovers">
+													
+												${staffVo.name }	
+												
+											<input  type="hidden" id="selectStaffId" name="selectStaffId" 
+													value="${staffVo.staffId }">											    
+													
+											<input type="hidden" id="distanceValue" value="${staffVo.distanceValue }">		
+											</button>
+										</c:forEach>
+									 </c:if>
+								 
+									 <c:if test="${oaOrderListVoModel.voList.size() <= 0 }">
+										  <button type="button" id="failStaff" style="margin-top:10px" disabled
+											    data-original-title="员工信息" 
+											    data-content="预计到达用时: 无
+											    	                        今日派单数: 无
+											    	                        距用户地址距离: 无" 
+											    data-placement="top" 
+											    data-trigger="hover" 
+											    class="btn btn-default popovers">
+												
+												暂无可用派工											
+											</button>
+									 </c:if>	
+								</div>
+						</div>
+						
+						
+					<%-- <hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						<h4 id="allow_title">服务人员派工信息</h4>
 						   <table class="table table-striped table-advance table-hover" id="allStaff">
                               <thead>
@@ -167,7 +240,14 @@
 							<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
 								<button type="button" id="viewForm" class="btn btn-success">暂无派工信息</button>
 							</div>
+						</div> --%>
+						
+						<div class="form-actions fluid">
+							<div class="col-md-offset-3 col-md-3" >
+								<button type="button" class="btn btn-success" id="submitForm" >保存修改</button>
+							</div>
 						</div>
+						
 				</form:form>
 			</div>
 			</section>
@@ -184,9 +264,9 @@
 
 	<!--script for this page-->
 	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>
 	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
 	<script
 		src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"
 		type="text/javascript"></script>

@@ -92,13 +92,10 @@ public class StudyQuestionController extends BaseController {
 		if(id == null){
 			id = 0L;
 		}
-		
 		StudyQuestionVo questionVo = questionService.initQuestionVo();
 		
 		if( id !=null && id >0L){
-			
 			StudyQuestion studyQuestion = questionService.selectByPrimaryKey(id);
-			
 			questionVo = questionService.completeVo(studyQuestion);
 		}
 		

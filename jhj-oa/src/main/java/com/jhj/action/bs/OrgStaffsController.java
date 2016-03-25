@@ -127,8 +127,10 @@ public class OrgStaffsController extends BaseController {
 		
 		OrgStaffVo orgStaffVo = orgStaffsService.initOrgStaffVo();
 		
-		 //门店列表
-		List<Orgs> orgList = orgService.selectAll();
+		 //门店列表 
+		
+		//2016年3月9日10:55:13  修改为 服务人员选择 云店
+		List<Orgs> orgList = orgService.selectOrgsNoParent();
 		
 		//标签列表
 		

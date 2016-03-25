@@ -3,9 +3,6 @@
 
 <%@ include file="../shared/taglib.jsp"%>
 <%@ include file="../shared/importCss.jsp"%>
-
-<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld" %>
-
 <html>
   <head>
 	
@@ -30,7 +27,6 @@
 	  <%@ include file="../shared/sidebarMenu.jsp"%>
       <!--sidebar end-->
       
-<!--main content start-->
       <section id="main-content">
           <section class="wrapper">
               <!-- page start-->
@@ -38,47 +34,34 @@
                   <div class="col-lg-12">
                       <section class="panel">
                           <header class="panel-heading">
-                                	云店管理
+                                门店管理
                           </header>
                           
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
                           
                           <div class="panel-body">
-                              <form:form modelAttribute="orgsModel" class="form-horizontal"
-								method="POST" action="doGroupForm" id="org-form"
+                              <form:form modelAttribute="disStaffVoModel" class="form-horizontal"
+								method="POST" action="" id="org-form"
 								enctype="multipart/form-data">
 
-								<form:hidden path="orgId" />
-								<form:hidden path="addTime"/>	
-								<form:hidden path="poiLatitude" id="poiLatitude"/>
-								<form:hidden path="poiLongitude" id="poiLongitude"/>
-								
-								<form:hidden path="poiAddress" id="poiAddress"/>
-								<form:hidden path="poiCity" id="poiCity"/>
 								
 								<div class="form-body">
-									
+
 									<div class="form-group required">
 
-										<label class="col-md-2 control-label">选择门店*</label>
+										<label class="col-md-2 control-label">门店名称*</label>
 										<div class="col-md-5">
-											 <orgSelectTag:select selectId="${orgsModel.parentId}"/>	 	
-										</div>
-									</div>
-											
-									<div class="form-group required">
-
-										<label class="col-md-2 control-label">云店名称*</label>
-										<div class="col-md-5">
-											<form:input path="orgName" class="form-control" placeholder="小组名称"
+											<form:input path="orgName" class="form-control" placeholder="门店名称"
 												maxLength="32" onchange="valid()"/>
 											<form:errors path="orgName" class="field-has-error"></form:errors>
 											 <div id="showResult" style="float:left"></div>
 										</div>
 									</div>
 									
+									
+									
 									<div class="form-group required">
-												<label class="col-md-2 control-label">云店地址*</label>
+												<label class="col-md-2 control-label">门店地址*</label>
 												<!-- <input type="text"  id="location" style="margin-left:15px;border:thin solid gray"/>
 												<input value="搜索" id="search" name="search" type="button" onclick="searchs();"/> -->
 												
@@ -86,54 +69,13 @@
    											<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 												
 										<br/><br/>
-										<div style="margin-left:220px; width:520px;height:340px;border:1px solid gray" 
+										<div style="margin-left:195px; width:520px;height:340px;border:1px solid gray" 
 											id="containers"></div>
 									</div>
 									
-									<div class="form-group required">
-										<label class="col-md-2 control-label">门牌号*</label>
-										<div class="col-md-5">
-											<form:input path="orgAddr" class="form-control" placeholder="门牌号"
-												maxLength="32" />
-											<form:errors path="orgAddr" class="field-has-error"></form:errors>
-										</div>
-									</div>
+								
 									
-									<div class="form-group required">
-										<label class="col-md-2 control-label">云店状态</label>
-										<div class="col-md-5">
-											<c:choose>
-												<c:when test="${orgsModel.orgStatus == 0 }">
-														<div class="col-md-2" align="right">
-															<label class="radio"> <input value="0" name="orgStatus"
-																	checked type="radio"> 不可用
-															</label>
-														</div>
-														<div class="col-md-2" align="left">
-															<label class="radio"> <input value="1" name="orgStatus"
-																	  type="radio"> 服务中
-															</label>
-														</div>
-														<!-- 动态获取orgStatus的值 -->
-														<form:hidden path="orgStatus"/>
-												</c:when>
-												<c:when test="${orgsModel.orgStatus == 1 }">	
-														<div class="col-md-2" align="right">
-															<label class="radio"> <input value="0" name="orgStatus"
-																	 type="radio"> 不可用
-															</label>
-														</div>
-														<div class="col-md-2" align="left">
-															<label class="radio"> <input value="1" name="orgStatus"
-																	 checked type="radio"> 服务中
-															</label>
-														</div>
-														<form:hidden path="orgStatus"/>
-												</c:when>
-											</c:choose>
-										</div>
-									</div>
-									<br/>								
+									
 									<div class="form-actions fluid">
 										<div class="col-md-offset-6 col-md-6" style="margin-left:315px">
 											<button type="submit" id="orgForm_btn"
@@ -166,6 +108,7 @@
     <script type="text/javascript"	src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
 	<script type="text/javascript"  src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
 	<script type="text/javascript"  src="<c:url value='/js/jhj/bs/orgForm.js'/>"></script>
+	<script type="text/javascript"  src="<c:url value='/js/jhj/demo.js'/>"></script>
   </body>
 </html>
 

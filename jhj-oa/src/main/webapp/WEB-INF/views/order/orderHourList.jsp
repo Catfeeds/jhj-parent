@@ -49,39 +49,33 @@ import="com.jhj.oa.common.UrlHelper"%>
                   <div class="col-lg-12">
                       <section class="panel">
                       	  
-                      	  <form:form modelAttribute="oaOrderSearchVoModel" action="order-hour-list" method="GET">
-	                         <header class="panel-heading">
-	                         	<h4>数据搜索</h4>
-	                         		<div>
-	                     					<%-- 服务类型：
-	                     					<form:select path="orderType">
-	                     							<option value="">请选择订单类型</option>
-	                     							<form:option value="0">钟点工</form:option>
-	                     							<form:option value="1">深度保洁</form:option>
-	                     							<form:option value="2">助理预约单</form:option>
-	                     					</form:select> --%>
-	                     					订单状态：
-	                     					<form:select path="orderStatus">
-	                     							<option value="">请选择订单状态</option>
-	                     							<form:option value="0">已取消</form:option>
-	                     							<form:option value="1">未支付</form:option>
-	                     							<form:option value="2">已支付</form:option>
-	                     							<form:option value="3">已派工</form:option>
-	                     							<form:option value="5">开始服务</form:option>
-	                     							<form:option value="7">完成服务</form:option>
-	                     							<form:option value="8">已评价</form:option>
-	                     							<form:option value="9">已关闭</form:option>
-	                     					</form:select>
-											
-										<c:if test="${loginOrgId == 0 }">
-											选择门店:
-											<orgSelectTag:select/>
-										</c:if>	
-									<input type="submit"  value="搜索"  >
-								</div>
-								</div>   
+                         <header class="panel-heading">
+                         	<h4>数据搜索</h4>
+	                      	  <form:form modelAttribute="oaOrderSearchVoModel" class="form-inline" action="order-hour-list" method="GET">
+		                         		<div class="form-group">
+		                     					订单状态：
+		                     					<form:select path="orderStatus" class="form-control">
+		                     							<option value="">请选择订单状态</option>
+		                     							<form:option value="0">已取消</form:option>
+		                     							<form:option value="1">未支付</form:option>
+		                     							<form:option value="2">已支付</form:option>
+		                     							<form:option value="3">已派工</form:option>
+		                     							<form:option value="5">开始服务</form:option>
+		                     							<form:option value="7">完成服务</form:option>
+		                     							<form:option value="8">已评价</form:option>
+		                     							<form:option value="9">已关闭</form:option>
+		                     					</form:select>
+		                     			</div>
+										<div class="form-group">		
+											<c:if test="${loginOrgId == 0 }">
+												选择门店:
+												<orgSelectTag:select/>
+											</c:if>	
+										</div>	
+										
+										<button type="submit" class="btn btn-primary" >搜索</button>
+	                           </form:form>   
 	                         </header>
-                           </form:form>   
                            
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
                       	

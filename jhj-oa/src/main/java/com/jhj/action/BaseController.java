@@ -4,7 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
@@ -32,4 +35,13 @@ public class BaseController {
 				Constants.ERROR_100, ConstantMsg.ERROR_100_MSG, "");
 		return result;
     }
+    
+    @InitBinder  
+    protected void initBinder(WebDataBinder binder) {  
+    	
+    	binder.setBindEmptyMultipartFiles(false);
+    	
+    	binder.setDisallowedFields("serviceImgUrl");
+    } 
+    
 }

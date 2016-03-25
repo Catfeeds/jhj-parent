@@ -17,7 +17,7 @@ import com.meijia.utils.OneCareUtil;
  */
 public class AstroSelectTag extends SimpleTagSupport {
 	
-	private String astroId ;
+	private Short astroId ;
 
 	public AstroSelectTag() {
 		
@@ -32,12 +32,12 @@ public class AstroSelectTag extends SimpleTagSupport {
             StringBuffer astroSelect = new StringBuffer();
             astroSelect.append("<select id = \"astro\" name=\"astro\" class=\"form-control\">");
 
-            String item = null;
+            String item = "";
             String selected = "";
             for(int i = 0;  i<list.size();  i++) {
                 item = list.get(i);
                 selected = "";
-                if (astroId != null && i==Short.valueOf(astroId)) {
+                if (astroId != null && i == astroId) {
                 	selected = "selected=\"selected\"";
                 }
                 astroSelect.append("<option value='" +i + "' " + selected + ">" + item + "</option>");
@@ -49,20 +49,12 @@ public class AstroSelectTag extends SimpleTagSupport {
         }
     }
 
-	/**
-	 * @return the astroId
-	 */
-	public String getAstroId() {
+	public Short getAstroId() {
 		return astroId;
 	}
 
-	/**
-	 * @param astroId the astroId to set
-	 */
-	public void setAstroId(String astroId) {
+	public void setAstroId(Short astroId) {
 		this.astroId = astroId;
 	}
 
-    
-	
 }

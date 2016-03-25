@@ -157,11 +157,10 @@ public class OrgStaffsAssistantController extends BaseController {
 	 */
 //	@AuthPassport
 	@RequestMapping(value = "/staffAsForm", method = RequestMethod.GET)
-	public String toOrgStaffAsForm(Model model,HttpServletRequest request,@RequestParam("orgStaffId") Long orgStaffId) {
+	public String toOrgStaffAsForm(Model model,HttpServletRequest request,
+			@RequestParam("orgStaffId") Long orgStaffId) {
 
-		
 		OrgStaffVo orgStaffVo = orgStaAsService.initOrgStaffVo();
-		
 		
 		//标签列表
 		
@@ -171,7 +170,6 @@ public class OrgStaffsAssistantController extends BaseController {
 		List<Tags> tagList = tagService.selectAll();
 
 		OrgStaffs orgStaffs = orgStaAsService.initOrgStaffs();
-
 		
 		String id = request.getParameter("orgStaffId");
 		if (Long.valueOf(id) > 0L) {
@@ -255,7 +253,6 @@ public class OrgStaffsAssistantController extends BaseController {
 					String imgUrl = Constants.IMG_SERVER_HOST + "/" + info.get("md5").toString();
 
 					orgStaffs.setHeadImg(imgUrl);
-					
 				}
 			}
 		}
@@ -287,8 +284,6 @@ public class OrgStaffsAssistantController extends BaseController {
 				orgStaTagService.insert(record);
 			}
 		}
-
-		
 		/*
 		 * 2016年1月22日19:14:09   录入认证信息
 		 */

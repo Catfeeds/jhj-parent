@@ -64,8 +64,6 @@ public class OrgsController extends BaseController{
 			orgSearchVo.setSearchOrgId(Long.valueOf(org));
 		}
 		
-		
-		
 		//默认将员工级别字段  设置  为 阿姨
 		PageInfo pageInfo = orgsService.selectByListPage(orgSearchVo,pageNo, pageSize);
 		model.addAttribute("orgsModel", pageInfo);
@@ -98,7 +96,7 @@ public class OrgsController extends BaseController{
 		
 		return "bs/orgForm";
 	}
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "/doOrgForm", method = { RequestMethod.POST })
 	public String doAdForm(HttpServletRequest request, Model model,
 			@ModelAttribute("orgs") Orgs orgs){

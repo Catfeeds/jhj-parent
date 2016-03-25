@@ -23,6 +23,8 @@ import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.vo.org.GroupSearchVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -37,33 +39,54 @@ import com.meijia.utils.TimeStampUtil;
  *
  *			通过 字段 org_type区分二者
  *			
- *			0=门店  1=小组
+ *			0=门店  1=云店
  *
  */
 @Controller
 @RequestMapping(value = "/group")
 public class GroupController {
 	
-	
 	@Autowired
 	private OrgsService orgsService;
-	/*
-	 * 列表查看所有门店信息
+	
+	/**
+	 * 
+	 *  @Title: groupList
+	  * @Description: 	
+	  * 		云店列表
+	  * @param model
+	  * @param request
+	  * @param searchVo	
+	  * 			列表页搜索条件
+	  * @param orgId	
+	  * 			从门店管理 查看 云店
+	  * @return String    返回类型
+	  * @throws
 	 */
 	@RequestMapping(value = "/group_list", method = {RequestMethod.GET})
-	public String groupList(Model model, HttpServletRequest request){
+	public String groupList(Model model, HttpServletRequest request, 
+			@ModelAttribute("groupSearchVoModel") GroupSearchVo searchVo,
+			@RequestParam(value = "orgId",required = false,defaultValue = "0") Long orgId){
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		
+		
 		PageHelper.startPage(pageNo, pageSize);
 		
-		List<Orgs> list = orgsService.selectGroupsByListPage();
+		if(orgId != 0L){
+			searchVo.setParentId(orgId);
+		}
+		
+		List<Orgs> list = orgsService.selectGroupsByListPage(searchVo);
+		
 		PageInfo result = new PageInfo(list);	
 		
 		model.addAttribute("orgsModel", result);
+		
+		model.addAttribute("groupSearchVoModel", searchVo);
 		
 		return "bs/groupList";
 	}
@@ -89,43 +112,30 @@ public class GroupController {
 		
 		return "bs/groupForm";
 	}
+	
 	@RequestMapping(value = "/doGroupForm", method = { RequestMethod.POST })
 	public String doAdForm(HttpServletRequest request, Model model,
-			@ModelAttribute("orgs") Orgs orgs){
+			@ModelAttribute("orgsModel") Orgs orgs){
 		
 		Long id = Long.valueOf(request.getParameter("orgId"));
+		
+		Orgs initOrgs = orgsService.initOrgs();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(orgs, initOrgs);
 		
 		//更新或修改
 		if(id!=null && id>0){
 			orgs.setUpdateTime(TimeStampUtil.getNow() / 1000);
-			orgsService.updateByPrimaryKeySelective(orgs);
+			orgsService.updateByPrimaryKeySelective(initOrgs);
 		}else {
-			orgs.setAddTime(TimeStampUtil.getNow()/1000);
-			orgs.setUpdateTime(0L);
-			orgs.setPoiName("");
-			orgs.setPoiPhone("");
-			orgs.setPoiPostCode("");
-			orgs.setPoiType((short)0);
-			orgs.setPoiUid(UUID.randomUUID().toString());
-			
-			orgsService.insertSelective(orgs);
+			initOrgs.setPoiUid(UUID.randomUUID().toString());
+		
+			orgsService.insertSelective(initOrgs);
 		}
 		
 		return "redirect:/group/group_list";
 	}
-	
-	/*
-	 * 删除一条记录
-	 */
-	@AuthPassport
-	@RequestMapping(value = "/delete", method = {RequestMethod.GET})
-	public String deleteOrg(@RequestParam(value = "orgId") Long orgId){
-		if(orgId !=null && orgId>0){
-			orgsService.deleteByPrimaryKey(orgId);
-		}
-		return "redirect:/bs/org-list";
-	}
-	
+
 	/*
 	 * 校验门店名称是否重复
 	 */
@@ -143,8 +153,5 @@ public class GroupController {
 		}
 		
 	}
-	
-	
-	
 	
 }
