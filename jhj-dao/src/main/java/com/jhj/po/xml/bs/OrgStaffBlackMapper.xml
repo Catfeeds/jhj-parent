@@ -26,6 +26,15 @@
     where staff_id = #{staffId,jdbcType=NUMERIC}
   </select>
   
+   <!-- 所有 差评人员 --> 
+   <select id="selectAllBadRateStaff"  resultMap="BaseResultMap">
+   	 select 
+    	<include refid="Base_Column_List" />
+     from 
+     	org_staff_black
+   </select>
+  
+  
    <select id="selectByStaffIdAndType" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

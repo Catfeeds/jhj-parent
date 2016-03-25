@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
 	
@@ -15,7 +15,7 @@
 
 		<!-- 数据库链接URL、用户名、密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/jhj2.0" userId="root"
+			connectionURL="jdbc:mysql://localhost:3306/jhj2.1" userId="root"
 			password="root1qaz" />
 
 		<!-- 解决数字转换问题 -->
@@ -27,25 +27,25 @@
 
 		<!-- 生成模型的包名和位置 -->
 		<javaModelGenerator targetPackage="com.jhj.po.model.university"
-			targetProject="jhj-dao2.0">
+			targetProject="jhj-dao">
             <property name="enableSubPackages" value="false" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
 		<!-- 生成的映射文件包名和位置 -->
 		<sqlMapGenerator targetPackage="com.jhj.po.xml.university"
-			targetProject="jhj-dao2.0">
+			targetProject="jhj-dao">
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- 生成DAO的包名和位置 -->
 		<javaClientGenerator targetPackage="com.jhj.po.dao.university"
-			targetProject="jhj-dao2.0" type="XMLMAPPER">
+			targetProject="jhj-dao" type="XMLMAPPER">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 
-	<!-- 
-		<table schema="jhj2.0" tableName="partner_service_type"
+	
+		<table schema="jhj" tableName="partner_service_type"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
 			enableUpdateByPrimaryKey="true"
@@ -54,12 +54,14 @@
 			enableDeleteByExample="false"
 			enableSelectByExample="false"
 			enableCountByExample="false">
-			<columnOverride  column="service_type_id" property="serviceTypeId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="parent_id" property="parentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="view_type" property="viewType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="no" property="no" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="service_type_id" property="serviceTypeId" javaType="java.lang.Long"  jdbcType="NUMERIC"/>		
+			<columnOverride column="parent_id" property="parentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="default_num" property="defaultNum" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="view_type" property="viewType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="no" property="no" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 		</table>
-	 
+	 <!-- 
 		<table schema="jhj2.0" tableName="study_learning"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
@@ -74,7 +76,7 @@
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 		</table>
 		
-		-->
+		
 		 <table schema="jhj2.0" tableName="study_bank"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
@@ -91,7 +93,6 @@
 			<columnOverride  column="random_q_num" property="randomQNum" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 		</table> 
 		
-		<!-- 
 		<table schema="jhj2.0" tableName="study_question"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"

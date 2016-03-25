@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffSkillMapper">
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffSkill">
+    <id column="id" jdbcType="NUMERIC" property="id" />
+    <result column="staff_id" jdbcType="NUMERIC" property="staffId" />
+    <result column="service_type_id" jdbcType="NUMERIC" property="serviceTypeId" />
+    <result column="add_time" jdbcType="NUMERIC" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, staff_id, service_type_id, add_time
+  </sql>
+  
+  <delete id="delByStaffId" parameterType="java.lang.Long">
+  	delete 
+  		from org_staff_skill
+    where 
+    	staff_id = #{staffId,jdbcType=NUMERIC}
+  </delete>
+  
+  <select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+    <include refid="Base_Column_List" />
+    from org_staff_skill
+    where 
+    	staff_id = #{staffId,jdbcType=NUMERIC}
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_staff_skill
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from org_staff_skill
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffSkill">
+    insert into org_staff_skill (id, staff_id, service_type_id, 
+      add_time)
+    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC}, 
+      #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffSkill">
+    insert into org_staff_skill
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="staffId != null">
+        staff_id,
+      </if>
+      <if test="serviceTypeId != null">
+        service_type_id,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="staffId != null">
+        #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null">
+        #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffSkill">
+    update org_staff_skill
+    <set>
+      <if test="staffId != null">
+        staff_id = #{staffId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null">
+        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffSkill">
+    update org_staff_skill
+    set staff_id = #{staffId,jdbcType=NUMERIC},
+      service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

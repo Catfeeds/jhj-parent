@@ -1,5 +1,7 @@
 package com.jhj.po.model.university;
 
+import java.math.BigDecimal;
+
 public class PartnerServiceType {
     private Long serviceTypeId;
 
@@ -7,9 +9,21 @@ public class PartnerServiceType {
 
     private Long parentId;
 
+    private String unit;
+
+    private Short defaultNum;
+
+    private BigDecimal price;
+
+    private String remarks;
+
     private Short viewType;
 
     private Short no;
+
+    private String serviceImgUrl;
+
+    private Short enable;
 
     public Long getServiceTypeId() {
         return serviceTypeId;
@@ -35,6 +49,38 @@ public class PartnerServiceType {
         this.parentId = parentId;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit == null ? null : unit.trim();
+    }
+
+    public Short getDefaultNum() {
+        return defaultNum;
+    }
+
+    public void setDefaultNum(Short defaultNum) {
+        this.defaultNum = defaultNum;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
+    }
+
     public Short getViewType() {
         return viewType;
     }
@@ -49,5 +95,21 @@ public class PartnerServiceType {
 
     public void setNo(Short no) {
         this.no = no;
+    }
+
+    public String getServiceImgUrl() {
+        return serviceImgUrl;
+    }
+
+    public void setServiceImgUrl(String serviceImgUrl) {
+        this.serviceImgUrl = serviceImgUrl == null ? null : serviceImgUrl.trim();
+    }
+
+    public Short getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Short enable) {
+        this.enable = enable;
     }
 }

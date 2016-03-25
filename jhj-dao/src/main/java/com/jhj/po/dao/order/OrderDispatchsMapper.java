@@ -56,5 +56,8 @@ public interface OrderDispatchsMapper {
 	// 获得某段时间内的派工列表 
 	List<OrderDispatchs> selectByStartTimeAndEndTime(@Param("startTime")Long startTime,@Param("endTime")Long endTime);
 
-
+	
+	//jhj2.1   服务人员 当天的派工数
+	Long getTodayOrderNumForTheSta(Long staffId);
+	
 }

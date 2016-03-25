@@ -3,19 +3,30 @@ package com.jhj.vo;
 
 public class StaffSearchVo {
 	  
-	  private Long orgId;
+	private Long orgId;
 	  
-	  private Short staffType;
+	private Short staffType;
+	
+	private String mobile;
+	  
+	private String name;
+	  
+	private Short sex;
+	  
+	private Long amId;
+	  
+	private Long parentId;
+	  
 
-	  private String mobile;
-	  
-	  private String name;
-	  
-	  private Short sex;
-	  
-	  private Long amId;
-	  	  
-	  
+	public Long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+
+
 	public Long getAmId() {
 		return amId;
 	}

@@ -24,24 +24,43 @@
 		</javaTypeResolver>
 
 		<!-- 生成模型的包名和位置 -->
-		<javaModelGenerator targetPackage="com.jhj.po.model.bs"
+		<javaModelGenerator targetPackage="com.jhj.po.model.university"
 			targetProject="jhj-dao">
             <property name="enableSubPackages" value="false" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
 		<!-- 生成的映射文件包名和位置 -->
-		<sqlMapGenerator targetPackage="com.jhj.po.xml.bs"
+		<sqlMapGenerator targetPackage="com.jhj.po.xml.university"
 			targetProject="jhj-dao">
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- 生成DAO的包名和位置 -->
-		<javaClientGenerator targetPackage="com.jhj.po.dao.bs"
+		<javaClientGenerator targetPackage="com.jhj.po.dao.university"
 			targetProject="jhj-dao" type="XMLMAPPER">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
-
+		
+		<table schema="jhj" tableName="partner_service_type"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="service_type_id" property="serviceTypeId" javaType="java.lang.Long"  jdbcType="NUMERIC"/>		
+			<columnOverride column="parent_id" property="parentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="default_num" property="defaultNum" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="view_type" property="viewType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="no" property="no" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="enable" property="enable" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		
+		
+		<!-- 
 		<table schema="jhj" tableName="orgs"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
@@ -56,9 +75,10 @@
 			<columnOverride  column="org_status" property="orgStatus" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="org_type" property="orgType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride  column="parent_id" property="parentId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 		</table>
-		<!-- 
+		
+			  
 			<table schema="jhj" tableName="org_staffs"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
@@ -69,7 +89,6 @@
 			enableSelectByExample="false"
 			enableCountByExample="false">
 			<columnOverride  column="staff_id" property="staffId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="province_id" property="provinceId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="city_id" property="cityId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="region_id" property="regionId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
@@ -81,7 +100,11 @@
 			<columnOverride column="astro" property="astro" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-		</table> 
+			
+			<columnOverride  column="parent_org_id" property="parentOrgId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="level" property="level" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		</table>
+		
 		标签表 tags
 		<table schema="jhj" tableName="tags"
 			enableInsert="true"
@@ -143,6 +166,20 @@
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 		</table>
 		-->
+		<table schema="jhj" tableName="org_staff_skill"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long"  jdbcType="NUMERIC"/>		
+			<columnOverride column="staff_id" property="staffId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="service_type_id" property="serviceTypeId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
 		
 	</context>
 </generatorConfiguration>

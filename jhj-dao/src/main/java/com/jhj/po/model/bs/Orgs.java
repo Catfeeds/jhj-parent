@@ -37,7 +37,7 @@ public class Orgs {
 
     private Long updateTime;
 
-    private Short orgType;
+    private Long parentId;
 
     public Long getOrgId() {
         return orgId;
@@ -183,11 +183,11 @@ public class Orgs {
         this.updateTime = updateTime;
     }
 
-    public Short getOrgType() {
-        return orgType;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setOrgType(Short orgType) {
-        this.orgType = orgType;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

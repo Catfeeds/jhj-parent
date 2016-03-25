@@ -36,6 +36,23 @@
 		add_time, update_time
 	</sql>
 	
+	<!-- 该服务人员  今天的 派工数量 -->
+	<select id="getTodayOrderNumForTheSta" resultType="java.lang.Long" parameterType="java.lang.Long">
+		select
+			count(*)
+		from 
+			order_dispatchs
+		where 
+			staff_id = #{staffId,jdbcType=NUMERIC}
+		<![CDATA[	
+		 and
+		 	add_time > UNIX_TIMESTAMP(CURDATE())
+		 and
+		 	add_time < UNIX_TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL 1 DAY))			
+		 ]]>	
+	</select>
+	
+	
 	<!-- 派工列表 ,所有有效派工-->
 	<select id="selectAbledOrderDis" resultMap="BaseResultMap" parameterType="com.jhj.vo.OaOrderDisSearchVo">
 		select

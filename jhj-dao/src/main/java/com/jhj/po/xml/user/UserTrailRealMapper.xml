@@ -19,7 +19,32 @@
     from user_trail_real
     where id = #{id,jdbcType=NUMERIC}
   </select>
-  
+  	
+  	<!-- 得到 传入 用户 集合 中 每个 用户 最近的位置 -->
+  	<select id="selectLatestPositionForUser" resultMap="BaseResultMap">
+  		SELECT 
+  			<include refid="Base_Column_List" />
+  		FROM 
+  			(
+				SELECT 
+					<include refid="Base_Column_List" />
+				 FROM 
+				 	user_trail_real 
+				 ORDER BY add_time DESC 
+			 ) AS p 
+			
+			WHERE 
+			 	user_id IN 
+		   <if test="userIdList.size() > 0">
+				<foreach collection="userIdList" item="userId" index="index"
+	            	open="(" close=")" separator=",">
+	            	#{userId}
+	        	</foreach>
+        	</if>
+		GROUP BY p.user_id 
+		ORDER BY add_time DESC 
+  	</select>
+  	
     <select id="selectByUserIdAndType" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
