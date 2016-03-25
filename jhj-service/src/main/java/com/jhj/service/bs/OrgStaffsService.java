@@ -33,7 +33,7 @@ public interface OrgStaffsService {
     
     List<OrgStaffs> selectAll();
     
-    List<OrgStaffs> selectByListPage(StaffSearchVo staffSearchVo, int pageNo, int pageSize);
+//    List<OrgStaffs> selectByListPage(StaffSearchVo staffSearchVo, int pageNo, int pageSize);
     
     OrgStaffs initOrgStaffs();
     
