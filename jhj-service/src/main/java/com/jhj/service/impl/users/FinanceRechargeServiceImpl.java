@@ -11,6 +11,7 @@ import com.jhj.po.model.user.FinanceRecharge;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.users.FinanceRechargeService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.finance.FinanceSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.TimeStampUtil;
@@ -83,8 +84,8 @@ public class FinanceRechargeServiceImpl implements FinanceRechargeService {
 	}
 	
 	@Override
-	public List<FinanceRecharge> selectByListPage() {
-		return financeMapper.selectByListPage();
+	public List<FinanceRecharge> selectByListPage(FinanceSearchVo searchVo) {
+		return financeMapper.selectByListPage(searchVo);
 	}
 	
 	@Override

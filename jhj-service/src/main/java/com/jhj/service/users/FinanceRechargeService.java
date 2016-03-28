@@ -3,6 +3,7 @@ package com.jhj.service.users;
 import java.util.List;
 
 import com.jhj.po.model.user.FinanceRecharge;
+import com.jhj.vo.finance.FinanceSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 
 /**
@@ -29,7 +30,7 @@ public interface FinanceRechargeService {
     
     FinanceRecharge initFinace();
     
-    List<FinanceRecharge> selectByListPage();
+    List<FinanceRecharge> selectByListPage(FinanceSearchVo searchVo);
     
     FinanceRechargeVo transToFinanceVo(FinanceRecharge recharge);
     
