@@ -49,7 +49,6 @@ public class UserAppController extends BaseController {
 	
 		@Autowired
 		private UserSmsTokenService userSmsTokenService;
-
 		
 		@Autowired
 		private UserPushBindService userPushBindService;
