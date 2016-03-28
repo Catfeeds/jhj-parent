@@ -2,16 +2,8 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
 
-<!-- 	 <classPathEntry location="C:\software\sonatype-work\nexus\storage\central\mysql\mysql-connector-java\5.1.33\mysql-connector-java-5.1.33.jar" />
- -->
+	 <classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" />
 
- <!--    <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" /> -->
-   <!--  <classPathEntry location="D:/workspace/jar/mysql-connector-java-5.1.33.jar" /> -->
-<classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" />
-  <!--   <classPathEntry location="D:/workspace/jar/mysql-connector-java-5.1.33.jar" /> -->
-	<!-- <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" /> -->
-<!-- 		 <classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" />
- -->
 		<!--  <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" /> -->
 	<!-- 数据库链接URL、用户名、密码 -->
 	<context id="jdbc-test">
@@ -23,7 +15,7 @@
 
 	<!-- 数据库链接URL、用户名、密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/jhj2.0" userId="root"
+			connectionURL="jdbc:mysql://localhost:3306/jhj2.1" userId="root"
 			password="root1qaz" />
 		<!-- 解决数字转换问题 -->
 		<javaTypeResolver>
@@ -34,20 +26,20 @@
 
 		<!-- 生成模型的包名和位置 -->
 		<javaModelGenerator targetPackage="com.jhj.po.model.user"
-			targetProject="jhj-dao2.0">
+			targetProject="jhj-dao">
             <property name="enableSubPackages" value="false" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
 		<!-- 生成的映射文件包名和位置 -->
 		<sqlMapGenerator targetPackage="com.jhj.po.xml.user"
-		targetProject="jhj-dao2.0">
+		targetProject="jhj-dao">
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- 生成DAO的包名和位置 -->
 		<javaClientGenerator targetPackage="com.jhj.po.dao.user"
-					targetProject="jhj-dao2.0" type="XMLMAPPER">
+					targetProject="jhj-dao" type="XMLMAPPER">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 			<!-- 用户表 -->
@@ -190,7 +182,7 @@
 			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-		</table> -->
+		</table> 
 
 
         <table schema="jhj2.0" tableName="user_push_bind"
@@ -237,6 +229,22 @@
 			<columnOverride  column="user_type" property="userType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 		</table>
-
+	-->
+	
+		<table schema="jhj" tableName="finance_recharge"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="admin_id" property="adminId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+	
 	</context>
 </generatorConfiguration>

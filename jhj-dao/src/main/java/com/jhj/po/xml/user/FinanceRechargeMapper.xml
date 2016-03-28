@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.user.FinanceRechargeMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.user.FinanceRecharge" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="recharge_value" property="rechargeValue" jdbcType="DECIMAL" />
+    <result column="rest_money_before" property="restMoneyBefore" jdbcType="DECIMAL" />
+    <result column="rest_money_after" property="restMoneyAfter" jdbcType="DECIMAL" />
+    <result column="admin_id" property="adminId" jdbcType="NUMERIC" />
+    <result column="admin_name" property="adminName" jdbcType="VARCHAR" />
+    <result column="admin_mobile" property="adminMobile" jdbcType="CHAR" />
+    <result column="approve_mobile" property="approveMobile" jdbcType="VARCHAR" />
+    <result column="approve_token" property="approveToken" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, recharge_value, rest_money_before, rest_money_after, admin_id, admin_name, 
+    admin_mobile, approve_mobile, approve_token, remarks, add_time
+  </sql>
+  
+  <select id="selectByListPage"  resultMap="BaseResultMap" >
+  	 select 
+    	<include refid="Base_Column_List" />
+     from 
+     	finance_recharge
+	 order by add_time desc  	 
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_recharge
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from finance_recharge
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.user.FinanceRecharge" >
+    insert into finance_recharge (id, user_id, recharge_value, 
+      rest_money_before, rest_money_after, admin_id, 
+      admin_name, admin_mobile, approve_mobile, 
+      approve_token, remarks, add_time
+      )
+    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{rechargeValue,jdbcType=DECIMAL}, 
+      #{restMoneyBefore,jdbcType=DECIMAL}, #{restMoneyAfter,jdbcType=DECIMAL}, #{adminId,jdbcType=NUMERIC}, 
+      #{adminName,jdbcType=VARCHAR}, #{adminMobile,jdbcType=CHAR}, #{approveMobile,jdbcType=VARCHAR}, 
+      #{approveToken,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.user.FinanceRecharge" >
+    insert into finance_recharge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="rechargeValue != null" >
+        recharge_value,
+      </if>
+      <if test="restMoneyBefore != null" >
+        rest_money_before,
+      </if>
+      <if test="restMoneyAfter != null" >
+        rest_money_after,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="adminName != null" >
+        admin_name,
+      </if>
+      <if test="adminMobile != null" >
+        admin_mobile,
+      </if>
+      <if test="approveMobile != null" >
+        approve_mobile,
+      </if>
+      <if test="approveToken != null" >
+        approve_token,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="rechargeValue != null" >
+        #{rechargeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="restMoneyBefore != null" >
+        #{restMoneyBefore,jdbcType=DECIMAL},
+      </if>
+      <if test="restMoneyAfter != null" >
+        #{restMoneyAfter,jdbcType=DECIMAL},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=NUMERIC},
+      </if>
+      <if test="adminName != null" >
+        #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminMobile != null" >
+        #{adminMobile,jdbcType=CHAR},
+      </if>
+      <if test="approveMobile != null" >
+        #{approveMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="approveToken != null" >
+        #{approveToken,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.FinanceRecharge" >
+    update finance_recharge
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="rechargeValue != null" >
+        recharge_value = #{rechargeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="restMoneyBefore != null" >
+        rest_money_before = #{restMoneyBefore,jdbcType=DECIMAL},
+      </if>
+      <if test="restMoneyAfter != null" >
+        rest_money_after = #{restMoneyAfter,jdbcType=DECIMAL},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=NUMERIC},
+      </if>
+      <if test="adminName != null" >
+        admin_name = #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminMobile != null" >
+        admin_mobile = #{adminMobile,jdbcType=CHAR},
+      </if>
+      <if test="approveMobile != null" >
+        approve_mobile = #{approveMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="approveToken != null" >
+        approve_token = #{approveToken,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.FinanceRecharge" >
+    update finance_recharge
+    set user_id = #{userId,jdbcType=NUMERIC},
+      recharge_value = #{rechargeValue,jdbcType=DECIMAL},
+      rest_money_before = #{restMoneyBefore,jdbcType=DECIMAL},
+      rest_money_after = #{restMoneyAfter,jdbcType=DECIMAL},
+      admin_id = #{adminId,jdbcType=NUMERIC},
+      admin_name = #{adminName,jdbcType=VARCHAR},
+      admin_mobile = #{adminMobile,jdbcType=CHAR},
+      approve_mobile = #{approveMobile,jdbcType=VARCHAR},
+      approve_token = #{approveToken,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>
