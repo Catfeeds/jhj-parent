@@ -17,7 +17,15 @@ public class UserChargeVo {
 	
 	private Long dictCardId;
 	
+	private String userMobile;
 	
+	public String getUserMobile() {
+		return userMobile;
+	}
+
+	public void setUserMobile(String userMobile) {
+		this.userMobile = userMobile;
+	}
 
 	public Long getDictCardId() {
 		return dictCardId;

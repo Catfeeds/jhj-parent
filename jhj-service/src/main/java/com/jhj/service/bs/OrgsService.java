@@ -2,6 +2,8 @@ package com.jhj.service.bs;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.vo.OrgSearchVo;
@@ -48,4 +50,11 @@ public interface OrgsService {
     
     //根据云店，得到对应的上级门店
     Orgs selectOrgByCloudOrg(Long orgId);
+    
+    
+    /*  
+     *  2016年3月25日17:50:19
+     *  
+     *  	选择 登录 店长 所在门店下的 云店
+     */
 }

@@ -80,6 +80,15 @@ public class Constants {
 	public static String SMS_STATUS_CODE= "statusCode";
 	public static String SMS_STATUS_MSG= "msg";
 	
+	/*
+	 *  短信验证码 类型 2016年3月28日12:13:13
+	 */
+	public static int SMS_TYPE_0 = 0;		// app登录
+	public static int SMS_TYPE_1 = 1;		// app 支付
+	public static int SMS_TYPE_2 = 2;
+	public static int SMS_TYPE_3 = 3;		// 运营平台。 会员充值 
+	
+	
 	//短信模板定义
 	public static String PAY_SUCCESS_SMS_TEMPLE_ID= "9282";
 	//public static String GET_CODE_TEMPLE_ID= "8429";
@@ -266,6 +275,8 @@ public class Constants {
 	//2016年3月24日18:07:28  派工表，该条 派工记录 是否有效
 	public static Short ORDER_DIS_ENABLE = 1;
 	public static Short ORDER_DIS_DISABLE = 0;
+	
+	
 }
 
 
