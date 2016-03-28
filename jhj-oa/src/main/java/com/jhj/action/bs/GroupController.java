@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.common.ConstantOa;
+import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -78,6 +80,14 @@ public class GroupController {
 		
 		if(orgId != 0L){
 			searchVo.setParentId(orgId);
+		}
+		
+		//得到 当前登录 的 门店id，并作为搜索条件
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		if(!StringUtil.isEmpty(org)){
+			
+			searchVo.setParentId(Long.parseLong(org));
 		}
 		
 		List<Orgs> list = orgsService.selectGroupsByListPage(searchVo);

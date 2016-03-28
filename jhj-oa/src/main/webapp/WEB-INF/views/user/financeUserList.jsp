@@ -37,7 +37,7 @@
       <section id="main-content">
           <section class="wrapper">
               <!-- page start-->
-		<%-- 	 <%@ include file="../common/user/userSearch.jsp"%> --%>
+			 <%@ include file="../common/user/userSearch.jsp"%>
               <div class="row">
                   <div class="col-lg-12">
                       <section class="panel">
@@ -55,38 +55,26 @@
                               <thead>
                               <tr>
                                   	  <th >会员手机号</th>
-		                              <th >手机号归属地</th>
 		                              <th >会员姓名</th>
 		                              <th >会员余额</th>
-		                              <th >会员积分</th>
-		                              <th >会员类型</th>
-		                              <th>会员来源</th>
 		                              <th >添加时间</th>
+		                              <th>操作</th>
                               </tr>
                               </thead>
                               <tbody>
                               <c:forEach items="${userList.list}" var="item">
                               <tr>
 							            <td>${ item.mobile }</td>
-							            <td>${ item.provinceName }</td>
 							            <td>${ item.name }</td>
-
 							            <td>${ item.restMoney }</td>
-							            <td>
-											${ item.score }
-							            </td>
-							          
-							            <td>
-							            	<userTypeTag:userTypeId userTypeId="${ item.userType }"/>
-							            </td>
-							          
-							            <td>
-							            	<orderFromTag:orderfrom orderFrom="${item.addFrom }"/>
-							            </td>
 							            <td>
 							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 							            </td>
 
+                                       <td>
+                                            <button  onClick="btn_update('user/charge-form?user_id=${ item.id }')"class="btn btn-info">充值</button>
+                                           <button  onClick="btn_update('user/coupons-list?user_id=${ item.id }')" class="btn btn-info" >优惠券</button>
+                                       </td>
                               </tr>
                               </c:forEach>
                               </tbody>
@@ -97,7 +85,7 @@
                       <!--  <input type="button" value="导出数据" onclick="download()"/> -->
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="userList"/>
-	        				<c:param name="urlAddress" value="/user/user-list"/>
+	        				<c:param name="urlAddress" value="/user/finance_user-list"/>
 	       			  </c:import>
                   </div>
               </div>

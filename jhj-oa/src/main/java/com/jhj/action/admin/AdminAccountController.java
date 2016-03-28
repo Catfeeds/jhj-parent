@@ -91,7 +91,7 @@ public class AdminAccountController extends AdminController {
 			NoSuchAlgorithmException {  
 		Long ids = Long.valueOf(request.getParameter("id"));	 // 主键id
 		
-		Long orgId = Long.valueOf(request.getParameter("orgId")); //选择的 门店 id
+		Long orgId = Long.valueOf(request.getParameter("parentId")); //选择的 门店 id
 		
 		Long roleId = Long.valueOf(request.getParameter("roleId"));//选择的角色
 		

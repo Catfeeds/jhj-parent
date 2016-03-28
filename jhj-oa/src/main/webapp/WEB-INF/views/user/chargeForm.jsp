@@ -65,23 +65,41 @@
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">任&nbsp;意&nbsp;金&nbsp;额</label>
 							<div class="col-md-5">
-								<form:input path="chargeMoney" class="form-control"
-									placeholder="请输入充值金额"  maxSize="10" />
+								<form:input path="chargeMoney" class="form-control" 
+									placeholder="请输入充值金额"  maxSize="6" />
 								<form:errors path="chargeMoney" class="field-has-error"></form:errors>
 							</div>
 						</div>
 					</div>
+					
+					<div class="form-body" >
+						<div class="form-group">
+							<label class="col-sm-2 col-sm-2 control-label">用户手机号</label>
+							<div class="col-md-5">
+								<form:input path="userMobile" class="form-control" readonly="true"/>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="form-body">
+						<div class="form-group">
+							<label class="col-sm-2 col-sm-2 control-label">验证码</label>
+							<div class="col-md-5">
+								<input type="text" class="col-lg-3"  style="width:200px"
+									placeholder="请输入验证码"	 id="userCode" value="" maxlength="4" >
+							</div>
+							<button type="button" id="getUserCode" style="margin-left:-280px" class="btn btn-success">获取验证码</button>
+							<font color="red">验证码30分钟内有效</font>
+						</div>
+					</div>
+					
 					<div class="form-actions">
 						<div class="row">
 							<div class="col-md-4" align="right">
 								<button class="btn btn-success" id="addCoupon_btn" type="button">
 									保存</button>
 							</div>
-							<!-- Button -->
-							<!-- <div class="col-md-8">
-								<button class="btn btn-success" type="reset">重置</button>
-							</div> -->
-
 						</div>
 					</div>
 					<!-- </fieldset> -->
@@ -103,6 +121,6 @@
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"
 		type="text/javascript"></script>
 	<!-- 会员充值Form表单 js -->
-	<script src="<c:url value='/js/jhj/user/chargeForm.js'/>"type="text/javascript"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/user/chargeForm.js'/>"></script>
 </body>
 </html>

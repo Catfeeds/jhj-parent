@@ -28,22 +28,16 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jhj.action.BaseController;
 import com.jhj.action.admin.AdminController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
-import com.jhj.oa.common.ArrayHelper;
-import com.jhj.po.model.admin.AdminAuthority;
-import com.jhj.po.model.admin.AdminRole;
-import com.jhj.po.model.admin.AdminRoleAuthority;
+import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffSkill;
-import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
-import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffSkillService;
@@ -54,10 +48,8 @@ import com.jhj.service.bs.TagsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.vo.StaffSearchVo;
-import com.jhj.vo.admin.AdminRoleVo;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
-import com.jhj.vo.bs.OrgStaffVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
@@ -120,6 +112,14 @@ public class NewOrgStaffController extends AdminController {
 		if(orgId != 0L){
 			staffSearchVo.setOrgId(orgId);
 		}
+		
+		//得到 当前登录 的 门店id，并作为搜索条件
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		if(!StringUtil.isEmpty(org)){
+			staffSearchVo.setOrgId(Long.parseLong(org));
+		}
+		
 		
 		List<OrgStaffs> list = staffService.selectNewStaffList(staffSearchVo);
 		

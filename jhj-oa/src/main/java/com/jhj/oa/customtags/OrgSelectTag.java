@@ -35,8 +35,8 @@ public class OrgSelectTag extends SimpleTagSupport {
 
     			WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(((PageContext) getJspContext()).getServletContext());
     			orgService = springContext.getBean(OrgsService.class);
-    	        
-    			
+    	    
+    		
         	List<Orgs> orgList = orgService.selectOrgsNoParent();
 
             StringBuffer orgSelect = new StringBuffer();

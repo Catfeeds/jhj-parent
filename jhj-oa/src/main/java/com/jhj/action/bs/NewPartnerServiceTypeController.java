@@ -21,17 +21,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.jhj.action.admin.AdminController;
 import com.jhj.common.Constants;
@@ -242,8 +238,6 @@ public class NewPartnerServiceTypeController extends AdminController {
 			@PathVariable(value = "id") Long id) throws JsonParseException, JsonMappingException, IOException {
 		
 		
-//		if (result.hasErrors()) 
-//			return edit(request, model, id);
 		
 		String returnUrl = ServletRequestUtils.getStringParameter(request,"returnUrl", null);
 		
