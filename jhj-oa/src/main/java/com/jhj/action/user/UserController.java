@@ -44,6 +44,7 @@ import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.UsersSmsTokenVo;
 import com.jhj.vo.bs.NewStaffListVo;
+import com.jhj.vo.finance.FinanceSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
 import com.jhj.vo.user.UserCouponsVo;
@@ -211,8 +212,6 @@ public class UserController extends BaseController {
 		userChargeVo.setUserId(userId);
 		userChargeVo.setChargeWay((short) 0);// 0=固定充值
 		
-		
-		
 		Users users = usersService.selectByUsersId(userId);
 		
 		userChargeVo.setUserMobile(users.getMobile());
@@ -226,9 +225,6 @@ public class UserController extends BaseController {
 		return "user/chargeForm";
 	}
 
-	
-	
-	
 	
 	/**********
 	 *  2016年3月25日18:28:50 
@@ -402,7 +398,7 @@ public class UserController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "finace_recharge_list",method = RequestMethod.GET)
-	public String getAllChargeList(Model model,HttpServletRequest request){
+	public String getAllChargeList(Model model,HttpServletRequest request,FinanceSearchVo searchVo){
 		
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
@@ -414,7 +410,16 @@ public class UserController extends BaseController {
 
 		PageHelper.startPage(pageNo, pageSize);
 		
-		List<FinanceRecharge> list = financeService.selectByListPage();
+		
+		// 过滤 显示  当前  登录 用户 
+		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
+		
+		Long id = auth.getId();
+		
+		searchVo.setAdminId(id);
+		
+		
+		List<FinanceRecharge> list = financeService.selectByListPage(searchVo);
 		
 		FinanceRecharge finance = null;
 		for (int i = 0; i < list.size(); i++) {
@@ -449,6 +454,8 @@ public class UserController extends BaseController {
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		
+		
 		PageInfo result = usersService.searchVoListPage(searchVo, pageNo,
 				pageSize);
 		model.addAttribute("userList", result);
