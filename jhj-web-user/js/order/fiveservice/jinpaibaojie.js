@@ -57,6 +57,17 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 	
 	$$(document).on("click",".button-template-fiveservice",function(){
 		
+		
+		var userId =  localStorage['user_id'];
+		
+		if(userId == undefined || userId.length == 0){
+			
+			myApp.alert("您还没有登录");
+			
+			mainView.router.loadPage("login.html");
+			return false;
+		}
+		
 		var enable =  $$(this).next().val();
 		
 		if(enable == 0){
