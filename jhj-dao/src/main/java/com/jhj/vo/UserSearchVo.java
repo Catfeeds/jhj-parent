@@ -3,17 +3,26 @@ package com.jhj.vo;
 
 public class UserSearchVo {
 
-	  private String mobile;
-	  
-	  private String name;
-	  
-	  private Short addFrom;
-	  
-	  private Long startTime;
-	  
-	  private Long endTime;
-	  
-	  
+    private String mobile;
+  
+    private String name;
+  
+    private Short addFrom;
+  
+    private Long startTime;
+  
+    private Long endTime;
+ 	  
+	private Long adminId;	// 加载 会员充值 列表页时。需要  过滤 显示  当前登录  用户（管理员、店长）  
+
+	
+	public Long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
+	}
 
 	public Long getStartTime() {
 		return startTime;

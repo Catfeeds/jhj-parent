@@ -8,4 +8,14 @@ package com.jhj.vo.finance;
  */
 public class FinanceSearchVo {
 	
+	private Long adminId;
+
+	public Long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
+	}
+	
 }

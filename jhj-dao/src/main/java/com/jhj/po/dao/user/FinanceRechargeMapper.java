@@ -3,6 +3,7 @@ package com.jhj.po.dao.user;
 import java.util.List;
 
 import com.jhj.po.model.user.FinanceRecharge;
+import com.jhj.vo.finance.FinanceSearchVo;
 
 public interface FinanceRechargeMapper {
     int deleteByPrimaryKey(Long id);
@@ -17,5 +18,5 @@ public interface FinanceRechargeMapper {
 
     int updateByPrimaryKey(FinanceRecharge record);
     
-    List<FinanceRecharge> selectByListPage();
+    List<FinanceRecharge> selectByListPage(FinanceSearchVo searchVo);
 }
