@@ -277,6 +277,9 @@ public class Constants {
 	public static Short ORDER_DIS_DISABLE = 0;
 	
 	
+	//2016年3月29日18:44:38  运营平台。 会员充值。 接收验证码的 配置 类型
+	public static String OA_CHARGE_SETTING_TYPE = "recharge_mobile";
+	
 }
 
 

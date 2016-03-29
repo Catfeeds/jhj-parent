@@ -100,9 +100,9 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		
 		
 		//门店Id
-		OrgStaffs orgStaffs = orgStaffsService.selectOrgIdByStaffId(orders.getAmId());
-		Long orgId = orgStaffs.getOrgId();
-		orderHourViewVo.setOrgId(orgId);
+//		OrgStaffs orgStaffs = orgStaffsService.selectOrgIdByStaffId(orders.getAmId());
+//		Long orgId = orgStaffs.getOrgId();
+//		orderHourViewVo.setOrgId(orgId);
 		
 		
 		

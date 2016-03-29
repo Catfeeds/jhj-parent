@@ -19,6 +19,16 @@ public class UserChargeVo {
 	
 	private String userMobile;
 	
+	private String ownerMobile;	//2016年3月29日18:35:02  会员充值时。获取验证码的 手机号
+	
+	public String getOwnerMobile() {
+		return ownerMobile;
+	}
+
+	public void setOwnerMobile(String ownerMobile) {
+		this.ownerMobile = ownerMobile;
+	}
+
 	public String getUserMobile() {
 		return userMobile;
 	}
