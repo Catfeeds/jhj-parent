@@ -127,7 +127,6 @@ public class OrderHourAddController extends BaseController {
 			return result;
 		}
 		
-		UserRefAm userRefAm = userRefAmService.selectByAmId(userId);
 		// 调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
 				
@@ -135,7 +134,6 @@ public class OrderHourAddController extends BaseController {
 		Orders order = ordersService.initOrders();
 		order.setMobile(u.getMobile());
 		order.setUserId(userId);
-		order.setAmId(userRefAm.getStaffId());
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);
@@ -151,11 +149,6 @@ public class OrderHourAddController extends BaseController {
 		order.setServiceContent(partnerServiceType.getName());
 		
 		order.setRemarks(remarks);
-		
-		OrgStaffs staffs = orgStaService.selectOrgIdByStaffId(userRefAm.getStaffId());
-		
-		order.setOrgId(staffs.getOrgId());
-		
 		
 		//mybatis xml 需要增加插入后获取last_insert_id;
 		ordersService.insert(order);
