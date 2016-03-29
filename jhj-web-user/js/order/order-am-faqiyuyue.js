@@ -61,7 +61,7 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 //				var result = JSON.parse(data);
 //				var service = result.data;
 				myApp.alert("预约成功");
-				mainView.loadPage.router("index.html")
+				mainView.router.loadPage("index.html")
 			},
 			error: function(status,xhr){
 			  	myApp.alert("网络异常,请稍后再试.");

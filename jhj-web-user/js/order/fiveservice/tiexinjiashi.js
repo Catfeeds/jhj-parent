@@ -53,7 +53,7 @@ myApp.onPageInit('tiexinjiashi-page', function(page) {
 	});
 
 	
-	$$(document).on("click",".button-template-fiveservice",function(){
+	$$(document).on("click","#tiexinjiashidiv",function(){
 		
 		
 		var userId =  localStorage['user_id'];

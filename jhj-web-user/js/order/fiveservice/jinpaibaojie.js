@@ -55,7 +55,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 	});
 
 	
-	$$(document).on("click",".button-template-fiveservice",function(){
+	$$(document).on("click","#jinpaibaojiediv",function(){
 		
 		
 		var userId =  localStorage['user_id'];
