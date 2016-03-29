@@ -5,9 +5,14 @@ myApp.onPageBeforeInit('mine', function (page) {
 	}
 	getUserInfos(userId);
 	
+	$$("#mine-order-lists").on("click",function(){
+		mainView.router.loadPage("order/order-hour-now-list.html?user_id="+userId);
+	});
+	
 	$$("#mine-addr-list").on("click",function(){
-			mainView.router.loadPage("user/mine-addr-list.html?user_id="+0);
-		});
+		mainView.router.loadPage("user/mine-addr-list.html?user_id="+userId);
+	});
+	
 	$$("#mine-coupon-lists").on("click",function(){
 		mainView.router.loadPage("user/coupon/mine-coupon-list.html?user_id="+userId);
 	});
@@ -24,6 +29,7 @@ myApp.onPageBeforeInit('mine', function (page) {
 		mainView.router.loadPage("user/user-wancheng.html");
 	});
 
+	
 	$$('.user-logout').on('click', function() {
 		  localStorage.removeItem("mobile");
 		  localStorage.removeItem('user_id');
