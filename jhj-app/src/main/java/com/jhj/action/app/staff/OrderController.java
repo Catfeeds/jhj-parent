@@ -243,7 +243,6 @@ public class OrderController extends BaseController {
 			BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
 			orderIncoming = orderPrices.getOrderMoney().multiply(settingValue);
 			orderIncoming = MathBigDeciamlUtil.round(orderIncoming, 2);
-			
 		}
 		
 		// 新增服务人员交易明细表 org_staff_detail_pay
