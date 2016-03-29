@@ -87,6 +87,7 @@
 			<thead>
 				<tr>
 					<th>门店名称</th>
+					<th>云店名称</th>
 					<th>下单时间</th>
 					<th>订单类型</th>
 					<!-- <th>服务日期</th> -->
@@ -107,17 +108,16 @@
 						<tr>
 
 							<td>${ item.orgName }</td>
+							<td>${item.cloudOrgName }</td>
+							
 							<td><timestampTag:timestamp patten="yyyy-MM-dd"
 									t="${item.addTime * 1000}" /></td>
 
-							<td><orderTypeNameTag:orderTypeId
-									orderTypeId="${item.orderType }" /></td>
+							<td>${item.orderTypeName }</td>
 
 							<td>${ item.mobile }</td>
 							<td>${ item.orderAddress }</td>
-							<td>${ item.staffName } 
-							</td>
-
+							<td>${ item.staffName } </td>
 							<td><orderVoStatusTag:orderstatus
 									orderStatus="${item.orderStatus }"
 									orderType="${item.orderType }" />

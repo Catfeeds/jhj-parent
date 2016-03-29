@@ -89,6 +89,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <thead>
                               <tr>	  
                                 	  <th >门店名称 </th>
+                                	  <th >云店名称</th>
 		                              <th >下单时间</th>
 		                              <th >订单类型</th>
 		                              <th >服务日期</th>
@@ -109,12 +110,14 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <tr>	
 							            
                                   	    <td>${ item.orgName }</td>
+                                  	    
+                                  	    <td>${ item.cloudOrgName }</td>
 							            <td>
 							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 							            </td>
 
 							            <td>
-											 <orderTypeNameTag:orderTypeId orderTypeId="${item.orderType }"/> 
+											 ${item.orderTypeName } 
 							            </td>
 							            <td>
 											<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.serviceDate * 1000}"/>
@@ -124,7 +127,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 										<td>${ item.mobile }</td>
 							            <td>${ item.orderAddress }</td>
 							            <td>
-							            	${ sta.value }
+							            	${ item.staffName }
 							            </td>
 							            <%-- <td>
 							            	${item.disStatusName }
