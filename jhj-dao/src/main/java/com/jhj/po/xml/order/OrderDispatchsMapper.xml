@@ -177,13 +177,14 @@
 		from order_dispatchs
 		where 
 		org_id = #{orgId}
-  	<![CDATA[    
-  	and (
-  		(service_date <= #{serviceDateEnd}  and service_date >= #{serviceDateStart} )
-  		or
-    	((service_date+ service_hours*3600) >= #{serviceDateStart} and (service_date+ service_hours*3600) <= #{serviceDateEnd})
-    ) 
-  	]]>
+		
+		<![CDATA[    
+		  	and (
+		  		(service_date <= #{serviceDateEnd}  and service_date >= #{serviceDateStart} )
+		  		or
+		    	((service_date+ service_hours*3600) >= #{serviceDateStart} and (service_date+ service_hours*3600) <= #{serviceDateEnd})
+		    ) 
+  		]]>		
 	</select>
 
 	<select id="getBadOrgStaff" resultMap="BaseResultMap">
