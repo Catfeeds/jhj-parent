@@ -154,7 +154,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		OrderDispatchs orderDispatchs = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
 		
 		orderDispatchs.setUserId(userId);
-		orderDispatchs.setOrgId(order.getOrgId());
+		orderDispatchs.setOrgId(staff.getOrgId());
 		orderDispatchs.setMobile(u.getMobile());
 		orderDispatchs.setOrderId(order.getId());
 		orderDispatchs.setOrderNo(order.getOrderNo());
