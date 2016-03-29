@@ -11,7 +11,7 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	
 	
 	//根据状态是否显示支付. (只有待支付 状态的 订单。显示 支付 选项)
-	if(orderStatus == 3){
+	if(orderStatus == 1){
 		$$("#user_coupon_view_li").hide();  // 优惠券选项
 		$$("#order_pay_view_li").hide();	// 实际金额
 		
@@ -57,25 +57,25 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 		}
 
 		// 对于钟点工 订单，只有  待支付，已支付 两种 状态   ，，显示取消订单  按钮 
-		if(orderStatus == 3 ||  orderStatus == 4){
+		if(orderStatus == 1 ||  orderStatus == 2){
 			$$("#cancleOrder").show();
 		}else{
 			$$("#cancleOrder").hide();
 		}
 		
-		//待评价订单，显示 评价按钮
-		if(orderStatus == 6){
-			$$("#rate").show();
-		}else{
-			$$("#rate").hide();
-		}
-		
-		//已评价 ，显示 查看评价 按钮
-		if(orderStatus == 7){
-			$$("#getRate").show();
-		}else{
-			$$("#getRate").hide();
-		}
+//		//待评价订单，显示 评价按钮
+//		if(orderStatus == 6){
+//			$$("#rate").show();
+//		}else{
+//			$$("#rate").hide();
+//		}
+//		
+//		//已评价 ，显示 查看评价 按钮
+//		if(orderStatus == 7){
+//			$$("#getRate").show();
+//		}else{
+//			$$("#getRate").hide();
+//		}
 	
 	
 	

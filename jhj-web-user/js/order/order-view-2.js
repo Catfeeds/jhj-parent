@@ -109,7 +109,6 @@ $$('label[name=myPayTypeSelect]').on('click',function(){
 		
 		var orderNo = $$("#order_no").val();
 		
-		alert(orderNo);
 		postdata.order_no = orderNo;
 		postdata.user_coupon_id = userCouponId;
 		
