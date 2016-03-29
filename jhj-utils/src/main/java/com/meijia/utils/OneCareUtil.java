@@ -973,10 +973,10 @@ public class OneCareUtil {
 		
 		List<String> list = new ArrayList<String>();
 		
-		list.add(0,"1");
-		list.add(1,"2");
-		list.add(2,"3");
-		list.add(3,"4");
+		list.add(0,"初级");
+		list.add(1,"中级");
+		list.add(2,"金牌");
+		list.add(3,"VIP");
 		
 		
 		return list;

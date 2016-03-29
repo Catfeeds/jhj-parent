@@ -57,7 +57,7 @@ public class StaffLevelSelectTag extends SimpleTagSupport {
                 if (level != null && item.equals(level)) {
                 		selected = "selected=\"selected\"";
                 }
-                levelSelect.append("<option value='" + item + "' " + selected + ">"+ item+ "</option>");
+                levelSelect.append("<option value='" + (i + 1) + "' " + selected + ">"+ item+ "</option>");
             }
 
             levelSelect.append("</select>");

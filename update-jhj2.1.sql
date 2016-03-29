@@ -1,3 +1,323 @@
+--
+-- 转存表中的数据 `admin_account`
+--
+
+INSERT INTO `admin_account` (`id`, `version`, `enable`, `name`, `email`, `username`, `password`, `register_time`, `role_id`, `organization_id`, `im_username`, `nickname`) VALUES
+(1, 1, 1, 'admin', 'admin@jhj.com', '徐sir', '7832545dc101bc98f65ccde5f93e5d24', '2014-04-02 23:26:40', 1, 1, NULL, '徐sir'),
+(2, 0, 1, '店长', 'shuangjing@jia-he-jia.com', 'shuangjing', '5a08b4f7c131be9f692b6c36a201f731', '2015-09-17 14:59:41', 2, 0, NULL, '呵呵'),
+(3, 0, 1, '邵毅夫', 'shaoyifu@jia-he-jia.com', 'shaoyifu', '5a08b4f7c131be9f692b6c36a201f731', '2015-09-27 09:52:02', 3, 0, NULL, 'shaoyifu'),
+(4, 0, 1, 'tianjiangtao', 'tianjiangtao@jia-he-jia.com', 'tianjiangtao', '5a08b4f7c131be9f692b6c36a201f731', '2015-10-08 18:04:38', 4, 0, NULL, 'tianjiangtao'),
+(5, 0, 1, '苗全国', 'miaoquanguo@jia-he-jia.com', 'miaoquanguo', '5a08b4f7c131be9f692b6c36a201f731', '2015-10-31 14:47:43', 5, 0, NULL, 'miaoquanguo'),
+(6, 0, 1, 'sujuan', 'sujuan@jia-he-jia.com', 'sujuan', '5a08b4f7c131be9f692b6c36a201f731', '2015-11-04 10:33:12', 6, 0, NULL, 'sujuan'),
+(7, 0, 1, '值班账户', 'info@jia-he-jia.com', 'jiahejia', '550c1beab72ec2d3ab345f3b6a225ec5', '2016-01-30 15:01:12', 7, 0, NULL, '值班账户');
+
+--
+-- 转存表中的数据 `admin_authority`
+--
+
+INSERT INTO `admin_authority` (`id`, `version`, `enable`, `name`, `level_code`, `position`, `the_value`, `url`, `match_url`, `item_icon`, `parent_id`) VALUES
+(1, 3, 0, '欢迎使用', '1', 0, '1', '/home', '^/home$', 'icon-home', 0),
+(2, 2, 0, '首页', '1,2', 0, '1', '/home/index', '/home/index', '', 1),
+(3, 2, 0, '系统设置', '3', 0, '2', '/setting', '^/setting$', 'icon-cogs', 0),
+(4, 4, 0, '用户管理', '3,4', 1, '1', '/account/list', '/account/list|/account/register', '', 3),
+(7, 1, 0, '角色管理', '3,7', 2, '2', '/role/list', '/role/list|/role/toRoleForm', '', 3),
+(10, 1, 0, '权限管理', '3,10', 3, '3', '/authority/chain', '/authority/chain', '', 3),
+(15, 1, 1, '基础配置', '15', 0, '2', '/base/', '/base', 'icon-archive', 0),
+(16, 1, 1, '服务类型', '15,16', 1, '1', '/base/service-list', '/base/service-list|/base/serviceTypeForm|/base/serviceAdd-list|/base/serviceAddForm', '', 15),
+(17, 1, 1, '广告位管理', '15,17', 2, '1', '/base/ad-list', '/base/ad-list|/base/adForm', '', 15),
+(18, 1, 1, '充值卡管理', '15,18', 3, '1', '/base/card-list', '/base/card-list|/base/cardForm', '', 15),
+(19, 1, 1, '业务管理', '19', 0, '2', '/bs/', '/bs', 'icon-building', 0),
+(20, 1, 1, '门店管理', '19,20', 2, '1', '/bs/org-list', '/bs/org-list|/bs/orgForm', '', 19),
+(21, 1, 1, '服务人员', '19,21', 5, '1', '/bs/staff-list', '/bs/staff-list|/bs/orgStaffForm|/order/order-scheduling|/bs/doOrgStaffForm', '', 19),
+(22, 1, 1, '助理人员', '19,21', 6, '1', '/bs/am-list', '/bs/am-list|/bs/staffAsForm|/bs/doOrgStaffAsForm', '', 19),
+(23, 1, 1, '标签库', '19,23', 7, '1', '/bs/tag-list', '/bs/tag-list|/bs/tagForm|/bs/doTagForm', '', 19),
+(24, 1, 1, '赠送优惠券', '19,24', 8, '1', '/bs/recharge-coupon-list', '/bs/recharge-coupon-list|/bs/toRechargeCouponForm|/bs/rechargeCouponForm| /bs/toRechargeCouponUserList', '', 19),
+(25, 1, 1, '外部资源', '19,25', 11, '1', '/bs/outsrc-list', '/bs/outsrc-list', '', 19),
+(26, 1, 1, '会员管理', '26', 0, '2', '/user/', '/user', 'icon-user', 0),
+(27, 1, 1, '会员列表', '26,27', 1, '1', '/user/user-list', '/user/user-list|/user/charge-form|/user/coupons-list', '', 26),
+(28, 1, 1, '会员消费明细', '26,28', 2, '1', '/user/user-pay-detail', '/user/user-pay-detail', '', 26),
+(29, 1, 1, '订单管理', '29', 0, '2', '/order/', '/order', 'icon-shopping-cart', 0),
+(30, 1, 1, '订单列表', '29,30', 7, '1', '/order/order-list', '/order/order-list|/order/orderView', '', 29),
+(31, 1, 1, '派工列表', '29,31', 8, '1', '/order/cal-list', '/order/cal-list|', '', 29),
+(33, 1, 1, '内容管理', '33', 0, '2', '/cp', '/cp', ' icon-folder-open', 0),
+(36, 1, 1, '兑换码优惠券', '36,19', 9, '1', '/bs/convert-coupon-list', '/bs/convert-coupon-list|/bs/toConvertCouponForm|/bs/convertCouponForm', '', 19),
+(37, 1, 1, '礼包', '37,19', 10, '1', '/bs/gifts-list', '/bs/gifts-list|/bs/toGiftsForm|/bs/giftsForm', '', 19),
+(38, 1, 1, '统计图表', '38', 0, '1', '/chart', '/chart', 'icon-building', 0),
+(39, 1, 1, '市场用户图表', '39,38', 1, '1', '/chart/chartUser', '/chart/chartUser', '', 38),
+(40, 1, 1, '用户活跃度图表', '40,38', 2, '', '/chart/userLive', '/chart/userLive', '', 38),
+(41, 1, 1, '市场订单图表', '41,38', 3, '1', '/chart/chartOrder', '/chart/chartOrder', '', 38),
+(42, 1, 1, '市场品类图表', '42,38', 4, '1', '/chart/chartType', '/chart/chartType', '', 38),
+(43, 1, 1, '助理品类图表', '43,38', 5, '', '/chart/chartAmType', '/chart/chartAmType', '', 38),
+(44, 1, 1, '订单收入图表', '44,38', 6, '1', '/chart/chartOrderRevenue', '/chart/chartOrderRevenue', '', 38),
+(45, 1, 1, '品类收入图表', '45,38', 7, '', '/chart/chartTypeRevenue', '/chart/chartTypeRevenue', '', 38),
+(46, 1, 1, '助理品类收入图表', '46,38', 8, '', '/chart/chartServiceType', '/chart/chartServiceType', '', 38),
+(47, 1, 1, '充值卡销售图表', '47,38', 9, '1', '/chart/chartSaleCard', '/chart/chartSaleCard', '', 38),
+(48, 1, 1, '用户余额图表', '48,38', 10, '1', '/chart/chartMoreCard', '/chart/chartMoreCard', '', 38),
+(49, 1, 1, '排班情况', '49,31', 9, '1', '/bs/staff-list', '/order', '', 29),
+(50, 1, 1, '社区活动列表', '50,33', 1, '1', '/socials/socials-list', '/socials/socials-list|/socials/socials-form', '', 33),
+(51, 1, 1, '社区活动记录列表', '51,33', 2, '1', '/socials/social-call-list', '/socials/social-call-list', '', 33),
+(53, 1, 1, '验证码列表', '52,3', 4, '', '/user/token-list', '/user/token-list', '', 3),
+(55, 1, 1, '提醒订单', '54,29', 4, '1', '/order/remind-order-list', '/order/remind-order-list', '', 29),
+(56, 1, 1, '话费订单', '56,29', 5, '', '/order/phone_charge_order_list', '/order/phone_charge_order_list', '', 29),
+(57, 1, 1, '话费订单图表', '57,38', 11, '', '/chart/phoneRechargeOrder', '/chart/phoneRechargeOrder', '', 38),
+(58, 1, 1, '话费订单收入图表', '58,38', 12, '', '/chart/phoneRechargeRevenue', '/chart/phoneRechargeRevenue', '', 38),
+(59, 1, 1, '助理类型分类管理', '59,15', 4, '', '/base/degree_type_list', '/base/degree_type_list', '', 15),
+(60, 1, 1, '叮当大学', '60', 0, '2', '/university/', '/university', 'icon-list-alt', 0),
+(61, 1, 1, '服务类别列表', '61,60', 0, '2', '/university/partner_list', '/university/partner_list', '', 60),
+(62, 1, 1, '培训学习', '62,60', 1, '2', '/university/study_list', '/university/study_list', '', 60),
+(63, 1, 1, '题库管理', '63,60', 2, '', '/university/bank_list', '/university/bank_list', '', 60),
+(64, 1, 1, '考题管理', '64,60', 3, '', '/university/question_list', '/university/question_list', '', 60),
+(65, 1, 1, '服务人员提现列表', '65,29', 10, '', '/staff/cash-list', '/staff/cash-list', '', 29),
+(66, 1, 1, '服务人员消费明细表', '66,29', 11, '', '/staff/staffPay-list', '/staff/staffPay-list', '', 29),
+(67, 1, 1, '黑名单列表', '67,29', 12, '', '/staff/staffBlack-list', '/staff/staffBlack-list', '', 29),
+(68, 1, 1, '服务人员欠款明细列表', '68,29', 13, '', '/staff/staffPayDept-list', '/staff/staffPayDept-list', '', 29),
+(69, 1, 1, '消息列表', '69,29', 9, '', '/msg/list', '/msg/list', '', 29),
+(70, 1, 1, '助理订单列表', '70,29', 3, '1', '/order/order-am-list', '/order/order-am-list|/order/order-am-view', '', 29),
+(71, 1, 1, '配送订单列表', '71,29', 4, '1', '/order/order-del-list', '/order/order-del-list|/order-order-del-view', '', 29),
+(72, 1, 1, '钟点工订单列表', '72,29', 1, '1', '/order/order-hour-list', '/order/order-hour-list|/order/order-hour-view', '', 29),
+(73, 1, 1, '深度保洁订单列表', '73,29', 2, '1', '/order/order-exp-list', '/order/order-exp-list|/order/order-exp-view', '', 29),
+(74, 1, 1, '云店管理', '74,19', 3, '', '/group/group_list', '/group/group_list', '', 19),
+(75, 1, 1, '工作人员', '75,19', 4, '', '/newbs/new_staff_list', '/newbs/new_staff_list', '', 19),
+(76, 1, 1, '服务类别管理', '76,19', 1, '', '/newbs/service_type_list', '/newbs/service_type_list', '', 19),
+(77, 1, 1, '会员充值', '77,26', 3, '', '/user/finance_user-list', '/user/finance_user-list', '', 26),
+(78, 1, 1, '财务充值记录', '78,26', 4, '', '/user/finace_recharge_list', '/user/finace_recharge_list', '', 26);
+
+--
+-- 转存表中的数据 `admin_organization`
+--
+
+INSERT INTO `admin_organization` (`id`, `version`, `enable`, `name`, `level_code`, `position`, `the_value`, `parent_id`) VALUES
+(1, 1, 0, '总机构', '1', 0, '1', 0),
+(2, 1, 0, '分机构1-1', '1,2', 0, '1', 1),
+(3, 1, 0, '分机构', '1,3', 0, '', 1),
+(4, 1, 0, '总机构2', '4', 0, '2', 0),
+(5, 2, 0, '组织机构2-1', '4,5', 0, '1', 4);
+
+--
+-- 转存表中的数据 `admin_ref_org`
+--
+
+INSERT INTO `admin_ref_org` (`id`, `admin_id`, `org_id`, `add_time`) VALUES
+(2, 3, 0, 1443318722),
+(3, 2, 1, 1443420278),
+(4, 1, 0, 1444281540),
+(5, 4, 0, 1444298677),
+(6, 5, 0, 1446274063),
+(7, 6, 0, 1446604391),
+(8, 7, 0, 1454137272);
+
+--
+-- 转存表中的数据 `admin_role`
+--
+
+INSERT INTO `admin_role` (`id`, `version`, `name`, `enable`) VALUES
+(1, 4, '系统管理员', 1),
+(2, 1, '店长', 1),
+(3, 1, '总部运营', 1),
+(4, 1, '运营账号', 1),
+(5, 1, '客服', 1),
+(6, 1, 'HR', 1),
+(7, 1, '值班账号', 1);
+
+--
+-- 转存表中的数据 `admin_role_authority`
+--
+
+INSERT INTO `admin_role_authority` (`id`, `role_id`, `authority_id`) VALUES
+(951, 4, 1),
+(952, 4, 2),
+(953, 4, 3),
+(954, 4, 53),
+(955, 4, 19),
+(956, 4, 36),
+(957, 4, 26),
+(958, 4, 27),
+(959, 4, 28),
+(1262, 6, 1),
+(1263, 6, 2),
+(1264, 6, 33),
+(1265, 6, 50),
+(1266, 6, 51),
+(1593, 7, 1),
+(1594, 7, 2),
+(1595, 7, 3),
+(1596, 7, 53),
+(1597, 7, 29),
+(1598, 7, 66),
+(1599, 7, 67),
+(1600, 7, 68),
+(1601, 7, 70),
+(1602, 7, 71),
+(1603, 7, 72),
+(1604, 7, 73),
+(1605, 7, 33),
+(1606, 7, 51),
+(1607, 7, 57),
+(1608, 7, 60),
+(1609, 7, 62),
+(1610, 7, 63),
+(1611, 7, 64),
+(1755, 5, 1),
+(1756, 5, 2),
+(1757, 5, 3),
+(1758, 5, 53),
+(1759, 5, 29),
+(1760, 5, 31),
+(1761, 5, 49),
+(1762, 5, 70),
+(1763, 5, 71),
+(1764, 5, 72),
+(1765, 5, 73),
+(1766, 5, 33),
+(1767, 5, 50),
+(1768, 5, 51),
+(2013, 2, 1),
+(2014, 2, 2),
+(2015, 2, 19),
+(2016, 2, 20),
+(2017, 2, 75),
+(2018, 2, 29),
+(2019, 2, 31),
+(2020, 2, 49),
+(2021, 2, 55),
+(2022, 2, 56),
+(2023, 2, 65),
+(2024, 2, 66),
+(2025, 2, 67),
+(2026, 2, 68),
+(2027, 2, 70),
+(2028, 2, 71),
+(2029, 2, 72),
+(2030, 2, 73),
+(2031, 2, 38),
+(2032, 2, 41),
+(2033, 2, 42),
+(2034, 2, 43),
+(2035, 2, 44),
+(2036, 2, 46),
+(2097, 1, 1),
+(2098, 1, 2),
+(2099, 1, 3),
+(2100, 1, 4),
+(2101, 1, 7),
+(2102, 1, 10),
+(2103, 1, 53),
+(2104, 1, 15),
+(2105, 1, 16),
+(2106, 1, 17),
+(2107, 1, 18),
+(2108, 1, 19),
+(2109, 1, 20),
+(2110, 1, 23),
+(2111, 1, 24),
+(2112, 1, 25),
+(2113, 1, 36),
+(2114, 1, 37),
+(2115, 1, 74),
+(2116, 1, 75),
+(2117, 1, 76),
+(2118, 1, 26),
+(2119, 1, 27),
+(2120, 1, 28),
+(2121, 1, 29),
+(2122, 1, 31),
+(2123, 1, 49),
+(2124, 1, 55),
+(2125, 1, 56),
+(2126, 1, 65),
+(2127, 1, 66),
+(2128, 1, 67),
+(2129, 1, 68),
+(2130, 1, 69),
+(2131, 1, 70),
+(2132, 1, 71),
+(2133, 1, 72),
+(2134, 1, 73),
+(2135, 1, 33),
+(2136, 1, 50),
+(2137, 1, 51),
+(2138, 1, 38),
+(2139, 1, 39),
+(2140, 1, 40),
+(2141, 1, 41),
+(2142, 1, 42),
+(2143, 1, 43),
+(2144, 1, 44),
+(2145, 1, 45),
+(2146, 1, 46),
+(2147, 1, 47),
+(2148, 1, 48),
+(2149, 1, 57),
+(2150, 1, 58),
+(2151, 1, 60),
+(2152, 1, 61),
+(2153, 1, 62),
+(2154, 1, 63),
+(2155, 1, 64),
+(2215, 3, 1),
+(2216, 3, 2),
+(2217, 3, 3),
+(2218, 3, 4),
+(2219, 3, 7),
+(2220, 3, 10),
+(2221, 3, 53),
+(2222, 3, 15),
+(2223, 3, 16),
+(2224, 3, 17),
+(2225, 3, 18),
+(2226, 3, 19),
+(2227, 3, 20),
+(2228, 3, 23),
+(2229, 3, 24),
+(2230, 3, 25),
+(2231, 3, 36),
+(2232, 3, 37),
+(2233, 3, 74),
+(2234, 3, 75),
+(2235, 3, 76),
+(2236, 3, 26),
+(2237, 3, 27),
+(2238, 3, 28),
+(2239, 3, 77),
+(2240, 3, 78),
+(2241, 3, 29),
+(2242, 3, 31),
+(2243, 3, 49),
+(2244, 3, 55),
+(2245, 3, 56),
+(2246, 3, 65),
+(2247, 3, 66),
+(2248, 3, 67),
+(2249, 3, 68),
+(2250, 3, 69),
+(2251, 3, 70),
+(2252, 3, 71),
+(2253, 3, 72),
+(2254, 3, 73),
+(2255, 3, 33),
+(2256, 3, 50),
+(2257, 3, 51),
+(2258, 3, 38),
+(2259, 3, 39),
+(2260, 3, 40),
+(2261, 3, 41),
+(2262, 3, 42),
+(2263, 3, 43),
+(2264, 3, 44),
+(2265, 3, 45),
+(2266, 3, 46),
+(2267, 3, 47),
+(2268, 3, 48),
+(2269, 3, 57),
+(2270, 3, 58),
+(2271, 3, 60),
+(2272, 3, 61),
+(2273, 3, 62),
+(2274, 3, 63),
+(2275, 3, 64);
+
+
+
 CREATE TABLE IF NOT EXISTS `dict_degree_type` (
 `id` int(11) unsigned NOT NULL COMMENT '主键',
   `name` varchar(20) NOT NULL COMMENT '级别名称/针对助理订单类型的归类',
@@ -536,326 +856,127 @@ ALTER TABLE `dict_service_types` ADD `degree_type` TINYINT(1) UNSIGNED NOT NULL 
 -- Database: `jhj`
 --
 
---
--- 插入之前先把表清空（truncate） `admin_account`
---
+INSERT INTO `jhj_setting` (`id`, `name`, `setting_type`, `setting_value`, `add_time`) VALUES (NULL, '后台充值验证手机号', 'recharge_mobile', '18611289885', '1459247137');
 
-TRUNCATE TABLE `admin_account`;
---
--- 转存表中的数据 `admin_account`
---
 
-INSERT INTO `admin_account` (`id`, `version`, `enable`, `name`, `email`, `username`, `password`, `register_time`, `role_id`, `organization_id`, `im_username`, `nickname`) VALUES
-(1, 1, 1, 'admin', 'admin@jhj.com', '徐sir', '7832545dc101bc98f65ccde5f93e5d24', '2014-04-02 23:26:40', 1, 1, NULL, '徐sir'),
-(2, 0, 1, '店长', 'shuangjing@jia-he-jia.com', 'shuangjing', '5a08b4f7c131be9f692b6c36a201f731', '2015-09-17 14:59:41', 2, 0, NULL, '呵呵'),
-(3, 0, 1, '邵毅夫', 'shaoyifu@jia-he-jia.com', 'shaoyifu', '5a08b4f7c131be9f692b6c36a201f731', '2015-09-27 09:52:02', 3, 0, NULL, 'shaoyifu'),
-(4, 0, 1, 'tianjiangtao', 'tianjiangtao@jia-he-jia.com', 'tianjiangtao', '5a08b4f7c131be9f692b6c36a201f731', '2015-10-08 18:04:38', 4, 0, NULL, 'tianjiangtao'),
-(5, 0, 1, '苗全国', 'miaoquanguo@jia-he-jia.com', 'miaoquanguo', '5a08b4f7c131be9f692b6c36a201f731', '2015-10-31 14:47:43', 5, 0, NULL, 'miaoquanguo'),
-(6, 0, 1, 'sujuan', 'sujuan@jia-he-jia.com', 'sujuan', '5a08b4f7c131be9f692b6c36a201f731', '2015-11-04 10:33:12', 6, 0, NULL, 'sujuan'),
-(7, 0, 1, '值班账户', 'info@jia-he-jia.com', 'jiahejia', '550c1beab72ec2d3ab345f3b6a225ec5', '2016-01-30 15:01:12', 7, 0, NULL, '值班账户');
 
 --
--- 插入之前先把表清空（truncate） `admin_authority`
+-- 表的结构 `partner_service_type`
 --
 
-TRUNCATE TABLE `admin_authority`;
---
--- 转存表中的数据 `admin_authority`
---
-
-INSERT INTO `admin_authority` (`id`, `version`, `enable`, `name`, `level_code`, `position`, `the_value`, `url`, `match_url`, `item_icon`, `parent_id`) VALUES
-(1, 3, 0, '欢迎使用', '1', 0, '1', '/home', '^/home$', 'icon-home', 0),
-(2, 2, 0, '首页', '1,2', 0, '1', '/home/index', '/home/index', '', 1),
-(3, 2, 0, '系统设置', '3', 0, '2', '/setting', '^/setting$', 'icon-cogs', 0),
-(4, 4, 0, '用户管理', '3,4', 0, '1', '/account/list', '/account/list|/account/register', '', 3),
-(7, 1, 0, '角色管理', '3,7', 0, '2', '/role/list', '/role/list|/role/toRoleForm', '', 3),
-(10, 1, 0, '权限管理', '3,10', 0, '3', '/authority/chain', '/authority/chain', '', 3),
-(15, 1, 1, '基础配置', '15', 0, '2', '/base/', '/base', 'icon-archive', 0),
-(16, 1, 1, '服务类型', '15,16', 0, '1', '/base/service-list', '/base/service-list|/base/serviceTypeForm|/base/serviceAdd-list|/base/serviceAddForm', '', 15),
-(17, 1, 1, '广告位管理', '15,17', 0, '1', '/base/ad-list', '/base/ad-list|/base/adForm', '', 15),
-(18, 1, 1, '充值卡管理', '15,18', 0, '1', '/base/card-list', '/base/card-list|/base/cardForm', '', 15),
-(19, 1, 1, '业务管理', '19', 0, '2', '/bs/', '/bs', 'icon-building', 0),
-(20, 1, 1, '门店管理', '19,20', 0, '1', '/bs/org-list', '/bs/org-list|/bs/orgForm', '', 19),
-(21, 1, 1, '服务人员', '19,21', 0, '1', '/bs/staff-list', '/bs/staff-list|/bs/orgStaffForm|/order/order-scheduling|/bs/doOrgStaffForm', '', 19),
-(22, 1, 1, '助理人员', '19,21', 0, '1', '/bs/am-list', '/bs/am-list|/bs/staffAsForm|/bs/doOrgStaffAsForm', '', 19),
-(23, 1, 1, '标签库', '19,23', 0, '1', '/bs/tag-list', '/bs/tag-list|/bs/tagForm|/bs/doTagForm', '', 19),
-(24, 1, 1, '赠送优惠券', '19,24', 0, '1', '/bs/recharge-coupon-list', '/bs/recharge-coupon-list|/bs/toRechargeCouponForm|/bs/rechargeCouponForm| /bs/toRechargeCouponUserList', '', 19),
-(25, 1, 1, '外部资源', '19,25', 0, '1', '/bs/outsrc-list', '/bs/outsrc-list', '', 19),
-(26, 1, 1, '会员管理', '26', 0, '2', '/user/', '/user', 'icon-user', 0),
-(27, 1, 1, '会员列表', '26,27', 0, '1', '/user/user-list', '/user/user-list|/user/charge-form|/user/coupons-list', '', 26),
-(28, 1, 1, '会员消费明细', '26,28', 0, '1', '/user/user-pay-detail', '/user/user-pay-detail', '', 26),
-(29, 1, 1, '订单管理', '29', 0, '2', '/order/', '/order', 'icon-shopping-cart', 0),
-(30, 1, 1, '订单列表', '29,30', 0, '1', '/order/order-list', '/order/order-list|/order/orderView', '', 29),
-(31, 1, 1, '派工列表', '29,31', 0, '1', '/order/cal-list', '/order/cal-list|', '', 29),
-(33, 1, 1, '内容管理', '33', 0, '2', '/cp', '/cp', ' icon-folder-open', 0),
-(36, 1, 1, '兑换码优惠券', '36,19', 0, '1', '/bs/convert-coupon-list', '/bs/convert-coupon-list|/bs/toConvertCouponForm|/bs/convertCouponForm', '', 19),
-(37, 1, 1, '礼包', '37,19', 0, '1', '/bs/gifts-list', '/bs/gifts-list|/bs/toGiftsForm|/bs/giftsForm', '', 19),
-(38, 1, 1, '统计图表', '38', 0, '1', '/chart', '/chart', 'icon-building', 0),
-(39, 1, 1, '市场用户图表', '39,38', 0, '1', '/chart/chartUser', '/chart/chartUser', '', 38),
-(40, 1, 1, '用户活跃度图表', '40,38', 1, '', '/chart/userLive', '/chart/userLive', '', 38),
-(41, 1, 1, '市场订单图表', '41,38', 2, '1', '/chart/chartOrder', '/chart/chartOrder', '', 38),
-(42, 1, 1, '市场品类图表', '42,38', 0, '1', '/chart/chartType', '/chart/chartType', '', 38),
-(43, 1, 1, '助理品类图表', '43,38', 0, '', '/chart/chartAmType', '/chart/chartAmType', '', 38),
-(44, 1, 1, '订单收入图表', '44,38', 0, '1', '/chart/chartOrderRevenue', '/chart/chartOrderRevenue', '', 38),
-(45, 1, 1, '品类收入图表', '45,38', 0, '', '/chart/chartTypeRevenue', '/chart/chartTypeRevenue', '', 38),
-(46, 1, 1, '助理品类收入图表', '46,38', 0, '', '/chart/chartServiceType', '/chart/chartServiceType', '', 38),
-(47, 1, 1, '充值卡销售图表', '47,38', 0, '1', '/chart/chartSaleCard', '/chart/chartSaleCard', '', 38),
-(48, 1, 1, '用户余额图表', '48,38', 0, '1', '/chart/chartMoreCard', '/chart/chartMoreCard', '', 38),
-(49, 1, 1, '排班情况', '49,31', 0, '1', '/bs/staff-list', '/order', '', 29),
-(50, 1, 1, '社区活动列表', '50,33', 0, '1', '/socials/socials-list', '/socials/socials-list|/socials/socials-form', '', 33),
-(51, 1, 1, '社区活动记录列表', '51,33', 0, '1', '/socials/social-call-list', '/socials/social-call-list', '', 33),
-(53, 1, 1, '验证码列表', '52,3', 0, '', '/user/token-list', '/user/token-list', '', 3),
-(55, 1, 1, '提醒订单', '54,29', 0, '1', '/order/remind-order-list', '/order/remind-order-list', '', 29),
-(56, 1, 1, '话费订单', '56,29', 0, '', '/order/phone_charge_order_list', '/order/phone_charge_order_list', '', 29),
-(57, 1, 1, '话费订单图表', '57,38', 0, '', '/chart/phoneRechargeOrder', '/chart/phoneRechargeOrder', '', 38),
-(58, 1, 1, '话费订单收入图表', '58,38', 0, '', '/chart/phoneRechargeRevenue', '/chart/phoneRechargeRevenue', '', 38),
-(59, 1, 1, '助理类型分类管理', '59,15', 0, '', '/base/degree_type_list', '/base/degree_type_list', '', 15),
-(60, 1, 1, '叮当大学', '60', 0, '2', '/university/', '/university', 'icon-list-alt', 0),
-(61, 1, 1, '服务类别列表', '61,60', 0, '2', '/university/partner_list', '/university/partner_list', '', 60),
-(62, 1, 1, '培训学习', '62,60', 0, '2', '/university/study_list', '/university/study_list', '', 60),
-(63, 1, 1, '题库管理', '63,60', 0, '', '/university/bank_list', '/university/bank_list', '', 60),
-(64, 1, 1, '考题管理', '64,60', 0, '', '/university/question_list', '/university/question_list', '', 60),
-(65, 1, 1, '提现列表', '65,29', 0, '', '/staff/cash-list', '/staff/cash-list', '', 29),
-(66, 1, 1, '服务人员消费明细表', '66,29', 0, '', '/staff/staffPay-list', '/staff/staffPay-list', '', 29),
-(67, 1, 1, '黑名单列表', '67,29', 0, '', '/staff/staffBlack-list', '/staff/staffBlack-list', '', 29),
-(68, 1, 1, '服务人员欠款明细列表', '68,29', 0, '', '/staff/staffPayDept-list', '/staff/staffPayDept-list', '', 29),
-(69, 1, 1, '消息列表', '69,29', 0, '', '/msg/list', '/msg/list', '', 29),
-(70, 1, 1, '助理订单列表', '70,29', 0, '1', '/order/order-am-list', '/order/order-am-list|/order/order-am-view', '', 29),
-(71, 1, 1, '配送订单列表', '71,29', 0, '1', '/order/order-del-list', '/order/order-del-list|/order-order-del-view', '', 29),
-(72, 1, 1, '钟点工订单列表', '72,29', 0, '1', '/order/order-hour-list', '/order/order-hour-list|/order/order-hour-view', '', 29),
-(73, 1, 1, '深度保洁订单列表', '73,29', 0, '1', '/order/order-exp-list', '/order/order-exp-list|/order/order-exp-view', '', 29);
+CREATE TABLE `partner_service_type` (
+  `service_type_id` int(11) UNSIGNED NOT NULL COMMENT '服务类别表',
+  `name` varchar(32) NOT NULL COMMENT '服务名称',
+  `parent_id` int(11) UNSIGNED NOT NULL COMMENT '父级ID',
+  `unit` varchar(16) NOT NULL COMMENT '单位',
+  `default_num` smallint(4) NOT NULL COMMENT '默认',
+  `price` decimal(9,2) UNSIGNED NOT NULL COMMENT '单价',
+  `remarks` varchar(255) NOT NULL COMMENT '备注',
+  `view_type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0=类别 1=商品',
+  `no` tinyint(1) UNSIGNED NOT NULL COMMENT '列表排序',
+  `service_img_url` varchar(255) NOT NULL COMMENT '微网站服务的图标图片',
+  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '服务是否可用'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 插入之前先把表清空（truncate） `admin_organization`
+-- 转存表中的数据 `partner_service_type`
 --
 
-TRUNCATE TABLE `admin_organization`;
---
--- 转存表中的数据 `admin_organization`
---
-
-INSERT INTO `admin_organization` (`id`, `version`, `enable`, `name`, `level_code`, `position`, `the_value`, `parent_id`) VALUES
-(1, 1, 0, '总机构', '1', 0, '1', 0),
-(2, 1, 0, '分机构1-1', '1,2', 0, '1', 1),
-(3, 1, 0, '分机构', '1,3', 0, '', 1),
-(4, 1, 0, '总机构2', '4', 0, '2', 0),
-(5, 2, 0, '组织机构2-1', '4,5', 0, '1', 4);
-
---
--- 插入之前先把表清空（truncate） `admin_role`
---
-
-TRUNCATE TABLE `admin_role`;
---
--- 转存表中的数据 `admin_role`
---
-
-INSERT INTO `admin_role` (`id`, `version`, `name`, `enable`) VALUES
-(1, 4, '系统管理员', 1),
-(2, 1, '店长', 1),
-(3, 1, '总部运营', 1),
-(4, 1, '运营账号', 1),
-(5, 1, '客服', 1),
-(6, 1, 'HR', 1),
-(7, 1, '值班账号', 1);
+INSERT INTO `partner_service_type` (`service_type_id`, `name`, `parent_id`, `unit`, `default_num`, `price`, `remarks`, `view_type`, `no`, `service_img_url`, `enable`) VALUES
+(16, '钟点工子1', 12, '呵呵', 10, '23.00', '', 0, 0, '', 1),
+(18, '深度子节点1', 13, '屋', 1, '2.00', '', 1, 0, '', 1),
+(20, '呵呵1', 19, '', 0, '0.00', '', 0, 0, '', 1),
+(21, '深度2', 13, '座', 1, '1.00', '', 0, 0, '', 1),
+(22, '快送子服务1', 15, '和', 1, '20.00', '', 1, 0, '', 1),
+(23, '金牌保洁', 0, '1', 1, '12.00', '', 1, 0, '', 1),
+(24, '厨娘烧饭', 0, '1', 1, '10.00', '', 1, 0, '', 1),
+(25, '贴心家事', 0, '1', 1, '1.00', '', 1, 0, '', 1),
+(26, '深度养护', 0, '1', 1, '10.00', '', 1, 0, '', 1),
+(27, '企业服务', 0, '1', 1, '10.00', '', 1, 1, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1),
+(28, '金牌保洁初体验', 23, '元/小时', 1, '33.00', '初次体验金牌保洁', 1, 123, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1),
+(29, '厨娘烧饭初体验', 24, '1', 1, '66.00', '我是厨娘烧饭*初体验', 1, 0, '2.png', 1),
+(30, '贴心家事', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/a973ba54285e3493b26abb5e4b11ccc7', 1),
+(31, '跑腿代办', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 0),
+(32, '陪伴', 25, '1', 0, '10.00', '', 1, 0, '', 0),
+(33, '便民服务', 25, '1', 0, '10.00', '', 1, 0, '', 1),
+(34, '床铺除螨杀菌', 26, '次', 1, '360.00', '', 1, 0, '', 1),
+(35, '厨房高温消毒杀菌', 26, '1', 1, '690.00', '说明', 1, 0, '', 1),
+(36, '油烟机清洗', 26, '1', 1, '10.00', '', 1, 0, '', 1),
+(37, '中小企业保洁', 27, '1', 1, '10.00', '', 1, 0, '', 1),
+(38, '中小企业做饭', 27, '1', 1, '10.00', '', 1, 0, '', 1),
+(41, '简朴生活', 23, '元/月', 0, '307.00', '全年2周1次金牌保洁', 1, 0, '', 0);
 
 --
--- 插入之前先把表清空（truncate） `admin_role_authority`
+-- Indexes for dumped tables
 --
 
-TRUNCATE TABLE `admin_role_authority`;
 --
--- 转存表中的数据 `admin_role_authority`
+-- Indexes for table `partner_service_type`
+--
+ALTER TABLE `partner_service_type`
+  ADD PRIMARY KEY (`service_type_id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
 --
 
-INSERT INTO `admin_role_authority` (`id`, `role_id`, `authority_id`) VALUES
-(951, 4, 1),
-(952, 4, 2),
-(953, 4, 3),
-(954, 4, 53),
-(955, 4, 19),
-(956, 4, 36),
-(957, 4, 26),
-(958, 4, 27),
-(959, 4, 28),
-(1262, 6, 1),
-(1263, 6, 2),
-(1264, 6, 33),
-(1265, 6, 50),
-(1266, 6, 51),
-(1593, 7, 1),
-(1594, 7, 2),
-(1595, 7, 3),
-(1596, 7, 53),
-(1597, 7, 29),
-(1598, 7, 66),
-(1599, 7, 67),
-(1600, 7, 68),
-(1601, 7, 70),
-(1602, 7, 71),
-(1603, 7, 72),
-(1604, 7, 73),
-(1605, 7, 33),
-(1606, 7, 51),
-(1607, 7, 57),
-(1608, 7, 60),
-(1609, 7, 62),
-(1610, 7, 63),
-(1611, 7, 64),
-(1612, 3, 1),
-(1613, 3, 2),
-(1614, 3, 3),
-(1615, 3, 4),
-(1616, 3, 7),
-(1617, 3, 10),
-(1618, 3, 53),
-(1619, 3, 15),
-(1620, 3, 16),
-(1621, 3, 17),
-(1622, 3, 18),
-(1623, 3, 59),
-(1624, 3, 19),
-(1625, 3, 20),
-(1626, 3, 21),
-(1627, 3, 22),
-(1628, 3, 23),
-(1629, 3, 24),
-(1630, 3, 25),
-(1631, 3, 36),
-(1632, 3, 37),
-(1633, 3, 26),
-(1634, 3, 27),
-(1635, 3, 28),
-(1636, 3, 29),
-(1637, 3, 31),
-(1638, 3, 49),
-(1639, 3, 55),
-(1640, 3, 56),
-(1641, 3, 65),
-(1642, 3, 66),
-(1643, 3, 67),
-(1644, 3, 68),
-(1645, 3, 69),
-(1646, 3, 70),
-(1647, 3, 71),
-(1648, 3, 72),
-(1649, 3, 73),
-(1650, 3, 33),
-(1651, 3, 50),
-(1652, 3, 51),
-(1653, 3, 38),
-(1654, 3, 39),
-(1655, 3, 40),
-(1656, 3, 41),
-(1657, 3, 42),
-(1658, 3, 43),
-(1659, 3, 44),
-(1660, 3, 45),
-(1661, 3, 46),
-(1662, 3, 47),
-(1663, 3, 48),
-(1664, 3, 57),
-(1665, 3, 58),
-(1666, 3, 60),
-(1667, 3, 61),
-(1668, 3, 62),
-(1669, 3, 63),
-(1670, 3, 64),
-(1671, 1, 1),
-(1672, 1, 2),
-(1673, 1, 3),
-(1674, 1, 4),
-(1675, 1, 7),
-(1676, 1, 10),
-(1677, 1, 53),
-(1678, 1, 15),
-(1679, 1, 16),
-(1680, 1, 17),
-(1681, 1, 18),
-(1682, 1, 59),
-(1683, 1, 19),
-(1684, 1, 20),
-(1685, 1, 21),
-(1686, 1, 22),
-(1687, 1, 23),
-(1688, 1, 24),
-(1689, 1, 25),
-(1690, 1, 36),
-(1691, 1, 37),
-(1692, 1, 26),
-(1693, 1, 27),
-(1694, 1, 28),
-(1695, 1, 29),
-(1696, 1, 31),
-(1697, 1, 49),
-(1698, 1, 55),
-(1699, 1, 56),
-(1700, 1, 65),
-(1701, 1, 66),
-(1702, 1, 67),
-(1703, 1, 68),
-(1704, 1, 69),
-(1705, 1, 70),
-(1706, 1, 71),
-(1707, 1, 72),
-(1708, 1, 73),
-(1709, 1, 33),
-(1710, 1, 50),
-(1711, 1, 51),
-(1712, 1, 38),
-(1713, 1, 39),
-(1714, 1, 40),
-(1715, 1, 41),
-(1716, 1, 42),
-(1717, 1, 43),
-(1718, 1, 44),
-(1719, 1, 45),
-(1720, 1, 46),
-(1721, 1, 47),
-(1722, 1, 48),
-(1723, 1, 57),
-(1724, 1, 58),
-(1725, 1, 60),
-(1726, 1, 61),
-(1727, 1, 62),
-(1728, 1, 63),
-(1729, 1, 64),
-(1730, 2, 1),
-(1731, 2, 2),
-(1732, 2, 19),
-(1733, 2, 20),
-(1734, 2, 21),
-(1735, 2, 22),
-(1736, 2, 29),
-(1737, 2, 31),
-(1738, 2, 49),
-(1739, 2, 55),
-(1740, 2, 56),
-(1741, 2, 65),
-(1742, 2, 66),
-(1743, 2, 67),
-(1744, 2, 68),
-(1745, 2, 70),
-(1746, 2, 71),
-(1747, 2, 72),
-(1748, 2, 73),
-(1749, 2, 38),
-(1750, 2, 41),
-(1751, 2, 42),
-(1752, 2, 43),
-(1753, 2, 44),
-(1754, 2, 46),
-(1755, 5, 1),
-(1756, 5, 2),
-(1757, 5, 3),
-(1758, 5, 53),
-(1759, 5, 29),
-(1760, 5, 31),
-(1761, 5, 49),
-(1762, 5, 70),
-(1763, 5, 71),
-(1764, 5, 72),
-(1765, 5, 73),
-(1766, 5, 33),
-(1767, 5, 50),
-(1768, 5, 51);
+--
+-- 使用表AUTO_INCREMENT `partner_service_type`
+--
+ALTER TABLE `partner_service_type`
+  MODIFY `service_type_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '服务类别表', AUTO_INCREMENT=42;
+
+
+ALTER TABLE `org_staffs` ADD `parent_org_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '对应地区门店ID' AFTER `org_id`;
+
+ALTER TABLE `org_staffs` ADD `level` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '员工等级 1 = 一级  2 = 二级  3 = 三级  4 = 四级' AFTER `staff_type`;
+
+
+--
+-- 表的结构 `org_staff_skill`
+--
+
+CREATE TABLE `org_staff_skill` (
+  `id` int(11) UNSIGNED NOT NULL COMMENT '主键，服务人员技能表',
+  `staff_id` int(11) UNSIGNED NOT NULL COMMENT '服务人员id',
+  `service_type_id` int(11) UNSIGNED NOT NULL COMMENT '服务类别id',
+  `add_time` int(11) UNSIGNED NOT NULL COMMENT '添加时间戳'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `org_staff_skill`
+--
+ALTER TABLE `org_staff_skill`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `org_staff_skill`
+--
+ALTER TABLE `org_staff_skill`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键，服务人员技能表';
+
+ALTER TABLE `orgs` ADD `parent_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '上级门店，默认 = 0;' AFTER `update_time`;
+
+
+CREATE TABLE `finance_recharge` (
+  `id` int(10) UNSIGNED NOT NULL COMMENT '财务充值记录表',
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT '充值目标用户Id',
+  `recharge_value` decimal(9,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT '充值金额',
+  `rest_money_before` decimal(9,2) UNSIGNED NOT NULL COMMENT '充值前金额',
+  `rest_money_after` decimal(9,2) UNSIGNED NOT NULL COMMENT '充值后金额',
+  `admin_id` int(11) UNSIGNED NOT NULL COMMENT '充值人员Id',
+  `admin_name` varchar(20) DEFAULT NULL COMMENT '充值人员姓名',
+  `admin_mobile` char(11) NOT NULL COMMENT '充值人员手机号',
+  `approve_mobile` varchar(20) NOT NULL COMMENT '审批手机号',
+  `approve_token` varchar(20) NOT NULL COMMENT '审批验证码',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  `add_time` int(11) NOT NULL COMMENT '添加时间戳'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
