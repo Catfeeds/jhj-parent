@@ -86,8 +86,25 @@ public class OaOrderListVo extends Orders {
 	
 	private String serviceDateStr;	//服务时间 字符串，页面需要
 	
+	//2016年3月29日17:36:47  jhj2.1 之后，都具体了具体的 服务类型。如 钟点工-->金牌保洁初体验。金牌保洁深度体验、、、、
+	private String orderTypeName;
+	
+	private String cloudOrgName; // 云店名称
 	
 	
+	
+	public String getCloudOrgName() {
+		return cloudOrgName;
+	}
+	public void setCloudOrgName(String cloudOrgName) {
+		this.cloudOrgName = cloudOrgName;
+	}
+	public String getOrderTypeName() {
+		return orderTypeName;
+	}
+	public void setOrderTypeName(String orderTypeName) {
+		this.orderTypeName = orderTypeName;
+	}
 	public String getServiceDateStr() {
 		return serviceDateStr;
 	}

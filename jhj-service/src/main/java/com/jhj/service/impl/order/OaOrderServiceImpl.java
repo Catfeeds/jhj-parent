@@ -21,10 +21,12 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
@@ -33,6 +35,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
@@ -82,6 +85,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 	@Autowired
 	private NewDispatchStaffService newDisStaService;
 	
+	@Autowired
+	private PartnerServiceTypeService partnerService;
+	
+	@Autowired
+	private OrgStaffsService staffService;
 	
 	@Override
 	public List<Orders> selectVoByListPage(OaOrderSearchVo oaOrderSearchVo, int pageNo, int pageSize) {
@@ -269,6 +277,8 @@ public class OaOrderServiceImpl implements OaOrderService {
 
 		oaOrderListVo.setOrgName("");
 
+		oaOrderListVo.setOrderTypeName("");//订单类型名称。。实际具体到 某种服务类型的名称
+		
 		return oaOrderListVo;
 	}
 	/**
@@ -721,7 +731,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 			// 支付方式
 			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
 			oaOrderListVo.setPayTypeName(payTypeName);
-
 		}
 
 		// 地址
@@ -733,7 +742,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderAddress(userAddrs.getName()+ " " + userAddrs.getAddress());
 			}
 		}
-		// 门店名称
+//		// 门店名称
 		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
 
 		if (orgs != null) {
@@ -770,7 +779,53 @@ public class OaOrderServiceImpl implements OaOrderService {
 		BeanUtilsExp.copyPropertiesIgnoreNull(oaOrderListVo, oaOrderListNewVo);
 
 		oaOrderListNewVo.setStatusNameMap(statuNameMap);
-
+		
+		
+		/*
+		 *  2016年3月29日17:43:59   细节修改。添加字段
+		 *  
+		 *   云店名称、派工人员姓名(如果已派工)、 订单具体类型
+		 */
+		
+		List<OrderDispatchs> list = orderDisService.selectByNoAndDisStatus(orderNo, Constants.ORDER_DIS_ENABLE);
+		
+		//如果有派工记录
+		if(list.size() >0){
+			
+			OrderDispatchs dispatchs = list.get(0);
+			//派工人员姓名
+			oaOrderListNewVo.setStaffName(dispatchs.getStaffName());
+			
+			Long staffId = dispatchs.getStaffId();
+			
+			OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
+			
+			
+			Orgs orgs2 = orgService.selectByPrimaryKey(staffs.getOrgId());
+			
+			//云店名称
+			oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
+			
+			
+		}else{
+			oaOrderListNewVo.setStaffName("暂无");
+			
+			oaOrderListNewVo.setCloudOrgName("");
+			oaOrderListNewVo.setOrgName("");
+		}
+		
+		
+		
+		Long serviceType = orders.getServiceType();
+		PartnerServiceType type = partnerService.selectByPrimaryKey(serviceType);
+		//订单类型 具体名称 （具体到服务类型）, 如 钟点工-->金牌保洁初体验、金牌保洁深度体验。。。
+		if(type !=null){
+			oaOrderListNewVo.setOrderTypeName(type.getName());
+		}else{
+			oaOrderListNewVo.setOrderTypeName("");
+		}
+		
+		
 		return oaOrderListNewVo;
 	}
 
