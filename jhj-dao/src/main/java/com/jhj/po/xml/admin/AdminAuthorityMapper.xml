@@ -41,7 +41,7 @@
         #{item}
     </foreach>
 
-    order by id asc
+    order by position asc
   </select>
   <select id="selectByParentId" resultMap="BaseResultMap"  parameterType="java.lang.Long" >
     select
