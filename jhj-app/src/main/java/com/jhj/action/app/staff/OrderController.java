@@ -213,6 +213,10 @@ public class OrderController extends BaseController {
 		orderDispatchs.setUpdateTime(orders.getUpdateTime());
 		orderDispatchsService.updateByPrimaryKeySelective(orderDispatchs);
 		
+		
+		
+		Short level = orgStaffs.getLevel();
+		String settingLevel = "-level-"+level.toString();
 		//得到订单收入
 		String settingType = "";
 		if (orders.getOrderType() == 0) {
@@ -228,6 +232,8 @@ public class OrderController extends BaseController {
 			// 配送服务收入比例 am-ratio
 			settingType = "dis-ratio";
 		}
+		
+		settingType+= settingLevel;
 		
 		BigDecimal orderIncoming = new BigDecimal(0);
 		BigDecimal orderMoney = orderPrices.getOrderMoney();
