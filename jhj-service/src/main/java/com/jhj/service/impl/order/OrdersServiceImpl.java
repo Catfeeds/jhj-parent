@@ -217,7 +217,7 @@ public class OrdersServiceImpl implements OrdersService {
 		}*/
 		// 用户收到未支付的助理订单通知
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(order.getId());
-		if (orderStatus.equals(Constants.ORDER_STATUS_3)) {
+		if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
 			String mobile = order.getMobile();
 			String code = RandomUtil.randomNumber();
 			if (mobile.equals("18610807136")) {
