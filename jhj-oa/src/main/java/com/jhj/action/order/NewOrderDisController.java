@@ -26,6 +26,7 @@ import com.jhj.po.model.user.UserPushBind;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserPushBindService;
@@ -68,6 +69,8 @@ public class NewOrderDisController extends BaseController {
 	@Autowired	
 	private UserPushBindService bindService;
 	
+	@Autowired
+	private OrderPayService orderPayService;
 	
 	/**
 	 * 
@@ -305,6 +308,10 @@ public class NewOrderDisController extends BaseController {
 			// 已派工。 修改派工表
 			disService.updateByPrimaryKeySelective(dispatchs);
 		}
+		
+		
+		// 发推送消息
+		orderPayService.orderPaySuccessToDoForAm(order);
 		
 		return resultData;
 	}

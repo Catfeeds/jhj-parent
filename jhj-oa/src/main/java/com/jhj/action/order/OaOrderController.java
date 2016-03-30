@@ -592,6 +592,9 @@ public class OaOrderController extends BaseController {
 		return "redirect:/order/order-list";
 	}
 	
+	/*
+	 * 提交 已预约 的 助理订单。。变为 已确认。。并生成 订单价格等信息
+	 */
 	
 	@RequestMapping(value = "oa_submit_am_order.json",method =RequestMethod.GET)
 	public AppResultData<Object> oaSubAmOrder(
