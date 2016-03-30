@@ -296,32 +296,36 @@ public class OrderPayServiceImpl implements OrderPayService {
 		}
 		
 		//2016年1月30日10:39:32  用户支付完  助理订单后，给助理推送消息
-		Long amId = orderDispatchs.getStaffId();
+//		Long amId = orderDispatchs.getStaffId();
+//		
+//		UserPushBind userPushBind = bindService.selectByUserId(amId);
+//		
+//		//助理的 cid
+//		String clientId = userPushBind.getClientId();
+//		
+//		HashMap<String, String> params = new HashMap<String, String>();
+//		params.put("cid", clientId);
+//		
+//		HashMap<String, String> tranParams = new HashMap<String, String>();
+//		 
+//		tranParams.put("is_show", "true");		
+//		tranParams.put("action", "msg");		
+//		tranParams.put("remind_title", "助理预约单");
+//		tranParams.put("remind_content", "您好，你的助理预约单，用户已经完成支付，请尽快处理.");
+//
+//		String jsonParams = GsonUtil.GsonString(tranParams);
+//		
+//		params.put("transmissionContent", jsonParams);
+//		try {
+//			boolean flag = PushUtil.AndroidPushToSingle(params);
+//		} catch (Exception e) {
+//			System.out.println("助理预约单支付完成时,推送给助理的消息,出现异常:"+e.getMessage());
+//			e.printStackTrace();
+//		}
 		
-		UserPushBind userPushBind = bindService.selectByUserId(amId);
+		//todo 支付成功给用户短信.
 		
-		//助理的 cid
-		String clientId = userPushBind.getClientId();
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cid", clientId);
-		
-		HashMap<String, String> tranParams = new HashMap<String, String>();
-		 
-		tranParams.put("is_show", "true");		
-		tranParams.put("action", "msg");		
-		tranParams.put("remind_title", "助理预约单");
-		tranParams.put("remind_content", "您好，你的助理预约单，用户已经完成支付，请尽快处理.");
-
-		String jsonParams = GsonUtil.GsonString(tranParams);
-		
-		params.put("transmissionContent", jsonParams);
-		try {
-			boolean flag = PushUtil.AndroidPushToSingle(params);
-		} catch (Exception e) {
-			System.out.println("助理预约单支付完成时,推送给助理的消息,出现异常:"+e.getMessage());
-			e.printStackTrace();
-		}
+		//todo 增加推送给客服人员短信或者其他方式.
 		
 	}
 	

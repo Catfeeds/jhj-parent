@@ -23,19 +23,24 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserPushBind;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
+import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UserTrailRealService;
+import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.GsonUtil;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.PushUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -58,6 +63,9 @@ public class NewOrderDisController extends BaseController {
 	private OrderDispatchsService disService;
 	
 	@Autowired
+	private UsersService userService;	
+	
+	@Autowired
 	private UserAddrsService userAddrService;
 	
 	@Autowired
@@ -71,6 +79,9 @@ public class NewOrderDisController extends BaseController {
 	
 	@Autowired
 	private OrderPayService orderPayService;
+	
+	@Autowired
+	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 	
 	/**
 	 * 
@@ -241,6 +252,7 @@ public class NewOrderDisController extends BaseController {
 		
 		Orders order = orderSevice.selectbyOrderId(orderId);
 		
+		Users u = userService.getUserById(order.getUserId());
 		//修改的 只是 有效派工的订单
 		List<OrderDispatchs> list = disService.selectByNoAndDisStatus(order.getOrderNo(), Constants.ORDER_DIS_ENABLE);
 		
@@ -288,7 +300,7 @@ public class NewOrderDisController extends BaseController {
 		
 		//对于 助理 类 订单，只有在  '已预约','已派工' 两种状态 可以 修改 派工人员
 		
-		if(orderStatus  == Constants.ORDER_AM_STATUS_1){
+		if(orderStatus  == Constants.ORDER_AM_STATUS_3){
 			
 			//如果订单状态是 已预约。 手动增加派工
 			
@@ -296,23 +308,31 @@ public class NewOrderDisController extends BaseController {
 			disService.insertSelective(dispatchs);
 			
 			//更新 order_status
-			order.setOrderStatus(Constants.ORDER_AM_STATUS_2);
+			order.setOrderStatus(Constants.ORDER_AM_STATUS_4);
 			order.setUpdateTime(TimeStampUtil.getNowSecond());
 			
 			orderSevice.updateByPrimaryKeySelective(order);
 			
 		}
 				
-		if(orderStatus == Constants.ORDER_AM_STATUS_2){
+		if(orderStatus == Constants.ORDER_AM_STATUS_4){
 			
 			// 已派工。 修改派工表
 			disService.updateByPrimaryKeySelective(dispatchs);
 		}
 		
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
+		//1) 用户收到派工通知---发送短信
+		String[] contentForUser = new String[] { timeStr };
+		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
 		
-//		orderPayService.orderPaySuccessToDoForAm(order);
-		orderSevice.userOrderAmSuccessTodo(order.getOrderNo());
+		//2)派工成功，为服务人员发送推送消息---推送消息
+		dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
+		
+		SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
 		
 		return resultData;
 	}
