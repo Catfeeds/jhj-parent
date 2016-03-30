@@ -216,8 +216,9 @@ public class NewOrderDisController extends BaseController {
 		Short orderStatus = orders.getOrderStatus();
 		
 		//对于 助理 类 订单，只有在  '已预约','已派工' 两种状态 可以 修改 派工人员
-		if(orderStatus  == Constants.ORDER_AM_STATUS_1
-					|| orderStatus == Constants.ORDER_AM_STATUS_2){
+		if(orderStatus  == Constants.ORDER_AM_STATUS_2 || 
+		   orderStatus == Constants.ORDER_AM_STATUS_3 ||
+		   orderStatus == Constants.ORDER_AM_STATUS_4){
 			list = newDisService.getTheNearestStaff(fromLat, fromLng, staIdList);
 		}
 		return list;
