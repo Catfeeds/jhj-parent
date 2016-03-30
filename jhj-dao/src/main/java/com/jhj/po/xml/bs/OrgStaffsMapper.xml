@@ -261,7 +261,7 @@
 
   </select> -->
   
-  <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByIds" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
     from org_staffs 
@@ -270,7 +270,7 @@
              open="(" separator="," close=")">
         #{item}
     </foreach>
-   order by add_time asc
+   order by add_time 
   </select>
   
   <select id="selectAll" resultMap="BaseResultMap" >
