@@ -9,6 +9,8 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	var order_type = $$("#orderType").val();
 	var order_money = delSomeString($$("#orderMoney").text());
 	
+	var orderStatus = $("#orderStatus").val();
+	
 	
 	//根据状态是否显示支付. (只有待支付 状态的 订单。显示 支付 选项)
 	if(orderStatus == 1){
