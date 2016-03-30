@@ -79,7 +79,8 @@ $("#chargeWay").on('change',function(){
  */
 $("#getUserCode").on("click",function(){
 		
-//	 var mobile = $("#userMobile").val(); 	
+	 
+	var mobile = $("#ownerMobile").val(); 	
 	
 	var count = 60;
 	
@@ -96,7 +97,6 @@ $("#getUserCode").on("click",function(){
 		count--;
 	}
 	
-	 var mobile = 13521193653;
 	
 	 //此处 新增一种  验证码 类型。 表示会员充值时需要的验证码
 	 var smsType = 3;
@@ -190,7 +190,6 @@ $("#addCoupon_btn").on("click",function(){
 	 	});
 	
 });
-
 
 function getRootPath() {
     var strFullPath = window.document.location.href;

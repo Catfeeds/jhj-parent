@@ -293,9 +293,9 @@ $('#viewForm').on('click',function(){
 	
 	//只有 已支付 和  已派工  的订单，可以有  调整派工操作
 	
-	if(orderStatus != 1 && orderStatus != 2){
+	if(orderStatus != 3 && orderStatus != 4){
 		
-		alert("只有 已预约 或 已派工状态的 订单 ,可以进行调整 派工操作");
+		alert("只有 已支付或 已派工状态的 订单 ,可以进行调整 派工操作");
 		return false;
 	}
 	
@@ -367,9 +367,10 @@ function getRootPath() {
 
 
 
-//页面加载时， 回显 已选中的 派工结果
+//页面加载时， 做一些 效果的处理
 var selectStaff = function(){
 	
+	//回显 已选中的 派工结果
 	$(".popovers").each(function(k,v){
 			
 		var selectStaffId = $(this).find("#selectStaffId").val();
@@ -380,6 +381,66 @@ var selectStaff = function(){
 			$(this).attr("class","btn btn-success popovers");
 		}
 	});
+	
+	
+	// 当订单状态 为   >2 已确认， 则 隐藏  '提交订单' 按钮
+	
+	var stat =  $("#orderStatus").val();
+	
+	if(stat >=2){
+		$("#saveOrder").hide();
+		//金额也不能修改
+		$("#orderMoney").prop("readonly",true);
+	}
 }
 
 window.onload = selectStaff;
+
+
+
+/*
+ *   已预约的订单, 手动填写 价格、沟通后的需求，提交
+ */
+$("#saveOrder").on('click',function(){
+	
+	var orderMoney =  $("#orderMoney").val();
+	
+	if(orderMoney.length == 0){
+		
+		alert("请输入订单价格");
+		return false;
+	}
+	
+	var remarksConfirm = encodeURIComponent($("#remarksConfirm").val());
+	
+	var orderId = $("#id").val();
+	
+	$.ajax({
+		type:'get',
+		 url:'oa_submit_am_order.json',
+		 data:{
+			 "orderMoney":orderMoney,
+			 "orderId":orderId,
+			 "remarksConfirm":remarksConfirm
+		 },
+		 dataType:'json',
+		 success:function(data,sta,xhr){
+			 alert(data.msg)
+			 
+			 var rootPath = getRootPath();
+			 window.location.replace(rootPath+"/order/order-am-list");
+			 return false;
+		 },
+		 error:function(){
+			 alert("网络错误,请联系管理员");
+			 return false;
+		 }
+		
+	});
+	
+});
+
+
+
+
+

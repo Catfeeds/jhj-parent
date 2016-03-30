@@ -86,11 +86,13 @@
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">验证码</label>
 							<div class="col-md-5">
-								<input type="text" class="col-lg-3"  style="width:200px"
+								<input type="text"   style="width:200px"
 									placeholder="请输入验证码"	 id="userCode" value="" maxlength="4" >
-							</div>
+							</div>		
+							
 							<button type="button" id="getUserCode" style="margin-left:-280px" class="btn btn-success">获取验证码</button>
-							<font color="red">验证码30分钟内有效</font>
+	
+							<input type="hidden" value="${userChargeVo.ownerMobile }" id="ownerMobile">	
 						</div>
 					</div>
 					

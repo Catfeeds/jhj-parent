@@ -1,5 +1,7 @@
 package com.jhj.action.order;
 
+import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -21,6 +24,7 @@ import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
@@ -28,6 +32,7 @@ import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OaOrderSearchVo;
@@ -35,6 +40,7 @@ import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -61,6 +67,9 @@ public class OaOrderController extends BaseController {
 	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 	@Autowired
 	private UsersService usersService;
+	
+	@Autowired
+	private OrderPricesService priceService;
 	
 	/*
 	 * 查看订单列表
@@ -580,7 +589,58 @@ public class OaOrderController extends BaseController {
 			orderPayService.orderPaySuccessToDoForHour(userId, id, orgStaffsNewVos, isChange);
 		}
 		
-		
 		return "redirect:/order/order-list";
 	}
+	
+	
+	@RequestMapping(value = "oa_submit_am_order.json",method =RequestMethod.GET)
+	public AppResultData<Object> oaSubAmOrder(
+			@RequestParam("orderId")Long orderId,
+			@RequestParam("remarksConfirm")String remarksCon,
+			@RequestParam("orderMoney")BigDecimal orderMoney){
+		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
+		
+		Orders order = orderService.selectbyOrderId(orderId);
+		
+		Short orderStatus = order.getOrderStatus();
+		
+		//如果 订单状态不是  已预约。则 不让提交 订单
+		if(orderStatus != Constants.ORDER_AM_STATUS_1){
+				
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("只有已预约的订单,可以修改订单价格信息");
+			
+			return result;
+		}
+		
+		String decode = URLDecoder.decode(remarksCon);
+		
+		// 修改订单为 已确认
+		order.setOrderStatus(Constants.ORDER_AM_STATUS_2);
+		order.setRemarksConfirm(decode);
+		
+		OrderPrices orderPrice = priceService.initOrderPrices();
+		
+		orderPrice.setUserId(order.getUserId());
+		orderPrice.setMobile(order.getMobile());
+		orderPrice.setOrderId(orderId);
+		orderPrice.setOrderNo(order.getOrderNo());
+
+		orderPrice.setOrderMoney(orderMoney);
+		
+		// 更新订单状态
+		orderService.updateByPrimaryKeySelective(order);
+		
+		//生成订单价格
+		priceService.insertSelective(orderPrice);
+		
+		//发短信
+		orderService.userOrderAmSuccessTodo(order.getOrderNo());
+		
+		result.setMsg("订单确认成功");
+		
+		return result;
+	}
+	
 }

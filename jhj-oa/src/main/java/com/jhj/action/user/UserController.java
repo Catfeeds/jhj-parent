@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,14 +25,14 @@ import com.jhj.common.Constants;
 import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictCardType;
-import com.jhj.po.model.order.OrderCards;
+import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.po.model.user.FinanceRecharge;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.UserSmsToken;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.CardTypeService;
+import com.jhj.service.jhjSetting.JhjSettingService;
 import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.users.FinanceRechargeService;
 import com.jhj.service.users.UserCouponsService;
@@ -43,7 +42,6 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.UsersSmsTokenVo;
-import com.jhj.vo.bs.NewStaffListVo;
 import com.jhj.vo.finance.FinanceSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
@@ -51,7 +49,6 @@ import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
-import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -80,7 +77,8 @@ public class UserController extends BaseController {
 	@Autowired
 	private FinanceRechargeService financeService;
 	
-	
+	@Autowired
+	private JhjSettingService settingService;
 	
 	@AuthPassport
 	@RequestMapping(value = "/update_name", method = { RequestMethod.POST })
@@ -216,6 +214,15 @@ public class UserController extends BaseController {
 		
 		userChargeVo.setUserMobile(users.getMobile());
 		
+		
+		/*
+		 *  充值时获取 验证码的 手机号
+		 */
+		
+//		JhjSetting jhjSetting = settingService.selectBySettingType(Constants.OA_CHARGE_SETTING_TYPE);
+		
+		userChargeVo.setOwnerMobile("18611289885");
+		
 		model.addAttribute("userChargeVo", userChargeVo);
 		model.addAttribute("selectDataSource",
 				usersService.selectDictCardDataSource());
@@ -236,7 +243,7 @@ public class UserController extends BaseController {
 	/* 
 	 *  运营平台-- 会员充值列表--充值--获取验证码
 	 */
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "get_user_sms_token.json", method = RequestMethod.GET)
 	public AppResultData<String> getSmsToken(
 			@RequestParam("userId") Long userId,
@@ -246,16 +253,18 @@ public class UserController extends BaseController {
 		AppResultData<String> result = new AppResultData<String>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		/*
-		 * 校验  手机号 和 用户 是否匹配
+		 * 校验  手机号 和 用户(主管手机号。接收验证码) 是否匹配
 		 */
-		Users users = usersService.selectByUsersId(userId);
 		
-		String mobile = users.getMobile();
+//		JhjSetting setting = settingService.selectBySettingType(Constants.OA_CHARGE_SETTING_TYPE);
+//		
+//		String value = setting.getSettingValue();
 		
-		if(!mobile.equals(userMobile)){
+		String value = "18611289885";
+		if(!userMobile.equals("18611289885")){
 			
 			result.setStatus(Constants.ERROR_999);
-			result.setMsg("手机号和用户不匹配");
+			result.setMsg("请联系主管获得验证码");
 			
 			return result;
 		}
@@ -266,9 +275,9 @@ public class UserController extends BaseController {
 
 		String[] content = new String[] { code, Constants.GET_CODE_MAX_VALID };
 		//2.短信平台发送给用户，并返回相关信息（短信平台是30分钟有效）
-		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
+		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(value,
 				Constants.GET_USER_VERIFY_ID, content);
-		UserSmsToken record = userSmsTokenService.initUserSmsToken(mobile,
+		UserSmsToken record = userSmsTokenService.initUserSmsToken(value,
 				sms_type, code, sendSmsResult);
 		//3.操作user_sms_token，保存验证码信息
 		userSmsTokenService.insert(record);
@@ -301,21 +310,20 @@ public class UserController extends BaseController {
 			@RequestParam("chargeMoney")Long chargeMoney,
 			@RequestParam("userCode")String userCode) {
 		
-		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 		
 		//1. 判断 手机号 和 验证码是否 匹配
 		Users user = usersService.selectByUsersId(userId);
 		
 		// 最新的 一条 验证码。类型为 3,表示  运营平台--会员充值验证码
-		UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType(userMobile, Constants.SMS_TYPE_3);
+		UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType("18611289885", Constants.SMS_TYPE_3);
 		
 		String token = smsToken.getSmsToken();
 		
 		if(!token.equals(userCode)){
 			
 			result.setStatus(Constants.ERROR_999);
-			result.setMsg("验证码与用户不匹配");
+			result.setMsg("验证码错误");
 			return result;
 		}
 		

@@ -212,14 +212,16 @@
 							</div>
 						</div>
 						
-						<div class="form-group ">
-							<label class="col-md-2 control-label">图片</label>
-							<div class="col-md-5">
-								<img src="${ newStaffFormVoModel.headImg }" style="display:block;width:100%;max-width:200px;max-height:200px;"/>
-							</div>
-							
-						</div>
 						
+						<c:if test="${newStaffFormVoModel.headImg != '' }">												
+							<div class="form-group ">
+								<label class="col-md-2 control-label">图片</label>
+								<div class="col-md-5">
+									<img src="${ newStaffFormVoModel.headImg }" style="display:block;width:100%;max-width:200px;max-height:200px;"/>
+								</div>
+								
+							</div>
+						</c:if>
 
 						<div class="form-group required">
 							<label class="col-md-2 control-label">员工头像</label>
