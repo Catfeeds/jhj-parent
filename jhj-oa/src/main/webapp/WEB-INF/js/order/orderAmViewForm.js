@@ -401,7 +401,7 @@ window.onload = selectStaff;
 /*
  *   已预约的订单, 手动填写 价格、沟通后的需求，提交
  */
-$("#saveOrder").on('click',function(){
+$("#saveOrderSubmit").on('click',function(){
 	
 	var orderMoney =  $("#orderMoney").val();
 	
