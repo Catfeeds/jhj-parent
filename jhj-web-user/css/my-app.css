@@ -3106,7 +3106,7 @@ i.toolbar-icon-my {
 
 
 
-//送酒业务
+/*//送酒业务*/
 .order-alcohol-banner{width:100%;height:auto;}
 .order-alcohol-banner img{width:100%;margin-top:15px;}
 .order-alcohol-varieties{width:100%;height:35px;background:#fff;}
@@ -3195,9 +3195,12 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 .personal-index{
   width:200px;height:200px;border:1px solid #fff;border-radius:50%;background:#E194C7;z-index: 999;
   opacity:1;position: absolute;margin-left:-65px;margin-top:-275px;
+  -moz-box-shadow: 5px 1px 10px #666;/*firefox*/
+  -webkit-box-shadow: 5px 1px 10px #666;/*safari或chrome*/
+  box-shadow:5px 1px 10px #666;/*opera或ie9*/
 }
 .personal-index img{
-  margin-left:80px;width:60px;margin-top:60px;
+  margin-left:80px;width:60px;margin-top:60px;、
 }
 .personal-index p{
   margin-left:70px;color:#fff;
@@ -3206,7 +3209,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   width:45%;height:100px;background: #FD98C3;border-radius: 15px;margin-left:50%;margin-top:20px;
 }
 .xiantiao-weather-index{
-  width:1px;height:100px;margin-left:70%;background: #fff;margin-top: -101px;
+  width:1px;height:100px;margin-left:70%;background: #fff;margin-top: -96px;
 }
 .tixing-index{
   font-size:24px;color:#fff;margin-left:78%;font-weight: bold;margin-top:-84px;
@@ -3275,4 +3278,16 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 .btn-five{
   width:26%;border:1px solid #999;color:#999;margin-top: 35px;margin-right:10px;float:right;
   font-size:16px;
+}
+.fiveservice-img img{
+  width: 100%;
+}
+.fiveservice-bottom img{
+  margin-top:10px;
+  width:100%;
+}
+.fiveservice-bottom1 img{
+  width:24%;
+  margin-left:38%;
+  margin-top:10px;
 }
