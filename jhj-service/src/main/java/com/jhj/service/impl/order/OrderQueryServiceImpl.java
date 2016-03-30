@@ -263,10 +263,17 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		//配送订单3订单总金额
 		BigDecimal disMoney = ordersMapper.getTotalOrderIncomeRunMoney(vo);
 		
-		String hoursettingType = "hour-ratio";
-		String cleansettingType = "deep-ratio";
-		String amsettingType = "am-ratio";
-		String dissettingType = "dis-ratio";
+		Long staffId = vo.getStaffId();
+		
+		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
+		
+		Short level = staffs.getLevel();
+		String settingLevel = "-level-"+level.toString();
+		
+		String hoursettingType = "hour-ratio" + settingLevel;
+		String cleansettingType = "deep-ratio" + settingLevel;
+		String amsettingType = "am-ratio" + settingLevel;
+		String dissettingType = "dis-ratio" + settingLevel;
 		
 		JhjSetting hour = settingService.selectBySettingType(hoursettingType);
 		JhjSetting clean = settingService.selectBySettingType(cleansettingType);

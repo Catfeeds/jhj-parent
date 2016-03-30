@@ -516,15 +516,16 @@
 		select sum(order_money) from order_prices where order_id in
 		(
 			select id from orders 
-			where id in (select order_id from order_dispatchs where staff_id =#{staffId,jdbcType=NUMERIC}
+			where id in (select order_id from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC}
+			and dispatch_status = 1
 			<if test="startTime != null">
 				<![CDATA[	and service_date >= ${startTime} ]]>   
 			</if>	
 			<if test="endTime != null">
 				<![CDATA[	and service_date <= ${endTime} ]]>   
 			</if>)
-			and order_type in (0, 2, 3)
-			and order_status = #{orderStatus,jdbcType=NUMERIC}
+			
 		) 
 
 	</select>
@@ -602,7 +603,8 @@
 		select sum(order_money)from order_prices where order_id in
 		(
 			select id from orders 
-			where id in (select order_id from order_dispatchs where staff_id =#{staffId,jdbcType=NUMERIC}
+			where id in (select order_id from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC}
 			<if test="startTime != null">
 				<![CDATA[	and update_time >= ${startTime} ]]>   
 			</if>	
@@ -618,36 +620,32 @@
 	<select id="getTotalOrderCount" resultType="java.lang.Long" parameterType="com.jhj.vo.OrderQuerySearchVo">
 		select count(*) from orders where id in
 		(
-			select order_id from order_dispatchs where staff_id =#{staffId,jdbcType=NUMERIC}
+			select order_id from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC}
+			and dispatch_status = 1
 			<if test="startTime != null">
 				<![CDATA[	and add_time >= ${startTime} ]]>   
 			</if>	
 			<if test="endTime != null">
 				<![CDATA[	and add_time <= ${endTime} ]]>   
 			</if>
-		) 
-		and ( 
-				(order_type in (0,3) and order_status >= 3 ) OR
-				(order_type = 2 and order_status >= 2 ) 
-			)
-
+		)
 	</select>
 
 	<!-- 当月订单总数order_status7,8: -->
 	<select id="getTotalOrderCountByMouth" resultType="java.lang.Long" parameterType="com.jhj.vo.OrderQuerySearchVo">
 		select count(*) from orders where id in
 		(
-			select order_id from order_dispatchs where staff_id =#{staffId,jdbcType=NUMERIC}
+			select order_id from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC}
+			and dispatch_status = 1
 			<if test="startTime != null">
 				<![CDATA[	and update_time >= ${startTime} ]]>   
 			</if>	
 			<if test="endTime != null">
 				<![CDATA[	and update_time <= ${endTime} ]]>   
 			</if>
-		) 
-		and order_type in (0,2,3)
-		and order_status in (7,8)
-
+		)
 	</select>
 
 
