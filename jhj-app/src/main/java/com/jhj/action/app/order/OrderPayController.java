@@ -213,7 +213,7 @@ public class OrderPayController extends BaseController {
 			//TODO  jhj2.1  订单 类型？？？
 			if(order.getOrderType() == Constants.ORDER_TYPE_2){
 				
-				order.setOrderStatus(Constants.ORDER_AM_STATUS_4);//已支付
+				order.setOrderStatus(Constants.ORDER_AM_STATUS_3);//已支付
 			}
 			
 			if(order.getOrderType() == Constants.ORDER_TYPE_0){
