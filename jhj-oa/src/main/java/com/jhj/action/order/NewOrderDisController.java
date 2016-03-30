@@ -328,7 +328,7 @@ public class NewOrderDisController extends BaseController {
 		
 		//1) 用户收到派工通知---发送短信
 		String[] contentForUser = new String[] { timeStr };
-		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
+//		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
 		
 		//2)派工成功，为服务人员发送推送消息---推送消息
 		dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
