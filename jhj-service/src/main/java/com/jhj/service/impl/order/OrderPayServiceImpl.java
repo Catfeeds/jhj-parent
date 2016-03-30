@@ -132,6 +132,11 @@ public class OrderPayServiceImpl implements OrderPayService {
 			
 			List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orderId, order.getServiceDate());
 			
+			if(staIdList.size() == 0){
+				//如果无可用派工。则设置 一个 为 0 的 staffId
+				staIdList.add(0L);
+			}
+			
 			staList = orgStaffService.selectByids(staIdList);
 			
 		}
@@ -247,14 +252,21 @@ public class OrderPayServiceImpl implements OrderPayService {
 	
 	/**
 	 * 助理订单支付成功,后续通知功能
-	 * 1. 如果为
+	 * 
 	 */
 	
 	@Override
 	public void orderPaySuccessToDoForAm(Orders orders) {
 		
 		
-		OrderDispatchs orderDispatchs = orderDispatchService.selectByNoAndDisStatus(orders.getOrderNo(),(short)1).get(0);
+		
+		List<OrderDispatchs> list = orderDispatchService.selectByNoAndDisStatus(orders.getOrderNo(),(short)1);
+		
+		OrderDispatchs orderDispatchs = new OrderDispatchs();
+		
+		if(list.size() > 0){
+			orderDispatchs = list.get(0);
+		}
 		
 		OrgStaffs am = orgStaffService.selectByPrimaryKey(orderDispatchs.getStaffId());
 		String[] contentForAy = new String[] {};
