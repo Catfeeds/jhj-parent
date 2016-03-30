@@ -310,7 +310,7 @@ public class NewOrderDisController extends BaseController {
 		}
 		
 		
-		// 发推送消息
+		
 //		orderPayService.orderPaySuccessToDoForAm(order);
 		orderSevice.userOrderAmSuccessTodo(order.getOrderNo());
 		

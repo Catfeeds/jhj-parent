@@ -113,12 +113,12 @@ public class NewOrgStaffController extends AdminController {
 			staffSearchVo.setOrgId(orgId);
 		}
 		
-		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
-		
-		if(!StringUtil.isEmpty(org)){
-			staffSearchVo.setOrgId(Long.parseLong(org));
-		}
+//		//得到 当前登录 的 门店id，并作为搜索条件
+//		String org = AuthHelper.getSessionLoginOrg(request);
+//		
+//		if(!StringUtil.isEmpty(org)){
+//			staffSearchVo.setOrgId(Long.parseLong(org));
+//		}
 		
 		
 		List<OrgStaffs> list = staffService.selectNewStaffList(staffSearchVo);
