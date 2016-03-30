@@ -677,6 +677,9 @@ public class OneCareUtil {
 	 * 助理订单状态
 	 * @param orderStatusId
 	 * @return
+	 * 
+	 * 		2016年3月30日10:57:24  修改  2 =已确认  3=已支付  4=已派工
+	 * 
 	 */
 	public static String getAmOrderStatusName(short orderStatusId){  
 		String asTroName = "";
@@ -688,13 +691,13 @@ public class OneCareUtil {
 				asTroName = "已预约";
 				break;
 			case 2:
-				asTroName = "已派工";
-				break;
-			case 3:
 				asTroName = "已确认";
 				break;
-			case 4:
+			case 3:
 				asTroName = "已支付";
+				break;
+			case 4:
+				asTroName = "已派工";
 				break;
 			case 5:
 				asTroName = "开始服务";
