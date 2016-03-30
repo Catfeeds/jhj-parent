@@ -237,7 +237,6 @@ public class OrderPayController extends BaseController {
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
 				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
 				
-//				List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orderId);
 			}
 			
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
@@ -245,7 +244,14 @@ public class OrderPayController extends BaseController {
 			}
 
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_2)) {
-				orderPayService.orderPaySuccessToDoForAm(order);
+				
+				/*
+				 *  2016年3月30日11:48:14  流程 已经变化。 在 支付后 才会 手动派工。
+				 *  
+				 *   此处不再 有后续。。 改为 在 oa 手动派工后，处理逻辑
+				 */
+				
+//				orderPayService.orderPaySuccessToDoForAm(order);
 			}
 		}
 		
