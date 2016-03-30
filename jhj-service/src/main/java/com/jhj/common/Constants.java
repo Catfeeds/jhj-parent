@@ -211,9 +211,14 @@ public class Constants {
 	//助理
 	public static short ORDER_AM_STATUS_0=0;//已取消
 	public static short ORDER_AM_STATUS_1=1;//已预约
-	public static short ORDER_AM_STATUS_2=2;//已派工
-	public static short ORDER_AM_STATUS_3=3;//已确认
-	public static short ORDER_AM_STATUS_4=4;//已支付
+	
+	//2016年3月30日10:11:18  修正   顺序:  已预约、已确认、已支付、已派工
+	
+	public static short ORDER_AM_STATUS_2=2;//已确认
+	public static short ORDER_AM_STATUS_3=3;//已支付
+	public static short ORDER_AM_STATUS_4=4;//已派工
+	
+	
 	public static short ORDER_AM_STATUS_5=5;//开始服务
 	public static short ORDER_AM_STATUS_7=7;//完成服务
 	public static short ORDER_AM_STATUS_9=9;//已关闭

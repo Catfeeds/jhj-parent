@@ -19,7 +19,6 @@ import com.jhj.po.model.order.Orders;
  *
  * @author :hulj
  * @Date : 2015年8月19日下午3:29:03
- * @Description: TODO
  *
  */
 public class OaOrderListVo extends Orders {

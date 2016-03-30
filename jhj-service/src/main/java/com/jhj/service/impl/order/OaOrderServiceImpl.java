@@ -550,7 +550,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 			staIdList =  newDisStaService.autoDispatchForAmOrder(
 							dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), orders.getServiceType());
 			
-			
 			/*
 			 * 设置一个 默认值。。解决 mybatis list参数size为0
 			 */
