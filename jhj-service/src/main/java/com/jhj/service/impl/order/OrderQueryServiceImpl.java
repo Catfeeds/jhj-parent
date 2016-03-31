@@ -535,13 +535,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		OrderListVo vo = new OrderListVo();
 
 		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderId(item.getId());
+		Long staffId = orderDispatchs.getStaffId();
+		
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(item.getId());
 		Users users = usersService.selectByUsersId(item.getUserId());
-
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
 		BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 		vo.setServiceTypeId(item.getServiceType());
 		vo.setOrderId(item.getId());
-		vo.setStaffId(item.getAmId());
+		vo.setStaffId(staffId);
 		vo.setMobile(users.getMobile());
 		// 服务日期
 		Long addTime = item.getServiceDate() * 1000;
@@ -565,6 +567,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		if (orderPrices != null) {
 			vo.setPayTypeName(OrderUtils.getPayTypeName(item.getOrderStatus(), orderPrices.getPayType()));
 		}
+		
+		Short level = orgStaffs.getLevel();
+		String settingLevel = "-level-"+level.toString();
+		
 		// 订单价格信息
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(item.getId());
 		vo.setOrderIncoming(new BigDecimal(0));
@@ -574,7 +580,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			// 总金额C * 85% = 结果.
 			if (vo.getOrderType() == 0) {
 				// 助理收入比例 hour-ratio
-				String settingType = "hour-ratio";
+				String settingType = "hour-ratio" + settingLevel;
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -587,7 +593,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			
 			if (vo.getOrderType() == 2) {
 				// 助理收入比例 am-ratio
-				String settingType = "am-ratio";
+				String settingType = "am-ratio" +settingLevel;
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -598,7 +604,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 			if (vo.getOrderType() == 3) {
 				// 配送服务收入比例 dispatch-ratio
-				String settingType = "dis-ratio";
+				String settingType = "dis-ratio" +settingLevel;
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
