@@ -184,7 +184,7 @@
 		<if test="amId !=null">
 			and am_id = #{amId,jdbcType=NUMERIC}
 		</if>
-		order by update_time desc		
+		order by add_time desc		
 		
 	</select>
 
@@ -226,7 +226,7 @@
 		<if test="userId !=null">
 			and user_id = #{userId,jdbcType=NUMERIC}
 		</if>
-		order by update_time desc		
+		order by add_time desc		
 		
 	</select>
 	
@@ -640,10 +640,10 @@
 			staff_id =#{staffId,jdbcType=NUMERIC}
 			and dispatch_status = 1
 			<if test="startTime != null">
-				<![CDATA[	and update_time >= ${startTime} ]]>   
+				<![CDATA[	and add_time >= ${startTime} ]]>   
 			</if>	
 			<if test="endTime != null">
-				<![CDATA[	and update_time <= ${endTime} ]]>   
+				<![CDATA[	and add_time <= ${endTime} ]]>   
 			</if>
 		)
 	</select>
