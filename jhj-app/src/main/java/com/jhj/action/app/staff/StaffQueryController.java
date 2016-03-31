@@ -94,8 +94,8 @@ public class StaffQueryController extends BaseController {
 			vo.setAuthStatus(orgStaffAuth.getAutStatus());
 		}
 		
-		String startTime = DateUtil.getfirstDayOfMonth();
-		String endTime = DateUtil.getLastDayOfMonth();
+		String startTime = DateUtil.getfirstDayOfMonth() + "00:00:00";
+		String endTime = DateUtil.getLastDayOfMonth() + "23:59:59";
 		
 		OrderQuerySearchVo searchVo = new OrderQuerySearchVo();
 		searchVo.setStartTime(TimeStampUtil.getMillisOfDay(startTime)/1000);

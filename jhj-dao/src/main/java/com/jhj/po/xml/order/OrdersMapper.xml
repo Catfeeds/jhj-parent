@@ -727,7 +727,7 @@
 		<include refid="Base_Column_List" />
 		from orders
 		where id in 
-		(select order_id from order_dispatchs where staff_id =#{amId,jdbcType=NUMERIC})
+		(select order_id from order_dispatchs where staff_id =#{amId,jdbcType=NUMERIC} and dispatch_status = 1)
 		<if test="orderFrom == 0">
 			and	order_status in (2,3,4)
 		</if>

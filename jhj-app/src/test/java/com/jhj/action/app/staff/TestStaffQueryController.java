@@ -14,11 +14,11 @@ import com.jhj.action.app.JUnitActionBase;
 public class TestStaffQueryController extends JUnitActionBase{
 	
 
-	/*@Test
+	@Test
     public void testGetInfo() throws Exception {
 
 		String url = "/app/staff/get_info.json";
-		String params = "?user_id=23";
+		String params = "?user_id=29";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);
@@ -26,7 +26,7 @@ public class TestStaffQueryController extends JUnitActionBase{
 	    resultActions.andExpect(status().isOk());
 
 	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
-    }*/
+    }
 	
 	/**
 	 * 获取欠款总额接口
