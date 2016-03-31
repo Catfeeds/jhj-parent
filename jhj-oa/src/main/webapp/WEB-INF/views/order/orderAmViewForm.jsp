@@ -211,55 +211,67 @@
 									</div>
 								</div>
 								
-								<div class="form-group required">
-									<label class="col-md-2 control-label">可选派工人员信息</label>
-									<div class="col-md-5" id="displayProperStaff">
-									
-										 <c:if test="${oaOrderListVoModel.voList.size() > 0 }" >
-											<c:forEach items="${oaOrderListVoModel.voList }" var="staffVo">
-											    <button id="successStaff" type="button" style="margin-top:10px"
-												    data-original-title="参考信息" 
-												    data-content="预计到达用时:${staffVo.durationText } &nbsp;&nbsp;&nbsp;
-												    			         今日派单数:${staffVo.todayOrderNum } &nbsp;&nbsp;&nbsp;
-												    	                      距用户地址距离:${staffVo.distanceText }" 
-												    data-placement="top" 
-												    data-trigger="hover" 
-												    class="btn btn-default popovers">
-														
-													${staffVo.name }	
+								
+					
+					
+					
+					<div id="staffList"  class="col-sm-8">
+							<section class="panel">
+								
+								<header class="panel-heading control-label" style="margin-left:50px;font-weight:bold">
+                             		可用派工人员列表
+                         		 </header>
+								<table class="table table-bordered table-hover table-condensed" 
+										style="margin-left:180px;" >
+									   
+										<thead>
+											<tr>
+												<th>选派员工</th>
+												<th>地区门店</th>
+												<th>云店</th>
+												<th>服务人员</th>
+												<th>手机号</th>
+												<th>距用户距离</th>
+												<th>预计到达用时</th>
+												<th>今日接单数</th>
+											</tr>
+										</thead>
+										<tbody id="allStaff">
+										   <c:forEach items="${oaOrderListVoModel.voList}" var="item">
+												<tr>
+													<td>
+                                                  		<input name="sample-radio" id="radio-01" value="${item.staffId }" type="radio" > 
+                                              			
+                                              			<input  type="hidden" id="selectStaffId" name="selectStaffId" 
+														value="${staffVo.staffId }">
+                                              			
+                                              			<input type="hidden" value="${item.distanceValue }" id="distanceValue">
+													</td>
 													
-												<input  type="hidden" id="selectStaffId" name="selectStaffId" 
-														value="${staffVo.staffId }">											    
-														
-												<input type="hidden" id="distanceValue" value="${staffVo.distanceValue }">		
-												</button>
+													<td>${ item.staffOrgName }</td>
+													<td>${ item.staffCloudOrgName }</td>
+													<td>${ item.name }</td>
+													<td>${ item.mobile }</td>
+													<td>${ item.distanceText }</td>
+													<td>${ item.durationText }</td>
+													<td>${ item.todayOrderNum }</td>
+												</tr>
 											</c:forEach>
-										 </c:if>
-									 
-										 <c:if test="${oaOrderListVoModel.voList.size() <= 0 }">
-											  <button type="button" id="failStaff" style="margin-top:10px" disabled
-												    data-original-title="员工信息" 
-												    data-content="预计到达用时: 无
-												    	                        今日派单数: 无
-												    	                        距用户地址距离: 无" 
-												    data-placement="top" 
-												    data-trigger="hover" 
-												    class="btn btn-default popovers">
-													
-													暂无可用派工											
-												</button>
-										 </c:if>	
+										</tbody>
+									</table>
+							</section>
+								
+								
+								<div class="form-actions fluid">
+									<div class="col-md-offset-6 col-md-6"
+										style="margin-left: 315px">
+										<button type="submit" id="viewForm" class="btn btn-success">确认派工</button>
 									</div>
-							</div>
-	
-							<div class="form-actions fluid">
-								<div class="col-md-offset-6 col-md-6"
-									style="margin-left: 315px">
-									<button type="button" id="viewForm" class="btn btn-success">确认派工</button>
 								</div>
-							</div>
-						</c:if>
-					</div>
+						</div> 
+					
+					
+					</c:if>
 				</div>
 			</form:form>
 			</div>

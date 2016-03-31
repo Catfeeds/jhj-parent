@@ -1,18 +1,4 @@
-$(document).ready(function() {
-	// 根据 url 参数 ，控制 div 是否显示
-	var url = window.location.search;
-	// url 参数 最后 一位 即为 派工状态。
-	var disStatu = url.charAt(url.length - 1);
-	if(disStatu>=3){//订单已经派工,显示派工信息，or 隐藏派工信息
-		$("#allStaff").show();
-		$("#viewForm").hide();
-		$("#nowStaff").hide();
-	}else{
-		$("#viewForm").show();
-		$("#allStaff").hide();
-		$("#nowStaff").hide();
-	}
-});
+
 
 $('.form_datetime').datetimepicker({
 	format: "yyyy-mm-dd hh:ii",
@@ -23,7 +9,7 @@ $('.form_datetime').datetimepicker({
 });
 
 
-
+//提交派工修改
 $("#submitForm").on('click',function(){
 	
 	
@@ -39,7 +25,6 @@ $("#submitForm").on('click',function(){
 	}
 	
 	
-	
 	/*  对于 基础保洁类派工
 	 * 
 	 * 	 可能 更改的 就两个条件, 	 
@@ -52,9 +37,6 @@ $("#submitForm").on('click',function(){
 	//服务时间戳
 	var paramStamp = orderDateTimeStamp/1000;
 	
-	//页面加载时, 已经选定的 派工人员, 不再 判断是否修改了。。直接到后台更新
-//	var staffId = $("#staffId").val();
-	
 	// 人工  选择的 派工 人员.如果没选。默认为0
 	var selectStaffId = 0;
 	
@@ -62,17 +44,34 @@ $("#submitForm").on('click',function(){
 	
 	var distanceValue = 0;
 	
-	$(".popovers").each(function(k,v){
+	$("input[name='sample-radio']").each(function(k,v){
 		
-		if($(this).attr("class").indexOf("btn-success") > 0){
+		//如果该行被选中 
+		if(this.checked){
 			
-			selectStaffId = $(this).find("#selectStaffId").val();
+			selectStaffId = $(this).parent().find("#selectStaffId").val();
 			
-			distanceValue = $(this).find("#distanceValue").val();
+			distanceValue = $(this).parent().find("#distanceValue").val();
 		}
 	});
 	
 	var orderId = $("#id").val();
+	
+	
+	//回显时。已派工的阿姨。
+	var staffId = $("#staffId").val();
+	
+	//如果 未选择派工 。直接 返回列表页
+	if(selectStaffId == 0 && staffId == 0){
+		
+		alert("没有可用派工,返回列表页");
+		
+		var rootPath = getRootPath();
+		window.location.replace(rootPath+"/order/order-hour-list");
+		
+		return false;
+	}
+	
 	
 	$.ajax({
 		type:'post',
@@ -91,7 +90,7 @@ $("#submitForm").on('click',function(){
 			var rootPath = getRootPath();
 			window.location.replace(rootPath+"/order/order-hour-list");
 		},error:function(){
-			
+			alert("网络错误");
 		}
 	})
 });
@@ -105,14 +104,6 @@ function getRootPath() {
     return (prePath + postPath);
 }
 
-
-//员工 按钮 处理,单选效果， 点击当前，其余变灰
-$(document).on("click",".popovers",function(k,v){
-	
-  $(this).parent().find("button").attr("class","btn btn-default popovers");
-  $(this).attr("class","btn btn-success popovers");
-  
-});
 
 
 
@@ -139,74 +130,41 @@ $('.form_datetime').datetimepicker().on('changeDate', function(ev){
 			
 			var result = data;
 			
-			//如果 调整时间后,没有可用派工
-			if(result.length  == 0){
+			//清空原有数据
+			$("#allStaff").html("");
+			
+			var tdHtml = "";
+			
+			for(var i= 0, j=data.length; i<j; i++){
 				
-				$("#displayProperStaff").html("");
+				var item = data[i];
 				
-				var button =  document.createElement("button");
 				
-				button.setAttribute("type","button");
-				button.setAttribute("class","btn btn-default");
-				button.setAttribute("disabled","disabled");
+				var htmlStr ="<tr>" 
+							 + "<td>"
+	                      			+"<input name='sample-radio' type='radio' value="+item.staff_id+">" 
+              			
+	                  				+"<input  type='hidden' id='selectStaffId' name='selectStaffId' value="+item.staff_id+">"
+              			
+	                  				+"<input type='hidden' id='distanceValue' value="+item.distance_value+">"	
+							+"</td>"
+							+"<td>"+item.staff_org_name+"</td>"
+							+"<td>"+item.staff_cloud_org_name+"</td>"
+							+"<td>"+item.name+"</td>"
+							+"<td>"+item.mobile+"</td>"
+							+"<td>"+item.distance_text+"</td>"
+							+"<td>"+item.duration_text+"</td>"
+							+"<td>"+item.today_order_num+"</td>" 
+							+"</tr>";
 				
-				$(button).text("暂无可用派工");
+				tdHtml+= htmlStr;
 				
-				$("#displayProperStaff").append(button);
 			}
 			
-			//如果有 可用的 服务人员
-			if(result.length > 0){
-				
-				//先清空
-				$("#displayProperStaff").text("");
-				
-				for(var i= 0, reLength = result.length; i< reLength; i++){
-					
-					var staff =  result[i];
-					
-					var button =  document.createElement("button");
-					
-					var tipContent = "预计到达用时:"+staff.duration_text+"\n" 
-									+"今日派单数:"+ staff.today_order_num+"\n"
-									+"距用户地址距离:"+ staff.distance_text;
-					
-					button.setAttribute("type","button");
-					button.setAttribute("style","margin-top:10px;margin-left:5px");
-					button.setAttribute("class","btn btn-default popovers");
-					
-					$(button).text(staff.name);
-					
-					//重新绑定  bootStrap 悬浮事件
-					$(button).popover({
-						trigger:"hover",
-						placement:"top",
-						title:"参考信息",
-						html:'true',	
-						content:tipContent,
-					})					
-					
-					var input1 =  document.createElement("input");
-					
-					input1.setAttribute("type","hidden");
-					input1.setAttribute("id","selectStaffId");
-					input1.setAttribute("value",staff.staff_id);
-					
-					button.appendChild(input1);
-					
-					var input2 = document.createElement("input");
-					
-					input2.setAttribute("type","hidden");
-					input2.setAttribute("id","distanceValue");
-					input2.setAttribute("value",staff.distance_value);
-					
-					button.appendChild(input2);
-					
-					$("#displayProperStaff").append(button);	
-					
-				}
-			}
+			$("#allStaff").append(tdHtml);
+
 			return false;
+
 		},
 		error:function(){
 			alert("网络错误");
@@ -220,18 +178,25 @@ $('.form_datetime').datetimepicker().on('changeDate', function(ev){
 //页面加载时， 回显 已选中的 派工结果
 var selectStaff = function(){
 	
-	$(".popovers").each(function(k,v){
+	var staffId = $("#staffId").val();
+	$("input[name='sample-radio']").each(function(k,v){
 			
-		var selectStaffId = $(this).find("#selectStaffId").val();
+		var selectStaffId = $(this).val();
 		
-		var staffId = $("#staffId").val();
 		if(selectStaffId == staffId){
 			
-			$(this).attr("class","btn btn-success popovers");
+			$(this).attr("checked",true);
 		}
 	});
+	
+	// 如果 用户已支付。但是  没有 派工记录。。表示该订单 无法 派工
+	// 原因可能 是 服务地址 过远。
+	
+	if(staffId.length == 0){
+		
+		$("#submitForm").text("返回列表页");
+	}
 }
-
 
 
 window.onload = selectStaff;

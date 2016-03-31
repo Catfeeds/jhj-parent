@@ -129,6 +129,20 @@ public class NewOrderDisController extends BaseController {
 		
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 		
+		if(selectStaffId == 0){
+			/*
+			 * 如果 未选择任何  员工。
+			 * 		1>有可用派工。但是未进行换人操作
+			 * 		2> 无可用派工。未进行换人操作
+			 * 
+			 *  都直接返回列表页即可。
+			 */
+			
+			resultData.setMsg("没有选择派工人员,返回列表页");
+			
+			return resultData;
+		}
+		
 		Orders order = orderSevice.selectbyOrderId(orderId);
 		
 		order.setServiceDate(newServiceDate);
@@ -159,9 +173,11 @@ public class NewOrderDisController extends BaseController {
 		dispatchs.setServiceDatePre(newServiceDate - 3600);
 		dispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 		
+		OrgStaffs staffs = new OrgStaffs();
+		
 		if(selectStaffId !=0L){
 			
-			OrgStaffs staffs = staffService.selectByPrimaryKey(selectStaffId);
+			staffs = staffService.selectByPrimaryKey(selectStaffId);
 			
 			dispatchs.setStaffId(selectStaffId);
 			dispatchs.setStaffName(staffs.getName());
@@ -180,9 +196,22 @@ public class NewOrderDisController extends BaseController {
 			disService.updateByPrimaryKeySelective(dispatchs);
 			//更新订单表
 			orderSevice.updateByPrimaryKeySelective(order);
+			
+			
+			String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+			String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+			String timeStr = beginTimeStr + "-" + endTimeStr;
+			
+			//1) 用户收到派工通知---发送短信
+			String[] contentForUser = new String[] { timeStr };
+			
+			//2)派工成功，为服务人员发送推送消息---推送消息
+			dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
+			
+			SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
+			
+			
 		}
-		
-		//发推送 消息 TODO
 		
 		return resultData;
 	}

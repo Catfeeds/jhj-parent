@@ -81,18 +81,6 @@
 							</div>
 						</div>
 						
-						<%-- <div class="form-group">
-
-							<label class="col-md-2 control-label">下单时间</label>
-							<div class="col-md-5">
-								<form:input path="orderDate" class="form-control form_datetime" readonly="true" />
-							</div>
-							
-							<div class="col-md-5">
-								<font color="red">tip*:如果没有可用服务人员,可尝试更改服务时间</font>
-							</div>
-						</div>
-						 --%>
 						
 						<div class="form-group">
 
@@ -123,6 +111,10 @@
 								<form:input path="orderAddress" class="form-control"
 									maxLength="32" readonly="true"/>
 								<form:errors path="orderAddress" class="field-has-error"></form:errors>
+							</div>
+							
+							<div class="col-md-5">
+								<font color="red">如果用户地址不再服务范围内,则不会有可用派工</font>
 							</div>
 						</div>
 						
@@ -175,72 +167,57 @@
 						</div>
 						
 						
-						<div class="form-group required">
-								<label class="col-md-2 control-label">可选派工人员信息</label>
-								<div class="col-md-5" id="displayProperStaff">
+						
+						
+						<div id="staffList"  class="col-sm-8">
+							<section class="panel">
 								
-									 <c:if test="${oaOrderListVoModel.voList.size() > 0 }" >
-										<c:forEach items="${oaOrderListVoModel.voList }" var="staffVo">
-										    <button id="successStaff" type="button" style="margin-top:10px"
-											    data-original-title="参考信息" 
-											    data-content="预计到达用时:${staffVo.durationText } &nbsp;&nbsp;&nbsp;
-											    			         今日派单数:${staffVo.todayOrderNum } &nbsp;&nbsp;&nbsp;
-											    	                      距用户地址距离:${staffVo.distanceText }" 
-											    data-placement="top" 
-											    data-trigger="hover" 
-											    class="btn btn-default popovers">
+								<header class="panel-heading" style="font-weight:bold;margin-left:40px">
+                             		可用派工人员列表
+                         		 </header>
+								<table class="table table-bordered table-hover table-condensed" 
+										style="margin-left:180px;" >
+									   
+										<thead>
+											<tr>
+												<th>选派员工</th>
+												<th>地区门店</th>
+												<th>云店</th>
+												<th>服务人员</th>
+												<th>手机号</th>
+												<th>距用户距离</th>
+												<th>预计到达用时</th>
+												<th>今日接单数</th>
+											</tr>
+										</thead>
+										<tbody id="allStaff">
+										   <c:forEach items="${oaOrderListVoModel.voList }" var="item">
+												<tr>
+													<td>
+                                                  		<input name="sample-radio" id="radio-01" value="${item.staffId }" type="radio" > 
+                                              			
+                                              			<input  type="hidden" id="selectStaffId" name="selectStaffId" 
+														value="${item.staffId }">
+                                              			
+                                              			<input type="hidden" value="${item.distanceValue }" id="distanceValue">
+													</td>
 													
-												${staffVo.name }	
-												
-											<input  type="hidden" id="selectStaffId" name="selectStaffId" 
-													value="${staffVo.staffId }">											    
-													
-											<input type="hidden" id="distanceValue" value="${staffVo.distanceValue }">		
-											</button>
-										</c:forEach>
-									 </c:if>
-								 
-									 <c:if test="${oaOrderListVoModel.voList.size() <= 0 }">
-										  <button type="button" id="failStaff" style="margin-top:10px" disabled
-											    data-original-title="员工信息" 
-											    data-content="预计到达用时: 无
-											    	                        今日派单数: 无
-											    	                        距用户地址距离: 无" 
-											    data-placement="top" 
-											    data-trigger="hover" 
-											    class="btn btn-default popovers">
-												
-												暂无可用派工											
-											</button>
-									 </c:if>	
-								</div>
-						</div>
-						
-						
-					<%-- <hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-						<h4 id="allow_title">服务人员派工信息</h4>
-						   <table class="table table-striped table-advance table-hover" id="allStaff">
-                              <thead>
-                              <tr>	  
-                               	  <th >姓名 </th>
-	                              <th >手机号</th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>	
-                           	    <td>
-                           	    	${oaOrderListVoModel.staffName}
-                           	    </td>
-                           	    <td>${oaOrderListVoModel.staffMobile }</td>
-							    </tr>
-                              </tbody>
-                          </table>
-						
-						<div class="form-actions fluid">
-							<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
-								<button type="button" id="viewForm" class="btn btn-success">暂无派工信息</button>
-							</div>
-						</div> --%>
+													<td>${ item.staffOrgName }</td>
+													<td>${ item.staffCloudOrgName }</td>
+													<td>${ item.name }</td>
+													<td>${ item.mobile }</td>
+													<td>${ item.distanceText }</td>
+													<td>${ item.durationText }</td>
+													<td>${ item.todayOrderNum }</td>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+							</section>
+								
+								
+						</div> 
+					
 						
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3" >
