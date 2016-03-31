@@ -327,9 +327,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 			}
 		}
 		
-		// 姓名
-		Long userId = orders.getUserId();
-		UserAddrs userAddrs = userAddrService.selectByDefaultAddr(userId);
+		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(orders.getAddrId());
 		if (userAddrs != null) {
 			oaOrderListVo.setOrderAddress(userAddrs.getName()+""+userAddrs.getAddr());
 		}
@@ -342,36 +340,45 @@ public class OaOrderServiceImpl implements OaOrderService {
 		Long addrId = orders.getAddrId();
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
 		
-		/*
-		 * 设置一个 默认值。。解决 mybatis list参数size为0
-		 */
-		if(staIdList.size() == 0){
-			staIdList.add(0, 0L);
+		
+		
+		// 查找对应订单有效派工
+		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
+		
+		if(orderDisList.size() > 0){
+			
+			OrderDispatchs dispatchs = orderDisList.get(0);
+			
+			/*
+			 *  如果  派工逻辑 未找到可用 派工。
+			 * 
+			 *  但是 已经有派工记录
+			 */
+			if(staIdList.size() == 0){
+				staIdList.add(0, dispatchs.getStaffId());
+			}
+			
+			//已经派工的员工id
+			oaOrderListVo.setStaffId(dispatchs.getStaffId());
+			
+			oaOrderListVo.setStaffName(dispatchs.getStaffName());
+		}else{
+			
+			/*
+			 * 如果派工逻辑 未找到 可用派工 
+			 * 	
+			 * 也无 派工记录	
+			 */
+			if(staIdList.size() == 0){
+				staIdList.add(0,0L);
+			}
 		}
+		
 	    //可用 服务人员 VO
 		List<OrgStaffsNewVo> staVoList = newDisStaService.getTheNearestStaff(addrs.getLatitude(), addrs.getLongitude(), staIdList);
 		
 		oaOrderListVo.setVoList(staVoList);
 		
-		// 查找对应订单有效派工
-		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
-		// 有派工记录 的订单，则展示当前 阿姨
-		for (OrderDispatchs orDis : orderDisList) {
-			oaOrderListVo.setStaffName(orDis.getStaffName());
-			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
-			oaOrderListVo.setStaffId(orDis.getStaffId());
-		}
-		
-		// 钟点工为自动派工，后台不显示派工按钮
-	/*	if (orders.getOrderStatus() == 4) {
-			Long startTime = orders.getServiceDate();
-			Long endTime = (startTime + orders.getServiceHour() * 3600);
-			// 根据新的派工逻辑 ，找出 这条 订单 的 符合条件的 阿姨
-			List<OrgStaffsNewVo> staffList = dispatchStaffFromOrderService.getNewBestStaffForDelOrAm(startTime, endTime, userAddrs.getId(), orders.getId());
-			// 保存可选的派工人员
-			oaOrderListVo.setVoList(staffList);
-			
-		}*/
 		return oaOrderListVo;
 	}
 	/**

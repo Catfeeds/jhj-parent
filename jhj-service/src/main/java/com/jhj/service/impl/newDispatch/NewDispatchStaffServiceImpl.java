@@ -147,8 +147,8 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		//最终 符合基本 派工 条件的 服务人员
 		staffIdList.removeAll(blackIdList);
 		staffIdList.removeAll(dispatchIdList);
-		
 //		staffList = staffService.selectByids(staffIdList);
+		
 		
 		return staffIdList;
 	}
@@ -287,6 +287,26 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				staffsNewVo.setStaffId(item.getUserId());
 				staffsNewVo.setTodayOrderNum(numTodayOrder);
 				
+				//服务人员所在 云店 id
+				Long orgId = staffs.getOrgId();
+				
+				//服务人员所在 门店id （该云店 的 上级 门店）
+				Long parentOrgId = staffs.getParentOrgId();
+				
+				
+				Orgs cloudOrg = orgService.selectByPrimaryKey(orgId);
+				
+				if(cloudOrg !=null){
+					staffsNewVo.setStaffCloudOrgName(cloudOrg.getOrgName());
+				}
+				
+				Orgs orgs = orgService.selectByPrimaryKey(parentOrgId);
+				
+				if(orgs !=null){
+					staffsNewVo.setStaffOrgName(orgs.getOrgName());
+				}
+				
+				
 				// 设置 服务 人员 特色信息, 供派工参考
 				for (BaiduPoiVo baiduPoiVo : destList) {
 					if (baiduPoiVo.getLat().equals(item.getLat()) &&
@@ -386,6 +406,8 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		newVo.setDurationText("");
 		newVo.setTodayOrderNum(0L);
 		
+		newVo.setStaffOrgName("");
+		newVo.setStaffCloudOrgName("");
 		
 		return newVo;
 	}
