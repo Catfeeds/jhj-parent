@@ -1,31 +1,3 @@
-//$(document).ready(function() {
-//	// 根据 url 参数 ，控制 div 是否显示
-//	var url = window.location.search;
-//	// url 参数 最后 一位 即为 派工状态。
-//	var disStatu = url.charAt(url.length - 1);
-//	$("#pickAddr").val("");
-//	
-//	// 当订单状态=1(已预约)，显示地图
-//	if (disStatu == 1 || disStatu == null || disStatu =="" ) {
-//		$("#addrMap").show();
-//	} else {
-//		$("#addrMap").hide();
-//	}
-//	$("#containers").hide();
-//	var flag = $("#flag").val();
-//	if (flag == 0) {
-//		$("#staffList").hide();
-//	} else {
-//		$("#staffList").show();
-//	}
-//	var disStatus = $("#disStatus").val();
-//	if (disStatu == 0 || disStatu == 1) {
-//		$("#staffDispatch").hide();
-//	} else {
-//		$("#staffDispatch").show();
-//	}
-//
-//});
 
 $("select[name='userAddrKey']").on('change',function() {
 	var userAddr = $('#userAddrKey option:selected').val();
@@ -149,31 +121,6 @@ function setPlace() {
 	local.search(myValue);
 }
 
-//function setPlace(){
-//	map.clearOverlays();    //清除地图上所有覆盖物
-//	function myFun(){
-//		var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
-//		map.centerAndZoom(pp, 18);
-//		
-//		
-//		//jhj2.1 使用搜索后,设置 选中 目标地点的 坐标
-//		$("#poiLongitude").val(pp.lng);
-//		$("#poiLatitude").val(pp.lat);
-//		
-//		loadProperStaffForAmOrder();
-//		
-//		var marker = new BMap.Marker(pp);
-//		map.addOverlay(new BMap.Marker(pp));    //添加标注
-//		marker.enableDragging();
-//		
-//	}
-//	var local = new BMap.LocalSearch(map, { //智能搜索
-//	  onSearchComplete: myFun
-//	});
-//	local.search(myValue);
-//}
-
-
 
 
 /*
@@ -268,14 +215,6 @@ $('#viewForm').on('click',function(){
 	
 	//门牌号
 	var addrNum = $("#pickAddr").val();
-	
-	if(addrNum == ""){
-		
-		alert("您还没有输入具体门派号哦");
-		
-		return false;
-	}
-	
 	
 	var orderId = $("#id").val();
 	var fromLat = $("#poiLatitude").val();
