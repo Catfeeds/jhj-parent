@@ -238,7 +238,6 @@ public class NewPartnerServiceTypeController extends AdminController {
 			@PathVariable(value = "id") Long id) throws JsonParseException, JsonMappingException, IOException {
 		
 		
-		
 		String returnUrl = ServletRequestUtils.getStringParameter(request,"returnUrl", null);
 		
 		if(partnerServiceType!=null){

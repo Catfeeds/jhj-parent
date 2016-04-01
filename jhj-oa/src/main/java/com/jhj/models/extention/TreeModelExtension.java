@@ -40,7 +40,8 @@ public class TreeModelExtension {
             	collpase = !expandedIdList.contains(entity.getId());
             if(entity.getChildren()!=null && !entity.getChildren().isEmpty())
             	children=ToTreeModels(entity.getChildren(), selectedId, checkedIdList, expandedIdList);
-
+            
+            
             /*
              *  分析:
              * 	
@@ -55,9 +56,11 @@ public class TreeModelExtension {
              *   目的: 供 jsp 页面的展示用 ，任意结点,只需提供  id 和 name属性， 即可以满足 展示和 后续的 CRUD 操作
              *  	
              */
+            
+            
             treeModels.add(new TreeModel(entity.getId().toString(),
-	        		entity.getId().toString(),
-	        		entity.getName().toString(),checked, selected, collpase, children));
+            		entity.getId().toString(),
+            		entity.getName().toString(),checked, selected, collpase, children));
 
 	        /*if (expanded.IsNotNullOrEmpty())
 	            collpase = !expanded.Contains(fd.Id);*/

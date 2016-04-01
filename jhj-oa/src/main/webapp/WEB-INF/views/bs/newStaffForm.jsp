@@ -50,7 +50,8 @@
 
 			<div class="panel-body">
 				<form:form modelAttribute="newStaffFormVoModel" class="form-horizontal"
-					method="POST" action="new_staff_form" id="newStaff-form"
+					method="POST" action="new_staff_form" id="newStaff-form"  
+					
 					enctype="multipart/form-data">
 					 
 					 <form:hidden  path="staffId"/> 
@@ -159,12 +160,12 @@
                                 <label class="col-sm-2 col-sm-2 control-label">技能</label>
                                 <div class="col-sm-5">
 	                                   <div class="portlet-body" id="authorityId" name="skillId">
-				                  	   <c:import url = "../shared/treeSelector.jsp">
-										 <c:param name="propertyName" value="skillId"/>
-										 <c:param name="propertyValue" value="${newStaffFormVoModel.getSkillIds()}"/>
-										 <c:param name="checkbox" value="true"/>
-										 <c:param name="treeDataSourceName" value="treeDataSource"/>
-									   </c:import>
+					                  	   <c:import url = "../shared/treeSelector.jsp">
+											 <c:param name="propertyName" value="skillId"/>
+											 <c:param name="propertyValue" value="${newStaffFormVoModel.getSkillIds()}"/>
+											 <c:param name="checkbox" value="true"/>
+											 <c:param name="treeDataSourceName" value="treeDataSource"/>
+										   </c:import>
 			                    		</div>
                         		 </div>
                         </div>
@@ -178,9 +179,10 @@
 						</div>
 						
 						<div class="form-group required">
-							<label class="col-md-2 control-label">选择员工等级</label>
+							<label class="col-md-2 control-label">选择员工等级*</label>
 							<div class="col-md-5">
 								<staffLevelSelectTag:select level="${newStaffFormVoModel.level }"/>
+								<form:errors path="level" class="field-has-error"></form:errors>
 							</div>
 						</div>
 						
@@ -300,7 +302,7 @@
 						<br />
 						<div class="form-actions fluid">
 							<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
-								<button type="submit" id="orgStaffForm_btn" class="btn btn-success">保存</button>
+								<button type="submit"  id="orgStaffForm_btn" class="btn btn-success">保存</button>
 							</div>
 						</div>
 					</div>
@@ -333,8 +335,6 @@
 <script type="text/javascript">
 	$('#provinceId').trigger('change');
 	
-	//处理
-	setTagButton();
 	
 	//身份认证回显
 	setReturnAuthButton();

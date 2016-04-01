@@ -33,7 +33,6 @@ import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
-import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
@@ -169,7 +168,13 @@ public class NewOrgStaffController extends AdminController {
 				
 				PartnerServiceType serviceType = (PartnerServiceType) iterator.next();
 				
-				if(serviceType!=null){
+				/*
+				 * 新需求
+				 * 
+				 */
+				Long parentId = serviceType.getParentId();
+				
+				if(serviceType!=null && parentId == 0){
 					checkedAuthorityIds.add(serviceType.getServiceTypeId());
 					checkedAuthorityIntegers.add(serviceType.getServiceTypeId().intValue());
 				}
@@ -186,8 +191,11 @@ public class NewOrgStaffController extends AdminController {
 
 		String expanded = ServletRequestUtils.getStringParameter(request, "expanded", null);
 		List<TreeModel> children=TreeModelExtension.ToTreeModels(partService.getTreeList(), null, checkedAuthorityIntegers, StringHelper.toIntegerList( expanded, ","));
-		List<TreeModel> treeModels=new ArrayList<TreeModel>(Arrays.asList(new TreeModel(null,null,"根节点",false,false,false,children)));
-		model.addAttribute(treeDataSourceName, JSONArray .fromObject(treeModels, new JsonConfig()).toString());
+//		List<TreeModel> treeModels=new ArrayList<TreeModel>(Arrays.asList(new TreeModel(null,null,"根节点",false,false,false,children)));
+		
+//		System.out.println(JSONArray.fromObject(treeModels, new JsonConfig()).toString());
+		
+		model.addAttribute(treeDataSourceName, JSONArray.fromObject(children, new JsonConfig()).toString());
 		
 //		model.addAttribute(selectDataSourceName,staffService.selectSkillEntity());
 		
@@ -287,6 +295,7 @@ public class NewOrgStaffController extends AdminController {
 				skillService.insert(staffSkill);
 			}
 		}
+		
 		/*
 		 * 2016年1月22日19:14:09   录入认证信息
 		 */

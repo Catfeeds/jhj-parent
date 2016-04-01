@@ -282,10 +282,8 @@ public class NewOrderDisController extends BaseController {
 		
 		Orders order = orderSevice.selectbyOrderId(orderId);
 		
-		Users u = userService.getUserById(order.getUserId());
 		//修改的 只是 有效派工的订单
 		List<OrderDispatchs> list = disService.selectByNoAndDisStatus(order.getOrderNo(), Constants.ORDER_DIS_ENABLE);
-		
 		
 		OrderDispatchs dispatchs = disService.initOrderDisp();
 		
@@ -337,9 +335,17 @@ public class NewOrderDisController extends BaseController {
 			//插入 派工表
 			disService.insertSelective(dispatchs);
 			
-			//更新 order_status
+			//更新 order_status   为 已派工
 			order.setOrderStatus(Constants.ORDER_AM_STATUS_4);
 			order.setUpdateTime(TimeStampUtil.getNowSecond());
+			
+			
+			/*
+			 * 更新助理订单 门店 为   派工人员 所在的 云店
+			 */
+			OrgStaffs orgStaffs = staffService.selectByPrimaryKey(staffId);
+			
+			order.setOrgId(orgStaffs.getOrgId());
 			
 			orderSevice.updateByPrimaryKeySelective(order);
 			
@@ -357,7 +363,6 @@ public class NewOrderDisController extends BaseController {
 		
 		//1) 用户收到派工通知---发送短信
 		String[] contentForUser = new String[] { timeStr };
-//		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
 		
 		//2)派工成功，为服务人员发送推送消息---推送消息
 		dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);

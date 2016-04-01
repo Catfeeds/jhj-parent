@@ -21,7 +21,6 @@ $(function(){
 	    },
 	   */
 	    axisFormat:'H:mm',
-	    slotMinutes:30,
 	    allDaySlot:false,
 	
 	});
@@ -30,7 +29,7 @@ $(function(){
 	var endStr = new Date(view.end).toLocaleDateString();
 	var start = startStr.replace(new RegExp('/','gm'),'-');
 	var end = endStr.replace(new RegExp('/','gm'),'-');
-    $.getJSON('/jhj-oa/interface-order/get-dispatch-by-month.json?',{org_staff_id:orgStaffId,start:'2015-07-27',end:'2015-09-27'},function(data) {    
+    $.getJSON('/jhj-oa/interface-order/get-dispatch-by-month.json?',{org_staff_id:orgStaffId,start:'2015-07-27',end:getToDay()},function(data) {    
         for(var i=0;i<data.length;i++) {    
             var obj = new Object();    
             obj.id = data[i].id;    
@@ -47,3 +46,28 @@ $(function(){
         }    
       });
 });
+
+
+function getToDay(){
+	
+    var now = new Date();
+    var nowYear = now.getFullYear();
+    var nowMonth = now.getMonth();
+    var nowDate = now.getDate();
+   
+	newdate = new Date(nowYear,nowMonth,nowDate);
+	nowMonth = doHandleMonth(nowMonth + 1);
+	nowDate = doHandleMonth(nowDate);
+	
+	return nowYear+"-"+nowMonth+"-"+nowDate;
+}
+function doHandleMonth(month){
+	
+   if(month.toString().length == 1){
+	   month = "0" + month;
+   }
+   
+   return month;
+}
+
+	  alert(getToDay());

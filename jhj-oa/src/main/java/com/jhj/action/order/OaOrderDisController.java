@@ -87,7 +87,7 @@ public class OaOrderDisController extends BaseController {
 		return "order/orderDisList";
 	}
 	
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "/order-scheduling", method = RequestMethod.GET )
 	public String orderCalender(HttpServletRequest request, Model model,
 		@RequestParam("org_staff_id") Long orgStaffId) {

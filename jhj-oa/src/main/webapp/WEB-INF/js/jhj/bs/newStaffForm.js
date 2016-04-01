@@ -1,6 +1,7 @@
 /*
  * 表单校验
  */
+
 $('#newStaff-form').validate({
 	errorElement : 'span', // default input error message container
 	errorClass : 'help-block', // default input error message class
@@ -18,7 +19,9 @@ $('#newStaff-form').validate({
 		},
 		addr : {
 			required : true
-		}
+		},
+		  
+	
 	},
 
 	messages : {
@@ -34,7 +37,10 @@ $('#newStaff-form').validate({
 		},
 		addr : {
 			required : "请输入员工联系地址"
-		}
+		},
+		level: { 
+			 valueNotEquals: "请选择员工等级" 
+	    }
 
 	},
 
@@ -82,9 +88,9 @@ $("#orgStaffForm_btn").click(function(form) {
 	
 	var nowMobile = $("#mobile").val();
 	
+	return checkThisForm();
 	
 	if (confirm("确认要保存吗?")) {
-		setTagIds();
 		setAuthIds();
 		
 		if(staffId == 0 ){
@@ -127,53 +133,7 @@ $('.input-group.date').datepicker({
 	}
 });
 
-//处理标签选中的样式.
-$("input[name='tagName']").click(function() {
-	
-	var tagId  = $(this).attr("id");
 
-	if($(this).attr("class")=="btn btn-default"){
-		$(this).attr("class","btn btn-success");
-		
-	}else{
-		$(this).attr("class","btn btn-success");
-		$(this).attr("class","btn btn-default");
-	}
-	
-	setTagIds();
-
-});
-
-
-function setTagIds() {
-	var tagIds = $("#skillIds");
-	var tagSelected = "";
-	//处理选择按钮的情况
-	$("input[name=tagName]").each(function(key, index) {
-		if ($(this).attr("class") == "btn btn-success") {
-			tagSelected = tagSelected + $(this).attr("id") + ",";
-		}
-	});	
-
-	if (tagSelected != "") {
-		tagSelected = tagSelected.substring(0, tagSelected.length - 1);
-	}
-
-	tagIds.val(tagSelected);
-}
-
-
-function setTagButton() {
-	var tagIds = $("#skillIds");
-	if (tagIds.val() == "") return false;
-	//处理选择按钮的情况
-	$("input[name=tagName]").each(function(key, index) {
-		var tagId = $(this).attr("id");
-		if (tagIds.val().indexOf(tagId) >= 0) {
-			$(this).attr("class","btn btn-success");
-		}
-	});	
-}
 
 /*
  * 2016年1月22日19:07:20 
@@ -237,8 +197,6 @@ function setAuthIds(){
 
 	authIds.val(tagSelected);
 }
-
-
 
 
 var ajaxReturn1 = "";
@@ -317,3 +275,61 @@ function validCardNum(){
 }
 
 
+/*
+ *  表单提交前 校验  。 是否选择 了 员工技能
+ */
+
+function checkThisForm(){
+	
+  var skl = $("#skillId").val();
+
+  
+  /*
+   *  无奈之举, 如果 第一次进入 form页。未选任何技能.提交后 会有 bug
+   * 
+   * 	一般都是：  [Ljava.lang.Long;@74b4d5f4"
+   * 	
+   * 	 意思是： long数组。强转 long 失败。
+   * 
+   * 此处 用是否包含 异常信息 。。来判断是否 有勾选 技能
+   */
+  
+  if(skl.indexOf("Ljava") > 0 || skl.length == 0){
+	 
+	//如果未选中 任何技能。 不让提交 
+	 
+	 alert("请您至少为当前服务人员勾选一个技能");
+	 
+	 return  false;
+  }
+ 
+  if($("#level").find("option:selected").val() == 0){
+	  
+	  alert("请选择员工等级");
+	  return false; 
+  }
+  
+  return true;
+  
+}
+
+/*
+ *  2016年4月1日10:43:42  
+ *  
+ *  页面加载时。 对于树形结构。只展示  叶子 节点的 checkbox 
+ *  
+ */
+var setTreehh =  function setTreeDisplay(){
+	
+	var secondNode = $("#skillId_tree").children("ul").children("li");
+	
+	
+	for(var i = 0,j=secondNode.length; i < j; i++){
+		
+		$(secondNode).children("input").attr("type","hidden");
+		
+	}
+	
+}
+
+window.onload = setTreehh;

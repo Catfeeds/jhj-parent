@@ -16,7 +16,7 @@
 	uri="/WEB-INF/tags/serviceTypeName.tld"%>
 
 
-<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
+<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
 <%@ taglib prefix="orderTypeNameTag"
 	uri="/WEB-INF/tags/orderTypeName.tld"%>
 <%@ taglib prefix="serviceTypeSelectTag"
@@ -32,7 +32,6 @@
 <!--common css for all pages-->
 <%@ include file="../shared/importCss.jsp"%>
 
-<!--css for this page-->
 </head>
 
 <body>
@@ -65,9 +64,7 @@
 						</form:select>
 					</div>
 					<div class="form-group">
-						<c:if test="${loginOrgId == 0 }">
-								选择门店:<orgSelectTag:select />
-						</c:if>
+							选择云店:<cloudOrgSelectTag:select />
 					</div>	
 						<button type="submit" class="btn btn-primary" >搜索</button>
 				</div>
@@ -85,7 +82,7 @@
 		<table class="table table-striped table-advance table-hover"
 			id="table2excel">
 			<thead>
-				<tr>
+				<tr >
 					<th>门店名称</th>
 					<th>云店名称</th>
 					<th>下单时间</th>
@@ -96,6 +93,7 @@
 					<th>服务人员</th>
 					<!-- <th>派工状态</th> -->
 					<th>订单状态</th>
+					<th>支付方式</th>
 					<th>总金额</th>
 					<th>支付金额</th>
 					<th>操作</th>
@@ -106,7 +104,8 @@
 					<c:forEach items="${item.statusNameMap }" var="sta">
 
 						<tr>
-
+							<input type="hidden" id="itemPayType" value="${item.payType }">	
+							<input type="hidden" id="itemOrderStatus" value="${item.orderStatus }">	
 							<td>${ item.orgName }</td>
 							<td>${item.cloudOrgName }</td>
 							
@@ -118,9 +117,14 @@
 							<td>${ item.mobile }</td>
 							<td>${ item.orderAddress }</td>
 							<td>${ item.staffName } </td>
-							<td><orderVoStatusTag:orderstatus
+							<td id="payTypeStatus">
+								<orderVoStatusTag:orderstatus
 									orderStatus="${item.orderStatus }"
 									orderType="${item.orderType }" />
+							</td>		
+							<td>
+								${ item.payTypeName } 
+							</td>		
 							<td>${ item.orderMoney }</td>
 							<td>${ item.orderPay }</td>
 
@@ -155,6 +159,6 @@
 	<script type="text/javascript"
 		src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
 
-	<script src="<c:url value='/js/jhj/order/orderList.js'/>"></script>
+	<script src="<c:url value='/js/order/orderAmList.js'/>"></script>
 </body>
 </html>

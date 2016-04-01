@@ -67,8 +67,6 @@ public class DictServiceTypesController extends BaseController {
 	}
 	
 	
-	
-	
 
 	/**
 	 * 服务类型表单方法，显示
