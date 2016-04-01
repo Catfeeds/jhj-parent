@@ -27,6 +27,7 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.UserTrailReal;
@@ -37,6 +38,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.vo.UserTrailVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
@@ -107,9 +109,9 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
-	
+		
 	@Autowired
-	DictService dictService;
+	PartnerServiceTypeService partnerServiceTypeService;
 
 	/**
 	 * 钟点工派工逻辑:
@@ -831,9 +833,10 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    //服务项目
 		    String serviceContent = "";
 		    if (order.getServiceType() > 0L) {
-		    	serviceContent = dictService.getServiceTypeName(order.getServiceType());
+		    	PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(order.getServiceType());
+		    	serviceContent = serviceType.getName();
 			}
-		    tranParams.put("service_content", "金牌服务xxxx");
+		    tranParams.put("service_content", serviceContent);
 		    
 		    //服务金额
 		    String orderMoney = MathBigDeciamlUtil.round2(orderPrice.getOrderMoney());

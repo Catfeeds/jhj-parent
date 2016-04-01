@@ -1021,3 +1021,10 @@ ALTER TABLE `jhj_setting`
 --
 ALTER TABLE `jhj_setting`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=25;
+
+ALTER TABLE `dict_service_types` ADD `subhead_huodong` VARCHAR(60) NOT NULL COMMENT '（微官网）限时活动列表页,副标题2015-11-26 10:24:53 ' AFTER `tips`, ADD `subhead_am` VARCHAR(60) NOT NULL COMMENT '（微官网）助理订单类型列表页，副标题2015-11-26 10:26:38' AFTER `subhead_huodong`, ADD `service_relative` VARCHAR(500) NOT NULL COMMENT '（微官网）助理订单类型详情页，服务范围2015-11-26 10:28:40' AFTER `subhead_am`, ADD `service_feature` VARCHAR(500) NOT NULL COMMENT '微官网）助理订单类型详情页，服务特色 2015-11-26 10:30:51' AFTER `service_relative`;
+
+
+ALTER TABLE `dict_service_types` ADD `degree_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '微官网）在助理订单类型列表页,分不同层级展示' AFTER `enable`;
+
+ALTER TABLE `dict_service_types` ADD `to_date` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '微官网）该类型的 上架截止日期' AFTER `degree_type`;
