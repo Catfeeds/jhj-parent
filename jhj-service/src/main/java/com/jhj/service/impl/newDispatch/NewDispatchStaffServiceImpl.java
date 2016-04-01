@@ -144,11 +144,13 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		//黑名单
 		List<Long> blackIdList = blackService.selectAllBadRateStaffId();
 		
+		/*
+		 *  2016年3月31日18:36:21  对于 厨娘烧饭有 附加服务。 还需过滤 标签匹配
+		 */
+		
 		//最终 符合基本 派工 条件的 服务人员
 		staffIdList.removeAll(blackIdList);
 		staffIdList.removeAll(dispatchIdList);
-//		staffList = staffService.selectByids(staffIdList);
-		
 		
 		return staffIdList;
 	}

@@ -124,8 +124,6 @@ public class Constants {
 	public static Short PAY_TYPE_6 = 6;
 	
 	
-	
-	
 	public static int SUCCESS_0 = 0;
 	public static int ERROR_999 = 999;
 	public static int ERROR_100 = 100;

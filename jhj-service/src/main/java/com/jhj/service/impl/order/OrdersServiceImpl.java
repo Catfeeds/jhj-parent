@@ -76,7 +76,7 @@ public class OrdersServiceImpl implements OrdersService {
 		record.setMobile("");
 		record.setUserId(0L);
 		record.setCityId(0L);
-		record.setOrgId(1L);
+		record.setOrgId(0L);
 		record.setAddrId(0L);
 		record.setOrderType((short) 0);// 0 = 钟点工 1 = 深度保洁 2 = 助理预约单
 		record.setServiceType(0L);

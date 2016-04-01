@@ -149,6 +149,10 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		//根据parentId=0 查询出所用的父节点
 		List<PartnerServiceType> list = partMapper.selectByParentId(0L);
 		
+//		List<PartnerServiceType> list = partMapper.selectNoParentService();
+		
+//		List<PartnerServiceType> list = partMapper.selectAllNoChildService();
+		
 		Iterator iterator = list.iterator(); 
 		
 		while(iterator.hasNext()) {

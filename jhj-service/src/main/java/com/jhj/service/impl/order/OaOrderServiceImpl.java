@@ -734,9 +734,13 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setOrderMoney(orderPrices.getOrderMoney());
 			// 订单实际支付金额
 			oaOrderListVo.setOrderPay(orderPrices.getOrderPay());
+			
+			
 			// 支付方式
 			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
 			oaOrderListVo.setPayTypeName(payTypeName);
+			
+			oaOrderListVo.setPayType(orderPrices.getPayType());
 		}
 
 		// 地址
@@ -748,7 +752,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderAddress(userAddrs.getName()+ " " + userAddrs.getAddress());
 			}
 		}
-//		// 门店名称
+		// 门店名称
 		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
 
 		if (orgs != null) {
@@ -830,6 +834,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}else{
 			oaOrderListNewVo.setOrderTypeName("");
 		}
+		
 		
 		
 		return oaOrderListNewVo;
