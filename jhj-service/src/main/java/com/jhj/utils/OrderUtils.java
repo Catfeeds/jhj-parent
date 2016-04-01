@@ -218,27 +218,27 @@ public class OrderUtils {
 					paytypeName = "未支付";
 					
 				}else {
-				if (payType == 0) {
+				if (payType.equals((short)0)) {
 						
 					paytypeName = "余额支付";	
 						
 				}
-				if (payType == 1) {
+				if (payType.equals((short)1)) {
 					
 					paytypeName = "支付宝";	
 						
 					}
-				if (payType == 2) {
+				if (payType.equals((short)2)) {
 					
 					paytypeName = "微信支付";	
 						
 					}
-				if (payType == 3) {
+				if (payType.equals((short)3)) {
 					
 					paytypeName = "智慧支付";	
 						
 					}
-				if (payType == 4) {
+				if (payType.equals((short)4)) {
 					
 					paytypeName = "现金支付";	
 						

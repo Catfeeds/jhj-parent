@@ -55,6 +55,8 @@ public class OrderListVo {
 	
 	private String remarksConfirm;
 	
+	private Short payType;
+	
 	private String payTypeName;
 	
 	private String mobile;
@@ -280,5 +282,13 @@ public class OrderListVo {
 
 	public void setPickAddrDistance(String pickAddrDistance) {
 		this.pickAddrDistance = pickAddrDistance;
+	}
+
+	public Short getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Short payType) {
+		this.payType = payType;
 	}	
 }

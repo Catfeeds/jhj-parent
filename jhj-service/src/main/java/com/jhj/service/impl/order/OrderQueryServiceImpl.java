@@ -563,8 +563,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 订单类型
 		vo.setOrderTypeName(OrderUtils.getOrderTypeName(item.getOrderType()));
 		// 订单支付名称
+		
 		vo.setPayTypeName("");
 		if (orderPrices != null) {
+			vo.setPayType(orderPrices.getPayType());
 			vo.setPayTypeName(OrderUtils.getPayTypeName(item.getOrderStatus(), orderPrices.getPayType()));
 		}
 		
