@@ -166,18 +166,20 @@ public class UserAppController extends BaseController {
 				 }		
 				 
 				 //登录时，获取 用户对应的 助理信息
-				 UserRefAm userRefAm = userRefAmService.selectByUserId(u.getId());
-				 
-				 if(userRefAm !=null){
-					 Long amId = userRefAm.getStaffId();
-					 
-					 userAppVo.setAmId(amId);
-					 
-					 OrgStaffs orgStaffs = orgStaffService.selectByPrimaryKey(amId);
-					 
-					 userAppVo.setAmMobile(orgStaffs.getMobile());
-					 
-				 }				 
+				 userAppVo.setAmId(0L);
+				 userAppVo.setMobile("");
+//				 UserRefAm userRefAm = userRefAmService.selectByUserId(u.getId());
+//				 
+//				 if(userRefAm !=null){
+//					 Long amId = userRefAm.getStaffId();
+//					 
+//					 userAppVo.setAmId(amId);
+//					 
+//					 OrgStaffs orgStaffs = orgStaffService.selectByPrimaryKey(amId);
+//					 
+//					 userAppVo.setAmMobile(orgStaffs.getMobile());
+//					 
+//				 }				 
 				 
 				 
 				result.setData(userAppVo);
