@@ -833,7 +833,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    if (order.getServiceType() > 0L) {
 		    	serviceContent = dictService.getServiceTypeName(order.getServiceType());
 			}
-		    tranParams.put("service_content",serviceContent);
+		    tranParams.put("service_content", "金牌服务xxxx");
 		    
 		    //服务金额
 		    String orderMoney = MathBigDeciamlUtil.round2(orderPrice.getOrderMoney());
