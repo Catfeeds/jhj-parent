@@ -25,19 +25,24 @@ import com.jhj.po.model.bs.OrgStaffOnline;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.dict.DictService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.users.UserAddrsService;
 import com.jhj.vo.UserTrailVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.GsonUtil;
+import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.PushUtil;
 import com.meijia.utils.RegexUtil;
@@ -86,6 +91,9 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	private OrderLogService orderLogService;
 	
 	@Autowired
+	private OrderPricesService orderPricesService;
+	
+	@Autowired
 	private UserPushBindMapper userPushBindMapper;
 	
 	@Autowired
@@ -93,6 +101,15 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	
 	@Autowired
 	private OrgStaffAuthMapper orgStaffAuthMapper;
+	
+	@Autowired
+	private UserAddrsService userAddrsService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchsService;
+	
+	@Autowired
+	DictService dictService;
 
 	/**
 	 * 钟点工派工逻辑:
@@ -780,24 +797,50 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    tranParams.put("remind_content",remindContent);
 		    
 		    
-		    
+		    Orders order = ordersService.selectbyOrderId(orderId);
+		    OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
+		    OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderId(orderId);
 		    //服务地址：
-		    tranParams.put("service_addr","北京市东城区东直门外大街42号宇飞大厦612.");
+		    String serviceAddr = "";
+		    if (order.getAddrId() > 0L) {
+				UserAddrs userAddr = userAddrsService.selectByPrimaryKey(order.getAddrId());
+				serviceAddr = userAddr.getName() + userAddr.getAddr();
+			} 
+		    
+		    if (order.getOrderType().equals((short)2)) {
+		    	serviceAddr = orderDispatchs.getPickAddrName() + orderDispatchs.getPickAddr();
+			}
+		    
+		    tranParams.put("service_addr", serviceAddr);
 		
 		    //服务时间
-		    tranParams.put("service_time","4月2号 11:00");
+		    Long serviceDate = order.getServiceDate();
+		    
+		    if (order.getOrderType().equals((short)2)) {
+		    	serviceDate = order.getAddTime();
+		    }
+		    
+		    String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "MM-dd HH:mm");
+		    
+		    tranParams.put("service_time", serviceTime);
 		    
 		    //服务时长 
-		    tranParams.put("service_hour","3小时");
+		    String serviceHour = order.getServiceHour().toString() + "小时";
+		    tranParams.put("service_hour", serviceHour);
 		    
 		    //服务项目
-		    tranParams.put("service_content","金牌保洁服务初体验");
+		    String serviceContent = "";
+		    if (order.getServiceType() > 0L) {
+		    	serviceContent = dictService.getServiceTypeName(order.getServiceType());
+			}
+		    tranParams.put("service_content",serviceContent);
 		    
 		    //服务金额
-		    tranParams.put("order_money","149元");
+		    String orderMoney = MathBigDeciamlUtil.round2(orderPrice.getOrderMoney());
+		    tranParams.put("order_money", orderMoney);
 		    
 		    //订单类型
-		    tranParams.put("order_type","2");
+		    tranParams.put("order_type", order.getOrderType().toString());
 		    
 			String jsonParams = GsonUtil.GsonString(tranParams);
 			params.put("transmissionContent", jsonParams);
