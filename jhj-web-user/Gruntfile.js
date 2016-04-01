@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 			
 			jslib : {
 				src : [ 'js/lib/moment-with-locales.min.js',
-					    'js/echarts/echarts.js','js/echarts/gauge.js',
+//					    'js/echarts/echarts.js','js/echarts/gauge.js',
 					    'js/lib/appframework.min.js', 'js/lib/mobiscroll.custom-2.16.1.min.js'],
 				dest : 'js/u-lib.js',
 			},
