@@ -468,9 +468,13 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		// 单项服务的 价格
 		BigDecimal price = type.getPrice();
 		
-		// 保洁服务的 服务时间 都为 3小时
-		prices.setOrderMoney(price.multiply(new BigDecimal(3)));
-		prices.setOrderPay(price.multiply(new BigDecimal(3)));
+		/*
+		 *  2016年4月1日14:49:48  
+		 *  
+		 * 	服务 都改为  次/元。。故不用 计算 时长的乘积了
+		 */
+		prices.setOrderMoney(price);
+		prices.setOrderPay(price);
 		
 		return prices;
 	}
