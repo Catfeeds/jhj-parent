@@ -9,6 +9,12 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		$$("#serviceType").val(paramServiceTypeId);
 	}
 	
+	var parentServiceTypeId = page.query.parentServiceTypeId;
+	
+	if(parentServiceTypeId == 23){
+		$$("#hhAddons").attr("style","display:none");
+	}
+	
 	
 	var userId = localStorage['user_id'];
 	$$("#userId").val(userId);
@@ -107,7 +113,6 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		$$("#serviceAddons").val(tagIds);
 		
 	}
-	
 	
 	
 	

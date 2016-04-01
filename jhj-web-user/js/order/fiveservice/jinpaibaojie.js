@@ -12,6 +12,8 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 	}
 	
 	
+	$$("#parentServiceType").val(parentServiceTypeId);
+	
 	$$.ajax({
 		type: "get",
 		 url: siteAPIPath + "newPartServiceType/second_service_type.json",
@@ -85,7 +87,11 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 		
 		var serviceTypeId =  $$(this).prev().val();
 		
-		mainView.router.loadPage("order/order-form-zhongdiangong.html?serviceType="+serviceTypeId);
+
+		var parentServiceTypeId =  $$("#parentServiceType").val();
+		
+		mainView.router.loadPage("order/order-form-zhongdiangong.html?serviceType="+serviceTypeId
+								+"&parentServiceTypeId="+parentServiceTypeId);
 	});
 });
 
