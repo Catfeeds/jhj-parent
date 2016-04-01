@@ -34,13 +34,13 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	}
 
 	@Override
-	public int insert(OrgStaffFinance record) {
+	public Long insert(OrgStaffFinance record) {
 		
 		return orgStaffFinanceMapper.insert(record);
 	}
 
 	@Override
-	public int insertSelective(OrgStaffFinance record) {
+	public Long insertSelective(OrgStaffFinance record) {
 	
 		return orgStaffFinanceMapper.insertSelective(record);
 	}

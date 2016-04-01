@@ -1,164 +1,170 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.bs.OrgStaffFinanceMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffFinance" >
-    <id column="id" property="id" jdbcType="NUMERIC" />
-    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
-    <result column="mobile" property="mobile" jdbcType="CHAR" />
-    <result column="total_incoming" property="totalIncoming" jdbcType="DECIMAL" />
-   <result column="total_dept" property="totalDept" jdbcType="DECIMAL" />
-    <result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
-    <result column="rest_money" property="restMoney" jdbcType="DECIMAL" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, staff_id, mobile, total_incoming,total_dept, total_cash, rest_money, add_time, update_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from org_staff_finance
-    where id = #{id,jdbcType=NUMERIC}
-  </select>
-  
-   <select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from org_staff_finance
-    where staff_id = #{staffId,jdbcType=NUMERIC}
-  </select>
-  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffFinanceSearchVo">
-  	select
-    <include refid="Base_Column_List" />
-    from org_staff_finance
- 	where total_dept &gt; 0 
-	<if test="mobile !=null and mobile != '' ">
-		and mobile = #{mobile,jdbcType=CHAR}
-	</if>
-	<if test="startTime !=null">
-		and start_time = #{startTime,jdbcType=NUMERIC}
-	</if>
-	<if test="endTime !=null">
-		and end_time = #{endTime,jdbcType=NUMERIC}
-	</if>
-    order by add_time desc    
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffFinanceMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffFinance">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="total_incoming" property="totalIncoming" jdbcType="DECIMAL" />
+		<result column="total_dept" property="totalDept" jdbcType="DECIMAL" />
+		<result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+		<result column="rest_money" property="restMoney" jdbcType="DECIMAL" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, staff_id, mobile, total_incoming,total_dept, total_cash, rest_money, add_time, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_finance
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
 
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from org_staff_finance
-    where id = #{id,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffFinance" >
-    insert into org_staff_finance (id, staff_id, mobile,
-      total_incoming, total_cash,total_dept, rest_money, 
-      add_time, update_time)
-    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, 
-      #{totalIncoming,jdbcType=DECIMAL}, #{totalDept,jdbcType=DECIMAL},
-      #{totalCash,jdbcType=DECIMAL}, #{restMoney,jdbcType=DECIMAL}, 
-      #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffFinance" >
-    insert into org_staff_finance
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="staffId != null" >
-        staff_id,
-      </if>
-      <if test="mobile != null" >
-        mobile,
-      </if>
-      <if test="totalIncoming != null" >
-        total_incoming,
-      </if>
-      <if test="totalDept != null" >
-        total_dept,
-      </if>
-      <if test="totalCash != null" >
-        total_cash,
-      </if>
-      <if test="restMoney != null" >
-        rest_money,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=NUMERIC},
-      </if>
-      <if test="staffId != null" >
-        #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="mobile != null" >
-        #{mobile,jdbcType=CHAR},
-      </if>
-      <if test="totalIncoming != null" >
-        #{totalIncoming,jdbcType=DECIMAL},
-      </if>
-     <if test="totalDept != null" >
-        #{totalDept,jdbcType=DECIMAL},
-      </if>
-      <if test="totalCash != null" >
-        #{totalCash,jdbcType=DECIMAL},
-      </if>
-      <if test="restMoney != null" >
-        #{restMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffFinance" >
-    update org_staff_finance
-    <set >
-      <if test="staffId != null" >
-        staff_id = #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="mobile != null" >
-        mobile = #{mobile,jdbcType=CHAR},
-      </if>
-      <if test="totalIncoming != null" >
-        total_incoming = #{totalIncoming,jdbcType=DECIMAL},
-      </if>
-      <if test="totalDept != null" >
-        total_dept = #{totalDept,jdbcType=DECIMAL},
-      </if>
-      <if test="totalCash != null" >
-        total_cash = #{totalCash,jdbcType=DECIMAL},
-      </if>
-      <if test="restMoney != null" >
-        rest_money = #{restMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffFinance" >
-    update org_staff_finance
-    set staff_id = #{staffId,jdbcType=NUMERIC},
-      mobile = #{mobile,jdbcType=CHAR},
-      total_incoming = #{totalIncoming,jdbcType=DECIMAL},
-      total_dept = #{totalDept,jdbcType=DECIMAL},
-      total_cash = #{totalCash,jdbcType=DECIMAL},
-      rest_money = #{restMoney,jdbcType=DECIMAL},
-      add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC}
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
+	<select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_finance
+		where staff_id = #{staffId,jdbcType=NUMERIC}
+	</select>
+	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffFinanceSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_finance
+		where total_dept &gt; 0
+		<if test="mobile !=null and mobile != '' ">
+			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		<if test="startTime !=null">
+			and start_time = #{startTime,jdbcType=NUMERIC}
+		</if>
+		<if test="endTime !=null">
+			and end_time = #{endTime,jdbcType=NUMERIC}
+		</if>
+		order by add_time desc
+
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from org_staff_finance
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffFinance">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into org_staff_finance (id, staff_id, mobile,
+		total_incoming, total_cash,total_dept, rest_money,
+		add_time, update_time)
+		values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
+		#{totalIncoming,jdbcType=DECIMAL}, #{totalDept,jdbcType=DECIMAL},
+		#{totalCash,jdbcType=DECIMAL}, #{restMoney,jdbcType=DECIMAL},
+		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffFinance">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into org_staff_finance
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="totalIncoming != null">
+				total_incoming,
+			</if>
+			<if test="totalDept != null">
+				total_dept,
+			</if>
+			<if test="totalCash != null">
+				total_cash,
+			</if>
+			<if test="restMoney != null">
+				rest_money,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=CHAR},
+			</if>
+			<if test="totalIncoming != null">
+				#{totalIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="totalDept != null">
+				#{totalDept,jdbcType=DECIMAL},
+			</if>
+			<if test="totalCash != null">
+				#{totalCash,jdbcType=DECIMAL},
+			</if>
+			<if test="restMoney != null">
+				#{restMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffFinance">
+		update org_staff_finance
+		<set>
+			<if test="staffId != null">
+				staff_id = #{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=CHAR},
+			</if>
+			<if test="totalIncoming != null">
+				total_incoming = #{totalIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="totalDept != null">
+				total_dept = #{totalDept,jdbcType=DECIMAL},
+			</if>
+			<if test="totalCash != null">
+				total_cash = #{totalCash,jdbcType=DECIMAL},
+			</if>
+			<if test="restMoney != null">
+				rest_money = #{restMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffFinance">
+		update org_staff_finance
+		set staff_id = #{staffId,jdbcType=NUMERIC},
+		mobile = #{mobile,jdbcType=CHAR},
+		total_incoming = #{totalIncoming,jdbcType=DECIMAL},
+		total_dept = #{totalDept,jdbcType=DECIMAL},
+		total_cash = #{totalCash,jdbcType=DECIMAL},
+		rest_money = #{restMoney,jdbcType=DECIMAL},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
 </mapper>

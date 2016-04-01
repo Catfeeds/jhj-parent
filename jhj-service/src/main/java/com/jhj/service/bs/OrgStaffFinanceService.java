@@ -16,9 +16,9 @@ import com.jhj.vo.OrgStaffFinanceSearchVo;
 public interface OrgStaffFinanceService {
 	int deleteByPrimaryKey(Long id);
 
-    int insert(OrgStaffFinance record);
+    Long insert(OrgStaffFinance record);
 
-    int insertSelective(OrgStaffFinance record);
+    Long insertSelective(OrgStaffFinance record);
 
     OrgStaffFinance selectByPrimaryKey(Long id);
 

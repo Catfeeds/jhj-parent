@@ -284,8 +284,7 @@ public class OrderController extends BaseController {
 		}
 
 		if (orderPrices.getPayType().equals((short)6)) {
-			OrgStaffDetailDept orgStaffDetailDept = orgStaffDetailDeptService
-					.initOrgStaffDetailDept();
+			OrgStaffDetailDept orgStaffDetailDept = orgStaffDetailDeptService.initOrgStaffDetailDept();
 			// 新增欠款明细表 org_staff_detail_dept
 			orgStaffDetailDept.setStaffId(staffId);
 			orgStaffDetailDept.setMobile(orgStaffs.getMobile());
