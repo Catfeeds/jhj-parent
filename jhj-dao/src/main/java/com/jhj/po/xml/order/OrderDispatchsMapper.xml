@@ -164,13 +164,32 @@
          and staff_id =#{staffId,jdbcType=NUMERIC} and from_unixtime(service_date,'%Y-%m-%d') = #{serviceDate,jdbcType=NUMERIC}  
          </if>
 	
-	</select>	
+	</select>
+	
+			
 	<!-- 统计在start和end之间的有效派工单个数 -->
 	<select id="selectOrdersCountByYearAndMonth" resultType="HashMap"  parameterType="java.util.HashMap">
-		select id,order_no,staff_id, from_unixtime((service_date+ service_hours*3600),'%Y-%m-%d %H:%i:%s') as service_end,from_unixtime(service_date,'%Y-%m-%d %H:%i:%s') as serviceTime,from_unixtime(service_date,'%Y-%m-%d') as startTime,<!-- count(*) as total, -->from_unixtime(service_date,'%Y-%m-%d') as serviceDate
-		from order_dispatchs where dispatch_status =1 and service_date between #{startTime,jdbcType=NUMERIC}
-		and #{endTime,jdbcType=NUMERIC} and staff_id =#{orgStaffId,jdbcType=NUMERIC}<!--  group by from_unixtime(service_date,'%Y-%m-%d') -->
+		select 
+			id,order_no,staff_id, 
+			from_unixtime((service_date+ service_hours*3600),'%Y-%m-%d %H:%i:%s') as service_end,
+			from_unixtime(service_date,'%Y-%m-%d %H:%i:%s') as serviceTime,
+			from_unixtime(service_date,'%Y-%m-%d') as startTime,
+			from_unixtime(service_date,'%Y-%m-%d') as serviceDate
+		from 
+			order_dispatchs 
+		where 
+			dispatch_status =1 
+			and 
+			service_date 
+				between 
+					#{startTime,jdbcType=NUMERIC}
+				and 
+					#{endTime,jdbcType=NUMERIC} 
+			and 
+				staff_id =#{orgStaffId,jdbcType=NUMERIC}
 	</select>
+	
+	
 	<select id="selectEnableStaffNow" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />

@@ -33,16 +33,18 @@ public class OaOrderSearchVo {
 	private Long searchOrgId;			//当前登录 店长 的 门店Id
 	private Short serviceTypeFlag;
 	
+	private Short orgId;	// 下拉选择 的 门店id
 	
-	/**
-	 * @return the searchOrgId
-	 */
+	
+	public Short getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(Short orgId) {
+		this.orgId = orgId;
+	}
 	public Long getSearchOrgId() {
 		return searchOrgId;
 	}
-	/**
-	 * @param searchOrgId the searchOrgId to set
-	 */
 	public void setSearchOrgId(Long searchOrgId) {
 		this.searchOrgId = searchOrgId;
 	}

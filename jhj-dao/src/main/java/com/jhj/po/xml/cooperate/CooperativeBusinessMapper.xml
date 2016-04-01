@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.cooperate.CooperativeBusinessMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.cooperate.CooperativeBusiness" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="business_name" property="businessName" jdbcType="VARCHAR" />
+    <result column="app_name" property="appName" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="pass_word" property="passWord" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, business_name, app_name, login_name, pass_word, add_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cooperative_business
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from cooperative_business
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.cooperate.CooperativeBusiness" >
+    insert into cooperative_business (id, business_name, app_name, 
+      login_name, pass_word, add_time, 
+      update_time)
+    values (#{id,jdbcType=NUMERIC}, #{businessName,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}, 
+      #{loginName,jdbcType=VARCHAR}, #{passWord,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, 
+      #{updateTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.cooperate.CooperativeBusiness" >
+    insert into cooperative_business
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="businessName != null" >
+        business_name,
+      </if>
+      <if test="appName != null" >
+        app_name,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="passWord != null" >
+        pass_word,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="businessName != null" >
+        #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null" >
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="passWord != null" >
+        #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.cooperate.CooperativeBusiness" >
+    update cooperative_business
+    <set >
+      <if test="businessName != null" >
+        business_name = #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null" >
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="passWord != null" >
+        pass_word = #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.cooperate.CooperativeBusiness" >
+    update cooperative_business
+    set business_name = #{businessName,jdbcType=VARCHAR},
+      app_name = #{appName,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      pass_word = #{passWord,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>
