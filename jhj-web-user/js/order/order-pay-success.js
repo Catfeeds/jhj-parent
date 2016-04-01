@@ -4,6 +4,7 @@ myApp.onPageInit('order-pay-success-page', function(page) {
 	
 	var orderType = page.query.order_type;
 	
+	var orderPayType = page.query.order_pay_type;
 	
 	if (orderType == 0) {
 		$$("#blackContent").text("订单支付成功!")
@@ -16,8 +17,15 @@ myApp.onPageInit('order-pay-success-page', function(page) {
 	}
 	
 	if(orderType == 2){
-		$$("#blackContent").text("订单支付成功!")
-		$$("#grayContent").text("您的助理会按约定时间为您服务");
+		
+		if(orderPayType == 6){
+			//如果是 现金支付
+			$$("#blackContent").text("现金支付成功!")
+			$$("#grayContent").text("您的助理会按约定时间为您服务");
+		}else{
+			$$("#blackContent").text("订单支付成功!")
+			$$("#grayContent").text("您的助理会按约定时间为您服务");
+		}
 	}
 	
 	$$('#order-pay-success-btn').click(function(){

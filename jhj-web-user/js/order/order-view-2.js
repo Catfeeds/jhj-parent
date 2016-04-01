@@ -59,7 +59,8 @@ myApp.onPageBeforeInit('order-hour-view-2-page', function (page) {
 			
 			var orderNo = order.order_no;
 			
-			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=2");
+			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=2"
+									+"&order_pay_type"+orderPayType);
 		}
 		
 		//如果为微信支付，则需要跳转到微信支付页面.
@@ -91,7 +92,6 @@ $$('label[name=myPayTypeSelect]').on('click',function(){
 			
 		});
 
-		
 	});
 	
 	
@@ -112,7 +112,6 @@ $$('label[name=myPayTypeSelect]').on('click',function(){
 		postdata.order_no = orderNo;
 		postdata.user_coupon_id = userCouponId;
 		
-//		return ;
 		
 		//获得选中的支付方式
 		$$('img[name="order_pay_type"]').each(function(index,value){

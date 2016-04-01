@@ -9,7 +9,7 @@
  *    
  */
 //serviceTypeList();
-//serviceTypeAddonsList();
+serviceTypeAddonsList();
 
 
 //partnerServiceTypeList(); 

@@ -48,6 +48,70 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		$$("#serviceDateSelect").html(dateTwo);
 	}
 	
+	
+	
+	/*
+	 * 
+	 *   对于做饭, 需要 选择 附加服务
+	 * 
+	 */
+	
+	// 附加服务 Id 的 字符串
+	var tagIds = "";
+	//点击图片变色效果。 有一定的局限性（需要是 .png 格式  、选中后的图片名需要是    xxx-2x.png 、 未选中的图片名需要是  xxx.png ）
+	$$("img[src$='.png']").on('click',function(e) {
+		
+		var arr =  $$(this).attr("src").split(".");
+		 
+		if($$(this).attr("src").indexOf("-2x") <= 0){
+			$$(this).attr("src",arr[0]+"-2x"+".png");
+		}else{
+			return false;
+		}
+		
+		
+		var obj = this;
+		
+		$$("img[name='tag']").each(function(k,v){
+			
+			if(obj !== v){
+				
+				var arrV =  $$(v).attr("src").split(".");
+				$$(v).attr("src",arrV[0].replace("-2x","")+".png");
+			}
+		});
+		
+		getTagAndPriceSelect();
+		
+	});
+	
+	// 回显后 提交订单 也需要 遍历 所有 选中的 图片（代码块位置 必须在 提交前，否则tagIds，会被覆盖）
+	function getTagAndPriceSelect(){
+		
+		var tagIds = "";
+		
+		$$("img[name = 'tag']").each(function(key, index) {
+			
+			//被选中的图片
+			if ($$(this).attr("src").indexOf("-2x")>0) {
+				tagIds  += $$(this).prev().val() + ",";
+			}
+			
+		});	
+		if (tagIds != "") {
+			tagIds = tagIds.substring(0, tagIds.length - 1);
+		}
+		
+		$$("#serviceAddons").val("");
+		
+		$$("#serviceAddons").val(tagIds);
+		
+	}
+	
+	
+	
+	
+	
 	/*
 	 * 提交订单
 	 */
@@ -58,13 +122,16 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 			return false;
 		}
 		
+		//提交时，再次 遍历 
+		getTagAndPriceSelect();
+		
 		// 文档要求： post请求，必须是 formData类型
 		var formData = myApp.formToJSON('#orderHour-Form');
 		
 		//处理 日期。。传给后台 string 类型 的 秒值，时间戳
 		formData.serviceDate =  moment(formData.serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 		
-		
+		return false;
 		$$.ajax({
 			type: "post",
 			 url: siteAPIPath + "order/post_hour.json",
@@ -116,7 +183,47 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 	$$("#addrSelect").on('click',function(){
 		//保存已选择的   服务时间
 		sessionStorage.setItem('serviceDate',$$("#serviceDate").val());
+		
+		sessionStorage.setItem('serviceAddons',$$("#serviceAddons").val());
+		
 	});
+	
+	
+	var serTypeList = JSON.parse(localStorage.getItem("service_type_addons_list"));
+	
+	for (var i = 0; i < serTypeList.length; i++) {
+		var item =  serTypeList[i];
+		
+		if(item.name == "做饭"){
+			$$("#zuofanPrice").val(item.price);
+			$$("#zuofanId").val(item.service_addon_id);
+		}
+		if(item.name == "洗衣"){
+			$$("#xiyiPrice").val(item.price);
+			$$("#xiyiId").val(item.service_addon_id);
+		}
+		if(item.name == "清洁用品"){
+			$$("#qingjiePrice").val(item.price);
+			$$("#qingjieId").val(item.service_addon_id);
+		}
+	}
+	
+	
+	var addonIds = sessionStorage.getItem('serviceAddons');
+	
+	if(addonIds != null){
+		$$("img[name = tag]").each(function(key, index) {
+			
+			var addonId =  $$(this).prev().val();
+			
+			var arr =  $$(this).attr("src").split(".");
+			
+			if(addonIds.indexOf(addonId) >= 0){
+				$$(this).attr("src",arr[0]+"-2x"+".png");
+			}
+		});	
+	}
+	
 	
 });
 
