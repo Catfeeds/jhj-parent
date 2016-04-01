@@ -190,17 +190,18 @@ public class OrderPayController extends BaseController {
 		orderPricesService.updateByPrimaryKey(orderPrice);
 		
 		//如果是余额支付或者需支付金额为0 ,或者是 现金支付
-		if (orderPayType.equals(Constants.PAY_TYPE_0) || orderPayType.equals(Constants.PAY_TYPE_6) ||
+		if (orderPayType.equals(Constants.PAY_TYPE_0) || 
+			orderPayType.equals(Constants.PAY_TYPE_6) ||
 			orderPay.compareTo(new BigDecimal(0)) == 0) {
 			// 1. 扣除用户余额.
 			// 2. 用户账号明细增加.
 			// 3. 订单状态变为已支付.
 			// 4. 订单日志
-			
-			u.setRestMoney(u.getRestMoney().subtract(orderPay));
-			u.setUpdateTime(updateTime);
-			userService.updateByPrimaryKeySelective(u);
-			
+			if (orderPayType.equals(Constants.PAY_TYPE_0)) {
+				u.setRestMoney(u.getRestMoney().subtract(orderPay));
+				u.setUpdateTime(updateTime);
+				userService.updateByPrimaryKeySelective(u);
+			}
 			
 			/**
 			 * 2016年3月24日19:11:16  
