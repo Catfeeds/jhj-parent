@@ -793,6 +793,12 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    //服务项目
 		    tranParams.put("service_content","金牌保洁服务初体验");
 		    
+		    //服务金额
+		    tranParams.put("order_money","149元");
+		    
+		    //订单类型
+		    tranParams.put("order_type","2");
+		    
 			String jsonParams = GsonUtil.GsonString(tranParams);
 			params.put("transmissionContent", jsonParams);
 			try {
