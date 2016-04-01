@@ -1,18 +1,20 @@
 package com.jhj.utils;
 
+import java.text.ParseException;
+
 import com.jhj.common.Constants;
 
 public class OrderUtils {
-	//获得订单类型名称
-	public static String getOrderTypeName(Short orderType){
+	// 获得订单类型名称
+	public static String getOrderTypeName(Short orderType) {
 
 		String orderTypeName = "";
-		
+
 		if (orderType.equals(Constants.ORDER_TYPE_0)) {
 			orderTypeName = "钟点工";
 		}
 		if (orderType.equals(Constants.ORDER_TYPE_1)) {
-			orderTypeName = "深度保洁";		
+			orderTypeName = "深度保洁";
 		}
 		if (orderType.equals(Constants.ORDER_TYPE_2)) {
 			orderTypeName = "助理预约单";
@@ -29,223 +31,232 @@ public class OrderUtils {
 		if (orderType.equals(Constants.ORDER_TYPE_6)) {
 			orderTypeName = "缴单费";
 		}
-      return orderTypeName;
-		
+		return orderTypeName;
+
 	}
-	   //获得订单状态名称
 
-		public static String getOrderStatusName(Short orderType , Short orderStatus){
-			String orderStatusName = "";
-			//1. 深度保洁0. 钟点工
-			if (orderType ==0 || orderType == 1) {
-				if (orderStatus.equals(Constants.ORDER_STATUS_0)) {
-					orderStatusName = "已取消";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_1)) {
-					orderStatusName ="未支付";		
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
-					orderStatusName ="已支付";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_3)) {
-					orderStatusName ="已派工";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_5)) {
-					orderStatusName ="开始服务";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_7)) {
-					orderStatusName ="完成服务";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_8)) {
-					orderStatusName ="已评价";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_9)) {
-					orderStatusName ="已关闭";
-				}
-			}
-			//2. 助理预约单
-			if (orderType ==2) {
-				if (orderStatus.equals(Constants.ORDER_STATUS_0)) {
-					orderStatusName ="已取消";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_1)) {
-					orderStatusName ="已预约";		
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
-					orderStatusName ="已派工";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_3)) {
-					orderStatusName ="已确认";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_4)) {
-					orderStatusName ="已支付";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_5)) {
-					orderStatusName ="开始服务";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_7)) {
-					orderStatusName ="完成服务";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_9)) {
-					orderStatusName ="已关闭";
-				}
-			}
-			//3. 配送服务
-			if (orderType ==3) {
-				if (orderStatus.equals(Constants.ORDER_STATUS_0)) {
-					orderStatusName = "已取消";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_1)) {
-					orderStatusName = "未支付";		
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
-					orderStatusName = "已支付";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_3)) {
-					orderStatusName = "已派工";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_5)) {
-					orderStatusName = "开始服务";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_6)) {
-					orderStatusName = "已取货";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_7)) {
-					orderStatusName = "已送达";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_9)) {
-					orderStatusName = "已关闭";
-				}
-			}
+	// 获得订单状态名称
 
-			//4. 充值订单
-			if (orderType ==4) {
-				if (orderStatus.equals(Constants.ORDER_STATUS_12)) {
-					orderStatusName = "提醒已取消";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_10)) {
-					orderStatusName = "提醒已预约";		
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_11)) {
-					orderStatusName = "提醒已完成";
-				}
+	public static String getOrderStatusName(Short orderType, Short orderStatus) {
+		String orderStatusName = "";
+		// 1. 深度保洁0. 钟点工
+		if (orderType == 0 || orderType == 1) {
+			if (orderStatus.equals(Constants.ORDER_STATUS_0)) {
+				orderStatusName = "已取消";
 			}
-			//5. 提醒订单
-			if (orderType ==5) {
-				if (orderStatus.equals(Constants.ORDER_STATUS_13)) {
-					orderStatusName = "充值中";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_14)) {
-					orderStatusName = "充值成功";		
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_15)) {
-					orderStatusName = "充值失败";
-				}
-				if (orderStatus.equals(Constants.ORDER_STATUS_16)) {
-					orderStatusName = "取消充值";
-				}
+			if (orderStatus.equals(Constants.ORDER_STATUS_1)) {
+				orderStatusName = "未支付";
 			}
-			
-	      return orderStatusName;
-			
+			if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
+				orderStatusName = "已支付";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_3)) {
+				orderStatusName = "已派工";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_5)) {
+				orderStatusName = "开始服务";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_7)) {
+				orderStatusName = "完成服务";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_8)) {
+				orderStatusName = "已评价";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_9)) {
+				orderStatusName = "已关闭";
+			}
 		}
-		
-		//根据订单状态和类型判断，button_word上的文字
-		public static String getButtonWordName(Short orderType , Short orderStatus){
-			String buttonWordName = "";
-			//0,1钟点工和深度保洁
-			if (orderType==0 ||orderType == 1) {
-			if (orderStatus==3) {
-					buttonWordName = "开始服务";
-				}
-			if (orderStatus==5) {
-				buttonWordName = "完成服务";
+		// 2. 助理预约单
+		if (orderType == 2) {
+			if (orderStatus.equals(Constants.ORDER_STATUS_0)) {
+				orderStatusName = "已取消";
 			}
-			if (orderStatus==7) {
-				buttonWordName = "已完成";
+			if (orderStatus.equals(Constants.ORDER_STATUS_1)) {
+				orderStatusName = "已预约";
 			}
-			if (orderStatus==8) {
-				buttonWordName = "已关闭";
+			if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
+				orderStatusName = "已派工";
 			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_3)) {
+				orderStatusName = "已确认";
 			}
-			//2.助理预约单
-			if (orderType == 2) {
-			if (orderStatus==2) {
-				buttonWordName = "调整订单";
+			if (orderStatus.equals(Constants.ORDER_STATUS_4)) {
+				orderStatusName = "已支付";
 			}
-			
-			if (orderStatus==3) {
-				buttonWordName = "等待支付";
+			if (orderStatus.equals(Constants.ORDER_STATUS_5)) {
+				orderStatusName = "开始服务";
 			}
-			
-			if (orderStatus==4) {
+			if (orderStatus.equals(Constants.ORDER_STATUS_7)) {
+				orderStatusName = "完成服务";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_9)) {
+				orderStatusName = "已关闭";
+			}
+		}
+		// 3. 配送服务
+		if (orderType == 3) {
+			if (orderStatus.equals(Constants.ORDER_STATUS_0)) {
+				orderStatusName = "已取消";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_1)) {
+				orderStatusName = "未支付";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
+				orderStatusName = "已支付";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_3)) {
+				orderStatusName = "已派工";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_5)) {
+				orderStatusName = "开始服务";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_6)) {
+				orderStatusName = "已取货";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_7)) {
+				orderStatusName = "已送达";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_9)) {
+				orderStatusName = "已关闭";
+			}
+		}
+
+		// 4. 充值订单
+		if (orderType == 4) {
+			if (orderStatus.equals(Constants.ORDER_STATUS_12)) {
+				orderStatusName = "提醒已取消";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_10)) {
+				orderStatusName = "提醒已预约";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_11)) {
+				orderStatusName = "提醒已完成";
+			}
+		}
+		// 5. 提醒订单
+		if (orderType == 5) {
+			if (orderStatus.equals(Constants.ORDER_STATUS_13)) {
+				orderStatusName = "充值中";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_14)) {
+				orderStatusName = "充值成功";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_15)) {
+				orderStatusName = "充值失败";
+			}
+			if (orderStatus.equals(Constants.ORDER_STATUS_16)) {
+				orderStatusName = "取消充值";
+			}
+		}
+
+		return orderStatusName;
+
+	}
+
+	// 根据订单状态和类型判断，button_word上的文字
+	public static String getButtonWordName(Short orderType, Short orderStatus) {
+		String buttonWordName = "";
+		// 0,1钟点工和深度保洁
+		if (orderType == 0 || orderType == 1) {
+			if (orderStatus == 3) {
 				buttonWordName = "开始服务";
 			}
-			if (orderStatus==5) {
+			if (orderStatus == 5) {
 				buttonWordName = "完成服务";
 			}
-			if (orderStatus==7) {
+			if (orderStatus == 7) {
 				buttonWordName = "已完成";
 			}
-			if (orderStatus==8) {
+			if (orderStatus == 8) {
 				buttonWordName = "已关闭";
-			}	
 			}
-			//3.配送服务单
-			if (orderType == 3) {
-				if (orderStatus==3) {
-						buttonWordName = "开始服务";
-				}
-				if (orderStatus==5) {
-					buttonWordName = "已取货";
-				}
-				if (orderStatus==6) {
-					buttonWordName = "已送达";
-				}	
-				if (orderStatus==7) {
-					buttonWordName = "已关闭";
-				}
-				}
-			return buttonWordName;
-			
 		}
-		    //根据订单状态和类型判断，button_word上的文字
-			public static String getPayTypeName(Short orderStatus,Short payType){
-				String paytypeName = "" ;	
-				
-				if (orderStatus == 1) {
-					
-					paytypeName = "未支付";
-					
-				}else {
-				if (payType.equals((short)0)) {
-						
-					paytypeName = "余额支付";	
-						
-				}
-				if (payType.equals((short)1)) {
-					
-					paytypeName = "支付宝";	
-						
-					}
-				if (payType.equals((short)2)) {
-					
-					paytypeName = "微信支付";	
-						
-					}
-				if (payType.equals((short)3)) {
-					
-					paytypeName = "智慧支付";	
-						
-					}
-				if (payType.equals((short)6)) {
-					
-					paytypeName = "现金支付";	
-						
-					}
-				}
-				
-				
-				return paytypeName;
+		// 2.助理预约单
+		if (orderType == 2) {
+			if (orderStatus == 2) {
+				buttonWordName = "调整订单";
 			}
+
+			if (orderStatus == 3) {
+				buttonWordName = "等待支付";
+			}
+
+			if (orderStatus == 4) {
+				buttonWordName = "开始服务";
+			}
+			if (orderStatus == 5) {
+				buttonWordName = "完成服务";
+			}
+			if (orderStatus == 7) {
+				buttonWordName = "已完成";
+			}
+			if (orderStatus == 8) {
+				buttonWordName = "已关闭";
+			}
+		}
+		// 3.配送服务单
+		if (orderType == 3) {
+			if (orderStatus == 3) {
+				buttonWordName = "开始服务";
+			}
+			if (orderStatus == 5) {
+				buttonWordName = "已取货";
+			}
+			if (orderStatus == 6) {
+				buttonWordName = "已送达";
+			}
+			if (orderStatus == 7) {
+				buttonWordName = "已关闭";
+			}
+		}
+		return buttonWordName;
+
+	}
+
+	// 根据订单状态和类型判断，button_word上的文字
+	public static String getPayTypeName(Short orderStatus, Short payType) {
+		String paytypeName = "";
+
+		if (orderStatus == 1) {
+
+			paytypeName = "未支付";
+
+		} else {
+			if (payType.equals((short) 0)) {
+
+				paytypeName = "余额支付";
+
+			}
+			if (payType.equals((short) 1)) {
+
+				paytypeName = "支付宝";
+
+			}
+			if (payType.equals((short) 2)) {
+
+				paytypeName = "微信支付";
+
+			}
+			if (payType.equals((short) 3)) {
+
+				paytypeName = "智慧支付";
+
+			}
+			if (payType.equals((short) 6)) {
+
+				paytypeName = "现金支付";
+
+			}
+		}
+
+		return paytypeName;
+	}
+	
+	public static void main(String[] args) throws ParseException {
+		
+		Short status = 5;
+		Short patType = 6;
+		
+		System.out.println(OrderUtils.getPayTypeName(status, patType));
+	}
 }

@@ -778,6 +778,21 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    tranParams.put("order_id", orderId+"");
 		    tranParams.put("remind_title", remindTitle);
 		    tranParams.put("remind_content",remindContent);
+		    
+		    
+		    
+		    //服务地址：
+		    tranParams.put("service_addr","北京市东城区东直门外大街42号宇飞大厦612.");
+		
+		    //服务时间
+		    tranParams.put("service_addr","4月2号 11:00");
+		    
+		    //服务时长 
+		    tranParams.put("service_hour","3小时");
+		    
+		    //服务项目
+		    tranParams.put("service_content","金牌保洁服务初体验");
+		    
 			String jsonParams = GsonUtil.GsonString(tranParams);
 			params.put("transmissionContent", jsonParams);
 			try {

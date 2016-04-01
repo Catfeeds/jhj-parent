@@ -29,11 +29,11 @@ public class TestOrderQuerysController extends JUnitActionBase{
 
 	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
     }
-	/*@Test
+	@Test
     public void testGetDetail() throws Exception {
 
 		String url = "/app/staff/order/get_detail.json";
-		String params = "?staff_id=4&&order_id=2295";
+		String params = "?staff_id=29&&order_id=3188";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);
@@ -41,6 +41,6 @@ public class TestOrderQuerysController extends JUnitActionBase{
 	    resultActions.andExpect(status().isOk());
 
 	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
-    }*/
+    }
 	
 }
