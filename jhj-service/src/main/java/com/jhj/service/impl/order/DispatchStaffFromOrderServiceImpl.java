@@ -785,7 +785,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    tranParams.put("service_addr","北京市东城区东直门外大街42号宇飞大厦612.");
 		
 		    //服务时间
-		    tranParams.put("service_addr","4月2号 11:00");
+		    tranParams.put("service_time","4月2号 11:00");
 		    
 		    //服务时长 
 		    tranParams.put("service_hour","3小时");
