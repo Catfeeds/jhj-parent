@@ -238,7 +238,7 @@ public class OrderUtils {
 					paytypeName = "智慧支付";	
 						
 					}
-				if (payType.equals((short)4)) {
+				if (payType.equals((short)6)) {
 					
 					paytypeName = "现金支付";	
 						

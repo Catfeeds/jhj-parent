@@ -381,45 +381,6 @@ ALTER TABLE `dict_service_types` ADD `service_relative` VARCHAR(500) NOT NULL CO
 ALTER TABLE `dict_service_types` ADD `service_feature` VARCHAR(500) NOT NULL COMMENT '（微官网）助理订单类型详情页，服务特色 2015-11-26 10:30:51' AFTER `service_relative`;
 
 
-DROP TABLE IF EXISTS `jhj_setting`;
-CREATE TABLE IF NOT EXISTS `jhj_setting` (
-`id` int(11) unsigned NOT NULL COMMENT '主键',
-  `name` varchar(32) NOT NULL COMMENT '钟点工收入比例 |  助理收入比例  | 统一客服电话 | 统一服务人员客服电话 | 推荐奖励 | 推荐有效天数 | | 推荐完成单数',
-  `setting_type` varchar(32) NOT NULL COMMENT 'hour_incoming|  am_incoming | user_service_tel | staff_service_tel | invite_price | invite_days | invite_order_count',
-  `setting_value` varchar(128) NOT NULL,
-  `add_time` int(11) NOT NULL COMMENT '添加时间戳'
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='相关配置表';
-
-
-INSERT INTO `jhj_setting` (`id`, `name`, `setting_type`, `setting_value`, `add_time`) VALUES
-(1, '钟点工提成', 'hour-ratio', '0.75', 1454121811),
-(2, '助理提成', 'am-ratio', '0.85', 1454121811),
-(3, '深度保洁提成', 'deep-ratio', '0', 1454121811),
-(4, '配送订单提成', 'dis-ratio', '0', 1454121811),
-(5, '统一客服电话', 'tel-u', '010-58734880', 1454121811),
-(6, '服务人员客服电话', 'tell-staff', '15210316330', 1454121811),
-(7, '欠款金额达到进入黑名单条件', 'total-dept-blank', '1000', 1454121811),
-(8, '后台充值验证手机号', 'recharge_mobile', '18611289885', 1459247137),
-(9, '初级服务人员钟点工提成', 'hour-ratio-level-1', '0.71', 1459249945),
-(10, '中级服务人员钟点工提成', 'hour-ratio-level-2', '0.75', 1459249945),
-(11, '金牌服务人员钟点工提成', 'hour-ratio-level-3', '0.79', 1459249945),
-(12, 'VIP服务人员钟点工提成', 'hour-ratio-level-4', '0.84', 1459249945),
-(13, '初级服务人员助理单提成', 'am-ratio-level-1', '0.71', 1459249945),
-(14, '中级服务人员助理单提成', 'am-ratio-level-2', '0.75', 1459249945),
-(15, '金牌服务人员助理单提成', 'am-ratio-level-3', '0.79', 1459249945),
-(16, 'VIP服务人员助理单提成', 'am-ratio-level-4', '0.84', 1459249945),
-(17, '初级服务人员配送单提成', 'dis-ratio-level-1', '0.71', 1459249945),
-(18, '中级服务人员配送单提成', 'dis-ratio-level-2', '0.75', 1459249945),
-(19, '金牌服务人员配送单提成', 'dis-ratio-level-3', '0.79', 1459249945),
-(20, 'VIP服务人员配送单提成', 'dis-ratio-level-4', '0.84', 1459249945);
-
-ALTER TABLE `jhj_setting`
- ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `jhj_setting`
-MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',AUTO_INCREMENT=8;
-
-
 CREATE TABLE IF NOT EXISTS `msg` (
 `msg_id` int(11) unsigned NOT NULL COMMENT '主键',
   `title` varchar(64) NOT NULL COMMENT '标题',
@@ -627,29 +588,6 @@ ALTER TABLE `org_staff_online`
 MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',AUTO_INCREMENT=1;
 ALTER TABLE `org_staff_pay_dept`
 MODIFY `order_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键支付欠款订单ID',AUTO_INCREMENT=1;
-
-
-CREATE TABLE IF NOT EXISTS `partner_service_type` (
-`service_type_id` int(11) unsigned NOT NULL COMMENT '服务类别id 主键',
-  `name` varchar(32) NOT NULL COMMENT '服务名称',
-  `parent_id` int(11) unsigned NOT NULL COMMENT '父级ID',
-  `view_type` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0=类别 1=商品',
-  `no` tinyint(1) unsigned NOT NULL COMMENT '列表排序'
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-
-INSERT INTO `partner_service_type` (`service_type_id`, `name`, `parent_id`, `view_type`, `no`) VALUES
-(12, '钟点工', 0, 0, 0),
-(13, '深度保洁', 0, 0, 0),
-(14, '助理', 0, 0, 0),
-(15, '快送', 0, 0, 0);
-
-
-ALTER TABLE `partner_service_type`
- ADD PRIMARY KEY (`service_type_id`);
-
-
-ALTER TABLE `partner_service_type`
-MODIFY `service_type_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '服务类别id 主键',AUTO_INCREMENT=16;
 
 
 CREATE TABLE IF NOT EXISTS `study_bank` (
@@ -906,7 +844,6 @@ ALTER TABLE `dict_service_types` ADD `degree_type` TINYINT(1) UNSIGNED NOT NULL 
 -- Database: `jhj`
 --
 
-INSERT INTO `jhj_setting` (`id`, `name`, `setting_type`, `setting_value`, `add_time`) VALUES (NULL, '后台充值验证手机号', 'recharge_mobile', '18611289885', '1459247137');
 
 
 
@@ -933,18 +870,13 @@ CREATE TABLE `partner_service_type` (
 --
 
 INSERT INTO `partner_service_type` (`service_type_id`, `name`, `parent_id`, `unit`, `default_num`, `price`, `remarks`, `view_type`, `no`, `service_img_url`, `enable`) VALUES
-(16, '钟点工子1', 12, '呵呵', 10, '23.00', '', 0, 0, '', 1),
-(18, '深度子节点1', 13, '屋', 1, '2.00', '', 1, 0, '', 1),
-(20, '呵呵1', 19, '', 0, '0.00', '', 0, 0, '', 1),
-(21, '深度2', 13, '座', 1, '1.00', '', 0, 0, '', 1),
-(22, '快送子服务1', 15, '和', 1, '20.00', '', 1, 0, '', 1),
 (23, '金牌保洁', 0, '1', 1, '12.00', '', 1, 0, '', 1),
 (24, '厨娘烧饭', 0, '1', 1, '10.00', '', 1, 0, '', 1),
 (25, '贴心家事', 0, '1', 1, '1.00', '', 1, 0, '', 1),
 (26, '深度养护', 0, '1', 1, '10.00', '', 1, 0, '', 1),
 (27, '企业服务', 0, '1', 1, '10.00', '', 1, 1, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1),
-(28, '金牌保洁初体验', 23, '元/小时', 1, '33.00', '初次体验金牌保洁', 1, 123, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1),
-(29, '厨娘烧饭初体验', 24, '1', 1, '66.00', '我是厨娘烧饭*初体验', 1, 0, '2.png', 1),
+(28, '金牌保洁初体验', 23, '元/次', 1, '149.00', '初次体验金牌保洁', 1, 123, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1),
+(29, '厨娘烧饭初体验', 24, '元/次', 1, '99.00', '我是厨娘烧饭*初体验', 1, 0, '2.png', 1),
 (30, '贴心家事', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/a973ba54285e3493b26abb5e4b11ccc7', 1),
 (31, '跑腿代办', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 0),
 (32, '陪伴', 25, '1', 0, '10.00', '', 1, 0, '', 0),
