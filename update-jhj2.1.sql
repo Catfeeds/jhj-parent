@@ -1030,3 +1030,6 @@ CREATE TABLE `order_customization_year` (
   `add_time` int(11) unsigned NOT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `partner_service_type` ADD `service_property` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务性质 0 = 单品(如跑腿、做饭) 1= 全年定制(全年定制)' AFTER `enable`, ADD `service_times` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '每周服务次数' AFTER `service_property`, ADD `service_content` VARCHAR(255) NOT NULL COMMENT '服务内容' AFTER `service_times`;
