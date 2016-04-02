@@ -46,8 +46,11 @@
 	<if test="mobile !=null and mobile !='' ">
 		and mobile like '%${mobile}%' 
 	</if>
-
-      
+	
+	<![CDATA[ 
+	    and sms_token != 3
+	]]>
+      	
     order by add_time desc    
 
   </select>
