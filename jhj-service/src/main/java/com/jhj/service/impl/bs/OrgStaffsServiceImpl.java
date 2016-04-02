@@ -669,15 +669,19 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		
 		List<PartnerServiceType> partServiceList = formVo.getPartServiceList();
 		
-		List<OrgStaffSkill> selectByStaffId = skillMapper.selectByStaffId(staffId);
+		List<OrgStaffSkill> skillList = skillMapper.selectByStaffId(staffId);
 		
-		for (Iterator iterator = selectByStaffId.iterator(); iterator.hasNext();) {
+		
+		for (Iterator iterator = skillList.iterator(); iterator.hasNext();) {
 			OrgStaffSkill orgStaffSkill = (OrgStaffSkill) iterator.next();
 			
 			if(orgStaffSkill !=null){
 				partServiceList.add(partServiceMapper.selectByPrimaryKey(orgStaffSkill.getServiceTypeId()));
 			}
+			
 		}
+		
+		formVo.setPartServiceList(partServiceList);
 		
 		return formVo;
 	}

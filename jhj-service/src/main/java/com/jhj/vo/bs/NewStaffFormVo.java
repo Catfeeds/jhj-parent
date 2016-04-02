@@ -7,6 +7,7 @@ import com.jhj.po.model.admin.AdminAuthority;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
+import com.meijia.utils.common.extension.ArrayHelper;
 
 /**
  *
@@ -33,6 +34,7 @@ public class NewStaffFormVo extends OrgStaffs {
 	
 	private  Long[]  skillIds;
 	
+	private  String skillIdsStr;
 	
 	//2016年1月22日18:44:36 服务人员 身份认证 Vo
 	private List<StaffAuthVo> authList;
@@ -79,6 +81,18 @@ public class NewStaffFormVo extends OrgStaffs {
 
 	public void setSkillIds(Long[] skillIds) {
 		this.skillIds = skillIds;
+	}
+
+//	public String getSkillIdsString() {
+//		return ArrayHelper.LongtoString(skillIds, ",");
+//	}
+
+	public String getSkillIdsStr() {
+		return skillIdsStr;
+	}
+
+	public void setSkillIdsStr(String skillIdsStr) {
+		this.skillIdsStr = skillIdsStr;
 	}
 	
 }

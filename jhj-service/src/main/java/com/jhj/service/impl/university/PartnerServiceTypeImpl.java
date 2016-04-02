@@ -83,6 +83,14 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		type.setServiceImgUrl("");
 		
 		type.setEnable((short)1); //0=不可用   1=可用
+		
+		
+		type.setServiceProperty((short)0); // 0= 单品  1=全年定制
+		
+		type.setServiceTimes(0L); // 每周定制次数
+		
+		type.setServiceContent("");
+		
 		return type;
 	}
 
