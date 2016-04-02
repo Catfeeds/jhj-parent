@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.order.OrderCustomizationYearMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderCustomizationYear" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, service_type_id, add_time
+  </sql>
+  
+  <select id="selectByListPage" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from order_customization_year
+  	order by add_time desc
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_customization_year
+    where id = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_customization_year
+    where id = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.order.OrderCustomizationYear" >
+    insert into order_customization_year (id, user_id, service_type_id, 
+      add_time)
+    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC}, 
+      #{addTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderCustomizationYear" >
+    insert into order_customization_year
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderCustomizationYear" >
+    update order_customization_year
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTypeId != null" >
+        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderCustomizationYear" >
+    update order_customization_year
+    set user_id = #{userId,jdbcType=NUMERIC},
+      service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+      add_time = #{addTime,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>
