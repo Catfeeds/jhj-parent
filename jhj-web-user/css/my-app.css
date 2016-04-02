@@ -2501,6 +2501,16 @@ i.toolbar-icon-my {
   border:1px solid #5EA6EE;
 }
 
+.my-submit1{
+  width:90%;
+  height:50px;
+  line-height: 50px;
+  margin: 10px auto;
+  font-size: 18px;
+  background: #FF8500!important;
+  border:1px solid #FF8500;
+}
+
 .hjyh-submit{
   width:60%;
   margin: 0 auto;
@@ -3272,9 +3282,9 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 .word-template-fiveservice1 p{
   color:#000;margin:0;font-size:16px;font-weight:bold;
 }
-.word-template-fiveservice p:nth-child(3){
+/* .word-template-fiveservice p:nth-child(3){
   color:#F08E36;
-}
+} */
 .btn-five{
   width:26%;border:1px solid #999;color:#999;margin-top: 35px;margin-right:10px;float:right;
   font-size:16px;
@@ -3290,4 +3300,94 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   width:24%;
   margin-left:38%;
   margin-top:10px;
+}
+
+
+
+
+/*金牌保洁//厨娘烧饭三级页面*/
+.jpbj-jpsh{
+  margin-left:2%;
+  margin-top:20px;
+  font-size: 20px;
+  font-weight: bold;
+  color:#666;
+}
+.jpbj-jpsh-xiantiao{
+  width:96%;
+  height:1px;
+  background: #B2B2B2;
+  margin-left:2%;
+}
+.jpbj-jpsh-mingxi{
+  color:#999;
+  margin:0;
+  margin-left:2%;
+  margin-top:10px;
+}
+.jpbj-jpsh-mingxi1{
+  color:#999;
+  margin:0;
+  margin-left:2%;
+}
+.jpbj-jpsh-mingxi2{
+  color:#999;
+  margin:0;
+  margin-left:2%;
+}
+
+
+
+
+/*助理页面修改*/
+.zhulifuwu{
+  margin-left: 2%;
+  margin-top:20px;
+  color:#FF8500;
+}
+.zhuli-introduce{
+  border-top: 1px solid #ccc;
+  height:80px;
+  width:100%;
+  background: #fff;
+}
+.zhuli-introduce img{
+  width:60px;
+  margin-left:20px;
+  margin-top:10px;
+  float:left;
+}
+.zhuli-introduce-nane{
+  height:80px;
+  float: left;
+  margin-left:20px;
+}
+.zhuli-introduce-nane p{
+  margin:0;
+  margin-top:15px;
+}
+.zhuli-introduce-img{
+  width:60px;
+  height:60px;
+  overflow:hidden;
+  float:left;
+  border-radius: 50%;
+  margin-left:20px;
+  margin-top:10px;
+}
+.zhuli-introduce-img img{
+  margin:0;
+}
+.zhuli-introduce-nane img{
+  float:left;
+  width:15px;
+  margin-left:0;
+}
+.zhuli-introduce-sure{
+  float:right;
+}
+.zhuli-introduce-sure a{
+  margin-top:45px;
+  background:0;
+  right:15px;
 }

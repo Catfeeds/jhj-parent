@@ -38,11 +38,32 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 				
 				htmlPart = htmlPart.replace(new RegExp('{name}',"gm"), service.name);
 				htmlPart = htmlPart.replace(new RegExp('{remarks}',"gm"), service.remarks);
-				htmlPart = htmlPart.replace(new RegExp('{price}',"gm"), service.price);
-				htmlPart = htmlPart.replace(new RegExp('{unit}',"gm"), service.unit);
+				
+				if(service.service_property == 0){
+					//单品
+					htmlPart = htmlPart.replace(new RegExp('{priceAndUnit}',"gm"), 
+								"<font color='orange'>"+service.price+service.unit+"</font>");
+				}else{
+					
+					var times =  service.service_times;
+					
+					var weekNum = "";
+					
+					if(times < 1){
+						//取整，舍弃小数
+						weekNum = parseInt(1/times);
+					}
+					// 全年订制
+					htmlPart = htmlPart.replace(new RegExp('{priceAndUnit}',"gm"), "全年订制:每"+weekNum+"周"+times+"次");
+				}
+				
 				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}',"gm"), service.service_type_id);
 				
 				htmlPart = htmlPart.replace(new RegExp('{enableNum}',"gm"), service.enable);
+				
+				htmlPart = htmlPart.replace(new RegExp('{serviceProperty}',"gm"), service.service_property);
+				
+				
 				var buttonWord = ""
 				
 				if(service.enable == 1){
@@ -52,15 +73,12 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 				}
 				
 				htmlPart = htmlPart.replace(new RegExp('{enable}',"gm"), buttonWord);
-				
 				resultHtm += htmlPart;
-				
 			}
 			
 			$$("#serviceContainer").append(resultHtm);
-			
 	 },
-	  error: function(status,xhr){
+	 error: function(status,xhr){
 		  	myApp.alert("网络异常,请稍后再试.");
 	 }
 	});
@@ -79,19 +97,30 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 			return false;
 		}
 		
-		var enable =  $$(this).next().val();
+		var enable =  $$(this).find("input[name='enable']").val();
 		
 		if(enable == 0){
 			return false;
 		}
 		
-		var serviceTypeId =  $$(this).prev().val();
+		var serviceTypeId =  $$(this).find("input[name='serviceTypeId']").val();
 		
-
+		
 		var parentServiceTypeId =  $$("#parentServiceType").val();
 		
-		mainView.router.loadPage("order/order-form-zhongdiangong.html?serviceType="+serviceTypeId
-								+"&parentServiceTypeId="+parentServiceTypeId);
+		var serviceProperty = $$(this).find("input[name='serviceProperty']").val();
+		
+		
+		var url = "order/order-form-zhongdiangong.html?serviceType="+serviceTypeId
+						+"&parentServiceTypeId="+parentServiceTypeId;
+		
+		if(serviceProperty == 1){
+			// 全年订制
+			url = "order/fiveservice/QuanNianDingZhi.html?serviceType="+serviceTypeId;	
+			
+		}
+		
+		mainView.router.loadPage(url);
 	});
 });
 

@@ -18,16 +18,20 @@
 					<div class="word-template-fiveservice">
 						<p>{name}</p>
 						<p>{remarks}</p>
-						<p>{price}{unit}</p>
+						<p>{priceAndUnit}</p>
+						
 					</div>
 					
-					<input type="hidden" name="serviceTypeId" value="{serviceTypeId}">
+					
 					
 					<div id="jinpaibaojiediv" class="button-template-fiveservice">
 						<a href="#" class="button button-big button-green btn-five">{enable}</a>
+						
+						<input type="hidden" name="serviceTypeId" value="{serviceTypeId}">
+						<input type="hidden" name="enable" value="{enableNum}">
+						<input type="hidden" name="serviceProperty" value="{serviceProperty}">
 					</div>
 					
-					<input type="hidden" name="enable" value="{enableNum}">
 				</div>
 			</div>
 			
