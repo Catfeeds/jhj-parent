@@ -88,8 +88,9 @@ $("#orgStaffForm_btn").click(function(form) {
 	return checkThisForm();
 	
 	if (confirm("确认要保存吗?")) {
-		setAuthIds();
 		
+		console.log($("#autoIds").val());
+		return false;
 		if(staffId == 0 ){
 			if(ajaxReturn1 != "0" && ajaxReturn2 != "0" && $('#newStaff-form').validate().form()){
 				$('#newStaff-form').submit();
@@ -172,6 +173,7 @@ function setAuthButton(obj){
 	if(classStr.indexOf('btn-success')>0){
 		$(obj).attr("class","btn btn-default");
 	}
+	setAuthIds();
 }
 
 /*
@@ -191,7 +193,7 @@ function setAuthIds(){
 	if (tagSelected != "") {
 		tagSelected = tagSelected.substring(0, tagSelected.length - 1);
 	}
-
+	console.log(tagSelected);
 	authIds.val(tagSelected);
 }
 
