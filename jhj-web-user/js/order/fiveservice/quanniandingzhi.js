@@ -24,7 +24,7 @@ myApp.onPageInit('quanniandingzhi-page', function(page) {
 			
 			var time = result.service_times;
 			//原价
-			var yearPriceOri = singlePrice*time*52;
+			var yearPriceOri = singlePrice;
 			
 			$$("#price").text("原价:"+yearPriceOri+"元");
 			

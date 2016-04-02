@@ -36,7 +36,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 				
 				var htmlPart = tempHtml;
 				
-				htmlPart = htmlPart.replace(new RegExp('{name}',"gm"), service.name);
+				htmlPart = htmlPart.replace(new RegExp('{name}',"gm"),service.name);
 				htmlPart = htmlPart.replace(new RegExp('{remarks}',"gm"), service.remarks);
 				
 				if(service.service_property == 0){
@@ -52,9 +52,11 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 					if(times < 1){
 						//取整，舍弃小数
 						weekNum = parseInt(1/times);
+						// 全年订制
+						htmlPart = htmlPart.replace(new RegExp('{priceAndUnit}',"gm"), "全年订制:每"+weekNum+"周"+1+"次");
+					}else{
+						htmlPart = htmlPart.replace(new RegExp('{priceAndUnit}',"gm"), "全年订制:每周"+times+"次");
 					}
-					// 全年订制
-					htmlPart = htmlPart.replace(new RegExp('{priceAndUnit}',"gm"), "全年订制:每"+weekNum+"周"+times+"次");
 				}
 				
 				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}',"gm"), service.service_type_id);
