@@ -838,16 +838,6 @@ MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',AUTO_INCRE
 
 ALTER TABLE `dict_service_types` ADD `degree_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '微官网）在助理订单类型列表页,分不同层级展示' , ADD `to_date` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '（微官网）该类型的 上架截止日期';
 
---
--- Database: `jhj`
---
-
-
-
-
---
--- 表的结构 `partner_service_type`
---
 
 CREATE TABLE `partner_service_type` (
   `service_type_id` int(11) UNSIGNED NOT NULL COMMENT '服务类别表',
@@ -860,31 +850,48 @@ CREATE TABLE `partner_service_type` (
   `view_type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0=类别 1=商品',
   `no` tinyint(1) UNSIGNED NOT NULL COMMENT '列表排序',
   `service_img_url` varchar(255) NOT NULL COMMENT '微网站服务的图标图片',
-  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '服务是否可用'
+  `enable` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '服务是否可用',
+  `service_property` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务性质 0 = 单品(如跑腿、做饭) 1= 全年定制(全年定制)',
+  `service_times` double(6,2) UNSIGNED NOT NULL COMMENT '每周服务次数',
+  `service_content` varchar(255) NOT NULL COMMENT '服务内容'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `partner_service_type`
 --
 
-INSERT INTO `partner_service_type` (`service_type_id`, `name`, `parent_id`, `unit`, `default_num`, `price`, `remarks`, `view_type`, `no`, `service_img_url`, `enable`) VALUES
-(23, '金牌保洁', 0, '1', 1, '12.00', '', 1, 0, '', 1),
-(24, '厨娘烧饭', 0, '1', 1, '10.00', '', 1, 0, '', 1),
-(25, '贴心家事', 0, '1', 1, '1.00', '', 1, 0, '', 1),
-(26, '深度养护', 0, '1', 1, '10.00', '', 1, 0, '', 1),
-(27, '企业服务', 0, '1', 1, '10.00', '', 1, 1, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1),
-(28, '金牌保洁初体验', 23, '元/次', 1, '149.00', '初次体验金牌保洁', 1, 123, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1),
-(29, '厨娘烧饭初体验', 24, '元/次', 1, '99.00', '我是厨娘烧饭*初体验', 1, 0, '2.png', 1),
-(30, '贴心家事', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/a973ba54285e3493b26abb5e4b11ccc7', 1),
-(31, '跑腿代办', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 0),
-(32, '陪伴', 25, '1', 0, '10.00', '', 1, 0, '', 0),
-(33, '便民服务', 25, '1', 0, '10.00', '', 1, 0, '', 1),
-(34, '床铺除螨杀菌', 26, '次', 1, '360.00', '', 1, 0, '', 1),
-(35, '厨房高温消毒杀菌', 26, '1', 1, '690.00', '说明', 1, 0, '', 1),
-(36, '油烟机清洗', 26, '1', 1, '10.00', '', 1, 0, '', 1),
-(37, '中小企业保洁', 27, '1', 1, '10.00', '', 1, 0, '', 1),
-(38, '中小企业做饭', 27, '1', 1, '10.00', '', 1, 0, '', 1),
-(41, '简朴生活', 23, '元/月', 0, '307.00', '全年2周1次金牌保洁', 1, 0, '', 0);
+INSERT INTO `partner_service_type` (`service_type_id`, `name`, `parent_id`, `unit`, `default_num`, `price`, `remarks`, `view_type`, `no`, `service_img_url`, `enable`, `service_property`, `service_times`, `service_content`) VALUES
+(23, '金牌保洁', 0, '1', 1, '12.00', '', 1, 0, '', 1, 0, 0.00, ''),
+(24, '厨娘烧饭', 0, '1', 1, '10.00', '', 1, 0, '', 1, 0, 0.00, ''),
+(25, '贴心家事', 0, '1', 1, '1.00', '', 1, 0, '', 1, 0, 0.00, ''),
+(26, '深度养护', 0, '1', 1, '10.00', '', 1, 0, '', 1, 0, 0.00, ''),
+(27, '企业服务', 0, '1', 1, '10.00', '', 1, 1, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1, 0, 0.00, ''),
+(28, '金牌保洁初体验', 23, '元/次', 1, '149.00', '初次体验金牌保洁', 1, 123, 'http://img.jia-he-jia.com:8080/42c9787725bafd9d79db1162f248629d', 1, 0, 0.00, ''),
+(29, '厨娘烧饭初体验', 24, '元/2小时', 1, '66.00', '一次超值的解馋体验', 1, 0, 'http://img.jia-he-jia.com:8080/42c9787725bafd9d79db1162f248629d', 1, 0, 0.00, '南方菜/北方菜（可代买食材）'),
+(30, '安心托管', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/eb5f777832737ca53a73c5fa0316984a', 1, 0, 0.00, ''),
+(31, '跑腿代办', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/bbfabfc7cd295ad77b31be296e39cef7', 1, 0, 0.00, ''),
+(32, '陪伴', 25, '1', 0, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/ec2d3e10b6f0129429e8c2fc14506401', 1, 0, 0.00, ''),
+(33, '便民服务', 25, '1', 0, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/c5134155c59406bc95f96921aa8737df', 1, 0, 0.00, ''),
+(34, '床铺除螨杀菌', 26, '元/次', 1, '360.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/8316de14c116886e09b61ee89b4ffd2c', 1, 0, 0.00, ''),
+(35, '厨房高温消毒杀菌', 26, '元/次', 1, '690.00', '说明', 1, 0, 'http://img.jia-he-jia.com:8080/b519ae6995c8a93c8e534688000f0b2f', 1, 0, 0.00, ''),
+(36, '油烟机清洗', 26, '元/次', 1, '120.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/252193c1e05883779d4f401b07b93734', 1, 0, 0.00, ''),
+(37, '中小企业保洁', 27, '元/次', 1, '149.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/4322f807d8156f2e672e1f55900986ce', 1, 0, 0.00, ''),
+(38, '中小企业做饭', 27, '次', 1, '99.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/25f1c008449d594225d04371c95a71c5', 1, 0, 0.00, ''),
+(41, '简朴生活', 23, '元/月', 0, '3874.00', '全年2周1次金牌保洁', 1, 0, 'http://img.jia-he-jia.com:8080/804a818e169ecc81555859baba103074', 1, 1, 0.50, '客厅、卧室、厨房、餐厅、卫生间、阳台六大区域\r\n除尘、除污、去油、拖洗、物品整理+擦拭+摆放等78项服务'),
+(42, '舒适生活', 23, '次', 0, '7748.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/150e5d2e56839f652aa480561c8557a1', 1, 1, 1.00, '客厅、卧室、厨房、餐厅、卫生间、阳台六大区域\r\n除尘、除污、去油、拖洗、物品整理+擦拭+摆放等78项服务'),
+(43, '怡然生活', 23, '次', 0, '15496.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/c891853e76f084be96b7946d6f267073', 1, 1, 2.00, '客厅、卧室、厨房、餐厅、卫生间、阳台六大区域\r\n除尘、除污、去油、拖洗、物品整理+擦拭+摆放等78项服务'),
+(44, '祥和生活', 23, '次', 0, '23244.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/7dfa2026848328ee7f796e0a7666c9ee', 1, 1, 3.00, '客厅、卧室、厨房、餐厅、卫生间、阳台六大区域\r\n除尘、除污、去油、拖洗、物品整理+擦拭+摆放等78项服务'),
+(45, '品质生活', 23, '次', 0, '38740.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/73f98a169e40028ddfbb32e50c9a213e', 1, 1, 5.00, '客厅、卧室、厨房、餐厅、卫生间、阳台六大区域\r\n除尘、除污、去油、拖洗、物品整理+擦拭+摆放等78项服务'),
+(46, '巧厨娘', 24, '次', 0, '25740.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/62b4f4c7dc7c62c8aedb26848d340cf8', 1, 1, 5.00, '南方菜/北方菜（可代买食材）'),
+(47, '俏厨娘', 24, '次', 0, '30888.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/7fe45ebcc1e4efd290c2d16e477cf2a1', 1, 1, 6.00, '南方菜/北方菜（可代买食材）'),
+(48, '贤厨娘', 24, '次', 0, '51488.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/132175a0d964b0bddec56f6941cf88ed', 1, 1, 10.00, '南方菜/北方菜（可代买食材）'),
+(49, '孝厨娘', 24, '次', 0, '61776.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/8c75a4588ea268327029febdbdb2f058', 1, 1, 12.00, '南方菜/北方菜（可代买食材）'),
+(50, '冰箱洗衣机清洗', 26, '元/次', 0, '200.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/b7e1809aca64b68b7e2233afb57c6bd0', 1, 0, 0.00, ''),
+(51, '空调清洗', 26, '元/次', 0, '100.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/80039b16969c5f578169a8de7d822169', 1, 0, 0.00, ''),
+(52, '地板家具养护', 26, '元/次', 0, '750.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/e090cee2fa450cae031f52a409e2b045', 1, 0, 0.00, ''),
+(53, '皮具护理', 26, '元/次', 0, '60.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/a46db0f57fda56b7cfea0d0bda873aa5', 1, 0, 0.00, ''),
+(54, '擦玻璃', 26, '元/次', 0, '120.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/aa2a2601fd225bc6ad581079352ea599', 1, 0, 0.00, ''),
+(55, '整理衣橱(含室内整理)', 26, '元/次', 0, '260.00', '', 0, 0, 'http://img.jia-he-jia.com:8080/b7fd6b59049f58c749d08807bda2138a', 1, 0, 0.00, '');
 
 --
 -- Indexes for dumped tables
@@ -895,6 +902,16 @@ INSERT INTO `partner_service_type` (`service_type_id`, `name`, `parent_id`, `uni
 --
 ALTER TABLE `partner_service_type`
   ADD PRIMARY KEY (`service_type_id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `partner_service_type`
+--
+ALTER TABLE `partner_service_type`
+  MODIFY `service_type_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '服务类别表', AUTO_INCREMENT=56;
 
 --
 -- 在导出的表使用AUTO_INCREMENT
