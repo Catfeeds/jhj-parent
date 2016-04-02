@@ -33,7 +33,7 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	});
 
 	
-	$$("#order-am-faqiyuyue").on("click",function(){
+	$$("#order-am-faqiyuyue-now-jhj2.1").on("click",function(){
 		
 		var content =  $$("#serviceContent").val();
 		
