@@ -190,8 +190,6 @@ function loadProperStaffForAmOrder(){
 
 			return false;
 			
-		},error:function(){
-			alert("网络错误");
 		}
 	})
 }
@@ -257,8 +255,6 @@ $('#viewForm').on('click',function(){
 			
 			var rootPath = getRootPath();
 			window.location.replace(rootPath+"/order/order-am-list");
-		},error:function(){
-			alert("网络错误");
 		}
 	})
 	
