@@ -275,6 +275,15 @@ public class NewPartnerServiceTypeController extends AdminController {
 			}
 			
 			partnerServiceType.setServiceTypeId(id);
+			
+			
+			/*
+			 * 2016年4月1日19:11:30
+			 * 
+			 *   每周服务次数、服务性质（单品/全年订制）
+			 */
+			
+			
 			partService.updateByPrimaryKeySelective(partnerServiceType);
 		}
 		

@@ -31,8 +31,7 @@
 			<section class="panel"> <header class="panel-heading">
 			服务类别管理 </header>
 
-			<hr
-				style="width: 100%; color: black; height: 1px; background-color: black;" />
+			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
  				<form:form enctype="multipart/form-data"
  						 modelAttribute="contentModelForm" class="form-horizontal" method="POST" id="service-form" >
  						 
@@ -54,13 +53,6 @@
                               </div>
                            </div>
                            
-                           <div class="form-group">
-                              <label  class="col-md-2 control-label">默认数量*</label>
-                              <div class="col-md-5">
-                                 <form:input path="defaultNum" class="form-control" placeholder="默认数量"/>
-                                 <form:errors path="defaultNum" class="field-has-error"/>
-                              </div>
-                           </div>
                            
                            <div class="form-group">
                               <label  class="col-md-2 control-label">单价*</label>
@@ -71,20 +63,56 @@
                            </div>
                            
                            <div class="form-group">
-                              <label  class="col-md-2 control-label">备注</label>
+                              <label  class="col-md-2 control-label">备注(副标题)</label>
                               <div class="col-md-5">
-                                 <form:input path="remarks" class="form-control" placeholder="备注" maxlength="100"/>
+                                 <form:input path="remarks" class="form-control" placeholder="app服务列表页副标题" maxlength="50"/>
                                  <form:errors path="remarks" class="field-has-error"/>
                               </div>
                            </div>
                            
                            <div class="form-group">
+                              <label  class="col-md-2 control-label">服务内容</label>
+                              <div class="col-md-5">
+                                 <form:textarea path="serviceContent" rows="5" cols="30"
+                                 		placeholder="不超过120字" maxlength="120"/>
+                              </div>
+                           </div>
+                           
+                           
+                           <div class="form-group">
+                              <label  class="col-md-2 control-label">服务品类</label>
+                              <div class="col-md-5" id="serviceProDiv">
+                              	 <form:radiobutton path="serviceProperty" value="0" label="单品"/>
+								 <form:radiobutton path="serviceProperty" value="1" label="全年定制" />
+                              </div>
+                           </div>
+                           
+                           <div id="weekTimes" class="form-group">
+                              <label  class="col-md-2 control-label">每周服务次数</label>
+                              <div class="col-md-5">
+                                 <form:input path="serviceTimes" class="form-control" 
+                                 			placeholder="请输入合法的数字" maxlength="2"/>
+                                 <form:errors path="serviceTimes" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           <div id="timeDetail" class="form-group">
+                           		<div class="col-md-6" style="margin-left:210px">
+	                         		<button type="button" id="yearTimes"  class="btn btn-success"></button>
+		                           	<button type="button" id="sumPrice" style="margin-left:20px" class="btn btn-success"></button>
+		                           	<button type="button" id="monthPrice" style="margin-left:20px" class="btn btn-success"></button>
+	                           		<button type="button" id="yearPrice" style="margin-top:10px" class="btn btn-success"></button>
+                           		</div>
+                           </div>
+                           
+                           
+                           <%-- <div class="form-group">
                               <label  class="col-md-2 control-label">服务类别</label>
                               <div class="col-md-5">
                               	 <form:radiobutton path="viewType" value="1" label="商品" />
 								 <form:radiobutton path="viewType" value="0" label="类别" />
                               </div>
-                           </div>
+                           </div> --%>
                            
                            
                            <div class="form-group">
@@ -156,6 +184,6 @@
 	<!--script for this page-->
 	
     <script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
-	<script src="<c:url value='/js/jhj/bs/serviceType/serviceForm.js'/>" type="text/javascript"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/bs/serviceType/serviceForm.js'/>"></script>
 </body>
 </html>

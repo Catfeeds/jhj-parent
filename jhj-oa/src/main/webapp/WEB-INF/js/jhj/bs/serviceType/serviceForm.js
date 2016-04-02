@@ -17,6 +17,10 @@ $('#service-form').validate({
 					required: true,
 					number:true
 				},
+				serviceTimes:{
+					required: true,
+					number:true
+				}
 			},
 
 			messages: {
@@ -34,6 +38,10 @@ $('#service-form').validate({
 					required: "请输入单价",
 					number:"请输入合法的单价数字"
 				},
+				serviceTimes:{
+					required: "请输入每周服务次数",
+					number:"请输入合法的周服务次数"
+				}
 			},
 
 			invalidHandler: function (event, validator) { //display error alert on form submit
@@ -85,3 +93,67 @@ $('#service-form').validate({
 //	msgSizeTooLarge: "上传文件大小超过8mb"
 //});		
 		
+$("input[name='serviceProperty']").on("change",function(){
+	
+	if($(this).val() == 0){
+		$("#weekTimes").hide();
+		$("#timeDetail").hide();
+		
+		$("#serviceTimes").val(0);
+	}
+	
+	if($(this).val() == 1){
+		$("#weekTimes").show();
+		
+	}
+	
+});		
+		
+$("#serviceTimes").on("change",function(){
+	
+	$("#timeDetail").show();
+	
+	var time =  $(this).val();
+	
+	var price = $("#price").val();
+	
+	$("#yearTimes").text("全年次数:"+Number(time)*52);
+	
+	$("#sumPrice").text("全年总价:"+Number(time)*52*Number(price));
+	
+	$("#monthPrice").text("月付价格(95折):"+(Number(time)*52*Number(price)/12*0.95).toFixed(2));
+	
+	$("#yearPrice").text("年付价格(85折):"+(Number(time)*52*Number(price)*0.85).toFixed(2));
+	
+});
+
+/*
+ *  页面加载时。动态展示 
+ */
+
+var loadTime = function(){
+	
+	if($("input[name='serviceProperty']:checked").val() == 0){
+		$("#weekTimes").hide();
+		$("#timeDetail").hide();
+	}else{
+		
+		$("#timeDetail").show();
+		
+		var time =  $("#serviceTimes").val();
+		
+		var price = $("#price").val();
+		
+		$("#yearTimes").text("全年次数:"+Number(time)*52);
+		
+		$("#sumPrice").text("全年总价:"+Number(time)*52*Number(price));
+		
+		$("#monthPrice").text("月付价格(95折):"+(Number(time)*52*Number(price)/12*0.95).toFixed(2));
+		
+		$("#yearPrice").text("年付价格(85折):"+(Number(time)*52*Number(price)*0.85).toFixed(2));
+		
+		
+	}
+}
+
+window.onload = loadTime;
