@@ -1,4 +1,4 @@
-myApp.onPageInit('cook-page"', function(page) {
+myApp.onPageInit('cook-page', function(page) {
 
 	// 根服务类型Id
 	var parentServiceTypeId = page.query.firstServiceType;
@@ -9,7 +9,6 @@ myApp.onPageInit('cook-page"', function(page) {
 			"click",
 			"#cook-div",
 			function() {
-
 				var userId = localStorage['user_id'];
 
 				if (userId == undefined || userId.length == 0) {
