@@ -49,8 +49,6 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	    $$.ajax({
 	        type:"POST",
 	        url:siteAPIPath+"order/post_user.json",
-	        dataType:"json",
-	        cache:false,
 	        data:{"user_id":userId,
 	        	  "service_type":serviceType,
 	              "service_content":content,
@@ -58,13 +56,8 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	      },
 	      success: function (data, status, xhr){
 				
-//				var result = JSON.parse(data);
-//				var service = result.data;
 				myApp.alert("预约成功");
 				mainView.router.loadPage("index.html")
-			},
-			error: function(status,xhr){
-			  	myApp.alert("网络异常,请稍后再试.");
 			}
 	       
 	    });
