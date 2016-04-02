@@ -1,4 +1,4 @@
-myApp.onPageInit('jinpaibaojie-page', function(page) {
+myApp.onPageInit('cook-page"', function(page) {
 
 	// 根服务类型Id
 	var parentServiceTypeId = page.query.firstServiceType;
@@ -7,7 +7,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 
 	$$(document).on(
 			"click",
-			"#jinpaibaojiediv",
+			"#cook-div",
 			function() {
 
 				var userId = localStorage['user_id'];
@@ -21,7 +21,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 				}
 
 				var enable = $$(this).find("input[name='enable']").val();
-
+				
 				if (enable == 0) {
 					return false;
 				}
@@ -37,8 +37,9 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 
 				if (serviceProperty == 1) {
 					// 全年订制
+					localStorage.setItem('service_type_id', serviceTypeId);
 					url = "order/fiveservice/QuanNianDingZhi.html?serviceType=" + serviceTypeId;
-
+					
 				}
 
 				mainView.router.loadPage(url);
@@ -46,7 +47,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 });
 
 // 列表显示
-myApp.template7Data['page:order-cook-page'] = function() {
+myApp.template7Data['page:cook-page'] = function() {
 	var result;
 	var parentServiceTypeId = 24;
 

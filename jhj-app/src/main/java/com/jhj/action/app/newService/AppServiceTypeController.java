@@ -1,5 +1,6 @@
 package com.jhj.action.app.newService;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -71,6 +73,7 @@ public class AppServiceTypeController extends BaseController {
 					weekNum = serviceTimes.intValue();
 					priceAndUnit = "每周"+ weekNum + "次";
 				}
+				vo.setYearTimes(String.valueOf(serviceTimes * 52));
 			}
 			
 			vo.setPriceAndUnit(priceAndUnit);
@@ -103,8 +106,42 @@ public class AppServiceTypeController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
 		PartnerServiceType serviceType = partService.selectByPrimaryKey(serviceTypeId);
+		PartnerServiceTypeVo vo = new PartnerServiceTypeVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(serviceType, vo);
 		
-		result.setData(serviceType);
+		BigDecimal price = vo.getPrice();
+		BigDecimal monthPrice = MathBigDeciamlUtil.mul(price, new BigDecimal(0.95));
+		BigDecimal yearPrice = MathBigDeciamlUtil.mul(price, new BigDecimal(0.85));
+		
+		String priceStr = "原价:"+MathBigDeciamlUtil.round2(price)+"元";
+		String monthPriceStr = "月付:"+MathBigDeciamlUtil.round2(monthPrice)+"元(享95折)";
+		String yearPriceStr = "年付:"+MathBigDeciamlUtil.round2(monthPrice)+"元(享85折)";
+		vo.setPriceStr(priceStr);
+		vo.setMonthPrice(monthPriceStr);
+		vo.setYearPrice(yearPriceStr);
+		
+		String priceAndUnit = "";
+		
+		if (vo.getServiceProperty().equals((short)0)) {
+			priceAndUnit =  vo.getPrice() + vo.getUnit();
+		} else {
+			Integer weekNum = 0;
+			Double serviceTimes = vo.getServiceTimes();
+			if (serviceTimes < 1) {
+				weekNum = (int) (1/serviceTimes);
+				priceAndUnit = "每" + weekNum + "周1次";
+			} else {
+				weekNum = serviceTimes.intValue();
+				priceAndUnit = "每周"+ weekNum + "次";
+			}
+			Integer t = (int) (serviceTimes * 52);
+			vo.setYearTimes(String.valueOf(t));
+		}
+		
+		vo.setPriceAndUnit(priceAndUnit);
+		
+		
+		result.setData(vo);
 		
 		return result;
 	}

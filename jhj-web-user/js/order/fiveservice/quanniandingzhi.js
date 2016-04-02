@@ -5,55 +5,7 @@ myApp.onPageInit('quanniandingzhi-page', function(page) {
 	if(serviceTypeId != undefined){
 		$$("#serviceTypeId").val(serviceTypeId);
 	}
-	
-	$$.ajax({
-		type: "get",
-		 url: siteAPIPath + "newPartServiceType/service_type_detail.json",
-		data: {
-			"service_type_id":serviceTypeId
-		},
-		success: function (data, status, xhr){
-			
-			var resultdata = JSON.parse(data);
-			
-			var result = resultdata.data;
-			
-			$$("#serviceName").text(result.name);
-			
-			var singlePrice = result.price;
-			
-			var time = result.service_times;
-			//原价
-			var yearPriceOri = singlePrice;
-			
-			$$("#price").text("原价:"+yearPriceOri+"元");
-			
-			var monthPrice = "月付:"+(Number(yearPriceOri)/12*0.95).toFixed(2)+"元(享95折)";
-			
-			//月付
-			$$("#monthPrice").text(monthPrice);
-			var yearPrice = "年付:"+(Number(yearPriceOri)*0.85).toFixed(2)+"元(享85折)";
-			//年付
-			$$("#yearPrice").text(yearPrice);
-			
-			$$("#yearTimes").text(time*52+"次");
-			
-			if(time < 1){
-				//取整，舍弃小数
-				var weekNum = parseInt(1/time);
-				$$("#weekTimes").text(weekNum+"周1次");
-			}else{
-				$$("#weekTimes").text("每周"+time+"次");
-			}
-			
-			$("#serviceContent").text(result.service_content);
-		},
-		error: function(status,xhr){
-		  	myApp.alert("网络异常,请稍后再试.");
-		}
-	});
-
-	
+		
 	$$("#submitAtOnce").on("click",function(){
 		
 		var  serviceTypeId = $$("#serviceTypeId").val();
@@ -91,5 +43,26 @@ myApp.onPageInit('quanniandingzhi-page', function(page) {
 		});
 	});	
 });
+
+myApp.template7Data['page:quanniandingzhi-page'] = function() {
+	var result;
+	var serviceTypeId = localStorage['service_type_id'];
+	
+	$$.ajax({
+		type : "GET",
+		url : siteAPIPath + "newPartServiceType/service_type_detail.json?service_type_id="
+				+ serviceTypeId,
+		dataType : "json",
+		cache : true,
+		async : false,
+		success : function(data) {
+			// console.log(data);
+			result = data.data;
+
+		}
+	})
+
+	return result;
+}
 
 

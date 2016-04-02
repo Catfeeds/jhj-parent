@@ -3,14 +3,6 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 	// 根服务类型Id
 	var parentServiceTypeId = page.query.firstServiceType;
 
-	// if(parentServiceTypeId == 24){
-//	$("#topImg").attr("src", "img/icon-fiveservice/chuniangshaofan-top.png");
-	// }
-
-	// if(parentServiceTypeId == 23){
-	// $("#topImg").attr("src","img/icon-fiveservice/jinpaibaojie-top.png");
-	// }
-
 	$$("#parentServiceType").val(parentServiceTypeId);
 
 	$$(document).on(
@@ -45,6 +37,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 
 				if (serviceProperty == 1) {
 					// 全年订制
+					localStorage.setItem('service_type_id', serviceTypeId);
 					url = "order/fiveservice/QuanNianDingZhi.html?serviceType=" + serviceTypeId;
 
 				}
