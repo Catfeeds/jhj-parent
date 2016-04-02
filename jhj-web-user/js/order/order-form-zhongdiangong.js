@@ -136,7 +136,6 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		//处理 日期。。传给后台 string 类型 的 秒值，时间戳
 		formData.serviceDate =  moment(formData.serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 		
-		return false;
 		$$.ajax({
 			type: "post",
 			 url: siteAPIPath + "order/post_hour.json",
