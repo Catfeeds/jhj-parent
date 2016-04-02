@@ -210,7 +210,7 @@ public class OrderController extends BaseController {
 		
 		//更新orderdispatchs的更新时间
 		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderId(orderId);
-		orderDispatchs.setUpdateTime(orders.getUpdateTime());
+		orderDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 		orderDispatchsService.updateByPrimaryKeySelective(orderDispatchs);
 		
 		
