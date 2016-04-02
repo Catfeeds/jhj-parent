@@ -174,12 +174,12 @@ $("#addCoupon_btn").on("click",function(){
 	 	    },
 	 	    success:function(data,textStatus,jqXHR){
 	 	    	
-	 	    	alert(data.msg);
+	 	    	
 	 	    	if(data.status == "999"){
-	 	    		
+	 	    		alert(data.msg);
 	 	    		return false;
 	 	    	}
-	 	    	
+	 	    	alert(data.msg);
 	 	    	var rootPath = getRootPath();
 				window.location.replace(rootPath+"/user/finace_recharge_list");
 	 	    	return false;

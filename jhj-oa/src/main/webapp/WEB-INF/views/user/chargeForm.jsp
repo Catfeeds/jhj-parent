@@ -90,7 +90,7 @@
 									placeholder="请输入验证码"	 id="userCode" value="" maxlength="4" >
 							</div>		
 							
-							<button type="button" id="getUserCode" style="margin-left:-280px" class="btn btn-success">获取验证码</button>
+							<button type="button" id="getUserCode" style="margin-left:-80px" class="btn btn-success">获取验证码</button>
 	
 							<input type="hidden" value="${userChargeVo.ownerMobile }" id="ownerMobile">	
 						</div>

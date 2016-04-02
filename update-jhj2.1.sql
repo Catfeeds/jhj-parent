@@ -89,7 +89,7 @@ INSERT INTO `admin_authority` (`id`, `version`, `enable`, `name`, `level_code`, 
 (74, 1, 1, '云店管理', '74,19', 3, '', '/group/group_list', '/group/group_list', '', 79),
 (75, 1, 1, '工作人员', '75,19', 4, '', '/newbs/new_staff_list', '/newbs/new_staff_list', '', 79),
 (76, 1, 1, '服务类别管理', '76,19', 1, '', '/newbs/service_type_list', '/newbs/service_type_list', '', 19),
-(77, 1, 1, '会员充值', '77,26', 3, '', '/user/finance_user-list', '/user/finance_user-list', '', 26),
+(77, 1, 1, '会员充值', '77,26', 3, '', '/user/finance_user-list', '/user/', '', 26),
 (78, 1, 1, '财务充值记录', '78,26', 4, '', '/user/finace_recharge_list', '/user/finace_recharge_list', '', 26),
 (79, 1, 1, '门店管理', '79', 4, '', 'org', 'org', '', 0),
 (80, 1, 1, '合作商户', '80', 11, '', 'p', 'p', '', 0);

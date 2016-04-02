@@ -301,7 +301,7 @@ public class UserController extends BaseController {
 	  * 
 	  * @param userCode  验证码
 	 */
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "/charge-form.json", method = { RequestMethod.POST })
 	public AppResultData<Object> doChargeForm(HttpServletRequest request,
 			@RequestParam("userId") Long userId,
@@ -317,7 +317,11 @@ public class UserController extends BaseController {
 		
 		// 最新的 一条 验证码。类型为 3,表示  运营平台--会员充值验证码
 		UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType("18611289885", Constants.SMS_TYPE_3);
-		
+		if (smsToken == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("验证码错误");
+			return result;
+		}
 		String token = smsToken.getSmsToken();
 		
 		if(!token.equals(userCode)){
@@ -394,6 +398,8 @@ public class UserController extends BaseController {
 		usersService.updateByPrimaryKeySelective(user);
 		
 		// TODO 5. 充值成功后,将该验证码。设为无效
+		
+		userSmsTokenService.deleteByPrimaryKey(smsToken.getId());
 		
 		result.setMsg("充值成功");
 		
