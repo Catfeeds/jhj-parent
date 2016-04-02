@@ -3,38 +3,28 @@
 		
 		<div class="page-content" style="padding-bottom:0;">
 			<div class="fiveservice-img">
-				<img id="topImg" src="" alt="">
+				<img id="topImg" src="img/icon-fiveservice/chuniangshaofan-top.png" alt="">
 			</div>
 			
 			<input  type="hidden" id="parentServiceType" value="">
 			
 			<div id="serviceContainer">
-			
-			</div>
-			
-			<div id="serviceTemplate" style="display:none">
+				{{#each data}}
+
+
 				<div class="template-fiveservice" >
-					<div class="circle-template-fiveservice1">{name}</div>
+					<div class="circle-template-fiveservice1">{{name}}</div>
 					<div class="word-template-fiveservice">
-						<p>{name}</p>
-						<p>{remarks}</p>
-						<p>{priceAndUnit}</p>
+						<p>{{name}}</p>
+						<p>{{remarks}}</p>
+						
 						
 					</div>
-					
-					
-					
-					<div id="jinpaibaojiediv" class="button-template-fiveservice">
-						<a href="#" class="button button-big button-green btn-five">{enable}</a>
-						
-						<input type="hidden" name="serviceTypeId" value="{serviceTypeId}">
-						<input type="hidden" name="enable" value="{enableNum}">
-						<input type="hidden" name="serviceProperty" value="{serviceProperty}">
-					</div>
-					
 				</div>
+				{{/each}}
+				
+				
 			</div>
-			
 			
 			<div class="fiveservice-bottom">
 				<img src="img/icon-fiveservice/five-servicebottom.png" alt="">
