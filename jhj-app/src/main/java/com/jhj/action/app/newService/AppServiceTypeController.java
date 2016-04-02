@@ -111,11 +111,14 @@ public class AppServiceTypeController extends BaseController {
 		
 		BigDecimal price = vo.getPrice();
 		BigDecimal monthPrice = MathBigDeciamlUtil.mul(price, new BigDecimal(0.95));
+		monthPrice = MathBigDeciamlUtil.div(monthPrice, new BigDecimal(12));
+		
+		
 		BigDecimal yearPrice = MathBigDeciamlUtil.mul(price, new BigDecimal(0.85));
 		
 		String priceStr = "原价:"+MathBigDeciamlUtil.round2(price)+"元";
 		String monthPriceStr = "月付:"+MathBigDeciamlUtil.round2(monthPrice)+"元(享95折)";
-		String yearPriceStr = "年付:"+MathBigDeciamlUtil.round2(monthPrice)+"元(享85折)";
+		String yearPriceStr = "年付:"+MathBigDeciamlUtil.round2(yearPrice)+"元(享85折)";
 		vo.setPriceStr(priceStr);
 		vo.setMonthPrice(monthPriceStr);
 		vo.setYearPrice(yearPriceStr);
