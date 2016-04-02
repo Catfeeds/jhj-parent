@@ -11,7 +11,7 @@ $("select[name='userAddrKey']").on('change',function() {
 	$("#poiLatitude").val(latitude);
 //	$("#pickAddrName").val(pickAddrName);
 //	$("#pickAddrName").attr("placeholder", pickAddrName);
-//	$("#pickAddr").val(pickAddr);
+	$("#pickAddr").val(pickAddr);
 //	$("#pickAddr").attr("placeholder", pickAddr);
 	$("#addrNum").show();
 	
@@ -28,6 +28,10 @@ $("select[name='userAddrKey']").on('change',function() {
 //	setPlace();
 	
 	loadProperStaffForAmOrder();
+	
+	
+	//同时 清空 手动输入的 地址
+	$("#pickAddrName").val("");
 
 });
 
@@ -113,6 +117,9 @@ function setPlace() {
 			 * jhj2.1  在设置完 新的  坐标位置后, 再 发起请求
 			 */ 
 			loadProperStaffForAmOrder();
+			
+			$("#pickAddr").val("");
+			$("#userAddrKey").val("");
 			
 	}
 	var local = new BMap.LocalSearch(map, { //智能搜索
@@ -246,7 +253,7 @@ $('#viewForm').on('click',function(){
 		  		"fromLng":fromLng,
 		  "selectStaffId":selectStaffId,	
 		  	  "distance" :distanceValue,
-		   "userAddrName":userAddrName,
+		   "userAddrName":userAddrName
 		},
 		dataType:'json',
 		success:function(data,status,xhr){

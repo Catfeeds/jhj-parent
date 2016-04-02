@@ -211,8 +211,6 @@
 									</div>
 								</div>
 								
-								
-					
 					
 					
 					<div id="staffList"  class="col-sm-8">
