@@ -87,7 +87,7 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		
 		type.setServiceProperty((short)0); // 0= 单品  1=全年定制
 		
-		type.setServiceTimes(0L); // 每周定制次数
+		type.setServiceTimes(0.0); // 每周定制次数
 		
 		type.setServiceContent("");
 		
