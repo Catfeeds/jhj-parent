@@ -111,16 +111,16 @@ public class OrderCusYearImpl implements OrderCustomizYearService {
 		Long serviceTimes = type.getServiceTimes();
 		
 		//原价
-		BigDecimal mul = MathBigDeciamlUtil.mul(price, new BigDecimal(52*serviceTimes));
-		yearVo.setPrice(mul);
+//		BigDecimal mul = MathBigDeciamlUtil.mul(price, new BigDecimal(52*serviceTimes));
+		yearVo.setPrice(price);
 		
 		//年付
-		yearVo.setYearPrice(MathBigDeciamlUtil.round(MathBigDeciamlUtil.mul(mul, new BigDecimal(0.95)), 2));
+		yearVo.setYearPrice(MathBigDeciamlUtil.round(MathBigDeciamlUtil.mul(price, new BigDecimal(0.95)), 2));
 		
 		//月付
 		// 原价 每月支付（两位小数）
-		BigDecimal div = MathBigDeciamlUtil.div(mul, new BigDecimal(12), 2);
-		yearVo.setMonthPrice(MathBigDeciamlUtil.round(MathBigDeciamlUtil.mul(div, new BigDecimal(0.85)), 2));
+//		BigDecimal div = MathBigDeciamlUtil.div(mul, new BigDecimal(12), 2);
+		yearVo.setMonthPrice(MathBigDeciamlUtil.round(MathBigDeciamlUtil.mul(price, new BigDecimal(0.85)), 2));
 		
 		//年服务频次
 		yearVo.setServiceTimeYear(type.getServiceTimes()*52);
