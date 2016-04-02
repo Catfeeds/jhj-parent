@@ -263,7 +263,11 @@ public class NewOrgStaffController extends AdminController {
 				}
 			}
 		}
-
+		
+		if (StringUtil.isEmpty(orgStaffs.getHeadImg())) {
+			orgStaffs.setHeadImg("http://www.jia-he-jia.com/u/img/default-head-img.png");
+		}
+		
 		if (id > 0L) {
 			orgStaffs.setUpdateTime(TimeStampUtil.getNow() / 1000);
 			staffService.updateByPrimaryKeySelective(orgStaffs);
