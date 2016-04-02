@@ -159,10 +159,10 @@
 						<div class="form-group">
                                 <label class="col-sm-2 col-sm-2 control-label">技能</label>
                                 <div class="col-sm-5">
-	                                   <div class="portlet-body" id="authorityId" name="skillId">
+	                                   <div class="portlet-body">
 					                  	   <c:import url = "../shared/treeSelector.jsp">
 											 <c:param name="propertyName" value="skillId"/>
-											 <c:param name="propertyValue" value="${newStaffFormVoModel.getSkillIds()}"/>
+											 <c:param name="propertyValue" value="${newStaffFormVoModel.skillIdsStr}"/>
 											 <c:param name="checkbox" value="true"/>
 											 <c:param name="treeDataSourceName" value="treeDataSource"/>
 										   </c:import>

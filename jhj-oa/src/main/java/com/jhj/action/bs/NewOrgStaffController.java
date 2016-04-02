@@ -54,6 +54,7 @@ import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.common.extension.ArrayHelper;
 import com.meijia.utils.common.extension.StringHelper;
 
 /**
@@ -168,13 +169,9 @@ public class NewOrgStaffController extends AdminController {
 				
 				PartnerServiceType serviceType = (PartnerServiceType) iterator.next();
 				
-				/*
-				 * 新需求
-				 * 
-				 */
 				Long parentId = serviceType.getParentId();
 				
-				if(serviceType!=null && parentId == 0){
+				if(serviceType!=null && parentId != 0){
 					checkedAuthorityIds.add(serviceType.getServiceTypeId());
 					checkedAuthorityIntegers.add(serviceType.getServiceTypeId().intValue());
 				}
@@ -185,6 +182,9 @@ public class NewOrgStaffController extends AdminController {
 			checkedAuthorityIds.toArray(checkedAuthorityIdsArray);
 			
 			formVo.setSkillIds(checkedAuthorityIdsArray);
+			
+			
+			formVo.setSkillIdsStr(ArrayHelper.LongtoString(checkedAuthorityIdsArray, ","));
 			
 			model.addAttribute("newStaffFormVoModel", formVo);
 		}

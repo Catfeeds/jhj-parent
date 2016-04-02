@@ -38,9 +38,6 @@ $('#newStaff-form').validate({
 		addr : {
 			required : "请输入员工联系地址"
 		},
-		level: { 
-			 valueNotEquals: "请选择员工等级" 
-	    }
 
 	},
 
@@ -281,6 +278,16 @@ function validCardNum(){
 
 function checkThisForm(){
 	
+	
+	if($("#level").find("option:selected").val() == 0){
+		  
+		  alert("请选择员工等级");
+		  return false; 
+	  }
+	
+	
+	
+	
   var skl = $("#skillId").val();
 
   
@@ -303,11 +310,7 @@ function checkThisForm(){
 	 return  false;
   }
  
-  if($("#level").find("option:selected").val() == 0){
-	  
-	  alert("请选择员工等级");
-	  return false; 
-  }
+  
   
   return true;
   
