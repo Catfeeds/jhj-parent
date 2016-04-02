@@ -28,7 +28,7 @@ myApp.onPageInit('quanniandingzhi-page', function(page) {
 			
 			$$("#price").text("原价:"+yearPriceOri+"元");
 			
-			var monthPrice = "月付:"+(Number(yearPriceOri)/12*0.95).toFixed(2)+"元(享95折)";
+			var monthPrice = "月付:"+(Number(yearPriceOri)*0.95).toFixed(2)+"元(享95折)";
 			
 			//月付
 			$$("#monthPrice").text(monthPrice);
