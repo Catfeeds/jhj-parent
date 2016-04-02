@@ -189,10 +189,17 @@ public class OrderPayController extends BaseController {
 		orderPrice.setCouponId(userCouponId);
 		orderPricesService.updateByPrimaryKey(orderPrice);
 		
-		//如果是余额支付或者需支付金额为0 ,或者是 现金支付
+		
+		/*
+		 *  2016年4月1日15:34:55
+		 * 
+		 * 	 对于 现金支付。  orderPayType == 6 ，不进行扣款操作。只更改 订单状态
+		 */
+		
+		//如果是余额支付或者需支付金额为0 
 		if (orderPayType.equals(Constants.PAY_TYPE_0) || 
-			orderPayType.equals(Constants.PAY_TYPE_6) ||
-			orderPay.compareTo(new BigDecimal(0)) == 0) {
+				orderPayType.equals(Constants.PAY_TYPE_6) ||
+				orderPay.compareTo(new BigDecimal(0)) == 0) {
 			// 1. 扣除用户余额.
 			// 2. 用户账号明细增加.
 			// 3. 订单状态变为已支付.
