@@ -121,7 +121,7 @@ $("#serviceTimes").on("change",function(){
 	
 	$("#sumPrice").text("全年总价:"+price);
 	
-	$("#monthPrice").text("月付价格(95折):"+(Number(price)*0.95).toFixed(2));
+	$("#monthPrice").text("月付价格(95折):"+(Number(price)/12*0.95).toFixed(2));
 	
 	$("#yearPrice").text("年付价格(85折):"+(Number(price)*0.85).toFixed(2));
 	
@@ -148,7 +148,7 @@ var loadTime = function(){
 		
 		$("#sumPrice").text("全年总价:"+price);
 		
-		$("#monthPrice").text("月付价格(95折):"+(Number(price)*0.95).toFixed(2));
+		$("#monthPrice").text("月付价格(95折):"+(Number(price)/12*0.95).toFixed(2));
 		
 		$("#yearPrice").text("年付价格(85折):"+(Number(price)*0.85).toFixed(2));
 		
