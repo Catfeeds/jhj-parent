@@ -27,7 +27,7 @@ public class PartnerServiceType {
 
     private Short serviceProperty;
 
-    private Long serviceTimes;
+    private Double serviceTimes;
 
     private String serviceContent;
 
@@ -127,11 +127,11 @@ public class PartnerServiceType {
         this.serviceProperty = serviceProperty;
     }
 
-    public Long getServiceTimes() {
+    public Double getServiceTimes() {
         return serviceTimes;
     }
 
-    public void setServiceTimes(Long serviceTimes) {
+    public void setServiceTimes(Double serviceTimes) {
         this.serviceTimes = serviceTimes;
     }
 
