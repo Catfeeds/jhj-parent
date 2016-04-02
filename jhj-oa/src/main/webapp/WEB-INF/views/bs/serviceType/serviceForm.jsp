@@ -91,7 +91,7 @@
                               <label  class="col-md-2 control-label">每周服务次数</label>
                               <div class="col-md-5">
                                  <form:input path="serviceTimes" class="form-control" 
-                                 			placeholder="请输入合法的数字" maxlength="2"/>
+                                 			placeholder="请输入合法的数字" maxlength="10"/>
                                  <form:errors path="serviceTimes" class="field-has-error"/>
                               </div>
                            </div>

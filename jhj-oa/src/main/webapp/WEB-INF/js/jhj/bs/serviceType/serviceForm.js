@@ -119,11 +119,11 @@ $("#serviceTimes").on("change",function(){
 	
 	$("#yearTimes").text("全年次数:"+Number(time)*52);
 	
-	$("#sumPrice").text("全年总价:"+Number(time)*52*Number(price));
+	$("#sumPrice").text("全年总价:"+price);
 	
-	$("#monthPrice").text("月付价格(95折):"+(Number(time)*52*Number(price)/12*0.95).toFixed(2));
+	$("#monthPrice").text("月付价格(95折):"+(Number(price)*0.95).toFixed(2));
 	
-	$("#yearPrice").text("年付价格(85折):"+(Number(time)*52*Number(price)*0.85).toFixed(2));
+	$("#yearPrice").text("年付价格(85折):"+(Number(price)*0.85).toFixed(2));
 	
 });
 
@@ -146,12 +146,11 @@ var loadTime = function(){
 		
 		$("#yearTimes").text("全年次数:"+Number(time)*52);
 		
-		$("#sumPrice").text("全年总价:"+Number(time)*52*Number(price));
+		$("#sumPrice").text("全年总价:"+price);
 		
-		$("#monthPrice").text("月付价格(95折):"+(Number(time)*52*Number(price)/12*0.95).toFixed(2));
+		$("#monthPrice").text("月付价格(95折):"+(Number(price)*0.95).toFixed(2));
 		
-		$("#yearPrice").text("年付价格(85折):"+(Number(time)*52*Number(price)*0.85).toFixed(2));
-		
+		$("#yearPrice").text("年付价格(85折):"+(Number(price)*0.85).toFixed(2));
 		
 	}
 }
