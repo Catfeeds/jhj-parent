@@ -20,7 +20,7 @@ public class OrderCusYearVo extends OrderCustomizationYear {
 	private BigDecimal monthPrice;
 	private BigDecimal yearPrice;
 	
-	private Long serviceTimeYear;
+	private Double serviceTimeYear;
 	
 	private String addTimeStr;
 	
@@ -31,10 +31,11 @@ public class OrderCusYearVo extends OrderCustomizationYear {
 	public void setAddTimeStr(String addTimeStr) {
 		this.addTimeStr = addTimeStr;
 	}
-	public Long getServiceTimeYear() {
+	
+	public Double getServiceTimeYear() {
 		return serviceTimeYear;
 	}
-	public void setServiceTimeYear(Long serviceTimeYear) {
+	public void setServiceTimeYear(Double serviceTimeYear) {
 		this.serviceTimeYear = serviceTimeYear;
 	}
 	public BigDecimal getPrice() {

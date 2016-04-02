@@ -108,7 +108,7 @@ public class OrderCusYearImpl implements OrderCustomizYearService {
 		BigDecimal price = type.getPrice();
 		
 		//每周频次
-		Long serviceTimes = type.getServiceTimes();
+		Double serviceTimes = type.getServiceTimes();
 		
 		//原价
 //		BigDecimal mul = MathBigDeciamlUtil.mul(price, new BigDecimal(52*serviceTimes));
@@ -123,7 +123,7 @@ public class OrderCusYearImpl implements OrderCustomizYearService {
 		yearVo.setMonthPrice(MathBigDeciamlUtil.round(MathBigDeciamlUtil.mul(div, new BigDecimal(0.85)), 2));
 		
 		//年服务频次
-		yearVo.setServiceTimeYear(type.getServiceTimes()*52);
+		yearVo.setServiceTimeYear(serviceTimes*52);
 		
 		String date1 = DateUtil.getDefaultDate(year.getAddTime() * 1000);
 		
