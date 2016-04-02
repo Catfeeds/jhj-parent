@@ -46,7 +46,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 });
 
 // 列表显示
-myApp.template7Data['page:jinpaibaojie-page'] = function() {
+myApp.template7Data['page:order-cook-page'] = function() {
 	var result;
 	var parentServiceTypeId = 24;
 
