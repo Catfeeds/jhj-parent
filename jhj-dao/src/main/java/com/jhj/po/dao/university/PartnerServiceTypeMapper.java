@@ -5,7 +5,7 @@ import java.util.List;
 import com.jhj.po.model.university.PartnerServiceType;
 
 public interface PartnerServiceTypeMapper {
-    int deleteByPrimaryKey(Long serviceTypeId);
+	int deleteByPrimaryKey(Long serviceTypeId);
 
     int insert(PartnerServiceType record);
 
@@ -17,7 +17,7 @@ public interface PartnerServiceTypeMapper {
 
     int updateByPrimaryKey(PartnerServiceType record);
     
-List<PartnerServiceType>  selectByListPage();
+    List<PartnerServiceType>  selectByListPage();
     
     List<PartnerServiceType> selectAll();
     
@@ -33,5 +33,4 @@ List<PartnerServiceType>  selectByListPage();
     
     //得到所有的 子服务(最底层没有子服务 )
     List<PartnerServiceType> selectAllNoChildService();
-    
 }

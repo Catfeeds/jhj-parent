@@ -13,11 +13,16 @@
     <result column="no" property="no" jdbcType="NUMERIC" />
     <result column="service_img_url" property="serviceImgUrl" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="NUMERIC" />
+    <result column="service_property" property="serviceProperty" jdbcType="NUMERIC" />
+    <result column="service_times" property="serviceTimes" jdbcType="NUMERIC" />
+    <result column="service_content" property="serviceContent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     service_type_id, name, parent_id, unit, default_num, price, remarks, view_type, no, 
-    service_img_url, enable
+    service_img_url, enable, service_property, service_times, service_content
   </sql>
+  
+  
   
   <!-- 所有的 没有子服务的 最底层的 服务 -->
   <select id="selectAllNoChildService" resultMap="BaseResultMap">
@@ -64,6 +69,9 @@
     from partner_service_type
   </select>
   
+  
+  
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -78,11 +86,13 @@
     insert into partner_service_type (service_type_id, name, parent_id, 
       unit, default_num, price, 
       remarks, view_type, no, 
-      service_img_url, enable)
+      service_img_url, enable, service_property, 
+      service_times, service_content)
     values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC}, 
       #{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL}, 
       #{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC}, 
-      #{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC})
+      #{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC}, 
+      #{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType" >
     insert into partner_service_type
@@ -120,6 +130,15 @@
       <if test="enable != null" >
         enable,
       </if>
+      <if test="serviceProperty != null" >
+        service_property,
+      </if>
+      <if test="serviceTimes != null" >
+        service_times,
+      </if>
+      <if test="serviceContent != null" >
+        service_content,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="serviceTypeId != null" >
@@ -154,6 +173,15 @@
       </if>
       <if test="enable != null" >
         #{enable,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceProperty != null" >
+        #{serviceProperty,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTimes != null" >
+        #{serviceTimes,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceContent != null" >
+        #{serviceContent,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -190,6 +218,15 @@
       <if test="enable != null" >
         enable = #{enable,jdbcType=NUMERIC},
       </if>
+      <if test="serviceProperty != null" >
+        service_property = #{serviceProperty,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceTimes != null" >
+        service_times = #{serviceTimes,jdbcType=NUMERIC},
+      </if>
+      <if test="serviceContent != null" >
+        service_content = #{serviceContent,jdbcType=VARCHAR},
+      </if>
     </set>
     where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
   </update>
@@ -204,7 +241,10 @@
       view_type = #{viewType,jdbcType=NUMERIC},
       no = #{no,jdbcType=NUMERIC},
       service_img_url = #{serviceImgUrl,jdbcType=VARCHAR},
-      enable = #{enable,jdbcType=NUMERIC}
+      enable = #{enable,jdbcType=NUMERIC},
+      service_property = #{serviceProperty,jdbcType=NUMERIC},
+      service_times = #{serviceTimes,jdbcType=NUMERIC},
+      service_content = #{serviceContent,jdbcType=VARCHAR}
     where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
   </update>
 </mapper>

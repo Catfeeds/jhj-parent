@@ -25,6 +25,12 @@ public class PartnerServiceType {
 
     private Short enable;
 
+    private Short serviceProperty;
+
+    private Long serviceTimes;
+
+    private String serviceContent;
+
     public Long getServiceTypeId() {
         return serviceTypeId;
     }
@@ -111,5 +117,29 @@ public class PartnerServiceType {
 
     public void setEnable(Short enable) {
         this.enable = enable;
+    }
+
+    public Short getServiceProperty() {
+        return serviceProperty;
+    }
+
+    public void setServiceProperty(Short serviceProperty) {
+        this.serviceProperty = serviceProperty;
+    }
+
+    public Long getServiceTimes() {
+        return serviceTimes;
+    }
+
+    public void setServiceTimes(Long serviceTimes) {
+        this.serviceTimes = serviceTimes;
+    }
+
+    public String getServiceContent() {
+        return serviceContent;
+    }
+
+    public void setServiceContent(String serviceContent) {
+        this.serviceContent = serviceContent == null ? null : serviceContent.trim();
     }
 }
