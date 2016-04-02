@@ -1,0 +1,46 @@
+	<div data-page="jinpaibaojie-page" class="page" style="background:#FDEEEE;overflow:auto;">
+	
+		<div class="page-content" style="padding-bottom:0;">
+			<div class="fiveservice-img">
+				<img id="topImg" src="img/icon-fiveservice/chuniangshaofan-top.png" alt="">
+			</div>
+			
+			<input  type="hidden" id="parentServiceType" value="">
+			
+			<div id="serviceContainer">
+				{{#each data}}
+
+				<div class="template-fiveservice" >
+					<div class="circle-template-fiveservice1">{{name}}</div>
+					<div class="word-template-fiveservice">
+						<p>{{name}}</p>
+						<p>{{remarks}}</p>
+						<p>{{price_and_unit}}</p>
+						
+					</div>
+					
+					<input type="hidden" name="serviceTypeId" value="{{service_type_id}}">
+					
+					<div id="jinpaibaojiediv" class="button-template-fiveservice">
+						<a href="#" class="button button-big button-green btn-five">{{button_word}}</a>
+						
+						<input type="hidden" name="serviceTypeId" value="{{service_type_id}}">
+						<input type="hidden" name="enable" value="{{enable}}">
+						<input type="hidden" name="serviceProperty" value="{{service_property}}">
+					</div>
+					
+				</div>
+				{{/each}}
+				
+				
+			</div>
+			
+			<div class="fiveservice-bottom">
+				<img src="img/icon-fiveservice/five-servicebottom.png" alt="">
+			</div>
+			<div class="fiveservice-bottom1">
+				<img src="img/icon-fiveservice/logo-fiveservice.png" alt="">
+			</div>
+			
+		</div>
+	</div>

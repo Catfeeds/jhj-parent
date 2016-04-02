@@ -1,5 +1,6 @@
 package com.jhj.action.app.newService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.PartnerServiceTypeVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -48,7 +51,41 @@ public class AppServiceTypeController extends BaseController {
 		
 		List<PartnerServiceType> list = partService.selectByParentId(serviceTypeId);
 		
-		result.setData(list);
+		List<PartnerServiceTypeVo> volist = new ArrayList<PartnerServiceTypeVo>();
+		
+		for(PartnerServiceType item : list) {
+			PartnerServiceTypeVo vo = new PartnerServiceTypeVo();
+			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+			
+			String priceAndUnit = "";
+			
+			if (vo.getServiceProperty().equals((short)0)) {
+				priceAndUnit =  vo.getPrice() + vo.getUnit();
+			} else {
+				Integer weekNum = 0;
+				Double serviceTimes = vo.getServiceTimes();
+				if (serviceTimes < 1) {
+					weekNum = (int) (1/serviceTimes);
+					priceAndUnit = "每" + weekNum + "周1次";
+				} else {
+					weekNum = serviceTimes.intValue();
+					priceAndUnit = "每周"+ weekNum + "次";
+				}
+			}
+			
+			vo.setPriceAndUnit(priceAndUnit);
+			
+			
+			if (vo.getEnable().equals((short)1)) {
+				vo.setButtonWord("立即预定");
+			} else {
+				vo.setButtonWord("敬请期待");
+			}
+			
+			volist.add(vo);
+		}
+		
+		result.setData(volist);
 		
 		return result;
 	}

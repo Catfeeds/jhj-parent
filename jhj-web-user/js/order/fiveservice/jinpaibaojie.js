@@ -4,7 +4,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 	var parentServiceTypeId = page.query.firstServiceType;
 
 	// if(parentServiceTypeId == 24){
-	$("#topImg").attr("src", "img/icon-fiveservice/chuniangshaofan-top.png");
+//	$("#topImg").attr("src", "img/icon-fiveservice/chuniangshaofan-top.png");
 	// }
 
 	// if(parentServiceTypeId == 23){
@@ -56,7 +56,7 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 // 列表显示
 myApp.template7Data['page:jinpaibaojie-page'] = function() {
 	var result;
-	var parentServiceTypeId = 24;
+	var parentServiceTypeId = 23;
 
 	$$.ajax({
 		type : "GET",
