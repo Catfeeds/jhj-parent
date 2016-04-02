@@ -23,6 +23,7 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -33,6 +34,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.orderReview.SettingService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
@@ -86,6 +88,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	
 	@Autowired
 	private OrgsService orgsService;
+	
+	@Autowired
+	PartnerServiceTypeService partnerServiceTypeService;
 
 	/*
 	 * 进行orderViewVo 结合了 orders , order_prices, 两张表的元素
@@ -560,8 +565,13 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			String serviceTypeName = dictService.getServiceTypeName(item.getServiceType());
 			vo.setServiceTypeName(serviceTypeName);
 		}
+		vo.setOrderTypeName("");
 		// 订单类型
-		vo.setOrderTypeName(OrderUtils.getOrderTypeName(item.getOrderType()));
+		if (item.getServiceType() > 0L) {
+	    	PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(item.getServiceType());
+	    	vo.setOrderTypeName(serviceType.getName());
+		}
+		
 		// 订单支付名称
 		
 		vo.setPayTypeName("");
