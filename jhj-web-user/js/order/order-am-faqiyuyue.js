@@ -18,7 +18,7 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 		type: "get",
 		 url: siteAPIPath + "newPartServiceType/service_type_detail.json",
 		data: {
-			"service_type_id":parentServiceTypeId
+			"service_type_id":serviceTypeId
 		},
 		success: function (data, status, xhr){
 			
@@ -28,9 +28,9 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 			
 			$$("#servceTypeName").text(service.name);
 			
-			$$("#servicePrice").text(service.price_and_unit);
+			$$("#servicePrice").text(service.remarks);
 			
-			$$("#serviceIntro").text(service.remarks);
+			$$("#serviceContent").text(service.service_content);
 			
 		},
 		error: function(status,xhr){

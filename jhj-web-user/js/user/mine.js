@@ -29,6 +29,12 @@ myApp.onPageBeforeInit('mine', function (page) {
 		mainView.router.loadPage("user/user-wancheng.html");
 	});
 
+	// 点击 余额 --消费明细
+   $$("#restMoneyDiv").on('click',function(){
+	   mainView.router.loadPage("user/mine-rest-money-detail.html");
+   });
+	
+	
 	
 	$$('.user-logout').on('click', function() {
 		  localStorage.removeItem("mobile");
@@ -225,4 +231,5 @@ function goToOrderList() {
 	var userId = $$.urlParam('user_id');
 	location.href = "wx-order-list.html?user_id=" + userId;
 }*/
+
 

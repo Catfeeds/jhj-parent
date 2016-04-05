@@ -1,7 +1,8 @@
 //列表显示
 myApp.template7Data['page:tiexinjiashi-page'] = function() {
 	var result;
-	var parentServiceTypeId = 26;
+	
+	var parentServiceTypeId = localStorage['firstServiceType'];
 
 	$$.ajax({
 		type : "GET",
@@ -25,37 +26,33 @@ myApp.template7Data['page:tiexinjiashi-page'] = function() {
 myApp.onPageInit('tiexinjiashi-page', function(page) {
 
 	// 根服务类型Id
-	var parentServiceTypeId = page.query.firstServiceType;
+	var parentServiceTypeId = localStorage['firstServiceType'];
+	
+	$$("#parentServiceTypeId").val(parentServiceTypeId);
 
-	$$("#parentServiceType").val(parentServiceTypeId);
+	$$("div[name='tiexinjiashidiv']").on("click",function() {
 
-	$$(document).on(
-			"click",
-			"#tiexinjiashidiv",
-			function() {
+		var userId = localStorage['user_id'];
 
-				var userId = localStorage['user_id'];
+		if (userId == undefined || userId.length == 0) {
 
-				if (userId == undefined || userId.length == 0) {
+			myApp.alert("您还没有登录");
 
-					myApp.alert("您还没有登录");
+			mainView.router.loadPage("login.html");
+			return false;
+		}
 
-					mainView.router.loadPage("login.html");
-					return false;
-				}
+		var enable = $$(this).find("input[name='enable']").val();
 
-				var enable = $$(this).find("input[name='enable']").val();
+		if (enable == 0) {
+			return false;
+		}
 
-				if (enable == 0) {
-					return false;
-				}
-
-				var serviceTypeId = $$(this).find("input[name='serviceTypeId']").val();
+		var serviceTypeId = $$(this).find("input[name='serviceTypeId']").val();
+		mainView.router.loadPage("order/order-am-faqiyuyue.html?serviceType="+serviceTypeId
+				+ "&parentServiceTypeId=" + parentServiceTypeId);
 				
-				mainView.router.loadPage("order/order-am-faqiyuyue.html?serviceType="+serviceTypeId
-						+ "&parentServiceTypeId=" + parentServiceTypeId);
-				
-			});
+	});
 });
 
 
