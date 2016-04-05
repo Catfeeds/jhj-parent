@@ -1,8 +1,6 @@
 
 $$("#indexPageContentDiv").find("a").on("click",function(k,v){
-	
-	alert(1);
-	
+		
 	
 });
 

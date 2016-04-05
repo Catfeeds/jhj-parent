@@ -1036,3 +1036,39 @@ CREATE TABLE `order_customization_year` (
   `add_time` int(11) unsigned NOT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `user_ref_org` (
+  `id` int(11) UNSIGNED NOT NULL COMMENT '主键',
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `org_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '云店ID',
+  `parent_org_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '对应地区门店ID',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间戳'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户关联助理表';
+
+--
+-- 转存表中的数据 `user_ref_org`
+--
+
+INSERT INTO `user_ref_org` (`id`, `user_id`, `org_id`, `parent_org_id`, `add_time`) VALUES
+(1, 2, 4, 2, 1459849281);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `user_ref_org`
+--
+ALTER TABLE `user_ref_org`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `user_ref_org`
+--
+ALTER TABLE `user_ref_org`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=2;
