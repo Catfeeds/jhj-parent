@@ -239,6 +239,10 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		}
 		if (!StringUtil.isEmpty(age)) age = age + "岁";
 		userGetAmVo.setAge(age);
+		
+		//血型
+		String bloodTypeName = OneCareUtil.getBloodTypeName(userGetAmVo.getBloodType());
+		userGetAmVo.setBloodType(bloodTypeName);
 		return userGetAmVo;
 	}
 	
