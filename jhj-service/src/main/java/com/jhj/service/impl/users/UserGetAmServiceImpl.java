@@ -28,7 +28,9 @@ import com.jhj.service.users.UserGetAmService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.vo.user.UserGetAmVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 
 /**
@@ -162,6 +164,29 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		return userGetAmVo;
 	}
 	
+	
+	/*
+	 * 助理版--我的
+	 */
+	@Override
+	public UserGetAmVo getStaffByUserId(Long userId, Long staffId) {
+		
+		//公共代码块。处理身份证号、助理技能
+		UserGetAmVo userGetAmVo = commonConvert(staffId);
+		
+		//亲密度。订单数，订单状态 >4 只要是已支付过的 订单，都可以算做 一条 “亲密度 ”
+		Map<String, Long> map = new HashMap<String, Long>();
+		
+		map.put("userId", userId);
+		map.put("amId", staffId);
+		
+		int orderNum = orderService.getIntimacyOrders(map);
+		
+		userGetAmVo.setOrderNum(orderNum);
+		
+		return userGetAmVo;
+	}	
+	
 	/*
 	 * 
 	 *  公用代码段。。处理 身份证号 和 助理技能
@@ -200,6 +225,20 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 			userGetAmVo.setTagList(new ArrayList<Tags>());
 		}
 		
+		//星座
+		String astroName =  OneCareUtil.getAstroName(userGetAmVo.getAstro());
+		userGetAmVo.setAstroName(astroName);
+		
+		//年龄
+		String age = "";
+		try {
+			age = DateUtil.getAge(userGetAmVo.getBirth());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (!StringUtil.isEmpty(age)) age = age + "岁";
+		userGetAmVo.setAge(age);
 		return userGetAmVo;
 	}
 	

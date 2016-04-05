@@ -12,7 +12,7 @@ public interface UserAddrsService {
 
     Long insert(UserAddrs record);
 
-	int insertSelective(UserAddrs record);
+	Long insertSelective(UserAddrs record);
 
 	UserAddrs selectByPrimaryKey(Long id);
 
@@ -41,8 +41,6 @@ public interface UserAddrsService {
 	int updataDefaultById(Long addrId);
 
 	UserAddrs selectUserId(Long userId);
-
-	Boolean allotAm(Long addrId);
 	
 	UserAddrs selectByDefaultAddr(Long userId);
 

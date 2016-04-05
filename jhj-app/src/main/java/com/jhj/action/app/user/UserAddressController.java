@@ -17,6 +17,7 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.async.UsersAsyncService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
@@ -48,6 +49,9 @@ public class UserAddressController extends BaseController {
 	@Autowired
 	private OrgStaffsService orgStaffsService;
 	
+	@Autowired
+	private UsersAsyncService usersAsyncService;
+	
 	/**
 	 * 根据userId查询用户的地址
 	 * @param userId
@@ -67,6 +71,7 @@ public class UserAddressController extends BaseController {
 				userAddrs = list.get(0);
 				userAddrs.setIsDefault((short) 1);
 				userAddrsService.updateByPrimaryKeySelective(userAddrs);
+				usersAsyncService.allotOrg(userAddrs.getId());
 			}
 		}
 		
@@ -98,6 +103,7 @@ public class UserAddressController extends BaseController {
 		
 		userAddrsService.updataDefaultByUserId(userId);
 		userAddrsService.updataDefaultById(addrId);
+		usersAsyncService.allotOrg(userAddrs.getId());
 		
 		return result;
 	}	
@@ -185,13 +191,22 @@ public class UserAddressController extends BaseController {
 				}
 				
 				userAddrsService.insertSelective(userAddrs);
+				
+				if (userAddrs.getIsDefault().equals((short)1)) {
+					usersAsyncService.allotOrg(userAddrs.getId());
+				}
+				
+				
 			}else{
 				BeanUtilsExp.copyPropertiesIgnoreNull(temp,userAddrs);
 			}
 		}
 		
 		//分配助理
-		userAddrsService.allotAm(userAddrs.getId());
+//		userAddrsService.allotAm(userAddrs.getId());
+		
+		//分配云店.
+		
 		UserAddrsVo userAddrsVo = new UserAddrsVo();
 		try {
 			BeanUtils.copyProperties(userAddrsVo, userAddrs);
@@ -202,13 +217,6 @@ public class UserAddressController extends BaseController {
 		}
 
 		userAddrsVo.setAmMobile("");
-//		UserRefAm userRefAm = userRefAmService.selectByAmId(userId);
-//		if(userRefAm !=null){
-//			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(userRefAm.getStaffId());
-//			if(orgStaffs !=null){
-//				userAddrsVo.setAmMobile(orgStaffs.getMobile());
-//			}
-//		}
 		
 		AppResultData<UserAddrs> result = new AppResultData<UserAddrs>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, userAddrsVo);

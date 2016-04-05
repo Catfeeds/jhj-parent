@@ -19,4 +19,6 @@ public interface UserGetAmService {
 	UserGetAmVo getAmVoByAmId(Long amId);
 	
 	UserGetAmVo initUserGetAmVo();
+
+	UserGetAmVo getStaffByUserId(Long userId, Long amId);
 }

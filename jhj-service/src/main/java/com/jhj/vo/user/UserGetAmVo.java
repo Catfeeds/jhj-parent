@@ -24,6 +24,10 @@ public class UserGetAmVo extends OrgStaffs {
 	
 	private String orgName;		//助理所属门店
 	
+	private String astroName;
+	
+	private String age;
+	
 	
 	public String getOrgName() {
 		return orgName;
@@ -55,6 +59,22 @@ public class UserGetAmVo extends OrgStaffs {
 
 	public void setOrderNum(int orderNum) {
 		this.orderNum = orderNum;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public String getAstroName() {
+		return astroName;
+	}
+
+	public void setAstroName(String astroName) {
+		this.astroName = astroName;
 	}
 
 	

@@ -8,11 +8,11 @@
 		<div class="page-content">
 			<div class="zhuli-top">
 				<div class="zhuli-top-jieshao">
-					<img src="" id="staffImg">
+					<img src="{{head_img}}" id="staffImg">
 					<ul class="zhuli-top-wenzi">
-						<li id="staffName"></li>
-						<li id="cardNo"></li>
-						<li id="age"></li>
+						<li id="staffName">{{name}}</li>
+						<li id="cardNo">{{card_id}}</li>
+						<li id="age">{{age}}</li>
 					</ul>
 				</div>
 				<a href="#" id="callStaff" class="button active zhuli-submit external"style="background:#EF7B01;border:1px solid #EF7B01;">
@@ -28,7 +28,7 @@
 	                        <div class="item-inner">
 	                          <div class="item-title label">星&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;座:</div>
 	                          <div class="item-xx-label">
-	                          		<span id="astro"></span>
+	                          		<span id="astro">{{astro_name}}</span>
 	                          </div>
 	                        </div>
 	                      </div>
@@ -38,7 +38,7 @@
 		                    <div class="item-inner">
 		                      <div class="item-title label">血&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:</div>
 		                      <div class="item-xx-label">
-	                          		<span id="bloodType"></span>
+	                          		<span id="bloodType">{{blood_type}}</span>
 	                          </div>
 		                    </div>
 		                  </li>
@@ -59,7 +59,7 @@
 		                        <div class="item-inner">
 		                          <div class="item-title label">亲&nbsp;&nbsp;密&nbsp;&nbsp;度:</div>
 		                           <div class="item-xx-label" style="width:65%;">
-	                          		<span id="orderNum"style="word-wrap:break-word;"></span>
+	                          		<span id="orderNum"style="word-wrap:break-word;">{{order_num}}</span>
 	                         	   </div>
 		                          
 		                        </div>
@@ -71,7 +71,7 @@
 		                        <div class="item-inner">
 		                          	<div class="item-title label">自我介绍:</div>
 		                         	<div class="item-xx-label" style="width:65%;">
-										<span id="intro" style="word-wrap:break-word;"></span>
+										<span id="intro" style="word-wrap:break-word;">{{intro}}</span>
 									</div>
 		                       	</div>
 		                      </div>

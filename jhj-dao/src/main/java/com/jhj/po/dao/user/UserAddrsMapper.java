@@ -12,7 +12,7 @@ public interface UserAddrsMapper {
 	
 	    Long insert(UserAddrs record);
 	
-	    int insertSelective(UserAddrs record);
+	    Long insertSelective(UserAddrs record);
 	
 	    int updateByPrimaryKeySelective(UserAddrs record);
 	

@@ -1,5 +1,6 @@
 package com.jhj.service.impl.cooperate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,8 @@ public class CooperateBusinessImpl implements CooperateBusinessService {
 		business.setAddTime(TimeStampUtil.getNowSecond());
 		business.setUpdateTime(TimeStampUtil.getNowSecond());
 		
-		business.setEnable((short)1);	//是否可用 ，1=是 0=否
-		business.setRoleId(0L);
+//		business.setEnable((short)1);	//是否可用 ，1=是 0=否
+//		business.setRoleId(0L);
 		
 		return business;
 	}
@@ -76,7 +77,8 @@ public class CooperateBusinessImpl implements CooperateBusinessService {
 	
 	@Override
 	public List<CooperativeBusiness> selectByListPage() {
-		return cooMapper.selectByListPage();
+		return new ArrayList<CooperativeBusiness>();
+//		return cooMapper.selectByListPage();
 	}
 	
 }

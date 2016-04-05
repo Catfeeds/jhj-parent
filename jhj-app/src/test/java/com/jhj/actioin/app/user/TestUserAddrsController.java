@@ -41,11 +41,11 @@ public class TestUserAddrsController extends JUnitActionBase {
 	@Test
     public void testPostDeleteUserAddrs() throws Exception {
 
-		String url = "/app/user/post_del_user_addrs.json";
+		String url = "/app/user/post_set_addr_default.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("user_id", "1");
-	    postRequest = postRequest.param("addr_id", "1");
+	    postRequest = postRequest.param("user_id", "2");
+	    postRequest = postRequest.param("addr_id", "79");
 	    
 
 	    ResultActions resultActions = mockMvc.perform(postRequest);
@@ -54,7 +54,7 @@ public class TestUserAddrsController extends JUnitActionBase {
 	    resultActions.andExpect(status().isOk());
 
 	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
-
+	    Thread.sleep(200000); // 因为junit结束会结束jvm，所以让它等会异步线程  
     }
 	
 	/**
