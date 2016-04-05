@@ -1,10 +1,16 @@
 myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	
 	// 根服务类型Id
-	var parentServiceTypeId =  page.query.serviceType;
+	var serviceTypeId =  page.query.serviceType;
+	
+	if(serviceTypeId != undefined){
+		$$("#serviceType").val(serviceTypeId);
+	}
+	
+	var parentServiceTypeId = page.query.parentServiceTypeId;
 	
 	if(parentServiceTypeId != undefined){
-		$$("#serviceType").val(parentServiceTypeId);
+		$$("#parentServiceTypeId").val(parentServiceTypeId);
 	}
 	
 	
@@ -20,9 +26,9 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 			
 			var service = result.data;
 			
-			$$("#servce_type_name").text(service.name);
+			$$("#servceTypeName").text(service.name);
 			
-			$$("#servicePrice").text(service.price+"/"+service.unit);
+			$$("#servicePrice").text(service.price_and_unit);
 			
 			$$("#serviceIntro").text(service.remarks);
 			
@@ -35,16 +41,22 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	
 	$$("#order-am-faqiyuyue-page-a-submit").on("click",function(){
 		
-		var content =  $$("#serviceContent").val();
+		var serviceType = $$("#serviceType").val();
 		
-		if(content == undefined || content == ""){
-			myApp.alert("请您简单描述一下服务要求");
-			return false;
+		var content =  $$("#serviceContent").val();
+
+		var parentServiceType = $$("#parentServiceTypeId").val();
+		
+		// 深度养护 不需要必填 服务要求
+		if(parentServiceType != 26){
+			
+			if(content == undefined || content == ""){
+				myApp.alert("请您简单描述一下服务要求");
+				return false;
+			}
 		}
 		
 		var userId = localStorage['user_id'];
-		
-		var serviceType = $$("#serviceType").val();
 		
 	    $$.ajax({
 	        type:"POST",
@@ -57,7 +69,7 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	      success: function (data, status, xhr){
 				
 				myApp.alert("预约成功");
-				mainView.router.loadPage("index.html")
+				mainView.router.loadPage("index.html");
 			}
 	       
 	    });

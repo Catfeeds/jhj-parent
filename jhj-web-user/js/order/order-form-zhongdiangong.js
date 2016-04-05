@@ -15,6 +15,12 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		$$("#hhAddons").attr("style","display:none");
 	}
 	
+	//厨娘烧饭。2小时
+	if(parentServiceTypeId == 24){
+		
+		$$("#serviceHourDescription").text("2小时");
+	}
+	
 	
 	var userId = localStorage['user_id'];
 	$$("#userId").val(userId);

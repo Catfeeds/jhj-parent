@@ -1,23 +1,30 @@
 	<div data-page="tiexinjiashi-page" class="page" style="background:#FDEEEE;">
 		<div class="page-content" id="serviceContainer">
 			
+			<input  type="hidden" id="parentServiceType" value="">
 			
-			<div id="serviceTemplate" style="display:none">
-			
+			<div id="serviceContainer">
+				
+				{{#each data}}
+				
 				<div class="template-fiveservice">
-					<div class="circle-template-fiveservice2"><img src="{imgUrl}" alt=""></div>
+					<div class="circle-template-fiveservice2"><img src="{{service_img_url}}" alt=""></div>
 					<div class="word-template-fiveservice1">
-						<p style="color:#F08E36;">{name}</p>
+						<p style="color:#F08E36;">{{name}}</p>
 					</div>
 					
-					<input  type="hidden" value="{serviceTypeId}">
 					
 					<div id="tiexinjiashidiv" class="button-template-fiveservice">
-						<a href="#" class="button button-big button-green btn-five">{enable}</a>
+						<a href="#" class="button button-big button-green btn-five">{{button_word}}</a>
+						
+						<input  type="hidden" name="serviceTypeId" value="{{service_type_id}}">
+						<input type="hidden" name="enable" value="{{enable}}">
 					</div>
 					
-					<input type="hidden" value="{enableNum}">
 				</div>	
+				
+				{{/each}}
+				
 			</div>
 			
 		</div>
