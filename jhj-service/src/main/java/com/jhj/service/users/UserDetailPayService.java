@@ -1,5 +1,7 @@
 package com.jhj.service.users;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPrices;
@@ -7,6 +9,7 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.UserDetailSearchVo;
+import com.jhj.vo.user.AppUserDetailPayVo;
 
 public interface UserDetailPayService {
 	
@@ -32,6 +35,12 @@ public interface UserDetailPayService {
 
 	UserDetailPay addUserDetailPayForOrderCard(Users user, OrderCards orderCard, String tradeStatus, String tradeNo, String payAccount);
 	
-
-
+	/*
+	 *  微网站--我的--余额--消费明细
+	 */
+	List<UserDetailPay> appSelectByListPage(UserDetailSearchVo searchVo,int pageNo,int pageSize);
+	
+	List<AppUserDetailPayVo> transToListVo(List<UserDetailPay> list);
+	
+	AppUserDetailPayVo initPayVo(UserDetailPay detailPay);
 }

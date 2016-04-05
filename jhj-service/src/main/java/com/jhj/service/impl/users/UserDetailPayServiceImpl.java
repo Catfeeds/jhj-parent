@@ -1,5 +1,6 @@
 package com.jhj.service.impl.users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,16 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.user.UserDetailPayMapper;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.vo.UserDetailSearchVo;
+import com.jhj.vo.user.AppUserDetailPayVo;
+import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.jhj.po.model.order.OrderCards;
 
@@ -25,6 +32,12 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Autowired
 	private UserDetailPayMapper userDetailPayMapper;
 
+	@Autowired
+	private OrdersService orderService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
+	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return userDetailPayMapper.deleteByPrimaryKey(id);
@@ -151,5 +164,69 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		userDetailPayMapper.insert(userDetailPay);
 		return userDetailPay;
 	}	
-
+	
+	@Override
+	public List<UserDetailPay> appSelectByListPage(UserDetailSearchVo searchVo, int pageNo, int pageSize) {
+		return userDetailPayMapper.selectByListPages(searchVo);
+	}
+	
+	
+	@Override
+	public List<AppUserDetailPayVo> transToListVo(List<UserDetailPay> list) {
+		
+		List<AppUserDetailPayVo> voList = new ArrayList<AppUserDetailPayVo>();
+		
+		if(!list.isEmpty() || list.size() > 0){
+			
+			for(UserDetailPay detailPay : list){
+				
+				AppUserDetailPayVo payVo = initPayVo(detailPay);
+				
+//				Short orderType = detailPay.getOrderType();
+				
+				Long orderId = detailPay.getOrderId();
+				
+				/*
+				 *  有脏数据。订单 不存在
+				 */
+				
+				Orders orders = orderService.selectbyOrderId(orderId);
+				
+				if(orders == null){
+					continue;
+				}
+				
+				PartnerServiceType type = partService.selectByPrimaryKey(orders.getServiceType());
+				
+				if(type != null){
+					
+					//订单类型名称
+					payVo.setOrderTypeName(type.getName());
+					
+					//支付方式名称
+					Short payType = payVo.getPayType();
+					String payTypeName = OneCareUtil.getPayTypeName(payType);
+					
+					payVo.setPayTypeName(payTypeName);
+				}
+				
+				voList.add(payVo);
+			}
+		}
+		
+		return voList;
+	}
+	
+	@Override
+	public AppUserDetailPayVo initPayVo(UserDetailPay detailPay) {
+		
+		AppUserDetailPayVo payVo = new AppUserDetailPayVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(detailPay, payVo);
+		
+		payVo.setPayTypeName("");
+		payVo.setOrderTypeName("");
+		
+		return payVo;
+	}
 }
+

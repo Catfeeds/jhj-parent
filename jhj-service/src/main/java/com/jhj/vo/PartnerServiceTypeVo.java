@@ -1,6 +1,5 @@
 package com.jhj.vo;
 
-import java.util.List;
 
 import com.jhj.po.model.university.PartnerServiceType;
 

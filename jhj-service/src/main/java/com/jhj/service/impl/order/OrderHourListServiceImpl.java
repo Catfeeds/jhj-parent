@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
@@ -23,7 +25,6 @@ import com.meijia.utils.OneCareUtil;
  *
  * @author :hulj
  * @Date : 2015年8月4日上午11:42:33
- * @Description: TODO
  *
  */
 @Service
@@ -39,6 +40,10 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 	
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
+	
 	/*
 	 * 当前订单
 	 */
@@ -89,13 +94,26 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 				//订单类型
 				Short orderType = orders.getOrderType();
 				
-				//2016-2-20 15:37:11    修改订单状态 名称为 二期 新定义的名称
-				orderHourListVo.setOrderHourTypeName(OneCareUtil.getJhjOrderTypeName(orderType));
+				
+				/*
+				 * 用户版-我的订单，对应的钟点工，助理预约单，改相应的名字
+				 * 
+				 *  2016年4月5日15:36:403  将 订单的大类型。。变为 具体 的 服务类型名称 
+				 *  
+				 *  如： 钟点工-->  厨娘烧饭初体验。
+				 */
+				
+				Long typeId = orders.getServiceType();
+				
+				PartnerServiceType partType = partService.selectByPrimaryKey(typeId);
+				
+				// 需要 区分 
+				
+				orderHourListVo.setOrderHourTypeName(partType.getName());
 				
 				//订单状态
 				Short orderStatus = orders.getOrderStatus();
 				
-				//2016年2月20日15:55:30   已更新为 二期 新定义的订单类型
 				orderHourListVo.setOrderHourStatusName(OneCareUtil.
 							getJhjOrderStausNameFromOrderType(orderType,orderStatus));
 				
@@ -108,9 +126,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 				}
 				
 				voList.add(orderHourListVo);
-				
 			}
-		
 		}
 		return voList;
 	}

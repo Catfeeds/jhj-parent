@@ -82,16 +82,20 @@ public class OaOrderDisServiceImpl implements OaOrderDisService {
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
 		orderDisVo.setAddrName(userAddrs.getName()+" "+userAddrs.getAddr());
 		
-		Long amId = dispatchs.getAmId();
-		OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(amId);
-		//助理名称
-		orderDisVo.setAmName(orgStaffs.getName());
-		//助理手机号
-		orderDisVo.setAmMobile(orgStaffs.getMobile());
+//		Long amId = dispatchs.getAmId();
+//		OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(amId);
+//		//助理名称
+//		orderDisVo.setAmName(orgStaffs.getName());
+//		//助理手机号
+//		orderDisVo.setAmMobile(orgStaffs.getMobile());
 		
-		//门店名称
-		Long orgId = orgStaffs.getOrgId();
+		Long staffId = dispatchs.getStaffId();
+		
+		OrgStaffs staffs = orgStaService.selectByPrimaryKey(staffId);
+		
+		Long orgId = staffs.getOrgId();
 		Orgs orgs = orgService.selectByPrimaryKey(orgId);
+		
 		orderDisVo.setOrgName(orgs.getOrgName());
 		
 		return orderDisVo;

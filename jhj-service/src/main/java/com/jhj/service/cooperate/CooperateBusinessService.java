@@ -1,5 +1,7 @@
 package com.jhj.service.cooperate;
 
+import java.util.List;
+
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 
 /**
@@ -23,4 +25,7 @@ public interface CooperateBusinessService {
 
     int updateByPrimaryKey(CooperativeBusiness record);
 	
+    CooperativeBusiness initCooBus();
+    
+    List<CooperativeBusiness> selectByListPage();
 }

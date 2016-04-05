@@ -752,12 +752,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderAddress(userAddrs.getName()+ " " + userAddrs.getAddress());
 			}
 		}
-		// 门店名称
-		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
-
-		if (orgs != null) {
-			oaOrderListVo.setOrgName(orgs.getOrgName());
-		}
+//		// 门店名称
+//		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
+//
+//		if (orgs != null) {
+//			oaOrderListVo.setOrgName(orgs.getOrgName());
+//		}
 		// 查找出有效派工
 		List<OrderDispatchs> disList_yes = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
 		// 查找出无效派工
@@ -816,15 +816,15 @@ public class OaOrderServiceImpl implements OaOrderService {
 			//云店名称
 			oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
 			
+			//门店名称
+			Orgs orgs = orgService.selectByPrimaryKey(staffs.getParentOrgId());
+			oaOrderListNewVo.setOrgName(orgs.getOrgName());
 			
 		}else{
-			oaOrderListNewVo.setStaffName("暂无");
-			
-			oaOrderListNewVo.setCloudOrgName("");
-			oaOrderListNewVo.setOrgName("");
+			oaOrderListNewVo.setStaffName("未派工");
+			oaOrderListNewVo.setCloudOrgName("未派工");
+			oaOrderListNewVo.setOrgName("未派工");
 		}
-		
-		
 		
 		Long serviceType = orders.getServiceType();
 		PartnerServiceType type = partnerService.selectByPrimaryKey(serviceType);
@@ -834,8 +834,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}else{
 			oaOrderListNewVo.setOrderTypeName("");
 		}
-		
-		
 		
 		return oaOrderListNewVo;
 	}

@@ -32,8 +32,6 @@ public class OrderHourListVo extends Orders {
 	private Long  addrId;
 	private String address;//地址 为   name  +  addr (user_addrs表）
 
-	
-
 
 	public String getOrderHourStatusName() {
 		return orderHourStatusName;
