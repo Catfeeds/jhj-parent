@@ -40,7 +40,7 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
 			
 		if (orders.length < 10) {
 			
-			$$('#order-list-more').css("display", "none");
+			$$('#pay-detail-list-more').css("display", "none");
 			return;			
 		}
 
@@ -62,7 +62,7 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
  		
 	 });
 	// 注册'infinite'事件处理函数
-	$$('#order-list-more').on('click', function () {
+	$$('#pay-detail-list-more').on('click', function () {
 		if (loading) return;//如果正在加载，则退出
 		loading = true;// 设置flag
 		postdata.user_id = userId;
@@ -90,7 +90,7 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
 			$$('#btn-order-history').attr("class", "history-box");		
 			
 			apiUrl = "order/orderHourNowList.json";
-			$$('#order-list-more').css("display", "block");
+			$$('#pay-detail-list-more').css("display", "block");
 			$$("#card-hour-now-list ul").html("");
 			page = 1;
 			var postdata = {};
@@ -120,7 +120,7 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
 			$$('#btn-order-now').attr("class", "dangqian-box1");
 			
 			apiUrl = "order/orderHourOldList.json";
-			$$('#order-list-more').css("display", "block");
+			$$('#pay-detail-list-more').css("display", "block");
 			$$("#card-hour-now-list ul").html("");
 			page = 1;
 			var postdata = {};
