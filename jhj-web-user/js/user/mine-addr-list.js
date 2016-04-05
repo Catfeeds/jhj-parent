@@ -141,8 +141,6 @@ function clickToSetDefault(obj,addrId){
 	}
 	
 	
-	
-	
 	var userId = localStorage['user_id'];
 
 	var paramData = {};
@@ -228,11 +226,12 @@ function goBackToZhongDianGongPage1(id,name){
 	
 	if (returnPage.indexOf("?") <=0 && returnPage.indexOf("addr") <=0) {
 		returnPage = returnPage + "?addr_id="+addrId + "&addr_name="+ addrName;
-	} 
-	
-	if (returnPage.indexOf("&") <=0 && returnPage.indexOf("addr") <=0) {
+	} else{
 		returnPage = returnPage + "&addr_id="+addrId + "&addr_name="+ addrName;
 	}
+	
+//	if (returnPage.indexOf("&") >=0 && returnPage.indexOf("addr") <=0) {
+//	}
 		
 
 	mainView.router.loadPage(returnPage);
@@ -277,14 +276,19 @@ function goBackToZhongDianGongPage(){
 	returnPage = replaceParamVal(returnPage, "addr_name", addrName);
 	
 	
+//	if (returnPage.indexOf("?") >=0 && returnPage.indexOf("addr") <=0) {
+//		returnPage = returnPage + "?addr_id="+addrId + "&addr_name="+ addrName;
+//	} 
+	
 	if (returnPage.indexOf("?") <=0 && returnPage.indexOf("addr") <=0) {
 		returnPage = returnPage + "?addr_id="+addrId + "&addr_name="+ addrName;
-	} 
-	
-	if (returnPage.indexOf("&") <=0 && returnPage.indexOf("addr") <=0) {
+	} else{
 		returnPage = returnPage + "&addr_id="+addrId + "&addr_name="+ addrName;
 	}
-		
+	
+//	if (returnPage.indexOf("&") <=0 && returnPage.indexOf("addr") <=0) {
+//		returnPage = returnPage + "&addr_id="+addrId + "&addr_name="+ addrName;
+//	}
 
 	mainView.router.loadPage(returnPage);
 	
