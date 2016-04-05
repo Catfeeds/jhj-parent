@@ -866,9 +866,9 @@ INSERT INTO `partner_service_type` (`service_type_id`, `name`, `parent_id`, `uni
 (25, '贴心家事', 0, '1', 1, '1.00', '', 1, 0, '', 1, 0, 0.00, ''),
 (26, '深度养护', 0, '1', 1, '10.00', '', 1, 0, '', 1, 0, 0.00, ''),
 (27, '企业服务', 0, '1', 1, '10.00', '', 1, 1, 'http://img.jia-he-jia.com:8080/b1f60d3c3fe9d27f4128e86e1981d29b', 1, 0, 0.00, ''),
-(28, '金牌保洁初体验', 23, '元/次', 1, '149.00', '初次体验金牌保洁', 1, 123, 'http://img.jia-he-jia.com:8080/42c9787725bafd9d79db1162f248629d', 1, 0, 0.00, ''),
-(29, '厨娘烧饭初体验', 24, '元/2小时', 1, '66.00', '一次超值的解馋体验', 1, 0, 'http://img.jia-he-jia.com:8080/42c9787725bafd9d79db1162f248629d', 1, 0, 0.00, '南方菜/北方菜（可代买食材）'),
-(30, '安心托管', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/eb5f777832737ca53a73c5fa0316984a', 1, 0, 0.00, ''),
+(28, '初体验', 23, '元/次', 1, '149.00', '初次体验金牌保洁', 1, 123, 'http://img.jia-he-jia.com:8080/42c9787725bafd9d79db1162f248629d', 1, 0, 0.00, ''),
+(29, '初体验', 24, '元/2小时', 1, '66.00', '一次超值的解馋体验', 1, 0, 'http://img.jia-he-jia.com:8080/42c9787725bafd9d79db1162f248629d', 1, 0, 0.00, '南方菜/北方菜（可代买食材）'),
+(30, '安心托管', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/d45ae0cc2c6b6f7e8aff514c0eaba1a1', 1, 0, 0.00, ''),
 (31, '跑腿代办', 25, '1', 1, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/bbfabfc7cd295ad77b31be296e39cef7', 1, 0, 0.00, ''),
 (32, '陪伴', 25, '1', 0, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/ec2d3e10b6f0129429e8c2fc14506401', 1, 0, 0.00, ''),
 (33, '便民服务', 25, '1', 0, '10.00', '', 1, 0, 'http://img.jia-he-jia.com:8080/c5134155c59406bc95f96921aa8737df', 1, 0, 0.00, ''),
@@ -912,17 +912,6 @@ ALTER TABLE `partner_service_type`
 --
 ALTER TABLE `partner_service_type`
   MODIFY `service_type_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '服务类别表', AUTO_INCREMENT=56;
-
---
--- 在导出的表使用AUTO_INCREMENT
---
-
---
--- 使用表AUTO_INCREMENT `partner_service_type`
---
-ALTER TABLE `partner_service_type`
-  MODIFY `service_type_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '服务类别表', AUTO_INCREMENT=42;
-
 
 ALTER TABLE `org_staffs` ADD `parent_org_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '对应地区门店ID' AFTER `org_id`;
 
