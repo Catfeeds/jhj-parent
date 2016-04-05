@@ -17,12 +17,6 @@ public class SurveyContent {
 
     private String itemUnit;
 
-    private String description;
-
-    private String contentChildDescription;
-
-    private String remark;
-
     private Short measurement;
 
     private Short enable;
@@ -32,6 +26,8 @@ public class SurveyContent {
     private Long updateTime;
 
     private Short contentChildType;
+
+    private Integer defaultTime;
 
     public Long getContentId() {
         return contentId;
@@ -89,30 +85,6 @@ public class SurveyContent {
         this.itemUnit = itemUnit == null ? null : itemUnit.trim();
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
-
-    public String getContentChildDescription() {
-        return contentChildDescription;
-    }
-
-    public void setContentChildDescription(String contentChildDescription) {
-        this.contentChildDescription = contentChildDescription == null ? null : contentChildDescription.trim();
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
-
     public Short getMeasurement() {
         return measurement;
     }
@@ -151,5 +123,13 @@ public class SurveyContent {
 
     public void setContentChildType(Short contentChildType) {
         this.contentChildType = contentChildType;
+    }
+
+    public Integer getDefaultTime() {
+        return defaultTime;
+    }
+
+    public void setDefaultTime(Integer defaultTime) {
+        this.defaultTime = defaultTime;
     }
 }

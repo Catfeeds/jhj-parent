@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.jhj.po.model.survey.SurveyContent;
 
 public interface SurveyContentMapper {
-    int deleteByPrimaryKey(Long contentId);
+	int deleteByPrimaryKey(Long contentId);
 
     int insert(SurveyContent record);
 
