@@ -293,7 +293,7 @@ public class UserController extends BaseController {
 	 * 
 	 *  @Title: doChargeForm
 	  * @Description: 
-	  *        提交  会员充值 结果
+	  *     运营平台--   提交  会员充值 结果
 	  * @param userId	用户id
 	  * @param chargeWay 充值方式
 	  * @param chargeMoney 充值金额	

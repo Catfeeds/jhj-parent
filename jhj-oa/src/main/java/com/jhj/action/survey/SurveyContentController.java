@@ -112,7 +112,7 @@ public class SurveyContentController extends BaseController {
 		}
 		
 		model.addAttribute("childList", list);
-		model.addAttribute("childDescription", content.getContentChildDescription());
+//		model.addAttribute("childDescription", content.getContentChildDescription());
 		model.addAttribute("contentFormModel", content);
 		
 		return "survey/contentForm";
@@ -162,12 +162,12 @@ public class SurveyContentController extends BaseController {
 			surveyContent.setName(name);
 			surveyContent.setPrice(price);
 			surveyContent.setPriceDescription(priceDescription);
-			surveyContent.setDescription(description);
+//			surveyContent.setDescription(description);
 			surveyContent.setContentChildType(contentChildType);
 			
 			//如果是 填空题形式（次数可修改，如家电清洗：空调1次。。。次数可修改）
 //			if(contentChildType == (short)2){
-				surveyContent.setContentChildDescription(contentChildDescription);
+//				surveyContent.setContentChildDescription(contentChildDescription);
 //			}
 			
 			surveyContent.setMeasurement(measurement);
@@ -184,12 +184,12 @@ public class SurveyContentController extends BaseController {
 			surveyContent.setName(name);
 			surveyContent.setPrice(price);
 			surveyContent.setPriceDescription(priceDescription);
-			surveyContent.setDescription(description);
+//			surveyContent.setDescription(description);
 			surveyContent.setContentChildType(contentChildType);
 			
 //			//如果是 填空题形式（次数可修改，如家电清洗：空调1次。。。次数可修改）
 //			if(contentChildType == (short)2){
-				surveyContent.setContentChildDescription(contentChildDescription);
+//				surveyContent.setContentChildDescription(contentChildDescription);
 //			}
 			
 			surveyContent.setMeasurement(measurement);
