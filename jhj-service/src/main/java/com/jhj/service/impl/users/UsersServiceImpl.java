@@ -128,6 +128,11 @@ public class UsersServiceImpl implements UsersService {
 	public List<Users> selectByUserIds(List<Long> ids) {
 		return usersMapper.selectByUserIds(ids);
 	}
+	
+	@Override
+	public List<Users> selectByAll() {
+		return usersMapper.selectByAll();
+	}
 
 	@Override
 	public Users getUserByMobile(String mobile) {

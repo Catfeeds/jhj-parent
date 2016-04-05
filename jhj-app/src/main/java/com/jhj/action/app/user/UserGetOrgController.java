@@ -15,12 +15,17 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.UserRefOrg;
+import com.jhj.po.model.user.Users;
+import com.jhj.service.async.UsersAsyncService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserGetAmService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserRefOrgService;
+import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.user.UserGetAmVo;
 
@@ -38,6 +43,9 @@ import com.jhj.vo.user.UserGetAmVo;
 public class UserGetOrgController extends BaseController {
 	
 	@Autowired
+	private UsersService userService;
+	
+	@Autowired
 	private UserGetAmService userGetAmService;
 	
 	@Autowired
@@ -48,6 +56,12 @@ public class UserGetOrgController extends BaseController {
 	
 	@Autowired
 	private UserRefOrgService userRefOrgService;
+	
+	@Autowired
+	private UserAddrsService userAddrsService;
+	
+	@Autowired
+	private UsersAsyncService usersAsyncService;
 	
 	/*
 	 * 用户版查看助理页签
@@ -95,4 +109,29 @@ public class UserGetOrgController extends BaseController {
 		
 		return result;
 	}	
+	
+	@RequestMapping(value = "gen_user_org",method = RequestMethod.GET)
+	public AppResultData<Object> genUserOrg(){
+		
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		List<Users> userlist = userService.selectByAll();
+		
+		for (Users u : userlist) {
+			Long userId = u.getId();
+			
+			UserRefOrg userRefOrg = userRefOrgService.selectByUserId(userId);
+			if (userRefOrg != null) continue;
+			
+			UserAddrs userAddrs = userAddrsService.selectByDefaultAddr(Long.valueOf(userId));
+			
+			if (userAddrs == null) continue;
+			
+			usersAsyncService.allotOrg(userAddrs.getId());	
+		}
+				
+		return result;
+	}		
+	
 }

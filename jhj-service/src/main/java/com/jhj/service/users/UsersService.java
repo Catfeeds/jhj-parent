@@ -60,4 +60,6 @@ public interface UsersService {
 	DictCardType selectDictCardTypeById(Long id);
 
 	List<Users> selectByListPage(List<Long> userIdList, int pageNo, int pageSize);
+
+	List<Users> selectByAll();
 }

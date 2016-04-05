@@ -30,6 +30,13 @@
 		from users
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
+	
+	<select id="selectByAll" resultMap="BaseResultMap" >
+		select
+		<include refid="Base_Column_List" />
+		from users
+	</select>
+	
 	<select id="selectByMobile" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
@@ -693,19 +700,19 @@
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyBetweenByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c") AS series,  
-			   COUNT(*) AS total 
-			   FROM users
-		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
-		<if test="startTime !=null">
+	SELECT FROM_UNIXTIME(add_time, "%c") AS series,
+	COUNT(*) AS total
+	FROM users
+	WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
+	<if test="startTime !=null">
 			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
+	</if>
+	<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-	
-		GROUP BY series ORDER BY series ASC
-	</select>
+	</if>
+
+	GROUP BY series ORDER BY series ASC
+</select>
 	<select id="userResyMoneyBetweenByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
 			   COUNT(*) AS total 

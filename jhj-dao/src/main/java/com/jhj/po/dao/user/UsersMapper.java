@@ -128,7 +128,9 @@ public interface UsersMapper {
 	
 	List<ChartMapVo> getRestUserAndMoneyByMonth(ChartSearchVo chartSearchVo);	
 	
-	List<ChartMapVo> getRestUserAndMoneyByQuarter(ChartSearchVo chartSearchVo);	
+	List<ChartMapVo> getRestUserAndMoneyByQuarter(ChartSearchVo chartSearchVo);
+
+	List<Users> selectByAll();	
 		
 		
 }
