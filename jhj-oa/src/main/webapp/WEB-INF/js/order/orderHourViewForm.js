@@ -105,8 +105,6 @@ function getRootPath() {
 }
 
 
-
-
 //改变 服务时间时,动态获取派工
 $('.form_datetime').datetimepicker().on('changeDate', function(ev){
     
@@ -165,10 +163,6 @@ $('.form_datetime').datetimepicker().on('changeDate', function(ev){
 
 			return false;
 
-		},
-		error:function(){
-			alert("网络错误");
-			return false;
 		}
 	});
 	
@@ -192,10 +186,10 @@ var selectStaff = function(){
 	// 如果 用户已支付。但是  没有 派工记录。。表示该订单 无法 派工
 	// 原因可能 是 服务地址 过远。
 	
-	if(staffId.length == 0){
-		
-		$("#submitForm").text("返回列表页");
-	}
+//	if(staffId.length == 0){
+//		
+//		$("#submitForm").text("返回列表页");
+//	}
 }
 
 

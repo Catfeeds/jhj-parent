@@ -262,8 +262,11 @@ $('#viewForm').on('click',function(){
 			
 			var rootPath = getRootPath();
 			window.location.replace(rootPath+"/order/order-am-list");
+		},
+		error:function(dat,sta,xhr){
+			
 		}
-	})
+	});
 	
 });
 
