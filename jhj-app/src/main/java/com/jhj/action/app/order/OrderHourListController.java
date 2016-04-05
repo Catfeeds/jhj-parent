@@ -55,7 +55,6 @@ public class OrderHourListController extends BaseController {
 		//用户当前订单
 		List<Orders> orderHourList = orderHourListService.selectNowOrderHourListByUserId(userId, page, Constants.PAGE_MAX_NUMBER);
 		
-//		List<Orders>  orderHourList = orderHourListService.selectNowOrderHourListByUserId(userId, page, Constants.PAGE_MAX_NUMBER);
 		List<OrderHourListVo> voList = orderHourListService.transOrderHourListVo(orderHourList);
 		
 		result.setData(voList);

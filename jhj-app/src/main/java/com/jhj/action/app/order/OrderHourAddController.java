@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
-import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
@@ -141,12 +139,30 @@ public class OrderHourAddController extends BaseController {
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);//钟点工未支付
 		order.setOrderNo(orderNo);
 		
-		/*
-		 * 2016年3月14日17:54:37  可直接设置为保洁
-		 */
+		
 		PartnerServiceType partnerServiceType = partService.selectByPrimaryKey(serviceType);
 		
-		order.setServiceContent(partnerServiceType.getName());
+		String serviceName = partnerServiceType.getName();
+		
+		/*
+		 *  2016年3月31日18:31:36  对于 厨娘烧饭。带有附加服务, 服务内容需要 加上 附加服务。
+		 *  
+		 */
+
+		
+		if(!StringUtil.isEmpty(serviceAddons)){
+			
+			String[] addonArray = StringUtil.convertStrToArrayByUL(serviceAddons);
+			
+			for (String addon : addonArray) {
+				
+				DictServiceAddons addons = dictServiceAddonService.selectByAddId(Long.valueOf(addon));
+				
+				serviceName += addons.getName() +" ";
+			}
+		}
+		
+		order.setServiceContent(serviceName);
 		
 		order.setRemarks(remarks);
 		
