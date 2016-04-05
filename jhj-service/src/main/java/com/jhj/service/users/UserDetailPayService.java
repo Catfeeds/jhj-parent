@@ -1,12 +1,16 @@
 package com.jhj.service.users;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
+import com.jhj.common.Constants;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.UserDetailSearchVo;
+import com.jhj.vo.user.AppUserDetailPayVo;
 
 public interface UserDetailPayService {
 	
@@ -32,6 +36,9 @@ public interface UserDetailPayService {
 
 	UserDetailPay addUserDetailPayForOrderCard(Users user, OrderCards orderCard, String tradeStatus, String tradeNo, String payAccount);
 	
+	List<UserDetailPay> appSelectByListPage(UserDetailSearchVo searchVo, int page, int pageSize);
 
-
+	List<AppUserDetailPayVo> transToListVo(List<UserDetailPay> list);
+	
+	AppUserDetailPayVo initVo(UserDetailPay pay);
 }

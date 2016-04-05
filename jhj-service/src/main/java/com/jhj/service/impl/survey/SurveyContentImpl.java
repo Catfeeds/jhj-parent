@@ -65,13 +65,13 @@ public class SurveyContentImpl implements SurveyContentService {
 		content.setPriceDescription(""); 	//对于 类似   100㎡ 以下 xx元， 100㎡ 以上xx 元的服务, 用这个字段,来展示价格明细
 		
 		content.setItemUnit("次");					//量词，这里都定为  次
-		content.setDescription("");
-		
-		//对于 类似 家电清洗：空调1次，卫生间1次。。。这种服务下包含子服务的,
-		//用这个字段，作为 调查结果的 调整使用
-		content.setContentChildDescription("");	 
-		
-		content.setRemark("");
+//		content.setDescription("");
+//		
+//		//对于 类似 家电清洗：空调1次，卫生间1次。。。这种服务下包含子服务的,
+//		//用这个字段，作为 调查结果的 调整使用
+//		content.setContentChildDescription("");	 
+//		
+//		content.setRemark("");
 		content.setMeasurement((short)0);    //计数期限  0=月 1=年 2=次 3=无（赠送，价钱为0）
 		content.setEnable((short)1);			//0 不可用  1可用
 		content.setAddTime(TimeStampUtil.getNowSecond());

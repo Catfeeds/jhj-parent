@@ -1,5 +1,6 @@
 package com.jhj.service.impl.users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,16 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.user.UserDetailPayMapper;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.vo.UserDetailSearchVo;
+import com.jhj.vo.user.AppUserDetailPayVo;
+import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.jhj.po.model.order.OrderCards;
 
@@ -25,6 +32,12 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Autowired
 	private UserDetailPayMapper userDetailPayMapper;
 
+	@Autowired
+	private OrdersService orderService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
+	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return userDetailPayMapper.deleteByPrimaryKey(id);
@@ -151,5 +164,65 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		userDetailPayMapper.insert(userDetailPay);
 		return userDetailPay;
 	}	
-
+	
+	
+	@Override
+	public List<UserDetailPay> appSelectByListPage(UserDetailSearchVo searchVo, int page, int pageSize) {
+		return userDetailPayMapper.selectByListPages(searchVo);
+	}
+	
+	@Override
+	public List<AppUserDetailPayVo> transToListVo(List<UserDetailPay> list) {
+		
+		List<AppUserDetailPayVo> voList = new ArrayList<AppUserDetailPayVo>();
+		
+		if(!list.isEmpty() || list.size() > 0){
+			
+			for (UserDetailPay pay : list) {
+				
+				AppUserDetailPayVo vo = initVo(pay);
+				
+				//订单状态名称
+				Long orderId = pay.getOrderId();
+				
+				Orders orders = orderService.selectbyOrderId(orderId);
+				
+				if(orders == null){
+					continue;
+				}
+				
+				String name = OneCareUtil.getJhjOrderTypeName(orders.getOrderType());
+				
+				vo.setOrderTypeName(name);
+				
+				Long serviceType = orders.getServiceType();
+				
+				PartnerServiceType part = partService.selectByPrimaryKey(serviceType);
+				
+				if(part !=null){
+					
+					vo.setOrderTypeName(part.getName());
+				}
+				
+				voList.add(vo);	
+			}
+			
+		}
+		
+		return voList;
+	}
+	
+	@Override
+	public AppUserDetailPayVo initVo(UserDetailPay pay) {
+		
+		AppUserDetailPayVo payVo = new AppUserDetailPayVo();		
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(pay, payVo);
+		
+		payVo.setOrderTypeName("");
+		
+		payVo.setPayTypeName("");
+		
+		return payVo;
+	}
 }
