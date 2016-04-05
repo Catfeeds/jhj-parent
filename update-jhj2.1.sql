@@ -1026,7 +1026,7 @@ ALTER TABLE `jhj_setting`
 ALTER TABLE `jhj_setting`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=25;
 
-update `org_staffs` set `head_img` = 'http://www.jia-he-jia.com/u/img/default-head-img.png' 
+update `org_staffs` set `head_img` = 'http://www.jia-he-jia.com/u/img/default-head-img.png';
 
 
 CREATE TABLE `order_customization_year` (
