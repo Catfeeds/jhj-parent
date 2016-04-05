@@ -955,15 +955,21 @@ CREATE TABLE `orgs` (
   `poi_post_code` varchar(16) NOT NULL COMMENT '地址位置邮编',
   `org_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '门店状态  0 = 不可用 1 = 服务中',
   `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间戳',
-  `update_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '修改时间戳'
+  `update_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '修改时间戳',
+  `parent_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '上级门店，默认 = 0;'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='门店表';
 
 --
 -- 转存表中的数据 `orgs`
 --
 
-INSERT INTO `orgs` (`org_id`, `org_name`, `org_addr`, `org_tel`, `org_owner`, `org_owner_tel`, `poi_latitude`, `poi_longitude`, `poi_type`, `poi_name`, `poi_address`, `poi_city`, `poi_uid`, `poi_phone`, `poi_post_code`, `org_status`, `add_time`, `update_time`) VALUES
-(1, '双井', '1单元205', '57135749', '毕晓曼', '15811223900', '39.895907', '116.473387', 0, '', '朝阳区武圣北路', '北京市', '28468373-a936-4568-bbc4-4e329081a228', '', '', 1, 1441618766, 0);
+INSERT INTO `orgs` (`org_id`, `org_name`, `org_addr`, `org_tel`, `org_owner`, `org_owner_tel`, `poi_latitude`, `poi_longitude`, `poi_type`, `poi_name`, `poi_address`, `poi_city`, `poi_uid`, `poi_phone`, `poi_post_code`, `org_status`, `add_time`, `update_time`, `parent_id`) VALUES
+(1, '双井', '1单元205', '57135749', '毕晓曼', '15811223900', '39.895907', '116.473387', 0, '', '朝阳区武圣北路', '北京市', '28468373-a936-4568-bbc4-4e329081a228', '', '', 1, 1441618766, 0, 0),
+(2, '海淀', '3号楼206', '01057231587', '王环', '12345678901', '40.090381', '116.26034', 0, '', '海淀区永丰嘉园五区', '北京市', '7eb72e9d-5ed3-43a8-a663-90e68d9d9c3b', '', '', 1, 1459848918, 0, 0),
+(3, '望京', '3号楼B单元3A01', '01084780149', '郑舒恒', '12345678901', '40.002743', '116.472613', 0, '', '朝阳区夏都家园', '北京市', 'b68c9ea1-a372-4e7f-82da-6fe27b2caac8', '', '', 1, 1459848999, 0, 0),
+(4, '双井云店', '15楼1单元205', '', '', '', '39.894586', '116.471626', 0, '', '朝阳区百环家园', '北京市', '554f5ed0-2c8e-494c-836b-babfcbfe1e85', '', '', 1, 1459849007, 0, 1),
+(5, '望京云店', '3号楼B单元3A01', '', '', '', '40.002743', '116.472613', 0, '', '朝阳区夏都家园', '北京市', 'bea730d1-a8e6-4f73-90fb-2cce3bd6d220', '', '', 1, 1459849054, 0, 3),
+(6, '海淀云店', '3号楼206', '', '', '', '40.090381', '116.26034', 0, '', '海淀区永丰嘉园五区', '北京市', '20fcb448-a09d-4220-a9d2-6d736a070201', '', '', 1, 1459849081, 0, 2);
 
 --
 -- Indexes for dumped tables
@@ -983,7 +989,7 @@ ALTER TABLE `orgs`
 -- 使用表AUTO_INCREMENT `orgs`
 --
 ALTER TABLE `orgs`
-  MODIFY `org_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '门店ID', AUTO_INCREMENT=2;
+  MODIFY `org_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '门店ID', AUTO_INCREMENT=7;
 
 
 DROP TABLE IF EXISTS `org_staffs`;
