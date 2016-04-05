@@ -191,9 +191,9 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 					continue;
 				}
 				
-				String name = OneCareUtil.getJhjOrderTypeName(orders.getOrderType());
+				Short payType = pay.getPayType();
 				
-				vo.setOrderTypeName(name);
+				vo.setPayTypeName(OneCareUtil.getPayTypeName(payType));
 				
 				Long serviceType = orders.getServiceType();
 				
