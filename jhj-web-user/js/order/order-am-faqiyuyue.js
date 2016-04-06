@@ -45,8 +45,6 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 		
 		var content =  $$("#serviceContentText").val();
 		
-		
-		alert(content);
 		var parentServiceType = $$("#parentServiceTypeId").val();
 		
 		// 深度养护 不需要必填 服务要求
