@@ -98,6 +98,12 @@ public class MathBigDeciamlUtil {
       return bd.toString();
     }
     
+    public static BigDecimal saveTwoDigital(BigDecimal bd) {
+
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bd;
+     }
+    
     /*
      * 判断 bigdecimal 参数   是否 为 合适的 价钱 值--> 即必须为 正数，可以为小数
      */
