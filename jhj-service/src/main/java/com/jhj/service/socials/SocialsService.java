@@ -27,7 +27,7 @@ public interface SocialsService {
 
     int updateByPrimaryKey(Socials record);
     
-	PageInfo searchVoListPage(SocialsSearchVo searchVo,int pageNo,int pageSize);
+	List<Socials> searchVoListPage(SocialsSearchVo searchVo,int pageNo,int pageSize);
 	
 	Socials initSocial();
 	
@@ -35,4 +35,9 @@ public interface SocialsService {
 
 	List<Socials> getSocialsList();
 
+	/*
+	 *  运营平台--活动列表页 VO
+	 */
+	SocialsVo oaListTransToVo(Socials socail);
+	
 }

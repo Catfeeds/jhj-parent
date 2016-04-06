@@ -1,5 +1,8 @@
 package com.jhj.service.impl.socials;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -69,11 +72,12 @@ public class SocialsServiceImpl implements SocialsService {
 	}
 
 	@Override
-	public PageInfo searchVoListPage(SocialsSearchVo searchVo, int pageNo, int pageSize) {
+	public List<Socials> searchVoListPage(SocialsSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<Socials> list =socialsMapper.selectByListPage(searchVo);
-		 PageInfo result = new PageInfo(list);
-		return result;
+		
+//		PageInfo result = new PageInfo(list);
+		return list;
 	}
 
 	@Override
@@ -115,6 +119,9 @@ public class SocialsServiceImpl implements SocialsService {
 		socials.setBeginDateStr("");
 		socials.setEndDateStr("");
 		socials.setAmMobile("");
+		
+		socials.setOutOfDateStr("");
+		
 		return socials;
 	}
 
@@ -124,5 +131,38 @@ public class SocialsServiceImpl implements SocialsService {
 	}
 	
 	
+	@Override
+	public SocialsVo oaListTransToVo(Socials socail) {
+		
+		SocialsVo socialsVo = initSocialsVo();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(socail, socialsVo);
+		
+		Date endDate = socail.getEndDate();
+		
+		String dateStr = DateUtil.formatDateFull(endDate);
+		
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		//当前时间
+		long nowTime = System.currentTimeMillis()/1000;
+		
+		try {
+			
+			//活动结束时间
+			long timeStart=sdf.parse(dateStr).getTime()/1000;
+			
+			if(timeStart < nowTime){
+				socialsVo.setOutOfDateStr("活动已过期");
+			}else{
+				socialsVo.setOutOfDateStr("活动进行中");
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return socialsVo;
+	}
 
 }

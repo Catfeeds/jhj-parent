@@ -19,6 +19,15 @@ public class SocialsVo extends Socials{
 	
 	private String amMobile;
 	
+	private String outOfDateStr;	//2016年4月6日15:31:55  标识 活动是否过期
+	
+	public String getOutOfDateStr() {
+		return outOfDateStr;
+	}
+
+	public void setOutOfDateStr(String outOfDateStr) {
+		this.outOfDateStr = outOfDateStr;
+	}
 
 	public String getAmMobile() {
 		return amMobile;
