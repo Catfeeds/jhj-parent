@@ -116,7 +116,6 @@ public class SurveyResultController extends BaseController {
 				@RequestParam(value = "box_content_array",required = false,defaultValue ="")String boxContentArray,
 				@RequestParam(value ="default_box_content_array",required = false,defaultValue ="")String defaultBoxContentArray) throws JSONException{
 		
-		
 		AppResultData<Object> result =  new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 		
 		/*
@@ -140,7 +139,6 @@ public class SurveyResultController extends BaseController {
 			}
 		}
 		
-		
 		/*
 		 * 2. 结果入库
 		 */
@@ -153,14 +151,11 @@ public class SurveyResultController extends BaseController {
 		//当 为调整  多选的  内容,且 该内容被选中,则拿到 该多选内容 的Id 后，手动得到 子服务并插入表中
 		JSONArray jsonArrayDefaultBox = new JSONArray(defaultBoxContentArray);
 		
-		
-		
 		// {"baseContentId":baseContentId,"baseContentTimes":Number(times)}
 		
 		//{"baseContentId":baseContentId,"childRadioArray":{childRadioContentId":childRadioContentId,"childRadioContentTimes":Number}
 		
 		//{"baseContentId":baseContentId,"childBoxArray":{"boxChildContentId":id,"boxChildContentTimes":times};
-		
 		
 		String resultNo = String.valueOf(OrderNoUtil.genOrderNo());
 		
@@ -176,12 +171,9 @@ public class SurveyResultController extends BaseController {
 				SurveyUserRefRecommend recommend = recommendService.initRecommend();
 				recommend.setResultNo(resultNo);
 				
-				
 				JSONObject jsonObject = jsonArrayRadio.getJSONObject(i);
 				
 				String baseContentId = jsonObject.getString("baseContentId");
-				
-				
 				
 				JSONArray childRadioArray = jsonObject.getJSONArray("childRadioArray");
 				
@@ -211,7 +203,6 @@ public class SurveyResultController extends BaseController {
 			if(jsonArrayBox.length() <= 0 && jsonArrayDefaultBox.length() > 0){
 				
 				for (int i = 0; i < jsonArrayDefaultBox.length(); i++) {
-					
 					
 					
 					JSONObject jsonObject = jsonArrayDefaultBox.getJSONObject(i);
