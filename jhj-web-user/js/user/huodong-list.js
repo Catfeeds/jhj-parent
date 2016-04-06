@@ -1,11 +1,12 @@
 //列表显示用户充值卡
-myApp.template7Data['page:huodong-list'] = function(){
+myApp.template7Data['page:huodong-list-page'] = function(){
   var result;
   var userId = localStorage.getItem("user_id");
   if(userId ==null || userId== undefined){
  	 	mainView.router.loadPage("login.html");
  	 	return;
 	}
+  
   $$.ajax({
           type : "GET",
           url  : siteAPIPath+"dict/get_socilas.json",
@@ -16,6 +17,7 @@ myApp.template7Data['page:huodong-list'] = function(){
               result = data;
           }
   })
+  
   return result;
 }
 function jumpDetail(id){

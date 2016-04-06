@@ -127,45 +127,49 @@ var ajaxError = function(data, textStatus, jqXHR) {
 })
 */
 function toolBarHref(url, toolbarName) {
+	//首页
 	var toolBarIndex = $$('#toolbar-index');
-	var toolBarOrder = $$('#toolbar-order');
+	//助理
 	var toolBarAm = $$('#toolbar-am');
+	//活动
+	var toolBarHuodong = $$('#toolbar-huodong');
+	//商城
+	var toolBarYouzan = $$('#toolbar-youzan');
+	//我的
 	var toolBarMine = $$('#toolbar-mine');
-	
-	var toolBarRemind = $$('#toolbar-remind');
 	
 	if (toolbarName == 'toolbar-index') {
 		toolBarIndex.addClass("active");
 		toolBarIndex.css("color", "#FB571E");
 		
-		toolBarOrder.removeClass("active");
-		toolBarOrder.css("color", "#FFF");
-		
 		toolBarAm.removeClass("active");
 		toolBarAm.css("color", "#FFF");
 		
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");	
+		toolBarHuodong.removeClass("active");
+		toolBarHuodong.css("color", "#FFF");
 		
-		toolBarRemind.removeClass("active");
-		toolBarRemind.css("color","#FFF");
+		toolBarYouzan.removeClass("active");
+		toolBarYouzan.css("color", "#FFF");	
+		
+		toolBarMine.removeClass("active");
+		toolBarMine.css("color","#FFF");
 	}
 	
-	if (toolbarName == 'toolbar-order') {
-		toolBarOrder.addClass("active");
-		toolBarOrder.css("color", "#FB571E");
-		
+	if (toolbarName == 'toolbar-am') {
 		toolBarIndex.removeClass("active");
 		toolBarIndex.css("color", "#FFF");
 		
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
+		toolBarAm.addClass("active");
+		toolBarAm.css("color", "#FB571E");
+		
+		toolBarHuodong.removeClass("active");
+		toolBarHuodong.css("color", "#FFF");
+		
+		toolBarYouzan.removeClass("active");
+		toolBarYouzan.css("color", "#FFF");	
 		
 		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-		
-		toolBarRemind.removeClass("active");
-		toolBarRemind.css("color","#FFF");
+		toolBarMine.css("color","#FFF");
 		
 		if (localStorage.getItem('user_id') == null) {
 			mainView.router.loadPage("login.html");
@@ -173,26 +177,25 @@ function toolBarHref(url, toolbarName) {
 		}
 	}
 	
-	if (toolbarName == 'toolbar-am') {
+	if (toolbarName == 'toolbar-huodong') {
 		
-		toolBarAm.addClass("active");
-		toolBarAm.css("color", "#FB571E");
-
 		toolBarIndex.removeClass("active");
 		toolBarIndex.css("color", "#FFF");
 		
-		toolBarOrder.removeClass("active");
-		toolBarOrder.css("color", "#FFF");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");		
+		toolBarAm.removeClass("active");
+		toolBarAm.css("color", "#FFF");
 		
-		toolBarRemind.removeClass("active");
-		toolBarRemind.css("color","#FFF");
+		toolBarHuodong.addClass("active");
+		toolBarHuodong.css("color", "#FB571E");
+		
+		toolBarYouzan.removeClass("active");
+		toolBarYouzan.css("color", "#FFF");	
+		
+		toolBarMine.removeClass("active");
+		toolBarMine.css("color","#FFF");
 		
 		
 		if (localStorage.getItem('user_id') == null) {
-//			console.log(localStorage.getItem('mobile') + "----");
 			mainView.router.loadPage("login.html");
 			return;
 		}
@@ -206,56 +209,49 @@ function toolBarHref(url, toolbarName) {
 		}			
 	}
 	
-	if (toolbarName == 'toolbar-mine') {
+	if (toolbarName == 'toolbar-youzan') {
 				
-		toolBarMine.addClass("active");
-		toolBarMine.css("color", "#FB571E");
-		
-		toolBarOrder.removeClass("active");
-		toolBarOrder.css("color", "#FFF");
+		toolBarIndex.removeClass("active");
+		toolBarIndex.css("color", "#FFF");
 		
 		toolBarAm.removeClass("active");
 		toolBarAm.css("color", "#FFF");
 		
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");	
+		toolBarHuodong.removeClass("active");
+		toolBarHuodong.css("color", "#FFF");
 		
-		toolBarRemind.removeClass("active");
-		toolBarRemind.css("color","#FFF");
-		
-		if (localStorage.getItem('user_id') == null) {
-			mainView.router.loadPage("login.html");
-			return;
-		}				
-	}
-	
-	if(toolbarName == 'toolbar-remind'){
-		
-		toolBarRemind.addClass("active");
-		toolBarRemind.css("color", "#FB571E");
-		
-		toolBarOrder.removeClass("active");
-		toolBarOrder.css("color", "#FFF");
-		
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-		
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");	
+		toolBarYouzan.addClass("active");
+		toolBarYouzan.css("color", "#FB571E");	
 		
 		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");	
+		toolBarMine.css("color","#FFF");
+		
+	}
+	
+	if(toolbarName == 'toolbar-mine'){
+		
+		toolBarIndex.removeClass("active");
+		toolBarIndex.css("color", "#FFF");
+		
+		toolBarAm.removeClass("active");
+		toolBarAm.css("color", "#FFF");
+		
+		toolBarHuodong.removeClass("active");
+		toolBarHuodong.css("color", "#FFF");
+		
+		toolBarYouzan.removeClass("active");
+		toolBarYouzan.css("color", "#FFF");	
+		
+		toolBarMine.addClass("active");
+		toolBarMine.css("color","#FB571E");
 		
 		if (localStorage.getItem('user_id') == null) {
-			console.log(localStorage.getItem('mobile') + "----");
 			mainView.router.loadPage("login.html");
 			return;
 		}
-		
 	}
 	
 	mainView.router.loadPage(url);
-
 }
 
 var getParameterByName = function(name) {

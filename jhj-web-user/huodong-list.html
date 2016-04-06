@@ -1,49 +1,20 @@
-
-<!-- We don't need full layout here, because this page will be parsed with Ajax-->
-<!-- Top Navbar-->
-
 <div class="pages" style="background:#E5E5E5;">
-<div data-page="huodong-list" class="page" style="overflow:auto;">
-	<!-- Page, data-page contains page name-->
-	<style>
-      .demo-card-header-pic .card-header {
-        height: 40vw;
-        background-size: cover;
-        background-position: center;
-      }
-    </style>
-     
-    <!-- <div class="content-block-title">线下义诊，免费换送保洁券</div> -->
-       {{#each data}}
-    <a  href="#" class="huo_dong" onclick="jumpDetail({{id}})" >
-<!--     <a  href="#" class="huo_dong" onclick="jumpDetail({{id}}) > -->
-      <div class="card demo-card-header-pic">
-      <div style="background-image:url({{title_img}})" valign="bottom" class="card-header color-white no-border"></div>
-<!--       <div style="background-image:url(img/huodong1.png)" valign="bottom" class="card-header color-white no-border"></div> -->
-      <div class="card-content">
-        <div class="card-content-inner">
-          <p class="color-gray">活动时间：{{begin_date_str}}&nbsp;至&nbsp;{{end_date_str}}</p>
-          <p>{{title}}</p>
-        </div>
-      </div>
-    </div>
-    </a>
-     {{/each}}
-    <!-- <div class="content-block-title">线下义诊，免费换送保洁券</div> -->
-    <!--  
-    <a href="huodong-detail.html">
-      <div class="card demo-card-header-pic">
-      <div style="background-image:url(img/huodong2.png)" valign="bottom" class="card-header color-white no-border"></div>
-      <div class="card-content">
-        <div class="card-content-inner">
-          <p class="color-gray">活动时间：2015年10月</p>
-          <p>凡双井地区的家中有超过70岁的老人，均可享受...</p>
-        </div>
-      </div>
-    </div>
-    </a> -->
-    
-</div>
+	<div data-page="huodong-list-page" class="page" style="overflow:auto;">
+	     
+	       {{#each data}}
+			    <a  href="#" class="huo_dong" onclick="jumpDetail({{id}})" >
+			      <div class="card demo-card-header-pic">
+			      <div style="background-image:url({{title_img}})" valign="bottom" class="card-header color-white no-border"></div>
+			      <div class="card-content">
+			        <div class="card-content-inner">
+			          <p class="color-gray">活动时间：{{begin_date_str}}&nbsp;至&nbsp;{{end_date_str}}</p>
+			          <p>{{title}}</p>
+			        </div>
+			      </div>
+			    </div>
+			    </a>
+	     {{/each}}
+	</div>
 </div>
 
 
