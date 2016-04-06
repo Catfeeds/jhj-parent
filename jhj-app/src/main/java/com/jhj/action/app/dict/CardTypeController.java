@@ -132,14 +132,13 @@ public class CardTypeController<T> {
 		
 		return result;
 	}
-	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "get_socilas", method = RequestMethod.GET)  
-    public AppResultData<List> getSocials () {
+    public AppResultData<Object> getSocials () {
 
     	//获得广告配置定义列表项
     	List<Socials> list = socialsService.getSocialsList();
     	List<SocialsVo> listVo = new ArrayList<SocialsVo>();
-    	for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+    	for (Iterator<Socials> iterator = list.iterator(); iterator.hasNext();) {
 			Socials socials = (Socials) iterator.next();
 			SocialsVo socialsVo = new SocialsVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(socials,socialsVo);
@@ -147,8 +146,9 @@ public class CardTypeController<T> {
 			socialsVo.setEndDateStr(DateUtil.formatDate(socials.getEndDate()));
 			listVo.add(socialsVo);
 		}
-    	AppResultData<List> result = null;
-    	result = new AppResultData<List>(0, "ok", listVo);
+    	AppResultData<Object> result = null;
+    	result = new AppResultData<Object>(0, "ok", listVo);
+    	
     	return result;
     }
 	
