@@ -13,7 +13,7 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 	 */
 	//订单状态
 	var orderStatus = $$("#orderStatus").val();
-	
+	console.log("orderStatus = " + orderStatus);
 	//总金额
 	var money  = $$("#orderMoney").text();
 	//util.js  处理  ￥符号
@@ -23,7 +23,7 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 	
 	var order_type = $$("#orderType").val();
 	
-	if(orderStatus == 3) {
+	if(orderStatus == 1) {
 		//点击选择优惠劵
 		$$("#selectCoupon").click(function() {
 			
