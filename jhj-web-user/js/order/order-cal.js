@@ -5,7 +5,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 
 	var today = new Date();
 	var weekLater = new Date().setDate(today.getDate() + 7);
-
+	var loadedMonth = today.getMonth();
 	var calendarParams = {
 		container : '#calendar-inline-container',
 		header : false,
@@ -35,14 +35,13 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 		},
 		onMonthYearChangeStart : function(p) {
 			console.log("onMonthYearChangeStart= " + p.currentYear + "-" +p.currentMonth);
+			
+			
 			$$('.calendar-custom-toolbar .center').text(
 					monthNames[p.currentMonth] + ', ' + p.currentYear);
 			
-			var year = p.currentYear;
-			var month = p.currentMonth + 1;
-			var nowDate = new Date();
-			if (month != nowDate.getMonth() + 1) {
-				loadTotalByMonth(userId, year, month);
+			if (p.currentMonth != loadedMonth) {
+				loadTotalByMonth(userId, p.currentYear, p.currentMonth);
 			}
 			
 		},
@@ -59,10 +58,11 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	
 	
 	function loadTotalByMonth(userId, year, month) {
+		console.log("loadTotalByMonth month = " + month);
 		var params = {};
 		params.user_id = userId;
 		params.year = year;
-		params.month = month;
+		params.month = month + 1;
 		
 		var apiUrl = "order/user_total_by_month.json";
 		
@@ -73,17 +73,21 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 			
 			var events = [];
 			for (var i = 0; i < monthDatas.length; i++) {
-				console.log(monthDatas[i].service_date);
+//				console.log(monthDatas[i].service_date);
 				var serviceDate = new Date(monthDatas[i].service_date);
-				console.log(serviceDate.getFullYear() + "-" + serviceDate.getMonth() + "-" + serviceDate.getDate());
+//				console.log(serviceDate.getFullYear() + "-" + serviceDate.getMonth() + "-" + serviceDate.getDate());
 				events.push(new Date(serviceDate.getFullYear(), serviceDate.getMonth(),  serviceDate.getDate()));
 			}
 //			console.log(events);
 //			console.log(events.length);
 			if (events.length > 0) {
-				calendarParams.events = events;
-				calendarInline.params = calendarParams;
-				calendarInline.setYearMonth(2016, 3, 0);
+//				calendarParams.events = events;
+				calendarInline.params.events = events;
+				
+				console.log("set month ====" + (month));
+				calendarInline.setYearMonth(year, month, 1);
+				
+				loadedMonth = month;
 			}
 		};
 		$$.ajax({
@@ -101,7 +105,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 		});
 	}	
 	
-	loadTotalByMonth(userId, today.getFullYear(), today.getMonth()+1);
+	loadTotalByMonth(userId, today.getFullYear(), today.getMonth());
 	
 	loadOrderList(userId, page);
 	// 注册'infinite'事件处理函数
