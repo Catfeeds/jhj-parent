@@ -22,11 +22,18 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
 			
 			var htmlPart = html;
 			
-			htmlPart = htmlPart.replace(new RegExp('{orderTypeName}',"gm"), order.order_type_name);
-			htmlPart = htmlPart.replace(new RegExp('{payTypeName}',"gm"), order.pay_type_name);
 			
-			htmlPart = htmlPart.replace(new RegExp('{orderMoney}',"gm"), order.order_money);
-			htmlPart = htmlPart.replace(new RegExp('{orderPay}',"gm"), order.order_pay);
+			if(order.order_flag == 0){
+				//支付
+				htmlPart = htmlPart.replace(new RegExp('{img}',"gm"), "img/userRestMoney/iconfont-jianhao.png");
+				htmlPart = htmlPart.replace(new RegExp('{orderMoney}',"gm"), "支付金额:"+order.order_money);
+			}else{
+				//充值	
+				htmlPart = htmlPart.replace(new RegExp('{img}',"gm"), "img/userRestMoney/iconfont-jiahao.png");
+				htmlPart = htmlPart.replace(new RegExp('{orderMoney}',"gm"), "充值金额:"+order.order_money);
+			}
+			
+			htmlPart = htmlPart.replace(new RegExp('{orderTypeName}',"gm"), order.order_type_name);
 			
 			htmlPart = htmlPart.replace(new RegExp('{addTime}',"gm"), moment.unix(order.add_time).format("YYYY-MM-DD HH:mm"));
 			

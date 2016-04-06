@@ -46,7 +46,6 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 			myApp.alert(result.msg);
 			return;
 		}
-		console.log(orderPayType)
 		var orderId = result.data.id;
 		//如果为微信支付，则需要跳转到微信支付页面.
 //		if (orderPayType == 2) {

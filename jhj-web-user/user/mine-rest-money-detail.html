@@ -17,21 +17,20 @@
 			
 			<!-- 每块 card的展示内容  模板 -->
 			 <div id="order-hour-list" style="display: none">
-				<a class="order-info-link" href="#">
-					<li class="list-card">
-						<div class="list-card1">
-	
-							{orderTypeName}
-							<p style="margin:0;margin-right: 30px;color:#ED6B00;float:right;">{payTypeName}</p>
-							
+				
+				<div class="pay-list-rv">
+					<div class="pay-list-rv-left">
+						<img src="{img}" alt="">
+					</div>
+					<div class="pay-list-rv-right">
+						<div class="pay-list-rv-right1">
+							<div class="pay-list-rv-right1-1">{orderTypeName}</div>
+							<div class="pay-list-rv-right1-2">{orderMoney}</div>
 						</div>
-						<div class="list-card2">
-							<div class="list-card2-1">总金额：{orderMoney}</div>
-							<div class="list-card2-1" style="margin-left:200px">支付金额：{orderPay}</div>
-							<div class="list-card2-1">时间：{addTime}</div>
-						</div>
-					</li>
-				</a>
+						<div class="pay-list-rv-right2">时间:{addTime}</div>
+					</div>
+				</div>	
+				
 			</div>
 		</div>	
 	</div>
