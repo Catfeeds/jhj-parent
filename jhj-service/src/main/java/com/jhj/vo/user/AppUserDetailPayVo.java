@@ -11,9 +11,20 @@ import com.jhj.po.model.user.UserDetailPay;
  */
 public class AppUserDetailPayVo extends UserDetailPay {
 	
+	private Short orderFlag;		//该条明细记录  的 副作用 是    消费(用户钱少了) 还是  充值 (用户钱多了)
+	
 	private String orderTypeName;
 	
 	private String payTypeName;
+
+	
+	public Short getOrderFlag() {
+		return orderFlag;
+	}
+
+	public void setOrderFlag(Short orderFlag) {
+		this.orderFlag = orderFlag;
+	}
 
 	public String getOrderTypeName() {
 		return orderTypeName;

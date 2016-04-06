@@ -280,9 +280,13 @@ public class Constants {
 	public static Short ORDER_DIS_DISABLE = 0;
 	
 	
-	//2016年3月29日18:44:38  运营平台。 会员充值。 接收验证码的 配置 类型
+	//2016年3月29日18:44:38  运营平台。 会员充值。 接收验证码的 配置 类型，（暂时没使用）
 	public static String OA_CHARGE_SETTING_TYPE = "recharge_mobile";
 	
+	
+	//2016年4月6日16:52:05  微网站--我的--余额--用户消费记录的标识 
+	public static Short USER_PAY_FLAG_MINUS = 0;	//用于支付  .用户钱少了
+	public static Short USER_PAY_FLAG_PLUS = 1;		//用于 充值 。用户钱多了
 }
 
 

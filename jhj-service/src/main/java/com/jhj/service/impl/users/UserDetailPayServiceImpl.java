@@ -185,31 +185,27 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 				
 				AppUserDetailPayVo vo = initVo(pay);
 				
-				//订单状态名称
-				Long orderId = pay.getOrderId();
 				
-				Orders orders = orderService.selectbyOrderId(orderId);
+				Short orderType = pay.getOrderType();
 				
-				if(orders == null){
-					continue;
-				}
-				
-				Short payType = pay.getPayType();
-				
-				vo.setPayTypeName(OneCareUtil.getPayTypeName(payType));
-				
-				Long serviceType = orders.getServiceType();
-				
-				PartnerServiceType part = partService.selectByPrimaryKey(serviceType);
-				
-				if(part !=null){
+				/*
+				 *  截止到  2016年4月6日16:56:24
+				 * 	
+				 * 	  只有  订单 类型为  4=	充值卡订单 时。 才会使 用户 余额增加
+				 * 
+				 * 	 其余 都是 消费，作用是使 该用户钱减少
+				 */
+				if(orderType == Constants.ORDER_TYPE_4){
+					vo.setOrderFlag(Constants.USER_PAY_FLAG_PLUS);
+					vo.setOrderTypeName("账户充值");
 					
-					vo.setOrderTypeName(part.getName());
+				}else{
+					vo.setOrderFlag(Constants.USER_PAY_FLAG_MINUS);
+					vo.setOrderTypeName("订单支付");
 				}
 				
 				voList.add(vo);	
 			}
-			
 		}
 		
 		return voList;
@@ -225,6 +221,9 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		payVo.setOrderTypeName("");
 		
 		payVo.setPayTypeName("");
+		
+		//用户 消费记录的 作用。。 0= 支付  1=充值
+		payVo.setOrderFlag(Constants.USER_PAY_FLAG_MINUS);
 		
 		return payVo;
 	}
