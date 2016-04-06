@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.jhj.po.model.survey.SurveyContent;
 
 public interface SurveyContentMapper {
-	int deleteByPrimaryKey(Long contentId);
+    int deleteByPrimaryKey(Long contentId);
 
     int insert(SurveyContent record);
 
@@ -26,9 +26,12 @@ public interface SurveyContentMapper {
     //除了 赠送服务之外的 服务 
     List<SurveyContent>	selectAllContent();
     
-    List<SurveyContent> selectByIdList(List<Long> idList);
+    List<SurveyContent> selectByIdList(@Param("idList")List<Long> idList);
     
     List<SurveyContent> selectFreeContent();
+    
+    List<Long> selectFreeContentId();
+    
     
     //不同计费方式的 服务 的 id 的 集合
     List<Long> selectContentIdByMeasurement(@Param("measurement")Short measurement);
@@ -50,4 +53,10 @@ public interface SurveyContentMapper {
     
     //得到所有 “助理” 服务,TODO 此处直接写死了 serviceId
     List<Long> selectAmContent();
+    
+    //默认次数由选项决定的 服务 2016-1-13 15:08:48
+    List<Long> selectSetDefaultTime();
+    
+    
+    
 }

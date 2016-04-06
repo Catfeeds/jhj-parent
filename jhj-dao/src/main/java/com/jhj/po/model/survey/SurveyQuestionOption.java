@@ -19,6 +19,8 @@ public class SurveyQuestionOption {
 
     private Long updateTime;
 
+    private Long defaultTimeOption;
+
     public Long getId() {
         return id;
     }
@@ -89,5 +91,13 @@ public class SurveyQuestionOption {
 
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getDefaultTimeOption() {
+        return defaultTimeOption;
+    }
+
+    public void setDefaultTimeOption(Long defaultTimeOption) {
+        this.defaultTimeOption = defaultTimeOption;
     }
 }

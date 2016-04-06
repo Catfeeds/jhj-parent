@@ -11,11 +11,13 @@
     <result column="related_content_id" property="relatedContentId" jdbcType="VARCHAR" />
     <result column="add_time" property="addTime" jdbcType="NUMERIC" />
     <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+    <result column="default_time_option" property="defaultTimeOption" jdbcType="NUMERIC" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, q_id, bank_id, title, no, related_q_id, related_content_id, add_time, update_time
+    id, q_id, bank_id, title, no, related_q_id, related_content_id, add_time, update_time, 
+    default_time_option
   </sql>
-	
+  
   <select id="selectOneByQIdAndNo" resultMap="BaseResultMap" >
   	select 
     <include refid="Base_Column_List" />
@@ -62,6 +64,7 @@
   	order by no asc
   </select>
   
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -75,12 +78,12 @@
   <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyQuestionOption" >
     insert into survey_question_option (id, q_id, bank_id, 
       title, no, related_q_id, 
-      related_content_id, add_time, update_time
-      )
+      related_content_id, add_time, update_time, 
+      default_time_option)
     values (#{id,jdbcType=NUMERIC}, #{qId,jdbcType=NUMERIC}, #{bankId,jdbcType=NUMERIC}, 
       #{title,jdbcType=VARCHAR}, #{no,jdbcType=VARCHAR}, #{realtedQId,jdbcType=NUMERIC}, 
-      #{relatedContentId,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}
-      )
+      #{relatedContentId,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}, 
+      #{defaultTimeOption,jdbcType=NUMERIC})
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyQuestionOption" >
     insert into survey_question_option
@@ -112,6 +115,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="defaultTimeOption != null" >
+        default_time_option,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -140,6 +146,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=NUMERIC},
+      </if>
+      <if test="defaultTimeOption != null" >
+        #{defaultTimeOption,jdbcType=NUMERIC},
       </if>
     </trim>
   </insert>
@@ -170,6 +179,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=NUMERIC},
       </if>
+      <if test="defaultTimeOption != null" >
+        default_time_option = #{defaultTimeOption,jdbcType=NUMERIC},
+      </if>
     </set>
     where id = #{id,jdbcType=NUMERIC}
   </update>
@@ -182,7 +194,8 @@
       related_q_id = #{realtedQId,jdbcType=NUMERIC},
       related_content_id = #{relatedContentId,jdbcType=VARCHAR},
       add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC}
+      update_time = #{updateTime,jdbcType=NUMERIC},
+      default_time_option = #{defaultTimeOption,jdbcType=NUMERIC}
     where id = #{id,jdbcType=NUMERIC}
   </update>
 </mapper>

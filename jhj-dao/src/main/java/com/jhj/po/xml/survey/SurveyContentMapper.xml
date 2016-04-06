@@ -14,13 +14,39 @@
     <result column="add_time" property="addTime" jdbcType="NUMERIC" />
     <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
     <result column="content_child_type" property="contentChildType" jdbcType="NUMERIC" />
-    <result column="default_time" property="defaultTime" jdbcType="INTEGER" />
+    <result column="default_time" property="defaultTime" jdbcType="NUMERIC" />
   </resultMap>
   <sql id="Base_Column_List" >
     content_id, service_id, name, price, unit_price, price_description, item_unit, measurement, 
     enable, add_time, update_time, content_child_type, default_time
   </sql>
   
+  <select id="selectFreeContentId" resultType="java.lang.Long">
+  	select 
+    content_id
+    from survey_content
+    where 
+    enable = 1
+    and
+    measurement = 3
+  </select>
+  
+  <!-- 由选项确定 默认次数的服务，
+  		3个条件
+  	   default_time == 0 ,measurement in(0,1,2), content_child_type = 0
+  	 -->
+  <select id="selectSetDefaultTime" resultType="java.lang.Long">
+  	select
+	content_id
+	from  survey_content 
+	where 1=1
+	and
+	default_time = 0
+	and
+	measurement in(0,1,2)
+	and
+	content_child_type = 0
+  </select>
   
    <!-- 所有基础 家政 服务, TODO 写死了 在 survey_service表 -->
   <select id="selectAmContent" resultType="java.lang.Long">
@@ -91,7 +117,9 @@
 	content_id
 	from  survey_content
   	where
-  	content_child_type in (0,1)
+  		content_child_type in (0,1)
+  	and
+  		measurement != 3	
   	and
   	enable = 1
   </select>
@@ -125,12 +153,14 @@
     from survey_content
     where 
     enable = 1
-    and
-    content_id in	
-	   <foreach item="item" index="index" collection="list" 
-                   open="(" separator="," close=")">
-                  #{item}
-	   </foreach>
+	<if test="idList.size() > 0 and idList !=null ">	    
+	    and
+	    content_id in	
+		   <foreach item="item" index="index" collection="idList" 
+	                   open="(" separator="," close=")">
+	                  #{item}
+		   </foreach>
+	 </if>  
   </select>
   
   
@@ -170,7 +200,6 @@
   
   
   
-  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -191,7 +220,7 @@
       #{price,jdbcType=DECIMAL}, #{unitPrice,jdbcType=DECIMAL}, #{priceDescription,jdbcType=VARCHAR}, 
       #{itemUnit,jdbcType=VARCHAR}, #{measurement,jdbcType=NUMERIC}, #{enable,jdbcType=NUMERIC}, 
       #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}, #{contentChildType,jdbcType=NUMERIC}, 
-      #{defaultTime,jdbcType=INTEGER})
+      #{defaultTime,jdbcType=NUMERIC})
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyContent" >
     insert into survey_content
@@ -274,9 +303,13 @@
         #{contentChildType,jdbcType=NUMERIC},
       </if>
       <if test="defaultTime != null" >
-        #{defaultTime,jdbcType=INTEGER},
+        #{defaultTime,jdbcType=NUMERIC},
       </if>
     </trim>
+    
+    <selectKey keyProperty="contentId" resultType="long">
+            select LAST_INSERT_ID()
+    </selectKey>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.survey.SurveyContent" >
     update survey_content
@@ -315,7 +348,7 @@
         content_child_type = #{contentChildType,jdbcType=NUMERIC},
       </if>
       <if test="defaultTime != null" >
-        default_time = #{defaultTime,jdbcType=INTEGER},
+        default_time = #{defaultTime,jdbcType=NUMERIC},
       </if>
     </set>
     where content_id = #{contentId,jdbcType=NUMERIC}
@@ -333,7 +366,7 @@
       add_time = #{addTime,jdbcType=NUMERIC},
       update_time = #{updateTime,jdbcType=NUMERIC},
       content_child_type = #{contentChildType,jdbcType=NUMERIC},
-      default_time = #{defaultTime,jdbcType=INTEGER}
+      default_time = #{defaultTime,jdbcType=NUMERIC}
     where content_id = #{contentId,jdbcType=NUMERIC}
   </update>
 </mapper>

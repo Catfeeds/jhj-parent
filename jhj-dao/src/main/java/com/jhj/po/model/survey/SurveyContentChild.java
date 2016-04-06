@@ -15,6 +15,8 @@ public class SurveyContentChild {
 
     private Long addTime;
 
+    private Long defaultTimeChild;
+
     public Long getId() {
         return id;
     }
@@ -61,5 +63,13 @@ public class SurveyContentChild {
 
     public void setAddTime(Long addTime) {
         this.addTime = addTime;
+    }
+
+    public Long getDefaultTimeChild() {
+        return defaultTimeChild;
+    }
+
+    public void setDefaultTimeChild(Long defaultTimeChild) {
+        this.defaultTimeChild = defaultTimeChild;
     }
 }

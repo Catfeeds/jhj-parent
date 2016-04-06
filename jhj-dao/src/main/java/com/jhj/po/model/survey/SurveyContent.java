@@ -27,7 +27,7 @@ public class SurveyContent {
 
     private Short contentChildType;
 
-    private Integer defaultTime;
+    private Long defaultTime;
 
     public Long getContentId() {
         return contentId;
@@ -125,11 +125,11 @@ public class SurveyContent {
         this.contentChildType = contentChildType;
     }
 
-    public Integer getDefaultTime() {
+    public Long getDefaultTime() {
         return defaultTime;
     }
 
-    public void setDefaultTime(Integer defaultTime) {
+    public void setDefaultTime(Long defaultTime) {
         this.defaultTime = defaultTime;
     }
 }

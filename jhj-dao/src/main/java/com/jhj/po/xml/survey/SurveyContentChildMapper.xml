@@ -8,13 +8,13 @@
     <result column="option_no" property="optionNo" jdbcType="VARCHAR" />
     <result column="child_price" property="childPrice" jdbcType="DECIMAL" />
     <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="default_time_child" property="defaultTimeChild" jdbcType="NUMERIC" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, content_id, option_str, option_no, child_price, add_time
+    id, content_id, option_str, option_no, child_price, add_time, default_time_child
   </sql>
   
-  
-  <!-- 修改时，先删除，所有的子服务，在添加 -->
+   <!-- 修改时，先删除，所有的子服务，在添加 -->
   <select id="deleteByContentId" parameterType="java.lang.Long">
   	delete from survey_content_child
     where 
@@ -44,11 +44,11 @@
   </delete>
   <insert id="insert" parameterType="com.jhj.po.model.survey.SurveyContentChild" >
     insert into survey_content_child (id, content_id, option_str, 
-      option_no, child_price, add_time
-      )
+      option_no, child_price, add_time, 
+      default_time_child)
     values (#{id,jdbcType=NUMERIC}, #{contentId,jdbcType=NUMERIC}, #{optionStr,jdbcType=VARCHAR}, 
-      #{optionNo,jdbcType=VARCHAR}, #{childPrice,jdbcType=DECIMAL}, #{addTime,jdbcType=NUMERIC}
-      )
+      #{optionNo,jdbcType=VARCHAR}, #{childPrice,jdbcType=DECIMAL}, #{addTime,jdbcType=NUMERIC}, 
+      #{defaultTimeChild,jdbcType=NUMERIC})
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.survey.SurveyContentChild" >
     insert into survey_content_child
@@ -71,6 +71,9 @@
       <if test="addTime != null" >
         add_time,
       </if>
+      <if test="defaultTimeChild != null" >
+        default_time_child,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -90,6 +93,9 @@
       </if>
       <if test="addTime != null" >
         #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="defaultTimeChild != null" >
+        #{defaultTimeChild,jdbcType=NUMERIC},
       </if>
     </trim>
   </insert>
@@ -111,6 +117,9 @@
       <if test="addTime != null" >
         add_time = #{addTime,jdbcType=NUMERIC},
       </if>
+      <if test="defaultTimeChild != null" >
+        default_time_child = #{defaultTimeChild,jdbcType=NUMERIC},
+      </if>
     </set>
     where id = #{id,jdbcType=NUMERIC}
   </update>
@@ -120,7 +129,8 @@
       option_str = #{optionStr,jdbcType=VARCHAR},
       option_no = #{optionNo,jdbcType=VARCHAR},
       child_price = #{childPrice,jdbcType=DECIMAL},
-      add_time = #{addTime,jdbcType=NUMERIC}
+      add_time = #{addTime,jdbcType=NUMERIC},
+      default_time_child = #{defaultTimeChild,jdbcType=NUMERIC}
     where id = #{id,jdbcType=NUMERIC}
   </update>
 </mapper>

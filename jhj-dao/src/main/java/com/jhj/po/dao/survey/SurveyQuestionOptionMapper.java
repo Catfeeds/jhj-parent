@@ -29,4 +29,5 @@ public interface SurveyQuestionOptionMapper {
     List<SurveyQuestionOption> selectByQIdAndNo(Map<String, Object> map);
     
     SurveyQuestionOption  selectOneByQIdAndNo(@Param("qId") Long qId, @Param("optionNo") String optionNo);
+    
 }

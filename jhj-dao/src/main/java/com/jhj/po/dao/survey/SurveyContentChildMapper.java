@@ -22,4 +22,5 @@ public interface SurveyContentChildMapper {
     
     //批量删除
     void  deleteByContentId(Long contentId);
+    
 }
