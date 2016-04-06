@@ -3,7 +3,7 @@ myApp.onPageBeforeInit('mine', function (page) {
 	if (userId == undefined || userId == '' || userId == 0) {
 		return;
 	}
-//	getUserInfos(userId);
+	getUserInfos(userId);
 	
 	$$("#mine-order-lists").on("click",function(){
 		mainView.router.loadPage("order/order-cal.html?user_id="+userId);
@@ -57,53 +57,30 @@ myApp.onPageBeforeInit('mine', function (page) {
 	
 });
 
-//列表显示
-myApp.template7Data['page:mine'] = function() {
-	var result;
-	var userId = localStorage.getItem("user_id");;
-	if (userId == undefined || userId == '' || userId == 0) {
+
+var onUserInfoSuccess =function(data, textStatus, jqXHR) {
+   	var result = JSON.parse(data.response);
+	if (result.status == "999") {
+		myApp.alert(result.msg);
 		return;
 	}
-
-	$$.ajax({
-		type : "GET",
-		url : siteAPIPath + "user/get_userinfo.json?user_id="+userId,
-		dataType : "json",
-		cache : true,
-		async : false,
-		success : function(data) {
-			// console.log(data);
-			result = data.data;
-		}
-	})
-
-	return result;
-}
-
-
-//var onUserInfoSuccess =function(data, textStatus, jqXHR) {
-//   	var result = JSON.parse(data.response);
-//	if (result.status == "999") {
-//		myApp.alert(result.msg);
-//		return;
-//	}
-//	var user = result.data;
-//	var headImg = user.head_img;
-//	if(headImg !='' && headImg != undefined){
-//		$$("#head_img-span").attr("src",user.head_img);
-//	}
-//	 $$("#mobile").text(user.mobile);
-//	 $$("#total_coupon").text(user.total_coupon+" 张");
-//	 $$("#user-id").text(user.id);
-//	 $$("#mine-rest-money").text(user.rest_money+" 元");
-//	 $$("#score").text(user.score);
-//	 var temp = Number(0);
-//     var restMoney = user.rest_money;
-//     temp = restMoney/100;
-//     if(temp>=100){
-//    	 temp = 100;
-//     }
-//	 $$("#am-time-span").text("约"+temp.toFixed(1)+"小时");
+	var user = result.data;
+	var headImg = user.head_img;
+	if(headImg !='' && headImg != undefined){
+		$$("#head_img-span").attr("src",user.head_img);
+	}
+	 $$("#mobile").text(user.mobile);
+	 $$("#total_coupon").text(user.total_coupon+" 张");
+	 $$("#user-id").text(user.id);
+	 $$("#mine-rest-money").text(user.rest_money+" 元");
+	 $$("#score").text(user.score);
+	 var temp = Number(0);
+     var restMoney = user.rest_money;
+     temp = restMoney/100;
+     if(temp>=100){
+    	 temp = 100;
+     }
+	 $$("#am-time-span").text("约"+temp.toFixed(1)+"小时");
 	 
 	  // 路径配置
 //	    require.config({
@@ -226,7 +203,33 @@ myApp.template7Data['page:mine'] = function() {
 //	         myChart.setOption(option, true);
 //	        }
 //	    );
-//}
+}
 
+//获取用户信息接口
+function getUserInfos(userId) {
+	var postdata = {};
+    postdata.user_id = userId;    
+	$$.ajax({
+		type : "GET",
+		url : siteAPIPath + "user/get_userinfo.json",
+		dataType : "json",
+		cache : true,
+		data :postdata,
+		statusCode: {
+         	200: onUserInfoSuccess,
+ 	    	400: ajaxError,
+ 	    	500: ajaxError
+ 	    },
+	});
+}
+/*function goToOrderForm() {
+	var userId = $$.urlParam('user_id');
+	location.href = "wx-order-form.html?user_id=" + userId;
+}
+
+function goToOrderList() {
+	var userId = $$.urlParam('user_id');
+	location.href = "wx-order-list.html?user_id=" + userId;
+}*/
 
 

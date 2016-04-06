@@ -4,7 +4,7 @@
 	<!-- Page, data-page contains page name-->
 	<div data-page="mine" class="page"style="overflow:auto;">
 		<div class="page-content" >
-			
+			<form id="my-form" class="list-block chongzhi-qingchu"style="color:#999;padding-bottom:10px;">
 				<div class="list-block">
 					<div class="list-group">
 						<ul>
@@ -16,7 +16,7 @@
 												<img src="img/icons/my-main.png" alt="">
 											</div>
 											<div class="item-input"style="text-align:left;">
-												<span id="mobile" >{{mobile}}</span>
+												<span id="mobile" ></span>
 												<select align="center" name="city_id">
 													<option value="0"></option>
 												</select>
@@ -31,14 +31,33 @@
 							</li>
 							<li class="my-jiben" id="restMoneyDiv">
 								<div>余额</div>
-								<div style="color:#EF7C00;" id="mine-rest-money">{{rest_money}}</div>
+								<div style="color:#EF7C00;" id="mine-rest-money"></div>
 							</li>
 						</ul>
 					</div>
 				</div>
-
-			
-			
+			</form>
+			<!-- <form class="list-block chongzhi-qingchu"style="color:#999;">
+				<div class="list-block">
+					<div class="list-group">
+						<ul>
+							<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title label" style="width:134px!important;">助理服务时长</div>
+										<div class="item-title">
+											<span id="am-time-span" style="color:orange"></span>
+										</div>
+									</div>
+								</div>
+								 <div id="main" style="height:300px"></div>
+								<img src="img/icons/tongjitu.png" alt=""style="margin-left:26%;width:46%;">
+							</li>
+						</ul>
+					</div>
+				</div>
+			</form> -->
+			<form  class="list-block chongzhi-qingchu"style="color:#999;">
 				<div  class="list-block">
 					<div class="list-group" style="margin-top:50px">
 						<ul>
@@ -60,8 +79,10 @@
 										<div class="item-inner">
 											<div class="item-title label">优惠券</div>
 											<div class="item-input"style="text-align:right;">
-												<span style="color:#EF7C00;" id="total_coupon">{{total_coupon_span}}</span>
-												
+												<span style="color:#EF7C00;" id="total_coupon"></span>
+												<select align="center" name="city_id">
+													<option value="0"></option>
+												</select>
 											</div>
 										</div>
 									</div>
@@ -73,7 +94,9 @@
 										<div class="item-inner">
 											<div class="item-title label">充值</div>
 											<div class="item-input">
-											
+												<select align="center" name="city_id">
+													<option value="0"></option>
+												</select>
 											</div>
 										</div>
 									</div>
@@ -96,7 +119,9 @@
 										<div class="item-inner">
 											<div class="item-title label">意见反馈</div>
 											<div class="item-input">
-												
+												<select align="center" name="city_id">
+													<option value="0"></option>
+												</select>
 											</div>
 										</div>
 									</div>
@@ -108,7 +133,9 @@
 										<div class="item-inner">
 											<div class="item-title label">更多</div>
 											<div class="item-input">
-												
+												<select align="center" name="city_id">
+													<option value="0"></option>
+												</select>
 											</div>
 										</div>
 									</div>
@@ -117,7 +144,7 @@
 						</ul>
 					</div>
 				</div>
-			
+			</form>
 			<a href="#" class="button active user-logout my-submit">退出当前账号</a>
 		</div>
 	</div>
