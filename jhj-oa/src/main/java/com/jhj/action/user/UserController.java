@@ -26,9 +26,9 @@ import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.dict.DictCardType;
-import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.po.model.user.FinanceRecharge;
 import com.jhj.po.model.user.UserCoupons;
+import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.UserSmsToken;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.CardTypeService;
@@ -79,6 +79,7 @@ public class UserController extends BaseController {
 	
 	@Autowired
 	private JhjSettingService settingService;
+	
 	
 	@AuthPassport
 	@RequestMapping(value = "/update_name", method = { RequestMethod.POST })
@@ -397,8 +398,33 @@ public class UserController extends BaseController {
 		user.setRestMoney(afterMoney);
 		usersService.updateByPrimaryKeySelective(user);
 		
-		// TODO 5. 充值成功后,将该验证码。设为无效
 		
+		/*
+		 *   记录 用户 消费明细
+		 */
+		
+		UserDetailPay userDetailPay = new UserDetailPay();
+		
+		userDetailPay.setUserId(user.getId());
+		userDetailPay.setMobile(user.getMobile());
+
+		userDetailPay.setOrderType(Constants.ORDER_TYPE_4);
+		/*
+		 *  运营平台的  会员充值， 是由  财务操作。
+		 *  
+		 *  	逻辑上已经保证了。充值后，用户也已经完成了 支付。
+		 *  
+		 *  	 所以总金额和 支付金额 相等即可。
+		 * 
+		 */
+		userDetailPay.setOrderMoney(new BigDecimal(chargeMoney));
+		userDetailPay.setOrderPay(new BigDecimal(chargeMoney));
+		
+		userDetailPay.setAddTime(TimeStampUtil.getNowSecond());
+		
+		userDetailPayService.insert(userDetailPay);
+		
+		// TODO 5. 充值成功后,将该验证码。设为无效
 		userSmsTokenService.deleteByPrimaryKey(smsToken.getId());
 		
 		result.setMsg("充值成功");
