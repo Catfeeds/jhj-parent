@@ -28,15 +28,23 @@
     from socials
     where id = #{id,jdbcType=NUMERIC}
   </select>
-  <select id="getSocialsList" resultMap="BaseResultMap" >
+  
+  
+  <select id="getSocialsList" resultMap="ResultMapWithBLOBs" >
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from socials
-    where is_publish =1 and curdate() between begin_date and end_date
-    order by add_time desc
+    where 
+    	is_publish =1 
+    	and 
+    		curdate() between begin_date and end_date
+    order by 
+    	add_time desc
   </select>
+  
+  
   <!-- 根据searchVo查询社区活动列表 -->
   <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.SocialsSearchVo">
   	select
