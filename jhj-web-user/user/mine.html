@@ -16,7 +16,7 @@
 												<img src="img/icons/my-main.png" alt="">
 											</div>
 											<div class="item-input"style="text-align:left;">
-												<span id="mobile" ></span>
+												<span id="mobile" >{{mobile}}</span>
 												<select align="center" name="city_id">
 													<option value="0"></option>
 												</select>
@@ -31,7 +31,7 @@
 							</li>
 							<li class="my-jiben" id="restMoneyDiv">
 								<div>余额</div>
-								<div style="color:#EF7C00;" id="mine-rest-money"></div>
+								<div style="color:#EF7C00;" id="mine-rest-money">{{rest_money}}元</div>
 							</li>
 						</ul>
 					</div>
@@ -79,7 +79,7 @@
 										<div class="item-inner">
 											<div class="item-title label">优惠券</div>
 											<div class="item-input"style="text-align:right;">
-												<span style="color:#EF7C00;" id="total_coupon"></span>
+												<span style="color:#EF7C00;" id="total_coupon">{{total_coupon}}张</span>
 												<select align="center" name="city_id">
 													<option value="0"></option>
 												</select>
