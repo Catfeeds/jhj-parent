@@ -30,7 +30,7 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 			
 			$$("#servicePrice").text(service.remarks);
 			
-			$$("#serviceContent").text(service.service_content);
+			$$("#serviceContents").text(service.service_content);
 			
 		},
 		error: function(status,xhr){
@@ -43,8 +43,10 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 		
 		var serviceType = $$("#serviceType").val();
 		
-		var content =  $$("#serviceContent").val();
-
+		var content =  $$("#serviceContentText").val();
+		
+		
+		alert(content);
 		var parentServiceType = $$("#parentServiceTypeId").val();
 		
 		// 深度养护 不需要必填 服务要求

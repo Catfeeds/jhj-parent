@@ -9,7 +9,6 @@ myApp.onPageInit('survey-result-page', function(page) {
 		return false;
 	}
 	
-	
 		/**
 		 *  请求成功后,	
 		 *  采用virtual list 替换 题目及选项模板
@@ -54,13 +53,102 @@ myApp.onPageInit('survey-result-page', function(page) {
 			var checkboxChildHtml = "";
 			
 			/*
+			 * 2016年3月17日16:11:29   点击多选后，由子页面 回到 当前页面时，回显 之前的 修改 结果
+			 */
+			var storeBase  = localStorage['storeBaseArray'];
+			
+			var storeRadio = localStorage['storeRadioArray'];
+			
+			if(storeBase != undefined){
+				
+				var baseArray =  JSON.parse(storeBase);
+				
+				//回显 无服务的  服务的  之前选中的 次数
+				for (var j=0; j< baseArray.length; j++ ) {
+					
+					var baseItem = baseArray[j];
+					
+					for (var i = 0; i < baseContent.length; i++) {
+						
+						var paramBaseItem = baseContent[i];
+						
+						if(baseItem.baseContentId == paramBaseItem.content_id){
+							
+							if(paramBaseItem.base_content_real_time != 0){
+								paramBaseItem.base_content_real_time = baseItem.baseContentTimes;
+							}else{
+								paramBaseItem.default_time = baseItem.baseContentTimes;
+							}
+							
+						}
+					}
+					
+					for(var i = 0; i < recommendContent.length; i++){
+						
+						var paramRecmmendItem = recommendContent[i];
+						
+						if(baseItem.baseContentId == paramRecmmendItem.content_id){
+							
+							if(paramRecmmendItem.base_content_real_time != 0){
+								paramRecmmendItem.base_content_real_time = baseItem.baseContentTimes;
+							}else{
+								paramRecmmendItem.default_time = baseItem.baseContentTimes;
+							}
+							
+						}
+					}
+					
+				}
+			}
+			
+			
+			if(storeRadio != undefined){
+				
+				var radioArray =  JSON.parse(storeRadio);
+				
+				//回显 无服务的  服务的  之前选中的 次数
+				for (var j= 0; j< radioArray.length; j++) {
+					
+					var radioItem = radioArray[j];
+					
+					for (var i = 0; i < baseContent.length; i++) {
+						
+						var paramBaseItem = baseContent[i];
+						
+						if(radioItem.baseContentId == paramBaseItem.content_id){
+							
+							paramBaseItem.child_list[0].default_time_child = 
+								
+								radioItem.childRadioArray[0].childRadioContentTimes;
+						}
+					}
+					
+					for(var i = 0; i < recommendContent.length; i++){
+						
+						var paramRecmmendItem = recommendContent[i];
+						
+						if(radioItem.baseContentId == paramRecmmendItem.content_id){
+							
+							paramRecmmendItem.child_list[0].default_time_child = 
+								
+								radioItem.childRadioArray[0].childRadioContentTimes;
+						}
+					}
+					
+				}
+				
+			}
+			
+			
+			
+			/*
 			 * 1.基础服务
 			 */
 			//基础服务 临时变量
 			var baseContentHtml = "";
 			//基础服务 主体 模板对象
 			var baseTemplateHtml = $$("ul[id='baseContentTemplate']").html();
-				
+			
 			for (var i = 0; i < baseContent.length; i++) {
 				var baseI = baseContent[i];
 				
@@ -69,7 +157,7 @@ myApp.onPageInit('survey-result-page', function(page) {
 				//由选项确定的服务次数, 如果为0, 则不展示，不为0，展示
 				var optionDecideTime = baseI.base_content_real_time;
 				
-				//次数 展示
+				//次数 展示  文字 “次/年。。”
 				var timeStr = generateTimeWordForTimes(baseI.measurement);
 				
 				//单选类型,默认 需要提供  默认选中的id
@@ -184,10 +272,8 @@ myApp.onPageInit('survey-result-page', function(page) {
 			
 			$$("#freeDisplay").append(freeHtml);
 			
-			
 			//数据加载完,打开一个 折叠布局
 			myApp.accordionOpen("#baseAccordionItem");
-			
 			
 			return false;
 		};
@@ -212,6 +298,7 @@ myApp.onPageInit('survey-result-page', function(page) {
 	 	    }
 		});
 		
+		
 	
 		/**
 		 * 点击提交 订制结果
@@ -221,92 +308,17 @@ myApp.onPageInit('survey-result-page', function(page) {
 			
 			$$(this).attr("disabled",true);
 			
-			//展示区域 的所有 被选中的  服务	
-			var aaObj =   $$("#resultDiv").find("a[id='contentName'][class='button button-fill color-green']");
-			
-			//存放  无子服务  类型的 {内容：次数}array
-			var baseContentArray = [];
-			
-			//存放 子服务 为 单选的 array {服务,子服务：次数}
-			var radioContentArray = [];
-			
-			//对于多选,如果未修改,但是也选中的话,需要传递  该 服务内容Id，并在后台处理  该服务的 子服务
-			var childBoxArray = [];
-			
-			
-			$$(aaObj).each(function(k,v){
-				
-				//‘调整次数  ’按钮  所在 div,包含隐藏域信息
-				var contentDiv = $$(this).parent().parent().find("#contentDiv");
-				
-				// 次数 所在 div
-				var timesDiv =$$(this).parent().parent().find("#timesDiv");
-				
-				
-//				alert(timesDiv.find("#contentTimes").text());
-//				
-//				return ;
-				//次数数字 每行 对应的数字
-				var times = timesDiv.find("#contentTimes").text().match(/\d/g).join("");
-				
-//				alert(Number(times));
-//				return ;
-				var childType =  contentDiv.find("#contentChildType").val();
-				
-				/*
-				 * 主服务id
-				 */
-				var baseContentId = contentDiv.find("#contentId").val();
-				
-				//没有子服务的 类型
-				if(childType == 0){
-					
-					baseContentArray.push({"baseContentId":baseContentId,"baseContentTimes":Number(times)});
-				}
-				
-				//单选类型
-				if(childType == 1){
-					
-					var childRadioContentId =  timesDiv.find("input[id='childRadioContentId']").val();
-					
-					//存放 单选子服务的 {子服务：次数}
-					var childRadioArray = [];
-					
-					
-					childRadioArray.push({"childRadioContentId":childRadioContentId,"childRadioContentTimes":Number(times)});
-					
-					radioContentArray.push({"baseContentId":baseContentId,"childRadioArray":childRadioArray});
-				}
-				
-				//多选类型, 在 新页面 已经存储
-				if(childType == 2){
-					
-					childBoxArray.push({"baseContentId":baseContentId});
-					
-				}
-				
-				
-				
-			});
-			
-//			//没有子服务的服务
-//			localStorage.setItem("baseContentArray",JSON.stringify(baseContentArray));
-//			
-//			//单选服务
-//			localStorage.setItem("radioContentArray",JSON.stringify(radioContentArray));
+			storeNowData();
 			
 			/*
 			 * 构造 参数
 			 */
-			
 			var postData ={};
 			
 			//无子服务
-			postData.base_content_array = JSON.stringify(baseContentArray);
+			postData.base_content_array = localStorage['storeBaseArray'];
 			//单选
-			postData.radio_content_array = JSON.stringify(radioContentArray);
-//			postData.box_content_array = localStorage['boxChildContent'];
-			
+			postData.radio_content_array = localStorage['storeRadioArray'];
 			
 			//多选
 			if(localStorage['boxChildContent'] != undefined ){
@@ -316,13 +328,10 @@ myApp.onPageInit('survey-result-page', function(page) {
 				/*
 				 * 多选的 默认值, 该多选对应的 主 服务 id
 				 */
-				
 				postData.default_box_content_array = JSON.stringify(childBoxArray);
 				
 				postData.box_content_array = "[]";
 			}
-			
-			
 			
 			//用户 id
 			postData.user_id = localStorage['survey_user_id'];
@@ -353,14 +362,6 @@ myApp.onPageInit('survey-result-page', function(page) {
 					
 					$$("#submitResult").removeAttr('disabled');  
 					
-//					//移除 调查相关的 缓存数据
-//					localStorage.removeItem("boxChildContent");
-//					localStorage.removeItem("surveyResult");
-//					localStorage.removeItem("survey_user_id");
-//					localStorage.removeItem("changeContentId");
-					
-					
-					
 					mainView.router.loadPage("survey/survey-result-price.html");
 				},
 				error:function(){
@@ -368,7 +369,101 @@ myApp.onPageInit('survey-result-page', function(page) {
 				}
 			});	
 		});
+		
+		
+		
+		/*
+		 * 展开、折叠效果，给出文字提示
+		 */
+		$$('.accordion-item').on('open', function () {
+			  
+			changeAccordText(this);
+		}); 
+			 
+		$$('.accordion-item').on('close', function (e) {
+			  
+			changeAccordText(this);
+		}); 	
+		
+		
+		function changeAccordText(obj){
+			
+			 var accordText =  $$(obj).find("font").text();
+			  
+			  if(accordText =="展开"){
+				  $$(obj).find("font").text("收起");
+			  }else{
+				  $$(obj).find("font").text("展开");
+			  }
+		}
+		
 });
+
+function storeNowData(){
+	
+	//展示区域 的所有 被选中的  服务	
+	var aaObj =   $$("#resultDiv").find("a[id='contentName'][class='button button-fill color-green']");
+	
+	//存放  无子服务  类型的 {内容：次数}array
+	var baseContentArray = [];
+	
+	//存放 子服务 为 单选的 array {服务,子服务：次数}
+	var radioContentArray = [];
+	
+	//对于多选,如果未修改,但是也选中的话,需要传递  该 服务内容Id，并在后台处理  该服务的 子服务
+	var childBoxArray = [];
+	
+	
+	$$(aaObj).each(function(k,v){
+		
+		//‘调整次数  ’按钮  所在 div,包含隐藏域信息
+		var contentDiv = $$(this).parent().parent().find("#contentDiv");
+		
+		// 次数 所在 div
+		var timesDiv =$$(this).parent().parent().find("#timesDiv");
+		
+		//次数数字 每行 对应的数字
+		var times = timesDiv.find("#contentTimes").text().match(/\d/g).join("");
+		
+		var childType =  contentDiv.find("#contentChildType").val();
+		
+		/*
+		 * 主服务id
+		 */
+		var baseContentId = contentDiv.find("#contentId").val();
+		
+		//没有子服务的 类型
+		if(childType == 0){
+			
+			baseContentArray.push({"baseContentId":baseContentId,"baseContentTimes":Number(times)});
+		}
+		
+		//单选类型
+		if(childType == 1){
+			
+			var childRadioContentId =  timesDiv.find("input[id='childRadioContentId']").val();
+			
+			//存放 单选子服务的 {子服务：次数}
+			var childRadioArray = [];
+			
+			childRadioArray.push({"childRadioContentId":childRadioContentId,"childRadioContentTimes":Number(times)});
+			
+			radioContentArray.push({"baseContentId":baseContentId,"childRadioArray":childRadioArray});
+		}
+		
+		//多选类型, 在 新页面 已经存储
+		if(childType == 2){
+			childBoxArray.push({"baseContentId":baseContentId});
+		}
+		
+	});
+	
+	localStorage.setItem("storeBaseArray",JSON.stringify(baseContentArray));
+	
+	localStorage.setItem("storeRadioArray",JSON.stringify(radioContentArray));
+}
+
+
 
 /*
  * 给服务次数,添加期限  --> "次/月"、"次/年"
@@ -391,8 +486,6 @@ function generateTimeWordForTimes(obj){
 	
 	return str;
 }
-
-
 
 
 
@@ -429,7 +522,6 @@ function changeColor(obj){
 
 
 
-
 /*
  * 点击调整次数, 去后台获取该 服务的 子服务 
  */
@@ -452,6 +544,11 @@ function changeThisTimes(obj){
 	//如果是多选，则跳转页面进行修改次数
 	if(childType == 2){
 		
+		/*
+		 *  多选题进入新页面之前，存储 当前页面的 调整结果，返回时 回显
+		 */
+		storeNowData();
+		
 		localStorage.setItem("changeContentId",contentId);
 		
 		var successUrl = "survey/survey-result-child.html";
@@ -465,8 +562,8 @@ function changeThisTimes(obj){
 		myApp.prompt('', '次数修改',
 		      function (value) {
 				 	
-					if(!isPositiveNum(value) || Number(value) > 100 || value.indexOf(0) == 0){
-						myApp.alert("请输入小于100的整数数字");
+					if(!isPositiveNum(value) || Number(value) > 400 || value.indexOf(0) == 0){
+						myApp.alert("请输入小于400的整数数字");
 						return false;
 					}
 					
@@ -503,20 +600,17 @@ function changeThisTimes(obj){
 				for (var i = 0; i < reLength; i++) {
 					var child = result.data[i];
 					
-//					var optionNum = child.option_str.match(/\d/g).join("");
-					
-					
 					//设置  默认次数的 选中
 					if(child.id == $$(obj).parent().parent().parent().find("#timesDiv").find("#childRadioContentId").val()){
 						childHtml += "<li>"
-								+	"<input type='hidden' id='childRadioId' value="+child.option_str+">"
+								+	"<input type='hidden' id='childRadioId' value="+child.default_time_child+">"
 								+	"<input type='radio' checked name='childRadio' value="+child.id+">"
 								+ 	child.option_str	
 								+ "</li>" 		
 					}else{
 						
 						childHtml += "<li>"
-							+	"<input type='hidden' id='childRadioId' value="+child.option_str+">"
+							+	"<input type='hidden' id='childRadioId' value="+child.default_time_child+">"
 							+	"<input type='radio'  name='childRadio' value="+child.id+">"
 							+ 	child.option_str	
 							+ "</li>"
@@ -542,13 +636,10 @@ function changeThisTimes(obj){
 						//选中的子服务的次数 --对应的 子服务 id
 						var radioChildContentId = $$("input[type='radio'][name='childRadio']:checked").val();
 						
-//						alert(radioChildContentId);
-						
 						//将该id 赋值给隐藏域,供提交
 						$$(obj).parent().parent().parent().find("#timesDiv").find("#childRadioContentId").val(radioChildContentId);
 						
 						//选中的 子服务的次数 内容，替换默认值
-						
 						var radioChildContentNumber = $$("input[type='radio'][name='childRadio']:checked")
 												.parent().find("input[id='childRadioId']").val();
 						
@@ -557,7 +648,6 @@ function changeThisTimes(obj){
 						
 						//选中后,替换默认次数
 						numberObj.text(numberObj.text().replace(/\d+/g,radioChildContentNumber));
-						
 						
 					}	
 				});
@@ -587,4 +677,7 @@ function replaceChildContentBoxNumber(str){
 	
 	return str;
 }
+
+
+
 

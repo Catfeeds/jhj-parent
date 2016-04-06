@@ -1,11 +1,16 @@
 myApp.onPageInit('survey-result-price-page', function(page) {
 	
+	//来到价格明细页面时，清除 结果页, 修改过程中的, “中间调整值”
+	localStorage.removeItem("storeBaseArray");
+	localStorage.removeItem("storeRadioArray");
+	
+	
 	var userId = localStorage['survey_user_id'];
 	
 	//对于 完成后  又返回的 情况~
 	if(userId == undefined){
 		
-		myApp.alert("请您发起新的订制服务");
+		myApp.alert("请您发起新的定制服务");
 		mainView.router.loadPage("index.html");
 		return false;
 	}
