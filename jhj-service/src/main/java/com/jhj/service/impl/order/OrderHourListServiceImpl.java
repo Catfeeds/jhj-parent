@@ -99,8 +99,18 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 				
 				PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 				
-				//2016-2-20 15:37:11    修改订单状态 名称为 二期 新定义的名称
-				orderHourListVo.setOrderHourTypeName(type.getName());
+				if(type != null){
+					
+					/*
+					 * 展示具体 服务类型的 订单名称
+					 */
+					orderHourListVo.setOrderHourTypeName(type.getName());
+				}else{
+					/*
+					 * 历史数据。。展示原来的 大类名称。钟点工、助理
+					 */
+					orderHourListVo.setOrderHourTypeName(OneCareUtil.getJhjOrderTypeName(orderType));
+				}
 				
 				//订单状态
 				Short orderStatus = orders.getOrderStatus();
