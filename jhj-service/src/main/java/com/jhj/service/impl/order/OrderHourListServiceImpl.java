@@ -102,7 +102,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 				if(type != null){
 					
 					/*
-					 * 展示具体 服务类型的 订单名称
+					 * 展示具体 服务类型的 订单名称，如 保洁初体验、简朴生活
 					 */
 					orderHourListVo.setOrderHourTypeName(type.getName());
 				}else{
