@@ -3,6 +3,8 @@ package com.jhj.service.survey;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.jhj.po.model.survey.SurveyUserRefRecommend;
 import com.jhj.vo.survey.OaSurveyUserResultVo;
 import com.jhj.vo.survey.SurveyResultPriceVo;

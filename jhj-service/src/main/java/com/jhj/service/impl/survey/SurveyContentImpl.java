@@ -65,13 +65,6 @@ public class SurveyContentImpl implements SurveyContentService {
 		content.setPriceDescription(""); 	//对于 类似   100㎡ 以下 xx元， 100㎡ 以上xx 元的服务, 用这个字段,来展示价格明细
 		
 		content.setItemUnit("次");					//量词，这里都定为  次
-//		content.setDescription("");
-//		
-//		//对于 类似 家电清洗：空调1次，卫生间1次。。。这种服务下包含子服务的,
-//		//用这个字段，作为 调查结果的 调整使用
-//		content.setContentChildDescription("");	 
-//		
-//		content.setRemark("");
 		content.setMeasurement((short)0);    //计数期限  0=月 1=年 2=次 3=无（赠送，价钱为0）
 		content.setEnable((short)1);			//0 不可用  1可用
 		content.setAddTime(TimeStampUtil.getNowSecond());
@@ -79,6 +72,7 @@ public class SurveyContentImpl implements SurveyContentService {
 		
 		content.setContentChildType((short)0);	//单选=1 多选=2，若不包含子服务 =0
 		
+		content.setDefaultTime(0L);
 		
 		return content;
 	}
@@ -119,6 +113,8 @@ public class SurveyContentImpl implements SurveyContentService {
 		BeanUtilsExp.copyPropertiesIgnoreNull(content, contentVo);
 		
 		contentVo.setChildList(new ArrayList<SurveyContentChild>());
+		contentVo.setBaseContentRealTime(0L);
+		
 		
 		return contentVo;
 	}
@@ -131,7 +127,12 @@ public class SurveyContentImpl implements SurveyContentService {
 	
 	@Override
 	public List<SurveyContent> selectByIdList(List<Long> list) {
-		return contentMapper.selectByIdList(list);
+		
+		if(list.size() > 0 && list !=null){
+			return contentMapper.selectByIdList(list);
+		}else{
+			return new ArrayList<SurveyContent>();
+		}
 	}
 	
 	@Override
@@ -162,5 +163,10 @@ public class SurveyContentImpl implements SurveyContentService {
 	@Override
 	public List<Long> selectAmContent() {
 		return contentMapper.selectAmContent();
+	}
+	
+	@Override
+	public List<Long> selectSetDefaultTime() {
+		return contentMapper.selectSetDefaultTime();
 	}
 }

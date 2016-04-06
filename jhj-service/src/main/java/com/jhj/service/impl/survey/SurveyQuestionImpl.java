@@ -1,10 +1,11 @@
 package com.jhj.service.impl.survey;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.json.JSONArray;
@@ -174,20 +175,14 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 				//关联的服务内容名称
 				questionVo.setOptionReContent(contentStr);
 				
-				
 				//关联的下一题的 id, 这里 是 一对一关系
 				SurveyQuestion question2 = questionMapper.selectByPrimaryKey(option.getRealtedQId());
 				
 				if(question2 !=null){
 					questionVo.setOptionReQName(question2.getTitle());
 				}
-				
 			}
-			
-			
 		}
-		
-		
 		return questionVo;
 	}
 	
@@ -230,7 +225,7 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 			}
 		}
 		
-		System.out.println(map);
+//		System.out.println(map);
 		
 		return map;
 		
@@ -257,6 +252,8 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 		 * 加载 第二题及之后的题目
 		 * 	
 		 *  通过当前题目 id 和选择的 选项，确定下一题
+		 *  
+		 *  2016年1月13日15:43:49  要求 对应关系存在 才能正确加载题目
 		 * 
 		 */
 		if(qId !=null && qId >0L){
@@ -309,6 +306,12 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 		
 		Map<Long, List<SurveyContentVo>> map = new HashMap<Long, List<SurveyContentVo>>();
 		
+		
+		/*
+		 * 2016-1-13 15:18:22  存放 由选项确定次数的 content,  < 服务id:次数 >
+		 */
+		Map<Long, Long> contentRealTime = new HashMap<Long, Long>();
+		
 		//用来存放  已选择的  content Id
 		List<Long>  selectContentIdList = new ArrayList<Long>();
 		
@@ -319,8 +322,14 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 			
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
 			
+			//题目 id
 			String questionId = jsonObject.getString("questionId");
 			
+			if(questionId.equals(28) || questionId.equals(57)){
+				System.out.println(questionId);
+			}
+			
+			// 选项序号   “A,B。。。”
 			String optionStr = jsonObject.getString("optionStr");
 			
 			String[] optionArray = optionStr.split(",");
@@ -330,6 +339,18 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 				 String optionNo = optionArray[j];
 				 
 				 SurveyOptionRefContent surveyOptionRefContent = refContentMapper.selectOneByQIdAndNo(Long.valueOf(questionId), optionNo);
+				 
+				 //由题目和 选项，得到该选项 对象，进而得到 该选项对应的  次数
+				 SurveyQuestionOption questionOption = optionMapper.selectOneByQIdAndNo(Long.valueOf(questionId), optionNo);
+				 
+				 Long defaultTimeOption = questionOption.getDefaultTimeOption();
+				 
+				 
+				 //2016-1-13 15:03:31  对于 保洁类 服务，默认次数 由选项决定
+					
+					//所有  默认次数 由 选项决定的  服务Id 的集合
+					List<Long> list2 = contentService.selectSetDefaultTime();
+				 
 				 
 				 if(surveyOptionRefContent !=null){
 					 
@@ -344,10 +365,13 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 					 String[] contentIdArray = contentId.split(",");
 					 
 					 for (int k = 0; k < contentIdArray.length; k++) {
-						 
 						 selectContentIdList.add(Long.valueOf(contentIdArray[k]));
-					}
-					 
+						 
+						 if(list2.contains(Long.valueOf(contentIdArray[k]))){
+							 
+							 contentRealTime.put(Long.valueOf(contentIdArray[k]),defaultTimeOption);
+						 }
+					 }
 				 }
 			}
 		}
@@ -375,6 +399,8 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 		//免费内容
 		List<SurveyContent> freeContentList = contentMapper.selectFreeContent();
 		
+		//所有免费内容的Id
+		List<Long> freeContentIdList = contentMapper.selectFreeContentId();
 		
 		
 		//移除之后 的 allContentList 就是未选择的 内容, 即推荐套餐
@@ -382,7 +408,6 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 		/**
 		 * 此处的移除,需要使用 移除  id 的方式，用对象，不行
 		 */
-		
 		
 		allContentIdList.removeAll(selectContentIdList);
 		
@@ -397,7 +422,6 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 		allContentIdList.removeAll(boxChildIdList);
 		
 		
-//		System.out.println(allContentIdList);
 		//使用移除后的  id,得到 推荐套餐
 		
 		/*
@@ -414,13 +438,22 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 		 * 生成Vo,带子服务
 		 */
 		
-		List<SurveyContentVo> selectContentList2 = getChildVoForContent(selectContentList);
+		//基础服务
 		
+		//关联内容中有 免费服务，则不再展示
+		selectContentList.removeAll(freeContentIdList);
+		
+		List<SurveyContentVo> selectContentList2 = getChildVoForContent(selectContentList);
+		//处理 选中服务中 ，次数由 选项决定的服务
+		List<SurveyContentVo> baseContentList = dealWithBaseContentList(selectContentList2, contentRealTime);
+		
+		//推荐服务
 		List<SurveyContentVo> allContentList2 = getChildVoForContent(allContentList);
 		
+		//免费服务
 		List<SurveyContentVo> freeContentList2 = getChildVoForContent(freeContentList);
 		
-		map.put(Constants.SURVEY_RESULT_0, selectContentList2);	//选择结果的服务
+		map.put(Constants.SURVEY_RESULT_0, baseContentList);	//选择结果的服务
 		map.put(Constants.SURVEY_RESULT_1, allContentList2);	//未选择的（推荐服务）
 		map.put(Constants.SURVEY_RESULT_2, freeContentList2);	//免费赠送服务
 		
@@ -447,9 +480,6 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 		
 		List<SurveyContentChild> childList = new ArrayList<SurveyContentChild>();
 		
-		//总价
-		BigDecimal sumPrice = new BigDecimal(0);
-		
 		//过滤后，可能 没有 “推荐服务”,需要校验 size
 		if(contentList.size() >0){
 			for (SurveyContent surveyContent : contentList) {
@@ -464,13 +494,37 @@ public class SurveyQuestionImpl implements SurveyQuestionServcie {
 					
 					contentVo.setChildList(childList);
 				}
-				
-				
 				BeanUtilsExp.copyPropertiesIgnoreNull(surveyContent, contentVo);
 				
 				list.add(contentVo);
 			}
 		}
+		return list;
+	}
+	
+	/*
+	 * 2016-1-13 15:28:34
+	 * 
+	 *  分析：  前提，该服务已经被选中
+	 * 		
+	 * 	对于   服务次数 由  选项 确定的服务, 单独处理其 默认次数		
+	 * 			
+	 */
+	private List<SurveyContentVo> dealWithBaseContentList(List<SurveyContentVo> list,Map<Long, Long> map){
+			
+		Set<Entry<Long,Long>> entrySet = map.entrySet();
+		
+		for (Entry<Long, Long> entry : entrySet) {
+			
+			Long key = entry.getKey();
+			
+			for (SurveyContentVo contentVo: list) {
+				if (contentVo.getContentId() == key) {
+					contentVo.setBaseContentRealTime(entry.getValue());	
+				}
+			}
+		}
+		
 		return list;
 	}
 	

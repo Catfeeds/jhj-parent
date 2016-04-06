@@ -51,5 +51,6 @@ public interface SurveyContentService {
     //得到所有 “助理” 服务,TODO 此处直接写死了 serviceId
     List<Long> selectAmContent();
     
-    
+    //默认次数由选项决定的 服务 2016-1-13 15:08:48
+    List<Long> selectSetDefaultTime();
 }

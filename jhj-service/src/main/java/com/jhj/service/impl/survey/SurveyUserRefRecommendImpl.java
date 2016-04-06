@@ -19,11 +19,13 @@ import com.jhj.po.model.survey.SurveyUserRefRecommend;
 import com.jhj.service.survey.SurveyContentChildService;
 import com.jhj.service.survey.SurveyContentService;
 import com.jhj.service.survey.SurveyUserRefRecommendService;
+import com.jhj.vo.survey.AppSurveyResultPriceVo;
 import com.jhj.vo.survey.OaSurveyUserResultVo;
 import com.jhj.vo.survey.SurveyResultPriceVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Service
@@ -151,7 +153,7 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 	public SurveyUserRefRecommend selectByUserIdAndContentId(Long userId, Long contentId) {
 		return recommendMapper.selectByUserIdAndContentId(userId, contentId);
 	}
-
+	
 	
 	/*
 	 * 微网站 提交 调查结果,返回价格条目信息
@@ -169,14 +171,19 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		
 		
 		//1 . 用户选择的 服务中  包含的 子服务,子服务Id,及其次数
+		
+		//用来存储  <服务Id,<子服务Id:服务次数>>
+		
 		Map<Long, Long> boxChildMap = new HashMap<Long, Long>();
 		
 		for (SurveyUserRefRecommend surveyUserRefRecommend : list) {
 			
 			Long contentId = surveyUserRefRecommend.getContentId();
 			
+			
 			if(surveyUserRefRecommend.getContentChildId() != 0){
 				boxChildMap.put(surveyUserRefRecommend.getContentChildId(), surveyUserRefRecommend.getTimes());
+				
 			}else{
 				//不包含子服务的 服务
 				contentIdList.add(contentId);
@@ -185,15 +192,9 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		
 		//按月 计费的所有服务
 		List<Long> monthIdList = contentService.selectContentIdByMeasurement(Constants.SURVEY_MEARSUREMENT_0);
-//		//按年 计费的所有服务
-//		List<Long> yearIdList = contentService.selectContentIdByMeasurement(Constants.SURVEY_MEARSUREMENT_1);
-//		//按次 计费的所有服务
-//		List<Long> timeIdList = contentService.selectContentIdByMeasurement(Constants.SURVEY_MEARSUREMENT_2);
-		
 		
 		//所有的基础家政服务 id
 		List<Long> baseContentIdList = contentService.selectBaseContent();
-		
 		
 		//所有服务中  的基础家政 服务
 		baseContentIdList.retainAll(contentIdList);
@@ -214,7 +215,6 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		 *		k：优惠系数,   B/C
 		 * 
 		 * 	  	 D： 优惠后总价格=A+（B×K）
-		 * 
 		 */
 		
 		//2. 总价 = 无子服务 的价格+ 子服务的价格
@@ -250,34 +250,46 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		//最终总价
 		BigDecimal sumPrice = MathBigDeciamlUtil.add(sumContentPrice, childSumPrice);
 		
-		//基础家政价格
-		BigDecimal basePrice = getSumPriceForContentList(baseContentList, userId);
-		
-		//助理 和  深度  价格之和 = 总价 - 基础家政
-		BigDecimal amAndDeepPrice = MathBigDeciamlUtil.sub(sumPrice, basePrice);
-		
-		//3.得到 优惠系数
 		
 		/*
-		 * 按年支付
+		 * 2016年3月14日11:37:58     不再根据权重计算优惠系数，优惠系数统一 
+		 * 	
+		 * 		 优惠幅度为年付 0.85 半年付 0.9 月付 0.95
+		 * 
 		 */
-		BigDecimal yearK = OneCareUtil.getSurveyRatio(sumPrice, amAndDeepPrice, Constants.SURVEY_PAY_TYPE_0);
 		
-		/*
-		 * 按 半年支付
-		 */
-		BigDecimal quarterK = OneCareUtil.getSurveyRatio(sumPrice, amAndDeepPrice, Constants.SURVEY_PAY_TYPE_1);
 		
-		/*
-		 * 按 月支付
-		 */
-		BigDecimal monthK = OneCareUtil.getSurveyRatio(sumPrice, amAndDeepPrice, Constants.SURVEY_PAY_TYPE_2);
+		
+//		//基础家政价格
+//		BigDecimal basePrice = getSumPriceForContentList(baseContentList, userId);
+//		
+//		//助理 和  深度  价格之和 = 总价 - 基础家政
+//		BigDecimal amAndDeepPrice = MathBigDeciamlUtil.sub(sumPrice, basePrice);
+//		
+//		//3.得到 优惠系数, !! 已保留两位小数
+//		
+//		/*
+//		 * 按年支付
+//		 */
+//		String yearK = OneCareUtil.getSurveyRatio(sumPrice, amAndDeepPrice, Constants.SURVEY_PAY_TYPE_0);
+//		
+//		/*
+//		 * 按 半年支付
+//		 */
+//		String quarterK = OneCareUtil.getSurveyRatio(sumPrice, amAndDeepPrice, Constants.SURVEY_PAY_TYPE_1);
+//		
+//		/*
+//		 * 按 月支付
+//		 */
+//		String monthK = OneCareUtil.getSurveyRatio(sumPrice, amAndDeepPrice, Constants.SURVEY_PAY_TYPE_2);
 		
 		
 		//4. 构造 返回结果
 		
 		//年优惠总价
-		BigDecimal ratioSumPriceYear = basePrice.add(amAndDeepPrice.multiply(yearK));
+//		BigDecimal ratioSumPriceYear = basePrice.add(amAndDeepPrice.multiply(new BigDecimal(yearK)));
+		
+		BigDecimal ratioSumPriceYear = sumPrice.multiply(new BigDecimal(0.85));
 		
 		//平均每月需支付的金额, 保留两位小数
 		BigDecimal divByYear = MathBigDeciamlUtil.div(ratioSumPriceYear, new BigDecimal(12), 2);
@@ -286,7 +298,7 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		
 		priceVoYear.setSurveyPayType(Constants.SURVEY_PAY_TYPE_0);
 		priceVoYear.setSumPrice(sumPrice);
-		priceVoYear.setDiscountPrice(ratioSumPriceYear);
+		priceVoYear.setDiscountPrice(MathBigDeciamlUtil.saveTwoDigital(ratioSumPriceYear));
 		priceVoYear.setPriceByMonth(divByYear);
 		
 		//按年计费
@@ -294,7 +306,10 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		
 		
 		//半年优惠总价
-		BigDecimal ratioSumPriceQuarter = basePrice.add(amAndDeepPrice.multiply(quarterK));
+//		BigDecimal ratioSumPriceQuarter = basePrice.add(amAndDeepPrice.multiply(new BigDecimal(quarterK)));
+		
+		BigDecimal ratioSumPriceQuarter = sumPrice.multiply(new BigDecimal(0.9));
+		
 		//平均每月需支付的金额
 		BigDecimal divByQuarter = MathBigDeciamlUtil.div(ratioSumPriceQuarter, new BigDecimal(12), 2);
 		
@@ -302,14 +317,17 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		
 		priceVoQuarter.setSurveyPayType(Constants.SURVEY_PAY_TYPE_1);
 		priceVoQuarter.setSumPrice(sumPrice);
-		priceVoQuarter.setDiscountPrice(ratioSumPriceQuarter);
+		priceVoQuarter.setDiscountPrice(MathBigDeciamlUtil.saveTwoDigital(ratioSumPriceQuarter));
 		priceVoQuarter.setPriceByMonth(divByQuarter);
 		
 		//按半年计费
 		map.put(Constants.SURVEY_PAY_TYPE_1, priceVoQuarter);
 		
 		//月优惠总价
-		BigDecimal ratioSumPriceMonth = basePrice.add(amAndDeepPrice.multiply(monthK));
+//		BigDecimal ratioSumPriceMonth = basePrice.add(amAndDeepPrice.multiply(new BigDecimal(monthK)));
+		
+		BigDecimal ratioSumPriceMonth =  sumPrice.multiply(new BigDecimal(0.95));
+		
 		//平均每月需支付的金额
 		BigDecimal divByMonth = MathBigDeciamlUtil.div(ratioSumPriceMonth, new BigDecimal(12), 2);
 		
@@ -317,7 +335,7 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		
 		priceVoMonth.setSurveyPayType(Constants.SURVEY_PAY_TYPE_2);
 		priceVoMonth.setSumPrice(sumPrice);
-		priceVoMonth.setDiscountPrice(ratioSumPriceMonth);
+		priceVoMonth.setDiscountPrice(MathBigDeciamlUtil.saveTwoDigital(ratioSumPriceMonth));
 		priceVoMonth.setPriceByMonth(divByMonth);
 		
 		//按月计费
@@ -347,7 +365,6 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		if(list.size() > 0 && list !=null){
 			
 			for (SurveyContent surveyContent : list) {
-				
 				//得到 该用户、该服务，按年支付的 价格
 				SurveyUserRefRecommend recommend = selectByUserIdAndContentId(userId, surveyContent.getContentId());
 				
@@ -384,16 +401,19 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 	 *  计算 用户 的 子服务 的 价格
 	 *   
 	 */
-	private Map<Long, BigDecimal>  calculateChildContentPrice(Map<Long, Long> map){
+	private Map<Long, BigDecimal>  calculateChildContentPrice(Map<Long,Long> map){
 		
 		// <服务id, 该服务的某项子服务的价格>
 		Map<Long, BigDecimal> contentMap = new HashMap<Long, BigDecimal>();
 		
+		List<Long> contentIdList = new ArrayList<Long>();
+		
 		Set<Entry<Long,Long>> entrySet = map.entrySet();
+		
+		BigDecimal childSumPrice = new BigDecimal(0);
 		
 		for (Entry<Long, Long> entry : entrySet) {
 			
-			BigDecimal childSumPrice = new BigDecimal(0);
 			//子服务id
 			Long childContentId = entry.getKey();
 			
@@ -404,11 +424,15 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 			//子服务次数
 			Long value = entry.getValue();
 			
-			//该子服务的单价
-			childSumPrice = childPrice.multiply(new BigDecimal(value));
-			
 			//子服务所属 的 服务id
 			Long contentId = contentChild.getContentId();
+			
+			//如果不是 同一种服务， 则重置 累加变量。。目的是得到  同一种 服务的子服务价格之和
+			if(!contentIdList.contains(contentId)){
+				childSumPrice = new BigDecimal(0);
+			}
+			
+			childSumPrice = childSumPrice.add(childPrice.multiply(new BigDecimal(value)));
 			
 			/**
 			 * 	通过   子服务对应的 服务id， 得到  该子服务 所属的  类型（基础家政、深度、助理）
@@ -416,6 +440,9 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 			 *   最终 得到  总价	
 			 */
 			contentMap.put(contentId, childSumPrice);
+			
+			//将当前 服务 留存
+			contentIdList.add(contentId);
 		}
 		
 		return contentMap;

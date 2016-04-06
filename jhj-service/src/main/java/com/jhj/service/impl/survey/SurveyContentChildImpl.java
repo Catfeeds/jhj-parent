@@ -1,6 +1,7 @@
 package com.jhj.service.impl.survey;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class SurveyContentChildImpl implements SurveyContentChildService{
 		contentChild.setOptionStr("");
 		contentChild.setOptionNo("");
 		contentChild.setAddTime(TimeStampUtil.getNowSecond());
+		
+		contentChild.setChildPrice(new BigDecimal(0));
+		contentChild.setDefaultTimeChild(0L);
 		
 		return contentChild;
 	}

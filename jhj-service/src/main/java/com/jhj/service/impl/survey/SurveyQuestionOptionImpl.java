@@ -67,6 +67,8 @@ public class SurveyQuestionOptionImpl implements SurveyQuestionOptionService {
 		option.setAddTime(TimeStampUtil.getNowSecond());
 		option.setUpdateTime(TimeStampUtil.getNowSecond());
 		
+		option.setDefaultTimeOption(0L);
+		
 		return option;
 	}
 
