@@ -78,10 +78,10 @@ module.exports = function(grunt) {
 //		        src: 'css/framework7.css',//将之前的all.css  
 //		        dest: 'css/framework7.min.css'  //压缩  
 //		      } ,
-			cssf7themes: {  
-		        src: 'css/framework7.themes.css',//将之前的all.css  
-		        dest: 'css/framework7.themes.min.css'  //压缩  
-		      } ,
+//			cssf7themes: {  
+//		        src: 'css/framework7.themes.css',//将之前的all.css  
+//		        dest: 'css/framework7.themes.min.css'  //压缩  
+//		      } ,
 			      
 			cssmyapp: {  
 		        src: 'css/my-app.css',//将之前的all.css  
