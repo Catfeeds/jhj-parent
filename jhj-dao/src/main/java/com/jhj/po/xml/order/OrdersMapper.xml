@@ -510,6 +510,42 @@
 
 
 	</select>
+	
+	<select id="selectByUserListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrderSearchVo">
+
+		select
+		<include refid="Base_Column_List" />
+		from orders
+		where 1=1
+
+		<if test="amId != null">
+			and am_id = #{amId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="mobile != null">
+			and mobile like CONCAT('%','${mobile}','%' )
+		</if>
+
+		<if test="orderNo != null">
+			and order_no like CONCAT('%','${orderNo}','%' )
+		</if>
+
+		<if test="orderFrom != null">
+			and order_from = #{orderFrom,jdbcType=NUMERIC}
+		</if>
+
+		<if test="serviceType != null">
+			and service_type = #{serviceType,jdbcType=NUMERIC}
+		</if>
+
+		order by add_time desc
+
+
+	</select>
 
     <!-- 根据开始时间，接收时间，staff_id ，得出订单总金额 -->
 		<select id="getTotalOrderMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.OrderQuerySearchVo">
@@ -763,6 +799,29 @@
 
 		order by add_time desc
 	</select>
+	
+	
+	<select id="userTotalByMonth" resultType="java.util.HashMap"
+		parameterType="com.jhj.vo.OrderSearchVo">
+		select FROM_UNIXTIME(service_date ,'%Y-%m-%d') as service_date , count(distinct id) as total
+		FROM
+		(SELECT id, 
+		<![CDATA[ (CASE WHEN service_date > add_time THEN service_date ELSE add_time END ) as service_date ]]>
+		from orders
+		where 1=1
+		<if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="startTime != null">
+			<![CDATA[ and ( (add_time >= #{startTime,jdbcType=NUMERIC} and add_time <= #{endTime,jdbcType=NUMERIC}) OR (service_date >= #{startTime,jdbcType=NUMERIC} and service_date <= #{endTime,jdbcType=NUMERIC}) ) ]]>
+		</if>		
+		) as T
+		GROUP BY service_date
+		order by service_date asc
+	</select>
+	
+	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from orders
 		where id = #{id,jdbcType=NUMERIC}

@@ -3444,3 +3444,14 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   line-height: 40px;
 }
 
+.picker-calendar-day.picker-calendar-day-has-events span:after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ff0004;
+  position: absolute;
+  margin-left: -2px;
+  left: 50%;
+  bottom: 1px;
+}

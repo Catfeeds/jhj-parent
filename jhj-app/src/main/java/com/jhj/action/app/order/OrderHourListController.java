@@ -1,5 +1,6 @@
 package com.jhj.action.app.order;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,10 @@ import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
+import com.meijia.utils.DateUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
 
 /**
@@ -40,6 +44,63 @@ public class OrderHourListController extends BaseController {
 	private UserAddrsService userAddrService;
 	@Autowired
 	private ServiceTypeService dictServiceTypeSerivice;
+	
+	
+	// 按照年月查看卡片个数
+		/**
+		 * @param card_id
+		 *            卡片ID, 0 表示新增
+		 * @param user_id
+		 *            用户ID
+		 *
+		 * @return CardViewVo
+		 */
+		@RequestMapping(value = "/user_total_by_month", method = RequestMethod.GET)
+		public AppResultData<Object> totalByMonth(
+			@RequestParam("user_id") Long userId, 
+			@RequestParam("year") int year, 
+			@RequestParam("month") int month) {
+			
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+			String startTimeStr = DateUtil.getFirstDayOfMonth(year, month) + " 00:00:00";
+			String endTimeStr = DateUtil.getLastDayOfMonth(year, month) + " 23:59:59";
+
+			Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
+			Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
+
+			OrderSearchVo orderSearchVo = new OrderSearchVo();
+			orderSearchVo.setUserId(userId);
+			orderSearchVo.setStartTime(startTime);
+			orderSearchVo.setEndTime(endTime);
+
+			List<HashMap> monthDatas = orderHourListService.userTotalByMonth(orderSearchVo);
+
+			result.setData(monthDatas);
+			return result;
+		}
+	
+	/*
+	 * 当前订单
+	 */
+	@RequestMapping(value = "user_order_list", method = RequestMethod.GET)
+	public AppResultData<Object> userOrderList(
+			@RequestParam("user_id") Long userId, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page){
+		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0,
+				ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		//用户当前订单
+		OrderSearchVo orderSearchVo = new OrderSearchVo();
+		orderSearchVo.setUserId(userId);
+		List<Orders> orderHourList = orderHourListService.selectByUserListPage(orderSearchVo, page, Constants.PAGE_MAX_NUMBER);
+		
+		List<OrderHourListVo> voList = orderHourListService.transOrderHourListVo(orderHourList);
+		
+		result.setData(voList);
+		return result;
+	}
 	
 	/*
 	 * 当前订单

@@ -4,11 +4,45 @@
 			style="min-height: 792px; height: auto !important; padding-bottom: 60px !important;"
 		>
 
-			<div class="content-block-title">服务日程</div>
 			<div class="content-block">
 				<div style="padding: 0; margin-right: -15px; width: auto" class="content-block-inner">
 					<div id="calendar-inline-container"></div>
 				</div>
+			</div>
+
+
+			<!-- 当前订单，  在 同一个  tabs展示两个 tab ，无限滚动会有问题。
+				
+				选择 将  当前 订单  和 历史订单做成两个 单独 的页面
+			 -->
+
+
+			<div class="list-block" id="card-hour-now-list">
+				<ul style="background: #E5E5E5;">
+
+				</ul>
+			</div>
+			<div id="more">
+				<a href="#" id="order-list-more" class="button active hjyh-submit">点击加载更多</a>
+			</div>
+
+			<!-- 每块 card的展示内容  模板 -->
+			<div id="order-hour-list" style="display: none">
+				<!--  card即为连接，跳转到订单详情-->
+				<a class="order-info-link" href="#" onclick="hrefToUorderView({order_type}, '{order_no}')">
+					<li class="list-card">
+						<div class="list-card1">
+
+							{order_hour_type_name}
+							<p style="margin: 0; margin-right: 30px; color: #ED6B00; float: right;">{order_hour_status_name}</p>
+
+						</div>
+						<div class="list-card2">
+							<div class="list-card2-1">时间：{service_date}</div>
+							<div class="list-card2-2">地址：{address}</div>
+						</div>
+				</li>
+				</a>
 			</div>
 
 

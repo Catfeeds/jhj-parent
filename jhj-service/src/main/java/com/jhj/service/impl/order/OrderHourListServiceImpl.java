@@ -1,6 +1,7 @@
 package com.jhj.service.impl.order;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,31 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	
+	/*
+	 * 统计有订单的日期
+	 */
+	@Override
+	public List<HashMap> userTotalByMonth(OrderSearchVo orderSearchVo) {
+
+		List<HashMap> list = orderMapper.userTotalByMonth(orderSearchVo);
+		
+		return list;
+	}	
+	
+	/*
+	 * 所有订单
+	 */
+	@Override
+	public List<Orders> selectByUserListPage(OrderSearchVo orderSearchVo,int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		
+		List<Orders> list = orderMapper.selectByUserListPage(orderSearchVo);
+		
+		return list;
+	}	
+	
 	/*
 	 * 当前订单
 	 */

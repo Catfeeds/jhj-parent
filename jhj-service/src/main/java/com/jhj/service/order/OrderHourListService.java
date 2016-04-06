@@ -1,8 +1,10 @@
 package com.jhj.service.order;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.jhj.po.model.order.Orders;
+import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
 
 /**
@@ -24,5 +26,9 @@ public interface OrderHourListService {
 	List<OrderHourListVo> transOrderHourListVo(List<Orders> orderHourList);
 
 	OrderHourListVo initOHLV();
+
+	List<Orders> selectByUserListPage(OrderSearchVo orderSearchVo, int pageNo, int pageSize);
+
+	List<HashMap> userTotalByMonth(OrderSearchVo orderSearchVo);
 	
 }

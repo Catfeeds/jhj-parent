@@ -58,6 +58,8 @@ public interface OrdersMapper {
 
 	int updateByCleanUpdateTimeSelective(Orders orders);
 	
+	List<Orders> selectByUserListPage(OrderSearchVo orderSearchVo);
+	
 	List<Orders> selectNowOrderHourByListPage(OrderSearchVo orderSearchVo);
 	
 	List<Orders> selectOldOrderHourByListPage(OrderSearchVo orderSearchVo);
@@ -256,6 +258,8 @@ public interface OrdersMapper {
 	BigDecimal getTotalOrderIncomeStaffMoney(OrderQuerySearchVo vo);
 	//配送订单3订单总金额
 	BigDecimal getTotalOrderIncomeRunMoney(OrderQuerySearchVo vo);
+
+	List<HashMap> userTotalByMonth(OrderSearchVo orderSearchVo);
 
 	
 

@@ -6,7 +6,7 @@ myApp.onPageBeforeInit('mine', function (page) {
 	getUserInfos(userId);
 	
 	$$("#mine-order-lists").on("click",function(){
-		mainView.router.loadPage("order/order-hour-now-list.html?user_id="+userId);
+		mainView.router.loadPage("order/order-cal.html?user_id="+userId);
 	});
 	
 	$$("#mine-addr-list").on("click",function(){

@@ -9,7 +9,7 @@
  *    
  */
 //serviceTypeList();
-serviceTypeAddonsList();
+//serviceTypeAddonsList();
 
 
 //partnerServiceTypeList(); 
@@ -24,9 +24,9 @@ serviceTypeAddonsList();
 //检测用户是否已有相应的助理
 //console.log(localStorage.getItem('am_id') );
 //console.log(localStorage.getItem('am_mobile') );
-if (localStorage.getItem('am_id') == null || localStorage.getItem('am_mobile') == null) {
-	getAm();
-}
+//if (localStorage.getItem('am_id') == null || localStorage.getItem('am_mobile') == null) {
+//	getAm();
+//}
 
 function serviceTypeList() {
 	$$.ajax({
