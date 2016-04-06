@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -28,11 +29,13 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.socials.Socials;
 import com.jhj.service.socials.SocialsCallService;
 import com.jhj.service.socials.SocialsService;
 import com.jhj.vo.SocialCallSearchVo;
 import com.jhj.vo.SocialsSearchVo;
+import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.socials.SocialsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -74,8 +77,18 @@ public class SocialsController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		
-		PageInfo result = socialsService.searchVoListPage(searchVo, pageNo,
-				pageSize);
+		List<Socials> list = socialsService.searchVoListPage(searchVo, pageNo, pageSize);
+		
+		Socials socials = null;
+		for (int i = 0; i < list.size(); i++) {
+			socials = list.get(i);
+			
+			SocialsVo socialsVo = socialsService.oaListTransToVo(socials);
+			
+			list.set(i,socialsVo);
+		}
+		
+		PageInfo result = new PageInfo(list);
 		
 		model.addAttribute("contentModel", result);
 		

@@ -46,11 +46,11 @@
                               <tr>
                               		  <th >标题</th>
                               		  <th >题图</th>
-                                	<!--   <th >内容</th> -->
                                 	  <th >开始日期</th>
                                 	  <th >结束日期</th>
                                 	  <th >是否发布</th>
 		                              <th >添加时间</th>
+		                              <th >是否过期</th>
 		                              <th>操作</th>
                               </tr>
                               </thead>
@@ -59,17 +59,10 @@
                               <tr>
 		                                <td>${ item.title }</td>
 		                                <td>
-		                                <c:if test="${item.titleSmallImg=='' }">
-		                                	<span style="color:green">您还没有上传题图</span>
-		                                </c:if>
-		                                <c:if test="${item.titleSmallImg !='' }">
-		                                	<img src="${item.titleSmallImg }">
-		                                </c:if>
-		                                
+		                                	<img src="${item.titleImg }">
 		                                </td>
-		                              <%--   <td>${ item.content }</td> --%>
 						              	<td><fmt:formatDate  value="${ item.beginDate}" pattern="yyyy-MM-dd"/></td>
-                   		             	 <td><fmt:formatDate  value="${ item.endDate}" pattern="yyyy-MM-dd"/></td>
+                   		             	<td><fmt:formatDate  value="${ item.endDate}" pattern="yyyy-MM-dd"/></td>
 		                                <td>
 		                                <c:choose>
 												<c:when test="${item.isPublish  == 0}">
@@ -84,10 +77,17 @@
 							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 							            </td>
 							            <td>
+							               <c:if test="${item.outOfDateStr == '活动进行中' }">
+							               		活动进行中
+							               </c:if>
+							               <c:if test="${item.outOfDateStr == '活动已过期' }">
+							               		<font color="red">活动已过期</font>
+							               </c:if>
+							            </td>
+							            <td>
 							            	<button id="btn_update"  onClick="btn_update('socials/socials-form?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
-<%-- 	                                  		<button id="btn_del" onClick="btn_del('socials/deleteBySocialsId?id=${item.id}')" class="btn btn-danger btn-xs"  title="删除"><i class="icon-trash "></i></button>
- --%>							            </td>
-                              </tr>
+							           </td>
+                                </tr>
                               </c:forEach>
                               </tbody>
                           </table>
@@ -116,6 +116,10 @@
     <%@ include file="../shared/importJs.jsp"%>
 
     <!--script for this page-->	
-
+	<script type="text/javascript">
+			
+	
+	
+	</script>
   </body>
 </html>
