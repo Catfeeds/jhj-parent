@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
@@ -39,6 +41,9 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 	
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
 	/*
 	 * 当前订单
 	 */
@@ -89,8 +94,13 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 				//订单类型
 				Short orderType = orders.getOrderType();
 				
+				
+				Long serviceType = orders.getServiceType();
+				
+				PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+				
 				//2016-2-20 15:37:11    修改订单状态 名称为 二期 新定义的名称
-				orderHourListVo.setOrderHourTypeName(OneCareUtil.getJhjOrderTypeName(orderType));
+				orderHourListVo.setOrderHourTypeName(type.getName());
 				
 				//订单状态
 				Short orderStatus = orders.getOrderStatus();

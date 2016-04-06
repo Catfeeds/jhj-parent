@@ -168,6 +168,9 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	
 	@Override
 	public List<UserDetailPay> appSelectByListPage(UserDetailSearchVo searchVo, int page, int pageSize) {
+		
+		PageHelper.startPage(page, pageSize);
+		
 		return userDetailPayMapper.selectByListPages(searchVo);
 	}
 	
