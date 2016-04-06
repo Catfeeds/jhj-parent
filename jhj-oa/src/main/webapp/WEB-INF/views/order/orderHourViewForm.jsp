@@ -214,10 +214,7 @@
 										</tbody>
 									</table>
 							</section>
-								
-								
 						</div> 
-					
 						
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3" >

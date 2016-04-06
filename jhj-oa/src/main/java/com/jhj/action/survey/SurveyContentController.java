@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,27 +115,32 @@ public class SurveyContentController extends BaseController {
 		}
 		
 		model.addAttribute("childList", list);
-//		model.addAttribute("childDescription", content.getContentChildDescription());
 		model.addAttribute("contentFormModel", content);
 		
 		return "survey/contentForm";
 	}
 	
 	/**
+	 * @throws JSONException 
 	 * 表单提交
 	 *  @Title: submitContentForm
-	  * @Description: TODO
-	  * @param @param contentId
-	  * @param @param serviceId
-	  * @param @param name
-	  * @param @param price
-	  * @param @param priceDescription
-	  * @param @param description
-	  * @param @param contentChildType
-	  * @param @param contentChildDescription
-	  * @param @param optionList
-	  * @param @param measurement
-	  * @param @param enable
+	  * @Description: 
+	  * 
+	  * 
+	  * @param contentId			服务id,判断是 新增还是 修改
+	  * @param serviceId			服务大类
+	  * @param name					服务名称
+	  * @param price				服务价格（/次）
+	  * @param priceDescription		价格描述（冗余，没多大用）
+	  * @param defaultTime			服务默认次数	
+	  * @param contentChildType		子服务的类型。单选=1，多选=2，或者没有子服务=0
+	  * @param optionList			
+	  * 
+	  * 			[{"defaultTimeChild":xx,"optionStr":xx,"childPrice":xx},...]
+	  * 			
+	  * 		==	[{"子服务默认次数":xx,"子服务内容":xx,"子服务单价":xx}]
+	  * @param measurement			计费方式   月=0  年=1 次=2 3=赠送  
+	  * @param enable				是否可用   否=0  是=1
 	  * @param @return    设定文件
 	  * @return AppResultData<Object>    返回类型
 	  * @throws
@@ -144,16 +152,24 @@ public class SurveyContentController extends BaseController {
 			@RequestParam("name")String name,
 			@RequestParam("price")BigDecimal price,
 			@RequestParam(value="priceDescription",required=false,defaultValue="")String priceDescription,
-			@RequestParam(value="description",required=false,defaultValue="")String description,
+			@RequestParam("defaultTime")Long defaultTime,
 			@RequestParam("contentChildType")Short contentChildType,
-			@RequestParam(value="contentChildDescription",required = false,defaultValue="")String contentChildDescription,
-			@RequestParam(value="optionArray",required = false,defaultValue="")List<String> optionList,
+			@RequestParam(value="optionArray",required = false,defaultValue="")String optionArray,
 			@RequestParam("measurement")Short measurement,
-			@RequestParam("enable")Short enable){
+			@RequestParam("enable")Short enable) throws JSONException{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 		
 		
+		/*
+		 * 1. 设置  服务 相关
+		 * 		
+		 * 		其中, 对于  没有子服务的 服务 ，默认次数为  defaultTime的 值
+		 * 		
+		 * 		对于有子服务，则 defaultTime为 0, 子服务次数在 json数组（optionArray参数）中
+		 * 		设置到  surveyContentChild 对象的 defaultTimeChild中
+		 * 	
+		 */
 		SurveyContent surveyContent = contentService.initContent();
 		//如果内容id为0,表示为新增
 		if(contentId == 0L){
@@ -162,17 +178,11 @@ public class SurveyContentController extends BaseController {
 			surveyContent.setName(name);
 			surveyContent.setPrice(price);
 			surveyContent.setPriceDescription(priceDescription);
-//			surveyContent.setDescription(description);
 			surveyContent.setContentChildType(contentChildType);
-			
-			//如果是 填空题形式（次数可修改，如家电清洗：空调1次。。。次数可修改）
-//			if(contentChildType == (short)2){
-//				surveyContent.setContentChildDescription(contentChildDescription);
-//			}
 			
 			surveyContent.setMeasurement(measurement);
 			surveyContent.setEnable(enable);
-			
+			surveyContent.setDefaultTime(defaultTime);
 			
 			contentService.insertSelective(surveyContent);
 			
@@ -184,22 +194,15 @@ public class SurveyContentController extends BaseController {
 			surveyContent.setName(name);
 			surveyContent.setPrice(price);
 			surveyContent.setPriceDescription(priceDescription);
-//			surveyContent.setDescription(description);
 			surveyContent.setContentChildType(contentChildType);
-			
-//			//如果是 填空题形式（次数可修改，如家电清洗：空调1次。。。次数可修改）
-//			if(contentChildType == (short)2){
-//				surveyContent.setContentChildDescription(contentChildDescription);
-//			}
-			
 			surveyContent.setMeasurement(measurement);
 			surveyContent.setEnable(enable);
+			
+			surveyContent.setDefaultTime(defaultTime);
 			
 			contentService.updateByPrimaryKeySelective(surveyContent);
 			
 			contentChildService.deleteByContentId(contentId);
-			
-			
 		}
 		
 		
@@ -209,29 +212,29 @@ public class SurveyContentController extends BaseController {
 		 */
 		if(contentChildType == (short)1 || contentChildType == (short)2){
 			
-			SurveyContentChild contentChild = contentChildService.initContentChild();
+			JSONArray jsonArray = new JSONArray(optionArray);
 			
-			/**
-			 * 通用方法，为选项生成 序号,并返回  key,val 键值对
-			 */
-			Map<String, String> map = questionService.generateNoForOption(optionList);
-			
-			//插入数据库后的 自增 主键
-			Long contentId2 = surveyContent.getContentId();
-			contentChild.setContentId(contentId2);
-			
-			
-			
-			for (Map.Entry<String, String> entry : map.entrySet()) {
+			for (int i = 0; i < jsonArray.length(); i++) {
 				
-				contentChild.setOptionNo(entry.getKey());
-				contentChild.setOptionStr(entry.getValue());
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				
+				String defaultTimeChild = jsonObject.getString("defaultTimeChild");
+				String optionStr = jsonObject.getString("optionStr");
+				String childPrice = jsonObject.getString("childPrice");
+				
+				SurveyContentChild contentChild = contentChildService.initContentChild();
+				
+				Long contentId2 = surveyContent.getContentId();
+				
+				contentChild.setContentId(contentId2);
+				contentChild.setDefaultTimeChild(Long.valueOf(defaultTimeChild));
+				contentChild.setOptionStr(optionStr);
+				contentChild.setChildPrice(new BigDecimal(childPrice));
 				
 				contentChildService.insertSelective(contentChild);
-			} 
+			}
 			
 		}
-		
 		
 		result.setMsg("success");
 		

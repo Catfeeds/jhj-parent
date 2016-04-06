@@ -73,13 +73,6 @@
 						</div>
 						
 						
-						<div class="form-group required">
-							<label class="col-md-2 control-label">按年计费：预计花费</label>
-							<div class="col-md-5" style="margin-top:5px;">
-								 	${yearPrice }
-							</div>
-						</div>
-						
 						
 						<div class="form-group required">
 							<label class="col-md-2 control-label">按次计费服务</label>
@@ -92,15 +85,9 @@
 							</div>
 						</div>
 						
-						<div class="form-group required">
-							<label class="col-md-2 control-label">按次计费：预计花费</label>
-							<div class="col-md-5" style="margin-top:5px;">
-								 	${timePrice }
-							</div>
-						</div>
 						
 						<div class="form-group required">
-							<label class="col-md-2 control-label">套餐计费服务</label>
+							<label class="col-md-2 control-label">套餐(包含子服务)服务</label>
 							<div class="col-md-5">
 									<c:forEach items="${childContent}" var="child">
 										<input type="button" class="btn btn-success" value="${child.key }" style="width:65%;margin-right:2%;margin-top:5px;float:left;">
@@ -110,12 +97,32 @@
 							</div>
 						</div>
 						
+						
 						<div class="form-group required">
-							<label class="col-md-2 control-label">套餐计费：预计花费</label>
-							<div class="col-md-5" style="margin-top:5px;">
-								 	${childPrice }
+							<label class="col-md-2 control-label">价格汇总</label>
+							<div class="col-md-5">
+									<ul>
+										<c:forEach items="${resultPrice}" var="result">
+										   <li>
+										   		<c:if test="${result.value.surveyPayType == 0}">
+										   			计费方式: 年付
+										   		</c:if>
+										   		<c:if test="${result.value.surveyPayType == 1}">
+										   			计费方式: 半年付
+										   		</c:if>
+										   		<c:if test="${result.value.surveyPayType == 2}">
+										   			计费方式 : 月付
+										   		</c:if>
+													
+													需要支付: ${result.value.sumPrice}
+												   优惠后需支付:	${result.value.discountPrice}
+											     当前支付方式月供:	${result.value.priceByMonth}									
+											</li>
+										</c:forEach>
+									</ul>
 							</div>
 						</div>
+						
 				</form:form>
 			</div>
 			</section>

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +23,14 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.po.model.survey.SurveyContent;
+import com.jhj.po.model.survey.SurveyContentChild;
 import com.jhj.po.model.survey.SurveyUser;
 import com.jhj.po.model.survey.SurveyUserRefRecommend;
 import com.jhj.service.survey.SurveyContentChildService;
 import com.jhj.service.survey.SurveyContentService;
 import com.jhj.service.survey.SurveyUserRefRecommendService;
 import com.jhj.service.survey.SurveyUserService;
+import com.jhj.vo.survey.SurveyResultPriceVo;
 
 /**
  *
@@ -193,15 +198,46 @@ public class OaSurveyUserResultController extends BaseController {
 		}
 		
 		
+		/*
+		 * 包含子服务的服务
+		 */
+		Set<Entry<Long,Long>> entrySet = boxChildMap.entrySet();
+		
+		Map<String, Long> childContentMap = new HashMap<String, Long>();
+		
+		for (Entry<Long, Long> entry : entrySet) {
+			
+			//次数
+			Long value = entry.getValue();
+			
+			//名字 ： 服务+子服务
+			Long key = entry.getKey();
+			
+			SurveyContentChild contentChild = childService.selectByPrimaryKey(key);
+			
+			Long contentId = contentChild.getContentId();
+			
+			SurveyContent content = contentService.selectByPrimaryKey(contentId);
+			
+			String name = content.getName()+"--"+contentChild.getOptionStr();
+			
+			childContentMap.put(name, value);
+			
+		}
+		
 		//服务内容及次数
 		model.addAttribute("monthContent", monthContentMap);
 		model.addAttribute("yearContent", yearContentMap);
 		model.addAttribute("timeContent", timeContentMap);
-		model.addAttribute("childContent",boxChildMap);
+		model.addAttribute("childContent",childContentMap);
 		//用户信息
 		model.addAttribute("userInfoModel", user);
 		
 		
+		Map<Short, SurveyResultPriceVo> map = recommendService.getResultPrice(userId);
+		
+		
+		model.addAttribute("resultPrice", map);
 		
 		return "survey/resultDetail";
 	}

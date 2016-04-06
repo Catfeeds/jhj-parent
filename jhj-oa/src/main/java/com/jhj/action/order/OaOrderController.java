@@ -275,6 +275,9 @@ public class OaOrderController extends BaseController {
 		for (int i = 0; i < orderList.size(); i++) {
 			orders = orderList.get(i);
 			OaOrderListNewVo completeVo = oaOrderService.completeNewVo(orders);
+			
+			
+			
 			orderList.set(i, completeVo);
 		}
 		

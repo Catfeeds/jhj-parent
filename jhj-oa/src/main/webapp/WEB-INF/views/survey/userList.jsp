@@ -73,7 +73,7 @@
 					</section>		
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="surveyUserListModel"/>
-	        				<c:param name="urlAddress" value="/survey/survey_user_list"/>
+	        				<c:param name="urlAddress" value="/survey/all_survey_user_list"/>
 	       			  </c:import>
                	</div>
               </div>

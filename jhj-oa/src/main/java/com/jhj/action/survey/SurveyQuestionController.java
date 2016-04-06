@@ -7,7 +7,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +24,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
+import com.jhj.po.model.survey.SurveyOptionRefNextQ;
 import com.jhj.po.model.survey.SurveyQuestion;
 import com.jhj.po.model.survey.SurveyQuestionOption;
 import com.jhj.service.survey.SurveyOptionRefNextQService;
@@ -107,8 +111,32 @@ public class SurveyQuestionController extends BaseController {
 	}
 	
 	
-	/*
-	 * 录入题目和选项
+	/**
+	 * 
+	 *  @Title: submitQuestionForm
+	  * @Description: 
+	  * 		
+	  * 	录入题目 及其  选项	
+	  * 
+	  * 	1. 生成题目
+	  * 	2. 生成 选项，及其次数
+	  * 		
+	  * @param id			页面标识。新增还是修改
+	  * @param bankId		题库Id
+	  * @param title			题干
+	  * @param isMulti		是否多选    0= 单选  1=多选
+	  * @param isFirst		题目位置	0 = 第一题    1=位于中间   2=最后一题	
+	  * @param beforeQId		上一题的 题目 id
+	  * @param optionArray	
+	  * 				
+	  * 			json数组  	[{"选项内容"：xx,"选项默认的次数"：xx}, ...]
+	  * 		
+	  * 			“选项默认的次数” 主要针对 
+	  * 				如   "保洁每周几次？"，选项 A 1-2次  B 3-4次		
+	  * 			 为A/B 默认次数 为 2 、4.. 供答题结束后的默认次数 展示		
+	  * 
+	  * @throws JSONException    设定文件
+	  * @return AppResultData<Object>    返回类型
 	 */
 	@RequestMapping(value = "question_form",method = RequestMethod.POST)
 	public AppResultData<Object> submitQuestionForm(HttpServletRequest request, 
@@ -118,20 +146,15 @@ public class SurveyQuestionController extends BaseController {
 			@RequestParam("isMulti") Short isMulti,
 			@RequestParam("isFirst") Short isFirst,
 			@RequestParam(value= "beforeQId",required = false, defaultValue = "0") Long beforeQId,
-			@RequestParam("optionArray") List<String> optionArray){
+			@RequestParam("optionArray") String optionArray) throws JSONException{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 		
-		
-		//所有选项、序号的键值对--> {(A:选项1)，(B:选项2)，(C:选项3)....}
-		Map<String, String> map = questionService.generateNoForOption(optionArray);
-		
-		
 		SurveyQuestion question = questionService.initQuestion();
-		
+		// 1. 录入题目
 		if(id == 0L){
 			/*
-			 * 添加 ： 1 考题  2 考题选项
+			 * 添加 ： 1 考题  2 考题选项  
 			 */
 			
 			//考题
@@ -141,10 +164,7 @@ public class SurveyQuestionController extends BaseController {
 			question.setIsMulti(isMulti); 
 			question.setIsFirst(isFirst);
 			
-			
 			questionService.insertSelective(question);
-			
-			
 		}else{
 			
 			/*
@@ -152,22 +172,17 @@ public class SurveyQuestionController extends BaseController {
 			 * 	  对于选项, 可能会有 删减之类的操作， 决定，直接删除原来的 选项记录， 插入新的选项	，实现修改		
 			 * 
 			 */
-			
 			question = questionService.selectByPrimaryKey(id);
 			
 			// 分析： 题目修改时, 不应该修改  题库 和 服务类别, 修改的只是 该题目的 相关属性
 			
 			question.setTitle(title);
 			question.setIsMulti(isMulti);
-			
 			question.setIsFirst(isFirst);
 			
 			questionService.updateByPrimaryKeySelective(question);
-			
-			
 			//选项修改
 			List<SurveyQuestionOption> list = optionService.selectByQId(question.getqId());
-			
 			
 			List<Long> optionIdList = new ArrayList<Long>();
 			
@@ -177,19 +192,13 @@ public class SurveyQuestionController extends BaseController {
 			
 			//先删除,再插入
 			optionService.deleteByIdList(optionIdList);
-			
 		}
-		
 		
 		//得到当前题目在数据库中的 id
 		Long qId = question.getqId();
 		
 		//设置上一题的  “下一题” 为当前题目
 		SurveyQuestion surveyQuestion = questionService.selectByPrimaryKey(beforeQId);
-		
-		
-		
-		
 		
 		if(surveyQuestion != null){
 			
@@ -200,27 +209,53 @@ public class SurveyQuestionController extends BaseController {
 			questionService.updateByPrimaryKeySelective(surveyQuestion);
 		}
 		
-		
-		
-		//考题选项
+		//2. 录入选项
 		SurveyQuestionOption option = optionService.initOption();
 		
-		
-		/**
-		 *  获取新增对象,插入后的主键id,有两种方法。。。设置主键自增
-		 */
 		option.setqId(question.getqId());
 		option.setBankId(bankId);
-	
 		
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-				
-			option.setNo(entry.getKey());
-			option.setTitle(entry.getValue());	
+		
+		JSONArray jsonArray = new JSONArray(optionArray);
+		
+		List<String> optionStrList = new ArrayList<String>();
+		
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			String optionStr = jsonObject.getString("optionStr");
+			String defaultTime = jsonObject.getString("defaultTime");
+			
+			option.setTitle(optionStr);
+			option.setDefaultTimeOption(Long.valueOf(defaultTime));
 			
 			optionService.insertSelective(option);
+			
+			optionStrList.add(optionStr);
 		}
 		
+		//所有选项、序号的键值对--> {(A:选项1)，(B:选项2)，(C:选项3)....}
+		Map<String, String> map = questionService.generateNoForOption(optionStrList);
+		
+		/*
+		 *  得到 插入数据库 却 没有 序号的 记录 
+		 */
+		List<SurveyQuestionOption> optionList = optionService.selectByQId(qId);
+		
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			
+			String optionStr = entry.getValue();
+			for (SurveyQuestionOption surveyQuestionOption : optionList) {
+				
+				String title2 = surveyQuestionOption.getTitle();
+				
+				//如果 选项内容   相同, 则设置 选项序号
+				if(title2.equals(optionStr)){
+					surveyQuestionOption.setNo(entry.getKey());
+					
+					optionService.updateByPrimaryKeySelective(surveyQuestionOption);
+				}
+			}
+		}
 		
 		result.setMsg("success");
 		

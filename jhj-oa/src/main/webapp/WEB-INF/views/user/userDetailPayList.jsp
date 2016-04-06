@@ -70,6 +70,8 @@
 							            </td>
 							            <td>${ item.mobile }</td>
 							            <td>
+							            
+							            	<!-- todo 不能显示 充值记录！！ -->
 							            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
 							            </td>
 							            <td align="center">
