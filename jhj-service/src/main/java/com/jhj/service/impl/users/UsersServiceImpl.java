@@ -159,6 +159,10 @@ public class UsersServiceImpl implements UsersService {
 			u.setProvinceName(provinceName);
 			
 			usersMapper.insertSelective(u);
+		}
+			
+			return u;
+			
 			/* 
 			  * 2015年10月27日18:27:17
 			  * 	
@@ -175,80 +179,61 @@ public class UsersServiceImpl implements UsersService {
 			  * 
 			  */
 			
-			  UserCoupons userCoupons = new UserCoupons();
-			 
-			  //id 为 5的是 注册大礼包
-			  List<GiftCoupons> giftCouponList = giftCouponMapper.selectByGiftId(5L);
-			  
-			  for (GiftCoupons giftCoupons : giftCouponList) {
-				  
-				  Long couponId = giftCoupons.getCouponId();
-				  DictCoupons dictCoupons = dictCouponService.selectByPrimaryKey(couponId);
-				  
-				  
-				  //根据 优惠券数量，生成多条记录
-				  Short num = giftCoupons.getNum();
-				  for (int i =(short)0; i < num; i++) {
-					
-					  //coupon_id	
-					  userCoupons.setCouponId(couponId);
-					  //user_id
-					  userCoupons.setUserId(u.getId()); 
-					  
-					  //gift_id
-					  userCoupons.setGiftId(giftCoupons.getGiftId());
-					  
-					  Date fromDate = dictCoupons.getFromDate();
-					  Date toDate = dictCoupons.getToDate();
-					  BigDecimal couponValue = dictCoupons.getValue();
-					  String serviceType = dictCoupons.getServiceType();
-					  
-					  //value
-					  userCoupons.setValue(couponValue);
-					  //service_Type
-					  userCoupons.setServiceType(serviceType);
-					  //from_date
-					  userCoupons.setFromDate(fromDate);
-					  //to_date
-					  userCoupons.setToDate(toDate);
-					  //is_used
-					  userCoupons.setIsUsed((short)0);
-					  //used_time
-					  userCoupons.setUsedTime(0L);
-					  //order_no
-					  userCoupons.setOrderNo("");
-					  //add_time
-					  userCoupons.setAddTime(TimeStampUtil.getNowSecond());
-					  
-					  //  生成新记录  mybatis 主键自增 useGenerateKeys = "ture"
-					  userCouponsService.insertSelective(userCoupons);
-					  
-				  }
-				  
-			  }
-			
-			// 先看看是否已经有赠送
-			/*
-			  UserCoupons userCoupon =
-			  userCouponService.selectByMobileCardPwd(mobile,
-			  Constants.NEW_USER_COUPON_CARD_PASSWORD);
-			 * 
-			 * if (userCoupon == null) { //新用户注册赠送相应的优惠劵. DictCoupons coupon =
-			 * couponService
-			 * .selectByCardPasswd(Constants.NEW_USER_COUPON_CARD_PASSWORD);
-			 * 
-			 * userCoupon = userCouponService.initUserCoupon();
-			 * userCoupon.setUserId(u.getId());
-			 * userCoupon.setMobile(u.getMobile());
-			 * userCoupon.setCouponId(coupon.getId());
-			 * userCoupon.setCardPasswd(coupon.getCardPasswd());
-			 * userCoupon.setValue(coupon.getValue());
-			 * userCoupon.setExpTime(coupon.getExpTime());
-			 * 
-			 * userCouponService.insert(userCoupon); }
-			 */
-		}
-		return u;
+//			  UserCoupons userCoupons = new UserCoupons();
+//			 
+//			  //id 为 5的是 注册大礼包
+//			  List<GiftCoupons> giftCouponList = giftCouponMapper.selectByGiftId(5L);
+//			  
+//			  for (GiftCoupons giftCoupons : giftCouponList) {
+//				  
+//				  Long couponId = giftCoupons.getCouponId();
+//				  DictCoupons dictCoupons = dictCouponService.selectByPrimaryKey(couponId);
+//				  
+//				  
+//				  //根据 优惠券数量，生成多条记录
+//				  Short num = giftCoupons.getNum();
+//				  for (int i =(short)0; i < num; i++) {
+//					
+//					  //coupon_id	
+//					  userCoupons.setCouponId(couponId);
+//					  //user_id
+//					  userCoupons.setUserId(u.getId()); 
+//					  
+//					  //gift_id
+//					  userCoupons.setGiftId(giftCoupons.getGiftId());
+//					  
+//					  Date fromDate = dictCoupons.getFromDate();
+//					  Date toDate = dictCoupons.getToDate();
+//					  BigDecimal couponValue = dictCoupons.getValue();
+//					  String serviceType = dictCoupons.getServiceType();
+//					  
+//					  //value
+//					  userCoupons.setValue(couponValue);
+//					  //service_Type
+//					  userCoupons.setServiceType(serviceType);
+//					  //from_date
+//					  userCoupons.setFromDate(fromDate);
+//					  //to_date
+//					  userCoupons.setToDate(toDate);
+//					  //is_used
+//					  userCoupons.setIsUsed((short)0);
+//					  //used_time
+//					  userCoupons.setUsedTime(0L);
+//					  //order_no
+//					  userCoupons.setOrderNo("");
+//					  //add_time
+//					  userCoupons.setAddTime(TimeStampUtil.getNowSecond());
+//					  
+//					  //  生成新记录  mybatis 主键自增 useGenerateKeys = "ture"
+//					  userCouponsService.insertSelective(userCoupons);
+//					  
+//				  }
+//				  
+//			  }
+//			
+
+//		}
+//		return u;
 	}
 
 	@Override
