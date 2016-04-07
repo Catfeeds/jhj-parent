@@ -105,7 +105,9 @@ public class CooperatBusinessController extends BaseController {
 		
 		CooperateVo formVo = bussService.transToFormVo(bus);
 		
-		model.addAttribute("cooBusinessModel", formVo);
+		if(!model.containsAttribute("cooBusinessModel")){
+			model.addAttribute("cooBusinessModel", formVo);
+		}
 		
 		return "cooperate/coopBusForm";
 	}
@@ -116,7 +118,7 @@ public class CooperatBusinessController extends BaseController {
 	 */
 	@RequestMapping(value = "coo_business_form", method = RequestMethod.POST)
 	public String submitBussniessForm(Model model,HttpServletRequest request,
-			@Valid@ModelAttribute("cooBusinessModel") CooperateVo businessVo,
+			@ModelAttribute("cooBusinessModel") CooperateVo businessVo,
 			BindingResult result,
 			@RequestParam("id")Long id) throws NoSuchAlgorithmException {
 		
@@ -142,6 +144,7 @@ public class CooperatBusinessController extends BaseController {
 			
 			result.addError(new FieldError("cooBusinessModel", "businessLoginName",
 					"该登录名已存在"));
+			
 			
 			model.addAllAttributes(result.getModel());
 			

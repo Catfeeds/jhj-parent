@@ -71,7 +71,7 @@
 								<form:input path="businessLoginName" class="form-control " autocomplete="off"
 											placeholder="商户登录名,不超过20字" 
 											maxlength="20" />
-								<form:errors path="businessLoginName"  cssClass="error"/>
+								<form:errors path="businessLoginName"  class="field-has-error"/>
 							</div>
 						</div>
 						
@@ -80,7 +80,7 @@
 							<div class="col-md-5">
 								<form:input path="businessPassWord" type="password" class="form-control" autocomplete="off"
 											maxlength="50" placeholder="请输入密码,不超过50个字符"/>
-								<form:errors path="businessPassWord"  cssClass="error" />
+								<form:errors path="businessPassWord"  class="field-has-error" />
 							</div>
 						</div>
 						
