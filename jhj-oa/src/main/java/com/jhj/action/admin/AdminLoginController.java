@@ -29,10 +29,12 @@ import com.jhj.po.model.admin.AdminAccount;
 import com.jhj.po.model.admin.AdminAuthority;
 import com.jhj.po.model.admin.AdminRefOrg;
 import com.jhj.po.model.admin.AdminRole;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.admin.AdminAccountService;
 import com.jhj.service.admin.AdminAuthorityService;
 import com.jhj.service.admin.AdminRefOrgService;
 import com.jhj.service.admin.AdminRoleService;
+import com.jhj.service.cooperate.CooperateBusinessService;
 
 
 @Controller
@@ -51,6 +53,9 @@ public class AdminLoginController extends BaseController {
 	@Autowired
     private AdminRefOrgService adminRefOrgService;
 	
+	@Autowired
+	private CooperateBusinessService cooService;
+	
 	@RequestMapping(value="/login", method = {RequestMethod.GET})
     public String login(Model model){
 		if(!model.containsAttribute("contentModel"))
@@ -66,28 +71,79 @@ public class AdminLoginController extends BaseController {
 
         String username = accountLoginVo.getUsername().trim();
         String password = accountLoginVo.getPassword().trim();
+        
+        /*
+         * 新增  合作商户的 登录
+         */
+        CooperativeBusiness business = cooService.login(username, password);
+        
         AdminAccount account = adminAccountService.login(username, password);
-
-    	if ( account == null ) {
+        
+    	if ( account == null && business == null) {
         	result.addError(new FieldError("contentModel","username","用户名或密码错误。"));
         	result.addError(new FieldError("contentModel","password","用户名或密码错误。"));
         	return login(model);
     	}
 
-        if ( account.getEnable() == 0 ) {
-        	result.addError(new FieldError("contentModel","username","此用户被禁用，不能登录。"));
-        	return login(model);
+       
+        
+		Long userId = 0L;
+		
+		String name = "";
+		
+		Long roleId = 0L;
+		
+		/*
+		 * 2016年4月7日15:19:27  合作商户 和 公司的  登录用户 
+		 * 
+		 * 	 从  CooperatBusinessController 中的 添加逻辑上 已经 保证了 不会 与  公司 用户 用户名的冲突
+		 * 
+		 * 	所以 : 同一个 登	录名称。
+		 * 					只可能 属于  公司 用户  admingAccount
+		 * 				 或者
+		 * 					合作商户  cooperateBusiness
+		 * 
+		 *   对于  userId 字段 , 合作商户 已经在 权限级别 控制了  不会发生 与 登录角色 id 相关的 业务
+		 * 					如 登录角色下的 门店等。。
+		 */
+		
+		if(account != null){
+			
+			 if ( account.getEnable() == 0) {
+		        	result.addError(new FieldError("contentModel","username","此用户被禁用，不能登录。"));
+		        	return login(model);
+			 	}
+
+	        if (account.getRoleId().equals(0)) {
+	        	result.addError(new FieldError("contentModel","username","此用户当前未被授权，不能登录。"));
+	        	return login(model);
+		       }
+			
+			
+			name = account.getName();
+			roleId = account.getRoleId();
+			
+			userId =  account.getId();
 		}
+		
+		if(business != null){
+			
+			 if (business.getEnable() == 0) {
+		        	result.addError(new FieldError("contentModel","username","此用户被禁用，不能登录。"));
+		        	return login(model);
+			 	}
 
-        if (account.getRoleId().equals(0)) {
-        	result.addError(new FieldError("contentModel","username","此用户当前未被授权，不能登录。"));
-        	return login(model);
-        }
-
-		Long userId = account.getId();
-		String name = account.getName();
-		Long roleId = account.getRoleId();
-
+	        if (business.getRoleId().equals(0)) {
+	        	result.addError(new FieldError("contentModel","username","此用户当前未被授权，不能登录。"));
+	        	return login(model);
+		       }
+			
+			name = business.getBusinessName();	
+			roleId = business.getRoleId();
+			
+			userId = business.getId();
+		}
+		
 		AdminRole role = adminRoleService.selectByPrimaryKey(roleId);
 
         AccountAuth accountAuth=new AccountAuth(userId, name, username);
@@ -148,11 +204,20 @@ public class AdminLoginController extends BaseController {
 
     	}
     	
-//    	System.out.println(AuthHelper.getSessionLoginOrg(request));
-
         String returnUrl = ServletRequestUtils.getStringParameter(request, "returnUrl", null);
-        if(returnUrl==null)
+        if(returnUrl==null){
+        	
+        	// 公司 用户登录 直接到 首页。
         	returnUrl="/home/index";
+        	
+        }
+        
+        //合作商户 登录 到 合作商户列表页
+        if(business != null){
+        	returnUrl = "/cooperate/coo_business_list";
+        }
+        
+        
     	return "redirect:"+returnUrl;
 
 	}

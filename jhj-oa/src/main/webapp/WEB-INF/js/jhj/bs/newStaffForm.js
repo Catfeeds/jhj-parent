@@ -291,17 +291,6 @@ function checkThisForm(){
 	
 	
   var skl = $("#skillId").val();
-
-  
-  /*
-   *  无奈之举, 如果 第一次进入 form页。未选任何技能.提交后 会有 bug
-   * 
-   * 	一般都是：  [Ljava.lang.Long;@74b4d5f4"
-   * 	
-   * 	 意思是： long数组。强转 long 失败。
-   * 
-   * 此处 用是否包含 异常信息 。。来判断是否 有勾选 技能
-   */
   
   if(skl.indexOf("Ljava") > 0 || skl.length == 0){
 	 

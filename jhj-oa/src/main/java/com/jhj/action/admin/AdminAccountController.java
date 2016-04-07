@@ -112,7 +112,6 @@ public class AdminAccountController extends AdminController {
 			account = adminAccountService.selectByPrimaryKey(ids);
 		}
 		
-		
 		BeanUtils.copyProperties(accountRegisterVo, account);
 		
 			String passwordMd5 = StringUtil.md5(account.getPassword().trim());
