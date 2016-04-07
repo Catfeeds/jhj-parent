@@ -15,6 +15,7 @@ import com.jhj.vo.OrderQuerySearchVo;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
+import com.jhj.vo.chart.CoopUserOrderVo;
 
 public interface OrdersMapper {
 	
@@ -260,9 +261,8 @@ public interface OrdersMapper {
 	BigDecimal getTotalOrderIncomeRunMoney(OrderQuerySearchVo vo);
 
 	List<HashMap> userTotalByMonth(OrderSearchVo orderSearchVo);
-
 	
-
-
-  	
+	Long totalOrderInUserIds(List<Long> userIds);
+	
+	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
 }

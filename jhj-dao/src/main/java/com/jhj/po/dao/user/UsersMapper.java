@@ -27,7 +27,7 @@ public interface UsersMapper {
     
     List<Users> selectByListPages(UserSearchVo userSearchVo);
     
-    
+     
     Users selectByMobile(String mobile);
 
 	List<Users> selectByUserIds(List<Long> ids);
@@ -132,5 +132,6 @@ public interface UsersMapper {
 
 	List<Users> selectByAll();	
 		
-		
+	//得到 不同来源的 用户
+	List<Users> selectUserByAddFrom(Long addFrom);
 }

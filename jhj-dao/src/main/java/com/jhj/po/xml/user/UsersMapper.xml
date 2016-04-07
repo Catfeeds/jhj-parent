@@ -23,7 +23,15 @@
 		user_type, remarks,add_from, add_time, update_time
 	</sql>
 
+	<select id="selectUserByAddFrom" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from users
+		where 
+			add_from = #{addFrom,jdbcType=NUMERIC}
+	</select>
 
+	
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
@@ -47,7 +55,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from users
-		where 1=1
+		where 1=1 
 		<if test="mobile != null">
 			and mobile like CONCAT('%','${mobile}','%' )
 		</if>

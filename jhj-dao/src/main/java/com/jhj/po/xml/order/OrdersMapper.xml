@@ -31,8 +31,44 @@
 		order_rate_content, order_from, remarks,remarks_confirm, add_time, update_time
 	</sql>
 	
-	<!-- 定时任务, 深度保洁 和 助理单, 发起预约后, 超过一小时未 完成确认, 则由 待确认 变为 已关闭 -->
+	<!-- 用户及其 订单数 -->
+	<resultMap id="CoopUserOrderMap" type="com.jhj.vo.chart.CoopUserOrderVo">
+		<result column="userId" property="userId"/>
+		<result column="userMobile" property="userMobile"  />
+		<result column="userOrderNum" property="userOrderNum"/>
+	</resultMap>
 	
+	
+	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">
+		select 
+			user_id AS userId,
+			mobile AS userMobile,
+			count(*) AS userOrderNum
+		from 
+			orders
+		where 
+			user_id in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		group by user_id
+		order by user_id desc
+	</select>
+	
+	<select id="totalOrderInUserIds" resultType="java.lang.Long" >
+		select
+			count(*)
+		from 
+			orders
+		where 
+			user_id in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</select>
+	
+	
+	<!-- 定时任务, 深度保洁 和 助理单, 发起预约后, 超过一小时未 完成确认, 则由 待确认 变为 已关闭 -->
 	<select id="selectChangeToClose" resultMap = "BaseResultMap">
 		select
 		<include refid="Base_Column_List" />

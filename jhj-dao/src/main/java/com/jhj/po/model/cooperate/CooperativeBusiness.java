@@ -7,9 +7,13 @@ public class CooperativeBusiness {
 
     private String appName;
 
-    private String loginName;
+    private String businessLoginName;
 
-    private String passWord;
+    private String businessPassWord;
+
+    private Short enable;
+
+    private Long roleId;
 
     private Long addTime;
 
@@ -39,20 +43,36 @@ public class CooperativeBusiness {
         this.appName = appName == null ? null : appName.trim();
     }
 
-    public String getLoginName() {
-        return loginName;
+    public String getBusinessLoginName() {
+        return businessLoginName;
     }
 
-    public void setLoginName(String loginName) {
-        this.loginName = loginName == null ? null : loginName.trim();
+    public void setBusinessLoginName(String businessLoginName) {
+        this.businessLoginName = businessLoginName == null ? null : businessLoginName.trim();
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getBusinessPassWord() {
+        return businessPassWord;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord == null ? null : passWord.trim();
+    public void setBusinessPassWord(String businessPassWord) {
+        this.businessPassWord = businessPassWord == null ? null : businessPassWord.trim();
+    }
+
+    public Short getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Short enable) {
+        this.enable = enable;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
     public Long getAddTime() {
