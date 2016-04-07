@@ -11,7 +11,7 @@
                   <li class="item-content" style="border:0">
                     <div class="item-inner">
                       <div class="item-title label">￥{{card_pay}}</div>
-                      <a href="" class="item-xx feed_back_money"  style="color:#EE7B08;font-size:16px;width:65%;">返{{gift.total_gift_money}}券</a>
+                      <!-- <a href="" class="item-xx feed_back_money"  style="color:#EE7B08;font-size:16px;width:65%;">返{{gift.total_gift_money}}券</a> -->
 	                	 <input type="hidden" class="card_id charge_money"  value="{{id}}"> 
 	                	  {{#js_compare "this.card_pay <10000"}}
 	                 	<a href="#"  class="myself-chongzhi button-round color-orange  charge-way">充值</a>
@@ -26,12 +26,7 @@
                   {{/each}}
                 </ul>
               </div>
-              <div class="huiyuan">
-              	<ul style="list-style:none;padding:0;margin:0;">
-              		<li style="color:#666;font-size:20px;padding-left:20px;">会员特权</li>
-              		<li><img src="img/tequanjieshao.png"style="width:100%;margin-top:5px;"></li>
-              	</ul>
-              </div>
+              
 		</div>
 	</div>
 </div>							
