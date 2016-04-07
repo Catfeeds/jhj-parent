@@ -3212,3 +3212,24 @@ ALTER TABLE `user_ref_org`
 --
 ALTER TABLE `user_ref_org`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=1597;
+  
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `cooperative_business`
+-- 设置了 主键自增初始值为99  
+CREATE TABLE `cooperative_business` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '第三方合作商户信息表,表中商户可以登录运营平台',
+  `business_name` varchar(50) NOT NULL COMMENT '商户名称，比如 XX公司',
+  `app_name` varchar(50) NOT NULL COMMENT '商户应用名称，比如该公司的xx商城',
+  `business_login_name` varchar(50) NOT NULL COMMENT '商户登录名称,登录后台所需登录名',
+  `business_pass_word` varchar(50) NOT NULL COMMENT '商户登录密码',
+  `enable` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否可用 1=是 0=否',
+  `role_id` int(11) unsigned NOT NULL COMMENT '商户对应的角色',
+  `add_time` int(11) unsigned NOT NULL COMMENT '添加时间',
+  `update_time` int(11) unsigned NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8;  
+  
