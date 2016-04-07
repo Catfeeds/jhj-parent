@@ -28,6 +28,7 @@ import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.vo.OrderSearchVo;
+import com.jhj.vo.chart.CoopUserOrderVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
@@ -453,5 +454,14 @@ public class OrdersServiceImpl implements OrdersService {
 		return true;
 	}
 
+	@Override
+	public Long totalOrderInUserIds(List<Long> userIds) {
+		return ordersMapper.totalOrderInUserIds(userIds);
+	}
 	
+	
+	@Override
+	public List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds) {
+		return ordersMapper.totalUserAndOrder(userIds);
+	}
 }

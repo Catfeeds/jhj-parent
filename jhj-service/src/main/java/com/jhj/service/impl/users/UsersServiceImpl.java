@@ -531,5 +531,9 @@ public class UsersServiceImpl implements UsersService {
 		List<Users> list = usersMapper.selectByUserIdPage(userIdList);
 		return list;
 	}
-
+	
+	@Override
+	public List<Users> selectUserByAddFrom(Long addFrom) {
+		return usersMapper.selectUserByAddFrom(addFrom);
+	}
 }

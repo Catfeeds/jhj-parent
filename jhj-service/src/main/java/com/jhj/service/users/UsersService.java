@@ -62,4 +62,11 @@ public interface UsersService {
 	List<Users> selectByListPage(List<Long> userIdList, int pageNo, int pageSize);
 
 	List<Users> selectByAll();
+	
+	/*
+	 *   2016年4月7日16:14:15 
+ 	 *   不同来源的 用户,主要 针对 注册 自 不同合作商户的 用户
+	 */
+	List<Users> selectUserByAddFrom(Long addFrom);
+	
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
+import com.jhj.vo.chart.CoopUserOrderVo;
 import com.jhj.vo.order.OrderViewVo;
 
 public interface OrdersService {
@@ -73,5 +74,8 @@ public interface OrdersService {
 	Boolean userJoinBlackSuccessTodo(String mobile);
 
 	
+	Long totalOrderInUserIds(List<Long> userIds);
 
+	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
+	
 }

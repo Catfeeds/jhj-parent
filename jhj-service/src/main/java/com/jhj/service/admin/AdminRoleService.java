@@ -1,5 +1,6 @@
 package com.jhj.service.admin;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -33,11 +34,5 @@ public interface AdminRoleService {
 
 	Map<Long,String> getSelectSource();
 
-
-
-
-
-
-
-
+    List<AdminRole> selectAll();
 }

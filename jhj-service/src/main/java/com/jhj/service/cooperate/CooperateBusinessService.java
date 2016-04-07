@@ -1,8 +1,10 @@
 package com.jhj.service.cooperate;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.vo.cooperate.CooperateVo;
 
 /**
  *
@@ -25,7 +27,13 @@ public interface CooperateBusinessService {
 
     int updateByPrimaryKey(CooperativeBusiness record);
 	
+    List<CooperativeBusiness> selectByListPage();
+    
     CooperativeBusiness initCooBus();
     
-    List<CooperativeBusiness> selectByListPage();
+    CooperativeBusiness selectByLogInName(String logInName);
+    
+    CooperateVo transToFormVo(CooperativeBusiness business);
+    
+    CooperativeBusiness login(String loginName,String passWord) throws NoSuchAlgorithmException  ;
 }

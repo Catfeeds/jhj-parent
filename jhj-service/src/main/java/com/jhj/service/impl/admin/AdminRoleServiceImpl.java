@@ -152,4 +152,9 @@ public class AdminRoleServiceImpl implements AdminRoleService {
 		}
 		return roleMap;
 	}
+	
+	@Override
+	public List<AdminRole> selectAll() {
+		return adminRoleMapper.selectAll();
+	}
 }
