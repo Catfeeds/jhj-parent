@@ -59,7 +59,7 @@
                               <tr>
 		                                <td>${ item.title }</td>
 		                                <td>
-		                                	<img src="${item.titleImg }">
+		                                	<img src="${item.titleImg }" alt="" width="60px" height="60px">
 		                                </td>
 						              	<td><fmt:formatDate  value="${ item.beginDate}" pattern="yyyy-MM-dd"/></td>
                    		             	<td><fmt:formatDate  value="${ item.endDate}" pattern="yyyy-MM-dd"/></td>

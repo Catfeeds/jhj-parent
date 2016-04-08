@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
+import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.socials.Socials;
@@ -39,6 +42,7 @@ import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.socials.SocialsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.ImgServerUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -169,10 +173,6 @@ public class SocialsController extends BaseController {
 		}
 		//  添加时：  处理上传头像
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
-        String path = request.getSession().getServletContext().getRealPath("/WEB-INF/upload/socialsImg");
-        String addr = request.getRemoteAddr();
-        String urlPath = request.getContextPath();
-        int port = request.getServerPort();
 		 if(multipartResolver.isMultipart(request))
 	        {
 	             //判断 request 是否有文件上传,即多部分请求...
@@ -181,28 +181,26 @@ public class SocialsController extends BaseController {
 	            while(iter.hasNext()){
 	                MultipartFile file = multiRequest.getFile(iter.next());
 	                if(file!=null && !file.isEmpty()){
+	                	 
+	                	//在图片服务器上的 图片 存放位置
+	                	String url = Constants.IMG_SERVER_HOST + "/upload/";
+	                	
+						String fileName = file.getOriginalFilename();
+						String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+						fileType = fileType.toLowerCase();
+						String sendResult = ImgServerUtil.sendPostBytes(url, file.getBytes(), fileType);
+						
+						ObjectMapper mapper = new ObjectMapper();
 
-	                	  String fileName = file.getOriginalFilename();
-	                      String extensionName = fileName.substring(fileName.lastIndexOf(".") + 1);
-	                      // 新的图片文件名 = 获取时间戳+随机六位数+"."图片扩展名
-	                      String before = TimeStampUtil.getNow()+String.valueOf(RandomUtil.randomNumber());
-	                      String newFileName = String.valueOf(before+"."+extensionName);
-	                     //获取系统发布后upload路径
-	                     FileUtils.copyInputStreamToFile(file.getInputStream(), new File(path,newFileName));
-	                     String imgUrl =  urlPath+"/upload/socialsImg/"+newFileName;
-	                     /*
-	                      * 设置数据库存储字段的值
-	                      */
-	                     socialsNew.setTitleImg(imgUrl);
-	                     //生成缩略图
-	                     BufferedImage bufferedImage1 = new BufferedImage(60,60,BufferedImage.TYPE_INT_BGR);
-	                     BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-	                     Image image = bufferedImage.getScaledInstance(60,60,Image.SCALE_DEFAULT);
-	                     bufferedImage1.getGraphics().drawImage(image, 0, 0, null);
-	                     String newFileName1 = String.valueOf(before+"_small."+extensionName);
+						HashMap<String, Object> o = mapper.readValue(sendResult, HashMap.class);
 
-	                     FileOutputStream out = new FileOutputStream(path + "/" + newFileName1);
-	                     ImageIO.write(bufferedImage1, "jpg",out);//把图片输出
+						String ret = o.get("ret").toString();
+
+						HashMap<String, String> info = (HashMap<String, String>) o.get("info");
+
+						String imgUrl = Constants.IMG_SERVER_HOST + "/" + info.get("md5").toString();
+
+						socialsNew.setTitleImg(imgUrl);
 	                }
 	            }
 	        }
