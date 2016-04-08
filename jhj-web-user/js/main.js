@@ -17,7 +17,7 @@ var myApp = new Framework7({
     modalButtonOk:'确定',
     modalButtonCancel:'返回',
     template7Data: {},
-    material: true,
+    material: false,
     allowDuplicateUrls:true,
     domCache: true,
     // Hide and show indicator during ajax requests
