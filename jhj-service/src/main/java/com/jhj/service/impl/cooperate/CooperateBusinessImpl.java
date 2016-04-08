@@ -109,10 +109,16 @@ public class CooperateBusinessImpl implements CooperateBusinessService {
 
 		conditions.put("username", loginName);
 		conditions.put("password", StringUtil.md5(passWord.trim()));
-//		AdminAccount po = adminAccountMapper.selectByUsernameAndPassword(conditions);
 		
 		CooperativeBusiness business = cooMapper.selectByUsernameAndPassword(conditions);
 		
 		return business;
 	}
+	
+	@Override
+	public List<Long> getAllCoopId() {
+		return cooMapper.getAllCoopId();
+	}
+	
+	
 }

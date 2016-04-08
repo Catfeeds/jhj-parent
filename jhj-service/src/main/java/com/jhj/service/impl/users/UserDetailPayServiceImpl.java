@@ -1,5 +1,6 @@
 package com.jhj.service.impl.users;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.user.AppUserDetailPayVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.jhj.po.model.order.OrderCards;
@@ -185,7 +187,6 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 				
 				AppUserDetailPayVo vo = initVo(pay);
 				
-				
 				Short orderType = pay.getOrderType();
 				
 				/*
@@ -199,10 +200,16 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 					vo.setOrderFlag(Constants.USER_PAY_FLAG_PLUS);
 					vo.setOrderTypeName("账户充值");
 					
+					vo.setImgUrl("img/userRestMoney/iconfont-jiahao.png");
+					
 				}else{
 					vo.setOrderFlag(Constants.USER_PAY_FLAG_MINUS);
 					vo.setOrderTypeName("订单支付");
+					
+					vo.setImgUrl("img/userRestMoney/iconfont-jianhao.png");
 				}
+				
+				vo.setAddTimeStr(DateUtil.convTimeStampToStringDate(pay.getAddTime()));
 				
 				voList.add(vo);	
 			}
@@ -225,6 +232,33 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		//用户 消费记录的 作用。。 0= 支付  1=充值
 		payVo.setOrderFlag(Constants.USER_PAY_FLAG_MINUS);
 		
+		//默认设置 为  "+" 号的图片吧
+		payVo.setImgUrl("img/userRestMoney/iconfont-jiahao.png");
+		
+		payVo.setAddTimeStr("");
+		
 		return payVo;
+	}
+	
+	@Override
+	public UserDetailPay initUserDetailPay() {
+		
+		UserDetailPay detailPay = new UserDetailPay();
+		
+		detailPay.setId(0L);
+	    detailPay.setPayAccount("");
+	    detailPay.setUserId(0L);
+	    detailPay.setMobile("");
+	    detailPay.setOrderType((short)0);
+	    detailPay.setOrderId(0L);
+	    detailPay.setOrderNo("");
+	    detailPay.setOrderMoney(new BigDecimal(0));
+	    detailPay.setOrderPay(new BigDecimal(0));
+	    detailPay.setTradeNo("");
+	    detailPay.setTradeStatus("");
+	    detailPay.setPayType((short)0);
+	    detailPay.setAddTime(TimeStampUtil.getNowSecond());
+		
+		return detailPay;
 	}
 }

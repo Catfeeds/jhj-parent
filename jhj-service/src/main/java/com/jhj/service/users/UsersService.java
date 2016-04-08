@@ -69,4 +69,5 @@ public interface UsersService {
 	 */
 	List<Users> selectUserByAddFrom(Long addFrom);
 	
+	List<Users> selectUserInAllCoopFrom(List<Long> list);
 }

@@ -36,4 +36,7 @@ public interface CooperateBusinessService {
     CooperateVo transToFormVo(CooperativeBusiness business);
     
     CooperativeBusiness login(String loginName,String passWord) throws NoSuchAlgorithmException  ;
+    
+    // 所有 合作商户 的 主键 id
+    List<Long> getAllCoopId();
 }

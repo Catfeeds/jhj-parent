@@ -41,4 +41,6 @@ public interface UserDetailPayService {
 	List<AppUserDetailPayVo> transToListVo(List<UserDetailPay> list);
 	
 	AppUserDetailPayVo initVo(UserDetailPay pay);
+	
+	UserDetailPay initUserDetailPay();
 }

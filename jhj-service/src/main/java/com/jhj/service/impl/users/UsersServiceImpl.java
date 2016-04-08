@@ -249,7 +249,7 @@ public class UsersServiceImpl implements UsersService {
 		u.setHeadImg(" ");
 		u.setRestMoney(new BigDecimal(0));
 		u.setUserType((short) 0);
-		u.setAddFrom((short) 1);
+		u.setAddFrom(addFrom);
 		u.setScore(0);
 		u.setRemarks(" ");
 		u.setAddTime(TimeStampUtil.getNow() / 1000);
@@ -536,4 +536,10 @@ public class UsersServiceImpl implements UsersService {
 	public List<Users> selectUserByAddFrom(Long addFrom) {
 		return usersMapper.selectUserByAddFrom(addFrom);
 	}
+	
+	@Override
+	public List<Users> selectUserInAllCoopFrom(List<Long> list) {
+		return usersMapper.selectUserInAllCoopFrom(list);
+	}
+	
 }

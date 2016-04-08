@@ -16,8 +16,28 @@ public class AppUserDetailPayVo extends UserDetailPay {
 	private String orderTypeName;
 	
 	private String payTypeName;
-
 	
+	private String imgUrl;		//图片url
+	
+	private String addTimeStr;	
+	
+	
+	public String getAddTimeStr() {
+		return addTimeStr;
+	}
+
+	public void setAddTimeStr(String addTimeStr) {
+		this.addTimeStr = addTimeStr;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
 	public Short getOrderFlag() {
 		return orderFlag;
 	}
