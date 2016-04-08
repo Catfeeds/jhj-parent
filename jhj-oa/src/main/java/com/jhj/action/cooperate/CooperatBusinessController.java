@@ -260,7 +260,6 @@ public class CooperatBusinessController extends BaseController {
 		
 		List<CoopUserOrderVo> userOrderList = orderService.totalUserAndOrder(userIds);
 		
-		System.out.println(userOrderList.size());
 		
 		PageInfo result = new PageInfo(userOrderList);
 		
