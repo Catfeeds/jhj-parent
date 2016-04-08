@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -220,6 +221,10 @@ public class CooperatBusinessController extends BaseController {
 			
 			// 家和家 角色。。可以查看所有第三方来源的用户
 			List<Long> coopIdList = bussService.getAllCoopId();
+			
+			if(coopIdList.size() <=0){
+				coopIdList.add(0L);
+			}
 			list = userService.selectUserInAllCoopFrom(coopIdList);
 		}else{
 			
