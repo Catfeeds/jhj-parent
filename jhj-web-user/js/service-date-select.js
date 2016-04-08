@@ -37,9 +37,10 @@ function serviceDateSelect() {
 
 	if(nowHour > 8 && nowHour <= 12){
 		for (i = nowHour + 4; i < 19; i++) {
-			tempHour = moment({ hour:i}).format('HH');
+				
+			var tempHour = moment({ hour:i}).format('HH');
 			
-			if(tempHour != 12){
+			if(tempHour != 12 && tempHour != 17){
 				serviceHoursValues.push(tempHour);
 			}
 		}

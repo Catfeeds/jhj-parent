@@ -1,4 +1,4 @@
-myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
+myApp.onPageInit('mine-rest-money-detail-page', function (page) {
 	
 	var postdata = {};
 	var page = 1;
@@ -8,50 +8,32 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
 	postdata.user_id = userId;
 	postdata.page = page;
 	
+	
+	var displayItem;
+	
+	
 	var orderListSuccess= function(data, textStatus, jqXHR) {
-
+		
 		var result = JSON.parse(data.response);
-		var orders = result.data;
 		
-		var html = $$('#order-hour-list').html();
+		displayItem = result.data;
 		
-		var resultHtmlNow = '';	//当前订单
-		
-		for(var i = 0; i< orders.length; i++) {
-			var order = orders[i];
-			
-			var htmlPart = html;
-			
-			
-			if(order.order_flag == 0){
-				//支付
-				htmlPart = htmlPart.replace(new RegExp('{img}',"gm"), "img/userRestMoney/iconfont-jianhao.png");
-//				htmlPart = htmlPart.replace(new RegExp('{orderMoney}',"gm"), "支付金额:"+order.order_money);
-			}else{
-				//充值	
-				htmlPart = htmlPart.replace(new RegExp('{img}',"gm"), "img/userRestMoney/iconfont-jiahao.png");
-			}
-			htmlPart = htmlPart.replace(new RegExp('{orderMoney}',"gm"), "金额:"+order.order_money);
-			
-			htmlPart = htmlPart.replace(new RegExp('{orderTypeName}',"gm"), order.order_type_name);
-			
-			htmlPart = htmlPart.replace(new RegExp('{addTime}',"gm"), moment.unix(order.add_time).format("YYYY-MM-DD HH:mm"));
-			
-			resultHtmlNow += htmlPart;
+		if(page >=2){
+			myList.appendItems(displayItem);
 		}
-		//当前订单
-		$$("#card-hour-now-list ul").append(resultHtmlNow);
 		
-		page = page + 1;
+		page = page+1;
 		loading = false;
-			
-		if (orders.length < 10) {
-			
-			$$('#pay-detail-list-more').css("display", "none");
-			return;			
+		
+		if(displayItem.length == 0){
+			loading = true;
+			$$("#pay-detail-list-more").text("已无更多记录(*^__^*)");
 		}
-
-	};	
+		
+		return false;
+		
+	}	
+	
 	
 	postdata.user_id = userId;
 	postdata.page = page;
@@ -61,18 +43,44 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
          dataType: "json",
          cache : true,
          data : postdata,
+         async:false,	//设置为 同步。取到数据后。再 构造
  		statusCode : {
  			200 : orderListSuccess,
  			400 : ajaxError,
  			500 : ajaxError
- 		},
+ 		}
  		
 	 });
+	
+
+ var myList = myApp.virtualList('.list-block.virtual-list',{
+		
+		   items:  displayItem,
+		   height: 100,
+		template:  "<div class='pay-list-rv' >"
+						+ "<div class='pay-list-rv-left'>"
+						+  		"<img src='{{img_url}}' alt=''>"
+						+ "</div>"
+						+ "<div class='pay-list-rv-right'>"
+						+	"<div class='pay-list-rv-right1'>"
+						+		"<div class='pay-list-rv-right1-1'>{{order_type_name}}</div>"
+						+			"<div class='pay-list-rv-right1-2'>支付金额:{{order_money}}</div>"
+						+		"</div>"
+						+		"<div class='pay-list-rv-right2'>时间:{{add_time_str}}</div>"
+						+	"</div>"
+						+ "</div>"
+					+"</div>"
+	});
+	
+
+	 
+	 
 	// 注册'infinite'事件处理函数
 	$$('#pay-detail-list-more').on('click', function () {
 		if (loading) return;//如果正在加载，则退出
 		loading = true;// 设置flag
 		postdata.user_id = userId;
+		
 		postdata.page = page;
 		
 		$$.ajax({
@@ -82,74 +90,13 @@ myApp.onPageBeforeInit('mine-rest-money-detail-page', function (page) {
 			cache : true,
 			data : postdata,
 			timeout: 10000, //超时时间：10秒
+			async:false,
 			statusCode : {
 				200 : orderListSuccess,
 				400 : ajaxError,
 				500 : ajaxError
-			},
+			}
 		});
 	}); 
 	
-	$$('#btn-order-now').on('click', function() {
-
-		if ($$(this).attr("class") != "dangqian-box active-state") {
-			$$(this).attr("class", "dangqian-box");
-			$$('#btn-order-history').attr("class", "history-box");		
-			
-			apiUrl = "order/orderHourNowList.json";
-			$$('#pay-detail-list-more').css("display", "block");
-			$$("#card-hour-now-list ul").html("");
-			page = 1;
-			var postdata = {};
-			postdata.user_id = userId;
-			postdata.page = page;
-			 $$.ajax({
-		         type : "GET",
-		         url  : siteAPIPath+"user/pay_detail_list.json",
-		         dataType: "json",
-		         cache : true,
-		         data : postdata,
-		 		statusCode : {
-		 			200 : orderListSuccess,
-		 			400 : ajaxError,
-		 			500 : ajaxError
-		 		},
-		 		
-			 });			
-			
-		}
-	});
-	
-	$$('#btn-order-history').on('click', function() {
-
-		if ($$(this).attr("class") != "history-box1 active-state") {
-			$$(this).attr("class", "history-box1");
-			$$('#btn-order-now').attr("class", "dangqian-box1");
-			
-			apiUrl = "order/orderHourOldList.json";
-			$$('#pay-detail-list-more').css("display", "block");
-			$$("#card-hour-now-list ul").html("");
-			page = 1;
-			var postdata = {};
-			postdata.user_id = userId;
-			postdata.page = page;
-			 $$.ajax({
-		         type : "GET",
-		         url  : siteAPIPath+"user/pay_detail_list.json.json",
-		         dataType: "json",
-		         cache : true,
-		         data : postdata,
-		 		statusCode : {
-		 			200 : orderListSuccess,
-		 			400 : ajaxError,
-		 			500 : ajaxError
-		 		},
-		 		
-			 });			
-			
-		}
-	});	
-	
-	
 });
-

@@ -175,6 +175,15 @@ function toolBarHref(url, toolbarName) {
 			mainView.router.loadPage("login.html");
 			return;
 		}
+		
+//		if (localStorage.getItem('am_id') == 'null' || localStorage.getItem('am_mobile') == 'null') {
+//			
+//			myApp.alert('您还没有添加地址，点击确定前往添加地址立刻获得家庭助理', "", function () {
+//				mainView.router.loadPage("user/mine-add-addr.html?addr_id=0&return_url=user/user-am-detail.html");
+//		    });
+//			return;
+//		}		
+		
 	}
 	
 	if (toolbarName == 'toolbar-huodong') {
@@ -200,13 +209,6 @@ function toolBarHref(url, toolbarName) {
 			return;
 		}
 		
-		if (localStorage.getItem('am_id') == 'null' || localStorage.getItem('am_mobile') == 'null') {
-			
-			myApp.alert('您还没有添加地址，点击确定前往添加地址立刻获得家庭助理', "", function () {
-				mainView.router.loadPage("user/mine-add-addr.html?addr_id=0&return_url=user/user-am-detail.html");
-		    });
-			return;
-		}			
 	}
 	
 	if (toolbarName == 'toolbar-youzan') {

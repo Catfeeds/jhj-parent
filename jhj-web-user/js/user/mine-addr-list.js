@@ -137,6 +137,12 @@ function clickToSetDefault(obj,addrId){
 	var addrIdClick = $$(obj).find("#addr_id").val();
 	
 	if(addrNameClick.indexOf("默认")>0){
+		
+		localStorage.setItem("default_addr_name",addrNameClick.replace("[默认]", "").trim());
+		localStorage.setItem("default_addr_id",addrIdClick);
+		
+		goBackToZhongDianGongPage();
+		
 		return false;
 	}
 	
