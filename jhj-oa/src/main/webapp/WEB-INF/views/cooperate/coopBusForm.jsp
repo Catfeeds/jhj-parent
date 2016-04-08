@@ -97,7 +97,8 @@
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">商户角色</label>
 							<div class="col-sm-5">
-								<roleSelectTag:select selectId="${cooBusinessModel.roleId }"/>
+								<form:hidden path="roleId" value="8" />
+								<input type="text" class="form-control" readonly="readonly" value="合作商户">								
 							</div>
 						</div>
 						
