@@ -23,5 +23,6 @@ public interface CooperativeBusinessMapper {
 	CooperativeBusiness selectBylogInName(String logInName);
 	
 	CooperativeBusiness selectByUsernameAndPassword(HashMap conditions);
-
+	
+	List<Long> getAllCoopId();
 }

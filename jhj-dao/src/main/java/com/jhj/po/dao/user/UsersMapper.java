@@ -132,6 +132,10 @@ public interface UsersMapper {
 
 	List<Users> selectByAll();	
 		
-	//得到 不同来源的 用户
+	//根据 来源 得到 对应的用户
 	List<Users> selectUserByAddFrom(Long addFrom);
+	
+	//得到 不同来源的 用户
+	List<Users> selectUserInAllCoopFrom(List<Long> list);
+	
 }

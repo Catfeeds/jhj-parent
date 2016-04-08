@@ -17,6 +17,13 @@
     add_time, update_time
   </sql>
   
+  <select id="getAllCoopId" resultType="java.lang.Long">
+  	select
+  		id
+    from 
+    	cooperative_business
+  </select>
+  
   
   <select id="selectByUsernameAndPassword" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
 	select
