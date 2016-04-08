@@ -136,7 +136,7 @@ public class OrderAmController extends BaseController {
 			HttpServletRequest request,
 			@RequestParam("user_id") Long userId,
 			@RequestParam("service_type") Long serviceType,
-			@RequestParam("service_content") String serviceContent,
+			@RequestParam(value ="service_content",required = false,defaultValue= "") String serviceContent,
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom){
 
 		AppResultData<Object> result = new AppResultData<Object>(

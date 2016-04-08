@@ -55,7 +55,7 @@ public class DiffrentUserLogInController extends BaseController {
 	  * 
 	  * @return AppResultData<Object>    返回类型
 	 */
-	@RequestMapping(value = "sign_in",method =RequestMethod.GET)
+	@RequestMapping(value = "sign_in.json",method =RequestMethod.GET)
 	public AppResultData<Object> signOnDingdang(
 			@RequestParam("mobile") String mobile,
 			@RequestParam("app_flag")Short appFlag){

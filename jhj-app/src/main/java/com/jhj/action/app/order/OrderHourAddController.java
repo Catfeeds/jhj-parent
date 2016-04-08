@@ -95,7 +95,7 @@ public class OrderHourAddController extends BaseController {
 	public AppResultData<Object> submitOrder(
 			@RequestParam("userId") Long userId,
 			@RequestParam("serviceType") Long serviceType,
-			@RequestParam("serviceContent") String serviceContent,
+			@RequestParam(value = "serviceContent",required =false,defaultValue = "") String serviceContent,
 			@RequestParam("serviceDate") Long serviceDate,
 			@RequestParam("addrId") Long addrId,
 			@RequestParam("serviceHour") Short serviceHour,
