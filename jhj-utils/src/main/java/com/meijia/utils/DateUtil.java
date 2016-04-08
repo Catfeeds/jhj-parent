@@ -578,7 +578,22 @@ public class DateUtil {
 		// System.out.println(date);
 		return Long.parseLong(date);
 	}
+	
+	
+	/*
+	 * long 型时间戳转换为 String 类型 字符串日期（yyyy-MM-dd）
+	 */
+	public static String convTimeStampToStringDate(Long timeStamp) {
+		SimpleDateFormat format1 = new SimpleDateFormat(DEFAULT_FULL_PATTERN);
 
+		long unixLong = timeStamp * 1000;
+
+		String date = format1.format(unixLong);
+
+		return date;
+	}
+	
+	
 	/**
 	 * 根据当前月份获得季度
 	 * 
