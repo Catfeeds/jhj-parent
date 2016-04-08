@@ -403,7 +403,8 @@ public class UserController extends BaseController {
 		 *   记录 用户 消费明细
 		 */
 		
-		UserDetailPay userDetailPay = new UserDetailPay();
+		
+		UserDetailPay userDetailPay = userDetailPayService.initUserDetailPay();
 		
 		userDetailPay.setUserId(user.getId());
 		userDetailPay.setMobile(user.getMobile());
@@ -417,15 +418,15 @@ public class UserController extends BaseController {
 		 *  	 所以总金额和 支付金额 相等即可。
 		 * 
 		 */
-		userDetailPay.setOrderMoney(new BigDecimal(chargeMoney));
-		userDetailPay.setOrderPay(new BigDecimal(chargeMoney));
+		userDetailPay.setOrderMoney(cardValue);
+		userDetailPay.setOrderPay(cardValue);
 		
 		userDetailPay.setAddTime(TimeStampUtil.getNowSecond());
 		
 		userDetailPayService.insert(userDetailPay);
 		
 		// TODO 5. 充值成功后,将该验证码。设为无效
-		userSmsTokenService.deleteByPrimaryKey(smsToken.getId());
+//		userSmsTokenService.deleteByPrimaryKey(smsToken.getId());
 		
 		result.setMsg("充值成功");
 		

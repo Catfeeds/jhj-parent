@@ -212,9 +212,9 @@ public class AdminLoginController extends BaseController {
         	
         }
         
-        //合作商户 登录 到 合作商户列表页
+        //合作商户 登录 到  （合作商户--用户统计）
         if(business != null){
-        	returnUrl = "/cooperate/coo_business_list";
+        	returnUrl = "/cooperate/cooperate_user_order";
         }
         
         

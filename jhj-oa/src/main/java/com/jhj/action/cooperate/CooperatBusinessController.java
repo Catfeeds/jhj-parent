@@ -145,10 +145,8 @@ public class CooperatBusinessController extends BaseController {
 			result.addError(new FieldError("cooBusinessModel", "businessLoginName",
 					"该登录名已存在"));
 			
-			
 			model.addAllAttributes(result.getModel());
 			
-//			result.rejectValue("businessLoginName", "", "该登录名已存在");
 			return bussinessForm(request, model);
 		}
 		
@@ -159,8 +157,6 @@ public class CooperatBusinessController extends BaseController {
 		if (!passWord.equals(confirmPassWord)) {
 			result.addError(new FieldError("cooBusinessModel", "confirmPassWord",
 					"确认密码与密码输入不一致。"));
-			
-//			result.rejectValue("confirmPassWord", "", "确认密码与密码输入不一致");
 			
 			return bussinessForm(request, model);
 		}
@@ -206,8 +202,30 @@ public class CooperatBusinessController extends BaseController {
 		
 		Long id = auth.getId();
 		
+		/*
+		 * 用户统计。对于 合作商户 只能看到自己的 用户
+		 * 
+		 * 		  对于家和家自己的 登录（拥有查看用户统计权限）的角色，可以查看 所有 第三方来源的用户
+		 */
 		
-		List<Users> list = userService.selectUserByAddFrom(id);
+		/*
+		 *   在 cooperate_business 第三方商户 表中，已经确立了 主键从 99 开始自增。
+		 *   
+		 *   而家和家 内部登录的角色在  admin_account表中。理论上并不会 超过 99
+		 */
+		
+		List<Users> list = new ArrayList<Users>();
+		
+		if(id < 99){
+			
+			// 家和家 角色。。可以查看所有第三方来源的用户
+			List<Long> coopIdList = bussService.getAllCoopId();
+			list = userService.selectUserInAllCoopFrom(coopIdList);
+		}else{
+			
+			//合作商户 登录，只能查看自己 登录id 决定的来源 的用户
+			list = userService.selectUserByAddFrom(id);
+		}
 		
 		List<Long> userIds = new ArrayList<Long>();
 		
@@ -245,17 +263,6 @@ public class CooperatBusinessController extends BaseController {
 		
 		return "cooperate/coopUserOrderList";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }
