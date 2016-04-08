@@ -3437,7 +3437,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 }
 .pay-list-rv-right1-2{
   line-height: 40px;
-  margin-left:60%;
+  margin-left: 50%;
 }
 .pay-list-rv-right2{
   width:100%;
