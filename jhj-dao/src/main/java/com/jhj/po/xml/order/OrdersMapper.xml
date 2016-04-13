@@ -1203,7 +1203,7 @@
 	<!-- 市场订单图表-按月统计 -->
 	<select id="statByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT order_from AS name, 
-			   FROM_UNIXTIME(add_time, "%c") AS series, 
+			   FROM_UNIXTIME(add_time, "%Y-%m") AS series, 
 			   COUNT(*) AS total 
 			   FROM orders
 		WHERE 1=1
@@ -1281,7 +1281,7 @@
 	<!-- 市场订单图表-按月统计 - 退单数 -->
 	<select id="statOrderCancelByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT '退单数' AS name, 
-			   FROM_UNIXTIME(add_time, "%c") AS series, 
+			   FROM_UNIXTIME(add_time, "%Y-%m") AS series, 
 			   COUNT(*) AS total 
 			   FROM orders
 		WHERE 1=1
@@ -1397,7 +1397,7 @@
 		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(
 			SELECT  order_from AS name, 
-				FROM_UNIXTIME(add_time, "%c") AS series,  
+				FROM_UNIXTIME(add_time, "%Y-%m") AS series,  
 				order_money
 			FROM 
 			(	
@@ -1496,7 +1496,7 @@
 	<!-- 市场品类图表-按月统计-->
 	<select id="chartTypeByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT order_type AS name, 
-			   FROM_UNIXTIME(add_time, "%c") AS series, 
+			   FROM_UNIXTIME(add_time, "%Y-%m") AS series, 
 			   COUNT(*) AS total 
 			   FROM orders
 		WHERE 1=1
@@ -1589,7 +1589,7 @@
 		  (
 		      select t1.user_id, t1.series from 
 			  (SELECT user_id,
-					 FROM_UNIXTIME(add_time, "%c") AS series
+					 FROM_UNIXTIME(add_time, "%Y-%m") AS series
 			  FROM  orders where 1=1
 				 <if test="startTime !=null">
 					<![CDATA[ and add_time >= #{startTime}]]>
@@ -1689,7 +1689,7 @@
 	 	SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(
 			SELECT  order_type AS name, 
-				FROM_UNIXTIME(add_time, "%c") AS series, 
+				FROM_UNIXTIME(add_time, "%Y-%m") AS series, 
 				order_money
 			FROM 
 			(	
@@ -1984,7 +1984,7 @@
 	
 	<select id="phoneRechargeByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT order_money AS name,
-               FROM_UNIXTIME(add_time, "%c") AS series,  
+               FROM_UNIXTIME(add_time, "%Y-%m") AS series,  
 			   COUNT(*) AS total,
        		   SUM(order_pay) AS totalMoney
 		 FROM  order_prices 
