@@ -3,7 +3,8 @@ myApp.template7Data['page:tiexinjiashi-page'] = function() {
 	var result;
 	
 	var parentServiceTypeId = localStorage['firstServiceType'];
-
+	
+	
 	$$.ajax({
 		type : "GET",
 		url : siteAPIPath + "newPartServiceType/second_service_type.json",
@@ -15,7 +16,7 @@ myApp.template7Data['page:tiexinjiashi-page'] = function() {
 		async : false,
 		success : function(data) {
 			result = data;
-
+			
 		}
 	})
 

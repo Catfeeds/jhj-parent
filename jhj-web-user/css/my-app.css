@@ -3276,7 +3276,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   text-align: center;line-height: 80px;margin-left:2%;margin-top:20px;float:left;
 }
 .circle-template-fiveservice2 img{
- width:80px;height:80px;margin-left:2%;margin-top:20px;float:left;border-radius:50%;overflow:hidden;
+  width:80px;height:80px;margin-left:2%;margin-top:20px;float:left;border-radius:50%;overflow:hidden;
 }
 .word-template-fiveservice{
   margin-left:2%;float:left;margin-top:30px;
@@ -3456,3 +3456,9 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   left: 50%;
   bottom: 1px;
 }
+
+
+.zhongdiangong-threefood{
+  width:100%!important;
+}
+

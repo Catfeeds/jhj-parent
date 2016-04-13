@@ -4,29 +4,41 @@
 			<input  type="hidden" id="parentServiceTypeId" value="">
 			
 			<div id="serviceContainer">
+			
+				<div class="fiveservice-img">
+					<img src="{{data.top_img_url}}" alt="">
+				</div> 
 				
-				{{#each data}}
+				{{#each data.list}}
 				
-				<div class="template-fiveservice">
-				    <div class="circle-template-fiveservice2">
-						<img src="{{service_img_url}}" alt="">
-					</div>
 					
-					<div class="word-template-fiveservice1">
-						<p style="color:#F08E36;">{{name}}</p>
-					</div>
-					
-					
-					<div name="tiexinjiashidiv" class="button-template-fiveservice">
-						<a href="#" class="button button-big button-green btn-five">{{button_word}}</a>
+					<div class="template-fiveservice">
+					    <div class="circle-template-fiveservice2">
+							<img src="{{service_img_url}}" alt="">
+						</div>
 						
-						<input  type="hidden" name="serviceTypeId" value="{{service_type_id}}">
-						<input type="hidden" name="enable" value="{{enable}}">
-					</div>
-					
-				</div>	
+						<div class="word-template-fiveservice1">
+							<p style="color:#F08E36;">{{name}}</p>
+						</div>
+						
+						
+						<div name="tiexinjiashidiv" class="button-template-fiveservice">
+							<a href="#" class="button button-big button-green btn-five">{{button_word}}</a>
+							
+							<input  type="hidden" name="serviceTypeId" value="{{service_type_id}}">
+							<input type="hidden" name="enable" value="{{enable}}">
+						</div>
+						
+					</div>	
 				
 				{{/each}}
+				
+				<div class="fiveservice-bottom">
+					<img src="img/icon-fiveservice/five-servicebottom.png" alt="">
+				</div>
+				<div class="fiveservice-bottom1">
+					<img src="img/icon-fiveservice/logo-fiveservice.png" alt="">
+				</div>
 				
 			</div>
 			
