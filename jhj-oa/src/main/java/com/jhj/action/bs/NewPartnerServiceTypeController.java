@@ -276,7 +276,6 @@ public class NewPartnerServiceTypeController extends AdminController {
 			
 			partnerServiceType.setServiceTypeId(id);
 			
-			
 			/*
 			 * 2016年4月1日19:11:30
 			 * 

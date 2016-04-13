@@ -76,8 +76,8 @@
 						<th>总单数</th>
 						<th>钟点工</th>
 						<th>钟点工占比</th>
-						<th>深度保洁</th>
-						<th>深度保洁占比</th>
+					<!-- 	<th>深度保洁</th>
+						<th>深度保洁占比</th> -->
 						<th>助理预约单</th>
 						<th>助理预约单占比</th>
 						<th>提醒订单</th>
@@ -88,40 +88,29 @@
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<th>${item.series}</th>
+						<th>${item.总单数}</th>
 						<th>
-							<a href="../order/order-list?startTime=${item.startTime }
+							<a href="../order/order-hour-list?startTime=${item.startTime }
 										&endTime=${item.endTime}">
-								${item.总单数}
-							</a>
-						</th>
-						<th>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}&searchOrderType=0">
 								${item.钟点工}
 							</a>
 						</th>
 						<th>${item.钟点工占比}</th>
-						<th>
+						<%-- <th>
 							<a href="../order/order-list?startTime=${item.startTime }
 										&endTime=${item.endTime}&searchOrderType=1">
 								${item.深度保洁}
 							</a>
 						</th>
-						<th>${item.深度保洁占比}</th>
+						<th>${item.深度保洁占比}</th> --%>
 						<th>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}&searchOrderType=2">
+							<a href="../order/order-am-list?startTime=${item.startTime }
+										&endTime=${item.endTime}">
 								${item.助理预约单}
 							</a>
 						</th>
 						<th>${item.助理预约单占比 }</th>
-						<th>
-							<a href="../order/remind-order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}">
-								${item.提醒订单 }
-							</a>
-						
-						</th>
+						<th>${item.提醒订单 }</th>
 						<th>${item.提醒订单占比 }</th>
 					</tr>
 				</c:forEach>

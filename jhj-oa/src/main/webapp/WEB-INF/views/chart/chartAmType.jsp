@@ -73,16 +73,19 @@
 					<tr>
 						<th>时间</th>
 						<th>总单数</th>
-						<th>日常家事</th>
+						<!-- <th>日常家事</th> -->
+						<th>贴心家事</th>
 						<th>占比(%)</th>
-						<th>代办</th>
+						<!-- <th>代办</th> -->
+						<th>深度养护</th>
 						<th>占比(%)</th>
-						<th>跑腿</th>
+						<!-- <th>跑腿</th> -->
+						<th>企业服务</th>
 						<th>占比(%)</th>
-						<th>陪伴</th>
+						<!-- <th>陪伴</th>
 						<th>占比(%)</th>
 						<th>其他</th>
-						<th>占比(%)</th>
+						<th>占比(%)</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -90,58 +93,43 @@
 					<tr>
 						<th>${item.series}</th>
 						<th>
-						<c:if test="${item.总单数==0}">
+						 <c:if test="${item.总单数==0 }">
 							${item.总单数}
-						</c:if>
-						<c:if test="${item.总单数>0}">
-							<a href="../order/order-list?serviceTypeFlag=1&startTime=${item.startTime}&endTime=${item.endTime}">${item.总单数}</a>
-						</c:if>
+						 </c:if>	
+						 <c:if test="${item.总单数>0}">
+							<a href="../order/order-am-list?startTime=${item.startTime}&endTime=${item.endTime}">${item.总单数}</a>
+						 </c:if> 
 						</th>
+						
 						<th>
-						<c:if test="${item.日常家事==0}">
-							${item.日常家事}
-						</c:if>
-						<c:if test="${item.日常家事>0}">
-							<a href="../order/order-list?searchOrderServiceType=3&startTime=${item.startTime}&endTime=${item.endTime}">${item.日常家事}</a>
-						</c:if>
+							<c:if test="${item.贴心家事==0}">
+								${item.贴心家事}
+							</c:if>
+							<c:if test="${item.贴心家事>0}">
+								<a href="../order/order-am-list?parentServiceType=25&startTime=${item.startTime}&endTime=${item.endTime}">${item.贴心家事}</a>
+							</c:if>
 						</th>
-						<th>${item.日常家事占比}</th>
+						<th>${item.贴心家事占比}</th>
+						
 						<th>
-						<c:if test="${item.代办==0}">
-							${item.代办}
-						</c:if>
-						<c:if test="${item.代办>0}">
-							<a href="../order/order-list?searchOrderServiceType=4&startTime=${item.startTime}&endTime=${item.endTime}">${item.代办}</a>
-						</c:if>
+							<c:if test="${item.深度养护 ==0}">
+								${item.深度养护 }
+							</c:if>
+							<c:if test="${item.深度养护 >0}">
+								<a href="../order/order-am-list?parentServiceType=26&startTime=${item.startTime}&endTime=${item.endTime}">${item.深度养护 }</a>
+							</c:if>
 						</th>
-						<th>${item.代办占比}</th>
+						<th>${item.深度养护占比}</th>
+						
 						<th>
-						<c:if test="${item.跑腿==0}">
-							${item.跑腿}
-						</c:if>
-						<c:if test="${item.跑腿>0}">
-							<a href="../order/order-list?searchOrderServiceType=5&startTime=${item.startTime}&endTime=${item.endTime}">${item.跑腿}</a>
-						</c:if>
+							<c:if test="${item.企业服务  ==0}">
+								${item.企业服务  }
+							</c:if>
+							<c:if test="${item.企业服务  >0}">
+								<a href="../order/order-am-list?parentServiceType=27&startTime=${item.startTime}&endTime=${item.endTime}">${item.企业服务 }</a>
+							</c:if>
 						</th>
-						<th>${item.跑腿占比}</th>
-						<th>
-						<c:if test="${item.陪伴==0}">
-							${item.陪伴}
-						</c:if>
-						<c:if test="${item.陪伴>0}">
-							<a href="../order/order-list?searchOrderServiceType=6&startTime=${item.startTime}&endTime=${item.endTime}">${item.陪伴}</a>
-						</c:if>
-						</th>
-						<th>${item.陪伴占比}</th>
-						<th>
-							<c:if test="${item.其他==0}">
-							${item.其他}
-						</c:if>
-						<c:if test="${item.其他>0}">
-							<a href="../order/order-list?searchOrderServiceType=7&startTime=${item.startTime}&endTime=${item.endTime}">${item.其他}</a>
-						</c:if>
-						</th>
-						<th>${item.其他占比}</th>
+						<th>${item.企业服务占比 }</th>
 					</tr>
 				</c:forEach>
 				</tbody>

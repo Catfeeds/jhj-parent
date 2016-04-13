@@ -5,7 +5,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 <%@ include file="../shared/taglib.jsp"%>
 
 <!-- taglib for this page -->
-<%@ taglib prefix="partServiceType" uri="/WEB-INF/tags/partnerServiceTypeSelect.tld" %>
+<%@ taglib prefix="partServiceType" uri="/WEB-INF/tags/partnerNoParentServiceTypeSelect.tld" %>
 
 
 <html>
@@ -40,26 +40,23 @@ import="com.jhj.oa.common.UrlHelper"%>
                   <div class="col-lg-12">
                       <section class="panel">
                       	  
-                      	  <form:form modelAttribute="questionSearchVoModel" action="question_list" method="GET">
-	                         <header class="panel-heading">
-	                         	<h4>搜索</h4>
-	                         		<div>
-										服务类别:
-											<partServiceType:select selectId="${questionSearchVoModel.serviceTypeId }"/>
-										题库名称:
-										<select id="bankId" name="bankId">
-											<option value="0">请选择题库</option>
-										<select>
-										<%-- 是否必考:
-										<form:select path="isNeed">
-										  	<option value="">请选择</option>
-											<form:option value="1">是</form:option>
-											<form:option value="0">否</form:option>											
-										</form:select> --%>
-									<input type="submit"  value="搜索"  >
-									</div>
-	                         </header>
-                           </form:form>   
+	                      <header class="panel-heading">
+	                         <h4>搜索</h4>
+	                      	  <form:form class="form-inline" modelAttribute="questionSearchVoModel" action="question_list" method="GET">
+		                         		<div class="form-group">
+											服务类别:
+												<partServiceType:select selectId="${questionSearchVoModel.serviceTypeId }"/>
+										</div>
+										<div class="form-group">		
+											题库名称:
+											<select id="bankId" name="bankId">
+												<option value="0">请选择题库</option>
+											<select>
+										</div>
+										<button type="submit" class="btn btn-primary" >搜索</button>
+	                           </form:form>   
+											
+		                   </header>
                            
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
                       	

@@ -63,18 +63,18 @@
                            </div>
                            
                            <div class="form-group">
-                              <label  class="col-md-2 control-label">备注(副标题)</label>
+                              <label  class="col-md-2 control-label">备注(副标题)/服务介绍</label>
                               <div class="col-md-5">
-                                 <form:input path="remarks" class="form-control" placeholder="app服务列表页副标题" maxlength="50"/>
-                                 <form:errors path="remarks" class="field-has-error"/>
+                                 <form:textarea path="remarks" class="form-control"  rows="5" cols="50"
+                                 	placeholder="不超过100字,该字段可作为金牌保洁、厨娘烧饭的副标题;对于助理类订单,该字段作为服务介绍" maxlength="100"/>
                               </div>
                            </div>
                            
                            <div class="form-group">
                               <label  class="col-md-2 control-label">服务内容</label>
                               <div class="col-md-5">
-                                 <form:textarea path="serviceContent" rows="5" cols="30"
-                                 		placeholder="不超过120字" maxlength="120"/>
+                                 <form:textarea path="serviceContent" rows="5" cols="50"
+                                 		placeholder="不超过120字,助理类订单,该字段作为服务说明" maxlength="120"/>
                               </div>
                            </div>
                            

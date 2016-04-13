@@ -4,7 +4,7 @@
 
 <%@ include file="../shared/taglib.jsp"%>
 <%@ taglib prefix="partServiceType"
-	uri="/WEB-INF/tags/partnerServiceTypeSelect.tld"%>
+	uri="/WEB-INF/tags/partnerNoParentServiceTypeSelect.tld"%>
 
 <html>
 <head>

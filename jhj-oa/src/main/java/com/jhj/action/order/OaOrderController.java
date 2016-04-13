@@ -34,6 +34,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OaOrderSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
@@ -70,6 +71,9 @@ public class OaOrderController extends BaseController {
 	
 	@Autowired
 	private OrderPricesService priceService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
 	
 	/*
 	 * 查看订单列表
@@ -158,6 +162,7 @@ public class OaOrderController extends BaseController {
 		if(!StringUtil.isEmpty(jspOrgId) && !jspOrgId.equals("0")){
 			oaOrderSearchVo.setSearchOrgId(Long.valueOf(jspOrgId));
 		}
+		
 		
         List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo,pageNo,pageSize);
 		
@@ -267,6 +272,26 @@ public class OaOrderController extends BaseController {
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
 			oaOrderSearchVo.setOrgId(Short.valueOf(org));
 		}
+		
+		/*
+		 *  2016年4月13日11:10:21
+		 *  处理  与 助理 相关的 统计的 数据下钻。 
+		 *  
+		 *  统计图表，统计的是 助理下的服务大类。如 贴心家事
+		 *  
+		 *  而此处 列表页是 服务大类的  子类，如贴心家事--安心托管、、、
+		 *  
+		 *  需要 转换大类-->子类集合
+		 */
+		Long parentServiceType = oaOrderSearchVo.getParentServiceType();
+		
+		if(parentServiceType != null && parentServiceType != 0L){
+			
+			List<Long> list = partService.selectChildIdByParentId(parentServiceType);
+			
+			oaOrderSearchVo.setChildServiceTypeList(list);
+		}
+		
 		
 		
         List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo,pageNo,pageSize);

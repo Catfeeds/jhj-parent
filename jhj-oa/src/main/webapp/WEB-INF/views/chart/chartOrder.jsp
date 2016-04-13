@@ -85,31 +85,11 @@
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<td>${item.series}</td>
-						<td>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}">
-								${item.新增订单小计}
-							</a>
-						</td>
+						<td>${item.新增订单小计}</td>
 						<td>${item.增长率}</td>
-						<td>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}&searchOrderFrom=1">
-								${item.微网站来源}
-							</a>
-						</td>
-						<td>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}&searchOrderFrom=0">
-								${item.App来源}
-							</a>
-						</td>
-						<td>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}&searchOrderStatus=0">
-								${item.退单数}
-							</a>
-						</td>
+						<td>${item.微网站来源}</td>
+						<td>${item.App来源}</td>
+						<td>${item.退单数}</td>
 						<td>${item.退单率}</td>
 					</tr>
 				</c:forEach>
