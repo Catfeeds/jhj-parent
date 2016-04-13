@@ -49,8 +49,8 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		legendAll.add("总单数");
 		legendAll.add("钟点工");
 		legendAll.add("钟点工占比");
-		legendAll.add("深度保洁");
-		legendAll.add("深度保洁占比");
+//		legendAll.add("深度保洁");
+//		legendAll.add("深度保洁占比");
 		legendAll.add("助理预约单");
 		legendAll.add("助理预约单占比");
 		
@@ -60,7 +60,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		//2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
 		legend.add("钟点工");
-		legend.add("深度保洁");
+//		legend.add("深度保洁");
 		legend.add("助理预约单");	
 		
 		legend.add("提醒订单");		
@@ -115,8 +115,8 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 					//0代表 钟点工  1 = 深度保洁   2= 助理预约单  5= 提醒订单
 					if (chartSqlData.getName().equals("0"))
 						tableDataItem.put("钟点工", String.valueOf(chartSqlData.getTotal()));
-					if (chartSqlData.getName().equals("1"))
-						tableDataItem.put("深度保洁", String.valueOf(chartSqlData.getTotal()));
+//					if (chartSqlData.getName().equals("1"))
+//						tableDataItem.put("深度保洁", String.valueOf(chartSqlData.getTotal()));
 					if (chartSqlData.getName().equals("2"))
 						tableDataItem.put("助理预约单", String.valueOf(chartSqlData.getTotal()));
 					
@@ -135,7 +135,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		//4-3. 计算各品类 占比
 		
 		String orderHourPercent = "0";	//钟点工占比
-		String deepPercent = "0";		//深度保洁占比
+//		String deepPercent = "0";		//深度保洁占比
 		String amPercent = "0";			//助理预约单占比
 		
 		String remindPercent = "0";		//提醒订单占比
@@ -145,7 +145,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			
 			//每行记录，各类订单数量
 			Integer orderHour = Integer.valueOf(tableDataItem.get("钟点工"));
-			Integer deepOrder = Integer.valueOf(tableDataItem.get("深度保洁"));
+//			Integer deepOrder = Integer.valueOf(tableDataItem.get("深度保洁"));
 			Integer amOrder = Integer.valueOf(tableDataItem.get("助理预约单"));
 			
 			Integer remindOrder = Integer.valueOf(tableDataItem.get("提醒订单"));
@@ -155,8 +155,8 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 				orderHourPercent = MathDoubleUtil.getPercent(orderHour,sumTotal);
 				tableDataItem.put("钟点工占比", orderHourPercent);
 				
-				deepPercent = MathDoubleUtil.getPercent(deepOrder, sumTotal);
-				tableDataItem.put("深度保洁占比", deepPercent);
+//				deepPercent = MathDoubleUtil.getPercent(deepOrder, sumTotal);
+//				tableDataItem.put("深度保洁占比", deepPercent);
 				
 				amPercent = MathDoubleUtil.getPercent(amOrder, sumTotal);
 				tableDataItem.put("助理预约单占比", amPercent);
@@ -165,7 +165,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 				tableDataItem.put("提醒订单占比", remindPercent);
 			}else{
 				tableDataItem.put("钟点工占比","0.00%");
-				tableDataItem.put("深度保洁占比","0.00%" );
+//				tableDataItem.put("深度保洁占比","0.00%" );
 				tableDataItem.put("助理预约单占比","0.00%");
 				
 				tableDataItem.put("提醒订单占比", "0.00%");
@@ -242,8 +242,8 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		legendAll.add("钟点工");
 		legendAll.add("钟点工营业额");
 		legendAll.add("钟点工营业额占比");
-		legendAll.add("深度保洁");
-		legendAll.add("深度保洁营业额");
+//		legendAll.add("深度保洁");
+//		legendAll.add("深度保洁营业额");
 		legendAll.add("钟点工营业额占比");
 		legendAll.add("助理预约单");
 		legendAll.add("助理预约单营业额");
@@ -252,7 +252,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		//2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
 		legend.add("钟点工");
-		legend.add("深度保洁");
+//		legend.add("深度保洁");
 		legend.add("助理预约单");	
 		
 		chartDataVo.setLegend(JSON.toJSONString(legend));
@@ -321,17 +321,17 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 						tableDataItem.put("钟点工营业额", MathBigDeciamlUtil.round2(hourMoney));
 					}
 						
-					if (chartSqlData.getName().equals("1")){
-						
-						deepNum =  chartSqlData.getTotal();
-						tableDataItem.put("深度保洁", String.valueOf(deepNum));
-						
-						deepMoney =  chartSqlData.getTotalMoney();
-						if(deepMoney ==null){
-							deepMoney = new BigDecimal(0);
-						}
-						tableDataItem.put("深度保洁营业额", MathBigDeciamlUtil.round2(deepMoney));
-					}
+//					if (chartSqlData.getName().equals("1")){
+//						
+//						deepNum =  chartSqlData.getTotal();
+//						tableDataItem.put("深度保洁", String.valueOf(deepNum));
+//						
+//						deepMoney =  chartSqlData.getTotalMoney();
+//						if(deepMoney ==null){
+//							deepMoney = new BigDecimal(0);
+//						}
+//						tableDataItem.put("深度保洁营业额", MathBigDeciamlUtil.round2(deepMoney));
+//					}
 					
 					if (chartSqlData.getName().equals("2")){
 						
@@ -354,31 +354,33 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (Map<String, String> tableDataItem : tableDatas) {
 			
 			BigDecimal moneyHour = new BigDecimal(tableDataItem.get("钟点工营业额"));
-			BigDecimal moneyDeep = new BigDecimal(tableDataItem.get("深度保洁营业额"));
+//			BigDecimal moneyDeep = new BigDecimal(tableDataItem.get("深度保洁营业额"));
 			BigDecimal moneyAm = new BigDecimal(tableDataItem.get("助理预约单营业额"));
 			
-			BigDecimal moneySum = moneyHour.add(moneyDeep).add(moneyAm);
+//			BigDecimal moneySum = moneyHour.add(moneyDeep).add(moneyAm);
+			
+			BigDecimal moneySum = moneyHour.add(moneyAm);
 			
 			tableDataItem.put("总营业额", MathBigDeciamlUtil.round2(moneySum));
 			
 			//intValue(), 效果 只取整数位，舍弃小数位  1.11  、 1.61  -->  1
 			if(moneySum.intValue() > 0 ){
 				tableDataItem.put("钟点工营业额占比", MathDoubleUtil.getPercent(moneyHour.intValue(),moneySum.intValue()));
-				tableDataItem.put("深度保洁营业额占比", MathDoubleUtil.getPercent(moneyDeep.intValue(),moneySum.intValue()));
+//				tableDataItem.put("深度保洁营业额占比", MathDoubleUtil.getPercent(moneyDeep.intValue(),moneySum.intValue()));
 				tableDataItem.put("助理预约单营业额占比", MathDoubleUtil.getPercent(moneyAm.intValue(),moneySum.intValue()));
 			}else{
 				tableDataItem.put("钟点工营业额占比","0.00%");
-				tableDataItem.put("深度保洁营业额占比","0.00%" );
+//				tableDataItem.put("深度保洁营业额占比","0.00%" );
 				tableDataItem.put("助理预约单营业额占比","0.00%");
 			}
 			
 			
 			Integer numHour = Integer.valueOf(tableDataItem.get("钟点工"));
-			Integer numDeep = Integer.valueOf(tableDataItem.get("深度保洁"));
+//			Integer numDeep = Integer.valueOf(tableDataItem.get("深度保洁"));
 			Integer numAm = Integer.valueOf(tableDataItem.get("助理预约单"));
 			
-			tableDataItem.put("总单数", String.valueOf(numHour+numDeep+numAm));
-			
+//			tableDataItem.put("总单数", String.valueOf(numHour+numDeep+numAm));
+			tableDataItem.put("总单数", String.valueOf(numHour+numAm));
 		}
 		
 		//5. 去掉第一个tableDataItem;
@@ -399,7 +401,6 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 				for (Map<String, String> tableDataItem : tableDatas) {
 					if (timeSeries.get(j).equals(tableDataItem.get("series").toString())) {
 						String valueStr = tableDataItem.get(legend.get(i)).toString();
-//						System.out.println(valueStr+"-----------j");
 						Integer v = Integer.valueOf(valueStr);
 						datas.add(v);
 					}
@@ -423,7 +424,6 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			tableDataItem.put("startTime", timeDuration.get("startTime").toString());
 			
 			tableDataItem.put("endTime", timeDuration.get("endTime").toString());
-			
 			
 		}
 		

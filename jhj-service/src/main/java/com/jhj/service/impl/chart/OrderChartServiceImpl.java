@@ -108,10 +108,14 @@ public class OrderChartServiceImpl implements OrderChartService {
 			for (Map<String, String> tableDataItem : tableDatas) {
 				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
 					//0代表APP  1 = 微网站来源
-					if (chartSqlData.getName().equals("0"))
+					if (chartSqlData.getName().equals("0")){
 						tableDataItem.put("App来源", String.valueOf(chartSqlData.getTotal()));
-					if (chartSqlData.getName().toString().equals("1"))
+					}
+					if(chartSqlData.getName().equals("1")){
 						tableDataItem.put("微网站来源", String.valueOf(chartSqlData.getTotal()));
+					}
+					
+					
 					
 					//新增订单小计 
 					Integer subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));

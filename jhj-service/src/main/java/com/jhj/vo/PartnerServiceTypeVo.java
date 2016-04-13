@@ -17,6 +17,7 @@ public class PartnerServiceTypeVo extends PartnerServiceType {
 	private String yearPrice;
 	
 	private String yearTimes;
+	
 
 	public String getPriceAndUnit() {
 		return priceAndUnit;

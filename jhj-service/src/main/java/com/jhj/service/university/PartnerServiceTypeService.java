@@ -54,4 +54,7 @@ public interface PartnerServiceTypeService {
     NewPartnerServiceVo initVo();
     
     List<PartnerServiceType> selectByParentId(Long id);
+    
+    List<Long> selectChildIdByParentId(Long id);
+    
 }

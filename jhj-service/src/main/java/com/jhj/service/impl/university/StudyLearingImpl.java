@@ -66,7 +66,10 @@ public class StudyLearingImpl implements StudyLearningService {
 		
 		PartnerServiceType partner = partnerService.selectByPrimaryKey(serviceTypeId);
 		
-		studyVo.setName(partner.getName());
+		if(partner != null){
+			studyVo.setName(partner.getName());
+		}
+		
 		
 		return studyVo;
 	}

@@ -234,4 +234,19 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 	public List<PartnerServiceType> selectByParentId(Long id) {
 		return partMapper.selectByParentId(id);
 	}
+	
+	@Override
+	public List<Long> selectChildIdByParentId(Long id) {
+		
+		List<Long> list = new ArrayList<Long>();
+		
+		List<PartnerServiceType> list2 = selectByParentId(id);
+		
+		for (PartnerServiceType partnerServiceType : list2) {
+			list.add(partnerServiceType.getServiceTypeId());
+		}
+		
+		return list;
+	}
+	
 }

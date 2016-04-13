@@ -95,7 +95,11 @@ public class StudyQuestionImpl implements StudyQuestionService {
 			questionVo.setBankName(studyBank.getName());
 			
 			PartnerServiceType partnerServiceType = partServiceMapper.selectByPrimaryKey(serviceTypeId);
-			questionVo.setServiceTypeName(partnerServiceType.getName());
+			
+			if(partnerServiceType != null){
+				questionVo.setServiceTypeName(partnerServiceType.getName());
+			}
+			
 			
 			List<StudyQuestionOption> list = optionMapper.selectByQId(qId);
 			questionVo.setOptionList(list);
