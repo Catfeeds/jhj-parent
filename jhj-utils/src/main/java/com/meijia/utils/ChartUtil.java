@@ -1,13 +1,11 @@
 package com.meijia.utils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 有个管家的常用方法
@@ -50,8 +48,10 @@ public class ChartUtil {
 		 * 2015-11-21 14:56:51  这里的 天数判断 ，决定了 统计图 横坐标的 天数跨度，从原来的 30天，改为了 90天~
 		 */
 		if (ago.intValue() < 90) statType = "day";
-		if (ago.intValue() > 90 ) statType = "month";
-			
+		if (ago.intValue() > 90 && ago.intValue() < 181 ) statType = "month";
+		
+		if(ago.intValue() >= 181) statType = "quarter";
+		
 		return statType;
 	}	
 	
@@ -126,6 +126,13 @@ public class ChartUtil {
 			startTimeStr = DateUtil.getBeginOfDay(startTimeStr);
 		}
 		
+		//????
+		if (statType.equals("quarter")) {
+			Date startTimeDate = DateUtil.parse(startTimeStr);
+			startTimeStr = DateUtil.addDay(startTimeDate, -1, Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+			startTimeStr = DateUtil.getBeginOfDay(startTimeStr);
+		}
+		
 		endTimeStr = DateUtil.getEndOfDay(endTimeStr);
 		
 			
@@ -162,42 +169,7 @@ public class ChartUtil {
 			}
 		}
 		
-		//TODO 这只是匹配 当年的月份
 		if (statType.equals("month")) {
-//			int startMonth = DateUtil.getMonth(startDate);
-//			int endMonth = DateUtil.getMonth(endDate);
-//			
-//			int startYear = DateUtil.getYear(startDate);
-//			
-//			int endYear = DateUtil.getYear(endDate);
-//			
-//			if(startYear == endYear){
-//				for (i = 0; i <= (endMonth - startMonth); i++) {
-//					curDate = DateUtil.addDay(startDate, i, Calendar.MONTH, "M");
-//					timeSeries.add(curDate);
-//				}
-//			}else{
-//				
-//				/*
-//				 * 按月份查找时，处理 跨年 的情况
-//				 *  
-//				 *  如： 2016-1 的最近三个月，应该是 [2015-11,2015-12,2016-1]
-//				 * 
-//				 */
-//				
-//				//注释举例 中的 2015-11 和  2015-12的 月份差值
-//				
-//				int monthDiv =  12 - startMonth;
-//				
-//				for (int j = 0; j <= (12-startMonth); j++) {
-//					
-//					if(j)
-//					
-//					curDate = DateUtil.addDay(startDate, i, Calendar.YEAR, "Y-M");
-//					timeSeries.add(curDate);
-//				}
-//				
-//			}
 			
 			timeSeries = DateUtil.getCureMonth(startDate, endDate);
 			
@@ -244,7 +216,7 @@ public class ChartUtil {
 			name = StringUtil.getZhNum(split[1]);
 			name = "第" + name + "季度";
 			
-			name += split[0]+",";
+			name = split[0]+","+name;
 		}
 		
 		return name;
@@ -273,10 +245,23 @@ public class ChartUtil {
 		}
 		
 		if (statType.equals("month")) {
+
+			if(seriesName.length() >=7){
+				
+				String yearName = seriesName.substring(0, 4);
+				
+				// 统一处理  月份的格式 为   2016-05、2015-12
+				if(!yearName.equals(nowYear+"")){
+					
+					nowYear = Integer.parseInt(yearName);
+				}
+				
+				seriesName = seriesName.substring(5,7);
+				
+			}else{
+				seriesName = seriesName.replace("月","");
+			}
 			
-			seriesName = seriesName.replace("月","");
-			
-			// TODO 目前 表示月份 字符是  "7月"
 			
 			//月份开始时间
 			long monthStart = TimeStampUtil.getMillisOfDayFull(nowYear+"-"+seriesName+"-1 00:00:00")/1000;
@@ -297,44 +282,43 @@ public class ChartUtil {
 			//此时的 seriesName 格式  ： 2015,第四季度
 			String[] split = seriesName.split(",");
 			
-			switch (split[1]) {
-			case "第一季度":
-				long quarterStart = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"1-1 00:00:00")/1000;
-				long quarterEnd = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"3-31 00:00:00")/1000;
+			long quarterStart = 0L;
+			
+			long quarterEnd = 0L;			
+			
+			if(seriesName.indexOf("第一季度") > 0){
+				
+				quarterStart = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"1-1 00:00:00")/1000;
+				quarterEnd = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"3-31 00:00:00")/1000;
 				
 				map.put("startTime", quarterStart);
 				map.put("endTime", quarterEnd);
-				break;
-			
-			case "第二季度":
 				
-				long quarterStart2 = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"4-1 00:00:00")/1000;
-				long quarterEnd2 = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"6-30 00:00:00")/1000;
+			}else if(seriesName.indexOf("第二季度") > 0){
 				
-				map.put("startTime", quarterStart2);
-				map.put("endTime", quarterEnd2);
-				break;
+				quarterStart = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"4-1 00:00:00")/1000;
+				quarterEnd = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"6-30 00:00:00")/1000;
 				
-			case "第三季度":
+				map.put("startTime", quarterStart);
+				map.put("endTime", quarterEnd);
 				
-				long quarterStart3 = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"7-1 00:00:00")/1000;
-				long quarterEnd3 = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"9-30 00:00:00")/1000;
+			}else if(seriesName.indexOf("第三季度") > 0){
 				
-				map.put("startTime", quarterStart3);
-				map.put("endTime", quarterEnd3);
-				break;
-			case "第四季度":
-	
-				long quarterStart4 = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"10-1 00:00:00")/1000;
-				long quarterEnd4 = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"12-31 00:00:00")/1000;
+				quarterStart = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"7-1 00:00:00")/1000;
+				quarterEnd = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"9-30 00:00:00")/1000;
 				
-				map.put("startTime", quarterStart4);
-				map.put("endTime", quarterEnd4);
-				break;
+				map.put("startTime", quarterStart);
+				map.put("endTime", quarterEnd);
 				
-			default:
-				break;
+			}else{
+				
+				quarterStart = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"10-1 00:00:00")/1000;
+				quarterEnd = TimeStampUtil.getMillisOfDayFull(split[0]+"-"+"12-31 00:00:00")/1000;
+				
+				map.put("startTime", quarterStart);
+				map.put("endTime", quarterEnd);
 			}
+			
 		}
 		
 		return map;

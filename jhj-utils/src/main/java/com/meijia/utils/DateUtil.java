@@ -658,24 +658,59 @@ public class DateUtil {
 		if (startYear == endYear) {
 			for (i = 0; i <= (endMonth - startMonth); i++) {
 				curDate = DateUtil.addDay(startDate, i, Calendar.MONTH, "M");
-				timeSeries.add(curDate);
-			}
-		} else {
-
-			for (int j = 0; j <= (12 - startMonth); j++) {
-
-				int tmpMonth = startMonth + j;
-
-				if (tmpMonth <= 12) {
-					timeSeries.add(startYear + "-" + startMonth + j);
+				
+				if(Integer.parseInt(curDate)< 10){
+					timeSeries.add(startYear+"-0"+curDate);
+				}else{
+					timeSeries.add(startYear+"-"+curDate);
 				}
 			}
-
-			for (int k = 1; k <= endMonth; k++) {
-
-				timeSeries.add(endYear + "-" + k);
+		} else {
+			//2016年4月11日15:35:28     如果是横跨  超过 1年以上
+			int duraYear =  endYear - startYear;
+			
+				
+			for (int j = startMonth ; j <= 12 ; j++) {
+				
+				/*
+				 * 对于月份  统一 时间的格式。为  YYYY-MM  如   2015-07、 2015-11
+				 * 
+				 * 为 最后处理  页面 table时，处理 时间时 使用
+				 */
+				
+				if(j < 10){
+					timeSeries.add(startYear + "-0" + j);
+				}else{
+					timeSeries.add(startYear + "-" + j);
+				}
 			}
-
+			
+			for (int k = 1; k <= endMonth; k++) {
+				
+				if(k < 10){
+					timeSeries.add(endYear + "-0" + k);
+				}else{
+					timeSeries.add(startYear + "-" + k);
+				}
+			}
+			
+			if(duraYear > 1){	
+				
+				//横框超过1年。则 加上中间年份 全年的月份。 
+				
+				for (int m = startYear +1 ; m < endYear; m++) {
+					for (int p = 1; p <= 12; p++) {
+						
+						if(p<10){
+							timeSeries.add(m + "-0" + p);
+						}else{
+							timeSeries.add(m + "-" + p);
+						}
+						
+					}
+				}
+			}
+			
 		}
 
 		return timeSeries;

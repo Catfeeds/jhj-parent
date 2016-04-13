@@ -133,10 +133,13 @@ public class TimeStampUtil {
 	}
 
 	public static void main(String[] args) {
-		Long t = (long) 1427328056;
-		Date startTime = TimeStampUtil.timeStampToDate(t*1000);
-		System.out.println(DateUtil.format(startTime, TimeStampUtil.DEFAULT_FULL_PATTERN));
-		System.out.println(TimeStampUtil.timeStampToDateStr(t*1000, TimeStampUtil.DEFAULT_FULL_PATTERN));
-		System.out.println(TimeStampUtil.timeStampToDateHour(t*1000));
+//		Long t = (long) 1427328056;
+//		Date startTime = TimeStampUtil.timeStampToDate(t*1000);
+//		System.out.println(DateUtil.format(startTime, TimeStampUtil.DEFAULT_FULL_PATTERN));
+//		System.out.println(TimeStampUtil.timeStampToDateStr(t*1000, TimeStampUtil.DEFAULT_FULL_PATTERN));
+//		System.out.println(TimeStampUtil.timeStampToDateHour(t*1000));
+		
+		System.out.println(getMillisOfDayFull("2013-03-01 00:00:00"));
+		
 	}
 }
