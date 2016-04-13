@@ -15,6 +15,7 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.AppAmPartnerVo;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDeciamlUtil;
@@ -55,6 +56,11 @@ public class AppServiceTypeController extends BaseController {
 		
 		List<PartnerServiceTypeVo> volist = new ArrayList<PartnerServiceTypeVo>();
 		
+		/*
+		 * 2016年4月13日17:01:41  助理 二级下单页 vo, 新增 头部 图片地址 
+		 */
+		AppAmPartnerVo partnerVo = new AppAmPartnerVo();
+		
 		for(PartnerServiceType item : list) {
 			PartnerServiceTypeVo vo = new PartnerServiceTypeVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
@@ -78,17 +84,40 @@ public class AppServiceTypeController extends BaseController {
 			
 			vo.setPriceAndUnit(priceAndUnit);
 			
-			
 			if (vo.getEnable().equals((short)1)) {
 				vo.setButtonWord("立即预定");
 			} else {
 				vo.setButtonWord("敬请期待");
 			}
 			
+			
 			volist.add(vo);
 		}
 		
-		result.setData(volist);
+		
+		/*
+		 *  2016年4月13日16:22:09
+		 *  助理类订单下单页面。之前是 没有 头部 图片。
+		 *  而且公用了 一个二级页面，此时需要 新增 vo字段传递 该 头部图片的url
+		 */
+		
+		if(serviceTypeId == 25){
+			//如果是 贴心家事 二级页面
+			partnerVo.setTopImgUrl("img/icon-fiveservice/tiexinjiashi-2.jpg");
+		}
+		
+		if(serviceTypeId == 26){
+			//如果是 深度养护 二级页面
+			partnerVo.setTopImgUrl("img/icon-fiveservice/shenduyanghu-2.jpg");
+		}
+		
+		if(serviceTypeId == 27){
+			//如果是 企业服务 二级页面
+			partnerVo.setTopImgUrl("img/icon-fiveservice/qiyefuwu-2.jpg");
+		}
+		
+		partnerVo.setList(volist);
+		result.setData(partnerVo);
 		
 		return result;
 	}

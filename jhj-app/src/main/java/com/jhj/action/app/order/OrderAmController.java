@@ -167,8 +167,6 @@ public class OrderAmController extends BaseController {
 		// 调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
 
-		Long now = TimeStampUtil.getNow() / 1000;
-
 		// 保存订单信息
 		Orders order = ordersService.initOrders();
 
@@ -353,6 +351,9 @@ public class OrderAmController extends BaseController {
 		
 		
 		Orders orders = ordersService.selectByOrderNo(orderNo);
+		if (orders == null) {
+			return result;
+		}
 		//如果订单不是待确认状态，就提示已经确认过
 		if (orders.getOrderStatus() != 1) {
 			result = new AppResultData<Object>(Constants.ERROR_100,
@@ -361,11 +362,6 @@ public class OrderAmController extends BaseController {
 		}
 		
 		Users u = userService.getUserById(orders.getUserId());
-		if (orders == null) {
-			result = new AppResultData<Object>(
-					Constants.ERROR_999, ConstantMsg.ORDER_NO_NOT_EXIST_MG, "");
-			return result;
-		}
 		/**
 		 * 更新订单信息
 		 */

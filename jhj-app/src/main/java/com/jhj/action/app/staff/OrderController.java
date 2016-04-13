@@ -349,7 +349,6 @@ public class OrderController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-
 		Orders orders = ordersService.selectByPrimaryKey(orderId);
 
 		if (orders == null) {

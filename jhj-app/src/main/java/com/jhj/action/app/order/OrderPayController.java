@@ -109,8 +109,8 @@ public class OrderPayController extends BaseController {
 		}		
 		
 		Orders order = ordersService.selectByOrderNo(orderNo);
-		Long orderId = order.getId();
 		if (order == null) return result;
+		Long orderId = order.getId();
 		
 		if(order.getOrderStatus() >= 4){
 			result.setStatus(Constants.ERROR_999);
@@ -218,7 +218,6 @@ public class OrderPayController extends BaseController {
 			 * 	jhj2.1	钟点工(基础保洁类) 修改为 2、  助理单修改为 4
 			 */
 			
-			//TODO  jhj2.1  订单 类型？？？
 			if(order.getOrderType() == Constants.ORDER_TYPE_2){
 				
 				order.setOrderStatus(Constants.ORDER_AM_STATUS_3);//已支付
