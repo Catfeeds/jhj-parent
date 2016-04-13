@@ -16,7 +16,6 @@ $(document).ready(function(){
 	  var result =  getUniversityLearningDetail(testId);
 	  
 	  $("#learningContent").html(result);
-
 	  
 	  /*1-2 进入页面已经可以确定题目，预加载所有题目（id集合）*/
 	  var loadQuestionListSuccess = function(datas, textStatus, jqXHR){

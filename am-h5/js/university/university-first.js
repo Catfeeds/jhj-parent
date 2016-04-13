@@ -5,17 +5,26 @@ $(document).ready(function(){
 	for (var i = 0; i < universityServiceList.length; i++) {
 		var item = universityServiceList[i];
 		
-		if(item.name == "钟点工"){
-			$("#hourTestId").val(item.service_type_id);
+		if(item.name == "金牌保洁"){
+			$("#jinpaiTestId").val(item.service_type_id);
 		}
 		
-		if(item.name == "助理"){
-			$("#amTestId").val(item.service_type_id);
+		if(item.name == "厨娘烧饭"){
+			$("#chuniangTestId").val(item.service_type_id);
 		}
 		
-		if(item.name == "快送"){
-			$("#fastDeliverTestId").val(item.service_type_id);
+		if(item.name == "贴心家事"){
+			$("#tiexinTestId").val(item.service_type_id);
 		}
+		
+		if(item.name == "深度养护"){
+			$("#shenduTestId").val(item.service_type_id);
+		}
+		
+		if(item.name == "企业服务"){
+			$("#qiyeTestId").val(item.service_type_id);
+		}
+		
 	}
 	
 	//页面加载,获得 当前登录人员的 考核状态
@@ -23,12 +32,6 @@ $(document).ready(function(){
 		
 		var result =  data.data;
 		
-		//钟点工测试
-		var hourTestId =$("#hourTestId").val();
-		//助理测试
-		var amTestId = $("#amTestId").val();
-		//快送测试
-		var fastDeliverTestId = $("#fastDeliverTestId").val();
 		
 		for (var i = 0, j= result.length; i < j ; i++) {
 			var testVo = result[i];
@@ -57,10 +60,6 @@ $(document).ready(function(){
 	
 	var staffId =  getParameterByName("staff_id");
 	
-	
-//	if(localStorage['university_staff_id'] == undefined || localStorage['university_staff_id'] == ""){
-//		localStorage.setItem("university_staff_id",staffId);
-//	}
 	
 		
 	var postData = {};
