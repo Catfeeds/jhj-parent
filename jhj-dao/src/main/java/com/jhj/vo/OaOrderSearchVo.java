@@ -1,5 +1,7 @@
 package com.jhj.vo;
 
+import java.util.List;
+
 /**
  *
  * @author :hulj
@@ -36,6 +38,36 @@ public class OaOrderSearchVo {
 	private Short orgId;	// 下拉选择 的 门店id
 	
 	
+	/*
+	 * 2016年4月13日11:01:34 
+	 * 	jhj2.1 
+	 * 	
+	 *  助理品类统计的 是 ，助理下的 大类，如 贴心家事、深度养护
+	 * 
+	 *  而助理订单 列表 的是 大类下的 具体子类。如 贴心家事-->安心托管。。
+	 * 
+	 * 	此处 下钻时。需要做 大类 -->子类的 转换
+	 * 
+	 */
+	
+	private Long  parentServiceType;
+	
+	private List<Long> childServiceTypeList;		
+	
+	
+	
+	public Long getParentServiceType() {
+		return parentServiceType;
+	}
+	public void setParentServiceType(Long parentServiceType) {
+		this.parentServiceType = parentServiceType;
+	}
+	public List<Long> getChildServiceTypeList() {
+		return childServiceTypeList;
+	}
+	public void setChildServiceTypeList(List<Long> childServiceTypeList) {
+		this.childServiceTypeList = childServiceTypeList;
+	}
 	public Short getOrgId() {
 		return orgId;
 	}
