@@ -3455,7 +3455,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   bottom: 1px;
 }
 
-
+/** 厨娘烧饭下单 页面  图片 样式*/
 .zhongdiangong-threefood{
   width:100%!important;
 }
