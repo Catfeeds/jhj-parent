@@ -18,6 +18,7 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
@@ -30,12 +31,15 @@ import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -82,6 +86,8 @@ public class OrderPayController extends BaseController {
 	@Autowired
 	private OrgStaffsService orgStaService;
 	
+	@Autowired
+	private PartnerServiceTypeService partService;
 	// 17.订单支付前接口
 	/**
 	 * @param mobile true string 手机号 
@@ -242,21 +248,50 @@ public class OrderPayController extends BaseController {
 			
 			//订单支付成功后
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
-				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
 				
+				/*
+				 *   2016年4月14日10:21:50 
+				 *   
+				 *   新增 短信， 用户 支付成功后，发短信	
+				 *   
+				 *    您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
+				 */
+				
+				Long serviceDate = order.getServiceDate();
+				//服务时间
+				String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "MM月-dd日HH:mm");
+				
+				Long serviceType = order.getServiceType();
+				PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+				//服务类型名称
+				String name = type.getName();
+				
+				String[] paySuccessForUser = new String[] {"服务时间:"+serviceTime,"的"+name};
+				
+				SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_PAY_SUCCESS_TO_SERVICE, paySuccessForUser);
+				
+				
+				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
 			}
 			
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+				
+				/* 
+				 *  2016年4月13日18:50:29  没啥大用了， jhj2.1 已经没有 深度 保洁订单类型了
+ 				 * 
+				 */
 				orderPayService.orderPaySuccessToDoForDeep(order);
 			}
 
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_2)) {
 				
 				/*
-				 *  2016年3月30日11:48:14  流程 已经变化。 在 支付后 才会 手动派工。
-				 *  
-				 *   此处不再 有后续。。 改为 在 oa 手动派工后，处理逻辑
+				 * 2016年4月13日18:50:48  新增 的 短信
+				 * 
 				 */
+//				您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
+				
+				
 				
 //				orderPayService.orderPaySuccessToDoForAm(order);
 			}

@@ -1,5 +1,7 @@
 package com.jhj.action.app.user;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.meijia.utils.SmsUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
-
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.order.OrderCardsService;
@@ -65,6 +69,24 @@ public class UserCardController extends BaseController {
 		orderCardsService.insert(record);
 
 		result.setData(record);
+		
+		
+		/*
+		 * 2016年4月15日17:06:44  新增短信
+		 * 
+		 * 您好，您的账户于{1}充值{2}。定制全年套餐，让美好生活不再有家务之忧
+		 * 
+		 */
+		//充值时间
+		String serviceTime = TimeStampUtil.timeStampToDateStr(TimeStampUtil.getNow(), "MM月-dd日HH:mm");
+		
+		//充值金额
+		BigDecimal value = dictCardType.getCardValue();
+		
+		String[] paySuccessForUser = new String[] {serviceTime,value.toString()};
+		
+		SmsUtil.SendSms(users.getMobile(),  Constants.MESSAGE_CHARGE_PAY_SUCCESS, paySuccessForUser);
+		
 		return result;
 	}
 

@@ -17,6 +17,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
@@ -142,31 +143,50 @@ public class OrderHourAddController extends BaseController {
 		
 		PartnerServiceType partnerServiceType = partService.selectByPrimaryKey(serviceType);
 		
+		//订单表 。服务内容字段
 		String serviceName = partnerServiceType.getName();
 		
-		/*
-		 *  2016年3月31日18:31:36  对于 厨娘烧饭。带有附加服务, 服务内容需要 加上 附加服务。
-		 *  
-		 */
-
-		
-		if(!StringUtil.isEmpty(serviceAddons)){
+		//如果有附加服务类型，需要存储到order_service_addons表.
+		if (!StringUtil.isEmpty(serviceAddons)) {
+			String[] serviceAddonArray = StringUtil.convertStrToArray(serviceAddons);
 			
-			String[] addonArray = StringUtil.convertStrToArrayByUL(serviceAddons);
-			
-			for (String addon : addonArray) {
-				
-				DictServiceAddons addons = dictServiceAddonService.selectByAddId(Long.valueOf(addon));
-				
-				serviceName += addons.getName() +" ";
+			List<Long> serviceAddonIds = new ArrayList<Long>();
+			for (int i = 0; i < serviceAddonArray.length; i++) {
+				if (!StringUtil.isEmpty(serviceAddonArray[i])) {
+					Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
+					serviceAddonIds.add(serviceAddonId);
+				}
 			}
+			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectByServiceAddonIds(serviceAddonIds);
+			
+			for (int i = 0; i < serviceAddonArray.length; i++) {	
+				Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
+				
+				OrderServiceAddons record = orderServiceAddonsService.initOrderServiceAddons();
+				
+				record.setOrderId(order.getId());
+				record.setOrderNo(order.getOrderNo());
+				record.setServiceAddonId(serviceAddonId);
+				record.setUserId(userId);
+				
+				
+				for (DictServiceAddons item : dictServiceAddons) {
+					if (item.getServiceAddonId().equals(serviceAddonId)) {
+						record.setItemNum(item.getDefaultNum());
+						record.setItemUnit(item.getItemUnit());
+						record.setPrice(item.getPrice());
+					}
+					serviceName += item.getName() +" ";
+				}
+				orderServiceAddonsService.insert(record);
+				order.setServiceContent(serviceName);
+			}
+		}else{
+			order.setServiceContent(serviceName);
 		}
-		
-		order.setServiceContent(serviceName);
 		
 		order.setRemarks(remarks);
 		
-		//mybatis xml 需要增加插入后获取last_insert_id;
 		ordersService.insert(order);
 		
 		//设置订单总金额。插入 order_prices表

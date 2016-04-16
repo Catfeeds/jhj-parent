@@ -1,5 +1,6 @@
 package com.jhj.action.app.order;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -29,6 +30,7 @@ import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -41,6 +43,7 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
@@ -56,6 +59,9 @@ import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
+
+
+
 
 
 
@@ -119,6 +125,9 @@ public class OrderAmController extends BaseController {
 	
 	@Autowired
 	private OrderDispatchsService disPatchService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
 	/**
 	 * 用户预约下单接口
 	 * 
@@ -185,11 +194,26 @@ public class OrderAmController extends BaseController {
 			ordersService.userOrderAmSuccessTodo(orderNo);
 		}
 
-		// todo 返回orderView
+		//  返回orderView
 		OrderViewVo vo = orderQueryService.getOrderView(order);
 
 		result = new AppResultData<Object>(Constants.SUCCESS_0,
 				ConstantMsg.SUCCESS_0_MSG, vo);
+		
+		/*
+		 *  2016年4月14日10:48:53  
+		 *  
+		 *  您预定的{1}服务已经受理，感谢您的支持，我们会尽快与您联系，如有任何疑问请拨打010-56429112
+		 */
+		
+		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+		//服务类型名称
+		String name = type.getName();
+		
+		String[] paySuccessForUser = new String[] {name};
+		
+		SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_SERVICE_ORDER_SUCCESS, paySuccessForUser);
+		
 		return result;
 	}
 
@@ -421,10 +445,8 @@ public class OrderAmController extends BaseController {
 			try {
 				BeanUtils.copyProperties(deepCleanVo,vo);
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			//助理调整订单成功给用户发短信
@@ -527,10 +549,8 @@ public class OrderAmController extends BaseController {
 	    try {
 			BeanUtils.copyProperties(deepCleanVo,vo);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	    
