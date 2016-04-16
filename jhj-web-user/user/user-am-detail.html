@@ -43,12 +43,11 @@
 		                   <li>
 		                      <div class="item-content">
 		                        <div class="item-inner">
-		                          <div class="item-title label">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签:</div>
+		                          <div class="item-title label">员工标签:</div>
 		                          <div class="item-xx-label" >
-		                          	
-		                          	{{#each tag_list}}
-		                          		{{tag_name}}&nbsp;&nbsp;
-		                          	{{/each}}
+			                          	{{#each tag_list}}
+			                          		{{tag_name}}&nbsp;&nbsp;
+			                          	{{/each}}
 								  </div>
 		                        </div>
 		                      </div>
@@ -79,14 +78,12 @@
 								     <div class="accordion-item-content">
 								        <div class="content-block">
 										        <div class="item-inner">
-										          <div class="item-title">{{@key}}</div>
+										          <div class="item-title"><strong>{{@key}}</strong></div>
 										        </div>
 								        	 	
-								        	   <div class="accordion-item-toggle" >
+								        	  <div class="accordion-item-toggle" >
 													{{#each this}}									        			    
-									        			<div class="content-block">
-								        					<a href="#" class="button" style="color:#FF4800">{{this}}</a>
-									        			</div>
+								        				<a href="#" style="margin-left:25px;color:#FF4800">{{this}}</a>
 							        				{{/each}}	
 								     		   </div>
 								         </div>
