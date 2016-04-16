@@ -3,6 +3,7 @@ package com.jhj.po.dao.university;
 import java.util.List;
 
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.vo.app.AmSkillVo;
 
 public interface PartnerServiceTypeMapper {
 	int deleteByPrimaryKey(Long serviceTypeId);
@@ -33,4 +34,11 @@ public interface PartnerServiceTypeMapper {
     
     //得到所有的 子服务(最底层没有子服务 )
     List<PartnerServiceType> selectAllNoChildService();
+    
+    
+    /* 
+     *  助理页面  技能 树，根据  员工的 技能 得到  技能的 上级 及对应的技能 
+     */
+    List<AmSkillVo> selectSkillNameAndParent(List<Long> childServiceIdList);
+    
 }

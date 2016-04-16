@@ -22,6 +22,25 @@
     service_img_url, enable, service_property, service_times, service_content
   </sql>
   
+  <resultMap id="AmKillVoMap" type="com.jhj.vo.app.AmSkillVo">
+		<result column="firstServiceType" property="firstServiceType"/>
+		<result column="childrenServiceName" property="childrenServiceName"  />
+  </resultMap>
+  
+  <!-- 根据 员工会的 二级技能， 得到  一级技能和 二级技能（会的）名称 -->
+  <select id="selectSkillNameAndParent" resultMap="AmKillVoMap">
+  	SELECT 
+  		parent_id AS firstServiceType,
+  		GROUP_CONCAT(name) AS childrenServiceName
+  	FROM 
+  		partner_service_type
+	WHERE 
+		service_type_id IN 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item}
+		</foreach>
+	GROUP BY parent_id
+  </select>
   
   
   <!-- 所有的 没有子服务的 最底层的 服务 -->
