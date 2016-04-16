@@ -34,8 +34,10 @@ import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffSkill;
+import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffSkillService;
@@ -182,7 +184,6 @@ public class NewOrgStaffController extends AdminController {
 			
 			formVo.setSkillIds(checkedAuthorityIdsArray);
 			
-			
 			formVo.setSkillIdsStr(ArrayHelper.LongtoString(checkedAuthorityIdsArray, ","));
 			
 			model.addAttribute("newStaffFormVoModel", formVo);
@@ -306,6 +307,7 @@ public class NewOrgStaffController extends AdminController {
 		
 		if (!StringUtil.isEmpty(authIds)) {
 			
+			//对于 身份认证， 若是取消 所有认证，不和 正常 逻辑。
 			authService.deleteByStaffId(id);
 			
 			String[] tagList = StringUtil.convertStrToArray(authIds);
@@ -320,6 +322,33 @@ public class NewOrgStaffController extends AdminController {
 				staffAuth.setUpdateTime(TimeStampUtil.getNowSecond());
 				
 				authService.insertSelective(staffAuth);
+			}
+		}
+		
+		//2016年4月16日12:01:34 存储标签
+		String tagListStr = request.getParameter("tagIds");
+		
+		
+		if (!StringUtil.isEmpty(tagListStr)) {
+			
+			/*
+			 * 对于 修改时 将 标签  设置 为 全不选择。
+			 * 	
+			 *  即 此时 tagListStr == "", 不合规范，也不合逻辑！ 
+			 */
+			orgStaTagService.deleteByStaffId(id);
+			
+			String[] tagList = StringUtil.convertStrToArray(tagListStr);
+			
+			for (int i = 0; i < tagList.length; i++) {
+				if (StringUtil.isEmpty(tagList[i])) continue;
+				
+				OrgStaffTags record = new OrgStaffTags();
+				record.setId(0L);
+				record.setStaffId(orgStaffs.getStaffId());
+				record.setTagId(Long.valueOf(tagList[i]));
+				record.setAddTime(TimeStampUtil.getNowSecond());
+				orgStaTagService.insert(record);
 			}
 		}
 		

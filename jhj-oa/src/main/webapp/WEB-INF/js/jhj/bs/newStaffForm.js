@@ -193,7 +193,7 @@ function setAuthIds(){
 	if (tagSelected != "") {
 		tagSelected = tagSelected.substring(0, tagSelected.length - 1);
 	}
-	console.log(tagSelected);
+//	console.log(tagSelected);
 	authIds.val(tagSelected);
 }
 
@@ -327,3 +327,61 @@ var setTreehh =  function setTreeDisplay(){
 }
 
 window.onload = setTreehh;
+
+
+/*
+ * 技能标签
+ */
+function setTagIds() {
+	
+	var tagIds = $("#tagIds");
+	var tagSelected = "";
+	//处理选择按钮的情况
+	$("input[name='tagName']").each(function(key, index) {
+		if ($(this).attr("class") == "btn btn-success") {
+			tagSelected = tagSelected + $(this).attr("id") + ",";
+		}
+	});	
+
+	if (tagSelected != "") {
+		tagSelected = tagSelected.substring(0, tagSelected.length - 1);
+	}
+	tagIds.val(tagSelected);
+}
+
+
+function setTagButton(obj) {
+	
+	var classStr = $(obj).attr("class");
+	
+	if(classStr.indexOf('btn-default')>0){
+	
+		$(obj).attr("class","btn btn-success");
+	}
+	
+	if(classStr.indexOf('btn-success')>0){
+		$(obj).attr("class","btn btn-default");
+	}
+	
+	setTagIds();
+}
+
+function setReturnTagButton(){
+	
+	var authIds = $("#tagIds");
+	
+	if(authIds.val() == "") return false;
+	
+	//回显
+	$("input[name='tagName']").each(function(key, index) {
+		var authId = $(this).attr("id");
+		if (authIds.val().indexOf(authId + ",") >= 0) {
+			$(this).attr("class","btn btn-success");
+		}
+	});	
+	
+}
+
+
+
+

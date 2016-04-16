@@ -188,6 +188,13 @@ public class NewOrderDisController extends BaseController {
 		Short orderStatus = order.getOrderStatus();
 		
 		
+		// 未更新 记录之前的 服务时间
+		String oldServiceDate = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		
+		Long userId = order.getUserId();
+		Users users = userService.selectByUsersId(userId);
+		String userMobile = users.getMobile();
+		
 		//对于  钟点工订单, 只有订单状态为    "已支付" 或  "已派工",可以进行 调整派工
 		if(orderStatus  == Constants.ORDER_HOUR_STATUS_2
 				|| orderStatus == Constants.ORDER_HOUR_STATUS_3){
@@ -202,14 +209,31 @@ public class NewOrderDisController extends BaseController {
 			String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
 			String timeStr = beginTimeStr + "-" + endTimeStr;
 			
-			//1) 用户收到派工通知---发送短信
+			
+			/*
+			 *  2016年4月14日10:39:36
+			 *  
+			 *  服务时间 变更 发送短信 通知
+			 *  
+			 *   您预定的{1}服务已经变更为{2}，感谢您的理解，给您带来的不便敬请谅解。
+			 *   
+			 *   oldServiceDate : 未 update 之前的 服务时间，多次派工时，只能取得上次的 服务时间
+			 */
+			
+			String[] changTimeMessage = new String[] {"服务时间为:"+oldServiceDate,beginTimeStr};
+			
+			SmsUtil.SendSms(userMobile, Constants.MESSAGE_ORDER_DATE_CHANGE, changTimeMessage);
+			
+			/*
+			 *  派工 短信通知
+			 */
+			// 用户收到派工通知---发送短信
 			String[] contentForUser = new String[] { timeStr };
 			
 			//2)派工成功，为服务人员发送推送消息---推送消息
 			dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 			
 			SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
-			
 			
 		}
 		

@@ -1,5 +1,6 @@
 package com.jhj.action.order;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
@@ -40,7 +42,9 @@ import com.jhj.vo.OaOrderSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -622,7 +626,7 @@ public class OaOrderController extends BaseController {
 	public AppResultData<Object> oaSubAmOrder(
 			@RequestParam("orderId")Long orderId,
 			@RequestParam("remarksConfirm")String remarksCon,
-			@RequestParam("orderMoney")BigDecimal orderMoney){
+			@RequestParam("orderMoney")BigDecimal orderMoney) throws UnsupportedEncodingException{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 		
@@ -639,7 +643,12 @@ public class OaOrderController extends BaseController {
 			return result;
 		}
 		
-		String decode = URLDecoder.decode(remarksCon);
+		/*
+		 *  decode() 需要处理 特殊字符%
+		 */
+		remarksCon = remarksCon.replaceAll("%(?![0-9a-fA-F]{2})", "%25");  
+		
+		String decode = URLDecoder.decode(remarksCon, "UTF-8");
 		
 		// 修改订单为 已确认
 		order.setOrderStatus(Constants.ORDER_AM_STATUS_2);
@@ -659,6 +668,26 @@ public class OaOrderController extends BaseController {
 		
 		//生成订单价格
 		priceService.insertSelective(orderPrice);
+		
+		
+		/*
+		 *  2016年4月14日11:05:05  新增短信
+		 *   
+		 *   客服完善订单信息
+		 *   
+		 *   对于 助理 类订单。 订单由 已预约--已确认（客服在平台手动完成）
+		 * 
+		 *   发短信
+		 */
+		
+		Long userId = order.getUserId();
+		
+		Users users = usersService.selectByUsersId(userId);
+		
+		String[] paySuccessForUser = new String[] {};
+		
+		SmsUtil.SendSms(users.getMobile(),  Constants.MESSAGE_ORDER_NEED_TO_PAY, paySuccessForUser);
+		
 		
 		//发短信
 		orderService.userOrderAmSuccessTodo(order.getOrderNo());

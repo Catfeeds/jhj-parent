@@ -60,6 +60,8 @@
 	
 					<input type="hidden" name="authIds" id="authIds" value="${newStaffFormVoModel.authIds }">		
 								
+					<input type="hidden" name="tagIds" id="tagIds" value="${newStaffFormVoModel.tagIds }"/>			
+								
 					<div class="form-body">
 					 
 						<div class="form-group required">
@@ -234,6 +236,23 @@
 							</div>
 						</div> 
 						
+						<div class="form-group required">
+							<label class="col-md-2 control-label">员工自我介绍</label>
+							<div class="col-md-5">
+								 <form:textarea path="intro" rows="5" cols="50"
+                                 	placeholder="不超过120字" maxlength="120"/>	
+							</div>
+						</div> 
+						
+						
+						<div class="form-group required">
+								<label class="col-md-2 control-label">技能标签</label>
+								<div class="col-md-5" id="allTag" >
+									<c:forEach items="${newStaffFormVoModel.tagList }" var="tag">
+										<input type="button" style="margin-top:10px;" name="tagName" value="${tag.tagName }" id="${tag.tagId }" onclick="setTagButton(this)" class="btn btn-default">
+									</c:forEach>
+								</div> 
+						</div> 
 						
 						
 						<c:if test="${ newStaffFormVoModel.staffId > 0 }">
@@ -335,6 +354,9 @@
 <script type="text/javascript">
 	$('#provinceId').trigger('change');
 	
+	
+	//技能标签
+	setReturnTagButton();
 	
 	//身份认证回显
 	setReturnAuthButton();
