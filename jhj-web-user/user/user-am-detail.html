@@ -1,8 +1,4 @@
-<!-- We don't need full layout here, because this page will be parsed with Ajax-->
-<!-- Top Navbar-->
 
-<div class="pages"style="background:0">
-	<!-- Page, data-page contains page name-->
 	<div data-page="user-am-detail-page" class="page"style="background-color:#E5E5E5E!important;overflow:auto">
 		<!-- Scrollable page content-->
 		<div class="page-content">
@@ -15,9 +11,10 @@
 						<li id="age">{{age}}</li>
 					</ul>
 				</div>
-				<a href="#" id="callStaff" class="button active zhuli-submit external"style="background:#EF7B01;border:1px solid #EF7B01;">
+				<!-- <a href="#" id="callStaff" class="button active zhuli-submit external"style="background:#EF7B01;border:1px solid #EF7B01;">
 					呼叫助理
 				</a>
+				 -->
 			</div>
 			<div class="zhuli-middle">
 				<div class="zhuli-middle-neirong">
@@ -46,25 +43,17 @@
 		                   <li>
 		                      <div class="item-content">
 		                        <div class="item-inner">
-		                          <div class="item-title label">技&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;能:</div>
+		                          <div class="item-title label">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;签:</div>
 		                          <div class="item-xx-label" >
-									<span id="tagName"/>
+		                          	
+		                          	{{#each tag_list}}
+		                          		{{tag_name}}&nbsp;&nbsp;
+		                          	{{/each}}
 								  </div>
 		                        </div>
 		                      </div>
 		                    </li>
 		                    
-		                    <li>
-		                      <div class="item-content">
-		                        <div class="item-inner">
-		                          <div class="item-title label">亲&nbsp;&nbsp;密&nbsp;&nbsp;度:</div>
-		                           <div class="item-xx-label" style="width:65%;">
-	                          		<span id="orderNum"style="word-wrap:break-word;">{{order_num}}</span>
-	                         	   </div>
-		                          
-		                        </div>
-		                      </div>
-		                    </li>
 		                    
 		                    <li>
 		               		  <div class="item-content">
@@ -76,10 +65,38 @@
 		                       	</div>
 		                      </div>
 		                    </li>
+		                    
+		                    
+		                    <li class="accordion-item">
+		                    	
+		                    	 <a href="#" class="item-content item-link">
+							        <div class="item-inner">
+							          <div class="item-title">员工技能</div>
+							        </div>
+							     </a>
+							     
+							     {{#each skill_map}}
+								     <div class="accordion-item-content">
+								        <div class="content-block">
+										        <div class="item-inner">
+										          <div class="item-title">{{@key}}</div>
+										        </div>
+								        	 	
+								        	   <div class="accordion-item-toggle" >
+													{{#each this}}									        			    
+									        			<div class="content-block">
+								        					<a href="#" class="button" style="color:#FF4800">{{this}}</a>
+									        			</div>
+							        				{{/each}}	
+								     		   </div>
+								         </div>
+								      </div>
+							      {{/each}}
+    						</li>
+		                    
 		                </ul>
 		              </form>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
