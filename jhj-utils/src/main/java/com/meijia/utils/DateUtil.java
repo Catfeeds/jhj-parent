@@ -583,8 +583,8 @@ public class DateUtil {
 	/*
 	 * long 型时间戳转换为 String 类型 字符串日期（yyyy-MM-dd）
 	 */
-	public static String convTimeStampToStringDate(Long timeStamp) {
-		SimpleDateFormat format1 = new SimpleDateFormat(DEFAULT_FULL_PATTERN);
+	public static String convTimeStampToStringDate(Long timeStamp,String pattern) {
+		SimpleDateFormat format1 = new SimpleDateFormat(pattern);
 
 		long unixLong = timeStamp * 1000;
 
