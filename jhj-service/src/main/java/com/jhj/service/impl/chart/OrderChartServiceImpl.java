@@ -116,7 +116,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 					}
 					
 					
-					
 					//新增订单小计 
 					Integer subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
 					subTotal = subTotal + chartSqlData.getTotal();

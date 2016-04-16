@@ -22,6 +22,8 @@ public interface OrderHourAddService {
 
 	List<Long> getBadRateStaffIds(Long userId, Long orgId);
 	
+	List<Long> getMatchTagStaffIds(Long orderId, List<Long> staffIds);
+	
 	
 	//2016年3月14日18:03:46  jhj2.1 计算 服务价格
 	

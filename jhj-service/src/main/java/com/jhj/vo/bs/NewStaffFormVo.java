@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.jhj.po.model.admin.AdminAuthority;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
 import com.meijia.utils.common.extension.ArrayHelper;
@@ -41,7 +42,28 @@ public class NewStaffFormVo extends OrgStaffs {
 	
 	//2016年1月22日18:44:46 已经通过认证的 项目 id，从 org_staff_auth表获得
 	private String authIds;
+	
+	//员工技能标签列表
+	private List<Tags> tagList;
+	
+	private String tagIds;
+	
 
+	public List<Tags> getTagList() {
+		return tagList;
+	}
+
+	public void setTagList(List<Tags> tagList) {
+		this.tagList = tagList;
+	}
+
+	public String getTagIds() {
+		return tagIds;
+	}
+
+	public void setTagIds(String tagIds) {
+		this.tagIds = tagIds;
+	}
 
 	public List<PartnerServiceType> getPartServiceList() {
 		return partServiceList;
@@ -82,10 +104,6 @@ public class NewStaffFormVo extends OrgStaffs {
 	public void setSkillIds(Long[] skillIds) {
 		this.skillIds = skillIds;
 	}
-
-//	public String getSkillIdsString() {
-//		return ArrayHelper.LongtoString(skillIds, ",");
-//	}
 
 	public String getSkillIdsStr() {
 		return skillIdsStr;

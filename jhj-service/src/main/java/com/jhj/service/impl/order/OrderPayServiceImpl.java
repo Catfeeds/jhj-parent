@@ -94,6 +94,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 	@Autowired
 	private NewDispatchStaffService newDisStaService;
 	
+	
 	/**
 	 * 钟点工订单支付成功,后续通知功能
 	 * 1. 进行派工操作
@@ -125,10 +126,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		//实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
 		if (orgStaffsNewVos.isEmpty()) {
-//			Long startTime = order.getServiceDate();
-//			Long endTime = startTime+order.getServiceHour()*3600;
-//			//jhj2.0派工逻辑
-//			orgStaffsNewVos = dispatchStaffFromOrderService.getNewBestStaffForHour(startTime, endTime, order.getAddrId(), orderId);
 			
 			List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orderId, order.getServiceDate());
 			
@@ -141,7 +138,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 			
 		}
 		
-//		if (orgStaffsNewVos.isEmpty()) return false;
 		
 		if(staList.isEmpty()) return false;
 		
@@ -151,10 +147,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 		//取第一个
 		OrgStaffs staff = staList.get(0);
 		
-		//随机取一个阿姨.
-//		Random r = new Random();
-//		int index = r.nextInt(orgStaffsNewVos.size());
-//		OrgStaffsNewVo orgStaffsNewVo = orgStaffsNewVos.get(index);
 		
 		OrderDispatchs orderDispatchs = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
 		
@@ -170,7 +162,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 		orderDispatchs.setServiceHours(order.getServiceHour());
 		
 		//更新服务人员与用户地址距离
-//TODO		orderDispatchs.setUserAddrDistance(orgStaffsNewVo.getDistanceValue());
 		
 		Long staffId = staff.getStaffId();
 		
@@ -187,19 +178,12 @@ public class OrderPayServiceImpl implements OrderPayService {
 		orderDispatchs.setUserAddrDistance(distance);
 		
 		//工作人员相关
-		//orderDispatchs.setStaffId(orgStaffsNewVo.getStaffId());
-		//orderDispatchs.setStaffName(orgStaffsNewVo.getName());
-		//orderDispatchs.setStaffMobile(orgStaffsNewVo.getMobile());
-		
 		orderDispatchs.setStaffId(staff.getStaffId());
 		orderDispatchs.setStaffName(staff.getName());
 		orderDispatchs.setStaffMobile(staff.getMobile());
 		
-//		orderDispatchs.setAmId(orgStaffsNewVo.getAmId());
-				
 		orderDispatchService.insertSelective(orderDispatchs);
 		
-//		order.setAmId(orgStaffsNewVo.getStaffId());//更新订单中助理Id
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);//更新订单状态---已派工
 		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付 的助理单，需要用到这个 修改时间
 		ordersService.updateByPrimaryKeySelective(order);
@@ -213,18 +197,17 @@ public class OrderPayServiceImpl implements OrderPayService {
 		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 
+		
 		//1) 用户收到派工通知---发送短信
 		String[] contentForUser = new String[] { timeStr };
 		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
 		
 		//2)派工成功，为服务人员发送推送消息---推送消息
 		if(orderDispatchs.getDispatchStatus()==1){
-//			dispatchStaffFromOrderService.pushToStaff(orgStaffsNewVo.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 			
 			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 		}
 		//2.1)派工成功,为服务人员发送短信
-//		SmsUtil.SendSms(orgStaffsNewVo.getMobile(),  "64746", contentForUser);
 
 		SmsUtil.SendSms(staff.getMobile(), "64746", contentForUser);
 		

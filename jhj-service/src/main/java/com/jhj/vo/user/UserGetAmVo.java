@@ -2,6 +2,7 @@ package com.jhj.vo.user;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Tags;
@@ -28,7 +29,17 @@ public class UserGetAmVo extends OrgStaffs {
 	
 	private String age;
 	
+	private Map<String, List<String>> skillMap;
+
 	
+	public Map<String, List<String>> getSkillMap() {
+		return skillMap;
+	}
+
+	public void setSkillMap(Map<String, List<String>> skillMap) {
+		this.skillMap = skillMap;
+	}
+
 	public String getOrgName() {
 		return orgName;
 	}

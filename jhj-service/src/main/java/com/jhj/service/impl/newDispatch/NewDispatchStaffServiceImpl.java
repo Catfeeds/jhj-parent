@@ -20,6 +20,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserTrailRealService;
@@ -62,6 +63,9 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	
 	@Autowired
 	private UserTrailRealService trailRealService;
+	
+	@Autowired
+	private OrderHourAddService orderHourAddService;
 	
 	/*
 	 *  助理类订单,手动派工，返回基础派工 逻辑 支持的  员工 id 集合
@@ -144,13 +148,18 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		//黑名单
 		List<Long> blackIdList = blackService.selectAllBadRateStaffId();
 		
-		/*
-		 *  2016年3月31日18:36:21  对于 厨娘烧饭有 附加服务。 还需过滤 标签匹配
-		 */
-		
 		//最终 符合基本 派工 条件的 服务人员
 		staffIdList.removeAll(blackIdList);
 		staffIdList.removeAll(dispatchIdList);
+		
+		
+		/*
+		 *  2016年3月31日18:36:21  对于 厨娘烧饭有 附加服务。 还需过滤 标签匹配
+		 *  
+		 */
+		
+		//匹配技能标签		TODO  匹配时，有个   清洁用品。写死了  id
+		staffIdList = orderHourAddService.getMatchTagStaffIds(orderId,staffIdList);
 		
 		return staffIdList;
 	}

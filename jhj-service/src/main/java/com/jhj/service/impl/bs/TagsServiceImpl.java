@@ -57,6 +57,11 @@ public class TagsServiceImpl implements TagsService {
 
 	@Override
 	public List<Tags> selectByIds(List<Long> tagIds) {
+		
+		if(tagIds.size() <= 0){
+			tagIds.add(0L);
+		}
+		
 		return tagsMapper.selectByIds(tagIds);
 	}
 

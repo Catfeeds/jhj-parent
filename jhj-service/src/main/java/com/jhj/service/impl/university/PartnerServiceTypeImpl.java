@@ -15,6 +15,7 @@ import com.jhj.po.model.admin.AdminAuthority;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.admin.AdminAuthorityVo;
+import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.bs.NewPartnerServiceVo;
 import com.jhj.vo.university.OaPartnerServiceTypeVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -186,10 +187,6 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		BeanUtilsExp.copyPropertiesIgnoreNull(serviceType, initVo);
 
 		
-		/*
-		 *  
-		 * 
-		 */
 		initVo.setId(serviceType.getServiceTypeId().intValue());
 		initVo.setVersion(0);
 		
@@ -204,8 +201,6 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 				NewPartnerServiceVo vo = transServiceToTree(partnerServiceType.getServiceTypeId());
 				
 				//递归调用, 得到 某个 根节点 及其 叶子子节点
-//				initVo.getChildList().add(vo);
-				
 				initVo.getChildren().add(vo);
 			}
 		}
@@ -249,4 +244,8 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		return list;
 	}
 	
+	@Override
+	public List<AmSkillVo> selectSkillNameAndParent(List<Long> childServiceIdList) {
+		return partMapper.selectSkillNameAndParent(childServiceIdList);
+	}
 }

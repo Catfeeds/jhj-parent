@@ -209,7 +209,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 					vo.setImgUrl("img/userRestMoney/iconfont-jianhao.png");
 				}
 				
-				vo.setAddTimeStr(DateUtil.convTimeStampToStringDate(pay.getAddTime()));
+				vo.setAddTimeStr(DateUtil.convTimeStampToStringDate(pay.getAddTime(),"yyyy-MM-dd HH:mm:ss"));
 				
 				voList.add(vo);	
 			}

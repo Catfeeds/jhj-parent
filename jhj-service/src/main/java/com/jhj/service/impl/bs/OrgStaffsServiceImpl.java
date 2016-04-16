@@ -683,6 +683,40 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		
 		formVo.setPartServiceList(partServiceList);
 		
+		
+		/*
+		 *  技能标签
+		 */
+		List<Tags> tags = new ArrayList<Tags>();
+		
+		String tagNames = "";
+		String tagIds = "";
+		
+		if (staffId > 0L) {
+			// 根据staffId查找对应的 tagId
+			List<OrgStaffTags> staffTags = orgStaTagService.selectByStaffId(staffId);
+			// 处理 form中 标签的 显示 和传值
+			List<Long> tagIdList = new ArrayList<Long>();
+			for (OrgStaffTags item : staffTags) {
+				tagIdList.add(item.getTagId());
+				tagIds += item.getTagId().toString() + ",";
+			}
+			//处理 列表中 标签字段的 展示
+			if (tagIdList.size() > 0) {
+				tags = tagService.selectByIds(tagIdList);
+				for (Tags item : tags) {
+					// 查找 tagId对应的 tagName
+					tagNames += item.getTagName() + " ";
+				}				
+			}
+		}
+		
+		formVo.setTagIds(tagIds);
+		
+		List<Tags> list = tagService.selectAll();
+		
+		formVo.setTagList(list);
+		
 		return formVo;
 	}
 	

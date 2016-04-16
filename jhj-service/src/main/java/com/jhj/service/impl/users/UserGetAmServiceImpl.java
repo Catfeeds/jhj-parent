@@ -2,8 +2,10 @@ package com.jhj.service.impl.users;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,20 +14,25 @@ import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
+import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserRefAm;
+import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserGetAmService;
 import com.jhj.service.users.UserRefAmService;
+import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.user.UserGetAmVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -61,6 +68,12 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 	private OrderPricesMapper orderPriceMapper;
 	@Autowired
 	private OrgsService orgService;
+	
+	@Autowired
+	private OrgStaffSkillService skillService;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
 	
 	/*
 	 * 用户版--用户查看助理页签
@@ -116,9 +129,6 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		}else {
 			userGetAmVo.setOrgName(orgs.getOrgName());
 		}
-		
-		
-		
 		
 		/*
 		 * 助理流水,  当月该助理   所有 助理预约单 的 订单金额 总和
@@ -183,6 +193,65 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		int orderNum = orderService.getIntimacyOrders(map);
 		
 		userGetAmVo.setOrderNum(orderNum);
+		
+		List<OrgStaffTags> list = orgStaTagService.selectByStaffId(staffId);
+		
+		List<Long> tagIdList = new ArrayList<Long>();
+		
+		for (OrgStaffTags orgStaffTags : list) {
+			tagIdList.add(orgStaffTags.getTagId());
+		}
+		
+		List<Tags> tagsList = tagService.selectByIds(tagIdList);
+		
+		// 标签
+		userGetAmVo.setTagList(tagsList);
+		
+		/*
+		 *  技能
+		 */
+		List<OrgStaffSkill> skillList = skillService.selectByStaffId(staffId);
+		
+		// 当前 staff 会的 所有技能 ， 录入时决定了。只能是  二级技能
+		List<Long> staffSkillList = new ArrayList<Long>();
+		
+		if(skillList.size()<=0){
+			staffSkillList.add(0L);
+		}
+		
+		for (OrgStaffSkill orgStaffSkill : skillList) {
+			staffSkillList.add(orgStaffSkill.getServiceTypeId());
+		}
+		
+		// 根据 员工会的 二级 技能-->  {一级技能id, 二级技能名称(属于分组一级技能、员工会)  }
+		List<AmSkillVo> amSkillList = partService.selectSkillNameAndParent(staffSkillList);
+		
+		
+		// <一级名称，二级名称集合>
+		Map<String, List<String>> skillNameMap = new LinkedHashMap<String, List<String>>();
+		
+		for (AmSkillVo amSkillVo : amSkillList) {
+			
+			Long firstServiceType = amSkillVo.getFirstServiceType();
+			
+			PartnerServiceType serviceType = partService.selectByPrimaryKey(firstServiceType);
+			
+			//一级技能 名称
+			String name = serviceType.getName();
+			
+			// 二级技能 名称 string
+			String childrenName = amSkillVo.getChildrenServiceName();
+			
+			String[] convertStrToArray = StringUtil.convertStrToArray(childrenName);
+			
+			//二级技能名称 list 集合
+			List<String> asList = Arrays.asList(convertStrToArray);
+			
+			skillNameMap.put(name, asList);
+			
+		}
+		// 技能树
+		userGetAmVo.setSkillMap(skillNameMap);
 		
 		return userGetAmVo;
 	}	

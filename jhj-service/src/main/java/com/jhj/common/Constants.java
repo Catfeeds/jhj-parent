@@ -287,6 +287,88 @@ public class Constants {
 	//2016年4月6日16:52:05  微网站--我的--余额--用户消费记录的标识 
 	public static Short USER_PAY_FLAG_MINUS = 0;	//用于支付  .用户钱少了
 	public static Short USER_PAY_FLAG_PLUS = 1;		//用于 充值 。用户钱多了
+	
+	
+	
+	/*
+	 *  截止 2016年4月13日18:56:37 
+	 *  	jhj2.1      短信模板 
+	 */
+	
+	/****************	用户微信版		********************/
+	
+	//1. 金牌保洁/厨娘烧饭/企业服务
+	
+	/*
+	 *  订单变更 (订单时间变更)
+	 *  
+	 *  您预定的{1}服务已经变更为{2}，感谢您的理解，给您带来的不便敬请谅解。
+	 */
+	public static String MESSAGE_ORDER_DATE_CHANGE = "79653";
+	
+	/*	
+	 * 	 下单成功待服务（支付成功）
+	 * 
+	 *   您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
+	 */
+	public static String MESSAGE_PAY_SUCCESS_TO_SERVICE = "79654";
+	
+	/*
+	 * 服务成功待评价（服务人员点击完成服务）
+	 * 
+	 *   您定制的{1}{2}服务已完成。为了您下次拥有更好的服务体验，诚邀您对我们的服务进行评价。链接{3}
+	 */
+	public static String MESSAGE_SERVICE_SUCCESS_TO_RATE = "79655";
+	
+	
+	/*
+	 *  套餐预约成功 (提交预约订单)
+	 * 
+	 *    您定制的{1}套餐已经预约成功，感谢您的支持，我们会尽快与您联系，如有任何疑问请拨打010-56429112
+	 * 
+	 */
+	public static String MESSAGE_SERVICE_PACKAGE_ORDER_SUCCESS = "79656";
+	
+	
+	//贴心家事、深度养护
+	
+	/*
+	 * 预约成功 （提交预约订单）
+	 * 
+	 *   您预定的{1}服务已经受理，感谢您的支持，我们会尽快与您联系，如有任何疑问请拨打010-56429112
+	 * 
+	 */
+	public static String MESSAGE_SERVICE_ORDER_SUCCESS = "79658";
+	
+	/*
+	 *  待支付 （客服完善订单信息）
+	 * 
+	 * 	您有一张未支付的订单，请您于30分钟内完成支付，以免耽误您的使用，谢谢。如已支付请忽略。
+	 */
+	public static String MESSAGE_ORDER_NEED_TO_PAY = "79660";
+	
+	/*
+	 * 服务完成待评价 (服务人员点击完成服务)
+	 * 
+	 *  您定制的{1}服务已完成。为了您下次拥有更好的服务体验，诚邀您对我们的服务进行评价。链接{2}
+	 */
+	public static String MESSAGE_SERVICE_SUCCESS_TO_RATE_2 = "79663";	
+	
+	//我的
+	
+	/*
+	 * 充值成功
+	 * 
+	 *  您好，您的账户于{1}充值{2}。定制全年套餐，让美好生活不再有家务之忧。
+	 */
+	public static String MESSAGE_CHARGE_PAY_SUCCESS = "79664";
+	
+	/*
+	 * 余额不足
+	 * 
+	 * 您好，您的账户余额已不足，为避免影响您的正常使用，请及时充值，谢谢。
+	 */
+	public static String MESSAGE_REST_MONEY_LITTLE = "79666";
 }
 
 
