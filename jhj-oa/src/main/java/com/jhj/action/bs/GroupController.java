@@ -85,12 +85,13 @@ public class GroupController {
 		//得到 当前登录 的 门店id，并作为搜索条件
 		String org = AuthHelper.getSessionLoginOrg(request);
 		
-		if(!StringUtil.isEmpty(org)){
+		if(!StringUtil.isEmpty(org) && !org.equals("0")){
 			
 			searchVo.setParentId(Long.parseLong(org));
 		}
 		
 		List<Orgs> list = orgsService.selectGroupsByListPage(searchVo);
+		
 		
 		PageInfo result = new PageInfo(list);	
 		
