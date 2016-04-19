@@ -752,12 +752,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderAddress(userAddrs.getName()+ " " + userAddrs.getAddress());
 			}
 		}
-		// 门店名称
-		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
-
-		if (orgs != null) {
-			oaOrderListVo.setOrgName(orgs.getOrgName());
-		}
+//		// 门店名称
+//		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
+//
+//		if (orgs != null) {
+//			oaOrderListVo.setOrgName(orgs.getOrgName());
+//		}
 		// 查找出有效派工
 		List<OrderDispatchs> disList_yes = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
 		// 查找出无效派工
@@ -815,10 +815,13 @@ public class OaOrderServiceImpl implements OaOrderService {
 				Orgs orgs2 = orgService.selectByPrimaryKey(staffs.getOrgId());
 				//云店名称
 				oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
+				
+				Long parentId = orgs2.getParentId();
+				Orgs orgs3 = orgService.selectByPrimaryKey(parentId);
+				//门店名称
+				oaOrderListNewVo.setOrgName(orgs3.getOrgName());
+				
 			}
-			
-			
-			
 			
 		}else{
 			oaOrderListNewVo.setStaffName("暂无");
