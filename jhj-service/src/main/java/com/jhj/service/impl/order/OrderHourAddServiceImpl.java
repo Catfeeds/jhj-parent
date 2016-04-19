@@ -380,7 +380,11 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 				orderServiceAddonList.remove(i);
 			}
 		}
-
+		
+		if(staffIds.isEmpty()){
+			staffIds.add(0L);
+		}
+		
 		//得到阿姨对应的所有技能列表.
 		List<OrgStaffTags> staffTagList = orgStaTagService.selectByStaffIds(staffIds);
 		

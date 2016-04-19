@@ -810,11 +810,14 @@ public class OaOrderServiceImpl implements OaOrderService {
 			
 			OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
 			
+			if(staffs != null){
+				
+				Orgs orgs2 = orgService.selectByPrimaryKey(staffs.getOrgId());
+				//云店名称
+				oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
+			}
 			
-			Orgs orgs2 = orgService.selectByPrimaryKey(staffs.getOrgId());
 			
-			//云店名称
-			oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
 			
 			
 		}else{
