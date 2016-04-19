@@ -3265,18 +3265,18 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   width:100%;border-bottom:1px solid #D4CACB;height:120px;float:left;
 }
 .circle-template-fiveservice{
-  width:80px;height:80px;border-radius: 50%;background:#F59DC1;color:#fff;font-size:16px;
-  text-align: center;line-height: 80px;margin-left:2%;margin-top:20px;float:left;
+  width:60px;height:60px;border-radius: 50%;background:#F59DC1;color:#fff;font-size:16px;
+  text-align: center;line-height: 60px;margin-left:2%;margin-top:30px;float:left;
 }
 .circle-template-fiveservice1{
-  width:80px;height:80px;border-radius: 50%;background:#FF999A;color:#fff;font-size:16px;
-  text-align: center;line-height: 80px;margin-left:2%;margin-top:20px;float:left;
+  width:60px;height:60px;border-radius: 50%;background:#FF999A;color:#fff;font-size:16px;
+  text-align: center;line-height: 60px;margin-left:2%;margin-top:30px;float:left;
 }
 .circle-template-fiveservice2 img{
-  width:80px;height:80px;margin-left:2%;margin-top:20px;float:left;border-radius:50%;overflow:hidden;
+  width:60px;height:60px;margin-left:2%;margin-top:30px;float:left;border-radius: 50%;
 }
 .word-template-fiveservice{
-  margin-left:2%;float:left;margin-top:30px;
+  float:left;margin-top:30px;
 }
 .word-template-fiveservice p{
   color:#999;margin:0;font-size:16px;
@@ -3287,12 +3287,12 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 .word-template-fiveservice1 p{
   color:#000;margin:0;font-size:16px;font-weight:bold;
 }
-/* .word-template-fiveservice p:nth-child(3){
+.word-template-fiveservice p:nth-child(3){
   color:#F08E36;
-} */
+}
 .btn-five{
-  width:26%;border:1px solid #999;color:#999;margin-top: 35px;margin-right:10px;float:right;
-  font-size:16px;
+  border:1px solid #999;color:#999;margin-top: 35px;margin-right:10px;float:right;
+  font-size:16px!important;
 }
 .fiveservice-img img{
   width: 100%;
@@ -3352,7 +3352,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   border-top: 1px solid #ccc;
   height:80px;
   width:100%;
-  background: #fff;
+  background: #fffce8;
 }
 .zhuli-introduce img{
   width:60px;
@@ -3363,7 +3363,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 .zhuli-introduce-nane{
   height:80px;
   float: left;
-  margin-left:20px;
+  margin-left:5px;
 }
 .zhuli-introduce-nane p{
   margin:0;
@@ -3375,7 +3375,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   overflow:hidden;
   float:left;
   border-radius: 50%;
-  margin-left:20px;
+  margin-left:5px;
   margin-top:10px;
 }
 .zhuli-introduce-img img{
