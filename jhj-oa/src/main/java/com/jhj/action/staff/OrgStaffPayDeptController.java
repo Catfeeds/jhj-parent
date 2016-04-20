@@ -50,21 +50,25 @@ public class OrgStaffPayDeptController extends BaseController {
 		//分页
 		PageHelper.startPage(pageNo, pageSize);
 		
-    //    List<OrgStaffPayDept> orgStaffPayDeptList = orgStaffPayDeptService.selectByListPage(searchVo,pageNo,pageSize);
         List<OrgStaffFinance> orgStaffFinanceList = orgStaffFinanceService.selectByListPage(searchVo,pageNo,pageSize);
-        OrgStaffFinanceVo vo = new OrgStaffFinanceVo();
+        
         for (int i = 0; i < orgStaffFinanceList.size(); i++) {
+        	
+        	OrgStaffFinanceVo vo = new OrgStaffFinanceVo();
+        	
         	OrgStaffFinance orgStaffFinance = orgStaffFinanceList.get(i);
         	BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffFinance, vo);
+        	
         	OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffFinance.getStaffId());
         	vo.setName(orgStaffs.getName());
+        	
         	orgStaffFinanceList.set(i, vo);
 		}
         
         PageInfo result = new PageInfo(orgStaffFinanceList);	
 		
 		model.addAttribute("contentModel", result);
-		//model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);
+		model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);
 		return "staff/staffPayDeptList";
 	}
 	

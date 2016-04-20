@@ -18,7 +18,8 @@
 	<%@ include file="../shared/importCss.jsp"%>
 	
 	<!--css for this page-->
-
+	<link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
+	     rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -36,20 +37,35 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-              <!-- page start-->
-		<%-- 	 <%@ include file="../common/user/userSearch.jsp"%> --%>
               <div class="row">
                   <div class="col-lg-12">
                       <section class="panel">
                           <header class="panel-heading">
-                          	会员列表
-                          	<!-- <div class="pull-right">
-                          		<button onClick="btn_add('/account/register?id=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
-                    		</div>  -->     
+                          	<h4>会员列表</h4>
+                          	
+                          	<form:form class="form-inline" onsubmit="return checkEndTime()"
+                          		modelAttribute="userListSearchVoModel" action="user-list" method="GET">
+	                         	<div class="form-group">	
+									手机号:<form:input path="mobile" class="form-control" autocomplete="off" type="number"/>
+								</div>
+								
+								<div class="form-group">
+	                          		开始时间：
+									<form:input path="startTimeStr" class="form-control form_datetime"
+									 style="width:110px; margin-bottom:0" readonly="true" />
+								</div>
+								<div class="form-group">
+									结束时间：
+									<form:input path="endTimeStr" class="form-control form_datetime" 
+									style="width:110px; margin-bottom:0" readonly="true" />
+								</div> 
+								
+								<button type="submit" class="btn btn-primary" >搜索</button>						
+	                 		</form:form> 
+                          	
                           </header>
                           
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-                          
 
                           <table class="table table-striped table-advance table-hover">
                               <thead>
@@ -60,7 +76,7 @@
 		                              <th >会员余额</th>
 		                              <th >会员积分</th>
 		                              <th >会员类型</th>
-		                              <th>会员来源</th>
+		                              <th >会员来源</th>
 		                              <th >添加时间</th>
                               </tr>
                               </thead>
@@ -94,7 +110,6 @@
 
                           
                       </section>
-                      <!--  <input type="button" value="导出数据" onclick="download()"/> -->
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="userList"/>
 	        				<c:param name="urlAddress" value="/user/user-list"/>
@@ -111,11 +126,16 @@
       <!--footer end-->
   </section>
 
-    <!-- js placed at the end of the document so the pages load faster -->
     <!--common script for all pages-->
     <%@ include file="../shared/importJs.jsp"%>
 
     <!--script for this page-->	
+    
+    <script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+	<script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+    
 	<script src="<c:url value='/js/jhj/user/userList.js'/>"></script>
 
   </body>

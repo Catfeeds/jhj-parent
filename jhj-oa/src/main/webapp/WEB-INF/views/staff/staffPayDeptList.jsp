@@ -6,7 +6,7 @@
 
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
-
+<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld" %>
 <html>
 <head>
 
@@ -27,27 +27,20 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			<section class="panel"> <%-- <form:form modelAttribute="orgStaffDetailPaySearchVoModel" action="staffBlack-list" method="GET">
-                          <header class="panel-heading">
-                          	<h4>数据搜索</h4>
-                          		<div>
-                          					姓名：<form:input path="name" />
-                          					手机号：<form:input path="mobile"/>
-									<input type="submit"  value="搜索"  >
-								</div>   
-                          </header>
-                           </form:form>  --%> <!-- <div class="pull-right">
-                          		<button onClick="btn_add('/staff/staffBlackForm?id=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
-                    		</div> --> <header class="panel-heading">
-			<h4>服务人员总欠款表</h4>
-
+			<section class="panel"> 
+			
+            <header class="panel-heading">
+				<h4>服务人员总欠款表</h4>
+				
+				<form:form class="form-inline" modelAttribute="orgStaffDetailPaySearchVoModel" action="staffPayDept-list" method="GET">
+                         <div class="form-group">	
+							选择云店: <cloudOrgSelectTag:select selectId="${orgStaffDetailPaySearchVoModel.orgId }"/>
+						</div>
+						<button type="submit" class="btn btn-primary" >搜索</button>						
+                 </form:form> 
 			</header>
-			<hr
-				style="width: 100%; color: black; height: 1px; background-color: black;" />
-
-
-
-			<!--  <button id="exportExcel" class="btn btn-success">导出Excel</button> -->
+			
+			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 
 			<table class="table table-striped table-advance table-hover"
 				id="table2excel">

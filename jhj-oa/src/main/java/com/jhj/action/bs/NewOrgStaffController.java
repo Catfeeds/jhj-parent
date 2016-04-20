@@ -37,7 +37,6 @@ import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
-import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffSkillService;

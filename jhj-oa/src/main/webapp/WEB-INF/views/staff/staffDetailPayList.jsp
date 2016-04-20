@@ -6,7 +6,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
-
+<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld" %>
 <html>
   <head>
 	
@@ -39,25 +39,31 @@ import="com.jhj.oa.common.UrlHelper"%>
                   <div class="col-lg-12">
                       <section class="panel">
                       	  
-                      	 	<form:form modelAttribute="orgStaffDetailPaySearchVoModel" action="staffPay-list" method="GET">
                           <header class="panel-heading">
                           	<h4>数据搜索</h4>
-                          		<div class="form-inline">
-                          					
-                          		手机号：<form:input path="mobile"/>
-                          		
-                          		开始时间：
-								<form:input path="startTimeStr" class="form-control form_datetime"
-								 style="width:110px; margin-bottom:0" readonly="true" />
-								 
-								结束时间：
-								<form:input path="endTimeStr" class="form-control form_datetime" 
-								style="width:110px; margin-bottom:0" readonly="true" />
+                      	 	<form:form class="form-inline" onsubmit="return checkEndTime()"
+                      	 			modelAttribute="orgStaffDetailPaySearchVoModel" 
+                      	 			action="staffPay-list" method="GET">
+                          		<div class="form-group">
+                          			手机号：<form:input path="mobile" class="form-control"/>
+                          		</div>
+                          		<div class="form-group">
+	                          		开始时间：
+									<form:input path="startTimeStr" class="form-control form_datetime"
+									 style="width:110px; margin-bottom:0" readonly="true" />
+								</div>
+								<div class="form-group">
+									结束时间：
+									<form:input path="endTimeStr" class="form-control form_datetime" 
+									style="width:110px; margin-bottom:0" readonly="true" />
+								</div> 
+								 <div class="form-group">	
+										选择云店: <cloudOrgSelectTag:select selectId="${orgStaffDetailPaySearchVoModel.orgId }"/>
+								 </div>
 								
-								<input type="submit"  value="搜索"  >
-								</div>   
-                          </header>
+								<button type="submit" class="btn btn-primary" >搜索</button>								
                            </form:form>     
+                          </header>
                            
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
                       	
@@ -65,7 +71,6 @@ import="com.jhj.oa.common.UrlHelper"%>
                           	<h4>服务人员财务明细列表</h4>
                           </header>
                           
-                         <!--  <button id="exportExcel" class="btn btn-success">导出Excel</button> -->
                           
                           <table class="table table-striped table-advance table-hover" id="table2excel">
                               <thead>
@@ -79,7 +84,6 @@ import="com.jhj.oa.common.UrlHelper"%>
 		                              <th >订单状态</th>
 		                              <th >备注</th>
 		                              <th >添加时间</th>
-		                             <!--  <th>操作</th>  -->
                               </tr>
                               </thead>
                               <tbody>
@@ -96,8 +100,6 @@ import="com.jhj.oa.common.UrlHelper"%>
 							            <td>
 							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 							            </td>
-							       	<%-- <td><button id="btn_update" onClick="btn_update('order/orderView?orderNo=${ item.orderNo }&disStatus=${fn:substring(sta.key,0,1) }')" class="btn btn-primary btn-xs" title="订单详情"><i class=" icon-ambulance"></i></button></td>
-							       	 --%>	
                               </tr>
                               	</c:forEach>
                               </tbody>

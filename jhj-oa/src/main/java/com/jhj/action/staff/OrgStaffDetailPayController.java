@@ -64,16 +64,17 @@ public class OrgStaffDetailPayController extends BaseController {
 			searchVo  = new OrgStaffDetailPaySearchVo();
 		}
 		searchVo.setMobile(mobile);
-		//在提醒订单，点击搜索
-				String startTimeStr = searchVo.getStartTimeStr();
-				if(!StringUtil.isEmpty(startTimeStr)){
-					searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
-				}
-				
-				String endTimeStr = searchVo.getEndTimeStr();
-				if(!StringUtil.isEmpty(endTimeStr)){
-					searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
-				}
+		
+		//转换为数据库 参数字段
+		String startTimeStr = searchVo.getStartTimeStr();
+		if(!StringUtil.isEmpty(startTimeStr)){
+			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		}
+		
+		String endTimeStr = searchVo.getEndTimeStr();
+		if(!StringUtil.isEmpty(endTimeStr)){
+			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		}
 		
 		
         List<OrgStaffDetailPay> orgStaffdetailPayList = orgStaffDetailPayService.selectVoByListPage(searchVo,pageNo,pageSize);

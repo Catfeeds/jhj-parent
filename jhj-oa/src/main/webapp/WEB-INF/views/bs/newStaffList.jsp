@@ -83,6 +83,7 @@
                               		<th>籍贯</th>
                               		<th>身份证号</th>
                               		<th>电话号码</th>
+                              		<th>是否可用</th>
                               		<th>操作</th>
                               </tr>
                               </thead>
@@ -112,7 +113,16 @@
 										<td>${ orgStaff.nativePlace }</td>
 										<td>${ orgStaff.cardId }</td>
 										<td>${ orgStaff.mobile }</td>
-								<td>
+										<td>
+											<c:choose>
+												<c:when test="${ orgStaff.status == 0}">
+													<font style="color:red">不可用</font>
+												</c:when>
+												<c:when test="${ orgStaff.status == 1}">
+														可用
+												</c:when>
+											</c:choose>	
+									<td>
 										<button id="btn_update"
 											onClick="btn_update('newbs/new_staff_form?orgStaffId=${orgStaff.staffId}')"
 											class="btn btn-primary btn-xs" title="修改">
@@ -124,8 +134,8 @@
 											onClick="btn_update('order/order-scheduling?org_staff_id=${orgStaff.staffId}')"
 											class="btn btn-info" >排班</button>
 										</button>
-								</td>
-							</tr>
+									</td>
+								</tr>
                               </c:forEach>
                               </tbody>
                           </table>

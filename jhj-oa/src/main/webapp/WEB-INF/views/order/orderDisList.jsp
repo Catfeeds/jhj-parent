@@ -6,8 +6,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
-<%@ taglib prefix="amNameTag"  uri = "/WEB-INF/tags/AmSelect.tld"%>
-
+<%@ taglib prefix="orderVoStatusTag" uri="/WEB-INF/tags/orderVoStatusName.tld" %>
 
 
 <html>
@@ -41,20 +40,8 @@ import="com.jhj.oa.common.UrlHelper"%>
                   <div class="col-lg-12">
                       <section class="panel">
                       	  
-                      	<%--   <form:form modelAttribute="oaOrderDisSearchVoModel" action="order-list" method="GET">
-	                         <header class="panel-heading">
-	                         	<h4>数据搜索</h4>
-	                         		<div>
-	                     			<amNameTag:select selectId="${ oaOrderDisSearchVoModel.amId}"/>
-									<input type="submit"  value="搜索"  >
-								</div>   
-	                         </header>
-                           </form:form>   
-                            
-                      	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
-                      	--%>
                           <header class="panel-heading">
-                          	<h4>订单列表</h4>
+                          	<h4>派工列表</h4>
                           </header>
                           
                           <table class="table table-striped table-advance table-hover">
@@ -65,11 +52,10 @@ import="com.jhj.oa.common.UrlHelper"%>
 		                              <th >用户手机</th>
 		                              <th >服务地址</th>
 		                              <th >服务时间</th>
-		                              <th >门店名称</th>
+		                              <th >云店名称</th>
 		                              <th >阿姨名称</th>
 		                              <th >阿姨手机号</th>
-		                              <th >助理名称</th>
-		                              <th >助理手机号</th>
+		                              <th >订单状态</th>
 		                              <th >操作</th>
                               </tr>
                               </thead>
@@ -86,15 +72,28 @@ import="com.jhj.oa.common.UrlHelper"%>
 									  <td>${ item.orgName }</td>
 									  <td>${ item.staffName }</td>
 									  <td>${ item.staffMobile }</td>
-									  <td>${ item.amName }</td>
-									  <td>${ item.amMobile }</td>
-
+									  <td>
+									  	 <orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" 
+ 											 	orderType="${item.orderType }" /> 
+									  </td>
 							       	  <td>
-							       		<button id="btn_update" 
-							       				onClick="btn_update('order/orderView?orderNo=${ item.orderNo }&disStatus=${item.dispatchStatus}')" 
-							       				class="btn btn-primary btn-xs" title="订单详情">
-							       				<i class=" icon-ambulance"></i>
-							       		</button>
+							       	  	<!-- 如果是钟点工订单 -->
+							       	  	<c:if test="${item.orderType == 0 }">
+								       		<button id="btn_update" 
+								       				onClick="btn_update('order/order-hour-view?orderNo=${ item.orderNo }&disStatus=${item.dispatchStatus}')" 
+								       				class="btn btn-primary btn-xs" title="订单详情">
+								       				<i class=" icon-ambulance"></i>
+								       		</button>
+							       	  	</c:if>
+							       	  	
+							       	  	<!-- 如果是助理订单 -->
+							       	  	<c:if test="${item.orderType == 2 }">
+							       	  		<button id="btn_update" 
+								       				onClick="btn_update('order/order-am-view?orderNo=${ item.orderNo }&disStatus=${item.dispatchStatus}')" 
+								       				class="btn btn-primary btn-xs" title="订单详情">
+								       				<i class=" icon-ambulance"></i>
+								       		</button>
+							       	  	</c:if>
 							       	  </td>
                               </tr>
                               </c:forEach>

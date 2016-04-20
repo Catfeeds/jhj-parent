@@ -1,6 +1,7 @@
 package com.jhj.action.user;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,9 +48,11 @@ import com.jhj.vo.finance.FinanceSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
 import com.jhj.vo.user.UserCouponsVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -109,19 +113,33 @@ public class UserController extends BaseController {
 	@AuthPassport
 	@RequestMapping(value = "/user-list", method = { RequestMethod.GET })
 	public String userList(HttpServletRequest request, Model model,
-			UserSearchVo searchVo) {
-		model.addAttribute("requestUrl", request.getServletPath());
-		model.addAttribute("requestQuery", request.getQueryString());
-
-		model.addAttribute("searchModel", searchVo);
+			@ModelAttribute("userListSearchVoModel")UserSearchVo searchVo) throws ParseException {
+		
+		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		
+		
+		//转换为数据库 参数字段
+		String startTimeStr = searchVo.getStartTimeStr();
+		if(!StringUtil.isEmpty(startTimeStr)){
+			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		}
+		
+		String endTimeStr = searchVo.getEndTimeStr();
+		if(!StringUtil.isEmpty(endTimeStr)){
+			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		}
+				
+		
 		PageInfo result = usersService.searchVoListPage(searchVo, pageNo,
 				pageSize);
 		model.addAttribute("userList", result);
 
+		model.addAttribute("userListSearchVoModel", searchVo);
+		
 		return "user/userList";
 	}
 
@@ -157,7 +175,7 @@ public class UserController extends BaseController {
 	@AuthPassport
 	@RequestMapping(value = "/user-pay-detail", method = { RequestMethod.GET })
 	public String payDetailList(HttpServletRequest request, Model model,
-			UserDetailSearchVo searchVo) {
+			@ModelAttribute("userPayDetailSearchVoModel")UserDetailSearchVo searchVo) throws ParseException {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
@@ -166,9 +184,24 @@ public class UserController extends BaseController {
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		
 
+		//转换为数据库 参数字段
+		String startTimeStr = searchVo.getStartTimeStr();
+		if(!StringUtil.isEmpty(startTimeStr)){
+			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		}
+		
+		String endTimeStr = searchVo.getEndTimeStr();
+		if(!StringUtil.isEmpty(endTimeStr)){
+			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		}
+		
+		
 		PageInfo result = userDetailPayService.searchVoListPage(searchVo,
 				pageNo, pageSize);
+		
+		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);
 
 		return "user/userDetailPayList";

@@ -13,7 +13,7 @@
 			</div>
 			<div class="portlet-body form">
 				<!-- BEGIN FORM-->
-				<form:form modelAttribute="searchModel" class="form-horizontal"
+				<form:form class="form-inline" modelAttribute="searchModel" class="form-horizontal"
 					method="Get">
 					<div class="form-body">
 

@@ -4,6 +4,8 @@
     import="com.jhj.common.ConstantOa"
     import="org.apache.taglibs.standard.tag.common.core.UrlSupport"%>
 
+<%@ include file="../shared/taglib.jsp"%>
+
 <%
 	String urlAddress=request.getParameter("urlAddress");
 	String pageModelName= request.getParameter("pageModelName");
@@ -13,6 +15,7 @@
 		pageCount = Integer.valueOf(request.getParameter("pageCount"));
 	}
 %>
+
 
 <div class="row">
 <%
@@ -32,13 +35,13 @@
 	<%}
 	else{%>
 
-		<div class="col-md-5 col-sm-12">
+		<div class="col-md-5 col-sm-9">
 			<div class="dataTables_info">(每页显示<%=pageInfo.getPageSize() %>条，共 <%=pageInfo.getTotal() %> 条记录)</div>
 		</div>
 
-		<div class="col-md-7 col-sm-12">
+		<div class="col-md-7 col-sm-15  text-center">
 			<div class="dataTables_paginate paging_bootstrap">
-		   		<ul class="pagination">
+		   		<ul class="pagination" >
 
 		<%String queryString=request.getQueryString();
 		urlAddress = UrlSupport.resolveUrl(urlAddress, null, pageContext);
@@ -75,7 +78,7 @@
                         <li><a href="<%=pageUrl%>"><%=i %></a></li>
     				<%}
         			else if(i==pageCount-2){%>
-        				<span>...</span>
+        				<li><span>...</span></li>
         			<%}
         			else{
     					int pageNo=pageInfo.getPages()-(pageCount-i);
@@ -89,7 +92,7 @@
                         <li><a href="<%=pageUrl%>"><%=i %></a></li>
         			<%}
         			else if(i==3){%>
-        				<span>...</span>
+        				<li><span>...</span></li>
         			<%}
         			else{
         				int pageNo=pageInfo.getPages()-(pageCount-i);
@@ -108,7 +111,7 @@
                         <li><a href="<%=pageUrl%>"><%=i %></a></li>
         			<%}
         			else if(i==3 || i==pageCount-2){%>
-        				<span>...</span>
+        				<li><span>...</span></li>
         			<%}
         			else if(i>pageCount-2){
         				int pageNo=pageInfo.getPages()-(pageCount-i);
@@ -162,9 +165,58 @@
 				<span>下一页</span>
 			</li>
         <%}%>
-        		</ul>
-			</div>
+             
+        </ul> 
+	        <div>          
+		                   跳转到 <input type="number" style="width:40px" id="gotoPageNo" value="">页
+		                   
+		            <% String nowDisplayUrl  = PageUtil.getNowDisUrl(urlAddress,queryString); %>       
+		             
+		            <input type="hidden" id="nowDisUrl" value="<%=nowDisplayUrl%>">       
+					<a href="#" id="gotoUrl">GO</a>
+	       	</div>	
 		</div>
+	</div>
 
 	<%}%>
 </div>
+
+
+<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://libs.baidu.com/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
+<script type="text/javascript">
+
+$("#gotoUrl").on("click",function(){
+	
+	
+	var nowDisUrl = $("#nowDisUrl").val();
+	
+	var pageNo =  $("#gotoPageNo").val();
+	
+	if(pageNo.length == 0){
+		//如果输入小数等,会跳转到第一页
+		alert("请输入合法的跳转页码");
+		return false;
+	}
+	
+	
+	if(nowDisUrl.indexOf("?")>0){
+		window.location.href = getRootPath()+nowDisUrl+"&pageNo="+pageNo;
+	}else{
+		window.location.href = getRootPath()+nowDisUrl+"?pageNo="+pageNo;
+	}
+	
+	
+});	
+
+function getRootPath() {
+    var strFullPath = window.document.location.href;
+    var strPath = window.document.location.pathname;
+    var pos = strFullPath.indexOf(strPath);
+    var prePath = strFullPath.substring(0, pos);
+    var postPath = strPath.substring(0, strPath.substr(1).indexOf('/') + 1);
+    return (prePath + postPath);
+}
+
+</script>

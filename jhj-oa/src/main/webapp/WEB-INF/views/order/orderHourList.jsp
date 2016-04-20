@@ -140,7 +140,14 @@ import="com.jhj.oa.common.UrlHelper"%>
 							            <td>${ item.orderMoney }</td>
 							            <td>${ item.orderPay }</td>
 							            
-							       	<td><button id="btn_update" onClick="btn_update('order/order-hour-view?orderNo=${ item.orderNo }&disStatus=${fn:substring(sta.key,0,1) }')" class="btn btn-primary btn-xs" title="订单详情"><i class=" icon-ambulance"></i></button></td>
+							       	<td>
+							       		<button id="btn_update" 
+							       			onClick="btn_update('order/order-hour-view?orderNo=${ item.orderNo }&disStatus=${fn:substring(sta.key,0,1) }')" 
+							       			class="btn btn-primary btn-xs" 
+							       			title="订单详情">
+							       				<i class=" icon-ambulance"></i>
+							       			</button>
+							       	</td>
 							       		<%-- <td>
 							       			<button id="btn_update" onClick="btn_update('msg/msgForm?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
 	                                  		<button id="btn_del" onClick="btn_del('/account/delete/${item.id}')" class="btn btn-danger btn-xs"  title="删除"><i class="icon-trash "></i></button>

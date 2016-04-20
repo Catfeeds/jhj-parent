@@ -383,7 +383,7 @@ public class OaOrderController extends BaseController {
 	 * 	@param 订单号。当前 派工状态
 	 * 	
 	 */
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "/orderView",method = RequestMethod.GET)
 	public String  orderDetail(String orderNo,Short disStatus,Model model){
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetail(orderNo,disStatus);
@@ -393,7 +393,10 @@ public class OaOrderController extends BaseController {
 	/**
 	 * 钟点工---订单详情
 	 * @param orderNo
-	 * @param disStatus
+	 * @param disStatus  
+	 * 
+	 * 			2016年4月20日15:39:00  该参数已无 实际用处。但为了兼顾 老数据，暂时保留
+	 * 
 	 * @param model
 	 * @return
 	 */
@@ -411,8 +414,13 @@ public class OaOrderController extends BaseController {
 	}
 	/**
 	 * 深度保洁---订单详情
+	 * 
+	 * 		2016年4月20日15:39:44  该方法 已经没有用处。。jhj2.1 没有深度保洁订单了
+	 * 			
 	 * @param orderNo
 	 * @param disStatus
+	 * 			
+	 * 			2016年4月20日15:39:00  该参数已无 实际用处。但为了兼顾 老数据，暂时保留
 	 * @param model
 	 * @return
 	 */
@@ -432,6 +440,9 @@ public class OaOrderController extends BaseController {
 	 * 助理---订单详情
 	 * @param orderNo
 	 * @param disStatus
+	 * 	
+	 * 			2016年4月20日15:39:00  该参数已无 实际用处。但为了兼顾 老数据，暂时保留
+	 * 			
 	 * @param model
 	 * @return
 	 */

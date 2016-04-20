@@ -173,10 +173,16 @@
                         </div>
 
 						<div class="form-group required">
-							<label class="col-md-2 control-label">员工状态</label>
+							<label class="col-md-2 control-label">
+								员工状态
+							</label>
 							<div class="col-md-5">
 								<form:radiobutton path="status" value="1" label="可用" />
 								<form:radiobutton path="status" value="0" label="不可用" />
+								<p>
+									若员工离职或请假请勾选为
+										<font color="red">不可用,不可用的员工不参与派工</font>
+								</p>
 							</div>
 						</div>
 						

@@ -14,7 +14,8 @@
 	<%@ include file="../shared/importCss.jsp"%>
 	
 	<!--css for this page-->
-
+	<link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
+	     rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -33,16 +34,38 @@
       <section id="main-content">
           <section class="wrapper">
               <!-- page start-->
-			 <%@ include file="../common/user/userDetailSearch.jsp"%>
+			<%--  <%@ include file="../common/user/userDetailSearch.jsp"%> --%>
               <div class="row">
                   <div class="col-lg-12">
                       <section class="panel">
                           <header class="panel-heading">
-                          	会员消费明细列表
-                          	
-                         <!--  	<div class="pull-right">
-                          		<button onClick="btn_add('/account/register?id=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
-                    		</div>    -->   
+                          	<h4>会员消费明细列表</h4>
+                        	
+                        	<form:form class="form-inline" onsubmit="return checkEndTime()"
+                        		modelAttribute="userPayDetailSearchVoModel" action="user-pay-detail" method="get" >
+                       	  
+                          		<div class="form-group">
+                          				会员手机号:<form:input path="mobile" class="form-control"  type="number"/>
+                          		</div>	
+                          		
+                          		<div class="form-group">
+                          				订单号:<form:input path="orderNo" class="form-control"  type="number"/>
+                          		</div>
+                          		
+                          		<div class="form-group">
+	                          		开始时间：
+									<form:input path="startTimeStr" class="form-control form_datetime"
+									 style="width:110px; margin-bottom:0" readonly="true" />
+								</div>
+								<div class="form-group">
+									结束时间：
+									<form:input path="endTimeStr" class="form-control form_datetime" 
+									style="width:110px; margin-bottom:0" readonly="true" />
+								</div>
+								 
+								<button type="submit" class="btn btn-primary" >搜索</button>
+                           </form:form> 
+                          
                           </header>
                           
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
@@ -59,7 +82,6 @@
 		                              <th>交易状态</th>
 		                              <th>付款类型</th>
 		                              <th >添加时间</th>
-		                             <!--  <th>操作</th> -->
                               </tr>
                               </thead>
                               <tbody>
@@ -90,11 +112,6 @@
 							            <td>
 							            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>
 							            </td>
-							           <%--  <td>
-							            	<button id="btn_update" onClick="btn_update('msg/msgForm?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
-	                                  		<button id="btn_del" onClick="btn_del('/account/delete/${item.id}')" class="btn btn-danger btn-xs"  title="删除"><i class="icon-trash "></i></button>
-							            
-							            </td> --%>
                               </tr>
                               </c:forEach>
                               </tbody>
@@ -123,6 +140,12 @@
     <%@ include file="../shared/importJs.jsp"%>
 
     <!--script for this page-->	
+    
+    <script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+	<script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+    
  	<script src="<c:url value='/js/jhj/user/userDetailList.js'/>"></script>
 
   </body>
