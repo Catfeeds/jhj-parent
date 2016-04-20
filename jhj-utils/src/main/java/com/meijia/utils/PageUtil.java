@@ -20,5 +20,22 @@ public class PageUtil {
 			return queryString.isEmpty()?url:url+"?"+queryString;
 		}
     }
-
+    
+    public static String getNowDisUrl(String url,String queryString){
+    	
+    	if(queryString==null)
+    		queryString=new String();
+    	else
+    		queryString=queryString.replaceAll("&pageNo=\\d*", "").replaceAll("pageNo=\\d*", "").replaceAll("&pageSize=\\d*", "").replaceAll("pageSize=\\d*", "");
+    	
+    	
+    	url = url.replaceAll("/jhj-oa", "");
+    	
+    	if (url.indexOf("?") > 0) {
+			return queryString.isEmpty()?url:url+"&"+queryString;
+		} else {
+			return queryString.isEmpty()?url:url+"?"+queryString;
+		}
+    	
+    }
 }

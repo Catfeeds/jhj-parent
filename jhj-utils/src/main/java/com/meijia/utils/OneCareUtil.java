@@ -218,7 +218,7 @@ public class OneCareUtil {
 				statusName = "管理平台";
 				break;
 			case 999:
-				statusName = "所用来源";
+				statusName = "所有来源";
 				break;
 			default:
 				statusName = "";
