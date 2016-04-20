@@ -1,6 +1,7 @@
 package com.jhj.action.app.user;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserRefOrgService;
 import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.user.CompareOrderNumForStaff;
 import com.jhj.vo.user.UserGetAmVo;
 
 /**
@@ -81,11 +83,21 @@ public class UserGetOrgController extends BaseController {
 		
 		List<UserGetAmVo> list = new ArrayList<UserGetAmVo>();
 		
-		for(OrgStaffs item : orgStaffs) {
+		for (OrgStaffs item : orgStaffs) {
+			
 			UserGetAmVo userGetAmVo = userGetAmService.getStaffByUserId(userId, item.getStaffId());
+			
 			list.add(userGetAmVo);
 		}
-
+		
+		//自定义排序，按服务次数倒序 
+		Collections.sort(list, new CompareOrderNumForStaff());
+		
+		//列表展示 ，只展示前5条
+		if(list.size() >= 5){
+			list = list.subList(0, 5);
+		}
+		
 		result.setData(list);
 		
 		return result;
@@ -101,7 +113,6 @@ public class UserGetOrgController extends BaseController {
 		
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
 		
 		UserGetAmVo userGetAmVo = userGetAmService.getStaffByUserId(userId, staffId);
 		
