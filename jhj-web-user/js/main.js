@@ -22,7 +22,7 @@ var myApp = new Framework7({
     domCache: true,
     // Hide and show indicator during ajax requests
     onAjaxStart: function (xhr) {
-            myApp.showIndicator();
+            myApp.hideIndicator();
     },
     onAjaxComplete: function (xhr) {
             myApp.hideIndicator();
