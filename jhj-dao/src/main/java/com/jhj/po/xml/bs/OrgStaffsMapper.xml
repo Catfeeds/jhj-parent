@@ -47,6 +47,8 @@
 	 	p.org_id = #{orgId,jdbcType=NUMERIC}	
 	 	AND 
 	 	m.service_type_id = #{serviceTypeId,jdbcType=VARCHAR}
+	 	and
+	 	status = 1
   </select>
   
   <!-- jhj2.1  新版服务人员列表 -->	

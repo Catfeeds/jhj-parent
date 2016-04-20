@@ -9,13 +9,37 @@ public class UserSearchVo {
   
     private Short addFrom;
   
-    private Long startTime;
-  
-    private Long endTime;
- 	  
 	private Long adminId;	// 加载 会员充值 列表页时。需要  过滤 显示  当前登录  用户（管理员、店长）  
 
+	/*
+	 *  页面参数
+	 */
+	private String startTimeStr;
+	private String endTimeStr;
 	
+	/*
+	 * 页面参数对应的数据库参数
+	 */
+	private Long startTime;
+	private Long endTime;
+	
+	
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
+	}
+
 	public Long getAdminId() {
 		return adminId;
 	}

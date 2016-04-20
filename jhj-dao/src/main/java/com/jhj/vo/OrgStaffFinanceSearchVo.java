@@ -3,11 +3,21 @@ package com.jhj.vo;
 
 public class OrgStaffFinanceSearchVo {
 
-	  private String mobile;
-	  
-	  private Long startTime;
-	  
-	  private Long endTime;
+	private String mobile;
+  
+	private Long startTime;
+  
+	private Long endTime;
+	
+	private Long orgId;
+	
+	public Long getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Long orgId) {
+		this.orgId = orgId;
+	}
 
 	public Long getStartTime() {
 		return startTime;

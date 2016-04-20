@@ -47,6 +47,13 @@
 		<if test="orderNo != null and orderNo !='' ">
 			and order_no = #{orderNo,jdbcType=VARCHAR}
 		</if>
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		
 		order by add_time desc
 	</select>
 

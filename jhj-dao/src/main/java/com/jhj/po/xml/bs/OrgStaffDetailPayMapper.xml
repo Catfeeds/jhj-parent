@@ -25,20 +25,32 @@
     where id = #{id,jdbcType=NUMERIC}
   </select>
   <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
-  	select
-    <include refid="Base_Column_List" />
-    from org_staff_detail_pay
- 	where 1=1 
-	<if test="mobile !=null and mobile != ''">
-		and mobile = #{mobile,jdbcType=CHAR}
-	</if>
-	<if test="startTime !=null and startTime!='' ">
+  
+  	SELECT 
+  	<include refid="Base_Column_List" /> 
+ 	FROM org_staff_detail_pay 
+	WHERE 1=1
+	and
+	staff_id IN (
+		SELECT 
+			c.`staff_id`
+		FROM org_staffs AS b, org_staff_detail_pay AS c
+		WHERE 
+			b.staff_id = c.staff_id 
+		<if test="mobile !=null and mobile != ''">
+			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		<if test="startTime !=null and startTime!='' ">
 			<![CDATA[ and add_time >= #{startTime}]]>
 		</if>
 		<if test="endTime !=null and endTime !='' ">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-    order by add_time desc    
+		<if test="orgId != null and orgId != 0 ">
+			and b.org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+	)
+	order by add_time desc    
 
   </select>
   	<select id="selectByStaffIdAndTimeListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffPaySearchVo">

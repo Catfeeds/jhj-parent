@@ -398,6 +398,10 @@
 		<include refid="Base_Column_List" />
 		from orders
 		where 1=1
+		
+		<if test="orderNo != null">
+			and  order_no = #{orderNo,jdbcType=VARCHAR}
+		</if>
 		and
 		order_type in (0,1,2,3,4,5,6)
 		
@@ -449,7 +453,6 @@
    			</foreach>  
 		
 		</if>
-		
 		
 		order by add_time desc
 	</select>

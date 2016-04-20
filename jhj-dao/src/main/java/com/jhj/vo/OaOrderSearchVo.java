@@ -55,7 +55,15 @@ public class OaOrderSearchVo {
 	private List<Long> childServiceTypeList;		
 	
 	
+	// 2016年4月19日18:36:13  排班列表，点击进入订单列表
+	private String orderNo;	
 	
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
 	public Long getParentServiceType() {
 		return parentServiceType;
 	}
