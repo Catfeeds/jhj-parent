@@ -87,6 +87,8 @@ public class UserGetAmVo extends OrgStaffs {
 	public void setAstroName(String astroName) {
 		this.astroName = astroName;
 	}
-
+	
+	
+	
 	
 }

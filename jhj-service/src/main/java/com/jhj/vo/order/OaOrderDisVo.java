@@ -21,6 +21,28 @@ public class OaOrderDisVo extends OrderDispatchs{
 	
 	private String amMobile;	//助理手机号
 
+	private Short orderType;	// 订单类型，决定 在派工列表点击进入 不同 的订单详情页
+	
+	private Short orderStatus;  //订单状态
+	
+	
+	
+	public Short getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(Short orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public Short getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Short orderType) {
+		this.orderType = orderType;
+	}
+
 	/**
 	 * @return the userName
 	 */

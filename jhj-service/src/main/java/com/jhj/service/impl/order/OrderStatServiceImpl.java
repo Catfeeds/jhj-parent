@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffsMapper;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.order.OrdersMapper;
@@ -68,7 +69,24 @@ public class OrderStatServiceImpl implements OrderStatService {
 				map1.put("color","orange");
 				flag = true;
 			}*/
-			map1.put("url","/jhj-oa/order/cal-list?name='agendaDay'&serviceDate="+serviceDate+"&staffId="+orgStaffId);
+			
+			Short orderType = orders.getOrderType();
+			
+			//钟点工订单--钟点工订单列表
+			if(orderType == Constants.ORDER_TYPE_0){
+//				map1.put("url","/jhj-oa/order/cal-list?name='agendaDay'&serviceDate="+serviceDate+"&staffId="+orgStaffId);
+				
+				map1.put("url", "/jhj-oa/order/order-hour-list?orderNo="+orderNo);
+			}
+			
+			//助理订单--助理订单列表
+			if(orderType == Constants.ORDER_TYPE_2){
+				map1.put("url", "/jhj-oa/order/order-am-list?orderNo="+orderNo);
+			}
+				
+			
+			
+			
 			listMap.add(map1);
 		}
 		return listMap;

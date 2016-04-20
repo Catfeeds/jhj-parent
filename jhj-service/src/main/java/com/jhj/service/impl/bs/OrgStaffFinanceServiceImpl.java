@@ -92,7 +92,6 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	@Override
 	public List<OrgStaffFinance> selectByListPage(
 			OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize) {
-		PageHelper.startPage(pageNo, pageSize);
 		List<OrgStaffFinance> list = orgStaffFinanceMapper.selectVoByListPage(searchVo);
 		return list;
 	}

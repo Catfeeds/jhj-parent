@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
@@ -76,23 +77,24 @@ public class OaOrderDisServiceImpl implements OaOrderDisService {
 		 * bug: 对于 已支付，即 在 派工表有记录的 订单， 如果发生 取消订单操作，
 		 */
 		
-		
 		Orders orders = orderService.selectByOrderNo(dispatchs.getOrderNo());
 		Long addrId = orders.getAddrId();
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
 		orderDisVo.setAddrName(userAddrs.getName()+" "+userAddrs.getAddr());
 		
-		Long amId = dispatchs.getAmId();
-		OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(amId);
-		//助理名称
-		orderDisVo.setAmName(orgStaffs.getName());
-		//助理手机号
-		orderDisVo.setAmMobile(orgStaffs.getMobile());
+		Long staffId = dispatchs.getStaffId();
 		
-		//门店名称
+		OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(staffId);
+		
+		//云店名称
 		Long orgId = orgStaffs.getOrgId();
 		Orgs orgs = orgService.selectByPrimaryKey(orgId);
 		orderDisVo.setOrgName(orgs.getOrgName());
+		
+		Short orderType = orders.getOrderType();
+		
+		orderDisVo.setOrderType(orderType);
+		orderDisVo.setOrderStatus(orders.getOrderStatus());
 		
 		return orderDisVo;
 	}

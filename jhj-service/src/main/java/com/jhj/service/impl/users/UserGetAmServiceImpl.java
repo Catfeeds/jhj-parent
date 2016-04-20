@@ -210,48 +210,48 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		/*
 		 *  技能
 		 */
-		List<OrgStaffSkill> skillList = skillService.selectByStaffId(staffId);
-		
-		// 当前 staff 会的 所有技能 ， 录入时决定了。只能是  二级技能
-		List<Long> staffSkillList = new ArrayList<Long>();
-		
-		if(skillList.size()<=0){
-			staffSkillList.add(0L);
-		}
-		
-		for (OrgStaffSkill orgStaffSkill : skillList) {
-			staffSkillList.add(orgStaffSkill.getServiceTypeId());
-		}
-		
-		// 根据 员工会的 二级 技能-->  {一级技能id, 二级技能名称(属于分组一级技能、员工会)  }
-		List<AmSkillVo> amSkillList = partService.selectSkillNameAndParent(staffSkillList);
-		
-		
-		// <一级名称，二级名称集合>
-		Map<String, List<String>> skillNameMap = new LinkedHashMap<String, List<String>>();
-		
-		for (AmSkillVo amSkillVo : amSkillList) {
-			
-			Long firstServiceType = amSkillVo.getFirstServiceType();
-			
-			PartnerServiceType serviceType = partService.selectByPrimaryKey(firstServiceType);
-			
-			//一级技能 名称
-			String name = serviceType.getName();
-			
-			// 二级技能 名称 string
-			String childrenName = amSkillVo.getChildrenServiceName();
-			
-			String[] convertStrToArray = StringUtil.convertStrToArray(childrenName);
-			
-			//二级技能名称 list 集合
-			List<String> asList = Arrays.asList(convertStrToArray);
-			
-			skillNameMap.put(name, asList);
-			
-		}
-		// 技能树
-		userGetAmVo.setSkillMap(skillNameMap);
+//		List<OrgStaffSkill> skillList = skillService.selectByStaffId(staffId);
+//		
+//		// 当前 staff 会的 所有技能 ， 录入时决定了。只能是  二级技能
+//		List<Long> staffSkillList = new ArrayList<Long>();
+//		
+//		if(skillList.size()<=0){
+//			staffSkillList.add(0L);
+//		}
+//		
+//		for (OrgStaffSkill orgStaffSkill : skillList) {
+//			staffSkillList.add(orgStaffSkill.getServiceTypeId());
+//		}
+//		
+//		// 根据 员工会的 二级 技能-->  {一级技能id, 二级技能名称(属于分组一级技能、员工会)  }
+//		List<AmSkillVo> amSkillList = partService.selectSkillNameAndParent(staffSkillList);
+//		
+//		
+//		// <一级名称，二级名称集合>
+//		Map<String, List<String>> skillNameMap = new LinkedHashMap<String, List<String>>();
+//		
+//		for (AmSkillVo amSkillVo : amSkillList) {
+//			
+//			Long firstServiceType = amSkillVo.getFirstServiceType();
+//			
+//			PartnerServiceType serviceType = partService.selectByPrimaryKey(firstServiceType);
+//			
+//			//一级技能 名称
+//			String name = serviceType.getName();
+//			
+//			// 二级技能 名称 string
+//			String childrenName = amSkillVo.getChildrenServiceName();
+//			
+//			String[] convertStrToArray = StringUtil.convertStrToArray(childrenName);
+//			
+//			//二级技能名称 list 集合
+//			List<String> asList = Arrays.asList(convertStrToArray);
+//			
+//			skillNameMap.put(name, asList);
+//			
+//		}
+//		// 技能树
+//		userGetAmVo.setSkillMap(skillNameMap);
 		
 		return userGetAmVo;
 	}	

@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -813,13 +815,21 @@ public class OaOrderServiceImpl implements OaOrderService {
 			if(staffs != null){
 				
 				Orgs orgs2 = orgService.selectByPrimaryKey(staffs.getOrgId());
-				//云店名称
-				oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
 				
-				Long parentId = orgs2.getParentId();
-				Orgs orgs3 = orgService.selectByPrimaryKey(parentId);
-				//门店名称
-				oaOrderListNewVo.setOrgName(orgs3.getOrgName());
+				if(orgs2 != null){
+					
+					//云店名称
+					oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
+					
+					Long parentId = orgs2.getParentId();
+					
+					//处理历史数据，  直接记录的是员工的  门店，而不是 jhj2.1的 云店
+					if(parentId != 0L){
+						//门店名称
+						Orgs orgs3 = orgService.selectByPrimaryKey(parentId);
+						oaOrderListNewVo.setOrgName(orgs3.getOrgName());
+					}
+				}
 				
 			}
 			
