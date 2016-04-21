@@ -42,6 +42,22 @@
 		add_time, update_time
 	</sql>
 	
+	<!--jhj2.1  助理列表页。。  计算员工和对应用户的 服务次数 -->
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrderSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from order_dispatchs
+		where 1=1
+         <if test="staffId !=null ">
+         	and staff_id =#{staffId,jdbcType=NUMERIC}
+         </if>
+         <if test="userId !=null">
+         	and user_id = #{userId,jdbcType=NUMERIC}
+         </if>
+		and dispatch_status = 1
+	</select>
+	
+	
 	<!-- 该服务人员  今天的 派工数量 -->
 	<select id="getTodayOrderNumForTheSta" resultType="java.lang.Long" parameterType="java.lang.Long">
 		select
