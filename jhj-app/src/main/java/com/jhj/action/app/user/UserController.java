@@ -79,7 +79,7 @@ public class UserController extends BaseController {
 		List<HashMap> list = orderDispatchsService.getUserIdsByListPage(amId, page, Constants.PAGE_MAX_NUMBER);
 		List<HashMap> resultList = new ArrayList<HashMap>();
 		for (HashMap item : list) {
-			Long userId = Long.valueOf(item.get("userId").toString());
+			Long userId = Long.valueOf(item.get("user_id").toString());
 			Users user = usersService.getUserById(userId);
 			
 			String serviceAddr = "";
