@@ -34,6 +34,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UserTrailHistoryService;
 import com.jhj.service.users.UserTrailRealService;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.bs.StaffVo;
@@ -246,6 +247,48 @@ public class StaffController extends BaseController {
 
 		return result;
 	}
+	
+	@RequestMapping(value = "get_auth", method = RequestMethod.GET)
+	public AppResultData<Object> getAuth(
+			HttpServletRequest request,
+			@RequestParam("staff_id") Long staffId
+			) {	
+		
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
+		
+		if (orgStaffs == null) return result;
+		
+		if (!StringUtil.isEmpty(orgStaffs.getName()) && !StringUtil.isEmpty(orgStaffs.getCardId())) {
+			List<OrgStaffAuth> rs = orgStaffAuthService.selectByStaffId(staffId);
+			Boolean isAuth = false;
+			for (OrgStaffAuth item:rs) {
+				if (item.getServiceTypeId().equals(0L)) {
+					if (item.getAutStatus().equals((short)1)) {
+						isAuth = true;
+						break;
+					}
+				}
+			}
+			
+			if (!isAuth) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("你已经提交过身份认证，正在审核中..");
+				return result;
+			} else {
+				result.setData(1);
+				return result;
+			}
+			
+			
+			
+		}
+		
+		
+		return result;
+	}	
 	
 	@RequestMapping(value = "auth", method = RequestMethod.POST)
 	public AppResultData<Object> auth(
