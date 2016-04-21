@@ -12,6 +12,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.bs.OrgStaffSkill;
@@ -19,6 +20,7 @@ import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.bs.Tags;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -32,6 +34,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserGetAmService;
 import com.jhj.service.users.UserRefAmService;
+import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.user.UserGetAmVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -74,6 +77,9 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrderDispatchsMapper disMapper;
 	
 	/*
 	 * 用户版--用户查看助理页签
@@ -184,15 +190,20 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		//公共代码块。处理身份证号、助理技能
 		UserGetAmVo userGetAmVo = commonConvert(staffId);
 		
-		//亲密度。订单数，订单状态 >4 只要是已支付过的 订单，都可以算做 一条 “亲密度 ”
-		Map<String, Long> map = new HashMap<String, Long>();
+		// 计算  服务人员对  用户的 服务次数。。只要有 派工记录就算，
+		OrderSearchVo searchVo = new OrderSearchVo();
 		
-		map.put("userId", userId);
-		map.put("amId", staffId);
+		searchVo.setUserId(userId);
+		searchVo.setStaffId(staffId);
 		
-		int orderNum = orderService.getIntimacyOrders(map);
+		//从派工表确定服务次数
+		List<OrderDispatchs> disList = disMapper.selectBySearchVo(searchVo);
 		
+		int orderNum = disList.size();
+		
+		//服务次数
 		userGetAmVo.setOrderNum(orderNum);
+		
 		
 		List<OrgStaffTags> list = orgStaTagService.selectByStaffId(staffId);
 		
