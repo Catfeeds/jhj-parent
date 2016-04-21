@@ -94,9 +94,6 @@ public class OrderHourListController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0,
 				ConstantMsg.SUCCESS_0_MSG, new String());
 		
-		
-
-		
 		//用户当前订单
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setUserId(userId);
@@ -113,7 +110,6 @@ public class OrderHourListController extends BaseController {
 			
 			orderSearchVo.setEndTime(endTime);
 		}
-		
 		
 		
 		List<Orders> orderHourList = orderHourListService.selectByUserListPage(orderSearchVo, page,  Constants.PAGE_MAX_NUMBER);
