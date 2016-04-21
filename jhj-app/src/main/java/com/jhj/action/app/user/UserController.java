@@ -77,6 +77,9 @@ public class UserController extends BaseController {
 
 		//根据派工找出相应的用户
 		List<HashMap> list = orderDispatchsService.getUserIdsByListPage(amId, page, Constants.PAGE_MAX_NUMBER);
+		
+		System.out.println(list.toString());
+		
 		List<HashMap> resultList = new ArrayList<HashMap>();
 		
 		if (list.isEmpty()) {
@@ -85,6 +88,9 @@ public class UserController extends BaseController {
 		}
 		
 		for (HashMap item : list) {
+			System.out.println("item = " + item.toString());
+			System.out.println(item.get("user_id").toString());
+			System.out.println(item.get("userId").toString());
 			Long userId = Long.valueOf(item.get("user_id").toString());
 			Users user = usersService.getUserById(userId);
 			
