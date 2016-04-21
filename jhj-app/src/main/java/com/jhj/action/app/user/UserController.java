@@ -89,9 +89,8 @@ public class UserController extends BaseController {
 		
 		for (HashMap item : list) {
 			System.out.println("item = " + item.toString());
-			System.out.println(item.get("user_id").toString());
 			System.out.println(item.get("userId").toString());
-			Long userId = Long.valueOf(item.get("user_id").toString());
+			Long userId = Long.valueOf(item.get("userId").toString());
 			Users user = usersService.getUserById(userId);
 			
 			String serviceAddr = "";
