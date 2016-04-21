@@ -78,6 +78,12 @@ public class UserController extends BaseController {
 		//根据派工找出相应的用户
 		List<HashMap> list = orderDispatchsService.getUserIdsByListPage(amId, page, Constants.PAGE_MAX_NUMBER);
 		List<HashMap> resultList = new ArrayList<HashMap>();
+		
+		if (list.isEmpty()) {
+			result.setData(resultList);
+			return result;
+		}
+		
 		for (HashMap item : list) {
 			Long userId = Long.valueOf(item.get("user_id").toString());
 			Users user = usersService.getUserById(userId);
