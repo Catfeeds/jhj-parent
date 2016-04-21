@@ -1,11 +1,13 @@
 package com.jhj.service.impl.order;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.model.order.OrderDispatchs;
@@ -112,6 +114,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	public OrderDispatchs selectByUserId(Long userId) {
 		return orderDisMapper.selectByUserId(userId);
 	}
+	
+	@Override
+	public List<HashMap> getUserIdsByListPage(Long staffId, int pageNo, int pageSize) {
+		
+		PageHelper.startPage(pageNo, pageSize);
+		List<HashMap> list = orderDisMapper.getUserIdsByListPage(staffId);
+		return list;
+	}	
 	
 	@Override
 	public List<OrderDispatchs> selectByOrderIds(List<Long> orderIds) {

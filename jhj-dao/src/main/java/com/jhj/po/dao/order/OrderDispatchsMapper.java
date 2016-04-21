@@ -1,5 +1,6 @@
 package com.jhj.po.dao.order;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,5 +60,7 @@ public interface OrderDispatchsMapper {
 	
 	//jhj2.1   服务人员 当天的派工数
 	Long getTodayOrderNumForTheSta(Long staffId);
+
+	List<HashMap> getUserIdsByListPage(Long staffId);
 	
 }

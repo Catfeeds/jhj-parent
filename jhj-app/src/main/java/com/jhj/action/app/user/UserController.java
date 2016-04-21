@@ -4,8 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +25,7 @@ import com.jhj.po.model.tags.UserRefTags;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.tags.UserRefTagsService;
@@ -58,7 +61,11 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private OrderQueryService orderQueryService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchsService;
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "get_user_list", method = RequestMethod.GET)
 	public AppResultData<Object> Sec(
 			HttpServletRequest request,
@@ -68,23 +75,30 @@ public class UserController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
-		List<UserRefAm> list = userRefAmService.selectUserListByAmId(amId,
-				page, Constants.PAGE_MAX_NUMBER);
-
-		if (list == null) {
-			return result;
+		//根据派工找出相应的用户
+		List<HashMap> list = orderDispatchsService.getUserIdsByListPage(amId, page, Constants.PAGE_MAX_NUMBER);
+		List<HashMap> resultList = new ArrayList<HashMap>();
+		for (HashMap item : list) {
+			Long userId = Long.valueOf(item.get("userId").toString());
+			Users user = usersService.getUserById(userId);
+			
+			String serviceAddr = "";
+			UserAddrs userAddr = userAddrsService.selectByDefaultAddr(userId);
+			if (userAddr != null) {
+				serviceAddr = userAddr.getName() + userAddr.getAddr();
+			}
+			
+			HashMap vo = new HashMap();
+			vo.put("staff_id", amId.toString());
+			vo.put("user_id", userId.toString());
+			vo.put("mobile", user.getMobile());
+			vo.put("service_times", item.get("total").toString());
+			vo.put("service_addr", serviceAddr);
+			
+			resultList.add(vo);
 		}
 
-		List<UsersListsVo> userListVo = new ArrayList<UsersListsVo>();
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			UserRefAm userRefAm = (UserRefAm) iterator.next();
-
-			UsersListsVo vo = userRefAmService.getUserList(userRefAm);
-
-			userListVo.add(vo);
-		}
-
-		result.setData(userListVo);
+		result.setData(resultList);
 		return result;
 	}
 

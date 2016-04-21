@@ -29,6 +29,12 @@
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 	</resultMap>
+	<resultMap id="statByUser" type="java.util.HashMap">
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="total" property="total" jdbcType="NUMERIC" />
+	</resultMap>
+	
+	
 	<sql id="Base_Column_List">
 		id, user_id, mobile, order_id, order_no, service_date_pre, service_date, service_hours, org_id,
 		staff_id, staff_name, staff_mobile, remarks, am_id, dispatch_status, 
@@ -187,6 +193,14 @@
 					#{endTime,jdbcType=NUMERIC} 
 			and 
 				staff_id =#{orgStaffId,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getUserIdsByListPage" resultMap="statByUser" parameterType="java.lang.Long">
+		select user_id, count(*) as total
+		from order_dispatchs
+		where 
+			staff_id = #{staffId,jdbcType=NUMERIC}
+		order by total desc
 	</select>
 	
 	
