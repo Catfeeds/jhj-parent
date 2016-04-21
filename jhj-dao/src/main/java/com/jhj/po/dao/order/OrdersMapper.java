@@ -262,6 +262,8 @@ public interface OrdersMapper {
 
 	List<HashMap> userTotalByMonth(OrderSearchVo orderSearchVo);
 	
+	List<HashMap> userAllTotalByMonth(OrderSearchVo orderSearchVo);
+	
 	Long totalOrderInUserIds(List<Long> userIds);
 	
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);

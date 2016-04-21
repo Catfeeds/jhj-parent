@@ -35,7 +35,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 			});
 		},
 		onMonthYearChangeStart : function(p) {
-			console.log("onMonthYearChangeStart= " + p.currentYear + "-" +p.currentMonth);
+			console.log("start current = "  +p.currentMonth + "  load = " + loadedMonth);
 			
 			
 			$$('.calendar-custom-toolbar .center').text(
@@ -44,8 +44,9 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 			if (p.currentMonth != loadedMonth) {
 				loadTotalByMonth(userId, p.currentYear, p.currentMonth);
 			}
-			
+			loadTotalByOrder(userId, p.currentYear, p.currentMonth);
 		},
+		
 		
 		onDayClick :function (p, dayContainer, year, month, day) {
 			var cmonth = parseInt(month) + 1;
@@ -59,14 +60,10 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	var calendarInline = myApp.calendar(calendarParams);
 	
 	var userId = userId;
-	
-	
-	console.log("year = " + today.getFullYear() + "--- month = " + today.getMonth());
-	
-	
+		
 	
 	function loadTotalByMonth(userId, year, month) {
-		console.log("loadTotalByMonth month = " + month);
+		
 		var params = {};
 		params.user_id = userId;
 		params.year = year;
@@ -76,9 +73,11 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 		
 		var totalByMonthSuccess = function(data, textStatus, jqXHR) {
 			var result = JSON.parse(data.response);
-			console.log(result);
-			var monthDatas = result.data;
 			
+			var resultData = result.data;
+		
+			var monthDatas = result.data;
+
 			var events = [];
 			for (var i = 0; i < monthDatas.length; i++) {
 //				console.log(monthDatas[i].service_date);
@@ -97,6 +96,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 				
 				loadedMonth = month;
 			}
+			
 		};
 		$$.ajax({
 			type : "GET",
@@ -113,8 +113,48 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 		});
 	}	
 	
-	loadTotalByMonth(userId, today.getFullYear(), today.getMonth());
+	function loadTotalByOrder(userId, year, month) {
+		
+		var params = {};
+		params.user_id = userId;
+		params.year = year;
+		params.month = month + 1;
+		
+		var apiUrl = "order/user_total_order.json";
+		
+		var totalByOrderSuccess = function(data, textStatus, jqXHR) {
+			var result = JSON.parse(data.response);
+			
+			var monthTotalDatas = result.data;
+		
+			for (var i = 0; i < monthTotalDatas.length; i++) {
+				if (monthTotalDatas[i].total != undefined) {
+					$("#total").html(monthTotalDatas[i].total);
+				}
+				
+				if (monthTotalDatas[i].total_uf != undefined) {
+					$("#total_uf").html(monthTotalDatas[i].total_uf);
+				}
+			}
+		};
+		$$.ajax({
+			type : "GET",
+			url : siteAPIPath + apiUrl,
+			dataType : "json",
+			cache : true,
+			data : params,
+			statusCode : {
+				200 : totalByOrderSuccess,
+				400 : ajaxError,
+				500 : ajaxError
+			},
+
+		});
+	}	
 	
+	loadTotalByMonth(userId, today.getFullYear(), today.getMonth());
+
+	loadTotalByOrder(userId, today.getFullYear(), today.getMonth());
 	
 	var loading = false;// 加载flag
 	var page = $$("#page").val();
@@ -177,11 +217,9 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 			$$("#page").val(page);
 			console.log("page = " + page);
 			console.log("len = " + orders.length);
-//			if (orders.length < 1) {
-//				console.log("dispaly < 1");
-//				$$('#order-list-more').css("display", "none");
-//				return;
-//			}
+			if (orders.length < 10) {
+				$$('#order-list-more').css("display", "none");
+			}
 		};
 
 		$$.ajax({

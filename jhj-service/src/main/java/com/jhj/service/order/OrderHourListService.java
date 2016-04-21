@@ -30,5 +30,7 @@ public interface OrderHourListService {
 	List<Orders> selectByUserListPage(OrderSearchVo orderSearchVo, int pageNo, int pageSize);
 
 	List<HashMap> userTotalByMonth(OrderSearchVo orderSearchVo);
+
+	List<HashMap> userAllTotalByMonth(OrderSearchVo orderSearchVo);
 	
 }

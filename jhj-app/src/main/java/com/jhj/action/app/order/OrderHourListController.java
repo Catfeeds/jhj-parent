@@ -77,8 +77,33 @@ public class OrderHourListController extends BaseController {
 			orderSearchVo.setEndTime(endTime);
 
 			List<HashMap> monthDatas = orderHourListService.userTotalByMonth(orderSearchVo);
-
+			
 			result.setData(monthDatas);
+			return result;
+		}
+		
+		@RequestMapping(value = "/user_total_order", method = RequestMethod.GET)
+		public AppResultData<Object> totalByOrder(
+			@RequestParam("user_id") Long userId, 
+			@RequestParam("year") int year, 
+			@RequestParam("month") int month) {
+			
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+			String startTimeStr = DateUtil.getFirstDayOfMonth(year, month) + " 00:00:00";
+			String endTimeStr = DateUtil.getLastDayOfMonth(year, month) + " 23:59:59";
+
+			Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
+			Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
+
+			OrderSearchVo orderSearchVo = new OrderSearchVo();
+			orderSearchVo.setUserId(userId);
+			orderSearchVo.setStartTime(startTime);
+			orderSearchVo.setEndTime(endTime);
+
+			List<HashMap> monthTotalDatas = orderHourListService.userAllTotalByMonth(orderSearchVo);
+			
+			result.setData(monthTotalDatas);
 			return result;
 		}
 	

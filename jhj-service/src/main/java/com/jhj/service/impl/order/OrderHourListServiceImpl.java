@@ -59,6 +59,17 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 	}	
 	
 	/*
+	 * 统计某月订单总数和未完成的订单总数.
+	 */
+	@Override
+	public List<HashMap> userAllTotalByMonth(OrderSearchVo orderSearchVo) {
+
+		List<HashMap> list = orderMapper.userAllTotalByMonth(orderSearchVo);
+		
+		return list;
+	}		
+	
+	/*
 	 * 所有订单
 	 */
 	@Override
