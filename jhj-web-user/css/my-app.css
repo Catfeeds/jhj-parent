@@ -3397,7 +3397,7 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 
 /**社区活动 **/
 .demo-card-header-pic .card-header {
-  height: 40vw;
+  height: 54vw;
   background-size: cover;
   background-position: center;
 }

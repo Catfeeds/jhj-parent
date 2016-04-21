@@ -2,7 +2,7 @@
 	<!-- Page, data-page contains page name-->
 	<div data-page="orderHour-pay-page" class="page"style="overflow:auto;">
 		<!-- Scrollable page content-->
-		<div class="page-content" style="background: #E5E5E5;">
+		<div class="page-content" style="background: #FDEEEE;">
 			<form id="orderHour-pay-form">
 			
 				<input type="hidden" value="{{order_status}}" id="orderStatus">
@@ -10,7 +10,7 @@
 				
 				
 				<div style="margin: 15px auto;" class="list-block">
-					<ul>
+					<ul style="background:#fffce8;">
 						<li>
 							<div class="item-content">
 								<div class="item-inner">
@@ -67,7 +67,7 @@
 						</li>
 				</div>
 				<div style="margin: 0" class="list-block">
-					<ul>
+					<ul style="background:#fffce8;">
 						<li>
 							<a href="#" id="selectCoupon" class="item-link">
 								<div class="item-content">
@@ -96,12 +96,12 @@
 				</div>
 
 				<div class="list-block">
-					<ul>
+					<ul style="background:#fffce8;">
 						<!-- Single chekbox item -->
 						<li><label class="label-checkbox item-content" name="myPayTypeSelect"> 
-								<div class="item-media"><img src="img/icons/zhanghuyue.png"style="margin-left:10px;"></div>
+								<div class="item-media"><img src="img/icons/zhanghuyue.png"style="margin-left:10px;width:25px;"></div>
 								<div class="item-inner">
-									<div class="item-title"style="margin-left:-16px;">账号余额(￥{{rest_money}})</div>
+									<div class="item-title"style="margin-left:-8px;">账号余额(￥{{rest_money}})</div>
 									
 									 <input type="hidden"  value="0"/>
 									 <img  src="img/icons/duigou-green.png" id="order_pay_type" name="order_pay_type"/> 
@@ -111,9 +111,9 @@
 						<!-- Another chekbox item -->
 						<li><label class="label-checkbox item-content" name="myPayTypeSelect"> 
 								
-								<div class="item-media"><img src="img/icons/weixin-2x.png"style="width:50px;"></div>
+								<div class="item-media"><img src="img/icons/weixin-2x.png"style="width:45px;"></div>
 								<div class="item-inner">
-									<div class="item-title"style="margin-left:-26px;">微信支付</div>
+									<div class="item-title"style="margin-left:-15px;">微信支付</div>
 									
 									 <input type="hidden"  value="2"/>
 									 <img  src="img/icons/duigou-grey.png" id="order_pay_type" name="order_pay_type"/> 

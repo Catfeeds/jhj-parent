@@ -1,7 +1,7 @@
 
 <div class="pages"style="background:0">
 	<!-- Page, data-page contains page name-->
-	<div data-page="order-hour-view-2-page" class="page"style="background-color:#E5E5E5!important;overflow:auto">
+	<div data-page="order-hour-view-2-page" class="page"style="background-color:#FDEEEE!important;overflow:auto">
 		<!-- Scrollable page content-->
 		<div class="page-content"style="margin:0;height:900px;">
 			<div class="ddxq-neirong">
@@ -40,7 +40,7 @@
 				<input type="hidden" id="order_id" name="order_id" value="{{id}}"/>
 				<input type="hidden" id="order_no" name="order_no" value="{{order_no}}"/>
 				<input type="hidden" id="order_money" name="order_money" value="{{order_money}}"/>			
-				<ul class="ddxq-xx"style="background:#F8F8F8">
+				<ul class="ddxq-xx"style="background:#fffce8">
 					
 				   		
 				
@@ -57,7 +57,7 @@
 				    
 				    
 				    <li>
-						<div class="item-content" style="background:#F8F8F8;">
+						<div class="item-content" style="background:#fffce8;">
 							<div class="item-inner">
 								<div class="item-title label"style="width:65%;">订单金额:</div>
 			        			 <div class="item-xx-label">
@@ -85,7 +85,7 @@
 				
 				{{#js_compare "this.order_status ===2 "}}
 				<div class="list-block am-pay-type" >
-					<ul>
+					<ul style="background:#fffce8;">
 						
 						<!-- 如果是 0元 的订单，优惠券、支付 方式都隐藏-->
 						{{#js_compare "this.order_money !== 0 "}}
@@ -106,7 +106,7 @@
 						{{/js_compare}}	
 						
 						<li>
-							<div class="item-content" style="background:#F8F8F8;">
+							<div class="item-content" style="background:#fffce8;">
 								<div class="item-inner">
 									<div class="item-title label"  >支付金额:</div>
 						
@@ -121,9 +121,9 @@
 						
 						<li>
 						<label class="label-checkbox item-content" name="myPayTypeSelect"> 
-								<div class="item-media"><img src="img/icons/zhanghuyue.png"style="margin-left:10px;"></div>
+								<div class="item-media"><img src="img/icons/zhanghuyue.png"style="margin-left:10px;width:25px;"></div>
 								<div class="item-inner">
-									<div class="item-title"style="margin-left:-16px;">账号余额(￥{{rest_money}})</div>
+									<div class="item-title"style="margin-left:-10px;">账号余额(￥{{rest_money}})</div>
 									
 									<input type="hidden"  value="0"/>
 									 <img  src="img/icons/duigou-green.png" id="order_pay_type" name="order_pay_type" /> 
@@ -133,9 +133,9 @@
 		
 						<li>
 							<label class="label-checkbox item-content" name="myPayTypeSelect"> 
-								<div class="item-media"><img src="img/icons/iconfont-qian.png"style="width:40px;margin-left:5px;"></div>
+								<div class="item-media"><img src="img/icons/iconfont-qian.png"style="width:45px;"></div>
 								<div class="item-inner">
-									<div class="item-title"style="margin-left:-26px;">现金支付</div>
+									<div class="item-title"style="margin-left:-15px;">现金支付</div>
 									<!-- 新增支付方式 ，现金支付 -->
 									<input type="hidden"  value="6"/>
 									<img  src="img/icons/duigou-grey.png" id="order_pay_type" name="order_pay_type"/> 
