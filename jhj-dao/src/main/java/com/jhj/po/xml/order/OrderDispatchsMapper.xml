@@ -198,8 +198,16 @@
 	<select id="getUserIdsByListPage" resultMap="statByUser" parameterType="java.lang.Long">
 		select user_id, count(*) as total
 		from order_dispatchs
-		where 
-			staff_id = #{staffId,jdbcType=NUMERIC}
+		where 1 = 1
+		
+		<if test="userId !=null ">
+        	and user_id =#{userId,jdbcType=NUMERIC}
+        </if> 
+		
+	 	<if test="staffId !=null ">
+        	and staff_id =#{staffId,jdbcType=NUMERIC}
+        </if> 
+			
 		order by total desc
 	</select>
 	

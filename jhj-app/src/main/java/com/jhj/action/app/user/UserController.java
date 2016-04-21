@@ -36,6 +36,7 @@ import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.jhj.vo.user.UsersListsVo;
@@ -76,10 +77,13 @@ public class UserController extends BaseController {
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		//根据派工找出相应的用户
-		List<HashMap> list = orderDispatchsService.getUserIdsByListPage(amId, page, Constants.PAGE_MAX_NUMBER);
 		
-		System.out.println(list.toString());
 		
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setAmId(amId);
+		
+		List<HashMap> list = orderDispatchsService.getUserIdsByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
+				
 		List<HashMap> resultList = new ArrayList<HashMap>();
 		
 		if (list.isEmpty()) {
@@ -88,8 +92,7 @@ public class UserController extends BaseController {
 		}
 		
 		for (HashMap item : list) {
-			System.out.println("item = " + item.toString());
-			System.out.println(item.get("userId").toString());
+
 			Long userId = Long.valueOf(item.get("userId").toString());
 			Users user = usersService.getUserById(userId);
 			

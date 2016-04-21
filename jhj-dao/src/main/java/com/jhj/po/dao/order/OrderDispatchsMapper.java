@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.vo.OaOrderDisSearchVo;
+import com.jhj.vo.OrderSearchVo;
 
 public interface OrderDispatchsMapper {
     int deleteByPrimaryKey(Long id);
@@ -61,6 +62,6 @@ public interface OrderDispatchsMapper {
 	//jhj2.1   服务人员 当天的派工数
 	Long getTodayOrderNumForTheSta(Long staffId);
 
-	List<HashMap> getUserIdsByListPage(Long staffId);
+	List<HashMap> getUserIdsByListPage(OrderSearchVo searchVo);
 	
 }

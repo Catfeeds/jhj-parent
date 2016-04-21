@@ -4,6 +4,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	var monthNames = [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ];
 
 	var today = new Date();
+	var curClickDay;
 	var weekLater = new Date().setDate(today.getDate() + 7);
 	var loadedMonth = today.getMonth();
 	var calendarParams = {
@@ -45,13 +46,20 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 			}
 			
 		},
+		
+		onDayClick :function (p, dayContainer, year, month, day) {
+			var cmonth = parseInt(month) + 1;
+			console.log(year + "-" + cmonth + "-" + day);
+			
+			loadOrderList(userId, 1, year + "-" + cmonth + "-" + day)
+		}
 				
 	};
 
 	var calendarInline = myApp.calendar(calendarParams);
 	
 	var userId = userId;
-	var page = 1;
+	
 	
 	console.log("year = " + today.getFullYear() + "--- month = " + today.getMonth());
 	
@@ -107,13 +115,74 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	
 	loadTotalByMonth(userId, today.getFullYear(), today.getMonth());
 	
-	loadOrderList(userId, page);
-	// 注册'infinite'事件处理函数
-	$$('#order-list-more').on('click', function() {
-		if (loading) return;// 如果正在加载，则退出
-		loading = true;// 设置flag
+	
+	var loading = false;// 加载flag
+	var page = $$("#page").val();
+	function loadOrderList(userId, page, cal) {
+		console.log("page = " + page);
+		curClickDay = cal;
+		var postdata = {};
+		
+		var apiUrl = "order/user_order_list.json";
 		postdata.user_id = userId;
 		postdata.page = page;
+		postdata.day = cal;
+
+		var orderListSuccess = function(data, textStatus, jqXHR) {
+
+			var result = JSON.parse(data.response);
+			var orders = result.data;
+
+			var html = $$('#order-hour-list').html();
+
+			var resultHtmlNow = ''; // 当前订单
+
+			for (var i = 0; i < orders.length; i++) {
+				var order = orders[i];
+
+				var htmlPart = html;
+				// var img_tag = '<img alt="" src="img/icons/order_type_img_'+
+				// order.order_type +'.png ">';
+				// htmlPart = htmlPart.replace(new RegExp('{img_tab}',"gm"),
+				// img_tag);
+				htmlPart = htmlPart.replace(new RegExp('{order_type}', "gm"), order.order_type);
+				htmlPart = htmlPart.replace(new RegExp('{order_no}', "gm"), order.order_no);
+				htmlPart = htmlPart.replace(new RegExp('{order_hour_type_name}', "gm"),
+						order.order_hour_type_name);
+				htmlPart = htmlPart.replace(new RegExp('{order_hour_status_name}', "gm"),
+						order.order_hour_status_name);
+
+				if (order.order_type == 2) {
+					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), moment.unix(
+							order.add_time).format("YYYY-MM-DD HH:mm"));
+				} else {
+					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), moment.unix(
+							order.service_date).format("YYYY-MM-DD HH:mm"));
+				}
+
+				htmlPart = htmlPart.replace(new RegExp('{address}', "gm"), order.address);
+
+				resultHtmlNow += htmlPart;
+			}
+			// 当前订单
+			if (page == 1) {
+				$$("#card-hour-now-list ul").html(resultHtmlNow);
+			} else {
+				$$("#card-hour-now-list ul").append(resultHtmlNow);
+			}
+
+			loading = false;
+			
+			page = page + 1;
+			$$("#page").val(page);
+			console.log("page = " + page);
+			console.log("len = " + orders.length);
+//			if (orders.length < 1) {
+//				console.log("dispaly < 1");
+//				$$('#order-list-more').css("display", "none");
+//				return;
+//			}
+		};
 
 		$$.ajax({
 			type : "GET",
@@ -121,13 +190,25 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 			dataType : "json",
 			cache : true,
 			data : postdata,
-			timeout : 10000, // 超时时间：10秒
 			statusCode : {
 				200 : orderListSuccess,
 				400 : ajaxError,
 				500 : ajaxError
 			},
+
 		});
+	}	
+	
+	
+	
+	console.log(today.getFullYear() + "-" + today.getMonth() + "-" + today.getDay());
+	var todayStr = today.getFullYear() + "-" + (parseInt(today.getMonth()) + 1) + "-" + today.getDay();
+	loadOrderList(userId, page, todayStr);
+	// 注册'infinite'事件处理函数
+	$$('#order-list-more').on('click', function() {
+		var cpage = $$("#page").val();
+		console.log("cpage = " + page);
+		loadOrderList(userId, cpage, curClickDay);
 	});
 
 });
@@ -135,79 +216,3 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 
 
 
-function loadOrderList(userId, page) {
-
-	var postdata = {};
-	
-	
-	var loading = false;// 加载flag
-	var apiUrl = "order/user_order_list.json";
-	postdata.user_id = userId;
-	postdata.page = page;
-
-	var orderListSuccess = function(data, textStatus, jqXHR) {
-
-		var result = JSON.parse(data.response);
-		var orders = result.data;
-
-		var html = $$('#order-hour-list').html();
-
-		var resultHtmlNow = ''; // 当前订单
-
-		for (var i = 0; i < orders.length; i++) {
-			var order = orders[i];
-
-			var htmlPart = html;
-			// var img_tag = '<img alt="" src="img/icons/order_type_img_'+
-			// order.order_type +'.png ">';
-			// htmlPart = htmlPart.replace(new RegExp('{img_tab}',"gm"),
-			// img_tag);
-			htmlPart = htmlPart.replace(new RegExp('{order_type}', "gm"), order.order_type);
-			htmlPart = htmlPart.replace(new RegExp('{order_no}', "gm"), order.order_no);
-			htmlPart = htmlPart.replace(new RegExp('{order_hour_type_name}', "gm"),
-					order.order_hour_type_name);
-			htmlPart = htmlPart.replace(new RegExp('{order_hour_status_name}', "gm"),
-					order.order_hour_status_name);
-
-			if (order.order_type == 2) {
-				htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), moment.unix(
-						order.add_time).format("YYYY-MM-DD HH:mm"));
-			} else {
-				htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), moment.unix(
-						order.service_date).format("YYYY-MM-DD HH:mm"));
-			}
-
-			htmlPart = htmlPart.replace(new RegExp('{address}', "gm"), order.address);
-
-			resultHtmlNow += htmlPart;
-		}
-		// 当前订单
-		$$("#card-hour-now-list ul").append(resultHtmlNow);
-
-		page = page + 1;
-		loading = false;
-
-		if (orders.length < 10) {
-
-			$$('#order-list-more').css("display", "none");
-			return;
-		}
-
-	};
-
-	postdata.user_id = userId;
-	postdata.page = page;
-	$$.ajax({
-		type : "GET",
-		url : siteAPIPath + apiUrl,
-		dataType : "json",
-		cache : true,
-		data : postdata,
-		statusCode : {
-			200 : orderListSuccess,
-			400 : ajaxError,
-			500 : ajaxError
-		},
-
-	});
-}

@@ -12,6 +12,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.vo.OrderSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -116,10 +117,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 	
 	@Override
-	public List<HashMap> getUserIdsByListPage(Long staffId, int pageNo, int pageSize) {
+	public List<HashMap> getUserIdsByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
 		
 		PageHelper.startPage(pageNo, pageSize);
-		List<HashMap> list = orderDisMapper.getUserIdsByListPage(staffId);
+		List<HashMap> list = orderDisMapper.getUserIdsByListPage(searchVo);
 		return list;
 	}	
 	

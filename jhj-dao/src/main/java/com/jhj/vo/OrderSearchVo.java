@@ -4,6 +4,8 @@ public class OrderSearchVo {
 	
 	private Long amId;
 	
+	private Long staffId;
+	
 	private Long userId;
 	
 	private String mobile;
@@ -90,6 +92,14 @@ public class OrderSearchVo {
 
 	public void setEndTime(Long endTime) {
 		this.endTime = endTime;
+	}
+
+	public Long getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
 	}
 
 

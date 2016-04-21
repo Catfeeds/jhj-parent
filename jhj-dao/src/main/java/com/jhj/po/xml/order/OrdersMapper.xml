@@ -591,6 +591,16 @@
 		<if test="serviceType != null">
 			and service_type = #{serviceType,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="startTime != null">
+				<![CDATA[	and service_date >= #{startTime,jdbcType=NUMERIC} ]]>
+		</if>
+
+		<if test="endTime != null">
+				<![CDATA[	and service_date <= #{endTime,jdbcType=NUMERIC} ]]>
+		</if>
+		
+		
 
 		order by add_time desc
 

@@ -1,5 +1,6 @@
 package com.jhj.action.app.order;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.OrderSearchVo;
@@ -86,15 +88,35 @@ public class OrderHourListController extends BaseController {
 	@RequestMapping(value = "user_order_list", method = RequestMethod.GET)
 	public AppResultData<Object> userOrderList(
 			@RequestParam("user_id") Long userId, 
+			@RequestParam(value = "day", required = false, defaultValue = "") String day,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page){
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0,
 				ConstantMsg.SUCCESS_0_MSG, new String());
 		
+		
+
+		
 		//用户当前订单
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setUserId(userId);
-		List<Orders> orderHourList = orderHourListService.selectByUserListPage(orderSearchVo, page, Constants.PAGE_MAX_NUMBER);
+		
+		if (!StringUtil.isEmpty(day)) {
+			Date cal = DateUtil.parse(day);
+			String calStr = DateUtil.format(cal, "yyyy-MM-dd");
+			String startTimeStr = calStr + " 00:00:00";
+			String endTimeStr = calStr + " 23:59:59";
+
+			Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
+			Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
+			orderSearchVo.setStartTime(startTime);
+			
+			orderSearchVo.setEndTime(endTime);
+		}
+		
+		
+		
+		List<Orders> orderHourList = orderHourListService.selectByUserListPage(orderSearchVo, page,  Constants.PAGE_MAX_NUMBER);
 		
 		List<OrderHourListVo> voList = orderHourListService.transOrderHourListVo(orderHourList);
 		

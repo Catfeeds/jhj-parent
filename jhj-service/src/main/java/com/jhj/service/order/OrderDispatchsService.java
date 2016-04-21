@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.vo.OrderSearchVo;
 
 /**
  *
@@ -49,5 +50,5 @@ public interface OrderDispatchsService {
 	//jhj2.1   服务人员 当天的派工数
 	Long getTodayOrderNumForTheSta(Long staffId);
 
-	List<HashMap> getUserIdsByListPage(Long staffId, int pageNo, int pageSize);
+	List<HashMap> getUserIdsByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
 }
