@@ -3457,3 +3457,16 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   width:100%!important;
 }
 
+/*定制服务结果页按钮*/
+/*橙色*/
+.service-button{
+  background:#F07C01!important;
+}
+/*绿色*/
+.service-button1{
+  background:#00FF39!important;
+}
+/*灰色*/
+.service-button2{
+  background:#D1D1D1!important;
+}
