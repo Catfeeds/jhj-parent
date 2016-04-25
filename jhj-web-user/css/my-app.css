@@ -3460,13 +3460,13 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 /*定制服务结果页按钮*/
 /*橙色*/
 .service-button{
-  background:#F07C01!important;
+  background:#ff9500!important;
 }
 /*绿色*/
 .service-button1{
-  background:#00FF39!important;
+  background:#4cd964!important;
 }
 /*灰色*/
 .service-button2{
-  background:#D1D1D1!important;
+  background:#8e8e93!important;
 }

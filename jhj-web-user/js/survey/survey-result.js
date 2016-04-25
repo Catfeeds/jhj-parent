@@ -195,6 +195,10 @@ myApp.onPageInit('survey-result-page', function(page) {
 				part = part.replace(new RegExp('{contentId}',"gm"), baseI.content_id);
 				part = part.replace(new RegExp('{contentChildType}',"gm"), baseI.content_child_type);
 				
+				part = part.replace(new RegExp('{serviceColor}',"gm"), "button button-fill service-button1");
+				
+				part = part.replace(new RegExp('{serviceChangeButtonColor}',"gm"), "button button-fill service-button");
+				
  				baseContentHtml += part;
 			}
 			
@@ -248,6 +252,10 @@ myApp.onPageInit('survey-result-page', function(page) {
 				part = part.replace(new RegExp('{price}',"gm"), recommendI.price);
 				part = part.replace(new RegExp('{contentId}',"gm"), recommendI.content_id);
 				part = part.replace(new RegExp('{contentChildType}',"gm"), recommendI.content_child_type);
+				
+				part = part.replace(new RegExp('{serviceColor}',"gm"), "button button-fill service-button2");
+				
+				part = part.replace(new RegExp('{serviceChangeButtonColor}',"gm"), "button button-fill service-button2");
 				
 				recommendHtml += part;
 			}
@@ -328,7 +336,7 @@ myApp.onPageInit('survey-result-page', function(page) {
 				/*
 				 * 多选的 默认值, 该多选对应的 主 服务 id
 				 */
-				postData.default_box_content_array = JSON.stringify(childBoxArray);
+				postData.default_box_content_array = localStorage['storeChildBoxArray'];
 				
 				postData.box_content_array = "[]";
 			}
@@ -402,7 +410,7 @@ myApp.onPageInit('survey-result-page', function(page) {
 function storeNowData(){
 	
 	//展示区域 的所有 被选中的  服务	
-	var aaObj =   $$("#resultDiv").find("a[id='contentName'][class='button button-fill color-green']");
+	var aaObj =   $$("#resultDiv").find("a[id='contentName'][class='button button-fill service-button1']");
 	
 	//存放  无子服务  类型的 {内容：次数}array
 	var baseContentArray = [];
@@ -461,6 +469,8 @@ function storeNowData(){
 	localStorage.setItem("storeBaseArray",JSON.stringify(baseContentArray));
 	
 	localStorage.setItem("storeRadioArray",JSON.stringify(radioContentArray));
+	
+	localStorage.setItem("storeChildBoxArray",JSON.stringify(childBoxArray));
 }
 
 
@@ -496,24 +506,24 @@ function changeColor(obj){
 	
 	var color = $$(obj).attr("class");
 	
-	if(color.indexOf("color-green")>0){
-		$$(obj).attr("class","button button-fill color-gray");
+	if(color.indexOf("service-button1")>0){
+		$$(obj).attr("class","button button-fill service-button2");
 		
 		//同时禁用调整次数按钮
 		
 		var  aButtonObj = $$(obj).parent().parent().find("a[id='changeThisTimes']");
 		
-		aButtonObj.attr("class","button button-fill color-gray");
+		aButtonObj.attr("class","button button-fill service-button2");
 		aButtonObj.attr("disabled",true);
 		
 	}
 	
-	if(color.indexOf("color-gray")>0){
-		$$(obj).attr("class","button button-fill color-green");
+	if(color.indexOf("service-button2")>0){
+		$$(obj).attr("class","button button-fill service-button1");
 		//打开调整次数按钮
 		
 		var  aButtonObj = $$(obj).parent().parent().find("a[id='changeThisTimes']");
-		aButtonObj.attr("class","button button-fill color-orange");
+		aButtonObj.attr("class","button button-fill service-button");
 		aButtonObj.removeAttr('disabled');
 		
 	}
@@ -526,6 +536,13 @@ function changeColor(obj){
  * 点击调整次数, 去后台获取该 服务的 子服务 
  */
 function changeThisTimes(obj){
+	
+	
+	//如果是 灰色 ，不让点击
+	if($$(obj).attr("class").indexOf("button2")>0){
+		
+		return false;
+	}
 	
 	//子服务类型
 	var childType =  $$(obj).parent().find("#contentChildType").val();
