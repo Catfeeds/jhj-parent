@@ -4,7 +4,6 @@ myApp.template7Data['page:tiexinjiashi-page'] = function() {
 	
 	var parentServiceTypeId = localStorage['firstServiceType'];
 	
-	
 	$$.ajax({
 		type : "GET",
 		url : siteAPIPath + "newPartServiceType/second_service_type.json",
@@ -30,7 +29,9 @@ myApp.onPageInit('tiexinjiashi-page', function(page) {
 	var parentServiceTypeId = localStorage['firstServiceType'];
 	
 	$$("#parentServiceTypeId").val(parentServiceTypeId);
-
+	
+	
+	// 1.  点击 到 下单页面
 	$$("div[name='tiexinjiashidiv']").on("click",function() {
 
 		var userId = localStorage['user_id'];
@@ -54,6 +55,20 @@ myApp.onPageInit('tiexinjiashi-page', function(page) {
 				+ "&parentServiceTypeId=" + parentServiceTypeId);
 				
 	});
+	
+	//2. 点击banner图进入 服务说明
+	$$("#tiexinjiashi-banner").on('click',function(){
+		
+		if(parentServiceTypeId == 25){
+			mainView.router.loadPage("order/service-introduce/service-tiexin.html");
+		}
+		
+		if(parentServiceTypeId == 26){
+			mainView.router.loadPage("order/service-introduce/service-shendu.html");
+		}
+		
+	})
+	
 });
 
 

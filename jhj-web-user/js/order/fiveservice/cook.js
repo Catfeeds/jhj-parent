@@ -43,6 +43,16 @@ myApp.onPageInit('cook-page', function(page) {
 
 				mainView.router.loadPage(url);
 			});
+	
+	// 2. 点击banner 图进入服务介绍
+	$$("#cook-banner").on('click',function(){
+		
+		if(parentServiceTypeId == 24){
+			mainView.router.loadPage("order/service-introduce/service-chuniang.html");
+		}
+		
+	});
+	
 });
 
 // 列表显示

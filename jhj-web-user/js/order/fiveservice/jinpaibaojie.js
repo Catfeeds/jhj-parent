@@ -44,6 +44,17 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 
 				mainView.router.loadPage(url);
 			});
+	
+	// 2. 点击banner 图进入服务介绍
+	$$("#jinpaibaojie-banner").on('click',function(){
+		
+		if(parentServiceTypeId == 23){
+			mainView.router.loadPage("order/service-introduce/service-jinpai.html");
+		}
+		
+	});
+	
+	
 });
 
 // 列表显示

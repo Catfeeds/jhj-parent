@@ -53,6 +53,16 @@ myApp.onPageInit('qiyefuwu-page', function(page) {
 				+ "&parentServiceTypeId=" + parentServiceTypeId);
 				
 	});
+	
+	
+	//点击banner进入 服务介绍
+	$$("#qiye-banner").on('click',function(){
+		
+		if(parentServiceTypeId == 27){
+			mainView.router.loadPage("order/service-introduce/service-qiye.html");
+		}
+		
+	});
 });
 
 
