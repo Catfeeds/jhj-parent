@@ -1837,7 +1837,7 @@ i.toolbar-icon-my {
   width: 100%;
   height: 100%;
   padding: 0 8px;
-  background-color: #5EA6EE;
+  background-color: #000;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -2466,9 +2466,29 @@ i.toolbar-icon-my {
   line-height: 50px;
   margin: 10px auto;
   font-size: 18px;
-  background: #EF7C00;
+  background: #EF7C00!important;
   color:#fff;
   border:1px solid #EF7C00;
+}
+.shendu-submit3{
+  width:30%;
+  height:30px;
+  line-height: 30px;
+  margin: 10px auto;
+  font-size: 18px;
+  background: #EF7C00!important;
+  color:#fff;
+  border:1px solid #EF7C00;
+}
+.shendu-submit4{
+  width:100%;
+  height:30px;
+  line-height: 30px;
+  margin: 0 auto;
+  font-size: 18px;
+  background: 0!important;
+  color:#EF7C00!important;
+  border:none;
 }
 
 
@@ -3201,62 +3221,69 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 
 /*最新首页*/
 .beijing-index{
-  background: url(../img/beijing-index.png) no-repeat center;
+  background: url(../img/newindex/index-beijing.png) no-repeat center;
+  margin-top:-6px;
+  height:498px;
 }
-.circle-index{
-  width:350px;height:350px;background: #D691B0;border-radius: 50%;margin-left: -125px;
-  margin-top:50px;opacity: 0.8;position:relative;z-index: 1;
-}
-.personal-index{
-  width:200px;height:200px;border:1px solid #fff;border-radius:50%;background:#E194C7;z-index: 999;
-  opacity:1;position: absolute;margin-left:-65px;margin-top:-275px;
-  -moz-box-shadow: 5px 1px 10px #666;/*firefox*/
-  -webkit-box-shadow: 5px 1px 10px #666;/*safari或chrome*/
-  box-shadow:5px 1px 10px #666;/*opera或ie9*/
-}
-.personal-index img{
-  margin-left:80px;width:60px;margin-top:60px;、
-}
-.personal-index p{
-  margin-left:70px;color:#fff;
-}
-.weather-index{
-  width:45%;height:100px;background: #FD98C3;border-radius: 15px;margin-left:50%;margin-top:20px;
-}
-.xiantiao-weather-index{
-  width:1px;height:100px;margin-left:70%;background: #fff;margin-top: -96px;
-}
-.tixing-index{
-  font-size:24px;color:#fff;margin-left:78%;font-weight: bold;margin-top:-84px;
-}
-.mincircle{
-  position: absolute;z-index: 999;
-}
-.mincircle img{
-  float:left;width:60px;
+.maincircle{
+  width:20%;
+  position:absolute;
 }
 .mincircle p{
-  color:#fff;font-size:18px;margin-left:5px;
+  color:#EF7B00;
+  margin:0;
+  width:100%;
+  text-align: center;
 }
-.xiabiaoxian{
-  width:110px;height:1px;background: #fff;margin-left:40px;margin-top:-5px;
+.mincircle img{
+  width:50%;
+  margin-left:25%;
+}
+.mincircle:nth-child(1){
+  width:24%;
+  float: left;
+  margin-left:18%;
+  padding-top:30px;
 }
 .mincircle:nth-child(2){
-  margin-left:5%;
+  width:24%;
+  margin-left:16%;
+  float: left;
+  padding-top:30px;
 }
 .mincircle:nth-child(3){
-  margin-left:40%;margin-top:80px;
+  width:24%;
+  margin-left:38%;
+  padding-top:130px;
 }
 .mincircle:nth-child(4){
-  margin-left:50%;margin-top:200px;
+  width:24%;
+  margin-left:8%;
+  float: left;
+  margin-top:-40px;
 }
 .mincircle:nth-child(5){
-  margin-left:40%;margin-top:300px;
+  width:24%;
+  margin-left:36%;
+  float: left;
+  margin-top:-40px;
 }
 .mincircle:nth-child(6){
-  margin-left:5%;margin-top:360px;
+  width:24%;
+  margin-left:38%;
 }
-
+.service-button3{
+  background:#fff!important;
+  position: absolute;
+  right:0px;
+  color:#EF7B00!important;
+  top:30%;
+  width:11%;
+  height:100px;
+  border:none;
+  line-height: 20px;
+  padding-top:10px;
+}
 
 
 
@@ -3469,4 +3496,198 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
 /*灰色*/
 .service-button2{
   background:#8e8e93!important;
+}
+
+
+
+
+
+/*fiveservice introduce*/
+.se-jinpai img{
+  width:100%;
+}
+.se-jinpai-title{
+  margin-top:5px;
+  width:98%;
+  margin-left:1%;
+}
+.se-jinpai-title1{
+  width:100%;
+}
+.se-jinpai-title1-1{
+  width:5px;
+  height:24px;
+  background: #D41D3B;
+  float:left;
+  margin-top:4px;
+}
+.se-jinpai-title1-2{
+  font-size: 24px;
+  margin-left:5px;
+  color:#000;
+  font-weight: bold;
+  float:left;
+}
+.se-jinpai-title1-3{
+  margin-left:10px;
+  margin-top:8px;
+  float:left;
+}
+.se-jinpai-title2{
+  width:100%;
+  clear:both;
+  color:#666;
+}
+.se-jinpai-title2 li{
+  font-weight:bold;
+  font-size:16px;
+  color:#333;
+}
+.se-jinpai-title2 p{
+  margin:0;
+  color:#666;
+  font-size:14px;
+  margin-left:4%;
+}
+
+
+
+
+.se-jinpai-title3 li{
+  width:30%;
+  float:left;
+  margin-left:2.5%;
+}
+.se-jinpai-title3 li img{
+  width:70%;
+  margin-left:15%;
+}
+.se-jinpai-title3 li p{
+  margin:0;
+  text-align: center;
+  font-size: 14px;
+  color:#666;
+}
+.se-jinpai-title3{
+  width:100%;
+  clear:both;
+  color:#666;
+  margin-top:10px;
+}
+
+
+
+.se-jinpai-title4 h5{
+  width:100%;
+  font-size: 20px;
+  font-weight:bold;
+  color:#333;
+  text-align: center;
+  line-height: 60px;
+  clear: both;
+}
+.se-jinpai-title4{
+  width:100%;
+  clear:both;
+  color:#666;
+  margin-top:10px;
+}
+.se-jinpai-title4 li{
+  width:30%;
+  float:left;
+  margin-left:2.5%;
+  height:90px;
+}
+.se-jinpai-title4 li p{
+  margin:0;
+  font-size: 12px;
+  color:#999;
+}
+.se-jinpai-title4 li img{
+  float:left;
+  width:14px;
+  margin-top:3px;
+  margin-right:5px;
+}
+.se-jinpai-title4-1{
+  color:#666;
+  font-size:14px;
+  margin-left:5px;
+}
+.se-jinpai-title3-dixian{
+  width:80%;
+  margin-left:10%;
+  height:1px;
+  background: #D41D3B;
+  margin-top:260px;
+}
+
+
+
+
+.se-jinpai-title5{
+  width:100%;
+  clear:both;
+  color:#666;
+  margin-top:10px;
+}
+.se-jinpai-title5 li{
+  width:47%;
+  float:left;
+  margin-left:2%;
+  height:260px;
+  margin-top:20px;
+}
+.se-jinpai-title5 li p{
+  margin:0;
+  font-size: 12px;
+  color:#999;
+  margin-left:5px;
+}
+.se-jinpai-title5 li img{
+  float:left;
+  width:14px;
+  margin-top:3px;
+  margin-right:5px;
+}
+.se-jinpai-title5-1{
+  color:#666;
+  font-size:14px;
+  margin-left:5px;
+  height:40px;
+}
+.se-jinpai-title5-2 li{
+  color:#666;
+  font-size:14px;
+  height:20px;
+  margin:0;
+}
+.se-jinpai-title5-dixian{
+  width:80%;
+  margin-left:10%;
+  height:1px;
+  background: #D41D3B;
+  margin-top:20px;
+  float:left;
+}
+.se-jinpai-title5 h5{
+  width:100%;
+  font-size: 20px;
+  font-weight:bold;
+  color:#E5780F;
+  text-align: center;
+  line-height: 60px;
+  clear: both;
+}
+
+
+
+.yuyuerexian{
+  width:100%;
+  font-size: 20px;
+  font-weight:bold;
+  color:#E5780F;
+  text-align: center;
+  line-height:30px;
+  clear: both;
 }
