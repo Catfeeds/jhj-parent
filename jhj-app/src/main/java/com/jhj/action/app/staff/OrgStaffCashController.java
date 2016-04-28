@@ -2,6 +2,7 @@ package com.jhj.action.app.staff;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,20 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffCash;
 import com.jhj.po.model.bs.OrgStaffFinance;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.service.bs.OrgStaffFinanceService;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffCashVo;
 import com.meijia.utils.vo.AppResultData;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
+import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.OrderNoUtil;
+import com.meijia.utils.SmsUtil;
 
 @Controller
 @RequestMapping(value = "/app/staff")
@@ -37,6 +43,9 @@ public class OrgStaffCashController extends BaseController {
 	
 	@Autowired
 	private UsersService usersService;
+	
+	@Autowired
+	private OrgStaffsService orgStaffsService;
 
 	//提现记录接口
 	@RequestMapping(value = "post_cash", method = RequestMethod.GET)
@@ -67,17 +76,26 @@ public class OrgStaffCashController extends BaseController {
 			return result;
 			
 		}
-		Users users = usersService.selectByUsersId(userId);
+		
+		OrgStaffs orgstaff = orgStaffsService.selectByPrimaryKey(userId);
 		
 		OrgStaffCash orgStaffCash = orgStaffCashService.initOrgStaffCash();
 		//1.调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
 		orgStaffCash.setOrderNo(orderNo);
 		orgStaffCash.setStaffId(userId);
-		orgStaffCash.setMobile(users.getMobile());
+		orgStaffCash.setMobile(orgstaff.getMobile());
 		orgStaffCash.setOrderMoney(cashMoney);
 		orgStaffCash.setAccount(account);
 		orgStaffCashService.insert(orgStaffCash);
+		
+		//申请提现短信发送
+		
+		String deptStr = MathBigDeciamlUtil.round2(orgStaffFinance.getTotalDept());
+		String timeStr = DateUtil.getNow("HH:mm");
+		String[] content = new String[] { timeStr, "7"};
+		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(orgstaff.getMobile(), Constants.STAFF_CASE_REQ, content);
+		
 		
 		return result;
 	}

@@ -95,7 +95,7 @@ public class Constants {
 	public static String GET_CODE_TEMPLE_ID= "30064";
 	public static String STAFF_POST_BEGIN= "64740";//服务人员点击开始服务  64740
 	public static String STAFF_POST_DONE= "64744";//服务人员点击完成服务  64740
-	public static String STAFF_JOIN_BLACK= "65014";//服务人员欠款大于1000元被加入黑名单
+	public static String STAFF_JOIN_BLACK= "80275";//服务人员欠款大于1000元被加入黑名单
 	public static String STAFF_OUT_BLACK= "65016";//服务人员已经被移除黑名单
 	public static String GET_USER_VERIFY_ID= "30064";//jhj 用户获取验证码短信模板Id
 	public static String GET_AM_EXP_CLEAN_ORDER_ID= "29167";//jhj 助理获得深度保洁订单通知
@@ -109,7 +109,8 @@ public class Constants {
 	public static String AM_NOTICE_CUSTOMER_Message= "64742";//助理修改助理预约单后给用户发短信
 	public static String AM_CLEAN_NOTICE_CUSTOMER_Message= "29160";//助理修改助理预约单后给用户发短信
 	public static String NOTICE_USER_REST_MONEY_NOT_ENOUGH= "34652";
-	
+	public static String STAFF_PAY_DEPT_SUCCESS =" 80274";   //服务人员支付欠款成功
+	public static String STAFF_CASE_REQ = "80272";   //服务人员申请提现
 
 	//支付方式： 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付(保留,暂不开发)
 	//4 = 上门刷卡（保留，暂不开发） 5 = 优惠券兑换
