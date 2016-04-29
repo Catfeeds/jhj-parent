@@ -291,8 +291,6 @@ public class OrderPayController extends BaseController {
 				 */
 //				您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
 				
-				
-				
 //				orderPayService.orderPaySuccessToDoForAm(order);
 			}
 		}

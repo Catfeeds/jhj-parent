@@ -132,21 +132,27 @@ public class OrderOnlinePayController extends BaseController {
 		
 		//更新订单状态.  对于 不是  order_type = 6, 即不是 话费充值类  的 订单做修改
 		if(!order.getOrderType().equals(Constants.ORDER_TYPE_6)){
-			order.setOrderStatus(Constants.ORDER_STATUS_4);//支付状态
+			
+			
+			
+			
+		}
+		
+		//订单支付成功后		
+		if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+			
+			//2016年4月29日11:13:04  钟点工订单，已支付状态为  2
+			order.setOrderStatus(Constants.ORDER_HOUR_STATUS_2);
 			order.setUpdateTime(updateTime);
 			ordersService.updateByPrimaryKeySelective(order);
-		
 			//插入订单日志
 			OrderLog orderLog = orderLogService.initOrderLog(order);
 			orderLogService.insert(orderLog);
-			
-			
 			//记录用户消费明细
 			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);
-		}
-		
-		//订单支付成功后
-		if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+			
+			
+			
 			orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), new ArrayList<OrgStaffsNewVo>(), false);
 		}
 		
@@ -155,7 +161,21 @@ public class OrderOnlinePayController extends BaseController {
 		}		
 
 		if (order.getOrderType().equals(Constants.ORDER_TYPE_2)) {
-			orderPayService.orderPaySuccessToDoForAm(order);
+			
+			//2016年4月29日11:13:04  助理订单，已支付状态为 3
+			order.setOrderStatus(Constants.ORDER_AM_STATUS_3);
+			order.setUpdateTime(updateTime);
+			ordersService.updateByPrimaryKeySelective(order);
+			//插入订单日志
+			OrderLog orderLog = orderLogService.initOrderLog(order);
+			orderLogService.insert(orderLog);
+			//记录用户消费明细
+			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);
+			
+			/*
+			 * 2016年4月29日11:18:33  不再做处理。由后台 手动派工
+			 */
+//			orderPayService.orderPaySuccessToDoForAm(order);
 		}		
 		
 		if(order.getOrderType().equals(Constants.ORDER_TYPE_6)) {
