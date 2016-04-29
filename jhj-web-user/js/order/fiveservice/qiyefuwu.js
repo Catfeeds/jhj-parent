@@ -50,7 +50,7 @@ myApp.onPageInit('qiyefuwu-page', function(page) {
 
 		var serviceTypeId = $$(this).find("input[name='serviceTypeId']").val();
 		mainView.router.loadPage("order/order-am-faqiyuyue.html?serviceType="+serviceTypeId
-				+ "&parentServiceTypeId=" + parentServiceTypeId);
+				+ "&parentServiceTypeId=" + localStorage['firstServiceType']);
 				
 	});
 	

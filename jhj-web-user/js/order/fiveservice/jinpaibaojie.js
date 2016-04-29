@@ -28,12 +28,12 @@ myApp.onPageInit('jinpaibaojie-page', function(page) {
 
 				var serviceTypeId = $$(this).find("input[name='serviceTypeId']").val();
 
-				var parentServiceTypeId = $$("#parentServiceType").val();
+				var parentServiceTypeId = 23;
 
 				var serviceProperty = $$(this).find("input[name='serviceProperty']").val();
 
 				var url = "order/order-form-zhongdiangong.html?serviceType=" + serviceTypeId
-						+ "&parentServiceTypeId=" + parentServiceTypeId;
+						+ "&parentServiceTypeId=" + 23;
 
 				if (serviceProperty == 1) {
 					// 全年订制

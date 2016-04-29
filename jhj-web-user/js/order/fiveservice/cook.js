@@ -27,12 +27,13 @@ myApp.onPageInit('cook-page', function(page) {
 
 				var serviceTypeId = $$(this).find("input[name='serviceTypeId']").val();
 
-				var parentServiceTypeId = $$("#parentServiceType").val();
+				//2016年4月29日11:39:23 由于有返回 页面操作。此处写死
+				var parentServiceTypeId = 24;
 
 				var serviceProperty = $$(this).find("input[name='serviceProperty']").val();
 
 				var url = "order/order-form-zhongdiangong.html?serviceType=" + serviceTypeId
-						+ "&parentServiceTypeId=" + parentServiceTypeId;
+						+ "&parentServiceTypeId=" + 24;
 
 				if (serviceProperty == 1) {
 					// 全年订制
