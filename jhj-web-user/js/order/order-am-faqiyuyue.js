@@ -26,7 +26,7 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 			
 			var service = result.data;
 			
-			$$("#servceTypeName").text(service.name);
+			/*$$("#servceTypeName").text(service.name);*/
 			
 			$$("#servicePrice").text(service.remarks);
 			

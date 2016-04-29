@@ -13,12 +13,19 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 	
 	if(parentServiceTypeId == 23){
 		$$("#hhAddons").attr("style","display:none");
+		
+		// 保洁时间插件
+		serviceDateSelect();
+		
 	}
 	
 	//厨娘烧饭。2小时
 	if(parentServiceTypeId == 24){
 		
 		$$("#serviceHourDescription").text("2小时");
+		
+		//做饭时间插件
+		cookDateSelect();
 	}
 	
 	
@@ -50,7 +57,6 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		 
 	}
 	
-	serviceDateSelect();
 	
 	/*
 	 * 回显   日期时间

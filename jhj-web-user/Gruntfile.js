@@ -17,7 +17,9 @@ module.exports = function(grunt) {
 			
 			jsmain : {					
 				// 源文件路径
-				src : [ 'js/main.js', 'js/require-data.js', 'js/utils.js', 'js/validate-reg.js', 'js/service-date-select.js', 'js/remind-date-select.js'],
+				src : [ 'js/main.js', 'js/require-data.js', 'js/utils.js', 'js/validate-reg.js', 
+				        'js/service-date-select.js', 'js/remind-date-select.js',
+				        'js/cook-date-select.js'],
 				dest : 'js/u-main.js'
 			},
 			
