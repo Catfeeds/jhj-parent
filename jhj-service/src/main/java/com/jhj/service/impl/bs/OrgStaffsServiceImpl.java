@@ -760,4 +760,8 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		return list;
 	}
 	
+	@Override
+	public List<OrgStaffs> selectByStaffName(String name) {
+		return orgStaMapper.selectByStaffName(name);
+	}
 }

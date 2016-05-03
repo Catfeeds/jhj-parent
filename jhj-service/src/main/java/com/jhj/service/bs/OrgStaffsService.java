@@ -94,4 +94,6 @@ public interface OrgStaffsService {
     
     List<Long> getProperStaffByOrgAndServiceType(Long orgId,Long serviceType);
     
+    
+    List<OrgStaffs> selectByStaffName(String name);
 }
