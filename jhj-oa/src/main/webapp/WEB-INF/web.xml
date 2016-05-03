@@ -40,12 +40,6 @@
     </filter-mapping>
     <!-- 设置servlet编码结束 -->  
     
-    <!--我自己的监听器 -->
-    <listener>
-		<listener-class>com.jhj.oa.vo.zzz.MyListner</listener-class>
-	</listener>
-    
-    
     <!-- Spring配置文件开始  -->    
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -71,13 +65,8 @@
         <load-on-startup>1</load-on-startup><!-- load-on-startup必须放在最后 -->
     </servlet>    
     <!-- Spring MVC配置文件结束 -->
-   
-     <servlet-mapping>
-        <servlet-name>spring-jhj-oa</servlet-name>
-        <url-pattern>/jhj-oa/queue/*</url-pattern>
-    </servlet-mapping> 
     
-   <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>spring-jhj-oa</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
