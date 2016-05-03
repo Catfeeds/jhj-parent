@@ -1,5 +1,7 @@
 package com.jhj.action.order;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +20,14 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OaOrderDisService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.vo.OaOrderDisSearchVo;
 import com.jhj.vo.order.OaOrderDisVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
 
 /**
@@ -42,12 +47,16 @@ public class OaOrderDisController extends BaseController {
 	@Autowired
 	private OrderDispatchsService orderDisService;
 	
+	@Autowired
+	private OrgStaffsService staffService;
+	
+	
 	/*
 	 * 下单表 所有记录
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/cal-list" , method =RequestMethod.GET)
-	public String getOrderDisList(Model model, HttpServletRequest request,OaOrderDisSearchVo oaOrderDisSearchVo){
+	public String getOrderDisList(Model model, HttpServletRequest request,OaOrderDisSearchVo oaOrderDisSearchVo) throws UnsupportedEncodingException, ParseException{
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
@@ -67,6 +76,16 @@ public class OaOrderDisController extends BaseController {
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
 			oaOrderDisSearchVo.setSearchOrgId(Long.valueOf(org));
 		}
+		
+		/*
+		 * 2016年5月3日16:23:03  设置搜索条件
+		 */
+		String staffName = oaOrderDisSearchVo.getStaffName();
+		if(!StringUtil.isEmpty(staffName)){
+			String name = new String(staffName.getBytes("iso-8859-1"),"utf-8");
+			oaOrderDisSearchVo.setStaffName(name);
+		}
+		
 		
 		List<OrderDispatchs> disList = oaDisService.selectOrderDisByListPage(oaOrderDisSearchVo, pageNo, pageSize);
 		

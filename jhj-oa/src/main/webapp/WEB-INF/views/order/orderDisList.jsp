@@ -16,7 +16,8 @@ import="com.jhj.oa.common.UrlHelper"%>
 	<%@ include file="../shared/importCss.jsp"%>
 	
 	<!--css for this page-->
-
+	<link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
+	     rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -41,9 +42,36 @@ import="com.jhj.oa.common.UrlHelper"%>
                       <section class="panel">
                       	  
                           <header class="panel-heading">
-                          	<h4>派工列表</h4>
+                          	<h4>条件检索</h4>
+                          	<form:form modelAttribute="oaOrderDisSearchVoModel" onsubmit="return checkEndTime()"
+                          	action="cal-list" class="form-inline"
+											method="GET">
+								
+								<div class="form-group">	
+									员工姓名:<form:input path="staffName" class="form-control" maxlength="5" autocomplete="off" type="text"/>
+								</div>
+								
+								<div class="form-group">
+	                          		开始时间：
+									<form:input path="startTimeStr" class="form-control form_datetime"
+									 style="width:110px; margin-bottom:0" readonly="true" />
+								</div>
+								<div class="form-group">
+									结束时间：
+									<form:input path="endTimeStr" class="form-control form_datetime" 
+									style="width:110px; margin-bottom:0" readonly="true" />
+								</div> 
+											
+											
+								<button type="submit" class="btn btn-primary" >搜索</button>
+							</form:form>
                           </header>
                           
+                       <hr style="width: 100%; color: black; height: 1px; background-color: black;" />   
+							<header class="panel-heading">
+								<h4>派工列表</h4>
+							</header>	
+							
                           <table class="table table-striped table-advance table-hover">
                               <thead>
                               <tr>	  
@@ -120,6 +148,37 @@ import="com.jhj.oa.common.UrlHelper"%>
     <!-- js placed at the end of the document so the pages load faster -->
     <!--common script for all pages-->
     <%@ include file="../shared/importJs.jsp"%>
-
+    
+    <script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+	<script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+	
+	<script type="text/javascript">
+	$('.form_datetime').datepicker({
+	 	format: "yyyy-mm-dd",
+	 	language: "zh-CN",
+	 	autoclose: true,
+	 	startView: 1,
+	 	todayBtn:true
+	 });
+		
+	 function checkEndTime(){  
+	     var startTime=$("#startTimeStr").val();  
+	     var start=new Date(startTime.replace("-", "/").replace("-", "/"));  
+	     var endTime=$("#endTimeStr").val();  
+	     var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	     if(end<start){ 
+	     	
+	     	alert('结束日期必须大于开始时间');
+	     	 return false;  
+	     }  
+	     return true;  
+	 }	
+	
+	
+	</script>
+	
+	
   </body>
 </html>

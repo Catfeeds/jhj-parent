@@ -137,6 +137,7 @@
 		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
     
 	<script src="<c:url value='/js/jhj/user/userList.js'/>"></script>
-
+	
   </body>
+  
 </html>

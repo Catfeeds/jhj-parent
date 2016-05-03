@@ -3,6 +3,7 @@ package com.jhj.action.order;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import com.jhj.vo.OaOrderSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -134,10 +136,11 @@ public class OaOrderController extends BaseController {
 	 * @param request
 	 * @param oaOrderSearchVo
 	 * @return
+	 * @throws ParseException 
 	 */
 //	@AuthPassport
 	@RequestMapping(value = "/order-hour-list", method = RequestMethod.GET)
-	public String getOrderHourList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo){
+	public String getOrderHourList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo) throws ParseException{
 	
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
@@ -165,6 +168,18 @@ public class OaOrderController extends BaseController {
 		String jspOrgId = request.getParameter("orgId");
 		if(!StringUtil.isEmpty(jspOrgId) && !jspOrgId.equals("0")){
 			oaOrderSearchVo.setSearchOrgId(Long.valueOf(jspOrgId));
+		}
+		
+		
+		//转换为数据库 参数字段
+		String startTimeStr = oaOrderSearchVo.getStartTimeStr();
+		if(!StringUtil.isEmpty(startTimeStr)){
+			oaOrderSearchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		}
+		
+		String endTimeStr = oaOrderSearchVo.getEndTimeStr();
+		if(!StringUtil.isEmpty(endTimeStr)){
+			oaOrderSearchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
 		}
 		
 		
@@ -250,10 +265,11 @@ public class OaOrderController extends BaseController {
 	 * @param request
 	 * @param oaOrderSearchVo
 	 * @return
+	 * @throws ParseException 
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/order-am-list", method = RequestMethod.GET)
-	public String getOrderAmList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo){
+	public String getOrderAmList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo) throws ParseException{
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
@@ -269,13 +285,11 @@ public class OaOrderController extends BaseController {
 			oaOrderSearchVo.setOrderType(Constants.ORDER_TYPE_2);
 		}
 		
-		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
 		
-		if(!StringUtil.isEmpty(org) && !org.equals("0")){
-			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			oaOrderSearchVo.setOrgId(Short.valueOf(org));
-		}
+		/*
+		 * 助理类订单，不能 根据门店划分。。因为新下的订单。没有门店一说
+		 */
+		
 		
 		/*
 		 *  2016年4月13日11:10:21
@@ -297,6 +311,17 @@ public class OaOrderController extends BaseController {
 		}
 		
 		
+		//转换为数据库 参数字段
+		String startTimeStr = oaOrderSearchVo.getStartTimeStr();
+		if(!StringUtil.isEmpty(startTimeStr)){
+			oaOrderSearchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		}
+		
+		String endTimeStr = oaOrderSearchVo.getEndTimeStr();
+		if(!StringUtil.isEmpty(endTimeStr)){
+			oaOrderSearchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		}
+		
 		
         List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo,pageNo,pageSize);
 		
@@ -312,7 +337,7 @@ public class OaOrderController extends BaseController {
 		
 		PageInfo result = new PageInfo(orderList);	
 		
-		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+//		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
 		

@@ -26,6 +26,8 @@ import="com.jhj.oa.common.UrlHelper"%>
 	<%@ include file="../shared/importCss.jsp"%>
 	
 	<!--css for this page-->
+	<link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
+	     rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -51,7 +53,8 @@ import="com.jhj.oa.common.UrlHelper"%>
                       	  
                          <header class="panel-heading">
                          	<h4>数据搜索</h4>
-	                      	  <form:form modelAttribute="oaOrderSearchVoModel" class="form-inline" action="order-hour-list" method="GET">
+	                      	  <form:form modelAttribute="oaOrderSearchVoModel" onsubmit="return checkEndTime()"
+	                      	  class="form-inline" action="order-hour-list" method="GET">
 		                         		<div class="form-group">
 		                     					订单状态：
 		                     					<form:select path="orderStatus" class="form-control">
@@ -72,6 +75,17 @@ import="com.jhj.oa.common.UrlHelper"%>
 												<orgSelectTag:select/>
 											</c:if>	
 										</div>	
+										
+										<div class="form-group">
+			                          		下单开始时间：
+											<form:input path="startTimeStr" class="form-control form_datetime"
+											 style="width:110px; margin-bottom:0" readonly="true" />
+										</div>
+										<div class="form-group">
+											下单结束时间：
+											<form:input path="endTimeStr" class="form-control form_datetime" 
+											style="width:110px; margin-bottom:0" readonly="true" />
+										</div> 
 										
 										<button type="submit" class="btn btn-primary" >搜索</button>
 	                           </form:form>   
@@ -187,5 +201,37 @@ import="com.jhj.oa.common.UrlHelper"%>
     <script	type="text/javascript"  src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
     
 	<script src="<c:url value='/js/jhj/order/orderList.js'/>"></script>
+	
+	 <script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+	<script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+	
+	<script type="text/javascript">
+	$('.form_datetime').datepicker({
+	 	format: "yyyy-mm-dd",
+	 	language: "zh-CN",
+	 	autoclose: true,
+	 	startView: 1,
+	 	todayBtn:true
+	 });
+	
+	 function checkEndTime(){  
+	     var startTime=$("#startTimeStr").val();  
+	     var start=new Date(startTime.replace("-", "/").replace("-", "/"));  
+	     var endTime=$("#endTimeStr").val();  
+	     var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	     if(end<start){ 
+	     	
+	     	alert('结束日期必须大于开始时间');
+	     	 return false;  
+	     }  
+	     return true;  
+	 }
+	
+	
+	</script>
+	
+	
   </body>
 </html>
