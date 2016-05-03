@@ -159,7 +159,6 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	var loading = false;// 加载flag
 	var page = $$("#page").val();
 	function loadOrderList(userId, page, cal) {
-		alert(cal);
 		console.log("page = " + page);
 		curClickDay = cal;
 		var postdata = {};
