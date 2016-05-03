@@ -30,11 +30,15 @@ function cookDateSelect() {
 		serviceHoursValues = [17,18];
 	}
 	
+	if(nowHour >= 16 && nowHour <= 23){
+		serviceHoursValues = [10,11,17,18];
+	}
+	
+	
 	for (var i =8; i < 20; i++) {
 		
 		defaultServiceHoursValues = [10,11,17,18];
 	}
-	
 	
 	
 	var serviceMins = ["00"];

@@ -159,6 +159,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	var loading = false;// 加载flag
 	var page = $$("#page").val();
 	function loadOrderList(userId, page, cal) {
+		alert(cal);
 		console.log("page = " + page);
 		curClickDay = cal;
 		var postdata = {};
@@ -181,10 +182,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 				var order = orders[i];
 
 				var htmlPart = html;
-				// var img_tag = '<img alt="" src="img/icons/order_type_img_'+
-				// order.order_type +'.png ">';
-				// htmlPart = htmlPart.replace(new RegExp('{img_tab}',"gm"),
-				// img_tag);
+				
 				htmlPart = htmlPart.replace(new RegExp('{order_type}', "gm"), order.order_type);
 				htmlPart = htmlPart.replace(new RegExp('{order_no}', "gm"), order.order_no);
 				htmlPart = htmlPart.replace(new RegExp('{order_hour_type_name}', "gm"),
@@ -193,10 +191,10 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 						order.order_hour_status_name);
 
 				if (order.order_type == 2) {
-					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), moment.unix(
+					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "下单时间: "+moment.unix(
 							order.add_time).format("YYYY-MM-DD HH:mm"));
 				} else {
-					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), moment.unix(
+					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "服务时间: "+moment.unix(
 							order.service_date).format("YYYY-MM-DD HH:mm"));
 				}
 
@@ -240,7 +238,12 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	
 	
 	console.log(today.getFullYear() + "-" + today.getMonth() + "-" + today.getDay());
-	var todayStr = today.getFullYear() + "-" + (parseInt(today.getMonth()) + 1) + "-" + today.getDay();
+	/*
+	 * 
+	 *  时间 ：   月份和 天数都比 实际数字 小 1
+	 * 
+	 */
+	var todayStr = today.getFullYear() + "-" + (parseInt(today.getMonth()) + 1) + "-" + (parseInt(today.getDay()) + 1);
 	loadOrderList(userId, page, todayStr);
 	// 注册'infinite'事件处理函数
 	$$('#order-list-more').on('click', function() {
