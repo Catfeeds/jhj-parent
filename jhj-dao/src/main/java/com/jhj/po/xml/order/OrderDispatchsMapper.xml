@@ -54,6 +54,12 @@
          <if test="userId !=null">
          	and user_id = #{userId,jdbcType=NUMERIC}
          </if>
+         <if test="staffName !=null and staffName !='' ">
+         	and staff_name = #{staffName,jdbcType=VARCHAR}
+         </if>
+         <if test="serviceDate !=null ">
+         	and from_unixtime(service_date,'%Y-%m-%d') = #{serviceDate,jdbcType=NUMERIC}
+         </if>
 		and dispatch_status = 1
 	</select>
 	
@@ -81,11 +87,16 @@
 		<include refid="Base_Column_List" />
 		from order_dispatchs
 		where 1=1
-		 <if test="serviceDate != null ">
-          and from_unixtime(service_date,'%Y-%m-%d') = #{serviceDate,jdbcType=NUMERIC}  
-         </if>
-         <if test="staffId !=null ">
-         	and staff_id =#{staffId,jdbcType=NUMERIC}
+         
+         <if test="startTimeStr !=null and startTimeStr !='' ">
+			<![CDATA[ and from_unixtime(service_date,'%Y-%m-%d') >= #{startTimeStr}]]>
+		 </if>
+		 <if test="endTimeStr !=null and endTimeStr !='' ">
+			<![CDATA[ and from_unixtime(service_date,'%Y-%m-%d') <= #{endTimeStr}]]>
+		 </if>
+         
+         <if test="staffName !=null and staffName !='' ">
+         	and staff_name =#{staffName,jdbcType=VARCHAR}
          </if>
          <if test="searchOrgId !=null">
          	and org_id = #{searchOrgId,jdbcType=NUMERIC}

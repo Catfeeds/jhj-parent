@@ -562,43 +562,16 @@
 	</select>
 	
 	<select id="selectByUserListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrderSearchVo">
-		select * FROM
-		(select
+	   select
 		<include refid="Base_Column_List" />
 		from orders
-		where order_type = 0
-		<if test="userId != null">
-			and user_id = #{userId,jdbcType=NUMERIC}
-		</if>
 
-		<if test="mobile != null">
-			and mobile like CONCAT('%','${mobile}','%' )
-		</if>
-
-		<if test="orderNo != null">
-			and order_no like CONCAT('%','${orderNo}','%' )
-		</if>
-
-		<if test="orderFrom != null">
-			and order_from = #{orderFrom,jdbcType=NUMERIC}
-		</if>
-
-		<if test="serviceType != null">
-			and service_type = #{serviceType,jdbcType=NUMERIC}
-		</if>
+		where 1=1
 		
-		<if test="startTime != null">
-				<![CDATA[	and service_date >= #{startTime,jdbcType=NUMERIC} ]]>
+		<if test="amId != null">
+			and am_id = #{amId,jdbcType=NUMERIC}
 		</if>
 
-		<if test="endTime != null">
-				<![CDATA[	and service_date <= #{endTime,jdbcType=NUMERIC} ]]>
-		</if>
-		UNION ALL
-		select
-		<include refid="Base_Column_List" />
-		from orders
-		where order_type in (1, 2)
 
 		<if test="userId != null">
 			and user_id = #{userId,jdbcType=NUMERIC}
@@ -620,16 +593,26 @@
 			and service_type = #{serviceType,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="startTime != null">
-				<![CDATA[	and add_time >= #{startTime,jdbcType=NUMERIC} ]]>
+				
+		<if test="startTime != null and endTime != null">
+			<![CDATA[	
+			and
+			case 			
+				when order_type != 0
+				then 
+					add_time > #{startTime,jdbcType=NUMERIC} 
+					and
+					add_time < #{endTime,jdbcType=NUMERIC} 
+				else
+					
+					service_date >=  #{startTime,jdbcType=NUMERIC}
+					and
+					service_date <=  #{endTime,jdbcType=NUMERIC}
+				end	
+			]]>
 		</if>
 
-		<if test="endTime != null">
-				<![CDATA[	and add_time <= #{endTime,jdbcType=NUMERIC} ]]>
-		</if>
-		) as T
 		order by add_time desc
-
 
 	</select>
 
@@ -899,7 +882,13 @@
 		</if>
 		
 		<if test="startTime != null">
-			<![CDATA[ and ( (add_time >= #{startTime,jdbcType=NUMERIC} and add_time <= #{endTime,jdbcType=NUMERIC}) OR (service_date >= #{startTime,jdbcType=NUMERIC} and service_date <= #{endTime,jdbcType=NUMERIC}) ) ]]>
+			<![CDATA[ and ( 
+			
+				(add_time >= #{startTime,jdbcType=NUMERIC} and add_time <= #{endTime,jdbcType=NUMERIC}) 
+				OR 
+				(service_date >= #{startTime,jdbcType=NUMERIC} and service_date <= #{endTime,jdbcType=NUMERIC}) 
+				
+				) ]]>
 		</if>		
 		) as T
 		GROUP BY service_date

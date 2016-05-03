@@ -67,4 +67,7 @@ public interface OrgStaffsMapper {
 	//根据 服务类型 和 门店 找到 符合 服务要求 的 服务人员
     List<Long> getProperStaffByOrgAndServiceType(@Param("orgId")Long orgId,@Param("serviceTypeId")Long serviceTypeId);
     
+    //精确查询，根据名称
+    List<OrgStaffs> selectByStaffName(String name);
+    
 }

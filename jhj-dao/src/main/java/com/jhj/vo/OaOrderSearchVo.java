@@ -58,6 +58,25 @@ public class OaOrderSearchVo {
 	// 2016年4月19日18:36:13  排班列表，点击进入订单列表
 	private String orderNo;	
 	
+	
+	//2016-5-3 17:23:13  钟点工和  助理订单 列表 搜索条件
+	private String startTimeStr;
+	
+	private String endTimeStr;
+	
+	
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
+	}
 	public String getOrderNo() {
 		return orderNo;
 	}
