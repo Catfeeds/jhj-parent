@@ -42,8 +42,6 @@
 				<input type="hidden" id="order_money" name="order_money" value="{{order_money}}"/>			
 				<ul class="ddxq-xx"style="background:#fffce8">
 					
-				   		
-				
 					<li>
 				      <div class="item-content">
 				        <div class="item-inner">
@@ -149,7 +147,7 @@
 							<label class="label-checkbox item-content" name="myPayTypeSelect" id="wxzhifuDiv"> 
 								<div class="item-media"><img src="img/icons/weixin.png"style="width:50px;"></div>
 								<div class="item-inner">
-									<div class="item-title"style="margin-left:-26px;">微信支付</div>
+									<div class="item-title"style="margin-left:-15px;">微信支付</div>
 									<input type="hidden"  value="2"/>
 									<img  src="img/icons/duigou-grey.png" id="order_pay_type" name="order_pay_type"/> 
 								</div>
@@ -162,7 +160,8 @@
 				</div>	
 				
 				{{/js_compare}}
-			{{#js_compare "this.order_status ===4"}}
+				
+			{{#js_compare "this.order_status ==3 || this.order_status ==4 "}}
 			<div class="list-block am-pay-type" >
 					<ul>
 						 <li id="user_coupon_view_li">
@@ -191,7 +190,7 @@
 						</div>
 						
 			{{/js_compare}}	
-			{{#js_compare "this.order_status ===6 "}}
+		<!-- 	{{#js_compare "this.order_status ===6 "}}
 			<div class="user-pingjia kehuzl-beizhu " style="display:block">
               <a href="#" id="yonghu-pingjiadingdan" class="button active my-submit" style="background:#5EA6EE;border:1px solid #5EA6EE;">评价订单</a>
         	</div>	
@@ -201,6 +200,11 @@
         	<div class="user-view-pingjia kehuzl-beizhu " style="display:block">
               <a href="#" id="yonghu-pingjiaxiangqing" class="button active my-submit" style="background:#5EA6EE;border:1px solid #5EA6EE;">查看评价</a>
         	</div>
+        	{{/js_compare}} -->
+        	
+        	
+        	{{#js_compare "this.order_status ==1 || this.order_status == 2 || this.order_status == 3 || this.order_status == 4 "}}
+        		<a href="#" class="button active my-submit"  id="cancleOrder" >取消订单</a>
         	{{/js_compare}}
         	
 		</div>

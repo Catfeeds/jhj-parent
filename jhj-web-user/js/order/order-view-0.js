@@ -4,13 +4,11 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	
 	var orderNo = page.query.order_no;
 		
-	
 	// 有 支付选项时，所需字段
 	var order_type = $$("#orderType").val();
 	var order_money = delSomeString($$("#orderMoney").text());
 	
 	var orderStatus = $("#orderStatus").val();
-	
 	
 	//根据状态是否显示支付. (只有待支付 状态的 订单。显示 支付 选项)
 	if(orderStatus == 1){
@@ -58,8 +56,11 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 			$$("#order_pay_view_li").show();       // 实际支付金额
 		}
 
-		// 对于钟点工 订单，只有  待支付，已支付 两种 状态   ，，显示取消订单  按钮 
-		if(orderStatus == 1 ||  orderStatus == 2){
+		/*
+		 * 	jhj2.1   对于钟点工 订单， 已支付=2 ，已派工=3 ，可以取消订单
+		 */
+	
+		if(orderStatus == 2 ||  orderStatus == 3){
 			$$("#cancleOrder").show();
 		}else{
 			$$("#cancleOrder").hide();
@@ -83,51 +84,7 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	
 	var postHourOrderPaySuccess =function(data, textStatus, jqXHR) {
 		
-		$$("#hour-pay-submit").removeAttr('disabled');
 		
-	 	var result = JSON.parse(data.response);
-		if (result.status == "999") {
-			myApp.alert(result.msg);
-			
-			// 重复支付或者订单不存在等情况，禁用支付按钮
-			$$(".zf-hour-submit").attr("disabled", true);
-			
-			return;
-		}
-		
-		//无可用派工的情况
-		if(result.status == "102"){
-			
-			//先禁用 支付按钮
-			$$(".zf-hour-submit").attr("disabled", true);
-			
-			//前往  呼叫助理
-			
-			myApp.alert("请联系助理,调整服务时间");
-			mainView.router.loadPage("user/user-am-detail.html");
-			return;
-		}
-		
-		//orderPayType = result.data.pay_type;
-		//如果为余额支付，则直接跳到完成页面
-		if (orderPayType == 0) {
-			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
-		}
-		
-		
-		var orderId = $$("#orderId").val();
-		
-		//如果为微信支付，则需要跳转到微信支付页面.
-		if (orderPayType == 2) {
-			 var userCouponId = $$("#user_coupon_id").val();
-			 if (userCouponId == undefined) userCouponId = 0;
-			 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
-			 wxPayUrl +="?orderId="+orderId;
-			 wxPayUrl +="&userCouponId="+userCouponId;
-			 wxPayUrl +="&orderType=1";
-			 wxPayUrl +="&payOrderType=0";
-			 location.href = wxPayUrl;
-		}
 		
 	};	
 	
@@ -145,16 +102,12 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 			}
 			
 		});
-
 		
 	});
 	
-	
-	
-	//点击支付的处理
-	$$("#hour-pay-submit").click(function(){
+	var payAjax = function(){
+			
 		
-		$$("#hour-pay-submit").attr("disabled", true);
 
 		var userCouponId = $$("#user_coupon_id").val();
 		if (userCouponId == undefined) userCouponId = 0;
@@ -163,11 +116,6 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 		postdata.order_no = orderNo;
 		postdata.user_coupon_id = userCouponId;
 				
-//		$$('input[type="radio"]').each(function(key,index) {
-//			 if(this.checked) {
-//				 orderPayType = this.value;
-//			 }
-//		 });
 		
 		$$('img[name="order_pay_type"]').each(function(index,value){
 			if($$(this).attr("src").indexOf("green")>0){
@@ -178,20 +126,87 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 		
 		postdata.order_pay_type = orderPayType;
 		
+		
 		$$.ajax({
 			type: "post",
 			 url: siteAPIPath + "order/post_pay.json",
 			data: postdata,
-			statusCode: {
-	         	200: postHourOrderPaySuccess,
-	 	    	400: ajaxError,
-	 	    	500: ajaxError
-	 	    }
-		});		
-		 
+			timeout : 20000, //超时时间设置，单位毫秒
+			success:function(xhr,data,status) {
+	        	
+				$$("#hour-pay-submit").removeAttr('disabled');
+				
+			 	var result = JSON.parse(data.response);
+				if (result.status == "999") {
+					myApp.alert(result.msg);
+					
+					// 重复支付或者订单不存在等情况，禁用支付按钮
+					$$(".zf-hour-submit").attr("disabled", true);
+					
+					return;
+				}
+				
+				//无可用派工的情况
+				if(result.status == "102"){
+					
+					//先禁用 支付按钮
+					$$(".zf-hour-submit").attr("disabled", true);
+					
+					//前往  呼叫助理
+					
+					myApp.alert("请联系助理,调整服务时间");
+					mainView.router.loadPage("user/user-am-detail.html");
+					return;
+				}
+				
+				//orderPayType = result.data.pay_type;
+				//如果为余额支付，则直接跳到完成页面
+				if (orderPayType == 0) {
+					mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
+				}
+				
+				
+				var orderId = $$("#orderId").val();
+				
+				//如果为微信支付，则需要跳转到微信支付页面.
+				if (orderPayType == 2) {
+					 var userCouponId = $$("#user_coupon_id").val();
+					 if (userCouponId == undefined) userCouponId = 0;
+					 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
+					 wxPayUrl +="?orderId="+orderId;
+					 wxPayUrl +="&userCouponId="+userCouponId;
+					 wxPayUrl +="&orderType=1";
+					 wxPayUrl +="&payOrderType=0";
+					 location.href = wxPayUrl;
+				}
+		    },
+		    error:function(xhr,status){
+		    	myApp.alert("网络环境较差,请稍候重试");
+		    },
+		    complete:function(xhr,status){
+		    	
+		    	if(status == 'timeout'){
+		    		
+		    		payAjax.abort();
+		    		
+		    		myApp.alert("网络环境较差,请稍后重试");
+		    	}
+		    	
+		    }
+		});	
+		
+	}
+	
+	
+	//点击支付的处理
+	$$("#hour-pay-submit").click(function(){
+		
+		$$("#hour-pay-submit").attr("disabled", true);
+		
+		payAjax();
 	});			
 	
-	// 点击 评价 操作
+	// 点击 评价 操作（2016年5月4日10:16:01 已无用）
 	$$("#rate").on('click',function(){
 		
 		if(orderStatus == 7){
@@ -205,7 +220,7 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 		
 	});
 	
-	//点击 查看评价 操作
+	//点击 查看评价 操作（2016年5月4日10:16:06 已无用）
 	$$("#getRate").on('click',function(){
 		var orderId = $$("#orderId").val();
 		mainView.router.loadPage("order/order-get-rate.html?order_id="+orderId);
@@ -219,7 +234,6 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 		
 		var dataCancle = {};
 		dataCancle.order_no = orderNo;
-		
 		
 		//根据服务时间，设置取消提示
 		var text = "";
@@ -237,7 +251,7 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 		
 		//服务开始前两小时之内
 		if(diffValue <= 7200 && diffValue >0){
-			text = "服务已经快开始了，现在取消订单会扣除全部费用哦，确定取消吗?";
+			text = "服务已经快开始了，现在取消订单会扣除全部费用哦，确定取消吗?如有问题请联系客服";
 		}else{
 			//逻辑上，服务时间内，还未支付的订单，已经变为 已关闭了
 			text = "现在取消订单，订单金额会全部退到您的账号余额，确定取消订单吗?";
@@ -253,8 +267,8 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 					 
 					 var result = JSON.parse(datas);
 					 if(result.status == 0){
-						 myApp.alert("订单取消成功！");
-						 mainView.router.loadPage("order/order-hour-now-list.html");
+						 myApp.alert(result.msg);
+						 mainView.router.loadPage("order/order-cal.html");
 					 }
 					 if(result.status == 999){
 						 myApp.alert(result.msg);

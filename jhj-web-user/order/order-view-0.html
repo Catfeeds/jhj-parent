@@ -197,11 +197,17 @@
 						
 					</ul>
 				</div>
-				
-		
-					<a href="#" class="button active my-submit"  id="hour-pay-submit">支付</a>
 					
-					<a href="#" class="button active my-submit"  id="cancleOrder">取消订单</a>					
+					
+					{{#js_compare "this.order_status == 2 || this.order_status == 3 "}}
+        				<a href="#" class="button active my-submit"  id="cancleOrder">取消订单</a>
+        			{{/js_compare}}
+	        	
+					
+					{{#js_compare "this.order_status == 1"}}
+						<a href="#" class="button active my-submit"  id="hour-pay-submit">支付</a>
+        			{{/js_compare}}
+					
 					
 					<!-- <a href="#" class="button active my-submit"  id="rate">评价</a>
 					

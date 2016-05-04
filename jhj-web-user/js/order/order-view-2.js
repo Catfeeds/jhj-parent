@@ -78,7 +78,7 @@ myApp.onPageBeforeInit('order-hour-view-2-page', function (page) {
 	};	
 	
 	//选择支付类型
-$$('label[name=myPayTypeSelect]').on('click',function(){
+ $$('label[name=myPayTypeSelect]').on('click',function(){
 		
 		var nowValue = $$(this).find("input").val();
 		
@@ -149,9 +149,67 @@ $$('label[name=myPayTypeSelect]').on('click',function(){
 	$$("#yonghu-pingjiaxiangqing").on("click",function(){
 	
  		mainView.router.loadPage("order/order-get-rate.html?order_id="+orderId);
-
  		
  	});
+	
+	
+	//取消订单操作
+	$$("#cancleOrder").on('click',function(){
+		
+//		var orderNo = localStorage['u_order_no_param'];
+		
+		var dataCancle = {};
+		dataCancle.order_no = orderNo;
+		
+		//根据服务时间，设置取消提示
+		var text = "";
+		
+		// 服务时间  unix时间戳
+		var aaa =   $$("#serviceDate").text();
+		var bb =  (new Date(aaa).getTime()/1000).toString();
+		
+		
+		//当前时间 unix时间戳
+		var now = Math.round(new Date().getTime()/1000);
+		
+		//时间差
+		var diffValue = Number(bb) - Number(now);
+		
+		//服务开始前两小时之内
+		if(diffValue <= 7200 && diffValue >0){
+			text = "服务已经快开始了，现在取消订单会扣除全部费用哦，确定取消吗?如有问题请联系客服";
+		}else{
+			//逻辑上，服务时间内，还未支付的订单，已经变为 已关闭了
+			text = "现在取消订单，订单金额会全部退到您的账号余额，确定取消订单吗?";
+		}
+		
+		myApp.confirm(text,function(){
+			$$.ajax({
+				type:"post",
+				url: siteAPIPath+"order/cancle_am_order.json",
+				data : dataCancle,
+				cache: true, 
+				success: function(datas,status,xhr){
+					 
+					 var result = JSON.parse(datas);
+					 if(result.status == 0){
+						 myApp.alert(result.msg);
+						 mainView.router.loadPage("order/order-cal.html");
+					 }
+					 if(result.status == 999){
+						 myApp.alert(result.msg);
+						 
+						 $$("#cancleOrder").attr("disabled",true);
+						 return false;
+					 }
+				}
+			});
+		});
+	});
+	
+	
+	
+	
 });
 
 //列表显示
