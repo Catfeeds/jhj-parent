@@ -49,8 +49,12 @@ myApp.onPageInit('qiyefuwu-page', function(page) {
 		}
 
 		var serviceTypeId = $$(this).find("input[name='serviceTypeId']").val();
-		mainView.router.loadPage("order/order-am-faqiyuyue.html?serviceType="+serviceTypeId
-				+ "&parentServiceTypeId=" + localStorage['firstServiceType']);
+		
+		//在 助理 服务下单页面。使用模板。此处需要存储url 参数值
+		localStorage.setItem("am_faqiyuyue_service_type_id",serviceTypeId);
+		localStorage.setItem("am_faqiyuyue_parent_service_type_id",localStorage['firstServiceType']);
+		
+		mainView.router.loadPage("order/order-am-faqiyuyue.html");
 				
 	});
 	

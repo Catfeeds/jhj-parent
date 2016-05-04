@@ -1,43 +1,5 @@
 myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	
-	// 根服务类型Id
-	var serviceTypeId =  page.query.serviceType;
-	
-	if(serviceTypeId != undefined){
-		$$("#serviceType").val(serviceTypeId);
-	}
-	
-	var parentServiceTypeId = page.query.parentServiceTypeId;
-	
-	if(parentServiceTypeId != undefined){
-		$$("#parentServiceTypeId").val(parentServiceTypeId);
-	}
-	
-	
-	$$.ajax({
-		type: "get",
-		 url: siteAPIPath + "newPartServiceType/service_type_detail.json",
-		data: {
-			"service_type_id":serviceTypeId
-		},
-		success: function (data, status, xhr){
-			
-			var result = JSON.parse(data);
-			
-			var service = result.data;
-			
-			/*$$("#servceTypeName").text(service.name);*/
-			
-			$$("#servicePrice").text(service.remarks);
-			
-			$$("#serviceContents").text(service.service_content);
-			
-		},
-		error: function(status,xhr){
-		  	myApp.alert("网络异常,请稍后再试.");
-		}
-	});
-
 	
 	$$("#order-am-faqiyuyue-page-a-submit").on("click",function(){
 		
@@ -76,4 +38,45 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 		
 	});
 });
+
+
+
+////列表显示
+myApp.template7Data['page:order-am-faqiyuyue-page'] = function() {
+	var result;
+//	var parentServiceTypeId = 24;
+	
+	// 根服务类型Id
+	var serviceTypeId =  localStorage['am_faqiyuyue_service_type_id'];
+	
+	if(serviceTypeId != undefined){
+		$$("#serviceType").val(serviceTypeId);
+	}
+	
+	var parentServiceTypeId = localStorage['am_faqiyuyue_parent_service_type_id'];
+	
+	if(parentServiceTypeId != undefined){
+		$$("#parentServiceTypeId").val(parentServiceTypeId);
+	}
+	
+	$$.ajax({
+		type : "GET",
+		url : siteAPIPath + "newPartServiceType/service_type_detail.json",
+		data: {
+			"service_type_id":serviceTypeId
+		},
+		dataType : "json",
+		cache : true,
+		async : false,
+		success : function(data) {
+			result = data;
+		}
+	})
+
+	return result;
+}
+
+
+
+
 
