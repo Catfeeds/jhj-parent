@@ -3,11 +3,11 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 	
 	$$("#order-am-faqiyuyue-page-a-submit").on("click",function(){
 		
-		var serviceType = $$("#serviceType").val();
+		var serviceType = localStorage['am_faqiyuyue_service_type_id'];
 		
 		var content =  $$("#serviceContentText").val();
 		
-		var parentServiceType = $$("#parentServiceTypeId").val();
+		var parentServiceType = localStorage['am_faqiyuyue_parent_service_type_id'];
 		
 		// 深度养护 不需要必填 服务要求
 		if(parentServiceType != 26){
