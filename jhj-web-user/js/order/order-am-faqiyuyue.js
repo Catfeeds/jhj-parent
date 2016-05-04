@@ -44,7 +44,6 @@ myApp.onPageInit('order-am-faqiyuyue-page', function(page) {
 ////列表显示
 myApp.template7Data['page:order-am-faqiyuyue-page'] = function() {
 	var result;
-//	var parentServiceTypeId = 24;
 	
 	// 根服务类型Id
 	var serviceTypeId =  localStorage['am_faqiyuyue_service_type_id'];
