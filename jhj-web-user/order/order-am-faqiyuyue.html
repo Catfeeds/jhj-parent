@@ -3,17 +3,17 @@
 		<div class="page-content"  style="background:#FDEEEE;height:100%!important;" >
 			<form class="list-block">
 				
-				<input type="hidden" id="serviceType" value="">
+				<input type="hidden" name="serviceType" id="serviceType" value="">
 				
 				<input type="hidden" id="parentServiceTypeId" value = "">
 				<ul style="background:#fffce8;">
 					 <li class="accordion-item">
-					 	<a href="#" class="item-content item-link">
+					 	<a href="#" class="item-content" style="color:#000;">
 				        	<div class="item-inner">
 				         		 <div class="item-title" >服务价格</div>
 				        	</div>
 				        </a>
-				        <div class="accordion-item-content" >
+				        <div class="accordion-item-content" style="height:100%!important;">
 				        	<div class="content-block">
 				         	  <p id="serviceContents">{{data.service_content}}</p>
 				        	</div>
@@ -21,12 +21,12 @@
 				    </li>
 					
 					<li class="accordion-item">
-					 	<a href="#" class="item-content item-link">
+					 	<a href="#" class="item-content" style="color:#000;">
 				        	<div class="item-inner">
 				         		 <div class="item-title" >服务介绍</div>
 				        	</div>
 				        </a>
-				        <div class="accordion-item-content" >
+				        <div class="accordion-item-content" style="height:100%!important;">
 				        	<div class="content-block">
 				         	  <p id="servicePrice">{{data.remarks}}</p>
 				        	</div>
