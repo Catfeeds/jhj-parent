@@ -2285,7 +2285,7 @@ i.toolbar-icon-my {
 .ddjg-input{
   width:100px;
   height:100px;
-  background: #F8F8F8;
+  background: #FDEEEE;
   margin:0px auto;
   z-index: 3;
 }
@@ -2306,10 +2306,35 @@ i.toolbar-icon-my {
   
   z-index: 2;
 }
+
+
+.ddjg-xq-service{
+  width:80%;
+  height:auto;
+  border:1px solid #999;
+  margin: 40px auto;
+  padding-bottom: 20px;
+  padding-top: 40px;
+  color:#999;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 30px;
+  margin-top: -50px;
+  z-index: 2;
+}
+
 .ddjg-xq li:nth-child(1){
   color:#333;
 }
-
+.ddjg-xq-service li:nth-child(1){
+  color:#333;
+}
+.ddjg-xq li p{
+  text-indent: 2em;
+  margin:0;
+  text-align: left;
+  margin-left:4px;
+}
 
 
 
