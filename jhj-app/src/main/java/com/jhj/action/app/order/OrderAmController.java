@@ -1,6 +1,5 @@
 package com.jhj.action.app.order;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -59,6 +58,8 @@ import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
+
+
 
 
 
@@ -614,7 +615,6 @@ public class OrderAmController extends BaseController {
 	 */
 	@RequestMapping(value="cancle_am_order", method = RequestMethod.POST)
 	public AppResultData<Object> cancleAmAlder(
-			
 			@RequestParam("order_no") String orderNo){
 		
 		AppResultData<Object> result = new AppResultData<Object>(
@@ -635,7 +635,6 @@ public class OrderAmController extends BaseController {
 			return result;
 		}
 		
-		
 		/*
 		 * 取消订单时，对于 已经在 order_dispatches 表中 有 派工  的订单，
 		 * 			需要将其派工状态 设置为 无效 0 。
@@ -649,10 +648,27 @@ public class OrderAmController extends BaseController {
 		}
 		
 		
+		/**
+		 *  2016年5月4日10:24:14 
+		 * 	
+		 * 	jhj2.1 取消订单逻辑 
+		 * 
+		 * 	可以取消订单的 大类：  
+		 * 
+		 * 			钟点工：  已支付=2 (可以取消，退全款) 
+		 * 				       已派工=3 (可以取消，2小时以上退全款，2小时内不退款)
+		 * 			
+		 * 			助理:  已预约 = 1(可以取消)
+		 * 				    已确认 = 2 (可以取消)		
+		 * 			              已支付 = 3（可以取消）
+		 * 				   已派工 = 4（可以取消，退全款）					
+		 * 
+		 */
 		
-		if (orders.getOrderStatus()==4) {
-			
-		//	userDetailPayService.addUserDetailPayForOrder();
+		String  cancelResultStr = "";
+		
+		//钟点工，取消
+		if(orders.getOrderType() == Constants.ORDER_TYPE_0){
 			
 			OrderPrices orderPrices = orderPricesService.selectByOrderNo(orderNo);
 			if (orderPrices == null) {
@@ -661,58 +677,32 @@ public class OrderAmController extends BaseController {
 				return result;
 			}
 			
-			//获得当前时间时间戳
-			Long nowDate = System.currentTimeMillis()/ 1000;
-			//服务时间时间戳
-			Long serviceDate = orders.getServiceDate();
-            //时间差
-		  //  double hours = (double)(serviceDate-nowDate)/3600/1000;
-		    Long hours = (serviceDate - nowDate) / 3600;
-		    //订单实际支付金额
-		    BigDecimal restMoney2 = orderPrices.getOrderPay();
-		    
-		    if (hours >= 2) {
-				//退全款  提示xxx 退回到余额
-		    	Users users = userService.selectByUsersId(orders.getUserId());
-		    	//获得用户当前余额
-		    	BigDecimal restMoney1 = users.getRestMoney();
-//		    	System.out.println("余额的总和："+restMoney1.add(restMoney2));
-		    	
-		    	users.setRestMoney(restMoney1.add(restMoney2));
-		    	userService.updateByPrimaryKeySelective(users);
-		    	
-		    	orderPrices.setOrderPayBack(restMoney2);
-		    	orderPricesService.updateByPrimaryKeySelective(orderPrices);
-		    	
-			}
-			//扣除订单金额 提示xxx
-		    
-		 /**
-		  * 如果用户在支付的时候使用了优惠券，
-		  * 那么在取消订单的时候把优惠券的is_used set成0===未使用
-		  */
-			if (orderPrices.getCouponId()>0) {
-				
-				UserCoupons userCoupons = userCouponsService.selectByPrimaryKey(orderPrices.getCouponId());
-				
-				userCoupons.setIsUsed((short)0);
-				userCoupons.setUsedTime(0L);
-				userCoupons.setOrderNo("");
-				userCouponsService.updateByPrimaryKeySelective(userCoupons);
-			}
+			cancelResultStr = ordersService.cancelBaseOrder(orders);
 		}
 		
-		if (orders.getOrderStatus()==1||orders.getOrderStatus()==2||orders.getOrderStatus()==3||orders.getOrderStatus()==4) {
-			orders.setOrderStatus(Constants.ORDER_STATUS_0);
-			ordersService.updateByPrimaryKeySelective(orders);
+		
+		// 助理类订单取消
+		if(orders.getOrderType() == Constants.ORDER_TYPE_2){
 			
-			// 记录订单日志.
-			OrderLog orderLog = orderLogService.initOrderLog(orders);
-			orderLogService.insert(orderLog);
+			OrderPrices orderPrices = orderPricesService.selectByOrderNo(orderNo);
+			if (orderPrices == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.ORDER_NO_NOT_EXIST_MG);
+				return result;
+			}
+			
+			cancelResultStr = ordersService.cancelAmOrder(orders);
+			
+			
+			
 		}
+		
+		
+		
+		
 		
 		result.setStatus(Constants.SUCCESS_0);
-		result.setMsg("订单已取消");
+		result.setMsg(cancelResultStr);
 		return result;
 				
 	}
