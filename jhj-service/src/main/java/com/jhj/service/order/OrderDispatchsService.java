@@ -51,4 +51,8 @@ public interface OrderDispatchsService {
 	Long getTodayOrderNumForTheSta(Long staffId);
 
 	List<HashMap> getUserIdsByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
+	
+	
+	//jhj2.1  服务人员 在 订单 服务 时间内  是否有 派工
+	Long getDisNumForStaDuringServiceDate(OrderSearchVo searchVo);
 }

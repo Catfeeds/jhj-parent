@@ -237,9 +237,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	@Override
 	public  List<OrgStaffsNewVo> getTheNearestStaff(String fromLat,String fromLng,List<Long> staIdList){
 		
-		
 		List<OrgStaffsNewVo> staWithUserList = new ArrayList<OrgStaffsNewVo>();
-		
 		
 		if(staIdList.size() == 0){
 			staIdList.add(0, 0L);
@@ -304,7 +302,6 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				//服务人员所在 门店id （该云店 的 上级 门店）
 				Long parentOrgId = staffs.getParentOrgId();
 				
-				
 				Orgs cloudOrg = orgService.selectByPrimaryKey(orgId);
 				
 				if(cloudOrg !=null){
@@ -317,18 +314,14 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 					staffsNewVo.setStaffOrgName(orgs.getOrgName());
 				}
 				
-				
 				// 设置 服务 人员 特色信息, 供派工参考
 				for (BaiduPoiVo baiduPoiVo : destList) {
 					if (baiduPoiVo.getLat().equals(item.getLat()) &&
 							baiduPoiVo.getLng().equals(item.getLng())) {
 						
-						
 						// 合适的服务人员的最新位置    与  服务地址 的 距离、时间等信息
-						
 						staffsNewVo.setDistanceText(baiduPoiVo.getDistanceText());
 						staffsNewVo.setDurationText(baiduPoiVo.getDurationText());
-						
 						staffsNewVo.setDistanceValue(baiduPoiVo.getDistanceValue());
 					}
 				}
@@ -422,4 +415,45 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		
 		return newVo;
 	}
+	
+	
+	/*
+	 * 2016年5月4日17:08:50
+	 * 
+	 * 对于 修改 服务时间也 没有 可用派工的  钟点工订单，
+	 * 
+	 */
+	@Override
+	public List<OrgStaffsNewVo> getAbleStaffListByCloudOrg(Long orderId,Long cloudOrgId) {
+		
+		List<OrgStaffs> staffList = staffService.selectByOrgId(cloudOrgId);
+		
+		List<Long> staffIdList = new ArrayList<Long>();
+		
+		for (OrgStaffs orgStaffs : staffList) {
+			
+			staffIdList.add(orgStaffs.getStaffId());
+		}
+		
+		Orders orders = orderService.selectbyOrderId(orderId);
+		
+		Long addrId = orders.getAddrId();
+		
+		UserAddrs userAddr = userAddrService.selectByPrimaryKey(addrId);
+		
+		String latitude = userAddr.getLatitude();
+		String longitude = userAddr.getLongitude();
+		
+		
+		/*   根据云店 加载 可用派工时，
+		 * 
+		 *   不再 走 自动派工逻辑。而是  直接  加载 对应云店的工作人员 派工情况即可
+		 */
+		
+		//转换为 VO	
+	    List<OrgStaffsNewVo> list = getTheNearestStaff(latitude, longitude, staffIdList);
+		
+		return list;
+	}
+	
 }

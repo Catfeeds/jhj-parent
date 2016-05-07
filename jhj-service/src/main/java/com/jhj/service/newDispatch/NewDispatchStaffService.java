@@ -53,4 +53,9 @@ public interface NewDispatchStaffService {
 	List<OrgStaffsNewVo> getAbleStaffList(Long orderId,Long serviceDate);
 	
 	OrgStaffsNewVo initStaffsNew();
+	
+	
+	List<OrgStaffsNewVo> getAbleStaffListByCloudOrg(Long orderId,Long cloudOrgId);
+	
+	
 }

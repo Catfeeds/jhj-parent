@@ -17,19 +17,25 @@ import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.order.OrderLogMapper;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
+import com.jhj.po.dao.university.PartnerServiceTypeMapper;
 import com.jhj.po.dao.user.UserAddrsMapper;
+import com.jhj.po.dao.user.UserCouponsMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.UserCoupons;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.chart.CoopUserOrderVo;
 import com.jhj.vo.order.OrderViewVo;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -62,6 +68,13 @@ public class OrdersServiceImpl implements OrdersService {
 
 	@Autowired
 	private UsersMapper usersMapper;
+	
+	@Autowired
+	private UserCouponsMapper userCouponMapper;
+	
+	@Autowired
+	private PartnerServiceTypeMapper partServiceTypeMapper;
+	
 	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -464,4 +477,176 @@ public class OrdersServiceImpl implements OrdersService {
 	public List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds) {
 		return ordersMapper.totalUserAndOrder(userIds);
 	}
+	
+	
+	@Override
+	public String cancelAmOrder(Orders orders) {
+		
+		Short orderStatus = orders.getOrderStatus();
+		
+		Long serviceTypeId = orders.getServiceType();
+		
+		/*
+		 * 助理:  已预约 = 1(可以取消)
+		 * 		  已确认 = 2 (可以取消)		
+		 *       已支付 = 3（可以取消）
+		 * 		  已派工 = 4（可以取消，退全款）
+		 */
+		if(orderStatus != 1 && orderStatus != 2 && orderStatus != 3 && orderStatus !=4){
+			
+			PartnerServiceType serviceType = partServiceTypeMapper.selectByPrimaryKey(serviceTypeId);
+			
+			String name = serviceType.getName();
+			
+			String typeName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orderStatus);
+			
+			return typeName+"的"+name+"订单,不能取消";
+		}
+		
+		
+		// 已支付和 已派工的 订单，需要 处理退款
+		if(orderStatus == 3 || orderStatus == 4){
+			
+			OrderPrices orderPrices = orderPricesService.selectByOrderNo(orders.getOrderNo());
+			
+			//获得当前时间时间戳
+			Long nowDate = System.currentTimeMillis()/ 1000;
+			//服务时间时间戳
+			Long serviceDate = orders.getServiceDate();
+			//时间差
+			Long hours = (serviceDate - nowDate) / 3600;
+			//订单实际支付金额
+			BigDecimal restMoney2 = orderPrices.getOrderPay();
+			
+			if (hours >= 2) {
+				//退全款  提示xxx 退回到余额
+				Users users = usersMapper.selectByPrimaryKey(orders.getUserId());
+				//获得用户当前余额
+				BigDecimal restMoney1 = users.getRestMoney();
+				
+				users.setRestMoney(restMoney1.add(restMoney2));
+				usersMapper.updateByPrimaryKeySelective(users);
+				
+				orderPrices.setOrderPayBack(restMoney2);
+				orderPricesService.updateByPrimaryKeySelective(orderPrices);
+				
+			}else{
+				
+				//如果超过2小时
+				return "服务即将开始,不能退款,如有问题请联系客服";
+			}
+			
+			/**
+			 * 如果用户在支付的时候使用了优惠券，
+			 * 那么在取消订单的时候把优惠券的is_used set成0===未使用
+			 */
+			if (orderPrices.getCouponId()>0) {
+				
+				UserCoupons userCoupons = userCouponMapper.selectByPrimaryKey(orderPrices.getCouponId());
+				
+				userCoupons.setIsUsed((short)0);
+				userCoupons.setUsedTime(0L);
+				userCoupons.setOrderNo("");
+				userCouponMapper.updateByPrimaryKeySelective(userCoupons);
+			}
+			
+			
+			orders.setOrderStatus(Constants.ORDER_STATUS_0);
+			ordersMapper.updateByPrimaryKeySelective(orders);
+			
+			// 记录订单日志.
+			OrderLog orderLog = orderLogService.initOrderLog(orders);
+			orderLogService.insert(orderLog);
+		}
+		
+		orders.setOrderStatus(Constants.ORDER_STATUS_0);
+		ordersMapper.updateByPrimaryKeySelective(orders);
+		
+		// 记录订单日志.
+		OrderLog orderLog = orderLogService.initOrderLog(orders);
+		orderLogService.insert(orderLog);
+		
+		//已预约和已确认订单，不用处理 退款问题
+		if(orderStatus == 1 || orderStatus == 2){
+			return "订单取消成功!";
+		}
+		
+		return "订单取消成功,支付款项已退回您的余额";
+	}
+	
+	@Override
+	public String cancelBaseOrder(Orders orders) {
+		
+		Short orderStatus = orders.getOrderStatus();
+		
+		Long serviceTypeId = orders.getServiceType();
+		
+		/*
+		 * 钟点工：  已支付=2 (可以取消，退全款) 
+		 * 	              已派工=3 (可以取消，2小时以上退全款，2小时内不退款)
+		 */
+		if(orderStatus != 2 && orderStatus !=3){
+			
+			PartnerServiceType serviceType = partServiceTypeMapper.selectByPrimaryKey(serviceTypeId);
+			
+			String name = serviceType.getName();
+			
+			String typeName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orderStatus);
+			
+			return typeName+"的"+name+"订单,不能取消订单";
+		}
+		
+		OrderPrices orderPrices = orderPricesService.selectByOrderNo(orders.getOrderNo());
+		
+		//获得当前时间时间戳
+		Long nowDate = System.currentTimeMillis()/ 1000;
+		//服务时间时间戳
+		Long serviceDate = orders.getServiceDate();
+        //时间差
+	    Long hours = (serviceDate - nowDate) / 3600;
+	    //订单实际支付金额
+	    BigDecimal restMoney2 = orderPrices.getOrderPay();
+	    
+	    if (hours >= 2) {
+			//退全款  提示xxx 退回到余额
+	    	Users users = usersMapper.selectByPrimaryKey(orders.getUserId());
+	    	//获得用户当前余额
+	    	BigDecimal restMoney1 = users.getRestMoney();
+	    	
+	    	users.setRestMoney(restMoney1.add(restMoney2));
+	    	usersMapper.updateByPrimaryKeySelective(users);
+	    	
+	    	orderPrices.setOrderPayBack(restMoney2);
+	    	orderPricesService.updateByPrimaryKeySelective(orderPrices);
+	    	
+		}else{
+			//服务开始前 2小时内
+			return "服务即将开始,不能退款,如有问题请联系客服";
+		}
+	    
+		 /**
+		  * 如果用户在支付的时候使用了优惠券，
+		  * 那么在取消订单的时候把优惠券的is_used set成0===未使用
+		  */
+		if (orderPrices.getCouponId()>0) {
+			
+			UserCoupons userCoupons = userCouponMapper.selectByPrimaryKey(orderPrices.getCouponId());
+			
+			userCoupons.setIsUsed((short)0);
+			userCoupons.setUsedTime(0L);
+			userCoupons.setOrderNo("");
+			userCouponMapper.updateByPrimaryKeySelective(userCoupons);
+		}
+		
+		
+		orders.setOrderStatus(Constants.ORDER_STATUS_0);
+		ordersMapper.updateByPrimaryKeySelective(orders);
+		
+		// 记录订单日志.
+		OrderLog orderLog = orderLogService.initOrderLog(orders);
+		orderLogService.insert(orderLog);
+		
+		return "取消成功,支付款项已退回您的余额";
+	}
+	
 }

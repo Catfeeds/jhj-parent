@@ -42,6 +42,7 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OaOrderSearchVo;
+import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
@@ -281,6 +282,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 
 		oaOrderListVo.setOrderTypeName("");//订单类型名称。。实际具体到 某种服务类型的名称
 		
+		
+		oaOrderListVo.setDisWay((short)0);	//派工方案，  方案一 = 0. 方案二 = 1
+		
 		return oaOrderListVo;
 	}
 	/**
@@ -343,7 +347,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
 		
 		
-		
 		// 查找对应订单有效派工
 		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
 		
@@ -363,7 +366,14 @@ public class OaOrderServiceImpl implements OaOrderService {
 			//已经派工的员工id
 			oaOrderListVo.setStaffId(dispatchs.getStaffId());
 			
-			oaOrderListVo.setStaffName(dispatchs.getStaffName());
+			
+			OrgStaffs orgStaffs = staffService.selectByPrimaryKey(dispatchs.getStaffId());
+			
+			Long orgId = orgStaffs.getOrgId();
+			
+			Orgs orgs = orgService.selectByPrimaryKey(orgId);
+			
+			oaOrderListVo.setStaffName(orgs.getOrgName()+"--"+dispatchs.getStaffName());
 		}else{
 			
 			/*
@@ -556,6 +566,20 @@ public class OaOrderServiceImpl implements OaOrderService {
 			
 			OrderDispatchs dispatchs = list.get(0);
 			
+			/*
+			 * 2016年5月4日16:17:29  如果已经有派工，展示当前派工人员
+			 */
+			
+			OrgStaffs orgStaffs = staffService.selectByPrimaryKey(dispatchs.getStaffId());
+			
+			Long orgId = orgStaffs.getOrgId();
+			
+			Orgs orgs = orgService.selectByPrimaryKey(orgId);
+			
+			oaOrderListVo.setStaffName(orgs.getOrgName()+"--"+dispatchs.getStaffName());  
+			
+			
+			
 			staIdList =  newDisStaService.autoDispatchForAmOrder(
 							dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), orders.getServiceType());
 			
@@ -568,6 +592,30 @@ public class OaOrderServiceImpl implements OaOrderService {
 			
 		    //可用 服务人员 VO
 			staVoList = newDisStaService.getTheNearestStaff(dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), staIdList);
+			
+			
+			for (OrgStaffsNewVo orgStaffsNewVo : staVoList) {
+				
+				 OrderSearchVo searchVo = new OrderSearchVo();
+				 
+				 searchVo.setServiceDateStart(orders.getServiceDate());
+				 searchVo.setServiceDateEnd(orders.getServiceDate()+orders.getServiceHour()*3600);
+				 
+					
+					 searchVo.setStaffId(orgStaffsNewVo.getStaffId());
+					 
+					 //对应当前订单的日期。。该员工是否 有 派工单
+					 Long disNum = orderDisMapper.getDisNumForStaDuringServiceDate(searchVo);
+					 
+					 if(disNum > 0L){
+						 orgStaffsNewVo.setDispathStaStr("不可派工");
+						 orgStaffsNewVo.setDispathStaFlag(0);
+					 }else{
+						 orgStaffsNewVo.setDispathStaStr("可派工");
+						 orgStaffsNewVo.setDispathStaFlag(1);
+					 }
+				}
+			
 		}
 		oaOrderListVo.setVoList(staVoList);
 		
@@ -582,6 +630,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 //			oaOrderListVo.setDisStatus(orDis.getDispatchStatus());
 //			oaOrderListVo.setStaffId(orDis.getStaffId());
 //		}
+		
+		
+		
 		return oaOrderListVo;
 	}
 	

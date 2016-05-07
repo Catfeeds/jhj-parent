@@ -36,6 +36,26 @@ public class OrgStaffsNewVo extends OrgStaffs {
 	private String staffCloudOrgName; //2016年3月30日16:45:14   该服务人员 所在 云店名称
 
 	
+	private String dispathStaStr;	//2016年5月4日17:31:30   该服务人员 派工情况描述
+
+	private int dispathStaFlag;	// 派工情况 标识
+	
+	
+	public int getDispathStaFlag() {
+		return dispathStaFlag;
+	}
+
+	public void setDispathStaFlag(int dispathStaFlag) {
+		this.dispathStaFlag = dispathStaFlag;
+	}
+
+	public String getDispathStaStr() {
+		return dispathStaStr;
+	}
+
+	public void setDispathStaStr(String dispathStaStr) {
+		this.dispathStaStr = dispathStaStr;
+	}
 
 	public String getStaffOrgName() {
 		return staffOrgName;

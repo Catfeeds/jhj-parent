@@ -78,4 +78,15 @@ public interface OrdersService {
 
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
 	
+	
+	/* 
+	 *  2016年5月4日10:32:26  jhj2.1 取消订单 通用 处理	
+	 */
+		
+	 //取消 基础服务订单（钟点工）
+	 String cancelBaseOrder(Orders order);
+	
+	 //取消 助理 预约订单（助理）
+	 String cancelAmOrder(Orders order);
+	 
 }

@@ -150,4 +150,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	public Long getTodayOrderNumForTheSta(Long staffId) {
 		return orderDisMapper.getTodayOrderNumForTheSta(staffId);
 	}
+	
+	@Override
+	public Long getDisNumForStaDuringServiceDate(OrderSearchVo searchVo) {
+		return orderDisMapper.getDisNumForStaDuringServiceDate(searchVo);
+	}
 }

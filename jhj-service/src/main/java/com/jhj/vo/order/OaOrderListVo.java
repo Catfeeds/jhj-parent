@@ -91,7 +91,14 @@ public class OaOrderListVo extends Orders {
 	private String cloudOrgName; // 云店名称
 	
 	
+	private Short disWay;	//派工方案标识。方案一，修改服务时间    方案二，根据 云店下拉选择加载服务人员
 	
+	public Short getDisWay() {
+		return disWay;
+	}
+	public void setDisWay(Short disWay) {
+		this.disWay = disWay;
+	}
 	public String getCloudOrgName() {
 		return cloudOrgName;
 	}
