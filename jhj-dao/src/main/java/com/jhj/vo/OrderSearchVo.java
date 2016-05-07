@@ -22,6 +22,29 @@ public class OrderSearchVo {
 	
 	private Long endTime;
 
+	
+	//2016年5月4日17:39:11  某个 订单的 服务时间
+	private Long serviceDateStart;
+	private Long serviceDateEnd;
+	
+	
+	
+	public Long getServiceDateStart() {
+		return serviceDateStart;
+	}
+
+	public void setServiceDateStart(Long serviceDateStart) {
+		this.serviceDateStart = serviceDateStart;
+	}
+
+	public Long getServiceDateEnd() {
+		return serviceDateEnd;
+	}
+
+	public void setServiceDateEnd(Long serviceDateEnd) {
+		this.serviceDateEnd = serviceDateEnd;
+	}
+
 	public String getMobile() {
 		return mobile;
 	}

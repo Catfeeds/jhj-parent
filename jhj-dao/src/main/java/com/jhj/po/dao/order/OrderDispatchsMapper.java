@@ -65,8 +65,12 @@ public interface OrderDispatchsMapper {
 	List<HashMap> getUserIdsByListPage(OrderSearchVo searchVo);
 	
 	
-	
 	//jhj2.1   服务人员 与 用户的 服务次数
 	List<OrderDispatchs> selectBySearchVo(OrderSearchVo searchVo);
+	
+	
+	//jhj2.1  服务人员 在 订单 服务 时间内  是否有 派工
+	Long getDisNumForStaDuringServiceDate(OrderSearchVo searchVo);
+	
 	
 }
