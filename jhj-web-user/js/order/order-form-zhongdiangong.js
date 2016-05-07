@@ -13,9 +13,9 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 	
 	if(parentServiceTypeId == 23){
 		$$("#hhAddons").attr("style","display:none");
-		
 		// 保洁时间插件
 		serviceDateSelect();
+		
 		
 	}
 	
@@ -148,6 +148,14 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		
 		//处理 日期。。传给后台 string 类型 的 秒值，时间戳
 		formData.serviceDate =  moment(formData.serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
+		
+		if($$("#serviceType").val() == 29){
+			formData.serviceHour = 2;
+		}else{
+			formData.serviceHour = 3;
+		}
+		
+		
 		
 		$$.ajax({
 			type: "post",
