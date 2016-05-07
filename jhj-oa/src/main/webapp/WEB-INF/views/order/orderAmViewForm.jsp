@@ -165,6 +165,17 @@
 									<form:errors path="couponValue" class="field-has-error"></form:errors>
 								</div>
 							</div>
+							
+							<div class="form-group">
+	
+								<label class="col-md-2 control-label"><font color="red">当前派工阿姨</font></label>
+								<div class="col-md-5">
+									<form:input path="staffName" class="form-control"
+										maxLength="32" readonly="true" />
+									<form:errors path="staffName" class="field-has-error"></form:errors>
+								</div>
+							</div>
+							
 						</c:if>
 						
 						<div id="saveOrder" class="form-actions fluid">
@@ -232,13 +243,16 @@
 												<th>距用户距离</th>
 												<th>预计到达用时</th>
 												<th>今日接单数</th>
+												<th>是否可派工</th>
 											</tr>
 										</thead>
 										<tbody id="allStaff">
 										   <c:forEach items="${oaOrderListVoModel.voList}" var="item">
 												<tr>
 													<td>
-                                                  		<input name="sample-radio" id="radio-01" value="${item.staffId }" type="radio" > 
+														<c:if test="${item.dispathStaFlag == 1 }">
+                                                  		 <input name="sample-radio"  id="radio-01" value="${item.staffId }" type="radio" > 
+                                              			</c:if>
                                               			
                                               			<input  type="hidden" id="selectStaffId" name="selectStaffId" 
 														value="${staffVo.staffId }">
@@ -253,6 +267,7 @@
 													<td>${ item.distanceText }</td>
 													<td>${ item.durationText }</td>
 													<td>${ item.todayOrderNum }</td>
+													<td>${item.dispathStaStr }</td>
 												</tr>
 											</c:forEach>
 										</tbody>

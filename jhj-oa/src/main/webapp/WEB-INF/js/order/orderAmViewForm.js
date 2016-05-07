@@ -171,10 +171,14 @@ function loadProperStaffForAmOrder(){
 				
 				var item = data[i];
 				
-				
+				var radioinput = "";
+
+				if(item.dispath_sta_flag == 1){
+					radioinput = "<input name='sample-radio' type='radio' value="+item.staff_id+">" ;
+				}
 				var htmlStr ="<tr>" 
 							 + "<td>"
-	                      			+"<input name='sample-radio' type='radio' value="+item.staff_id+">" 
+	                      			+ radioinput
               			
 	                  				+"<input  type='hidden' id='selectStaffId' name='selectStaffId' value="+item.staff_id+">"
               			
@@ -187,6 +191,7 @@ function loadProperStaffForAmOrder(){
 							+"<td>"+item.distance_text+"</td>"
 							+"<td>"+item.duration_text+"</td>"
 							+"<td>"+item.today_order_num+"</td>" 
+							+"<td>"+item.dispath_sta_str+"</td>"
 							+"</tr>";
 				
 				tdHtml+= htmlStr;

@@ -88,7 +88,7 @@
 									
 									<button id="btn_update"
 										onClick="btn_update('newbs/new_staff_list?orgId=${org.orgId}')"
-										class="btn btn-primary btn-xs" title="查看小组成员">
+										class="btn btn-primary btn-xs" title="查看云店成员">
 										<i class="icon-search"></i>
 									</button>
 							</td>
@@ -99,7 +99,7 @@
                       </section>
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="orgsModel"/>
-	        				<c:param name="urlAddress" value="/group/group-list"/>
+	        				<c:param name="urlAddress" value="/group/group_list"/>
 	       			  </c:import>
                   </div>
               </div>

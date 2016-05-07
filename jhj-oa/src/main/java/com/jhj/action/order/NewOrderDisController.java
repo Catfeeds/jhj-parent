@@ -34,6 +34,7 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -273,6 +274,31 @@ public class NewOrderDisController extends BaseController {
 		   orderStatus == Constants.ORDER_AM_STATUS_3 ||
 		   orderStatus == Constants.ORDER_AM_STATUS_4){
 			list = newDisService.getTheNearestStaff(fromLat, fromLng, staIdList);
+			
+			 OrderSearchVo searchVo = new OrderSearchVo();
+			 
+			 searchVo.setServiceDateStart(orders.getServiceDate());
+			 searchVo.setServiceDateEnd(orders.getServiceDate()+orders.getServiceHour()*3600);
+			 
+			 for (OrgStaffsNewVo orgStaffsNewVo : list) {
+				
+				 searchVo.setStaffId(orgStaffsNewVo.getStaffId());
+				 
+				 //对应当前订单的日期。。该员工是否 有 派工单
+				 Long disNum = disService.getDisNumForStaDuringServiceDate(searchVo);
+				 
+				 if(disNum > 0L){
+					 orgStaffsNewVo.setDispathStaStr("不可派工");
+					 orgStaffsNewVo.setDispathStaFlag(0);
+				 }else{
+					 orgStaffsNewVo.setDispathStaStr("可派工");
+					 orgStaffsNewVo.setDispathStaFlag(1);
+				 }
+			}
+			
+			
+			
+			
 		}
 		return list;
 	}
@@ -394,6 +420,74 @@ public class NewOrderDisController extends BaseController {
 		SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
 		
 		return resultData;
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 *  @Title: loadProperStaffListForBaseByCloudOrg
+	  * @Description: 
+	  * 		根据 云店 动态加载 该 云店下 可用的 派工
+	  * @param orderId
+	  * @param cloudOrgId
+	  * @throws
+	 */
+	/**
+	 *  @Title: loadProperStaffListForBaseByCloudOrg
+	  * @Description: TODO
+	  * @param @param model
+	  * @param @param orderId
+	  * @param @param cloudOrgId
+	  * @param @return    设定文件
+	  * @return List<OrgStaffsNewVo>    返回类型
+	  * @throws
+	 */
+	@RequestMapping(value = "load_staff_by_change_cloud_org.json",method = RequestMethod.GET)
+	public List<OrgStaffsNewVo> loadProperStaffListForBaseByCloudOrg(Model model,
+			@RequestParam("orderId")Long orderId,
+			@RequestParam("cloudOrgId")Long cloudOrgId){
+		
+		Orders orders = orderSevice.selectbyOrderId(orderId);
+		
+		Short orderStatus = orders.getOrderStatus();
+		
+		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		
+		
+		
+		
+		//对于  钟点工订单, 只有订单状态为    "已支付" 或  "已派工",可以进行 调整派工
+		if(orderStatus  == Constants.ORDER_HOUR_STATUS_2
+					|| orderStatus == Constants.ORDER_HOUR_STATUS_3){
+			
+			 list = newDisService.getAbleStaffList(orderId, cloudOrgId);
+			 
+			 
+			 OrderSearchVo searchVo = new OrderSearchVo();
+			 
+			 searchVo.setServiceDateStart(orders.getServiceDate());
+			 searchVo.setServiceDateEnd(orders.getServiceDate()+orders.getServiceHour()*3600);
+			 
+			 for (OrgStaffsNewVo orgStaffsNewVo : list) {
+				
+				 searchVo.setStaffId(orgStaffsNewVo.getStaffId());
+				 
+				 //对应当前订单的日期。。该员工是否 有 派工单
+				 Long disNum = disService.getDisNumForStaDuringServiceDate(searchVo);
+				 
+				 if(disNum > 0L){
+					 orgStaffsNewVo.setDispathStaStr("不可派工");
+					 orgStaffsNewVo.setDispathStaFlag(0);
+				 }else{
+					 orgStaffsNewVo.setDispathStaStr("可派工");
+					 orgStaffsNewVo.setDispathStaFlag(1);
+				 }
+			}
+		}
+		
+		return list;
 	}
 	
 }

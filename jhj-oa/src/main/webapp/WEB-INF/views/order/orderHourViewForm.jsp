@@ -5,6 +5,7 @@
 <%@ include file="../shared/taglib.jsp"%>
 <%@ taglib prefix="citySelectTag" uri="/WEB-INF/tags/citySelect.tld"%>
 <%@ taglib prefix="payTypeNameTag" uri="/WEB-INF/tags/payTypeName.tld"%>
+<%@ taglib prefix="cloudOrgSelect"	uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
 <html>
 <head>
 
@@ -70,29 +71,6 @@
 							</div>
 						</div>
 						
-						<div class="form-group" id="nowStaff">
-	
-							<label class="col-md-2 control-label">当前阿姨</label>
-							<div class="col-md-5">
-							
-								<form:input path="staffName" class="form-control"
-									maxLength="32" readonly="true"/>
-								<form:errors path="staffName" class="field-has-error"></form:errors>
-							</div>
-						</div>
-						
-						
-						<div class="form-group">
-
-							<label class="col-md-2 control-label">服务时间</label>
-							<div class="col-md-5">
-								<form:input path="serviceDateStr" class="form-control form_datetime" readonly="true" />
-							</div>
-							
-							<div class="col-md-5">
-								<font color="red">tip*:如果没有可用服务人员,可尝试更改服务时间</font>
-							</div>
-						</div>
 						
 						<div class="form-group">
 
@@ -104,19 +82,6 @@
 							</div>
 						</div>
 						
-						<div class="form-group required">
-
-							<label class="col-md-2 control-label">用户服务地址</label>
-							<div class="col-md-5">								
-								<form:input path="orderAddress" class="form-control"
-									maxLength="32" readonly="true"/>
-								<form:errors path="orderAddress" class="field-has-error"></form:errors>
-							</div>
-							
-							<div class="col-md-5">
-								<font color="red">如果用户地址不再服务范围内,则不会有可用派工</font>
-							</div>
-						</div>
 						
 						<div class="form-group">
 
@@ -166,7 +131,62 @@
 							</div>
 						</div>
 						
+						<div class="form-group" id="nowStaff">
+	
+							<label class="col-md-2 control-label">当前阿姨</label>
+							<div class="col-md-5">
+							
+								<form:input path="staffName" class="form-control"
+									maxLength="32" readonly="true"/>
+								<form:errors path="staffName" class="field-has-error"></form:errors>
+							</div>
+						</div>
 						
+						<div class="form-group required">
+
+							<label class="col-md-2 control-label">用户服务地址</label>
+							<div class="col-md-5">								
+								<form:input path="orderAddress" class="form-control"
+									maxLength="32" readonly="true"/>
+								<form:errors path="orderAddress" class="field-has-error"></form:errors>
+							</div>
+							
+							<div class="col-md-5">
+								<font color="red"><strong>如果用户地址不在服务范围内,则不会有可用派工</strong></font>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label"><font color="red">派工方案(可调整)</font></label>
+							<div class="col-md-5">
+									<form:radiobutton path="disWay" value="0" />方案一
+									<form:radiobutton path="disWay" value="1" />方案二
+							</div>						
+						</div>
+						
+						
+						
+						<div class="form-group" id="disWayOne">
+
+							<label class="col-md-2 control-label"><font color="red">服务时间(可调整)</font></label>
+							<div class="col-md-5">
+								<form:input path="serviceDateStr" class="form-control form_datetime" readonly="true" />
+							</div>
+							
+							<div class="col-md-5">
+								<font color="red"><strong>如果没有可用服务人员,可尝试更改服务时间</strong></font>
+							</div>
+						</div>
+						
+						
+						<div class="form-group" id="disWayTwo">
+
+							<label class="col-md-2 control-label"><font color="red">选择云店(可调整)</font></label>
+							<div class="col-md-5">
+										<!-- id= orgId -->
+									<cloudOrgSelect:select/>									
+							</div>
+						</div>
 						
 						
 						<div id="staffList"  class="col-sm-8">
@@ -188,14 +208,16 @@
 												<th>距用户距离</th>
 												<th>预计到达用时</th>
 												<th>今日接单数</th>
+												<th>是否可派工</th>
 											</tr>
 										</thead>
 										<tbody id="allStaff">
 										   <c:forEach items="${oaOrderListVoModel.voList }" var="item">
 												<tr>
 													<td>
-                                                  		<input name="sample-radio" id="radio-01" value="${item.staffId }" type="radio" > 
-                                              			
+														<c:if test="${item.dispatchStaFlag == 1 }">
+                                                  		 <input name="sample-radio"  id="radio-01" value="${item.staffId }" type="radio" > 
+                                              			</c:if>
                                               			<input  type="hidden" id="selectStaffId" name="selectStaffId" 
 														value="${item.staffId }">
                                               			
@@ -209,6 +231,7 @@
 													<td>${ item.distanceText }</td>
 													<td>${ item.durationText }</td>
 													<td>${ item.todayOrderNum }</td>
+													<td>${item.dispathStaStr }</td>
 												</tr>
 											</c:forEach>
 										</tbody>
