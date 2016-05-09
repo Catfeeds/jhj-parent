@@ -105,7 +105,8 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		vo.setMobile(orgStaffDetailPay.getMobile());
 		// 发生时间
 		Long addTime = orgStaffDetailPay.getAddTime() * 1000;
-		vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(addTime));
+		vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(addTime, "MM-dd HH:mm"));
+		
 		
 
 		// 交易来源名称
@@ -115,7 +116,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 				|| orgStaffDetailPay.getOrderType() == 3) {
 			BigDecimal orderMoney = orgStaffDetailPay.getOrderMoney();
 			String orderMoneyStr = MathBigDeciamlUtil.round2(orderMoney);
-			vo.setOrderTypeName("订单收入，订单金额:" + orderMoneyStr);
+			vo.setOrderTypeName("订单收入,订单金额:" + orderMoneyStr);
 		}
 		if (orgStaffDetailPay.getOrderType() == 4)
 			vo.setOrderTypeName("还款金额");
