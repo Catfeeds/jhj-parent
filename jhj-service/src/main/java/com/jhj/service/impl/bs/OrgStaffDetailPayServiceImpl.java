@@ -13,6 +13,7 @@ import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.vo.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
+import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -105,13 +106,16 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		// 发生时间
 		Long addTime = orgStaffDetailPay.getAddTime() * 1000;
 		vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(addTime));
+		
 
 		// 交易来源名称
 		if (orgStaffDetailPay.getOrderType() == 0
 				|| orgStaffDetailPay.getOrderType() == 1
 				|| orgStaffDetailPay.getOrderType() == 2
 				|| orgStaffDetailPay.getOrderType() == 3) {
-			vo.setOrderTypeName("订单收入");
+			BigDecimal orderMoney = orgStaffDetailPay.getOrderMoney();
+			String orderMoneyStr = MathBigDeciamlUtil.round2(orderMoney);
+			vo.setOrderTypeName("订单收入，订单金额:" + orderMoneyStr);
 		}
 		if (orgStaffDetailPay.getOrderType() == 4)
 			vo.setOrderTypeName("还款金额");
