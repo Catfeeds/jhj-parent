@@ -1,4 +1,16 @@
 
+
+$('.form_datetime').datetimepicker({
+	format: "yyyy-mm-dd hh:ii",
+	language: "zh-CN",
+	autoclose: true,
+	todayBtn:true,
+	minuteStep: 30,
+});
+
+
+
+
 $("select[name='userAddrKey']").on('change',function() {
 	var userAddr = $('#userAddrKey option:selected').val();
 	if (userAddr == undefined || userAddr == "") return false;
@@ -311,6 +323,7 @@ var selectStaff = function(){
 		//金额也不能修改
 		$("#orderMoney").prop("readonly",true);
 	}
+	
 }
 
 window.onload = selectStaff;
@@ -334,13 +347,40 @@ $("#saveOrderSubmit").on('click',function(){
 	
 	var orderId = $("#id").val();
 	
+	// 针对 深度 保洁类 服务
+	//开始时间
+	var serviceDateStart = $("#serviceDateStartStr").val();
+	
+	//结束时间
+	var serviceDateEnd = $("#serviceDateEndStr").val();
+	
+	var timeStart = new Date(serviceDateStart).getTime();
+	var timeEnd = new Date(serviceDateEnd).getTime();
+	
+	var dura = timeEnd - timeStart;
+	
+	if(dura < 3600*1000 || dura > 13*3600*1000){
+		alert("深度养护服务时长 必须 在 1~13 小时内");
+		return false;
+	}
+	
+	var nowDate = new Date().getTime();
+	
+	if(timeStart < nowDate){
+		
+		alert("服务开始时间 不能 早于 当前时间 ");
+		return false;
+	}
+	
 	$.ajax({
 		type:'get',
 		 url:'oa_submit_am_order.json',
 		 data:{
 			 "orderMoney":orderMoney,
 			 "orderId":orderId,
-			 "remarksConfirm":remarksConfirm
+			 "remarksConfirm":remarksConfirm,
+			 "serviceDateStart":timeStart,
+			 "serviceDateEnd":timeEnd
 		 },
 		 dataType:'json',
 		 success:function(data,sta,xhr){

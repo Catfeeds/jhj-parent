@@ -9,7 +9,7 @@
 	<uri>http://journaldev.com/jsp/tlds/mytags</uri>
 	<tag>
 		<name>select</name>
-		<tag-class>com.jhj.oa.customtags.CloudOrgSelectTag</tag-class>
+		<tag-class>com.jhj.oa.customtags.LeaveDurationTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>selectId</name>
@@ -17,16 +17,5 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		
-		<attribute>
-			<name>logInParentOrgId</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		
-		<attribute>
-			<name>hasAll</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
 	</tag>
 </taglib>

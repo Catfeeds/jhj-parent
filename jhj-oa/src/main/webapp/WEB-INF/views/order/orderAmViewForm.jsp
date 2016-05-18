@@ -16,7 +16,7 @@
 	type="text/css" />
 
 <link
-	href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
+	href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>"
 	rel="stylesheet" type="text/css" />
 </head>
 
@@ -126,7 +126,7 @@
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group required">
 
 							<label class="col-md-2 control-label">订单总金额</label>
 							<div class="col-md-5">
@@ -134,6 +134,52 @@
 								<form:errors path="orderMoney" class="field-has-error"></form:errors>
 							</div>
 						</div>
+						
+						<!-- 助理订单状态 为   （已预约、深度养护）， 可以修改   服务开始时间 -->
+						<c:if test="${oaOrderListVoModel.orderStatus == 1 && oaOrderListVoModel.parentServiceTypeId == 26  }">
+								<div class="form-group required">
+												
+									<label class="col-md-2 control-label"><font color="red">服务开始时间(已预约,可调整)</font></label>
+									<div class="col-md-5">
+										<form:input path="serviceDateStartStr" class="form-control form_datetime" readonly="true" />
+										<form:errors path="serviceDateStartStr" class="field-has-error"></form:errors>
+									</div>
+									
+									<div class="col-md-5">
+										<font color="red"><strong>深度养护类服务,需要满足  1 &lt;服务时长 &lt; 13 </strong></font>
+									</div>
+								</div>
+								
+								
+								
+								<div class="form-group required">
+												
+									<label class="col-md-2 control-label"><font color="red">服务结束时间(已预约,可调整)</font></label>
+									<div class="col-md-5">
+										<form:input path="serviceDateEndStr" class="form-control form_datetime" readonly="true" />
+										<form:errors path="serviceDateEndStr" class="field-has-error"></form:errors>
+									</div>
+								</div>
+								
+						</c:if>
+						
+						<!-- 已预约的 深度养护 类 订单，修改后 展示 服务时间 ,此时不可更改-->
+						<c:if test="${oaOrderListVoModel.orderStatus >= 2 && oaOrderListVoModel.parentServiceTypeId == 26  }">
+								<div class="form-group required">
+									<label class="col-md-2 control-label">服务开始时间<font color="red">(已确认,不可调整)</font></label>
+									<div class="col-md-5">
+										<form:input path="serviceDateStartStr" class="form-control" readonly="true" />
+									</div>
+								</div>
+								
+								<div class="form-group required">
+									<label class="col-md-2 control-label">服务时长(小时)</label>
+									<div class="col-md-5">
+										<form:input path="serviceHour" class="form-control" readonly="true" />
+									</div>
+								</div>
+						</c:if>
+						
 						
 						<!-- 支付后的 价格信息 -->
 						<c:if test="${oaOrderListVoModel.orderStatus >=3  }">
@@ -304,10 +350,12 @@
 	<!-- 引入百度地图API,其中   申请的密钥   ak 和主机 ip绑定， -->
 	<script type="text/javascript"
 		src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>
+	
 	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>
 	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
+	
 	<script
 		src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"
 		type="text/javascript"></script>

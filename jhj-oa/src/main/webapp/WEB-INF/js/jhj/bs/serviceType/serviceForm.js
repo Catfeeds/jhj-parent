@@ -20,7 +20,12 @@ $('#service-form').validate({
 				serviceTimes:{
 					required: true,
 					number:true
+				},
+				defaultHour:{
+					required: true,
+					number:true
 				}
+				
 			},
 
 			messages: {
@@ -41,7 +46,12 @@ $('#service-form').validate({
 				serviceTimes:{
 					required: "请输入每周服务次数",
 					number:"请输入合法的周服务次数"
+				},
+				defaultHour:{
+					required: "请输入默认服务时长",
+					number:"服务时长必须为数字"
 				}
+				
 			},
 
 			invalidHandler: function (event, validator) { //display error alert on form submit

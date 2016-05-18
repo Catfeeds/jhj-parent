@@ -45,11 +45,11 @@
                         		modelAttribute="userPayDetailSearchVoModel" action="user-pay-detail" method="get" >
                        	  
                           		<div class="form-group">
-                          				会员手机号:<form:input path="mobile" class="form-control"  type="number"/>
+                          				会员手机号:<form:input path="mobile" class="form-control"  maxlength="11"/>
                           		</div>	
                           		
                           		<div class="form-group">
-                          				订单号:<form:input path="orderNo" class="form-control"  type="number"/>
+                          				订单号:<form:input path="orderNo" class="form-control"  maxlength="18"/>
                           		</div>
                           		
                           		<div class="form-group">

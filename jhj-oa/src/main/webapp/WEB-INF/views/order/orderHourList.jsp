@@ -12,7 +12,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 <%@ taglib prefix="orderServiceTimeTag" uri="/WEB-INF/tags/orderServiceTime.tld" %>
 <%@ taglib prefix="serviceTypeTag" uri="/WEB-INF/tags/serviceTypeName.tld" %>
 
-
+<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
 <%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="orderTypeNameTag" uri="/WEB-INF/tags/orderTypeName.tld" %>
 <%@ taglib prefix="serviceTypeSelectTag" uri="/WEB-INF/tags/serviceTypeSelect.tld" %>
@@ -56,7 +56,8 @@ import="com.jhj.oa.common.UrlHelper"%>
 	                      	  <form:form modelAttribute="oaOrderSearchVoModel" onsubmit="return checkEndTime()"
 	                      	  class="form-inline" action="order-hour-list" method="GET">
 		                         		<div class="form-group">
-		                     					订单状态：
+		                     				订单状态：
+		                     				<c:if test="${loginOrgId == 0 }">
 		                     					<form:select path="orderStatus" class="form-control">
 		                     							<option value="">请选择订单状态</option>
 		                     							<form:option value="0">已取消</form:option>
@@ -68,14 +69,27 @@ import="com.jhj.oa.common.UrlHelper"%>
 		                     							<form:option value="8">已评价</form:option>
 		                     							<form:option value="9">已关闭</form:option>
 		                     					</form:select>
+		                     				</c:if>
+		                     				
+		                     				<!-- 如果是 店长登录,则 只能选择 已派工之后的 订单状态 -->
+		                     				<c:if test="${loginOrgId > 0 }">
+		                     					<form:select path="orderStatus" class="form-control">
+		                     							<option value="">请选择订单状态</option>
+		                     							<form:option value="3">已派工</form:option>
+		                     							<form:option value="5">开始服务</form:option>
+		                     							<form:option value="7">完成服务</form:option>
+		                     							<form:option value="8">已评价</form:option>
+		                     							<form:option value="9">已关闭</form:option>
+		                     					</form:select>
+		                     				</c:if>
+		                     				
 		                     			</div>
+		                     			
 										<div class="form-group">		
-											<c:if test="${loginOrgId == 0 }">
-												选择门店:
-												<orgSelectTag:select/>
-											</c:if>	
+											选择云店:<cloudOrgSelectTag:select 
+													selectId="${oaOrderSearchVoModel.orgId }"
+													logInParentOrgId="${loginOrgId }"/>
 										</div>	
-										
 										<div class="form-group">
 			                          		下单开始时间：
 											<form:input path="startTimeStr" class="form-control form_datetime"
@@ -104,12 +118,12 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <tr>	  
                                 	  <th >门店名称 </th>
                                 	  <th >云店名称</th>
+		                              <th >服务人员</th>
 		                              <th >下单时间</th>
 		                              <th >订单类型</th>
 		                              <th >服务日期</th>
 		                              <th >用户手机号</th>
 		                              <th >服务地址</th>
-		                              <th >服务人员</th>
 		                             <!--  <th >派工状态</th> -->
 		                              <th >订单状态</th>
 		                              <th >总金额</th>
@@ -122,27 +136,21 @@ import="com.jhj.oa.common.UrlHelper"%>
                               	<c:forEach items="${item.statusNameMap }" var="sta">
                               	
                               <tr>	
-							            
                                   	    <td>${ item.orgName }</td>
-                                  	    
                                   	    <td>${ item.cloudOrgName }</td>
+                                  	    <td>${ item.staffName }</td>
 							            <td>
 							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 							            </td>
-
 							            <td>
 											 ${item.orderTypeName } 
 							            </td>
 							            <td>
 											<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.serviceDate * 1000}"/>
 										</td>
-
-
 										<td>${ item.mobile }</td>
 							            <td>${ item.orderAddress }</td>
-							            <td>
-							            	${ item.staffName }
-							            </td>
+							           
 							            <%-- <td>
 							            	${item.disStatusName }
 							          
@@ -198,10 +206,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 
     <%-- <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
     <!--script for this page-->	
-    <script	type="text/javascript"  src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
     
-	<script src="<c:url value='/js/jhj/order/orderList.js'/>"></script>
-	
 	 <script type="text/javascript"
 		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
 	<script type="text/javascript"

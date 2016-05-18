@@ -38,38 +38,58 @@
 
 <body>
 
-	<section id="container"> <!--header start--> <%@ include
-		file="../shared/pageHeader.jsp"%> <!--header end-->
+	<section id="container"> 
+	<!--header start--> 
+	<%@ include file="../shared/pageHeader.jsp"%> 
+	<!--header end-->
 
-	<!--sidebar start--> <%@ include file="../shared/sidebarMenu.jsp"%>
-	<!--sidebar end--> <!--main content start--> <section id="main-content">
-	<section class="wrapper"> <!-- page start-->
+	<!--sidebar start--> 
+	<%@ include file="../shared/sidebarMenu.jsp"%>
+	<!--sidebar end--> 
+	<!--main content start--> 
+	<section id="main-content">
+		<section class="wrapper"> 
+	<!-- page start-->
 
 	<div class="row">
 		<div class="col-lg-12">
 			<section class="panel"> 
 				<h4>数据搜索</h4>
 				<form:form modelAttribute="oaOrderSearchVoModel" onsubmit="return checkEndTime()"
-					action="order-am-list" class="form-inline"
-					method="GET">
+					action="order-am-list" class="form-inline"	method="GET">
 					<div class="form-group">
-						订单状态：
-						<form:select path="orderStatus" class="form-control">
-							<option value="">请选择订单状态</option>
-							<form:option value="0">已取消</form:option>
-							<form:option value="1">已预约</form:option>
-							<form:option value="2">已派工</form:option>
-							<form:option value="3">已确认</form:option>
-							<form:option value="4">已支付</form:option>
-							<form:option value="5">开始服务</form:option>
-							<form:option value="7">完成服务</form:option>
-							<form:option value="9">已关闭</form:option>
-						</form:select>
+						订单状态:
+						<c:if test="${loginOrgId == 0 }">
+							<form:select path="orderStatus" class="form-control">
+								<option value="">请选择订单状态</option>
+								<form:option value="0">已取消</form:option>
+								<form:option value="1">已预约</form:option>
+								<form:option value="2">已确认</form:option>
+								<form:option value="3">已支付</form:option>
+								<form:option value="4">已派工</form:option>
+								<form:option value="5">开始服务</form:option>
+								<form:option value="7">完成服务</form:option>
+								<form:option value="9">已关闭</form:option>
+							</form:select>
+						</c:if>
+						
+						<!-- 如果是 店长登录,则 只能选择 已派工之后的 订单状态 -->
+          				<c:if test="${loginOrgId > 0 }">
+          					<form:select path="orderStatus" class="form-control">
+          						<option value="">请选择订单状态</option>
+          						<form:option value="4">已派工</form:option>
+								<form:option value="5">开始服务</form:option>
+								<form:option value="7">完成服务</form:option>
+								<form:option value="9">已关闭</form:option>	
+          					</form:select>
+          				</c:if>
+						
 					</div>
 					<div class="form-group">
-							选择云店:<cloudOrgSelectTag:select />
+						选择云店:<cloudOrgSelectTag:select 
+									selectId="${oaOrderSearchVoModel.orgId }"
+									logInParentOrgId="${loginOrgId }"/>
 					</div>	
-					
 					
 					<div class="form-group">
                        	下单开始时间：
@@ -101,12 +121,12 @@
 				<tr >
 					<th>门店名称</th>
 					<th>云店名称</th>
+					<th>服务人员</th>
 					<th>下单时间</th>
 					<th>订单类型</th>
-					<!-- <th>服务日期</th> -->
 					<th>用户手机号</th>
+					<th>服务时间</th> 
 					<th>服务地址</th>
-					<th>服务人员</th>
 					<!-- <th>派工状态</th> -->
 					<th>订单状态</th>
 					<th>支付方式</th>
@@ -124,6 +144,7 @@
 							<input type="hidden" id="itemOrderStatus" value="${item.orderStatus }">	
 							<td>${ item.orgName }</td>
 							<td>${item.cloudOrgName }</td>
+							<td>${ item.staffName } </td>
 							
 							<td><timestampTag:timestamp patten="yyyy-MM-dd"
 									t="${item.addTime * 1000}" /></td>
@@ -131,8 +152,9 @@
 							<td>${item.orderTypeName }</td>
 
 							<td>${ item.mobile }</td>
+							<td><timestampTag:timestamp patten="yyyy-MM-dd"
+									t="${item.serviceDate * 1000}" /></td>
 							<td>${ item.orderAddress }</td>
-							<td>${ item.staffName } </td>
 							<td id="payTypeStatus">
 								<orderVoStatusTag:orderstatus
 									orderStatus="${item.orderStatus }"
@@ -204,9 +226,7 @@
 	     return true;  
 	 }
 	
-	
 	</script>
-	
 	
 </body>
 </html>

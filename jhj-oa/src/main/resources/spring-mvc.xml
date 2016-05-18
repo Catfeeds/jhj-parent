@@ -25,8 +25,23 @@
 
     <!-- 配置自定义过滤 -->
     <mvc:interceptors>
+    
+    	  <!-- 拦截用户手机号 -->
+		 <!-- <mvc:interceptor>
+				<mvc:mapping path="/queue/getUserMobile.json"/>  
+				<bean class="com.jhj.oa.vo.zzz.MyInterceptor"/>
+		 </mvc:interceptor>  --> 
+    
     	<!-- 如果不定义 mvc:mapping path 将拦截所有的URL请求 -->
-	        <bean class="com.jhj.oa.auth.AuthInterceptor"></bean>
+    	
+    	<!-- <mvc:interceptor>
+    			<mvc:mapping path="/**"/>
+    			-->
+		     <bean class="com.jhj.oa.auth.AuthInterceptor"></bean> 
+    	<!-- </mvc:interceptor> -->
+    	
+	
+		 
     </mvc:interceptors>
     <!-- 如果当前请求为"/”时，则转发到"/home/hello” -->
     <mvc:view-controller path="/" view-name="forward:/home/index"/>

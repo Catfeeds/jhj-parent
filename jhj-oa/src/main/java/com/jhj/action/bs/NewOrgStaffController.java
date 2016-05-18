@@ -32,6 +32,7 @@ import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
+import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
@@ -113,12 +114,13 @@ public class NewOrgStaffController extends AdminController {
 			staffSearchVo.setOrgId(orgId);
 		}
 		
-//		//得到 当前登录 的 门店id，并作为搜索条件
-//		String org = AuthHelper.getSessionLoginOrg(request);
-//		
-//		if(!StringUtil.isEmpty(org)){
-//			staffSearchVo.setOrgId(Long.parseLong(org));
-//		}
+		//得到 当前登录 的 门店id，并作为搜索条件
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
+			staffSearchVo.setOrgId(Long.valueOf(org));
+		}
 		
 		
 		List<OrgStaffs> list = staffService.selectNewStaffList(staffSearchVo);
@@ -133,6 +135,7 @@ public class NewOrgStaffController extends AdminController {
 		
 		PageInfo result = new PageInfo(list);
 		
+		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
 		model.addAttribute("staffModel", result);
 		model.addAttribute("staffSearchVoModel", staffSearchVo);
 
@@ -190,13 +193,15 @@ public class NewOrgStaffController extends AdminController {
 
 		String expanded = ServletRequestUtils.getStringParameter(request, "expanded", null);
 		List<TreeModel> children=TreeModelExtension.ToTreeModels(partService.getTreeList(), null, checkedAuthorityIntegers, StringHelper.toIntegerList( expanded, ","));
-//		List<TreeModel> treeModels=new ArrayList<TreeModel>(Arrays.asList(new TreeModel(null,null,"根节点",false,false,false,children)));
-		
-//		System.out.println(JSONArray.fromObject(treeModels, new JsonConfig()).toString());
 		
 		model.addAttribute(treeDataSourceName, JSONArray.fromObject(children, new JsonConfig()).toString());
 		
-//		model.addAttribute(selectDataSourceName,staffService.selectSkillEntity());
+		//得到 当前登录 的 门店id，并作为搜索条件
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+			model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+		}
 		
 		return "bs/newStaffForm";
 	}

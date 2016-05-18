@@ -12,10 +12,12 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.Gifts;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictCity;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.dict.DictRegion;
 import com.jhj.service.bs.GiftsService;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.AdService;
 import com.jhj.service.dict.DictService;
 import com.jhj.service.dict.ServiceTypeService;
@@ -37,6 +39,9 @@ public class DictInterface extends BaseController {
     @Autowired
     private GiftsService giftsService;
 
+    @Autowired
+    private OrgStaffsService staffService;
+    
 	/**
 	 * 列表显示城市
 	 * @return
@@ -138,4 +143,22 @@ public class DictInterface extends BaseController {
 		}
 		return result;
 	}
+	
+	
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "select-staff-by-cloudOrg.json", method = RequestMethod.POST)
+	public  AppResultData<Object> selectCloudStaffList(
+			@RequestParam(value = "orgId", required = true, defaultValue = "0") Long cloudOrgId) {
+
+		AppResultData<Object> result = new AppResultData<Object>(
+		Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, false);
+
+		List<OrgStaffs> list = staffService.selectByOrgId(cloudOrgId);
+		
+		result.setData(list);
+		
+		return result;
+	}
+	
+	
 }

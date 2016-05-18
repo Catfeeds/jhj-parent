@@ -25,12 +25,14 @@ import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -40,9 +42,11 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OaOrderSearchVo;
+import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
@@ -80,6 +84,8 @@ public class OaOrderController extends BaseController {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	@Autowired
+	private OrgsService orgService;
 	
 	/*
 	 * 查看订单列表
@@ -138,7 +144,7 @@ public class OaOrderController extends BaseController {
 	 * @return
 	 * @throws ParseException 
 	 */
-//	@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/order-hour-list", method = RequestMethod.GET)
 	public String getOrderHourList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo) throws ParseException{
 	
@@ -159,16 +165,73 @@ public class OaOrderController extends BaseController {
 		//得到 当前登录 的 门店id，并作为搜索条件
 		String org = AuthHelper.getSessionLoginOrg(request);
 		
+		List<Long> cloudIdList = new ArrayList<Long>();
+		
 		if(!org.equals("0") && !StringUtil.isEmpty(org)){
-			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			oaOrderSearchVo.setSearchOrgId(Long.valueOf(org));
+			
+			
+			/*
+			 * 如果是店长 ，只能看到 自己门店 对应的 所有 云店 的 订单
+			 * 而且 只能是 已 派工过的 订单。
+			 * 
+			 */
+			
+			GroupSearchVo groupSearchVo = new GroupSearchVo();
+			groupSearchVo.setParentId(Long.parseLong(org));
+			
+			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			
+			for (Orgs orgs : cloudList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+			
+			
+			List<Short> searchOrderStatusList = new ArrayList<Short>();
+			
+			// 店长 可查看的 钟点工 订单状态列表：  已派工 之后的都可以查看
+//			public static short ORDER_HOUR_STATUS_3=3;//已派工
+//			public static short ORDER_HOUR_STATUS_5=5;//开始服务
+//			public static short ORDER_HOUR_STATUS_7=7;//完成服务
+//			public static short ORDER_HOUR_STATUS_8=8;//已评价
+//			public static short ORDER_HOUR_STATUS_9=9;//已关闭
+			
+			
+			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
+			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
+			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
+			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_9);
+			
+			oaOrderSearchVo.setSearchOrderStatusList(searchOrderStatusList);
+			
+		}else{
+			// 如果是 运营 人员，则能  查看全部 订单, 查看所有 云店
+			List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+			
+			for (Orgs orgs : cloudOrgList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+			
+			/*
+			 *  对于   未派工的  订单，，没有 云店， 只有运营人员 可以  看到，以便 后续处理
+			 */
+			cloudIdList.add(0L);
 		}
 		
-		//如果在 订单列表页面，选择了 门店  作为搜索 条件
+		
+		// 根据 登录 角色的门店，确定 云店
+		oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
+		
+		//如果在 列表页面，选择了 云店  作为搜索 条件
 		String jspOrgId = request.getParameter("orgId");
 		if(!StringUtil.isEmpty(jspOrgId) && !jspOrgId.equals("0")){
-			oaOrderSearchVo.setSearchOrgId(Long.valueOf(jspOrgId));
+			
+			cloudIdList.clear();
+			cloudIdList.add(Long.valueOf(jspOrgId));
+			oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
 		}
+		
+		
 		
 		
 		//转换为数据库 参数字段
@@ -193,7 +256,6 @@ public class OaOrderController extends BaseController {
 		}
 		
 		PageInfo result = new PageInfo(orderList);	
-		
 		
 		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
@@ -234,11 +296,11 @@ public class OaOrderController extends BaseController {
 			oaOrderSearchVo.setSearchOrgId(Long.valueOf(org));
 		}
 		
-		//如果在 订单列表页面，选择了 门店  作为搜索 条件
-		String jspOrgId = request.getParameter("orgId");
-		if(!StringUtil.isEmpty(jspOrgId) && !jspOrgId.equals("0")){
-			oaOrderSearchVo.setSearchOrgId(Long.valueOf(jspOrgId));
-		}
+//		//如果在 订单列表页面，选择了 门店  作为搜索 条件
+//		String jspOrgId = request.getParameter("orgId");
+//		if(!StringUtil.isEmpty(jspOrgId) && !jspOrgId.equals("0")){
+//			oaOrderSearchVo.setSearchOrgId(Long.valueOf(jspOrgId));
+//		}
 		
         List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo,pageNo,pageSize);
 		
@@ -286,9 +348,63 @@ public class OaOrderController extends BaseController {
 		}
 		
 		
-		/*
-		 * 助理类订单，不能 根据门店划分。。因为新下的订单。没有门店一说
-		 */
+		//得到 当前登录 的 门店id，并作为搜索条件
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		List<Long> cloudIdList = new ArrayList<Long>();
+		
+		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+			
+			GroupSearchVo groupSearchVo = new GroupSearchVo();
+			groupSearchVo.setParentId(Long.parseLong(org));
+			
+			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			
+			for (Orgs orgs : cloudList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+			
+			// 店长 可查看的 助理 订单状态列表：  已派工 之后的都可以查看
+//			public static short ORDER_AM_STATUS_4=4;//已派工
+//			public static short ORDER_AM_STATUS_5=5;//开始服务
+//			public static short ORDER_AM_STATUS_7=7;//完成服务
+//			public static short ORDER_AM_STATUS_9=9;//已关闭
+			
+			List<Short> searchOrderStatusList = new ArrayList<Short>();
+			
+			searchOrderStatusList.add(Constants.ORDER_AM_STATUS_4);
+			searchOrderStatusList.add(Constants.ORDER_AM_STATUS_5);
+			searchOrderStatusList.add(Constants.ORDER_AM_STATUS_7);
+			searchOrderStatusList.add(Constants.ORDER_AM_STATUS_9);
+			
+			oaOrderSearchVo.setSearchOrderStatusList(searchOrderStatusList);
+			
+		}else{
+			// 如果是 运营 人员，则能  查看全部 订单, 查看所有 云店
+			List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+			
+			for (Orgs orgs : cloudOrgList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+			
+			/*
+			 *  对于   未派工的  订单，，没有 云店， 保证 运营和 市场 人员可以看到即可 ，以便 后续处理
+			 */
+			cloudIdList.add(0L);
+		}
+		
+		// 根据 登录 角色的门店，确定 云店
+		oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
+		
+		
+		//如果在 列表页面，选择了 云店  作为搜索 条件
+		String jspOrgId = request.getParameter("orgId");
+		if(!StringUtil.isEmpty(jspOrgId) && !jspOrgId.equals("0")){
+			
+			cloudIdList.clear();
+			cloudIdList.add(Long.valueOf(jspOrgId));
+			oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
+		}
 		
 		
 		/*
@@ -330,14 +446,13 @@ public class OaOrderController extends BaseController {
 			orders = orderList.get(i);
 			OaOrderListNewVo completeVo = oaOrderService.completeNewVo(orders);
 			
-			
-			
 			orderList.set(i, completeVo);
 		}
 		
 		PageInfo result = new PageInfo(orderList);	
 		
-//		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+		
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
 		
@@ -427,9 +542,24 @@ public class OaOrderController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/order-hour-view",method = RequestMethod.GET)
-	public String  orderHourDetail(String orderNo,Short disStatus,Model model){
+	public String  orderHourDetail(String orderNo,Short disStatus,Model model,HttpServletRequest request){
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailHour(orderNo,disStatus);
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
+		
+		
+		//得到 当前登录 的  店长所在 门店id，
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+			
+			/*
+			 *  派工调整时，选择 门店
+			 */
+			model.addAttribute("loginOrgId", org);	
+		}
+		
+		
+		
 		short orderType = oaOrderListVo.getOrderType();
 		if(orderType==Constants.ORDER_TYPE_0){//钟点工
 			return "order/orderHourViewForm";
@@ -612,8 +742,6 @@ public class OaOrderController extends BaseController {
 	
 	
 	
-	
-	
 	/*
 	 * 订单换人操作
 	 *  @param 订单用户Id,  订单Id,  订单（有过派工） 对应 的阿姨 Id
@@ -627,9 +755,7 @@ public class OaOrderController extends BaseController {
 		 * 
 		 * 如果 前台 传参  staffId，未发生变化。。则 无后续 更新及发短信操作
 		 */
-		
 		boolean isChange = true;
-		
 		
 		//如果 能 找到  派工 为 1  的 订单记录    , mybatis已修改。 selectByOrderId() 得到 的 是 有效派工  的记录 。 
 		OrderDispatchs disStatuYes = orderDisService.selectByOrderId(id);
@@ -662,7 +788,9 @@ public class OaOrderController extends BaseController {
 	public AppResultData<Object> oaSubAmOrder(
 			@RequestParam("orderId")Long orderId,
 			@RequestParam("remarksConfirm")String remarksCon,
-			@RequestParam("orderMoney")BigDecimal orderMoney) throws UnsupportedEncodingException{
+			@RequestParam("orderMoney")BigDecimal orderMoney,
+			@RequestParam(value = "serviceDateStart",required = false,defaultValue = "0")Long serviceDateStart,
+			@RequestParam(value = "serviceDateEnd",required = false,defaultValue = "0")Long serviceDateEnd) throws UnsupportedEncodingException, ParseException{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 		
@@ -690,6 +818,20 @@ public class OaOrderController extends BaseController {
 		order.setOrderStatus(Constants.ORDER_AM_STATUS_2);
 		order.setRemarksConfirm(decode);
 		
+		/*
+		 * 对于  大类 为   深度养护的 订单，需要 设置   服务 时间  和 服务时长
+		 */
+		Long serviceType = order.getServiceType();
+		PartnerServiceType partnerServiceType = partService.selectByPrimaryKey(serviceType);
+		
+		if(partnerServiceType.getParentId() == 26){
+			
+			//向上 取整, 有小数 都 +1
+			double floor = Math.ceil((serviceDateEnd - serviceDateStart)/1000);
+			order.setServiceHour((short)floor);
+			order.setServiceDate(serviceDateStart/1000);
+		}
+		
 		OrderPrices orderPrice = priceService.initOrderPrices();
 		
 		orderPrice.setUserId(order.getUserId());
@@ -704,7 +846,6 @@ public class OaOrderController extends BaseController {
 		
 		//生成订单价格
 		priceService.insertSelective(orderPrice);
-		
 		
 		/*
 		 *  2016年4月14日11:05:05  新增短信
@@ -723,7 +864,6 @@ public class OaOrderController extends BaseController {
 		String[] paySuccessForUser = new String[] {};
 		
 		SmsUtil.SendSms(users.getMobile(),  Constants.MESSAGE_ORDER_NEED_TO_PAY, paySuccessForUser);
-		
 		
 		//发短信
 		orderService.userOrderAmSuccessTodo(order.getOrderNo());

@@ -52,13 +52,18 @@
 											</form:select> 
 								 </div>				
 								 
-								 <div class="form-group">				
+								<%--  <div class="form-group">				
 										选择门店: <orgSelectTag:select  selectId="${staffSearchVoModel.parentId }"/>								
-								 </div>		
+								 </div>		 --%>
 								 
-								 <div class="form-group">	
-										选择云店: <cloudOrgSelectTag:select selectId="${staffSearchVoModel.orgId }"/>
-								 </div>   
+								 <!-- 运营人员登录才有选择云店， 店长登录只能看到自己云店的人员。可以屏蔽该选项 -->
+								 <c:if test="${loginOrgId == 0 }">
+									 <div class="form-group">	
+											选择云店: <cloudOrgSelectTag:select 
+														logInParentOrgId="${loginOrgId}"
+														selectId="${staffSearchVoModel.orgId }"/>
+									 </div>
+								 </c:if>   
 									<button type="submit" class="btn btn-primary" >搜索</button>
                            </form:form> 
                           </header>

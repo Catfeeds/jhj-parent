@@ -183,8 +183,7 @@
 
 							<label class="col-md-2 control-label"><font color="red">选择云店(可调整)</font></label>
 							<div class="col-md-5">
-										<!-- id= orgId -->
-									<cloudOrgSelect:select/>									
+									<cloudOrgSelect:select logInParentOrgId="${loginOrgId }"/>									
 							</div>
 						</div>
 						

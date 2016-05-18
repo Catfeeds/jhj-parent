@@ -27,15 +27,18 @@ import com.jhj.common.Constants;
 import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.user.FinanceRecharge;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.UserSmsToken;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.OrgsService;
 import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.jhjSetting.JhjSettingService;
 import com.jhj.service.order.OrderCardsService;
+import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.FinanceRechargeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
@@ -45,6 +48,7 @@ import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.UsersSmsTokenVo;
 import com.jhj.vo.finance.FinanceSearchVo;
+import com.jhj.vo.org.GroupSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
 import com.jhj.vo.user.UserCouponsVo;
@@ -84,6 +88,11 @@ public class UserController extends BaseController {
 	@Autowired
 	private JhjSettingService settingService;
 	
+	@Autowired
+	private OrgsService orgService;
+	
+	@Autowired
+	private OrdersService orderService;
 	
 	@AuthPassport
 	@RequestMapping(value = "/update_name", method = { RequestMethod.POST })
@@ -115,12 +124,10 @@ public class UserController extends BaseController {
 	public String userList(HttpServletRequest request, Model model,
 			@ModelAttribute("userListSearchVoModel")UserSearchVo searchVo) throws ParseException {
 		
-		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		
 		
 		//转换为数据库 参数字段
 		String startTimeStr = searchVo.getStartTimeStr();
@@ -134,10 +141,31 @@ public class UserController extends BaseController {
 		}
 				
 		
+		//得到 当前登录 的 门店id，并作为搜索条件
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		List<Long> cloudIdList = new ArrayList<Long>();
+		
+		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+			
+			GroupSearchVo groupSearchVo = new GroupSearchVo();
+			
+			groupSearchVo.setParentId(Long.parseLong(org));
+			
+			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			
+			
+			for (Orgs orgs : cloudList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+		}else{
+			cloudIdList.add(0L);
+		}
+		searchVo.setSearchOrgList(cloudIdList);
+		
 		PageInfo result = usersService.searchVoListPage(searchVo, pageNo,
 				pageSize);
 		model.addAttribute("userList", result);
-
 		model.addAttribute("userListSearchVoModel", searchVo);
 		
 		return "user/userList";
@@ -171,7 +199,14 @@ public class UserController extends BaseController {
 
 		return "user/userCouponsList";
 	}
-
+	
+	/**
+	 * 
+	 *  @Title: payDetailList
+	  * @Description: 
+	  * 		消费明细列表	
+	  * 	
+	 */
 	@AuthPassport
 	@RequestMapping(value = "/user-pay-detail", method = { RequestMethod.GET })
 	public String payDetailList(HttpServletRequest request, Model model,
@@ -185,7 +220,6 @@ public class UserController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		
-
 		//转换为数据库 参数字段
 		String startTimeStr = searchVo.getStartTimeStr();
 		if(!StringUtil.isEmpty(startTimeStr)){
@@ -198,8 +232,55 @@ public class UserController extends BaseController {
 		}
 		
 		
-		PageInfo result = userDetailPayService.searchVoListPage(searchVo,
-				pageNo, pageSize);
+		//得到 当前登录 的 门店id，并作为搜索条件
+		String org = AuthHelper.getSessionLoginOrg(request);
+		
+		UserSearchVo userSearchVo = new UserSearchVo();
+		
+		List<Long> cloudIdList = new ArrayList<Long>();
+		
+		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+			
+			GroupSearchVo groupSearchVo = new GroupSearchVo();
+			
+			groupSearchVo.setParentId(Long.parseLong(org));
+			
+			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			
+			
+			for (Orgs orgs : cloudList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+			
+		}else{
+			cloudIdList.add(0L);
+		}
+		
+		userSearchVo.setSearchOrgList(cloudIdList);
+		
+		/*
+		 *  根据  在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的  消费明细
+		 *  
+		 */
+		
+		
+		// 在店长登录门店 下过单的 用户集合
+		List<Users> userList = usersService.selectBySearchVo(userSearchVo);	
+		
+		List<Long> userIdList = new ArrayList<Long>();
+		
+		for (Users users : userList) {
+			userIdList.add(users.getId());
+		}
+		
+		
+		searchVo.setUserIdList(userIdList);
+		
+		PageHelper.startPage(pageNo, pageSize);
+		
+		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
+		
+		PageInfo result = new PageInfo(list);
 		
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);

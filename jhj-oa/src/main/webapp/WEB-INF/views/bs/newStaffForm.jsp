@@ -67,7 +67,11 @@
 						<div class="form-group required">
 							<label class="col-md-2 control-label">选择云店*</label>
 							<div class="col-md-5">
-								<cloudOrgSelectTag:select selectId="${newStaffFormVoModel.orgId }" />
+								
+								<cloudOrgSelectTag:select 
+										logInParentOrgId="${loginOrgId}"
+										selectId="${staffSearchVoModel.orgId }"/>	
+							    		
 							</div>
 						</div>
 							
@@ -358,7 +362,11 @@
 </body>
 </html>
 <script type="text/javascript">
-	$('#provinceId').trigger('change');
+
+	$(document).ready(function(){
+		$('#provinceId').trigger('change');
+	});
+
 	
 	
 	//技能标签

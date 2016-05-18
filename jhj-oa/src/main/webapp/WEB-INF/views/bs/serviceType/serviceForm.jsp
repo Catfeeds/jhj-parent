@@ -37,7 +37,7 @@
  						 
                         <div class="form-body">
                         
-                           <div class="form-group">
+                           <div class="form-group required">
                               <label  class="col-md-2 control-label">服务名称*</label>
                               <div class="col-md-5">
                                  <form:input path="name" class="form-control" placeholder="服务名称"/>
@@ -54,7 +54,7 @@
                            </div>
                            
                            
-                           <div class="form-group">
+                           <div class="form-group required">
                               <label  class="col-md-2 control-label">单价*</label>
                               <div class="col-md-5">
                                  <form:input path="price" class="form-control" placeholder="单价"/>
@@ -62,7 +62,8 @@
                               </div>
                            </div>
                            
-                           <div class="form-group">
+                           
+                           <div class="form-group required">
                               <label  class="col-md-2 control-label">备注(副标题)/服务介绍</label>
                               <div class="col-md-5">
                                  <form:textarea path="remarks" class="form-control"  rows="5" cols="50"
@@ -70,7 +71,7 @@
                               </div>
                            </div>
                            
-                           <div class="form-group">
+                           <div class="form-group required">
                               <label  class="col-md-2 control-label">服务内容</label>
                               <div class="col-md-5">
                                  <form:textarea path="serviceContent" rows="5" cols="50"
@@ -79,7 +80,7 @@
                            </div>
                            
                            
-                           <div class="form-group">
+                           <div class="form-group required">
                               <label  class="col-md-2 control-label">服务品类</label>
                               <div class="col-md-5" id="serviceProDiv">
                               	 <form:radiobutton path="serviceProperty" value="0" label="单品"/>
@@ -87,7 +88,7 @@
                               </div>
                            </div>
                            
-                           <div id="weekTimes" class="form-group">
+                           <div id="weekTimes" class="form-group required">
                               <label  class="col-md-2 control-label">每周服务次数</label>
                               <div class="col-md-5">
                                  <form:input path="serviceTimes" class="form-control" 
@@ -96,7 +97,7 @@
                               </div>
                            </div>
                            
-                           <div id="timeDetail" class="form-group">
+                           <div id="timeDetail" class="form-group required">
                            		<div class="col-md-6" style="margin-left:210px">
 	                         		<button type="button" id="yearTimes"  class="btn btn-success"></button>
 		                           	<button type="button" id="sumPrice" style="margin-left:20px" class="btn btn-success"></button>

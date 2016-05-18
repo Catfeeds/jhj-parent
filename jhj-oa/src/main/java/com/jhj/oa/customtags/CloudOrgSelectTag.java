@@ -14,6 +14,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.StringUtil;
 
 
@@ -34,12 +35,12 @@ public class CloudOrgSelectTag extends SimpleTagSupport {
     // 是否包含全部，  0 = 不包含  1= 包含
     private String hasAll =  "1";
     
-    
+    //登录角色的 门店 id
+    private Long logInParentOrgId;
     
 	private OrgsService orgService;
 
     public CloudOrgSelectTag() {
-    	
     	
     }
 
@@ -59,7 +60,11 @@ public class CloudOrgSelectTag extends SimpleTagSupport {
 			 * 
 			 */
 			
-        	List<Orgs> orgList = orgService.selectCloudOrgs();
+			GroupSearchVo searchVo = new GroupSearchVo();
+			
+			searchVo.setParentId(logInParentOrgId);
+			
+        	List<Orgs> orgList = orgService.selectCloudOrgByParentOrg(searchVo);
 
             StringBuffer orgSelect = new StringBuffer();
             orgSelect.append("<select id = \"orgId\" name=\"orgId\" class=\"form-control\">" );
@@ -103,4 +108,12 @@ public class CloudOrgSelectTag extends SimpleTagSupport {
 		this.selectId = selectId;
 	}
 
+	public Long getLogInParentOrgId() {
+		return logInParentOrgId;
+	}
+
+	public void setLogInParentOrgId(Long logInParentOrgId) {
+		this.logInParentOrgId = logInParentOrgId;
+	}
+	
 }

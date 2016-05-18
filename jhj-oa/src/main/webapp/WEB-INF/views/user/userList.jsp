@@ -46,7 +46,7 @@
                           	<form:form class="form-inline" onsubmit="return checkEndTime()"
                           		modelAttribute="userListSearchVoModel" action="user-list" method="GET">
 	                         	<div class="form-group">	
-									手机号:<form:input path="mobile" class="form-control" autocomplete="off" type="number"/>
+									手机号:<form:input path="mobile" class="form-control" autocomplete="off" maxlengt="11"/>
 								</div>
 								
 								<div class="form-group">

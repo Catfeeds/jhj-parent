@@ -18,9 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
+import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.Users;
@@ -37,6 +39,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
+import com.jhj.vo.org.LeaveSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.OneCareUtil;
@@ -265,6 +268,12 @@ public class NewOrderDisController extends BaseController {
 		
 		List<Long> staIdList = newDisService.autoDispatchForAmOrder(fromLat, fromLng, orders.getServiceType());
 		
+		//请假的员工(服务类型 属于  深度养护 类别下 )
+		List<Long> leaveStaffIdList = newDisService.getLeaveStaffForDeepOrder(orderId, orders.getServiceType());
+
+		//排除请假的员工
+		staIdList.removeAll(leaveStaffIdList);
+		
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
 		
 		Short orderStatus = orders.getOrderStatus();
@@ -295,9 +304,6 @@ public class NewOrderDisController extends BaseController {
 					 orgStaffsNewVo.setDispathStaFlag(1);
 				 }
 			}
-			
-			
-			
 			
 		}
 		return list;
@@ -454,8 +460,6 @@ public class NewOrderDisController extends BaseController {
 		Short orderStatus = orders.getOrderStatus();
 		
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
-		
-		
 		
 		
 		//对于  钟点工订单, 只有订单状态为    "已支付" 或  "已派工",可以进行 调整派工
