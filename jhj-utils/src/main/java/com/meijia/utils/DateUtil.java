@@ -778,8 +778,13 @@ public class DateUtil {
 		// System.out.println(Collections.frequency(matchList, 3L));
 
 //		Long convTimeStampToDate = convTimeStampToDate(1458727667L);
-		String birth = "1979-09-15";
-		Date birthDay = DateUtil.parse(birth);
-		System.out.println(DateUtil.getAge(birthDay));
+//		String birth = "1979-09-15";
+//		Date birthDay = DateUtil.parse(birth);
+//		System.out.println(DateUtil.getAge(birthDay));
+		
+		long unixTimeStamp = getUnixTimeStamp("2016-05-13 18:35:00");
+		
+		System.out.println(unixTimeStamp);
+		
 	}
 }

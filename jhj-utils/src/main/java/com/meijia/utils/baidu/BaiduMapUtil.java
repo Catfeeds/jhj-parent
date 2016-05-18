@@ -132,11 +132,13 @@ public class BaiduMapUtil {
 	public static List<BaiduPoiVo>  getMinDest(List<BaiduPoiVo> resultAddrs, int maxDistance, int maxDuration){
 		
 		if (maxDistance <= 0 ) maxDistance = 10000;
+		
+		//2016年5月16日14:51:27  修改为 10公里 120分钟
 		if (maxDuration <= 0 ) maxDuration = 3600;
 		
 		List<BaiduPoiVo> firstList = new ArrayList<BaiduPoiVo>();
 		
-		//取得 符合 60分钟。10公里  的Vo
+		//取得 符合60分钟。10公里  的Vo
 		for (int i = 0; i < resultAddrs.size(); i++) {
 			BaiduPoiVo baiduPoiVo = resultAddrs.get(i);
 			//10000米，3600秒
