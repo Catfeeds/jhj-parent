@@ -84,7 +84,7 @@
 	<if test="amId !=null and amId !='' ">
 		and am_id like '%${amId}%' 
 	</if>	
-	<if test="orgId !=null and orgId !='' ">
+	<if test="orgId !=null and orgId != 0 ">
 		and org_id = #{orgId,jdbcType=NUMERIC}
 	</if>
 	<if test="parentId !=null and parentId != 0 ">

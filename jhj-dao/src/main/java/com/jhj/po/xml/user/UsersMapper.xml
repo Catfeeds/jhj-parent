@@ -81,12 +81,32 @@
 		</if>
 		order by add_time desc
 	</select>
-  
+  	
+  	<!-- 展示 只在 当前门店 下过单的 客户 -->
 	<select id="selectByListPages" resultMap="BaseResultMap" parameterType="com.jhj.vo.UserSearchVo">
-		select
+	
+		SELECT 
 		<include refid="Base_Column_List" />
-		from users
-		where 1=1
+		FROM 
+			users,
+			(
+			  SELECT 
+			  	DISTINCT(orders.`user_id`) AS thisUserId 
+			  FROM  orders 
+			  where	 
+			 	 orders.`org_id` 
+			 	 in
+			 	 
+			 	 <if test="searchOrgList != null">
+					<foreach item="item" index="index" collection="searchOrgList" open="(" separator="," close=")">
+						#{searchOrgList[${index}]}
+					</foreach>
+			 	 </if>
+			 	 
+			) AS f  
+		
+		WHERE users.`id` = f.thisUserId
+		
 		<if test="mobile != null and mobile !='' ">
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
@@ -103,6 +123,7 @@
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		order by add_time desc
+
 	</select>
 	
 	<select id="selectByUserIds" resultMap="BaseResultMap" parameterType="java.util.List">

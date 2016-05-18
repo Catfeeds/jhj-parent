@@ -40,4 +40,10 @@ public interface OrgsMapper {
     
     //根据云店，得到对应的上级门店
     Orgs selectOrgByCloudOrg(Long orgId);
+    
+    // 根据 登录角色 所在的 门店，得到 门店 对应的 所有云店
+    
+    List<Orgs> selectCloudOrgByParentOrg(GroupSearchVo searchVo);
+    
+    
 }

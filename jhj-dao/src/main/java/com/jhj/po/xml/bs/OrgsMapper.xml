@@ -28,6 +28,15 @@
     add_time, update_time, parent_id
   </sql>
   
+   <select id="selectCloudOrgByParentOrg" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.GroupSearchVo">
+   	   select
+       <include refid="Base_Column_List" />
+       from orgs
+       <if test="parentId != null and parentId != 0">
+       	where parent_id = #{parentId,jdbcType=NUMERIC}
+       </if>
+   </select>
+  
    <select id="selectOrgByCloudOrg" resultMap="BaseResultMap" parameterType="java.lang.Long">
    	 select
        <include refid="Base_Column_List" />

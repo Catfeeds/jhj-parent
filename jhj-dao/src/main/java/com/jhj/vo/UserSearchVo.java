@@ -1,5 +1,7 @@
 package com.jhj.vo;
 
+import java.util.List;
+
 
 public class UserSearchVo {
 
@@ -10,7 +12,13 @@ public class UserSearchVo {
     private Short addFrom;
   
 	private Long adminId;	// 加载 会员充值 列表页时。需要  过滤 显示  当前登录  用户（管理员、店长）  
-
+	
+	
+	private Long searchOrgId;	//店长 登录 条件过滤
+	
+	private List<Long> searchOrgList;	//根据 店长登录所在的 门店，得到 该门店下对应的 所有云店
+	
+	
 	/*
 	 *  页面参数
 	 */
@@ -23,7 +31,22 @@ public class UserSearchVo {
 	private Long startTime;
 	private Long endTime;
 	
-	
+	public List<Long> getSearchOrgList() {
+		return searchOrgList;
+	}
+
+	public void setSearchOrgList(List<Long> searchOrgList) {
+		this.searchOrgList = searchOrgList;
+	}
+
+	public Long getSearchOrgId() {
+		return searchOrgId;
+	}
+
+	public void setSearchOrgId(Long searchOrgId) {
+		this.searchOrgId = searchOrgId;
+	}
+
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}

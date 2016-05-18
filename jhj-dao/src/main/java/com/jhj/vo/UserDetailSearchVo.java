@@ -1,5 +1,7 @@
 package com.jhj.vo;
 
+import java.util.List;
+
 
 public class UserDetailSearchVo {
 
@@ -21,7 +23,19 @@ public class UserDetailSearchVo {
 	
 	private Long endTime;
     
-    
+	
+	// 在店长对应 云店下过单的 用户
+	private List<Long> userIdList;
+	
+
+	public List<Long> getUserIdList() {
+		return userIdList;
+	}
+
+	public void setUserIdList(List<Long> userIdList) {
+		this.userIdList = userIdList;
+	}
+
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}

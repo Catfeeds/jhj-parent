@@ -14,7 +14,7 @@
     <result column="service_img_url" property="serviceImgUrl" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="NUMERIC" />
     <result column="service_property" property="serviceProperty" jdbcType="NUMERIC" />
-    <result column="service_times" property="serviceTimes" jdbcType="DOUBLE" />
+    <result column="service_times" property="serviceTimes" jdbcType="NUMERIC" />
     <result column="service_content" property="serviceContent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -22,7 +22,9 @@
     service_img_url, enable, service_property, service_times, service_content
   </sql>
   
-  <resultMap id="AmKillVoMap" type="com.jhj.vo.app.AmSkillVo">
+  
+  
+   <resultMap id="AmKillVoMap" type="com.jhj.vo.app.AmSkillVo">
 		<result column="firstServiceType" property="firstServiceType"/>
 		<result column="childrenServiceName" property="childrenServiceName"  />
   </resultMap>
@@ -91,7 +93,6 @@
   
   
   
-  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -112,7 +113,7 @@
       #{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL}, 
       #{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC}, 
       #{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC}, 
-      #{serviceTimes,jdbcType=DOUBLE}, #{serviceContent,jdbcType=VARCHAR})
+      #{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType" >
     insert into partner_service_type
@@ -198,7 +199,7 @@
         #{serviceProperty,jdbcType=NUMERIC},
       </if>
       <if test="serviceTimes != null" >
-        #{serviceTimes,jdbcType=DOUBLE},
+        #{serviceTimes,jdbcType=NUMERIC},
       </if>
       <if test="serviceContent != null" >
         #{serviceContent,jdbcType=VARCHAR},
@@ -242,7 +243,7 @@
         service_property = #{serviceProperty,jdbcType=NUMERIC},
       </if>
       <if test="serviceTimes != null" >
-        service_times = #{serviceTimes,jdbcType=DOUBLE},
+        service_times = #{serviceTimes,jdbcType=NUMERIC},
       </if>
       <if test="serviceContent != null" >
         service_content = #{serviceContent,jdbcType=VARCHAR},
@@ -263,7 +264,7 @@
       service_img_url = #{serviceImgUrl,jdbcType=VARCHAR},
       enable = #{enable,jdbcType=NUMERIC},
       service_property = #{serviceProperty,jdbcType=NUMERIC},
-      service_times = #{serviceTimes,jdbcType=DOUBLE},
+      service_times = #{serviceTimes,jdbcType=NUMERIC},
       service_content = #{serviceContent,jdbcType=VARCHAR}
     where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
   </update>

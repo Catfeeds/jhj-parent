@@ -32,7 +32,6 @@ public class OaOrderSearchVo {
 	
 	private Short searchOrderServiceType; 	//订单服务类型
 	
-	private Long searchOrgId;			//当前登录 店长 的 门店Id
 	private Short serviceTypeFlag;
 	
 	private Short orgId;	// 下拉选择 的 门店id
@@ -65,6 +64,24 @@ public class OaOrderSearchVo {
 	private String endTimeStr;
 	
 	
+	private Long searchOrgId;			//当前登录 店长 的 门店Id
+	private List<Long> searchCloudOrgIdList;	// 根据登录角色 的 门店 确定的 云店。。
+	
+	private List<Short> searchOrderStatusList;	// 根据登录角色，确定 可以 查看的 订单状态
+	
+	
+	public List<Short> getSearchOrderStatusList() {
+		return searchOrderStatusList;
+	}
+	public void setSearchOrderStatusList(List<Short> searchOrderStatusList) {
+		this.searchOrderStatusList = searchOrderStatusList;
+	}
+	public List<Long> getSearchCloudOrgIdList() {
+		return searchCloudOrgIdList;
+	}
+	public void setSearchCloudOrgIdList(List<Long> searchCloudOrgIdList) {
+		this.searchCloudOrgIdList = searchCloudOrgIdList;
+	}
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}

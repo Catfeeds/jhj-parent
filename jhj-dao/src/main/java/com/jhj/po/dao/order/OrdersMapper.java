@@ -267,4 +267,6 @@ public interface OrdersMapper {
 	Long totalOrderInUserIds(List<Long> userIds);
 	
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
+	
+	
 }
