@@ -43,4 +43,6 @@ public interface UserDetailPayService {
 	AppUserDetailPayVo initVo(UserDetailPay pay);
 	
 	UserDetailPay initUserDetailPay();
+	
+	List<UserDetailPay> selectBySearchVo(UserDetailSearchVo searchVo);
 }

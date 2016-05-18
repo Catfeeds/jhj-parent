@@ -92,6 +92,7 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		
 		type.setServiceContent("");
 		
+		
 		return type;
 	}
 

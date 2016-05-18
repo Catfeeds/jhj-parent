@@ -85,6 +85,12 @@ public class OaOrderListVo extends Orders {
 	
 	private String serviceDateStr;	//服务时间 字符串，页面需要
 	
+	private String serviceDateStartStr;	// 服务开始时间，
+	
+	private String serviceDateEndStr;	//服务结束时间
+	
+	
+	
 	//2016年3月29日17:36:47  jhj2.1 之后，都具体了具体的 服务类型。如 钟点工-->金牌保洁初体验。金牌保洁深度体验、、、、
 	private String orderTypeName;
 	
@@ -93,6 +99,31 @@ public class OaOrderListVo extends Orders {
 	
 	private Short disWay;	//派工方案标识。方案一，修改服务时间    方案二，根据 云店下拉选择加载服务人员
 	
+	
+	//2016年5月13日17:35:13
+	private Long parentServiceTypeId;	//对于  助理类--深度养护--需要有 开始时间
+	
+	
+	
+	
+	public String getServiceDateStartStr() {
+		return serviceDateStartStr;
+	}
+	public void setServiceDateStartStr(String serviceDateStartStr) {
+		this.serviceDateStartStr = serviceDateStartStr;
+	}
+	public String getServiceDateEndStr() {
+		return serviceDateEndStr;
+	}
+	public void setServiceDateEndStr(String serviceDateEndStr) {
+		this.serviceDateEndStr = serviceDateEndStr;
+	}
+	public Long getParentServiceTypeId() {
+		return parentServiceTypeId;
+	}
+	public void setParentServiceTypeId(Long parentServiceTypeId) {
+		this.parentServiceTypeId = parentServiceTypeId;
+	}
 	public Short getDisWay() {
 		return disWay;
 	}

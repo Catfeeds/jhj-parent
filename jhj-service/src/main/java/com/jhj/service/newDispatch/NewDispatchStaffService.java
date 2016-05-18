@@ -54,8 +54,14 @@ public interface NewDispatchStaffService {
 	
 	OrgStaffsNewVo initStaffsNew();
 	
-	
 	List<OrgStaffsNewVo> getAbleStaffListByCloudOrg(Long orderId,Long cloudOrgId);
 	
+	
+	/*
+	 * 2016年5月13日15:39:19
+	 *  
+	 * 对于 深度养护 订单, 需要 排除  在 订单 服务时间内, 请假的 员工
+	 */
+	 List<Long> getLeaveStaffForDeepOrder(Long orderId,Long serviceType);
 	
 }

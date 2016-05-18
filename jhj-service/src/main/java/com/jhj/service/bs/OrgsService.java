@@ -57,4 +57,7 @@ public interface OrgsService {
      *  
      *  	选择 登录 店长 所在门店下的 云店
      */
+    List<Orgs> selectCloudOrgByParentOrg(GroupSearchVo searchVo);
+    
+    
 }

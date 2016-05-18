@@ -542,4 +542,8 @@ public class UsersServiceImpl implements UsersService {
 		return usersMapper.selectUserInAllCoopFrom(list);
 	}
 	
+	@Override
+	public List<Users> selectBySearchVo(UserSearchVo searchVo) {
+		return usersMapper.selectByListPages(searchVo);
+	}
 }

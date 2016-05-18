@@ -50,6 +50,7 @@ import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -476,34 +477,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 		
 		oaOrderListVo.setVoList(staVoList);
 		
-//		// 查找对应订单有效派工
-//		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
-//		// 有派工记录 的订单，则展示当前 阿姨
-//		for (OrderDispatchs orDis : orderDisList) {
-//			oaOrderListVo.setStaffName(orDis.getStaffName());
-//			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
-//			oaOrderListVo.setStaffId(orDis.getStaffId());
-//		}
-//		
-//		
-//		
-//		// 查找对应订单有效派工
-//		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
-//		// 有派工记录 的订单，则展示 当前 阿姨
-//		for (OrderDispatchs orDis : orderDisList) {
-//			oaOrderListVo.setStaffName(orDis.getStaffName());
-//			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
-//			oaOrderListVo.setStaffId(orDis.getStaffId());
-//		}
-//		Long startTime = orders.getServiceDate();
-//		Long endTime = (startTime + orders.getServiceHour() * 3600);
-//
-//		if (orders.getOrderStatus() == 1) {//预约状态显示确认派工
-//			// 根据 派工逻辑 ，找出 这条 订单 的 符合条件的 阿姨
-//			List<OrgStaffsNewVo> staffList = dispatchStaffFromOrderService.getNewBestStaffForAm(startTime, endTime,poiLongitude,poiLatitude, orders.getId());
-//			// 保存可选的派工人员
-//			oaOrderListVo.setVoList(staffList);
-//		}
 		return oaOrderListVo;
 	}
 	@Override
@@ -517,6 +490,26 @@ public class OaOrderServiceImpl implements OaOrderService {
 		Long addTime = orders.getAddTime();
 		String date = DateUtil.getDefaultDate(addTime * 1000);
 		oaOrderListVo.setOrderDate(date);
+		
+		
+		Long serviceDate = orders.getServiceDate();
+		
+		
+		/*
+		 * 	2016年5月17日10:21:25
+		 *  服务时间， 针对 深度养护类 服务，需要 有 开始和 结束时间。   差值 [1,13] 
+		 */
+		//默认当前时间  (开始时间）
+		String date1  = DateUtil.getDefaultDate(TimeStampUtil.getNow());
+		
+		if(serviceDate > 0L){
+			date1 = DateUtil.getDefaultDate(serviceDate * 1000);
+		}
+		oaOrderListVo.setServiceDateStartStr(date1);
+		//服务结束时间。默认当前时间+ 1小时
+		oaOrderListVo.setServiceDateEndStr(DateUtil.getDefaultDate(TimeStampUtil.getNow()+3600*1000));
+		
+		
 		//2.显示订单状态名称
 		String orderStausName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orders.getOrderStatus());
 		oaOrderListVo.setOrderStatusName(orderStausName);
@@ -632,6 +625,22 @@ public class OaOrderServiceImpl implements OaOrderService {
 //		}
 		
 		
+		// 助理类订单的   服务 大类    床铺除螨--> 深度养护
+		
+		Long serviceType = orders.getServiceType();
+		
+		PartnerServiceType part = partnerService.selectByPrimaryKey(serviceType);
+		
+		/*
+		 *  具体服务 对应的  服务大类,  如果是 深度养护。可以修改  服务开始时间 （状态为 已预约）
+		 *   和 服务结束时间
+		 */
+		
+		
+		if(part != null){
+			// 兼容 历史 数据， 此处 做判空
+			oaOrderListVo.setParentServiceTypeId(part.getParentId());
+		}
 		
 		return oaOrderListVo;
 	}
@@ -901,7 +910,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}else{
 			oaOrderListNewVo.setOrderTypeName("");
 		}
-		
 		
 		
 		return oaOrderListNewVo;

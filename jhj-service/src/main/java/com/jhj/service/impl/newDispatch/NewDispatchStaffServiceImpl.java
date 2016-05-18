@@ -9,10 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jhj.common.Constants;
+import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
+import com.jhj.po.dao.university.PartnerServiceTypeMapper;
+import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffBlackService;
@@ -22,11 +26,13 @@ import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
 import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
+import com.jhj.vo.org.LeaveSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
@@ -67,6 +73,12 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	@Autowired
 	private OrderHourAddService orderHourAddService;
 	
+	@Autowired
+	private OrgStaffLeaveMapper leaveMapper;
+	
+	@Autowired
+	private PartnerServiceTypeService partService;
+	
 	/*
 	 *  助理类订单,手动派工，返回基础派工 逻辑 支持的  员工 id 集合
 	 * 
@@ -100,6 +112,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			properStaIdList.addAll(staffIdList);
 		}
 			
+		
 		return properStaIdList;
 	}
 	
@@ -135,7 +148,11 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				List<Long> staffIds = staffService.getProperStaffByOrgAndServiceType(orgId, serviceType);
 				
 				//服务时间内 已 排班的 阿姨
-				List<OrderDispatchs> disList = dispatchService.selectEnableStaffNow(orgId, serviceDate, serviceDate+order.getServiceHour()*3600);
+				
+				/*
+				 *  2016年5月16日14:39:37  预留 2小时， 将 服务 开始 时间  提前 2小时，用作预留 时间
+				 */
+				List<OrderDispatchs> disList = dispatchService.selectEnableStaffNow(orgId, serviceDate-3600*2, serviceDate+order.getServiceHour()*3600);
 				
 				for (OrderDispatchs orderDispatchs : disList) {
 					dispatchIdList.add(orderDispatchs.getStaffId());
@@ -160,6 +177,38 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		
 		//匹配技能标签		TODO  匹配时，有个   清洁用品。写死了  id
 		staffIdList = orderHourAddService.getMatchTagStaffIds(orderId,staffIdList);
+		
+		
+		/* 
+		 * 2016年5月13日14:42:20
+		 *	 	排除请假的 员工 （在假期内）
+		 *	
+		 *	对于 基础 保洁类 订单， 排除 请假时间 和 订单 服务时间 有交集  的员工
+		 *	
+		 */
+		
+		LeaveSearchVo searchVo = new LeaveSearchVo();
+		
+		Short serviceHour = order.getServiceHour();
+		
+		Long orderServiceDateEnd = serviceDate + serviceHour*3600;
+		
+		//订单服务开始时间
+		searchVo.setOrderServiceDateStart(serviceDate);
+		//订单服务结束时间
+		searchVo.setOrderServiceDateEnd(orderServiceDateEnd);
+		
+		// 服务时间内  ，同时也在  假期内的 员工
+		List<OrgStaffLeave> leaveList = leaveMapper.selectLeavingStaff(searchVo);
+		
+		List<Long> leaveStaffIdList = new ArrayList<Long>();
+		
+		for (OrgStaffLeave orgStaffLeave : leaveList) {
+			leaveStaffIdList.add(orgStaffLeave.getStaffId());
+		}
+		
+		//排除 假期内员工
+		staffIdList.removeAll(leaveStaffIdList);
 		
 		return staffIdList;
 	}
@@ -454,6 +503,46 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	    List<OrgStaffsNewVo> list = getTheNearestStaff(latitude, longitude, staffIdList);
 		
 		return list;
+	}
+	
+	
+	
+	@Override
+	public List<Long> getLeaveStaffForDeepOrder(Long orderId, Long serviceType) {
+		
+		Orders order = orderService.selectByPrimaryKey(orderId);
+		
+		// 请假的 服务人员
+		List<Long> leaveStaffIdList = new ArrayList<Long>();
+		
+		PartnerServiceType partner = partService.selectByPrimaryKey(serviceType);
+		Long parentId = partner.getParentId();
+		
+		// 如果当前 助理类 订单 的 服务类型 属于  深度养护类的  子服务，，需要排除请假周期内的 员工
+ 		if(parentId == 26){
+			
+ 			LeaveSearchVo searchVo = new LeaveSearchVo();
+ 			
+ 			Short serviceHour = order.getServiceHour();
+ 			
+ 			Long serviceDate = order.getServiceDate();
+ 			
+ 			Long orderServiceDateEnd = serviceDate + serviceHour*3600;
+ 			
+ 			//订单服务开始时间
+ 			searchVo.setOrderServiceDateStart(serviceDate);
+ 			//订单服务结束时间
+ 			searchVo.setOrderServiceDateEnd(orderServiceDateEnd);
+ 			
+ 			// 服务时间内  ，同时也在  假期内的 员工
+ 			List<OrgStaffLeave> leaveList = leaveMapper.selectLeavingStaff(searchVo);
+ 			
+ 			for (OrgStaffLeave orgStaffLeave : leaveList) {
+ 				leaveStaffIdList.add(orgStaffLeave.getStaffId());
+ 			}
+		}
+		
+		return leaveStaffIdList;
 	}
 	
 }

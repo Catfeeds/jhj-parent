@@ -184,6 +184,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		orderDispatchService.insertSelective(orderDispatchs);
 		
+		/*
+		 *  2016年5月17日11:27:17 
+		 * 	
+		 *  派工后。。修改  orders表 的  org_id 为 staff 所在 的 云店
+		 * 	
+		 */
+		order.setOrgId(staff.getOrgId());
+		
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);//更新订单状态---已派工
 		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付 的助理单，需要用到这个 修改时间
 		ordersService.updateByPrimaryKeySelective(order);

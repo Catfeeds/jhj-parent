@@ -133,4 +133,10 @@ public class OrgsServiceImpl implements OrgsService {
 	public Orgs selectOrgByCloudOrg(Long orgId) {
 		return orgsMapper.selectOrgByCloudOrg(orgId);
 	}
+	
+	
+	@Override
+	public List<Orgs> selectCloudOrgByParentOrg(GroupSearchVo searchVo) {
+		return orgsMapper.selectCloudOrgByParentOrg(searchVo);
+	}
 }
