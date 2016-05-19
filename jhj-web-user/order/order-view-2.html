@@ -143,13 +143,25 @@
 
 						{{#js_compare "this.order_money !== 0 "}}					
 						<!-- Another chekbox item -->
-						<li>
+						<li id="select-alipay" style="display:none">
 							<label class="label-checkbox item-content" name="myPayTypeSelect" id="wxzhifuDiv"> 
 								<div class="item-media"><img src="img/icons/weixin.png"style="width:50px;"></div>
 								<div class="item-inner">
 									<div class="item-title"style="margin-left:-15px;">微信支付</div>
 									<input type="hidden"  value="2"/>
 									<img  src="img/icons/duigou-grey.png" id="order_pay_type" name="order_pay_type"/> 
+								</div>
+							</label>
+						</li>
+						
+						<li id="select-alipay" style="display:none"><label class="label-checkbox item-content" name="myPayTypeSelect"> 
+								
+								<div class="item-media"><img src="img/icons/zhifubao.png"style="width:25px;margin-left:10px;"></div>
+								<div class="item-inner">
+									<div class="item-title"style="margin-left:-15px;">支付宝支付</div>
+									
+									 <input type="hidden"  value="1"/>
+									 <img  src="img/icons/duigou-grey.png" id="order_pay_type" name="order_pay_type"/> 
 								</div>
 							</label>
 						</li>

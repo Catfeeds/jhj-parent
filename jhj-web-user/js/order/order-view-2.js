@@ -6,6 +6,16 @@ myApp.onPageBeforeInit('order-hour-view-2-page', function (page) {
 	var orderNo = page.query.order_no;
 	var orderId = 0;
 	
+	var isWx = isWeiXin();
+	
+	console.log("isWx == " + isWx);
+	if (isWx) {
+		$$("#select-wxpay").css("display", "block");
+		$$("#select-alipay").css("display", "none");
+	} else  {
+		$$("#select-wxpay").css("display", "none");
+		$$("#select-alipay").css("display", "block");
+	}
 	
 	$$("#selectCoupon").click(function() {
 		var orderType =$$("#order_type").val();
@@ -53,14 +63,25 @@ myApp.onPageBeforeInit('order-hour-view-2-page', function (page) {
 		var order = result.data;
 //		console.log(order+"~~~~~~~~~~~~~");
 		var orderId = order.id;
+		var orderNo = order.order_no;
+		var orderType = order.order_type;
 		//orderPayType = result.data.pay_type;
 		//如果为余额支付，则直接跳到完成页面
 		if (orderPayType == 0 || orderPayType == 6) {
 			
-			var orderNo = order.order_no;
+			
 			
 			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=2"
 									+"&order_pay_type"+orderPayType);
+		}
+		
+		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
+		if (orderPayType == 1) {
+			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
+			alipayUrl +="?orderNo="+orderNo;
+			alipayUrl +="&orderPay=0.01";
+			alipayUrl +="&orderType="+orderType;
+			location.href = alipayUrl;
 		}
 		
 		//如果为微信支付，则需要跳转到微信支付页面.
