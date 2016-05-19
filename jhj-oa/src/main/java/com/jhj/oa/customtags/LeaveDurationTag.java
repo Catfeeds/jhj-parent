@@ -40,9 +40,9 @@ public class LeaveDurationTag extends SimpleTagSupport {
         	
         	Map<String, String> map = new LinkedHashMap<String, String>();
         	
-        	map.put("0", "8点~12点");
-        	map.put("1", "8点~21点");
-        	map.put("2", "12点~21点");
+        	map.put("0", "上午");
+        	map.put("1", "下午");
+        	map.put("2", "全天");
         	
             StringBuffer leaveDurationSelect = new StringBuffer();
             leaveDurationSelect.append("<select id = \"leaveDuration\" name=\"leaveDuration\" class=\"form-control\">" );
