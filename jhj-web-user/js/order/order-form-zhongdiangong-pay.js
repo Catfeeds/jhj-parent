@@ -7,6 +7,16 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 	//默认支付类型
 	var orderPayType = 0;
 	
+	var isWx = isWeiXin();
+	
+	console.log("isWx == " + isWx);
+	if (isWx) {
+		$$("#select-wxpay").css("display", "block");
+		$$("#select-alipay").css("display", "none");
+	} else  {
+		$$("#select-wxpay").css("display", "none");
+		$$("#select-alipay").css("display", "block");
+	}
 	
 	/*
 	 * 优惠券
@@ -113,6 +123,7 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 		
 		
 		orderPayType = result.data.pay_type;
+		orderType = result.data.order_type;
 		console.log("orderPayType = " + orderPayType);
 		//如果为余额支付，则直接跳到完成页面
 		if (orderPayType == 0) {
@@ -124,6 +135,7 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
 			alipayUrl +="?orderNo="+orderNo;
 			alipayUrl +="&orderPay=0.01";
+			alipayUrl +="&orderType="+orderType;
 			location.href = alipayUrl;
 		}
 		

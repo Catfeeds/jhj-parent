@@ -41,8 +41,8 @@
         //收银台页面上，商品展示的超链接，必填
         String show_url = "http://www.jia-he-jia.com/";
 		
-        //商品描述，可空
-        String body = "";
+        //商品描述，可空， 传递order_type
+        String body = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
 		
 		
 		
