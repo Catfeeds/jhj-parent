@@ -71,7 +71,7 @@
 				//如果有做过处理，不执行商户的业务程序
 			String orderType = body;
 			String orderNo = out_trade_no;
-			String redirectUrl = "http://123.57.209.81/u";
+			String redirectUrl = "http://123.57.209.81/u/";
 			redirectUrl+= "order/order-pay-success.html?order_no="+orderNo+"&order_type="+orderType;
 			response.sendRedirect(redirectUrl); 
 		}
