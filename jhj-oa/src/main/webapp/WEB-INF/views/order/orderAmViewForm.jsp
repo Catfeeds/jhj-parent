@@ -52,6 +52,8 @@
 					<input type="hidden" id="dyanmicPickAddrName" value="${oaOrderListVoModel.pickAddrName }">
 					<input type="hidden" name="pickAddrs" value="${oaOrderListVoModel.pickAddr }">
 					
+					<input type="hidden" id="parentId" value="${oaOrderListVoModel.parentServiceTypeId }">
+					
 					<form:hidden path="orderStatus"/>
 					
 					<form:hidden path="staffId"/>

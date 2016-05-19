@@ -13,7 +13,6 @@
 	<!--common css for all pages-->
 	<%@ include file="../shared/importCss.jsp"%>
 	
-	
 	<link rel="stylesheet" href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
 	type="text/css" />
   </head>
@@ -92,7 +91,7 @@
 													class="input-group-addon"><i
 													class="glyphicon glyphicon-th"></i></span>
 											</div>
-										</div>
+										</div>	
 									</div>
 									
 									<div class="form-group required">

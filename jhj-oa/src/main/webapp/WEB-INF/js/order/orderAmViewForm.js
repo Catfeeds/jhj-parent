@@ -354,22 +354,36 @@ $("#saveOrderSubmit").on('click',function(){
 	//结束时间
 	var serviceDateEnd = $("#serviceDateEndStr").val();
 	
-	var timeStart = new Date(serviceDateStart).getTime();
-	var timeEnd = new Date(serviceDateEnd).getTime();
+	var timeStart = 0;
 	
-	var dura = timeEnd - timeStart;
+	var timeEnd = 0;
 	
-	if(dura < 3600*1000 || dura > 13*3600*1000){
-		alert("深度养护服务时长 必须 在 1~13 小时内");
-		return false;
-	}
-	
-	var nowDate = new Date().getTime();
-	
-	if(timeStart < nowDate){
+	//如果是 深度 养护 类 订单，校验时间
+	if($("#parentId").val() == 26){
+			
+		timeStart = new Date(serviceDateStart).getTime();
+		timeEnd = new Date(serviceDateEnd).getTime();
 		
-		alert("服务开始时间 不能 早于 当前时间 ");
-		return false;
+		var dura = timeEnd - timeStart;
+		
+		if(dura < 3600*1000 || dura > 13*3600*1000){
+			alert("深度养护服务时长 必须 在 1~13 小时内");
+			return false;
+		}
+		
+		var nowDate = new Date().getTime();
+		
+		if(timeStart < nowDate){
+			
+			alert("服务开始时间 不能 早于 当前时间 ");
+			return false;
+		}
+		
+		if(timeStart >timeEnd){
+			alert("服务开始时间不能 晚于 结束时间");
+			return false;
+		}
+		
 	}
 	
 	$.ajax({
