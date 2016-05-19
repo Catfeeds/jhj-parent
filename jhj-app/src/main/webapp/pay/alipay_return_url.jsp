@@ -69,11 +69,15 @@
 			//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				//如果有做过处理，不执行商户的业务程序
-			out.println("body = " + body);
+			String orderType = body;
+			String orderNo = out_trade_no;
+			String redirectUrl = "http://123.57.209.81/u";
+			redirectUrl+= "order/order-pay-success.html?order_no="+orderNo+"&order_type="+orderType;
+			response.sendRedirect(redirectUrl); 
 		}
 		
 		//该页面可做页面美工编辑
-		out.println("验证成功<br />");
+		//out.println("验证成功<br />");
 		//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 
 		//////////////////////////////////////////////////////////////////////////////////////////
