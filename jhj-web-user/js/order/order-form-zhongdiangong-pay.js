@@ -118,6 +118,14 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
 		}
 		
+		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
+		if (orderPayType == 3) {
+			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
+			alipayUrl +="?orderNo="+orderNo;
+			alipayUrl +="?orderPay=1";
+			location.href = wxPayUrl;
+		}
+		
 		//如果为微信支付，则需要跳转到微信支付页面.
 		if (orderPayType == 2) {
 			 var userCouponId = $$("#user_coupon_id").val();

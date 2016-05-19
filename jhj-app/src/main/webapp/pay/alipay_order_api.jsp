@@ -31,13 +31,13 @@
 		////////////////////////////////////请求参数//////////////////////////////////////
 
         //商户订单号，商户网站订单系统中唯一订单号，必填
-        String out_trade_no = new String(request.getParameter("order_no").getBytes("ISO-8859-1"),"UTF-8");
+        String out_trade_no = new String(request.getParameter("orderNo").getBytes("ISO-8859-1"),"UTF-8");
 		
         //订单名称，必填
         String subject = "叮当到家家庭服务";
 		
         //付款金额，必填
-        String total_fee = new String(request.getParameter("total_fees").getBytes("ISO-8859-1"),"UTF-8");
+        String total_fee = new String(request.getParameter("orderPay").getBytes("ISO-8859-1"),"UTF-8");
 		
         //收银台页面上，商品展示的超链接，必填
         String show_url = "http://www.jia-he-jia.com/";
