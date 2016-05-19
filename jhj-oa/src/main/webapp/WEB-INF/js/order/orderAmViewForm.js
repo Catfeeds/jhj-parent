@@ -386,6 +386,13 @@ $("#saveOrderSubmit").on('click',function(){
 		
 	}
 	
+	console.log("serviceDateStart = " + serviceDateStart);
+	console.log("serviceDateEnd = " +  serviceDateEnd);
+	
+	console.log("timeStart = " + timeStart);
+	console.log("timeEnd = " +  timeEnd);
+	
+//	return false;
 	$.ajax({
 		type:'get',
 		 url:'oa_submit_am_order.json',
