@@ -28,6 +28,16 @@ public class AlipayConfig {
 	public static String partner = "2088911921151260";
 	// 商户的私钥
 	public static String key = " b6bfchzxalm9uhhm721xh8lkwr1y4yh5";
+	
+	// 收款支付宝账号，以2088开头由16位纯数字组成的字符串，一般情况下收款账号就是签约账号
+	public static String seller_id = "info@jia-he-jia.com";
+	
+	// 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
+	public static String notify_url = "http://123.57.209.81/jhj-app/pay/notify_alipay_order.jsp";
+
+	// 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
+	public static String return_url = "http://123.57.209.81/jhj-app/pay/alipay_return_url.jsp";
+
 
 	//↑↑↑↑↑↑↑↑↑↑请在这里配置您的基本信息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -40,5 +50,11 @@ public class AlipayConfig {
 
 	// 签名方式 不需修改
 	public static String sign_type = "MD5";
+	
+	// 支付类型 ，无需修改
+	public static String payment_type = "1";
+	
+	// 调用的接口名，无需修改
+	public static String service = "alipay.wap.create.direct.pay.by.user";
 
 }
