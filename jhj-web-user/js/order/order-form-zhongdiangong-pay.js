@@ -123,7 +123,7 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 		if (orderPayType == 1) {
 			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
 			alipayUrl +="?orderNo="+orderNo;
-			alipayUrl +="&orderPay=1";
+			alipayUrl +="&orderPay=0.01";
 			location.href = alipayUrl;
 		}
 		
