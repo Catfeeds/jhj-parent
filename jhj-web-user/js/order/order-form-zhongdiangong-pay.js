@@ -112,18 +112,19 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 		}
 		
 		
-		//orderPayType = result.data.pay_type;
+		orderPayType = result.data.pay_type;
+		console.log("orderPayType = " + orderPayType);
 		//如果为余额支付，则直接跳到完成页面
 		if (orderPayType == 0) {
 			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
 		}
 		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
-		if (orderPayType == 3) {
+		if (orderPayType == 1) {
 			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
 			alipayUrl +="?orderNo="+orderNo;
-			alipayUrl +="?orderPay=1";
-			location.href = wxPayUrl;
+			alipayUrl +="&orderPay=1";
+			location.href = alipayUrl;
 		}
 		
 		//如果为微信支付，则需要跳转到微信支付页面.
@@ -167,6 +168,9 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 		
 		
 		postdata.order_pay_type = orderPayType;
+		
+		console.log(postdata);
+//		return false;
 		
 		$$.ajax({
 			type: "post",
