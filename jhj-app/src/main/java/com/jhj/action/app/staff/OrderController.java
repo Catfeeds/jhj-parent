@@ -202,6 +202,20 @@ public class OrderController extends BaseController {
 		if (orders == null) {
 			return result;
 		}
+		
+		//如果为钟点工，则必须过来服务时间才能点击完成服务.
+		if (orders.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+			Long ServiceEndTime = orders.getServiceDate() + orders.getServiceHour() * 3600;
+			
+			Long nowSecond = TimeStampUtil.getNowSecond();
+			
+			if (nowSecond < ServiceEndTime) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("未到服务完成时间点.不能提前完成服务");
+				return result;
+			}
+		}
+
 		// 改变服务状态为已完成
 		orders.setOrderStatus((short) 7);
 		orders.setUpdateTime(TimeStampUtil.getNow()/1000);
@@ -212,9 +226,7 @@ public class OrderController extends BaseController {
 		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderId(orderId);
 		orderDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 		orderDispatchsService.updateByPrimaryKeySelective(orderDispatchs);
-		
-		
-		
+
 		Short level = orgStaffs.getLevel();
 		String settingLevel = "-level-"+level.toString();
 		//得到订单收入
