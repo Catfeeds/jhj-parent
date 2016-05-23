@@ -77,7 +77,7 @@
 	//params.put("notify_params", notify_params.toString());
 
 //	if(AlipayNotify.verify(notify_params)) {//验证成功
-		String url = "http://localhost/simi/app/order/online_pay_notify.json";
+		String url = "http://localhost/jhj-app/app/order/online_pay_notify.json";
 		AppSubmit.appAliay(url, params);
 		out.println("success");	//请不要修改或删除
 //	} else {//验证失败
