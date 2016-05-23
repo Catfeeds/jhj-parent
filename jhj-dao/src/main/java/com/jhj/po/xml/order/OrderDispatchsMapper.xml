@@ -218,7 +218,8 @@
 			from_unixtime((service_date+ service_hours*3600),'%Y-%m-%d %H:%i:%s') as service_end,
 			from_unixtime(service_date,'%Y-%m-%d %H:%i:%s') as serviceTime,
 			from_unixtime(service_date,'%Y-%m-%d') as startTime,
-			from_unixtime(service_date,'%Y-%m-%d') as serviceDate
+			from_unixtime(service_date,'%Y-%m-%d') as serviceDate,
+			update_time
 		from 
 			order_dispatchs 
 		where 

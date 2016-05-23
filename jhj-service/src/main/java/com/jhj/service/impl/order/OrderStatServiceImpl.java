@@ -53,8 +53,25 @@ public class OrderStatServiceImpl implements OrderStatService {
 			String serviceDate = (String)map.get("startTime");
 			String orderNo = (String)map.get("order_no");
 			Long staffId = (Long)map.get("staff_id");
+			
+			
+			
+			
 			OrgStaffs  orgStaffs = orgStaffsMapper.selectByPrimaryKey(staffId);
 			Orders orders= ordersMapper.selectByOrderNo(orderNo);
+			
+			Long updateTime = (Long)map.get("update_time");
+			String serviceEnd = map.get("service_end").toString();
+			if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+				if (orders.getOrderStatus() >= 7) {
+					Long servicePlanEnd = orders.getServiceDate() + orders.getServiceHour() * 3600 ;
+					if (updateTime < servicePlanEnd) {
+						//%Y-%m-%d %H:%i:%s
+						serviceEnd = TimeStampUtil.timeStampToDateStr(updateTime);
+					}
+				}
+			}
+			
 			UserAddrs userAddrs = userAddrsMapper.selectByPrimaryKey(orders.getAddrId());
 			String detailAddrs = userAddrs.getName()+userAddrs.getAddr();
 			map1.put("id",map.get("id"));
