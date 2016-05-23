@@ -9,7 +9,7 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 	
 	var isWx = isWeiXin();
 	
-	console.log("isWx == " + isWx);
+//	console.log("isWx == " + isWx);
 	if (isWx) {
 		$$("#select-wxpay").css("display", "block");
 		$$("#select-alipay").css("display", "none");

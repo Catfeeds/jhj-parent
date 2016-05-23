@@ -4,7 +4,9 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	
 	var orderNo = page.query.order_no;
 	
-	console.log("isWx == " + isWx);
+	var isWx = isWeiXin();
+	
+//	console.log("isWx == " + isWx);
 	if (isWx) {
 		$$("#select-wxpay").css("display", "block");
 		$$("#select-alipay").css("display", "none");
