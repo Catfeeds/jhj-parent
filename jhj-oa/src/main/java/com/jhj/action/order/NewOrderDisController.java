@@ -395,7 +395,6 @@ public class NewOrderDisController extends BaseController {
 			order.setOrderStatus(Constants.ORDER_AM_STATUS_4);
 			order.setUpdateTime(TimeStampUtil.getNowSecond());
 			
-			
 			/*
 			 * 更新助理订单 门店 为   派工人员 所在的 云店
 			 */
@@ -404,11 +403,9 @@ public class NewOrderDisController extends BaseController {
 			order.setOrgId(orgStaffs.getOrgId());
 			
 			orderSevice.updateByPrimaryKeySelective(order);
-			
 		}
 				
 		if(orderStatus == Constants.ORDER_AM_STATUS_4){
-			
 			// 已派工。 修改派工表
 			disService.updateByPrimaryKeySelective(dispatchs);
 		}

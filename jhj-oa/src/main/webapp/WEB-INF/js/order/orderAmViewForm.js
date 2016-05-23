@@ -361,17 +361,17 @@ $("#saveOrderSubmit").on('click',function(){
 	//如果是 深度 养护 类 订单，校验时间
 	if($("#parentId").val() == 26){
 			
-		timeStart = new Date(serviceDateStart).getTime();
-		timeEnd = new Date(serviceDateEnd).getTime();
+		timeStart = moment(serviceDateStart + ":00", "yyyy-MM-DD HH:mm:ss").unix();
+		timeEnd = moment(serviceDateEnd + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 		
 		var dura = timeEnd - timeStart;
 		
-		if(dura < 3600*1000 || dura > 13*3600*1000){
+		if(dura <= 3600 || dura >= 13*3600){
 			alert("深度养护服务时长 必须 在 1~13 小时内");
 			return false;
 		}
 		
-		var nowDate = new Date().getTime();
+		var nowDate = moment().format('X');
 		
 		if(timeStart < nowDate){
 			
@@ -386,13 +386,7 @@ $("#saveOrderSubmit").on('click',function(){
 		
 	}
 	
-	console.log("serviceDateStart = " + serviceDateStart);
-	console.log("serviceDateEnd = " +  serviceDateEnd);
 	
-	console.log("timeStart = " + timeStart);
-	console.log("timeEnd = " +  timeEnd);
-	
-//	return false;
 	$.ajax({
 		type:'get',
 		 url:'oa_submit_am_order.json',
