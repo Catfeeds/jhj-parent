@@ -77,9 +77,10 @@ myApp.onPageBeforeInit('order-hour-view-2-page', function (page) {
 		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {
+			var orderPay = order.order_pay;
 			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
 			alipayUrl +="?orderNo="+orderNo;
-			alipayUrl +="&orderPay=0.01";
+			alipayUrl +="&orderPay="+order_pay;
 			alipayUrl +="&orderType="+orderType;
 			location.href = alipayUrl;
 		}

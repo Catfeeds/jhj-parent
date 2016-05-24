@@ -33,10 +33,10 @@ public class AlipayConfig {
 	public static String seller_id = "info@jia-he-jia.com";
 	
 	// 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-	public static String notify_url = "http://123.57.209.81/jhj-app/pay/notify_alipay_order.jsp";
+	public static String notify_url = "http://www.jia-he-jia.com/jhj-app/pay/notify_alipay_order.jsp";
 
 	// 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-	public static String return_url = "http://123.57.209.81/jhj-app/pay/alipay_return_url.jsp";
+	public static String return_url = "http://www.jia-he-jia.com/jhj-app/pay/alipay_return_url.jsp";
 
 
 	//↑↑↑↑↑↑↑↑↑↑请在这里配置您的基本信息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

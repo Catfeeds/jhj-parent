@@ -124,6 +124,7 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 		
 		orderPayType = result.data.pay_type;
 		orderType = result.data.order_type;
+		
 		console.log("orderPayType = " + orderPayType);
 		//如果为余额支付，则直接跳到完成页面
 		if (orderPayType == 0) {
@@ -132,9 +133,10 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {
+			var orderPay = result.data.order_pay;
 			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
 			alipayUrl +="?orderNo="+orderNo;
-			alipayUrl +="&orderPay=0.01";
+			alipayUrl +="&orderPay="+orderPay;
 			alipayUrl +="&orderType="+orderType;
 			location.href = alipayUrl;
 		}
