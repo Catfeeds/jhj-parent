@@ -45,8 +45,6 @@
   
   
   
-  
-  
   <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.LeaveSearchVo">
   	select 
     <include refid="Base_Column_List" />
@@ -54,7 +52,7 @@
     where 1=1
     <if test="cloudOrgId !=null and cloudOrgId != 0 ">
 	    and
-		    org_id = #{cloudOrgId,jdbcType=NUMERIC}
+		    parent_id = #{cloudOrgId,jdbcType=NUMERIC}
     </if>
     
     <if test="staffId != null and staffId !=0 ">
