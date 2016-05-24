@@ -108,7 +108,7 @@
 							<div class="col-lg-5 " id="optionTemplate" >
 							
 							<!-- 对于选项,添加时是两个 空白选项框, 修改时回显所有选项,并选中正确答案 -->
-							
+						<%-- 	
 							<c:if test="${questionVoFormModel.qId eq 0 }">
 								<div class="input-group m-bot15" >
                                         <span class="input-group-addon">
@@ -151,9 +151,68 @@
 							</div>
 							
 							
+						</div> --%>
+						
+						
+						<div class="form-group  required" >
+							<label class="col-md-2 control-label">设置选项*</label>
+							
+							<div class="col-lg-5 " id="optionTemplate" >
+							
+							<!-- 对于选项,添加时是两个 空白选项框, 修改时回显所有选项,并选中正确答案 -->
+							
+							<c:if test="${questionVoFormModel.qId eq 0 }">
+								<div class="input-group m-bot15" >
+                                        <span class="input-group-addon">
+                                          <input type="text"  value ="0" id="defaultTime" placeholder="特殊题目的选项,默认次数">
+                                        </span>
+                                        <textarea name="optionText" maxlength="100" placeholder="提示:点击左边单选框,选择正确答案" class="form-control"></textarea>
+                                        <span class="input-group-addon">
+                                        	<button type="button" name="delOption" onclick="myDelOption(this)" class="close">&times;</button>
+                                        </span>
+								</div>
+								
+								<div class="input-group m-bot15" >
+                                        <span class="input-group-addon">
+                                          <input type="text"  value="0" id="defaultTime" placeholder="特殊题目的选项,默认次数">
+                                        </span>
+                                        <textarea name="optionText"  maxlength="100" placeholder="提示:建议不超过100字,输入框可拖动" class="form-control"></textarea>
+                                        <span class="input-group-addon">
+                                        	<button type="button" name="delOption" onclick="myDelOption(this)" class="close">&times;</button>
+                                        </span>
+								</div>
+							 </c:if>
+							 
+							 <c:if test="${questionVoFormModel.qId > 0 }">
+							 	 	
+							 	 	<c:forEach items="${questionVoFormModel.optionList }" var="item" varStatus="option">
+							 	 		
+							 	 				<div class="input-group m-bot15" >
+			                                        <span class="input-group-addon">
+			                                          <input type="text"  value="${item.defaultTimeOption }" id="defaultTime" >
+			                                        </span>
+			                                        <textarea name="optionText"  maxlength="100"  class="form-control">${item.title }</textarea>
+			                                        <span class="input-group-addon">
+			                                        	<button type="button" name="delOption" onclick="myDelOption(this)" class="close">&times;</button>
+			                                        </span>
+												</div>
+							 	 	</c:forEach>
+							 </c:if>
+							 		
+                                 <button type="button" id="addOption" class="btn btn-info "><i class="icon-plus"></i>添加一个选项</button> 
+							</div>
+							
 						</div>
 						
-
+						
+						
+						
+						
+						
+						
+						
+							
+						
 						<div class="form-actions fluid">
 							<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
 								<!-- <button type="submit" id="" class="btn btn-success">保存</button> -->

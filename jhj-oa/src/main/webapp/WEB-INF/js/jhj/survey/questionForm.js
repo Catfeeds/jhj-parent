@@ -4,7 +4,7 @@
 
 $("#addOption").click(function(){
 	
-	var cloneNode = ("<div class='input-group m-bot15'> " 
+/*	var cloneNode = ("<div class='input-group m-bot15'> " 
                             +"<span class='input-group-addon'>"
                             + 		"<input type='radio' name='optionRadio' id='optionRadio'>"
                             +"</span> "
@@ -12,7 +12,19 @@ $("#addOption").click(function(){
                             +"<span class='input-group-addon'><button type='button' onclick='myDelOption(this)' name='delOption'  class='close'>&times;</button></span>"
 					+"</div>");
 	
-	$(this).before(cloneNode);
+	$(this).before(cloneNode);*/
+	
+	
+	var cloneNode = ("<div class='input-group m-bot15'> " 
+            +"<span class='input-group-addon'>"
+            + 		"<input type='text'  value ='0' id='defaultTime'>"
+            +"</span> "
+            +"<textarea name='optionText' maxlength='100' placeholder='提示:建议不超过100字,输入框可拖动' class='form-control'></textarea>"
+            +"<span class='input-group-addon'><button type='button' onclick='myDelOption(this)' name='delOption'  class='close'>&times;</button></span>"
+	+"</div>");
+
+$(this).before(cloneNode);
+	
 	
 });
 
@@ -38,31 +50,7 @@ function myDelOption(obj){
 }
 
 
-///*
-// *  选择题目位置
-// */
-//$("input[name=isFirst]").on('change',function(){
-//	
-//	var selectVal = $(this).val();
-//	
-//	alert(selectVal == 0);
-//	//如果选择的第一题
-//	if(selectVal == "0"){
-//		$("#selectBefore").hide();
-////		$("#selectNext").show();
-//	}
-//	//如果选择的位于中间
-//	if(selectVal == "1"){
-//		$("#selectBefore").show();
-////		$("#selectNext").show();
-//	}
-//	//如果选择的最后一题
-//	if(selectVal == "2"){
-//		$("#selectBefore").show();
-////		$("#selectNext").hide();
-//	}
-//	
-//});
+
 
 
 
@@ -81,25 +69,30 @@ $("#questionFormSubmit").on('click',function(){
    //是否必考
    var isMulti = $("input[name='isMulti']:checked").val();
    
-   //所有选项	
-   var optionArray = [];	
   
-  
+// 选项 和 次数 的 string
+  var optionArray = [];	
+ 
   $("textarea[name=optionText]").each(function(key,strValue){
-	  optionArray.push($(this).val());
-  });	
+  
+	  var defaultTime = $(this).parent().find("#defaultTime").val();
+	  
+	  var optStr = {"optionStr":$(this).val(),"defaultTime":defaultTime};
+	  
+	  optionArray.push(optStr);
+ });	
 
-  //题目 id
-  var qId = $("#qId").val();
+ //题目 id
+ var qId = $("#qId").val();
+ 
+ //题目位置
+ var isFirst = $("input[name='isFirst']:checked").val();
+ 
+ //上一题的id
+ var beforeQId = $("#beforeQId").find("option:selected").val();
+ 
+ var opArray = JSON.stringify(optionArray);
   
-  //题目位置
-  var isFirst = $("input[name='isFirst']:checked").val();
-  
-  //上一题的id
-  var beforeQId = $("#beforeQId").find("option:selected").val();
-  
-  
-//  return false;
  
  $.ajax({
 	   type: 'POST',
@@ -114,7 +107,7 @@ $("#questionFormSubmit").on('click',function(){
 			"isMulti" : isMulti,
 			"isFirst" : isFirst, 
 			"beforeQId": beforeQId,
-		"optionArray" : optionArray,
+		"optionArray" : opArray,
 		},
 		success:function(datas, textStatus, jqXHR){
 			

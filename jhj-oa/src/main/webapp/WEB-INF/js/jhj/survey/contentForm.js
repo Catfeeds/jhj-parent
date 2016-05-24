@@ -29,6 +29,8 @@ $("input[name='contentChildType']").on('change',function(){
 				"<div class='input-group m-bot15' >"
 					+"<span class='input-group-addon'>"
 					+"<button type='button' id='addOption' onclick='myAddOption(this)' title='添加选项'><i class='icon-plus'></i></button>"
+					+"<textarea  id='defaultTimeChild' placeholder='默认次数' rows='1' cols='10'></textarea>"
+					+"<textarea  id='childPrice' placeholder='价格' rows='1' cols='10'></textarea>"
 					+"</span>"
                 +"<textarea name='optionText' maxlength='100' placeholder='提示:点击左边单选框,选择正确答案' class='form-control'></textarea>"
                 	+"<span class='input-group-addon'>"
@@ -46,6 +48,8 @@ $("input[name='contentChildType']").on('change',function(){
 				"<div class='input-group m-bot15' >"
 					+"<span class='input-group-addon'>"
 					+"<button type='button' id='addOption' onclick='myAddOption(this)' title='添加选项'><i class='icon-plus'></i></button>"
+					+"<textarea  id='defaultTimeChild' placeholder='默认次数' rows='1' cols='10'></textarea>"
+					+"<textarea  id='childPrice' placeholder='价格' rows='1' cols='10'></textarea>"
 					+"</span>"
                 +"<textarea name='optionText' maxlength='100' placeholder='提示:点击左边单选框,选择正确答案' class='form-control'></textarea>"
                 	+"<span class='input-group-addon'>"
@@ -54,6 +58,7 @@ $("input[name='contentChildType']").on('change',function(){
                 +"</div>"
 		);
 	}
+	
 	
 });
 
@@ -112,12 +117,35 @@ $("#contentFormSubmit").on("click",function(){
 	}
 	
 	//选择题的内容数组
+//	var optionArray = [];	
+//	
+//	if(contentChildType == "1" || contentChildType == "2"){
+//		
+//		  $("textarea[name=optionText]").each(function(key,strValue){
+//			  optionArray.push($(this).val());
+//		  });	
+//	}
+//	
+//	//计数期限
+//	var measurement = $("input[name='measurement']:checked").val();
+//	//是否可用
+//	var enable = $("input[name='enable']:checked").val();
+	
+	
+	//选择题的内容数组
 	var optionArray = [];	
 	
 	if(contentChildType == "1" || contentChildType == "2"){
 		
 		  $("textarea[name=optionText]").each(function(key,strValue){
-			  optionArray.push($(this).val());
+			  
+			  var defaultTimeChild = $(this).parent().find("#defaultTimeChild").val();
+			  
+			  var childPrice = $(this).parent().find("#childPrice").val();
+			  
+			  var opStr = {"defaultTimeChild":defaultTimeChild,"optionStr":$(this).val(),"childPrice":childPrice};
+			  
+			  optionArray.push(opStr);
 		  });	
 	}
 	
@@ -126,7 +154,12 @@ $("#contentFormSubmit").on("click",function(){
 	//是否可用
 	var enable = $("input[name='enable']:checked").val();
 	
-//	return false;
+	var jsonOption = JSON.stringify(optionArray);
+	
+	
+	var defaultTime = $("#defaultTime").val();
+	
+	
 	$.ajax({
 		   type: 'POST',
 			url: '/jhj-oa/survey/content_form.json',
@@ -139,12 +172,13 @@ $("#contentFormSubmit").on("click",function(){
 					 "name" : name,
 					"price" : price,
 		 "priceDescription" : priceDescription,
-			  "description" : description,
+//			  "description" : description,
 		 "contentChildType" : contentChildType,
-  "contentChildDescription" : contentChildDescription,
-			  "optionArray" : optionArray,
+//  "contentChildDescription" : contentChildDescription,
+			  "optionArray" : jsonOption,
 			  "measurement" : measurement,
-			  	   "enable" : enable
+			  	   "enable" : enable,
+			  "defaultTime" : defaultTime  
 			},
 			success:function(datas, textStatus, jqXHR){
 				

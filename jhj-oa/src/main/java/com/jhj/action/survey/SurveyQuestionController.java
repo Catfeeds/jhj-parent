@@ -190,6 +190,9 @@ public class SurveyQuestionController extends BaseController {
 				optionIdList.add(option.getId());
 			}
 			
+			//默认一个0
+			optionIdList.add(0L);
+			
 			//先删除,再插入
 			optionService.deleteByIdList(optionIdList);
 		}
@@ -204,6 +207,9 @@ public class SurveyQuestionController extends BaseController {
 			
 			question.setBeforeQId(beforeQId);
 			surveyQuestion.setNextQId(qId);
+			
+			
+			surveyQuestion.setIsFirst((short)1);
 			
 			questionService.updateByPrimaryKeySelective(question);
 			questionService.updateByPrimaryKeySelective(surveyQuestion);

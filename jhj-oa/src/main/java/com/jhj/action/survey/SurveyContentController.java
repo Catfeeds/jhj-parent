@@ -109,9 +109,7 @@ public class SurveyContentController extends BaseController {
 				
 				list = contentChildService.selectByContentId(id);
 				
-				
 			}
-			
 		}
 		
 		model.addAttribute("childList", list);
@@ -152,7 +150,7 @@ public class SurveyContentController extends BaseController {
 			@RequestParam("name")String name,
 			@RequestParam("price")BigDecimal price,
 			@RequestParam(value="priceDescription",required=false,defaultValue="")String priceDescription,
-			@RequestParam("defaultTime")Long defaultTime,
+			@RequestParam(value="defaultTime",required=false,defaultValue="0")Long defaultTime,
 			@RequestParam("contentChildType")Short contentChildType,
 			@RequestParam(value="optionArray",required = false,defaultValue="")String optionArray,
 			@RequestParam("measurement")Short measurement,

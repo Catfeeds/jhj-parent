@@ -76,14 +76,14 @@
 							</div>
 						</div>
 						
-						<div class="form-group required">
+						<%-- <div class="form-group required">
 							<label class="col-md-2 control-label">服务说明</label>
 							<div class="col-md-5">
 								<form:input path="description" class="form-control" placeholder="默认次数,若没有子服务,或选择项,可以不填" 
 									maxLength="20" />
 								<form:errors path="description" class="field-has-error"></form:errors>
 							</div>
-						</div>
+						</div> --%>
 						
 						<%-- <div class="form-group required">
 							<label class="col-md-2 control-label">子服务说明</label>
@@ -127,7 +127,7 @@
 								<!-- 子服务是单选题或者 多选题,回显 -->
 								<c:if test="${contentFormModel.contentChildType == 1  || contentFormModel.contentChildType == 2 }">
 									<c:forEach items="${childList }" var="child">
-										<div class='input-group m-bot15' >
+										<%-- <div class='input-group m-bot15' >
 												<span class='input-group-addon'>
 													<button type='button' id='addOption' title='添加选项'
 														onclick='myAddOption(this)' ><i class='icon-plus'></i></button>
@@ -137,7 +137,24 @@
                 									<button type='button' title='删除该选项' name='delOption' 
                 										onclick='myDelOption(this)' class='close'>&times;</button>
                								    </span>
+              							 </div> --%>
+              							 
+              							 
+              							 
+              							 <div class='input-group m-bot15' >
+												<span class='input-group-addon'>
+													<button type='button' id='addOption' title='添加选项'
+														onclick='myAddOption(this)' ><i class='icon-plus'></i></button>
+													<textarea id="defaultTimeChild" row="1" cols="10">${child.defaultTimeChild }</textarea>
+                									<textarea id="childPrice"  row='1' cols="10">${child.childPrice }</textarea>
+												</span>
+                								<textarea name='optionText' maxlength='100' class='form-control'>${child.optionStr }</textarea>
+                								<span class='input-group-addon'>
+                									<button type='button' title='删除该选项' name='delOption' 
+                										onclick='myDelOption(this)' class='close'>&times;</button>
+               								    </span>
               							 </div>
+              							 
 									</c:forEach>
 								</c:if>
 							</div>
@@ -172,6 +189,16 @@
 								<form:radiobutton path="measurement" value="2" label="次" />
 								&nbsp;&nbsp;&nbsp;
 								<form:radiobutton path="measurement" value="3" label="赠送" />
+							</div>
+						</div>
+						
+						
+						<div class="form-group required">
+							<label class="col-md-2 control-label">默认次数</label>
+							<div class="col-md-5">
+								<form:input path="defaultTime" class="form-control" placeholder="默认次数" 
+									maxLength="20" />
+								<form:errors path="defaultTime" class="field-has-error"></form:errors>
 							</div>
 						</div>
 						
