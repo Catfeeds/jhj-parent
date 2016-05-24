@@ -198,6 +198,7 @@ public class OrgStaffLeaveController extends BaseController {
 		
 		leave.setOrgId(org.getOrgId());
 		
+		leave.setParentId(org.getParentId());
 		
 		if(id == 0){
 			
