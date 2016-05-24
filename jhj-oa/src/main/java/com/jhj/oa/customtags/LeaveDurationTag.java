@@ -32,7 +32,7 @@ import com.jhj.service.bs.OrgsService;
  */
 public class LeaveDurationTag extends SimpleTagSupport {
 	
-	private String selectId = "0";
+	private String selectId;
 
     @Override
     public void doTag() throws JspException, IOException {
@@ -41,24 +41,25 @@ public class LeaveDurationTag extends SimpleTagSupport {
         	Map<String, String> map = new LinkedHashMap<String, String>();
         	
         	map.put("0", "上午");
-        	map.put("1", "下午");
-        	map.put("2", "全天");
+        	map.put("1", "全天");
+        	map.put("2", "下午");
         	
             StringBuffer leaveDurationSelect = new StringBuffer();
             leaveDurationSelect.append("<select id = \"leaveDuration\" name=\"leaveDuration\" class=\"form-control\">" );
 
-            String selected = "";
+            
+            String selected = this.getSelectId();
             
             Set<Entry<String,String>> set = map.entrySet();
             for (Entry<String, String> entry : set) {
 				
+            	String isSelect = "";
             	String key = entry.getKey();
-            	selected = "";
             	
-            	if(selected != null && key.equals(selected)){
-            		selected = "selected=\"selected\"";
+            	if(isSelect != null && key.equals(selected)){
+            		isSelect = "selected=\"selected\"";
             	}
-            	leaveDurationSelect.append("<option value='" + key + "' " + selected + ">" + entry.getValue() + "</option>");
+            	leaveDurationSelect.append("<option value='" + key + "' " + isSelect + ">" + entry.getValue() + "</option>");
 			}
 
             leaveDurationSelect.append("</select>");
