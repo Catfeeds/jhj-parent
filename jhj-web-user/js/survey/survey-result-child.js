@@ -48,21 +48,21 @@ myApp.onPageInit('survey-result-child-page', function(page) {
 					
 						var childBoxArray = nowArrayCont.childBoxArray;
 					
-						for (var int = 0; int < childBoxArray.length; int++) {
+						for (var int = 0, lengthA = childBoxArray.length; int < lengthA; int++) {
 							
 							var  childBox = childBoxArray[int];
 							
-							for (var i = 0; i < childArray.length; i++) {
+							for (var i = 0, lengthB =  childArray.length ; i < lengthB ; i++) {
 								
 								var child = childArray[i];
 								
 								if(child.id == childBox.boxChildContentId){
 									
-									var number = child.option_str.match(/\d/g).join("");
+//									var number = child.option_str.match(/\d/g).join("");
 									
-									number = childBox.boxChildContentTimes;
+									var  realNumber = childBox.boxChildContentTimes;
 									
-									child.option_str = child.option_str.replace(/\d/g,number);
+									child.option_str = child.option_str.replace(/\d+/g,realNumber);
 								}
 							}
 						}
@@ -208,6 +208,8 @@ function onAddItemNum(obj) {
 	} else {
 		v = parseInt(v) + 1;
 	}
+	itemNumObj.val("");
+	
 	itemNumObj.val(v);
 
 //	setTotal();
@@ -222,6 +224,9 @@ function onSubItemNum(obj) {
 	} else {
 		v = parseInt(v) - 1;
 	}
+	
+	itemNumObj.val("");
+	
 	itemNumObj.val(v);
 //	setTotal();	
 }
