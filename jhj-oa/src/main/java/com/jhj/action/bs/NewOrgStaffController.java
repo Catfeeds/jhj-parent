@@ -119,7 +119,7 @@ public class NewOrgStaffController extends AdminController {
 		
 		if(!org.equals("0") && !StringUtil.isEmpty(org)){
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			staffSearchVo.setOrgId(Long.valueOf(org));
+			staffSearchVo.setParentId(Long.valueOf(org));
 		}
 		
 		
