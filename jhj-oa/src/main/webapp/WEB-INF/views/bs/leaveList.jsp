@@ -79,10 +79,10 @@
 		                              <th>云店</th>
 		                              <th>服务人员姓名</th>
 		                              <th>服务人员手机号</th>
-                                  	  <th>请假时间</th>
+                                  	  <th>请假申请时间</th>
                                   	  <th>假期时间</th>
                                   	  <th>员工状态</th>
-                                  	  <th>批复人</th>
+                                  	 
                                   	  <th>操作</th>
                               </tr>
                               </thead>
@@ -105,7 +105,7 @@
 											假期已结束
 										</c:if>
 									</td>
-									<td>${item.excuteStaffName }</td>
+									
 									<td>
 										<c:choose>
 											<c:when test="${item.leaveStatus == 1 }">
