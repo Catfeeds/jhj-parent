@@ -24,6 +24,8 @@
             open="(" close=")" separator=",">
             #{employeeId}
       </foreach>
+      
+     order by add_time desc 
   </select>
   
   
