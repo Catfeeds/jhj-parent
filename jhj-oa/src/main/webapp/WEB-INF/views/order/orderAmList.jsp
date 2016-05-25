@@ -113,7 +113,8 @@
 		<header class="panel-heading">
 		<h4>助理订单列表</h4>
 		</header>
-
+	
+		 <button id="exportExcel" class="btn btn-success">导出Excel</button> 
 
 		<table class="table table-striped table-advance table-hover"
 			id="table2excel">
@@ -193,7 +194,9 @@
 	<!-- js placed at the end of the document so the pages load faster -->
 	<!--common script for all pages-->
 	<%@ include file="../shared/importJs.jsp"%>
-
+	
+	  <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> 
+	
 	<script type="text/javascript"
 		src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
 
@@ -226,6 +229,17 @@
 	     return true;  
 	 }
 	
+	 
+	 //导出excel
+	 $("#exportExcel").click(function(){
+	 $("#table2excel").table2excel({
+		exclude: ".noExl",
+		name: "深度服务订单列表",
+		filename: "深度服务订单列表"
+	   });
+    });
+	 
+	 
 	</script>
 	
 </body>

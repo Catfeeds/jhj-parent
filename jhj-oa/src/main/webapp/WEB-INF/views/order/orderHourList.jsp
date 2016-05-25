@@ -111,7 +111,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                           	<h4>钟点工订单列表</h4>
                           </header>
                           
-                         <!--  <button id="exportExcel" class="btn btn-success">导出Excel</button> -->
+                         <button id="exportExcel" class="btn btn-success">导出Excel</button> 
                           
                           <table class="table table-striped table-advance table-hover" id="table2excel">
                               <thead>
@@ -128,7 +128,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 		                              <th >订单状态</th>
 		                              <th >总金额</th>
 		                              <th >支付金额</th>
-		                              <th>操作</th> 
+		                              <th >操作</th> 
                               </tr>
                               </thead>
                               <tbody>
@@ -162,7 +162,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 							            <td>${ item.orderMoney }</td>
 							            <td>${ item.orderPay }</td>
 							            
-							       	<td>
+							       	<td  class="noExl">
 							       		<button id="btn_update" 
 							       			onClick="btn_update('order/order-hour-view?orderNo=${ item.orderNo }&disStatus=${fn:substring(sta.key,0,1) }')" 
 							       			class="btn btn-primary btn-xs" 
@@ -204,7 +204,7 @@ import="com.jhj.oa.common.UrlHelper"%>
     <!--common script for all pages-->
     <%@ include file="../shared/importJs.jsp"%>
 
-    <%-- <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
+   <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> 
     <!--script for this page-->	
     
 	 <script type="text/javascript"
@@ -234,9 +234,17 @@ import="com.jhj.oa.common.UrlHelper"%>
 	     return true;  
 	 }
 	
-	
+	 
+	 //导出excel
+	 $("#exportExcel").click(function(){
+	 $("#table2excel").table2excel({
+		exclude: ".noExl",
+		name: "基础服务订单列表",
+		filename: "基础服务订单列表"
+	   });
+    });
+	 
 	</script>
-	
 	
   </body>
 </html>

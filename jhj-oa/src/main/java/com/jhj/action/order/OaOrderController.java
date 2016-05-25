@@ -827,9 +827,9 @@ public class OaOrderController extends BaseController {
 		if(partnerServiceType.getParentId() == 26){
 			
 			//向上 取整, 有小数 都 +1
-			double floor = Math.ceil((serviceDateEnd - serviceDateStart)/3600000);
+			double floor = Math.ceil((serviceDateEnd - serviceDateStart)/3600);
 			order.setServiceHour((short)floor);
-			order.setServiceDate(serviceDateStart/1000);
+			order.setServiceDate(serviceDateStart);
 		}
 		
 		OrderPrices orderPrice = priceService.initOrderPrices();
