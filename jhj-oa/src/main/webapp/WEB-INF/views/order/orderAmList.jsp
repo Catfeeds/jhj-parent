@@ -102,12 +102,6 @@
 						style="width:110px; margin-bottom:0" readonly="true" />
 					</div> 
 					
-					<div class="form-group">
-                                                            备注:
-						<form:input path="remarks" class="form-control" maxlength="20" placeholder="不超过20字"
-						 style="width:110px; margin-bottom:0" />
-					</div>
-					
 					
 					<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" >搜索</button>
 					<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
