@@ -43,14 +43,11 @@ public class OaOrderListVo extends Orders {
 	
 	private String couponName;		//优惠券 名称 ： ex: 50元钟点工代金券
 	
-	
 	private String userName;		//用户姓名
 	
 	private String cityName;		//城市名称
 	
-	
 	private String orderDate;		//下单时间
-	
 	
 	private List<OrgStaffs> staffList;	// 当前门店 下 的  阿姨 列表
 	
@@ -102,8 +99,6 @@ public class OaOrderListVo extends Orders {
 	
 	//2016年5月13日17:35:13
 	private Long parentServiceTypeId;	//对于  助理类--深度养护--需要有 开始时间
-	
-	
 	
 	
 	public String getServiceDateStartStr() {

@@ -147,7 +147,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 		//取第一个
 		OrgStaffs staff = staList.get(0);
 		
-		
 		OrderDispatchs orderDispatchs = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
 		
 		orderDispatchs.setUserId(userId);
@@ -248,7 +247,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 	
 	@Override
 	public void orderPaySuccessToDoForAm(Orders orders) {
-		
 		
 		
 		List<OrderDispatchs> list = orderDispatchService.selectByNoAndDisStatus(orders.getOrderNo(),(short)1);

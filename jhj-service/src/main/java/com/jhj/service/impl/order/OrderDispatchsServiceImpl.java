@@ -12,7 +12,9 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.vo.OaOrderDisSearchVo;
 import com.jhj.vo.OrderSearchVo;
+import com.jhj.vo.dispatch.StaffDispatchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -154,5 +156,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	@Override
 	public Long getDisNumForStaDuringServiceDate(OrderSearchVo searchVo) {
 		return orderDisMapper.getDisNumForStaDuringServiceDate(searchVo);
+	}
+	
+	
+	@Override
+	public List<StaffDispatchVo> selectStaffDisBySevenDay(OaOrderDisSearchVo oaOrderDisSearchVo) {
+		return orderDisMapper.selectStaffDisBySevenDay(oaOrderDisSearchVo);
 	}
 }

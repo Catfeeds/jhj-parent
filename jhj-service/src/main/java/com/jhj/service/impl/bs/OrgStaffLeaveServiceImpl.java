@@ -205,4 +205,9 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 		
 		return staffVo;
 	}
+	
+	@Override
+	public List<OrgStaffLeave> selectByLeaveSearchVo(LeaveSearchVo searchVo) {
+		return leaveMapper.selectByListPage(searchVo);
+	}
 }

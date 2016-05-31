@@ -797,7 +797,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 			// 订单实际支付金额
 			oaOrderListVo.setOrderPay(orderPrices.getOrderPay());
 			
-			
 			// 支付方式
 			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
 			oaOrderListVo.setPayTypeName(payTypeName);

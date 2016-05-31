@@ -80,7 +80,9 @@ public class OaOrderDisServiceImpl implements OaOrderDisService {
 		Orders orders = orderService.selectByOrderNo(dispatchs.getOrderNo());
 		Long addrId = orders.getAddrId();
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
-		orderDisVo.setAddrName(userAddrs.getName()+" "+userAddrs.getAddr());
+		if(userAddrs != null){
+			orderDisVo.setAddrName(userAddrs.getName()+" "+userAddrs.getAddr());
+		}
 		
 		Long staffId = dispatchs.getStaffId();
 		

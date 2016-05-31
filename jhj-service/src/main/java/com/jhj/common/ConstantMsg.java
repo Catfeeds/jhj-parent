@@ -110,6 +110,12 @@ public class ConstantMsg {
 	public static String OLD_TIME = "现在不能下过去的单啦！";
 	
 	public static String BEFORE_ONE_HOUR = "请您提前至少1小时下单";
+	
+	
+	//2016年5月25日17:31:12  用户添加 地址。超出范围提示
+	public static String ADDRESS_OUT_OF_BJ = "新增地址需要在北京市范围内";
+	
+	
 }
 
 

@@ -107,6 +107,9 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		record.setAddTime(TimeStampUtil.getNowSecond());
 		record.setUpdateTime(TimeStampUtil.getNowSecond());
+		
+		record.setRemarksBussinessConfirm("");	//运营人员在 后台 对订单详情添加的 备注
+		
 		return record;
 	}
 
@@ -508,7 +511,6 @@ public class OrdersServiceImpl implements OrdersService {
 		if(orderStatus == 3 || orderStatus == 4){
 			
 			OrderPrices orderPrices = orderPricesService.selectByOrderNo(orders.getOrderNo());
-			
 			//获得当前时间时间戳
 			Long nowDate = System.currentTimeMillis()/ 1000;
 			//服务时间时间戳
@@ -518,7 +520,19 @@ public class OrdersServiceImpl implements OrdersService {
 			//订单实际支付金额
 			BigDecimal restMoney2 = orderPrices.getOrderPay();
 			
-			if (hours >= 2) {
+			Short payType = orderPrices.getPayType();
+			
+			 /**
+		     *  2016年5月27日14:51:36 
+		     *  
+		     *    取消订单时, 如果是 现金支付， 不退回余额，只修改状态！！ 
+		     *    
+		     *    	防止潜在 bug, 现金支付后，一直 取消订单，导致 余额一直变多！！！	
+		     *    
+		     *    现金支付 payType = 6
+		     */
+			
+			if (hours >= 2 && payType != 6) {
 				//退全款  提示xxx 退回到余额
 				Users users = usersMapper.selectByPrimaryKey(orders.getUserId());
 				//获得用户当前余额
@@ -531,7 +545,6 @@ public class OrdersServiceImpl implements OrdersService {
 				orderPricesService.updateByPrimaryKeySelective(orderPrices);
 				
 			}else{
-				
 				//如果超过2小时
 				return "服务即将开始,不能退款,如有问题请联系客服";
 			}
@@ -607,7 +620,20 @@ public class OrdersServiceImpl implements OrdersService {
 	    //订单实际支付金额
 	    BigDecimal restMoney2 = orderPrices.getOrderPay();
 	    
-	    if (hours >= 2) {
+	    
+	    /**
+	     *  2016年5月27日14:51:36 
+	     *  
+	     *    取消订单时, 如果是 现金支付， 不退回余额，只修改状态！！ 
+	     *    
+	     *    	防止潜在 bug, 现金支付后，一直 取消订单，导致 余额一直变多！！！	
+	     *    
+	     *    现金支付 payType = 6
+	     */
+	    
+	    Short payType = orderPrices.getPayType();
+	    
+	    if (hours >= 2  && payType != 6) {
 			//退全款  提示xxx 退回到余额
 	    	Users users = usersMapper.selectByPrimaryKey(orders.getUserId());
 	    	//获得用户当前余额
@@ -637,7 +663,6 @@ public class OrdersServiceImpl implements OrdersService {
 			userCoupons.setOrderNo("");
 			userCouponMapper.updateByPrimaryKeySelective(userCoupons);
 		}
-		
 		
 		orders.setOrderStatus(Constants.ORDER_STATUS_0);
 		ordersMapper.updateByPrimaryKeySelective(orders);

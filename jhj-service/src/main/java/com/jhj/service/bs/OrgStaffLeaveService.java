@@ -29,4 +29,6 @@ public interface OrgStaffLeaveService {
 	OrgStaffLeave initLeave();
 	
 	LeaveStaffVo initLeaveVo();
+	
+	List<OrgStaffLeave> selectByLeaveSearchVo(LeaveSearchVo searchVo);
 }
