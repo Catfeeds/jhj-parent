@@ -67,7 +67,7 @@ public class OrgStaffsController extends BaseController {
 	private OrgStaffAuthService authService;
 	
 	
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "/staff-list", method = RequestMethod.GET)
 	public String orgStaffList(Model model, HttpServletRequest request, StaffSearchVo staffSearchVo) throws UnsupportedEncodingException{
 		

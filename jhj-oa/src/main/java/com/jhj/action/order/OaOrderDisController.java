@@ -86,15 +86,12 @@ public class OaOrderDisController extends BaseController {
 			oaOrderDisSearchVo.setStaffName(name);
 		}
 		
-		
 		List<OrderDispatchs> disList = oaDisService.selectOrderDisByListPage(oaOrderDisSearchVo, pageNo, pageSize);
 		
 		OrderDispatchs orderDis = null;
 		for (int i = 0; i < disList.size(); i++) {
 			orderDis = disList.get(i);
-			
 			OaOrderDisVo oaOrderDisVo = oaDisService.compleVo(orderDis);
-			
 			disList.set(i, oaOrderDisVo);
 		}
 		
@@ -106,6 +103,12 @@ public class OaOrderDisController extends BaseController {
 		return "order/orderDisList";
 	}
 	
+	/**
+	 *   
+	 *  订单日历--控件展示
+	 *  
+	 */
+	
 //	@AuthPassport
 	@RequestMapping(value = "/order-scheduling", method = RequestMethod.GET )
 	public String orderCalender(HttpServletRequest request, Model model,
@@ -115,4 +118,5 @@ public class OaOrderDisController extends BaseController {
 
 		return "order/orderCalendarList";
 	}
+	
 }

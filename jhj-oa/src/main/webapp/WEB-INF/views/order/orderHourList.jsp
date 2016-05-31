@@ -54,7 +54,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                          <header class="panel-heading">
                          	<h4>数据搜索</h4>
 	                      	  <form:form modelAttribute="oaOrderSearchVoModel" onsubmit="return checkEndTime()"
-	                      	  class="form-inline" action="order-hour-list" method="GET">
+	                      	  class="form-inline" action="order-hour-list" method="GET" id="oaSearchForm">
 		                         		<div class="form-group">
 		                     				订单状态：
 		                     				<c:if test="${loginOrgId == 0 }">
@@ -101,7 +101,17 @@ import="com.jhj.oa.common.UrlHelper"%>
 											style="width:110px; margin-bottom:0" readonly="true" />
 										</div> 
 										
-										<button type="submit" class="btn btn-primary" >搜索</button>
+										
+										<div class="form-group">
+			                          		备注:
+											<form:input path="remarks" class="form-control" maxlength="20" placeholder="不超过20字"
+											 style="width:110px; margin-bottom:0" />
+										</div>
+										
+										
+										<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" >搜索</button>
+										
+										<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
 	                           </form:form>   
 	                         </header>
                            
@@ -111,7 +121,6 @@ import="com.jhj.oa.common.UrlHelper"%>
                           	<h4>钟点工订单列表</h4>
                           </header>
                           
-                         <button id="exportExcel" class="btn btn-success">导出Excel</button> 
                           
                           <table class="table table-striped table-advance table-hover" id="table2excel">
                               <thead>
@@ -126,6 +135,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 		                              <th >服务地址</th>
 		                             <!--  <th >派工状态</th> -->
 		                              <th >订单状态</th>
+		                              <th >支付方式</th>
 		                              <th >总金额</th>
 		                              <th >支付金额</th>
 		                              <th >操作</th> 
@@ -135,7 +145,10 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <c:forEach items="${oaOrderListVoModel.list}" var="item">
                               	<c:forEach items="${item.statusNameMap }" var="sta">
                               	
-                              <tr>	
+                              	<tr>	
+                              			<input type="hidden" id="itemPayType" value="${item.payType }">	
+										<input type="hidden" id="itemOrderStatus" value="${item.orderStatus }">	
+                              
                                   	    <td>${ item.orgName }</td>
                                   	    <td>${ item.cloudOrgName }</td>
                                   	    <td>${ item.staffName }</td>
@@ -146,7 +159,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 											 ${item.orderTypeName } 
 							            </td>
 							            <td>
-											<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.serviceDate * 1000}"/>
+											<timestampTag:timestamp patten="yyyy-MM-dd HH:mm" t="${item.serviceDate * 1000}"/>
 										</td>
 										<td>${ item.mobile }</td>
 							            <td>${ item.orderAddress }</td>
@@ -159,16 +172,28 @@ import="com.jhj.oa.common.UrlHelper"%>
 							             <orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" 
  											 	orderType="${item.orderType }" /> 
 							            </td>
+							            <td>${ item.payTypeName }</td>
 							            <td>${ item.orderMoney }</td>
 							            <td>${ item.orderPay }</td>
 							            
-							       	<td  class="noExl">
+							       	<td>
 							       		<button id="btn_update" 
 							       			onClick="btn_update('order/order-hour-view?orderNo=${ item.orderNo }&disStatus=${fn:substring(sta.key,0,1) }')" 
 							       			class="btn btn-primary btn-xs" 
 							       			title="订单详情">
 							       				<i class=" icon-ambulance"></i>
-							       			</button>
+							       		</button>
+							       		
+							       		<!-- 如果 运营人员备注为 空，可以添加，不为空，不让添加 -->
+							       		<c:if test="${empty item.remarksBussinessConfirm  }">
+								       		<button  
+								       			onClick="btn_update('order/remarks_bussiness_form?orderId=${ item.id }')" 
+								       			class="btn btn-primary btn-xs" 
+								       			title="添加订单备注">
+								       				<i class="icon-plus-sign-alt"></i>
+								       		</button>
+							       		</c:if>
+							       		
 							       	</td>
 							       		<%-- <td>
 							       			<button id="btn_update" onClick="btn_update('msg/msgForm?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
@@ -212,39 +237,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 	<script type="text/javascript"
 		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
 	
-	<script type="text/javascript">
-	$('.form_datetime').datepicker({
-	 	format: "yyyy-mm-dd",
-	 	language: "zh-CN",
-	 	autoclose: true,
-	 	startView: 1,
-	 	todayBtn:true
-	 });
-	
-	 function checkEndTime(){  
-	     var startTime=$("#startTimeStr").val();  
-	     var start=new Date(startTime.replace("-", "/").replace("-", "/"));  
-	     var endTime=$("#endTimeStr").val();  
-	     var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
-	     if(end<start){ 
-	     	
-	     	alert('结束日期必须大于开始时间');
-	     	 return false;  
-	     }  
-	     return true;  
-	 }
-	
-	 
-	 //导出excel
-	 $("#exportExcel").click(function(){
-	 $("#table2excel").table2excel({
-		exclude: ".noExl",
-		name: "基础服务订单列表",
-		filename: "基础服务订单列表"
-	   });
-    });
-	 
-	</script>
+	<script src="<c:url value='/js/order/orderHourList.js'/>"></script>
 	
   </body>
 </html>

@@ -74,7 +74,7 @@ public class OrgStaffLeaveController extends BaseController {
 		
 		if(!StringUtil.isEmpty(org) && !org.equals("0")){
 			
-			searchVo.setCloudOrgId(Long.parseLong(org));
+			searchVo.setParentOrgId(Long.parseLong(org));
 		}
 		
 		//转换为数据库 参数字段

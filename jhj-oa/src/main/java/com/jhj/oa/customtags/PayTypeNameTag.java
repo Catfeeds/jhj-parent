@@ -19,8 +19,8 @@ public class PayTypeNameTag extends SimpleTagSupport {
         try {
         	String payTypeName = "";
         	if (orderStatus >=2) {
-            		payTypeName = OneCareUtil.getPayTypeName(payType);
-            	}
+            	payTypeName = OneCareUtil.getPayTypeName(payType);
+            }
             getJspContext().getOut().write(payTypeName);
         } catch (Exception e) {
             e.printStackTrace();

@@ -7,23 +7,31 @@ $(function(){
 	    header: {
 	        left: 'prev,next today',
 	        center: 'title',
-	        right: 'month,agendaDay'
+	        right: 'month,agendaWeek,agendaDay'
 	    },
-	    height: 550,
-	    firstHour:6,
-	    slotMinutes:30,
-	 /*   events: {
-	    	allDay:true,
-	        url: '/jhj-oa/interface-order/get-dispatch-by-month.json?org_staff_id='+orgStaffId,
-	        error: function() {
-	            $('#script-warning').show();
-	        }
-	    },
-	   */
+	    height: 650,
+	    firstHour:6,	
+	    slotMinutes:30, 
+	
 	    axisFormat:'H:mm',
 	    allDaySlot:false,
-	
+	    
+	    dayClick:function(date, jsEvent, view){
+//	    	$("#calendar").fullCalendar( 'changeView', 'agendaDay');
+	    	
+	    	 alert('Clicked on: ' + date.format());
+
+	         alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+	         alert('Current view: ' + view.name);
+
+	         // change the day's background color just for fun
+	         $(this).css('background-color', 'red');
+	    }
 	});
+	
+	
+	
 	var view=$('#calendar').fullCalendar('getView');
 	var startStr = new Date(view.start).toLocaleDateString();
 	var endStr = new Date(view.end).toLocaleDateString();
@@ -53,6 +61,7 @@ $(function(){
 			}    
       });
 });
+
 
 
 function getToDay(){

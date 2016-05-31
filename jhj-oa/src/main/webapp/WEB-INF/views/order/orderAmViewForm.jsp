@@ -103,6 +103,17 @@
 						</div>
 						
 						<div class="form-group">
+
+							<label class="col-md-2 control-label"><font color="green">运营人员备注:</font></label>
+							<div class="col-md-5">
+								<form:textarea path="remarksBussinessConfirm" 
+									maxlength="100" readonly="true" rows="5" cols="50" />
+							</div>
+						</div>
+						
+						
+						
+						<div class="form-group">
 							<label class="col-md-2 control-label">备注</label>
 							<div class="col-md-5">
 								<form:textarea path="serviceContent" rows="5" cols="30" readonly="true" />

@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +44,6 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OaOrderSearchVo;
-import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
@@ -50,7 +51,6 @@ import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
-import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -232,8 +232,6 @@ public class OaOrderController extends BaseController {
 		}
 		
 		
-		
-		
 		//转换为数据库 参数字段
 		String startTimeStr = oaOrderSearchVo.getStartTimeStr();
 		if(!StringUtil.isEmpty(startTimeStr)){
@@ -244,7 +242,6 @@ public class OaOrderController extends BaseController {
 		if(!StringUtil.isEmpty(endTimeStr)){
 			oaOrderSearchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
 		}
-		
 		
         List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo,pageNo,pageSize);
 		
@@ -873,4 +870,51 @@ public class OaOrderController extends BaseController {
 		return result;
 	}
 	
+	
+	
+	/**
+	 *  运营人员 为订单 添加 备注
+	 */
+	
+	@RequestMapping(value = "remarks_bussiness_form",method = RequestMethod.GET)
+	public String toBussinessRemarkForm(Model model,
+			@RequestParam("orderId")Long orderId){
+		
+ 		Orders	orders = orderService.selectbyOrderId(orderId);
+		
+		model.addAttribute("orderModel", orders);
+		
+		return "order/OrderRemarksBussinessForm";
+	}
+	
+	
+	/**
+	 *  运营人员 为订单 添加 备注
+	 */
+	
+	@RequestMapping(value = "remarks_bussiness_form",method = RequestMethod.POST)
+	public String submitBussinessRemarkForm(
+			@ModelAttribute("orderModel") Orders orderForm,BindingResult bindingResult){
+		
+		Long id = orderForm.getId();
+		
+		Orders orders = orderService.selectByPrimaryKey(id);
+		
+		orders.setRemarksBussinessConfirm(orderForm.getRemarksBussinessConfirm());
+		
+		// 这里不设置修改时间。。与1期的定时任务，可能会冲突
+		orderService.updateByPrimaryKeySelective(orders);
+		
+		String returnUrl = "";
+		
+		if(orders.getOrderType() == Constants.ORDER_TYPE_0){
+			// 钟点工订单
+			returnUrl = "redirect:order-hour-list";
+		}else{
+			//助理订单
+			returnUrl = "redirect:order-am-list";
+		}
+		
+		return returnUrl;
+	}
 }
