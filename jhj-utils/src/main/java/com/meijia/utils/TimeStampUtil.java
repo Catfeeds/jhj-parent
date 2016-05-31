@@ -151,7 +151,7 @@ public class TimeStampUtil {
 //		Long seconds = TimeStampUtil.getMillisOfDate(new Date())/1000;
 //		Date date =TimeStampUtil.timeStampToDateFull(seconds*1000, "yyyy-MM-dd");
 		
-		
+		System.out.println(TimeStampUtil.timeStampToDateStr(1464597140L*1000, "HH"));
 		
 	}
 }

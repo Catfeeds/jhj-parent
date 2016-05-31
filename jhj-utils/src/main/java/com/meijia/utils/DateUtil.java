@@ -564,7 +564,49 @@ public class DateUtil {
 		}
 		return list;
 	}
-
+	
+	public static List<String> getLastWeekArray(String startTimeStr){
+		
+		if(StringUtil.isEmpty(startTimeStr)){
+			
+			//如果没有 时间。。则默认 从 今天起的  7天的 时间
+			startTimeStr = sevenDayBeforeToday();
+		}
+		
+		Date startDate = DateUtil.parse(startTimeStr);
+		
+		// 保存  一段  7天的  时间段
+		List<String> weekTime = new ArrayList<String>();
+ 		
+		String curDate = "";
+		
+		for (int i = 0; i < 7 ; i++) {
+			curDate = DateUtil.addDay(startDate, i, Calendar.DATE, "yyyy-MM-dd");
+			weekTime.add(curDate);
+		}
+		
+		return weekTime;
+	}
+	
+	
+	/*
+	 *  得到 从今天起  7天前的  日期，格式为  yyyy-MM-dd
+	 */
+	public static String sevenDayBeforeToday(){
+		
+		Calendar cal =Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		cal.setTime(new Date());
+		
+		cal.add(Calendar.DATE, -6);
+		
+//		System.out.println(df.format(cal.getTime()));
+		
+		return  df.format(cal.getTime());
+	}
+	
+	
 	/*
 	 * long 型时间戳转换为 日期类型（yyyy-MM-dd）
 	 */
@@ -752,7 +794,14 @@ public class DateUtil {
 
 		return age + "";
 	}
-
+	
+	
+	
+	
+	
+	
+	
+	
 	public static void main(String[] args) throws Exception {
 		// List<String> result = DateUtil.getLastMonth(6, 12);
 		//
@@ -781,10 +830,10 @@ public class DateUtil {
 //		String birth = "1979-09-15";
 //		Date birthDay = DateUtil.parse(birth);
 //		System.out.println(DateUtil.getAge(birthDay));
-		
-		long unixTimeStamp = getUnixTimeStamp("2016-05-13 18:35:00");
-		
-		System.out.println(unixTimeStamp);
-		
+//		
+//		long unixTimeStamp = getUnixTimeStamp("2016-05-13 18:35:00");
+//		
+//		System.out.println(unixTimeStamp);
+	
 	}
 }

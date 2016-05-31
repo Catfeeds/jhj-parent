@@ -987,8 +987,4 @@ public class OneCareUtil {
 		return list;
 	}
 	
-	
-	
-	
-	
 }
