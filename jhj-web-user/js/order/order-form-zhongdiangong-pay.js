@@ -126,10 +126,12 @@ myApp.onPageInit('orderHour-pay-page', function(page) {
 		orderType = result.data.order_type;
 		
 		console.log("orderPayType = " + orderPayType);
-		//如果为余额支付，则直接跳到完成页面
-		if (orderPayType == 0) {
+		
+		//如果为余额支付或者 现金支付，则直接跳到完成页面
+		if (orderPayType == 0 || orderPayType == 6) {
 			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
 		}
+		
 		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {

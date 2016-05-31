@@ -41,7 +41,6 @@ myApp.onPageBeforeInit('mine-add-addrs', function(page) {
 		getAm();
 		
 		localStorage['am_mobile'] = result.data.amMobile;
-		
 
 		
 		mainView.router.loadPage(returnUrl);
@@ -79,8 +78,16 @@ myApp.onPageBeforeInit('mine-add-addrs', function(page) {
 function baiduAutoCompleteSuccess(data, textStatus, jqXHR) {
 	var result = JSON.parse(data.response);
 	var list = result.data;
-	if (list.length > 0)
-		$$('#addr-auto-list ul').html("");
+	
+	//先清空
+	$$('#addr-auto-list ul').html("");
+	
+	//如果没有搜索结果，直接返回
+	if(list.length <= 0){
+		return false;
+	}
+	
+	
 	var html = $$('#autocomplete-list-part-li').html();
 	var resultHtml = '';
 	$$.each(list, function(i, item) {
@@ -103,15 +110,26 @@ function baiduAutoCompleteSuccess(data, textStatus, jqXHR) {
 
 }
 
+
+
 //发起请求调用百度关键字提示接口
 function getBaiduAutoComplete() {
 
 	var paramData = {};
+	
 	paramData.query = $$("#name").val();
-	paramData.region = "131";
+	paramData.region = "北京市";
 	paramData.output = "json";
 	paramData.ak = "2sshjv8D4AOoOzozoutVb6WT";
-
+	
+	/*
+	 * 	当 name 值为空时, 参数query 不会传递,导致请求失败
+	 */
+	if($$("#name").val().length <= 0){
+		return false;
+	}
+	
+	
 	$$.ajax({
 		type : "GET",
 		url : siteAPIPath + "map/autocomplete.json",

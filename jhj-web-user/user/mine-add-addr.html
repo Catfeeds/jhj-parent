@@ -19,11 +19,13 @@
 				<input type="hidden" id="latitude" name="latitude" value=""/>
 				<input type="hidden" id="city" name="city" value=""/>
 				<input type="hidden" id="uid" name="uid" value=""/>
+				
 				<ul>
 					<li>
 						<div class="searchbar-input-jhj" style="border-bottom:1px solid #B5B5B5;">
 							<!-- oninput -> execute our getcity() function to search and fill list-items -->
-							<input id="name" name="name" oninput="getBaiduAutoComplete()" placeholder="第一步	   请输入小区名" type="search-jhj" style="background:#fffce8;">
+							<input id="name" name="name" oninput="getBaiduAutoComplete()" maxlength="64"
+									placeholder="第一步	   请输入小区名" type="search-jhj" style="background:#fffce8;">
 
 						</div>
 
