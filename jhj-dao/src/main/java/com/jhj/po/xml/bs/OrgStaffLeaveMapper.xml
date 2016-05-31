@@ -17,6 +17,7 @@
     id, org_id, parent_id, staff_id, leave_date, start, end, remarks, admin_id, add_time
   </sql>
   
+  	
   <!-- 假期中的员工 -->
   <select id="selectLeavingStaff" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.LeaveSearchVo">
   	select 
@@ -50,9 +51,9 @@
     <include refid="Base_Column_List" />
     from org_staff_leave
     where 1=1
-    <if test="cloudOrgId !=null and cloudOrgId != 0 ">
+    <if test="parentOrgId !=null and parentOrgId != 0 ">
 	    and
-		    parent_id = #{cloudOrgId,jdbcType=NUMERIC}
+		    parent_id = #{parentOrgId,jdbcType=NUMERIC}
     </if>
     
     <if test="staffId != null and staffId !=0 ">
@@ -74,6 +75,17 @@
     		UNIX_TIMESTAMP(leave_date) =  #{leaveTimeStamp,jdbcType=NUMERIC}
     	]]>	
     </if> 
+    
+    <if test="dispatchDateStartStr != null and dispatchDateEndStr != null ">
+    
+    	<![CDATA[ 
+    	and 
+    		UNIX_TIMESTAMP(leave_date) >=  #{dispatchDateStartStr}
+    		and
+    		UNIX_TIMESTAMP(leave_date) <=  #{dispatchDateEndStr}
+    	]]>	
+    </if>
+    
     order by add_time desc
   </select>
   

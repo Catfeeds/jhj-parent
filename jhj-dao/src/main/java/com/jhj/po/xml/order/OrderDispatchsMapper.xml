@@ -34,6 +34,14 @@
 		<result column="total" property="total" jdbcType="NUMERIC" />
 	</resultMap>
 	
+	<!-- 2016年5月30日12:25:52  门店派工列表 -->
+	<resultMap id="staffDisMap" type="com.jhj.vo.dispatch.StaffDispatchVo">
+		<result column="serviceDateStr" property="serviceDateStr"  />
+		<result column="staffId" property="staffId"  />
+		<result column="staffName" property="staffName" />
+		<result column="orderId" property="orderId"/>
+	</resultMap>
+	
 	
 	<sql id="Base_Column_List">
 		id, user_id, mobile, order_id, order_no, service_date_pre, service_date, service_hours, org_id,
@@ -41,6 +49,40 @@
 		pick_addr_name,pick_addr_lat,pick_addr_lng,pick_addr,pick_distance,user_addr_distance,
 		add_time, update_time
 	</sql>
+	
+	
+	<select id="selectStaffDisBySevenDay" resultMap="staffDisMap" parameterType="com.jhj.vo.OaOrderDisSearchVo">
+	
+		SELECT 
+			FROM_UNIXTIME(service_date,'%Y-%m-%d') AS serviceDateStr, 
+			staff_id  AS staffId ,
+			staff_name AS staffName,
+			order_id AS orderId
+		FROM 
+			order_dispatchs  
+		WHERE 
+			dispatch_status = 1
+		 <if test="cloudOrgList != null and cloudOrgList.size() > 0">
+			and
+			org_id in
+				<foreach item="item" index="index" collection="cloudOrgList"
+			           open="(" separator="," close=")">
+			      #{item}
+			  	</foreach>
+		 </if>
+		 GROUP BY serviceDateStr, staffId
+			
+		 HAVING  
+		 	(	 
+				 <if test="startTimeStr !=null and startTimeStr !='' ">
+					<![CDATA[ serviceDateStr >= #{startTimeStr}]]>
+				 </if>
+				 <if test="endTimeStr !=null and endTimeStr !='' ">
+					<![CDATA[ and serviceDateStr <= #{endTimeStr}]]>
+				 </if>
+			)
+	</select>
+	
 	
 	<!-- 某个订单确定的服务时间内，服务人员的派工情况，是否有接单 -->
 	<select id="getDisNumForStaDuringServiceDate" resultType="java.lang.Long" parameterType="com.jhj.vo.OrderSearchVo">

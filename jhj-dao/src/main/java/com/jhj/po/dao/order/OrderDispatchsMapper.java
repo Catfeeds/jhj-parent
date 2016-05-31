@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.vo.OaOrderDisSearchVo;
 import com.jhj.vo.OrderSearchVo;
+import com.jhj.vo.dispatch.StaffDispatchVo;
 
 public interface OrderDispatchsMapper {
     int deleteByPrimaryKey(Long id);
@@ -72,5 +73,10 @@ public interface OrderDispatchsMapper {
 	//jhj2.1  服务人员 在 订单 服务 时间内  是否有 派工
 	Long getDisNumForStaDuringServiceDate(OrderSearchVo searchVo);
 	
-	
+	/**
+	 *  门店派工人员列表
+	 *  
+	 *  	展示 7天 的 派工情况
+	 */
+	List<StaffDispatchVo>   selectStaffDisBySevenDay(OaOrderDisSearchVo oaOrderDisSearchVo);
 }

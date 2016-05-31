@@ -1,5 +1,7 @@
 package com.jhj.vo;
 
+import java.util.List;
+
 /**
  *
  * @author :hulj
@@ -11,17 +13,26 @@ public class OaOrderDisSearchVo extends OaOrderSearchVo{
 	
 	private String serviceDate;
 	
+	//根据 staffId 唯一标识一个服务人员, 并找到该服务人员的   请假时间
 	private Long staffId;
 	
-	
 	private String staffName;
-	
 	
 	private String startTimeStr;
 	
 	private String endTimeStr;
 	
+	//根据当前登录角色 确定 门店下的 所有云店
+	private List<Long> cloudOrgList;
 	
+	public List<Long> getCloudOrgList() {
+		return cloudOrgList;
+	}
+
+	public void setCloudOrgList(List<Long> cloudOrgList) {
+		this.cloudOrgList = cloudOrgList;
+	}
+
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}

@@ -42,8 +42,18 @@ public class Orders {
     private Long addTime;
 
     private Long updateTime;
+    
+    private String remarksBussinessConfirm;
+    
+    public String getRemarksBussinessConfirm() {
+		return remarksBussinessConfirm;
+	}
 
-    public Long getId() {
+	public void setRemarksBussinessConfirm(String remarksBussinessConfirm) {
+		this.remarksBussinessConfirm = remarksBussinessConfirm;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -53,7 +53,6 @@ public class OaOrderSearchVo {
 	
 	private List<Long> childServiceTypeList;		
 	
-	
 	// 2016年4月19日18:36:13  排班列表，点击进入订单列表
 	private String orderNo;	
 	
@@ -63,13 +62,20 @@ public class OaOrderSearchVo {
 	
 	private String endTimeStr;
 	
-	
 	private Long searchOrgId;			//当前登录 店长 的 门店Id
 	private List<Long> searchCloudOrgIdList;	// 根据登录角色 的 门店 确定的 云店。。
 	
 	private List<Short> searchOrderStatusList;	// 根据登录角色，确定 可以 查看的 订单状态
 	
 	
+	private String remarks;		// 订单的备注查询
+	
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 	public List<Short> getSearchOrderStatusList() {
 		return searchOrderStatusList;
 	}

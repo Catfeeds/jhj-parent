@@ -23,12 +23,15 @@
 		<result column="remarks_confirm" property="remarksConfirm" jdbcType="VARCHAR" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		
+		<result column="remarks_bussiness_confirm" property="remarksBussinessConfirm" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_no, order_type,
 		service_type,service_content, service_date, service_hour, order_status,
 		order_rate,
 		order_rate_content, order_from, remarks,remarks_confirm, add_time, update_time
+		,remarks_bussiness_confirm
 	</sql>
 	
 	<!-- 在某个 门店 下过单 的 用户 -->
@@ -469,6 +472,13 @@
    			</foreach>  
 		
 		</if>
+		
+		<if test="remarks != null and remarks !='' ">
+			and
+				remarks like CONCAT('%','${remarks}','%' )
+		</if>
+		
+		
 		order by add_time desc
 	</select>
 	
@@ -941,7 +951,8 @@
 		order_type, service_type,
 		service_content, service_date, service_hour,
 		order_status, order_rate, order_rate_content,
-		order_from, remarks,remarks_confirm,add_time, update_time
+		order_from, remarks,remarks_confirm,add_time, update_time,
+		remarks_bussiness_confirm
 		)
 		values
 		(#{id,jdbcType=NUMERIC}, #{amId,jdbcType=NUMERIC},
@@ -1029,6 +1040,12 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			
+			<if test="remarksBussinessConfirm !=null">
+				remarks_bussiness_confirm,
+			</if>
+			
+			
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -1161,6 +1178,11 @@
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=NUMERIC},
 			</if>
+			
+			<if test="remarksBussinessConfirm !=null and remarksBussinessConfirm !='' ">
+				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR},
+			</if>
+			
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -1216,7 +1238,10 @@
 		remarks_confirm = #{remarksConfirm,jdbcType=VARCHAR},
 		add_time =
 		#{addTime,jdbcType=NUMERIC},
-		update_time = #{updateTime,jdbcType=NUMERIC}
+		update_time = #{updateTime,jdbcType=NUMERIC},
+		
+		remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR},
+		
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
 	

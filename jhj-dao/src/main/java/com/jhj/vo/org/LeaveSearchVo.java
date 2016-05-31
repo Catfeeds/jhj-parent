@@ -12,6 +12,8 @@ public class LeaveSearchVo {
 	
 	private Long cloudOrgId;
 	
+	private Long parentOrgId;
+	
 	private String addTimeStr;		// 请假时间 ： 如，周三 请 周五的假， 此字段为  周三
 	
 	private Long addStartTime;
@@ -31,6 +33,39 @@ public class LeaveSearchVo {
 	private Long orderServiceDateEnd;	// 派工时，订单服务时间 （结束）的时间戳
 	
 	
+	// 服务人员排班表里，开始时间(和 leaveDate 比较),确定某个时间下,服务人员的请假状态
+	private Long dispatchDateStartStr;	
+	
+	//格式为     日期格式不能直接比较。转换为时间戳
+	private Long dispatchDateEndStr;
+	
+	
+	
+
+	public Long getDispatchDateStartStr() {
+		return dispatchDateStartStr;
+	}
+
+	public void setDispatchDateStartStr(Long dispatchDateStartStr) {
+		this.dispatchDateStartStr = dispatchDateStartStr;
+	}
+
+	public Long getDispatchDateEndStr() {
+		return dispatchDateEndStr;
+	}
+
+	public void setDispatchDateEndStr(Long dispatchDateEndStr) {
+		this.dispatchDateEndStr = dispatchDateEndStr;
+	}
+
+	public Long getParentOrgId() {
+		return parentOrgId;
+	}
+
+	public void setParentOrgId(Long parentOrgId) {
+		this.parentOrgId = parentOrgId;
+	}
+
 	public Long getOrderServiceDateStart() {
 		return orderServiceDateStart;
 	}
