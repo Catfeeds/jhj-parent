@@ -221,7 +221,7 @@ public class OrderPayController extends BaseController {
 			 * 		
 			 * 		修改已支付 状态时。。  
 			 * 
-			 * 	jhj2.1	钟点工(基础保洁类) 修改为 2、  助理单修改为 4
+			 * 	jhj2.1	钟点工(基础保洁类) 修改为 2、  助理单修改为 3
 			 */
 			
 			if(order.getOrderType() == Constants.ORDER_TYPE_2){

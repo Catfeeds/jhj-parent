@@ -25,6 +25,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserAddrsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.baiduMap.BaiduMapSearchUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -116,7 +117,7 @@ public class UserAddressController extends BaseController {
 	 * is_default 是否默认0=不默认1=默认
 	 */
 	@RequestMapping(value = "post_user_addrs", method = RequestMethod.POST)
-	public AppResultData<UserAddrs> saveAddress(
+	public AppResultData<Object> saveAddress(
 
 			@RequestParam("user_id") Long userId,
 			@RequestParam("addr_id") Long addrId,
@@ -137,6 +138,25 @@ public class UserAddressController extends BaseController {
 			@RequestParam(value = "org_id", required = false, defaultValue="0") Long orgId
 			) {
 
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		//添加地址之前，判断是否在北京市 范围内。不在则不让添加
+		
+		/*
+		 *  未做 编码转换, 该接口下没有 编码问题。。mapcontroller 接口下有编码问题
+		 */
+		boolean input = BaiduMapSearchUtil.isInBeijingForUserInput(name);
+		
+		if(!input){
+			
+			//如果不在 北京范围内
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ADDRESS_OUT_OF_BJ);
+			
+			return result;
+		}
+		
 
 		UserAddrs userAddrs = userAddrsService.initUserAddrs();
 		if (addrId > 0L) {
@@ -218,8 +238,8 @@ public class UserAddressController extends BaseController {
 
 		userAddrsVo.setAmMobile("");
 		
-		AppResultData<UserAddrs> result = new AppResultData<UserAddrs>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, userAddrsVo);
+		result.setData(userAddrsVo);
+		
 		return result;
 	}
 

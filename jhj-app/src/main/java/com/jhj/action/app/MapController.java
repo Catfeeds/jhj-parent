@@ -13,28 +13,34 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.meijia.utils.vo.AppResultData;
 import com.meijia.utils.HttpClientUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.wx.utils.JsonUtil;
 
 @Controller
 @RequestMapping(value="/app/map")
-public class MapController {
+public class MapController{
 
 	@RequestMapping(value = "autocomplete", method = RequestMethod.GET)
     public AppResultData<Object> autoComplete(
     		@RequestParam("query") String query,
-    		@RequestParam(value = "region", required = false, defaultValue = "全国") String region
+    		@RequestParam(value = "region", required = false, defaultValue = "北京市") String region
     		) {
 
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-
+		
+		if(StringUtil.isEmpty(query)){
+			
+			return result;
+		}
+		
+		
 		Map<String, String> params = new HashMap<String, String>();
 //		query = URLDecoder.decode(query);
 		try {
 			query = new String(query.getBytes("iso-8859-1"),"utf-8");
 			region = new String(region.getBytes("iso-8859-1"),"utf-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		params.put("query", query);

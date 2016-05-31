@@ -693,13 +693,7 @@ public class OrderAmController extends BaseController {
 			
 			cancelResultStr = ordersService.cancelAmOrder(orders);
 			
-			
-			
 		}
-		
-		
-		
-		
 		
 		result.setStatus(Constants.SUCCESS_0);
 		result.setMsg(cancelResultStr);
