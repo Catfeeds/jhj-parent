@@ -1,5 +1,7 @@
 package com.jhj.vo;
 
+import java.util.List;
+
 
 public class StaffSearchVo {
 	  
@@ -17,6 +19,16 @@ public class StaffSearchVo {
 	  
 	private Long parentId;
 	  
+	private List<Long> cloudOrgList;
+	
+	
+	public List<Long> getCloudOrgList() {
+		return cloudOrgList;
+	}
+
+	public void setCloudOrgList(List<Long> cloudOrgList) {
+		this.cloudOrgList = cloudOrgList;
+	}
 
 	public Long getParentId() {
 		return parentId;
