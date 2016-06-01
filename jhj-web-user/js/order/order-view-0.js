@@ -175,7 +175,7 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 				console.log("orderPayType = " + orderPayType);
 				//orderPayType = result.data.pay_type;
 				//如果为余额支付，则直接跳到完成页面
-				if (orderPayType == 0) {
+				if (orderPayType == 0 || orderPayType == 6) {
 					mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
 				}
 				
@@ -214,10 +214,8 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 		    		
 		    		myApp.alert("网络环境较差,请稍后重试");
 		    	}
-		    	
 		    }
 		});	
-		
 	}
 	
 	
@@ -328,12 +326,8 @@ myApp.template7Data['page:order-hour-view-0-page'] = function(){
           var timestamp = moment.unix(result.service_date);
 		  var startTime = timestamp.format('YYYY-MM-DD HH:mm');
 		  result.service_date = startTime;
-		  
-//		  var orderStatus = result.order_status;
-		  
 		 
       }	
-			  
    })
   
   return result;
