@@ -228,6 +228,8 @@
 											</tr>
 										</thead>
 										<tbody id="allStaff">
+										
+										   <c:if test="${fn:length(oaOrderListVoModel.voList) > 0}">	
 										   <c:forEach items="${oaOrderListVoModel.voList }" var="item">
 												<tr>
 													<td>
@@ -250,6 +252,7 @@
 													<td>${item.dispathStaStr }</td>
 												</tr>
 											</c:forEach>
+											</c:if>
 										</tbody>
 									</table>
 							</section>
