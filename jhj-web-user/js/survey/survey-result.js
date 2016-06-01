@@ -579,8 +579,8 @@ function changeThisTimes(obj){
 		myApp.prompt('', '次数修改',
 		      function (value) {
 				 	
-					if(!isPositiveNum(value) || Number(value) > 400 || value.indexOf(0) == 0){
-						myApp.alert("请输入小于400的整数数字");
+					if(!isPositiveNum(value) || Number(value) > 700 || value.indexOf(0) == 0){
+						myApp.alert("请输入小于700的整数数字");
 						return false;
 					}
 					
