@@ -20,7 +20,10 @@ $('#newStaff-form').validate({
 		addr : {
 			required : true
 		},
-		  
+		orgId: {
+			required: true,
+			orgId:"orgId"
+		},
 	
 	},
 
@@ -64,6 +67,15 @@ $('#newStaff-form').validate({
 	}
 
 });
+
+$.validator.addMethod("orgId",function(value,elements){
+	
+	// value 值是  option 选项 在 所有 option 中的 下标，从 0开始
+	if(value != 0){
+		return true;
+	}
+},"请选择云店");
+
 
 
 $('.org-form input').keypress(function(e) {

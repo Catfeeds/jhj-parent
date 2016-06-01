@@ -70,7 +70,7 @@
 								
 								<cloudOrgSelectTag:select 
 										logInParentOrgId="${loginOrgId}"
-										selectId="${staffSearchVoModel.orgId }"/>	
+										selectId="${newStaffFormVoModel.orgId }"/>	
 							    		
 							</div>
 						</div>

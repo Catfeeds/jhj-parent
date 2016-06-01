@@ -165,20 +165,22 @@ public class NewOrgStaffController extends AdminController {
 		List<Long> checkedAuthorityIds = new ArrayList<Long>();
 		List<Integer> checkedAuthorityIntegers = new ArrayList<Integer>();
 		
-		if(formVo.getPartServiceList()!=null){
-			List<PartnerServiceType> partServiceList = formVo.getPartServiceList();
+		List<PartnerServiceType> partServiceList = formVo.getPartServiceList();
+		
+		if(partServiceList!= null && partServiceList.size() > 0){
 			
-			for (Iterator iterator  = partServiceList.iterator(); iterator.hasNext();) {
+			for (PartnerServiceType partnerServiceType : partServiceList) {
 				
-				PartnerServiceType serviceType = (PartnerServiceType) iterator.next();
-				
-				Long parentId = serviceType.getParentId();
-				
-				if(serviceType!=null && parentId != 0){
-					checkedAuthorityIds.add(serviceType.getServiceTypeId());
-					checkedAuthorityIntegers.add(serviceType.getServiceTypeId().intValue());
+				if(partnerServiceType != null ){
+					Long parentId = partnerServiceType.getParentId();
+					if(parentId != 0){
+						checkedAuthorityIds.add(partnerServiceType.getServiceTypeId());
+						checkedAuthorityIntegers.add(partnerServiceType.getServiceTypeId().intValue());
+					}
 				}
+				
 			}
+			
 		}
 		if(!model.containsAttribute("newStaffFormVoModel")){
 			Long[] checkedAuthorityIdsArray=new Long[checkedAuthorityIds.size()];
@@ -200,7 +202,12 @@ public class NewOrgStaffController extends AdminController {
 		String org = AuthHelper.getSessionLoginOrg(request);
 		
 		if(!org.equals("0") && !StringUtil.isEmpty(org)){
-			model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+			
+//			if(orgStaffId != 0){
+//				model.addAttribute("loginOrgId", orgStaffId);
+//			}else{
+				model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+//			}
 		}
 		
 		return "bs/newStaffForm";
