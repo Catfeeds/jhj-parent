@@ -1181,7 +1181,7 @@
 			</if>
 			
 			<if test="remarksBussinessConfirm !=null and remarksBussinessConfirm !='' ">
-				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR},
+				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR}
 			</if>
 			
 		</set>
