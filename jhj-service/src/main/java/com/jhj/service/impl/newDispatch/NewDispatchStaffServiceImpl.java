@@ -250,7 +250,14 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		Orgs item = null;
 		try {
 			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
-			List<BaiduPoiVo> voList = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			/**
+			 * 
+			 *  2016年6月1日17:46:42 
+			 *  
+			 *   临时决定调换成  20Km , 3小时
+			 */
+			
+			List<BaiduPoiVo> voList = BaiduMapUtil.getMinDest(destList, 20000, 3600*3);
 			
 			for (int i =0; i < cloudOrgList.size(); i++) {
 				item = cloudOrgList.get(i);
