@@ -139,22 +139,33 @@ public class OrderCalendarController extends BaseController {
 		
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 		
-		//登录门店下的 所有 员工
-		List<OrgStaffs> staffList = new ArrayList<OrgStaffs>();
+		
+		
+		//门店下的所有员工 ............
+		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		
 		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
 			
 			//所有员工的请假情况
 			leaveSearchVo.setParentOrgId(Long.valueOf(org));
 			
-			//门店下的所有员工 ............
-			StaffSearchVo staffSearchVo = new StaffSearchVo();
-			
+			//店长登录，可以看到所在门店下的 所有员工
 			staffSearchVo.setParentId(Long.valueOf(org));
 			
-			staffList = staffService.selectNewStaffList(staffSearchVo);
+		}else{
+			//如果是 运营人员，可以查看所有门店的所有员工
+			staffSearchVo.setCloudOrgList(cloudIdList);
 			
+			//如果选择了云店
+			Short orgId = disSearchVo.getOrgId();
+			
+			if(orgId != null ){
+				staffSearchVo.setOrgId((long)orgId);
+			}
 		}
+		
+		//登录门店下的 所有 员工
+		List<OrgStaffs>  staffList = staffService.selectNewStaffList(staffSearchVo);
 		
 		leaveSearchVo.setDispatchDateStartStr(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(disSearchVo.getStartTimeStr())));
 		

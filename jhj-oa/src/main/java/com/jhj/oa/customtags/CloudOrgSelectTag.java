@@ -1,6 +1,7 @@
 package com.jhj.oa.customtags;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,11 +61,20 @@ public class CloudOrgSelectTag extends SimpleTagSupport {
 			 * 
 			 */
 			
-			GroupSearchVo searchVo = new GroupSearchVo();
 			
-			searchVo.setParentId(logInParentOrgId);
+			List<Orgs> orgList = new ArrayList<Orgs>();
 			
-        	List<Orgs> orgList = orgService.selectCloudOrgByParentOrg(searchVo);
+			if(logInParentOrgId != 0){
+				//如果登录的是店长
+				
+				GroupSearchVo searchVo = new GroupSearchVo();
+				searchVo.setParentId(logInParentOrgId);
+				orgList = orgService.selectCloudOrgByParentOrg(searchVo);
+			}else{
+				//如果登录的是 运营人员
+				orgList = orgService.selectCloudOrgs();
+			}
+			
 
             StringBuffer orgSelect = new StringBuffer();
             orgSelect.append("<select id = \"orgId\" name=\"orgId\" class=\"form-control\">" );
