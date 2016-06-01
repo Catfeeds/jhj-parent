@@ -19,6 +19,10 @@ import="com.jhj.oa.common.UrlHelper"%>
 
   <section id="container" >
 	  
+	  <!--header start-->
+	  <%@ include file="../shared/pageHeader.jsp"%>
+	  <!--header end-->
+	  
       <!--sidebar start-->
 	  <%@ include file="../shared/sidebarMenu.jsp"%>
       <!--sidebar end-->
