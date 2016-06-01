@@ -131,6 +131,13 @@
 							</div>
 						</div>
 						
+						<div class="form-group">
+
+							<label class="col-md-2 control-label"><font color="red">用户备注:</font></label>
+							<div class="col-md-5">
+								<form:textarea path="remarks" readonly="true" rows="5" cols="50" />
+							</div>
+						</div>
 						
 						<div class="form-group">
 
