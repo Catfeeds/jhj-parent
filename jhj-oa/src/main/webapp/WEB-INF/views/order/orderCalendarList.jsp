@@ -26,29 +26,23 @@
               <!-- page start-->
 
               <div class="row">
-                    <input type="hidden" value="${orgStaffId}" id="org_staff_id">
-				   <!-- <div class="portlet-title">
+                 <!--  <div class="col-lg-12"> -->
+                    <!--   <section class="panel"> -->
+                        <input type="hidden" value="${orgStaffId}" id="org_staff_id">
+							<div class="portlet-title">
                      <div class="caption"><i class="icon-table"></i>订单日历</div>
-                   </div> -->
-                  
-                  <tr>
-                  
-                   <td>
-                   		<p></p>
-                   		<p></p>
-                   		<p></p>
-                   		<p></p>
-                   </td>
-                   <td>
-	                  <div class="portlet-body" style="width: 1000px;margin-left: 200px;">
-	                     <div class="dataTables_wrapper form-inline" role="grid">
-		                     <div class="table-scrollable">
-		                     	<div id="calendar" class="has-toolbar"></div>
-		                     </div>
-	       				 </div>
-	                  </div>
-                   </td>
-                  </tr>
+                  </div>
+                  <div class="portlet-body">
+                     <div class="dataTables_wrapper form-inline" role="grid">
+	                     <div class="table-scrollable">
+	                     	<div id="calendar" class="has-toolbar"></div>
+	                     </div>
+       				 </div>
+                  </div>
+                          
+                    <!--   </section> -->
+                      
+                  <!-- </div> -->
               </div>
               <!-- page end-->
           </section> 
@@ -66,6 +60,7 @@
     <script type="text/javascript" src="<c:url value='/js/calendar/moment.min.js'/>"></script>
    <script type="text/javascript" src="<c:url value='/js/calendar/fullcalendar.min.js'/>"></script>
    <script type="text/javascript" src="<c:url value='/js/lang/zh-cn.js'/>"></script>
+   <script type="text/javascript" src="<c:url value='/js/app.js'/>"></script>
     <!--script for this page-->	
 
      <script type="text/javascript" src="<c:url value='/js/jhj/order/order-calendar.js'/>"></script>
