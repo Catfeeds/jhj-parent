@@ -15,8 +15,7 @@ $(function(){
 	
 	    axisFormat:'H:mm',
 	    allDaySlot:false,
-	    
-	    
+	      
 	});
 	
 	
