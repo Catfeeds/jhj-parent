@@ -81,7 +81,7 @@ public class OrderCalendarController extends BaseController {
 		// 得到 当前登录 的 门店id，并作为搜索条件
 		String org = AuthHelper.getSessionLoginOrg(request);
 		
-		 org = "1";
+//		 org = "1";
 		
 		List<Long> cloudIdList = new ArrayList<Long>();
 
@@ -128,15 +128,10 @@ public class OrderCalendarController extends BaseController {
 		
 		if(StringUtil.isEmpty(disSearchVo.getStartTimeStr())){
 			disSearchVo.setStartTimeStr(DateUtil.sevenDayBeforeToday());
-			
-//			disSearchVo.setStartTimeStr("2016-05-01");
-			
 		}
 		
 		if(StringUtil.isEmpty(disSearchVo.getEndTimeStr())){
 			disSearchVo.setEndTimeStr(DateUtil.format(new Date(), "yyyy-MM-dd"));
-			
-//			disSearchVo.setEndTimeStr("2016-05-07");
 		}
 		
 		//排班列表
@@ -244,7 +239,6 @@ public class OrderCalendarController extends BaseController {
 						
 						// 订单服务时间的 结束时间点
 						String endHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate + serviceHour*3600*1000, "HH:mm");
-						
 						
 						PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 						
