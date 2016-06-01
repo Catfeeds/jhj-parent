@@ -129,12 +129,21 @@ public class BaiduMapUtil {
 	/*
 	 * 对结果集排序，索引为0的 第一个对象，即为最近距离的 
 	 */
+	
+	
+	/*
+	 * 
+	 *  2016年6月1日17:42:11 
+	 *  
+	 *  	决定 调换成  20 公里 3小时  范围内均可
+	 */
+	
 	public static List<BaiduPoiVo>  getMinDest(List<BaiduPoiVo> resultAddrs, int maxDistance, int maxDuration){
 		
-		if (maxDistance <= 0 ) maxDistance = 10000;
+		if (maxDistance <= 0 ) maxDistance = 20000;
 		
 		//2016年5月16日14:51:27  修改为 10公里 120分钟
-		if (maxDuration <= 0 ) maxDuration = 3600;
+		if (maxDuration <= 0 ) maxDuration = 3600*3;
 		
 		List<BaiduPoiVo> firstList = new ArrayList<BaiduPoiVo>();
 		
