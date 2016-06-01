@@ -390,6 +390,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 	    //可用 服务人员 VO
 		List<OrgStaffsNewVo> staVoList = newDisStaService.getTheNearestStaff(addrs.getLatitude(), addrs.getLongitude(), staIdList);
 		
+		if(staVoList.size() <= 0){
+			
+			OrgStaffsNewVo staffNewVo = staffService.initOrgStaffNewVo();
+			staVoList.add(staffNewVo);
+		}
+		
 		oaOrderListVo.setVoList(staVoList);
 		
 		return oaOrderListVo;

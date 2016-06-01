@@ -51,6 +51,7 @@ import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
 import com.jhj.vo.bs.StaffSkillVo;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
+import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDeciamlUtil;
@@ -764,4 +765,30 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	public List<OrgStaffs> selectByStaffName(String name) {
 		return orgStaMapper.selectByStaffName(name);
 	}
+	
+	
+	@Override
+	public OrgStaffsNewVo initOrgStaffNewVo() {
+		
+		OrgStaffsNewVo newVo = new OrgStaffsNewVo();
+		OrgStaffs staffs = initOrgStaffs();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, newVo);
+		
+		newVo.setLat("");
+		newVo.setLng("");
+		newVo.setLocName("");
+		newVo.setDistanceValue(0);
+		newVo.setDistanceText("");
+		newVo.setDurationValue(0);
+		newVo.setDurationText("");
+		newVo.setTodayOrderNum(0L);
+		newVo.setStaffOrgName("");
+		newVo.setStaffCloudOrgName("");
+		newVo.setDispathStaStr("");
+		newVo.setDispathStaFlag(0);
+		
+		return newVo;
+	}
+	
 }

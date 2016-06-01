@@ -10,6 +10,7 @@ import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
 import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
+import com.jhj.vo.order.OrgStaffsNewVo;
 
 /**
  *
@@ -96,4 +97,6 @@ public interface OrgStaffsService {
     
     
     List<OrgStaffs> selectByStaffName(String name);
+    
+    OrgStaffsNewVo initOrgStaffNewVo();
 }
