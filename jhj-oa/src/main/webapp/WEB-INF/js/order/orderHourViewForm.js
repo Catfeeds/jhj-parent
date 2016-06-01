@@ -128,9 +128,9 @@ var loadStaffDynamic = function(data, status, xhr){
 		var item = data[i];
 		
 		var radioinput = "";
-		if(item.dispatch_sta_flag == 1){
+//		if(item.dispatch_sta_flag == 1){
 			radioinput = "<input name='sample-radio' type='radio' value="+item.staff_id+">" ;
-		}
+//		}
 		
 		var htmlStr ="<tr>" 
 					+ "<td>"

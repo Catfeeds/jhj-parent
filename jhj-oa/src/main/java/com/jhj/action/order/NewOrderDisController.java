@@ -169,9 +169,23 @@ public class NewOrderDisController extends BaseController {
 		 */
 		
 		//查询 出  某个 order_No 对应的 有效的 派工记录。。根据修改值，更新该条记录
-		List<OrderDispatchs> list = disService.selectByNoAndDisStatus(order.getOrderNo(), Constants.ORDER_DIS_ENABLE);
+		List<OrderDispatchs> disList = disService.selectByNoAndDisStatus(order.getOrderNo(), Constants.ORDER_DIS_ENABLE);
 		
-		OrderDispatchs dispatchs = list.get(0);		
+		OrderDispatchs dispatchs  = disService.initOrderDisp();
+		
+		if(disList.size() > 0){
+			dispatchs = disList.get(0);		
+		}else{
+			
+			dispatchs.setUserId(order.getUserId());
+			dispatchs.setMobile(order.getMobile());
+			dispatchs.setOrderId(orderId);
+			dispatchs.setOrderNo(order.getOrderNo());
+			dispatchs.setServiceHours(order.getServiceHour());
+			dispatchs.setRemarks(order.getRemarks());
+			
+		}
+		
 		
 		dispatchs.setServiceDate(newServiceDate);
 		dispatchs.setServiceDatePre(newServiceDate - 3600);
@@ -183,6 +197,7 @@ public class NewOrderDisController extends BaseController {
 			
 			staffs = staffService.selectByPrimaryKey(selectStaffId);
 			
+			dispatchs.setOrderId(staffs.getOrgId());
 			dispatchs.setStaffId(selectStaffId);
 			dispatchs.setStaffName(staffs.getName());
 			dispatchs.setStaffMobile(staffs.getMobile());
@@ -204,7 +219,17 @@ public class NewOrderDisController extends BaseController {
 				|| orderStatus == Constants.ORDER_HOUR_STATUS_3){
 		
 			//更新 派工表
-			disService.updateByPrimaryKeySelective(dispatchs);
+			if(disList.size() > 0){
+				//如果有过 派工记录。则修改
+				disService.updateByPrimaryKeySelective(dispatchs);
+			}else{
+				//否则是新增派工记录
+				disService.insert(dispatchs);
+			}
+			
+			
+			
+			
 			//更新订单表
 			orderSevice.updateByPrimaryKeySelective(order);
 			
@@ -437,16 +462,6 @@ public class NewOrderDisController extends BaseController {
 	  * @param cloudOrgId
 	  * @throws
 	 */
-	/**
-	 *  @Title: loadProperStaffListForBaseByCloudOrg
-	  * @Description: TODO
-	  * @param @param model
-	  * @param @param orderId
-	  * @param @param cloudOrgId
-	  * @param @return    设定文件
-	  * @return List<OrgStaffsNewVo>    返回类型
-	  * @throws
-	 */
 	@RequestMapping(value = "load_staff_by_change_cloud_org.json",method = RequestMethod.GET)
 	public List<OrgStaffsNewVo> loadProperStaffListForBaseByCloudOrg(Model model,
 			@RequestParam("orderId")Long orderId,
@@ -463,7 +478,7 @@ public class NewOrderDisController extends BaseController {
 		if(orderStatus  == Constants.ORDER_HOUR_STATUS_2
 					|| orderStatus == Constants.ORDER_HOUR_STATUS_3){
 			
-			 list = newDisService.getAbleStaffList(orderId, cloudOrgId);
+			 list = newDisService.getAbleStaffListByCloudOrg(orderId, cloudOrgId);
 			 
 			 
 			 OrderSearchVo searchVo = new OrderSearchVo();
