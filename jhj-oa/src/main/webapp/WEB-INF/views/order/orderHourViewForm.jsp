@@ -233,7 +233,7 @@
 										   <c:forEach items="${oaOrderListVoModel.voList }" var="item">
 												<tr>
 													<td>
-														<c:if test="${item.dispatchStaFlag == 1 }">
+														<c:if test="${item.dispathStaFlag == 1 }">
                                                   		 <input name="sample-radio"  id="radio-01" value="${item.staffId }" type="radio" > 
                                               			</c:if>
                                               			<input  type="hidden" id="selectStaffId" name="selectStaffId" 

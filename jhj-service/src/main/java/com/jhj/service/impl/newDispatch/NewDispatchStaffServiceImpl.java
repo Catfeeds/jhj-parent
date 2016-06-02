@@ -385,6 +385,12 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				staWithUserList.add(staffsNewVo);
 			}
 			
+			Collections.sort(staWithUserList, new Comparator<OrgStaffsNewVo>() {
+			    public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
+			    }
+			}); 
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -468,6 +474,8 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		
 		newVo.setStaffOrgName("");
 		newVo.setStaffCloudOrgName("");
+		newVo.setDispathStaFlag(0);
+		newVo.setDispathStaStr("");
 		
 		return newVo;
 	}
