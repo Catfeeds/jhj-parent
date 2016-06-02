@@ -146,16 +146,22 @@ public class UserAddressController extends BaseController {
 		/*
 		 *  未做 编码转换, 该接口下没有 编码问题。。mapcontroller 接口下有编码问题
 		 */
-		boolean input = BaiduMapSearchUtil.isInBeijingForUserInput(name);
-		
-		if(!input){
-			
+		if (!city.equals("北京市")) {
 			//如果不在 北京范围内
 			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.ADDRESS_OUT_OF_BJ);
-			
+			result.setMsg(ConstantMsg.ADDRESS_OUT_OF_BJ);		
 			return result;
 		}
+//		boolean input = BaiduMapSearchUtil.isInBeijingForUserInput(name);
+//		
+//		if(!input){
+//			
+//			//如果不在 北京范围内
+//			result.setStatus(Constants.ERROR_999);
+//			result.setMsg(ConstantMsg.ADDRESS_OUT_OF_BJ);
+//			
+//			return result;
+//		}
 		
 
 		UserAddrs userAddrs = userAddrsService.initUserAddrs();
