@@ -79,7 +79,7 @@ $("#submitForm").on('click',function(){
 		data:{
 		  "selectStaffId":selectStaffId,	
 		  		"orderId":orderId,
-		 "newServiceDate":paramStamp,
+		 "newServiceDate":orderDate,
 		 "distanceValue" :distanceValue
 		},
 		dataType:'json',

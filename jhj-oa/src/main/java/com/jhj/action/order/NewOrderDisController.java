@@ -128,10 +128,12 @@ public class NewOrderDisController extends BaseController {
 	public AppResultData<Object> submitManuBaseOrder(Model model,
 			@RequestParam("orderId")Long orderId,
 			@RequestParam("selectStaffId")Long selectStaffId,
-			@RequestParam("newServiceDate")Long newServiceDate,
+			@RequestParam("newServiceDate") String newServiceDate,
 			@RequestParam("distanceValue")int distanceValue){
 		
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
+		
+		if (newServiceDate.length() == 16) newServiceDate+=":00";
 		
 		if(selectStaffId == 0){
 			/*
@@ -148,8 +150,8 @@ public class NewOrderDisController extends BaseController {
 		}
 		
 		Orders order = orderSevice.selectbyOrderId(orderId);
-		
-		order.setServiceDate(newServiceDate);
+		Long serviceDateTime = TimeStampUtil.getMillisOfDayFull(newServiceDate) / 1000;
+		order.setServiceDate(serviceDateTime);
 		order.setUpdateTime(TimeStampUtil.getNowSecond());
 		//更新为 已派工
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
@@ -187,8 +189,8 @@ public class NewOrderDisController extends BaseController {
 		}
 		
 		
-		dispatchs.setServiceDate(newServiceDate);
-		dispatchs.setServiceDatePre(newServiceDate - 3600);
+		dispatchs.setServiceDate(serviceDateTime);
+		dispatchs.setServiceDatePre(serviceDateTime - 3600);
 		dispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 		
 		OrgStaffs staffs = new OrgStaffs();
