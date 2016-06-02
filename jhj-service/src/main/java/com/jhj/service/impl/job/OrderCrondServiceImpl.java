@@ -300,7 +300,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 			
 			orders.setOrderStatus(Constants.ORDER_STATUS_9);
 			
-			orderMapper.updateByPrimaryKey(orders);
+			orderMapper.updateByPrimaryKeySelective(orders);
 			
 		}
 		

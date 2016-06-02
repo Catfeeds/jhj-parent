@@ -559,8 +559,9 @@ public class OaOrderController extends BaseController {
 				list.add(orgStaffsNewVo);
 			}
 			
-			oaOrderListVo.setVoList(list);
+			
 		}
+		oaOrderListVo.setVoList(list);
 
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
 
