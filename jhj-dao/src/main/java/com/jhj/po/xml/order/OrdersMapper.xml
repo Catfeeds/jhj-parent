@@ -333,7 +333,7 @@
 		where 
 		order_type = 0
 		and
-		order_status = 3
+		order_status = 1
 		and
 		<![CDATA[
 		UNIX_TIMESTAMP(CURRENT_TIMESTAMP) >= add_time + 1800

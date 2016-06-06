@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.google.gson.Gson;
 import com.jhj.action.BaseController;
 import com.jhj.oa.auth.AuthHelper;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
@@ -75,6 +76,7 @@ public class OrderCalendarController extends BaseController {
 	 * 
 	 *               门店 工作人员 排班表 和 请假表
 	 */
+	@AuthPassport
 	@RequestMapping(value = "calendar_list", method = RequestMethod.GET)
 	public String staffOrderList(OaOrderDisSearchVo disSearchVo, HttpServletRequest request, Model model) throws ParseException {
 
@@ -147,8 +149,8 @@ public class OrderCalendarController extends BaseController {
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		
 		if (org!=null &&
-				   !org.equals("0") && 
-				   !StringUtil.isEmpty(org)) {
+		   !org.equals("0") && 
+		   !StringUtil.isEmpty(org)) {
 			
 			//所有员工的请假情况
 			leaveSearchVo.setParentOrgId(Long.valueOf(org));
@@ -188,12 +190,16 @@ public class OrderCalendarController extends BaseController {
 		// 初始化时间、staff
 		for (OrgStaffs orgStaff : staffList) {
 			
+			Long staffId = orgStaff.getStaffId();
+			if (!staffId.equals(34L)) continue;
+			
+			
 			OaStaffDisAndLeaveVo disAndLeaveVo = new OaStaffDisAndLeaveVo();
 			
 			disAndLeaveVo.setStaffId(orgStaff.getStaffId());
 			disAndLeaveVo.setStaffName(orgStaff.getName());
 			
-			Long staffId = orgStaff.getStaffId();
+			
 			
 			List<TimeEventVo> timeEventList = new ArrayList<TimeEventVo>();
 			
