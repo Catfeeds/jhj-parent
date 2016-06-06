@@ -85,7 +85,9 @@ public class OrderCalendarController extends BaseController {
 		
 		List<Long> cloudIdList = new ArrayList<Long>();
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (org!=null &&
+		   !org.equals("0") && 
+		   !StringUtil.isEmpty(org)) {
 
 			/*
 			 * 如果是店长 ，只能看到 自己门店 对应的 所有 云店 的 派工记录  （成功派工）。
@@ -144,7 +146,9 @@ public class OrderCalendarController extends BaseController {
 		//门店下的所有员工 ............
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (org!=null &&
+				   !org.equals("0") && 
+				   !StringUtil.isEmpty(org)) {
 			
 			//所有员工的请假情况
 			leaveSearchVo.setParentOrgId(Long.valueOf(org));
@@ -251,9 +255,11 @@ public class OrderCalendarController extends BaseController {
 						// 订单服务时间的 结束时间点
 						String endHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate + serviceHour*3600*1000, "HH:mm");
 						
+						eventVo.setEventName("");
 						PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
-						
-						eventVo.setEventName(type.getName()); 
+						if (type != null) {
+							eventVo.setEventName(type.getName());
+						}
 						eventVo.setDateDuration(startHourMinStr +"~"+ endHourMinStr);
 						
 						eventList.add(eventVo);
