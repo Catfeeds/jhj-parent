@@ -57,7 +57,8 @@
 			FROM_UNIXTIME(service_date,'%Y-%m-%d') AS serviceDateStr, 
 			staff_id  AS staffId ,
 			staff_name AS staffName,
-			order_id AS orderId
+			order_id AS orderId,
+			order_no as orderNo
 		FROM 
 			order_dispatchs  
 		WHERE 
@@ -69,9 +70,7 @@
 			           open="(" separator="," close=")">
 			      #{item}
 			  	</foreach>
-		 </if>
-		 GROUP BY serviceDateStr, staffId
-			
+		 </if>			
 		 HAVING  
 		 	(	 
 				 <if test="startTimeStr !=null and startTimeStr !='' ">
@@ -81,6 +80,7 @@
 					<![CDATA[ and serviceDateStr <= #{endTimeStr}]]>
 				 </if>
 			)
+		ORDER BY service_date asc
 	</select>
 	
 	

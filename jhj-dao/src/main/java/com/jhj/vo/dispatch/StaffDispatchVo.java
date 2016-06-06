@@ -20,7 +20,9 @@ public class StaffDispatchVo {
 	private String staffName;
 	
 	private Long orderId;
-
+	
+	private String orderNo;
+	
 	public String getServiceDateStr() {
 		return serviceDateStr;
 	}
@@ -51,6 +53,14 @@ public class StaffDispatchVo {
 
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 	
 }

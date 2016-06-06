@@ -191,7 +191,6 @@ public class OrderCalendarController extends BaseController {
 		for (OrgStaffs orgStaff : staffList) {
 			
 			Long staffId = orgStaff.getStaffId();
-			if (!staffId.equals(34L)) continue;
 			
 			
 			OaStaffDisAndLeaveVo disAndLeaveVo = new OaStaffDisAndLeaveVo();
@@ -243,12 +242,13 @@ public class OrderCalendarController extends BaseController {
 					
 					Long orderId = staffDisVo.getOrderId();
 					
+					String orderNo = staffDisVo.getOrderNo();
 					
 					if (disStaffId == staffId && serviceDateStr.equals(weekDate)) {
 						
 						EventVo eventVo = new EventVo();
 						
-						Orders orders = orderService.selectByPrimaryKey(orderId);
+						Orders orders = orderService.selectByOrderNo(orderNo);
 						
 						Long serviceDate = orders.getServiceDate()*1000;
 						Short serviceHour = orders.getServiceHour();
