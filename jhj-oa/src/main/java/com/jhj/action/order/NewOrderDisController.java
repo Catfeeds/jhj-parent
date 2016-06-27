@@ -199,7 +199,7 @@ public class NewOrderDisController extends BaseController {
 			
 			staffs = staffService.selectByPrimaryKey(selectStaffId);
 			
-			dispatchs.setOrderId(staffs.getOrgId());
+			dispatchs.setOrderId(orderId);
 			dispatchs.setStaffId(selectStaffId);
 			dispatchs.setStaffName(staffs.getName());
 			dispatchs.setStaffMobile(staffs.getMobile());

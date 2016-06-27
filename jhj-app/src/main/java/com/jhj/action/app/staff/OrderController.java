@@ -222,8 +222,11 @@ public class OrderController extends BaseController {
 		ordersService.updateByPrimaryKeySelective(orders);
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(orderId);
 		
+		String orderNo = orders.getOrderNo();
 		//更新orderdispatchs的更新时间
-		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderId(orderId);
+		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(orderNo);
+		
+		
 		orderDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 		orderDispatchsService.updateByPrimaryKeySelective(orderDispatchs);
 

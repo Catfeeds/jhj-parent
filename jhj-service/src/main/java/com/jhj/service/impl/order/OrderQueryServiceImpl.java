@@ -539,7 +539,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 		OrderListVo vo = new OrderListVo();
 
-		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderId(item.getId());
+		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(item.getOrderNo());
 		Long staffId = orderDispatchs.getStaffId();
 		
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(item.getId());

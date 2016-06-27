@@ -801,7 +801,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    
 		    Orders order = ordersService.selectbyOrderId(orderId);
 		    OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
-		    OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderId(orderId);
+		    OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(order.getOrderNo());
 		    //服务地址：
 		    String serviceAddr = "";
 		    if (order.getAddrId() > 0L) {
