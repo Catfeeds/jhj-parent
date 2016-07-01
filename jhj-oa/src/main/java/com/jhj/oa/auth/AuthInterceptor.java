@@ -40,11 +40,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             			matcher = pattern.matcher(requestServletPath);
 //            			System.out.println(permissionMenu.getPermission() + "----" + requestServletPath + "----matcher=" + matcher.find());
             			Boolean matcherFind = false;
-            			matcherFind = matcher.matches();
+            			matcherFind = matcher.find();
             			if(matcherFind){
         					hasPermission=true;
 //        					System.out.println(permissionMenu.getPermission() + "-1111---" + requestServletPath + "----2222matcher=" + matcherFind);
         					AuthHelper.setRequestPermissionMenu(request, permissionMenu);
+        					break;
             			}
             		}
             		if(hasPermission)

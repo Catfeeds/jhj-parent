@@ -70,7 +70,7 @@
 						<!-- <th>序号</th> -->
 						<th>标题</th>
 						<th>摘要</th>
-						<th>详细内容</th>
+						<!-- <th>详细内容</th> -->
 						<th>用户类型</th>
 						<th>是否有效</th>
 						<th>添加时间</th>
@@ -83,7 +83,7 @@
 							<%-- <td>${ item.msgId }</td> --%>
 							<td>${ item.title }</td>
 							<td>${ item.summary }</td>
-							<td>${ item.content }</td>
+							<%-- <td>${ item.content }</td> --%>
 							<td>
 								<c:choose>
 										<c:when test="${item.userType==0}">

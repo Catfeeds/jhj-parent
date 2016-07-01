@@ -52,8 +52,8 @@
 					<div class="form-group required">
 						<label class="col-md-2 control-label">摘要</label>
 						<div class="col-md-5">
-							<form:input path="summary" class="form-control" id="summary"
-								placeholder="摘要" maxLength="32" />
+							<form:textarea path="summary" class="form-control"  rows="5" cols="50"
+                                 	placeholder="不超过500个字" maxlength="500"/>
 							<form:errors path="summary" class="field-has-error"></form:errors>
 						</div>
 					</div>
