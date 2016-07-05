@@ -1,5 +1,7 @@
 package com.jhj.action.app.user;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,11 +11,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.users.UsersService;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.SmsUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
 @Controller
@@ -76,6 +82,8 @@ public class UserCardPayController extends BaseController {
 
 		userId = orderCards.getUserId();
 		
+		
+		Users u = usersService.selectByUsersId(userId);
 		//如果已经付款，则直接返回
 		if (orderCards != null && orderCards.getOrderStatus().equals(Constants.PAY_STATUS_1)) {
 			return result;
@@ -88,6 +96,25 @@ public class UserCardPayController extends BaseController {
 		
 		//赠送相应的优惠劵到对于的用户账户
 		orderCardsService.sendCoupons(userId, orderCards.getId());
+		
+		/*
+		 * 2016年4月15日17:06:44  新增短信
+		 * 
+		 * 您好，您的账户于{1}充值{2}。定制全年套餐，让美好生活不再有家务之忧
+		 * 
+		 */
+		//充值时间
+		
+		String serviceTime = TimeStampUtil.timeStampToDateStr(TimeStampUtil.getNow(), "MM月-dd日HH:mm");
+		
+		//充值金额
+		BigDecimal value = orderCards.getCardPay();
+		
+		String[] paySuccessForUser = new String[] {serviceTime,value.toString()};
+		
+		SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_CHARGE_PAY_SUCCESS, paySuccessForUser);
+				
+		
 		
 		return result;
 
