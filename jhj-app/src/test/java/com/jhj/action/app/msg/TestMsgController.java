@@ -23,7 +23,7 @@ public class TestMsgController extends JUnitActionBase {
     public void testMsgList() throws Exception {
 
 		String url = "/app/msg/get_list.json";
-		String params = "?user_id=1&user_type=0&page=1";
+		String params = "?user_id=60&user_type=0&page=1";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);

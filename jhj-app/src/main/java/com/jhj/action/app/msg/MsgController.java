@@ -52,6 +52,7 @@ public class MsgController extends BaseController {
 				page, Constants.PAGE_MAX_NUMBER);*/
 		
 		MsgSearchVo searchVo = new MsgSearchVo();
+		searchVo.setUserId(userId);
 		searchVo.setUserType(userType);
 		
 		List<Msg> list = msgService.selectMsgListBySearchVo(searchVo,
