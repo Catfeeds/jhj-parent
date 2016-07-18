@@ -1,8 +1,10 @@
 package com.jhj.po.dao.bs;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.vo.StaffSearchVo;
@@ -69,5 +71,10 @@ public interface OrgStaffsMapper {
     
     //精确查询，根据名称
     List<OrgStaffs> selectByStaffName(String name);
+    
+//    List<Map> selectStaffRegion();
+    
+    //分页获取员工位置信息
+    List<Map> selectByListPage(@Param("mobile")String mobile);
     
 }
