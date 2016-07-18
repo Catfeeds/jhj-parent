@@ -28,6 +28,17 @@
     <result column="parent_org_id" property="parentOrgId" jdbcType="NUMERIC" />
     <result column="level" property="level" jdbcType="NUMERIC" />
   </resultMap>
+  
+   <resultMap id="UserTrailRealMap" type="com.jhj.po.model.user.UserTrailReal" >
+    <id column="id" property="id" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="user_type" property="userType" jdbcType="NUMERIC" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="poi_name" property="poiName" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     staff_id, province_id, city_id, region_id, org_id, staff_type, status, sex, name, 
     mobile, tel, addr, birth, work_year, card_id, nation, edu, astro, blood_type, head_img, 
@@ -601,4 +612,15 @@
       level = #{level,jdbcType=NUMERIC}
     where staff_id = #{staffId,jdbcType=NUMERIC}
   </update>
+  
+  <!-- 两个表关联查询员工地理位置，user_trail_real,org_staffs -->
+  <select id="selectByListPage" resultType="java.util.Map" parameterType="java.lang.String">
+  	SELECT os.org_id,os.parent_org_id,os.name,os.mobile,ut.poi_name,ut.add_time 
+  	FROM user_trail_real ut,org_staffs os 
+  	WHERE ut.user_id=os.staff_id 
+  	<if test="mobile!=null">
+  		and os.mobile like concat('%',#{mobile},'%') 
+  	</if>
+  	order by os.add_time desc
+  </select>
 </mapper>
