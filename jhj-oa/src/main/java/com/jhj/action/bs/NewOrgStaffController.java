@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 
+import org.apache.ibatis.session.RowBounds;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.admin.AdminController;
@@ -91,6 +94,7 @@ public class NewOrgStaffController extends AdminController {
 	@Autowired
 	private PartnerServiceTypeService partService;
 	
+	
 	/**
 	 *  @Title: newStaffList
 	  * @Description: 
@@ -122,9 +126,7 @@ public class NewOrgStaffController extends AdminController {
 			staffSearchVo.setParentId(Long.valueOf(org));
 		}
 		
-		
 		List<OrgStaffs> list = staffService.selectNewStaffList(staffSearchVo);
-		
 		OrgStaffs orgStaff = null;
 		for (int i = 0; i < list.size(); i++) {
 			orgStaff = list.get(i);
@@ -132,7 +134,7 @@ public class NewOrgStaffController extends AdminController {
 
 			list.set(i, vo);
 		}
-		
+		System.out.println(list);
 		PageInfo result = new PageInfo(list);
 		
 		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
@@ -365,6 +367,32 @@ public class NewOrgStaffController extends AdminController {
 		
 		
 		return "redirect:/newbs/new_staff_list";
+	}
+	
+	/*
+	 * 获取服务人员最新的地理位置
+	 * */
+	@RequestMapping(value="/staffRegion",method={RequestMethod.GET,RequestMethod.POST})
+	public String staffRegion(Model model,HttpServletRequest request,
+			@RequestParam(value="mobile",required=false) String mobile){
+		
+		int pageNo = ServletRequestUtils.getIntParameter(request,
+				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request,
+				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		//获取员工的地理位置
+		PageInfo<Map> pageList = staffService.selectByListPage(mobile,pageNo,pageSize);
+		System.out.println(pageList);
+		//获取门店信息
+		List<Orgs> orgsList=orgService.selectOrgsNoParent();
+		//获取云店信息
+		List<Orgs> cloudOrgsList = orgService.selectCloudOrgs();
+		
+		model.addAttribute("orgsList", orgsList);
+		model.addAttribute("cloudOrgsList", cloudOrgsList);
+		model.addAttribute("pageInfo", pageList);
+		
+		return "bs/staffRegion";
 	}
 	
 }
