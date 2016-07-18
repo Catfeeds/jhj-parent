@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffSkillMapper;
 import com.jhj.po.dao.bs.OrgStaffsMapper;
@@ -789,6 +791,15 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		newVo.setDispathStaFlag(0);
 		
 		return newVo;
+	}
+
+	@Override
+	public PageInfo<Map> selectByListPage(String mobile,int pageNo,int pageSize) {
+		// 分页
+		PageHelper.startPage(pageNo, pageSize);
+		List<Map> pageList = orgStaMapper.selectByListPage(mobile);
+		PageInfo pageInfo=new PageInfo(pageList);
+		return pageInfo;
 	}
 	
 }
