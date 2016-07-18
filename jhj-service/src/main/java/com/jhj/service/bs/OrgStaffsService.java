@@ -3,6 +3,9 @@ package com.jhj.service.bs;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
+
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.StaffSearchVo;
@@ -99,4 +102,7 @@ public interface OrgStaffsService {
     List<OrgStaffs> selectByStaffName(String name);
     
     OrgStaffsNewVo initOrgStaffNewVo();
+    
+    //分页获取员工最新的地理位置
+    PageInfo<Map> selectByListPage(String mobile,int pageNo,int pageSize);
 }
