@@ -65,6 +65,7 @@
 	                              <tr>	
                               		<td>
                               			<c:forEach items="${orgsList }" var="org">
+                              				${staff.parent_id }
                               				<c:if test="${org.orgId eq staff.parent_id && org.parentId eq 0 }">
                               					<span>${org.orgName }</span>
                               				</c:if>
@@ -72,7 +73,7 @@
                               		</td>
                               		<td>
                               			<c:forEach items="${cloudOrgsList }" var="cloud">
-                              				<c:if test="${org.parentId gt 0 && cloud.orgId eq staff.org_id }">
+                              				<c:if test="${cloud.orgId gt 0 && cloud.orgId eq staff.org_id }">
                               					<span>${cloud.orgName }</span>
                               				</c:if>
                               			</c:forEach>
