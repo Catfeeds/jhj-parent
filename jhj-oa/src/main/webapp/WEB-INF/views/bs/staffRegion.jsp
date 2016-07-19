@@ -65,8 +65,7 @@
 	                              <tr>	
                               		<td>
                               			<c:forEach items="${orgsList }" var="org">
-                              				${staff.parent_id }
-                              				<c:if test="${org.orgId eq staff.parent_id && org.parentId eq 0 }">
+                              				<c:if test="${org.orgId eq staff.parent_org_id && org.parentId eq 0 }">
                               					<span>${org.orgName }</span>
                               				</c:if>
                               			</c:forEach>
