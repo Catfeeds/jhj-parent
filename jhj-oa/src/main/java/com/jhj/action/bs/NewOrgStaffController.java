@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 
-import org.apache.ibatis.session.RowBounds;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.admin.AdminController;
@@ -382,7 +380,6 @@ public class NewOrgStaffController extends AdminController {
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		//获取员工的地理位置
 		PageInfo<Map> pageList = staffService.selectByListPage(mobile,pageNo,pageSize);
-		System.out.println(pageList);
 		//获取门店信息
 		List<Orgs> orgsList=orgService.selectOrgsNoParent();
 		//获取云店信息
