@@ -41,8 +41,8 @@ public class OrderHourPayServiceImpl implements OrderHourPayService {
 		List<UserCoupons> list = userCouponService.selectByUserId(userId);
 		List<DictCoupons> listNew = new ArrayList<DictCoupons>();
 		//过滤优惠券是否失效
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			UserCoupons userCoupons = (UserCoupons) iterator.next();
+		for (Iterator<UserCoupons> iterator = list.iterator(); iterator.hasNext();) {
+			UserCoupons userCoupons = iterator.next();
 			DictCoupons dictCoupons = dictCouponService.selectByPrimaryKey(userCoupons.getCouponId());
 			if(DateUtil.getNowOfDate().before(dictCoupons.getToDate())){
 				
