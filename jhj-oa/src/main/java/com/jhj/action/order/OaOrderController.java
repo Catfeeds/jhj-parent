@@ -158,6 +158,7 @@ public class OaOrderController extends BaseController {
 
 		if (oaOrderSearchVo == null) {
 			oaOrderSearchVo = new OaOrderSearchVo();
+			//钟点工
 			oaOrderSearchVo.setOrderType(Constants.ORDER_TYPE_0);
 		} else {
 			oaOrderSearchVo.setOrderType(Constants.ORDER_TYPE_0);
@@ -461,6 +462,7 @@ public class OaOrderController extends BaseController {
 
 		if (oaOrderSearchVo == null) {
 			oaOrderSearchVo = new OaOrderSearchVo();
+			//配送服务订单
 			oaOrderSearchVo.setOrderType(Constants.ORDER_TYPE_3);
 		} else {
 			oaOrderSearchVo.setOrderType(Constants.ORDER_TYPE_3);
@@ -716,8 +718,8 @@ public class OaOrderController extends BaseController {
 
 			// 更新派工表 + 日志表
 			dispatchStaffFromOrderService.disStaff(orgStaffs, order, user, poiLongitude, poiLatitude, pickAddrName, pickAddr, userAddrDistance);
-
-			// 后期增加给服务人员推送消息
+			
+			SmsUtil.SendSms(user.getMobile(), Constants.MESSAGE_ORDER_PAY_HINT, new String[]{});
 		}
 		return "redirect:/order/order-am-list";
 	}
@@ -897,7 +899,7 @@ public class OaOrderController extends BaseController {
 
 		Users users = usersService.selectByUsersId(userId);
 
-		String[] paySuccessForUser = new String[] {};
+		String[] paySuccessForUser = new String[] {"您的订单已确认，请在30分钟之内支付"};
 
 		SmsUtil.SendSms(users.getMobile(), Constants.MESSAGE_ORDER_NEED_TO_PAY, paySuccessForUser);
 
