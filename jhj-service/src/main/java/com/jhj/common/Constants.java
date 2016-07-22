@@ -348,6 +348,13 @@ public class Constants {
 	 */
 	public static String MESSAGE_ORDER_NEED_TO_PAY = "79660";
 	
+	
+	/*
+	 * 代付款
+	 * 您的订单已确认，请在30分钟之内支付
+	 * */
+	public static String MESSAGE_ORDER_PAY_HINT ="103194";
+	
 	/*
 	 * 服务完成待评价 (服务人员点击完成服务)
 	 * 
