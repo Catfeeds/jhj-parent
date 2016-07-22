@@ -59,6 +59,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 
 	var calendarInline = myApp.calendar(calendarParams);
 	
+	
 	var userId = userId;
 		
 	
@@ -242,15 +243,19 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	 *  时间 ：   月份和 天数都比 实际数字 小 1
 	 * 
 	 */
-	var todayStr = today.getFullYear() + "-" + (parseInt(today.getMonth()) + 1) + "-" + (parseInt(today.getDay()) + 1);
-	loadOrderList(userId, page, todayStr);
+//	var todayStr = today.getFullYear() + "-" + (parseInt(today.getMonth()) + 1) + "-" + (parseInt(today.getDay()) + 1);
+//	loadOrderList(userId, page, todayStr);
+	$$(document).on('pageAfterAnimation', function () {
+		loadOrderList(userId, page, curClickDay)
+	});
+	
 	// 注册'infinite'事件处理函数
 	$$('#order-list-more').on('click', function() {
 		var cpage = $$("#page").val();
 		console.log("cpage = " + page);
 		loadOrderList(userId, cpage, curClickDay);
 	});
-
+	
 });
 
 
