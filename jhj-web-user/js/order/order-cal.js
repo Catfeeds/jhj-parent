@@ -245,8 +245,10 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	 */
 //	var todayStr = today.getFullYear() + "-" + (parseInt(today.getMonth()) + 1) + "-" + (parseInt(today.getDay()) + 1);
 //	loadOrderList(userId, page, todayStr);
-	$$(document).on('pageAfterAnimation', function () {
-		loadOrderList(userId, page, curClickDay)
+	$$(document).once('pageAfterAnimation', function () {
+		var date=new Date()
+		var time=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+		loadOrderList(userId, page, time);
 	});
 	
 	// 注册'infinite'事件处理函数
