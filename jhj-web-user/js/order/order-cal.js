@@ -236,8 +236,6 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	}	
 	
 	
-	
-	console.log(today.getFullYear() + "-" + today.getMonth() + "-" + today.getDay());
 	/*
 	 * 
 	 *  时间 ：   月份和 天数都比 实际数字 小 1
