@@ -251,8 +251,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	
 	// 注册'infinite'事件处理函数
 	$$('#order-list-more').on('click', function() {
-		var cpage = $$("#page").val();
-		console.log("cpage = " + page);
+		var cpage = ++page;
 		loadOrderList(userId, cpage, curClickDay);
 	});
 	
