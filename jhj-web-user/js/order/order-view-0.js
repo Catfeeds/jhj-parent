@@ -143,11 +143,11 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 			 url: siteAPIPath + "order/post_pay.json",
 			data: postdata,
 			timeout : 20000, //超时时间设置，单位毫秒
-			success:function(xhr,data,status) {
+			success:function(data,xhr,status) {
 	        	
 				$$("#hour-pay-submit").removeAttr('disabled');
 				
-			 	var result = JSON.parse(data.response);
+			 	var result = JSON.parse(data);
 				if (result.status == "999") {
 					myApp.alert(result.msg);
 					
@@ -172,7 +172,6 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 				
 				orderPayType = result.data.pay_type;
 				orderType = result.data.order_type;
-				console.log("orderPayType = " + orderPayType);
 				//orderPayType = result.data.pay_type;
 				//如果为余额支付，则直接跳到完成页面
 				if (orderPayType == 0 || orderPayType == 6) {
