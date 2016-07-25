@@ -45,7 +45,7 @@ function serviceDateSelect() {
 	}
 	
 	if(nowHour > 18 && nowHour <=23){
-		serviceHoursValues = [8,9,10,11,12,13,14,15,16,17,18]; 
+		serviceHoursValues = [08,09,10,11,12,13,14,15,16,17,18]; 
 	}
 	
 	var serviceMins = ["00", "30"];
