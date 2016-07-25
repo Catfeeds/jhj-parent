@@ -8,7 +8,12 @@ function serviceDateSelect() {
 	//当前整点小时数
 	var todayStr = moment().add(0,'days').format('YYYY-MM-DD');
 	var tomorrowStr = moment().add(1,'days').format('YYYY-MM-DD');
-	var nowHour = moment().hour();
+	var nowHour=null;
+	if(moment().minutes()>=30){
+		nowHour= moment().hour()+1;
+	}else{
+		nowHour= moment().hour();
+	}
 	
 //	var nowHour = 12;
 	if (nowHour >= 18) {
@@ -33,8 +38,8 @@ function serviceDateSelect() {
 	} 
 
 	if(nowHour > 8 && nowHour <= 18){
-		for (i = nowHour + 1; i < 18; i++) {
-			var tempHour = moment({ hour:i+1}).format('HH');
+		for (i = nowHour + 1; i <= 18; i++) {
+			var tempHour = moment({ hour:i}).format('HH');
 			serviceHoursValues.push(tempHour);
 		}
 	}
