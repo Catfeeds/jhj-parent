@@ -11,51 +11,36 @@ function serviceDateSelect() {
 	var nowHour = moment().hour();
 	
 //	var nowHour = 12;
-	if (nowHour >= 16) {
+	if (nowHour >= 18) {
 		start = 1;
 	}	
 	
-	for (var i = start; i < 14; i++) {
+	for (var i = start; i <= 14; i++) {
 		var tempDay = moment().add(i,'days').format('YYYY-MM-DD');
 		serviceDateValues.push(tempDay);
 	}	
 	
 	var serviceHoursValues = [];
 	var defaultServiceHoursValues = [];
-	// 可选 小时 的  最大范围 （考虑 时长）， 为  6 ~ 19
-	for (var i =8; i < 20; i++) {
-		
-		if(i != 12 && i != 17){
-			var tempHour = moment({ hour:i}).format('HH');
-			defaultServiceHoursValues.push(tempHour);
-		}
+	// 可选 小时 的  最大范围 （考虑 时长）， 为  8 ~ 18
+	for (var i =8; i <= 18; i++) {
+		var tempHour = moment({ hour:i}).format('HH');
+		defaultServiceHoursValues.push(tempHour);
 	}
 	
-	if(nowHour >= 0 && nowHour < 7){
-		serviceHoursValues = [10,11,13,14,15,16,18,19];
+	if(nowHour >= 0 && nowHour <= 8){
+		serviceHoursValues = [09,10,11,12,13,14,15,16,17,18];
 	} 
 
-	if(nowHour > 8 && nowHour <= 12){
-		for (i = nowHour + 4; i < 19; i++) {
-				
-			var tempHour = moment({ hour:i}).format('HH');
-			
-			if(tempHour != 12 && tempHour != 17){
-				serviceHoursValues.push(tempHour);
-			}
+	if(nowHour > 8 && nowHour <= 18){
+		for (i = nowHour + 1; i < 18; i++) {
+			var tempHour = moment({ hour:i+1}).format('HH');
+			serviceHoursValues.push(tempHour);
 		}
 	}
 	
-	if(nowHour >12 && nowHour <= 15){
-		serviceHoursValues = [18,19];
-	}
-	
-	if(nowHour >= 16 && nowHour <= 19){
-		serviceHoursValues = [8,9,10,11,13,14,15,16,18,19];
-	}
-	
-	if(nowHour > 19 && nowHour <=23){
-		serviceHoursValues = [10,11,13,14,15,16,18,19]; 
+	if(nowHour > 18 && nowHour <=23){
+		serviceHoursValues = [8,9,10,11,12,13,14,15,16,17,18]; 
 	}
 	
 	var serviceMins = ["00", "30"];
