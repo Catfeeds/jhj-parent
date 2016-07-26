@@ -67,13 +67,13 @@ function serviceDateSelect() {
 	               }
 	           ]];
 	var defaultValue=null;
-	if(20<moment().minutes()<=50){
-		alert("00000")
-		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[1];
+	if(moment().minutes()<=20){
+		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
+		
 	}else if(moment().minutes()>50){
 		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
 	}else{
-		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
+		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[1];
 	}
 	$$("#serviceDateSelect").html(defaultValue);
 	$$("#serviceDate").val(defaultValue);
