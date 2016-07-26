@@ -98,9 +98,9 @@ function serviceDateSelect() {
     			if  (todayStr == selectedDate) {
     				wheel[0][1].values = serviceHoursValues;
     			} 
-//    			else if (tomorrowStr == selectedDate && nowHour > 18 && nowHour <=23) {
-//    				wheel[0][1].values = serviceHoursValues;
-//    			} 
+    			else if (tomorrowStr == selectedDate && nowHour >= 18 && nowHour <=23) {
+    				wheel[0][1].values = serviceHoursValues;
+    			} 
     			else {
     				wheel[0][1].values = defaultServiceHoursValues;
     			}
