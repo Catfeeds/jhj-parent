@@ -9,10 +9,10 @@ function serviceDateSelect() {
 	var todayStr = moment().add(0,'days').format('YYYY-MM-DD');
 	var tomorrowStr = moment().add(1,'days').format('YYYY-MM-DD');
 	var nowHour=null;
-	if(moment().minutes()>=30){
-		nowHour= moment().hour()+1;
+	if(moment().minutes()>50){
+		nowHour=moment().hour()+1;
 	}else{
-		nowHour= moment().hour();
+		nowHour=moment().hour();
 	}
 	
 //	var nowHour = 12;
@@ -66,7 +66,15 @@ function serviceDateSelect() {
                        width : 30
 	               }
 	           ]];
-	var defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
+	var defaultValue=null;
+	if(20<moment().minutes()<=50){
+		alert("00000")
+		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[1];
+	}else if(moment().minutes()>50){
+		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
+	}else{
+		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
+	}
 	$$("#serviceDateSelect").html(defaultValue);
 	$$("#serviceDate").val(defaultValue);
 	
@@ -89,9 +97,11 @@ function serviceDateSelect() {
     		if (index == 0 ) {
     			if  (todayStr == selectedDate) {
     				wheel[0][1].values = serviceHoursValues;
-    			} else if (tomorrowStr == selectedDate && nowHour > 19 && nowHour <=23) {
-    				wheel[0][1].values = serviceHoursValues;
-    			} else {
+    			} 
+//    			else if (tomorrowStr == selectedDate && nowHour > 18 && nowHour <=23) {
+//    				wheel[0][1].values = serviceHoursValues;
+//    			} 
+    			else {
     				wheel[0][1].values = defaultServiceHoursValues;
     			}
     			
