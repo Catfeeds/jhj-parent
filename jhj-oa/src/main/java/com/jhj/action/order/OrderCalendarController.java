@@ -2,6 +2,7 @@ package com.jhj.action.order;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -131,11 +132,11 @@ public class OrderCalendarController extends BaseController {
 		 */
 		
 		if(StringUtil.isEmpty(disSearchVo.getStartTimeStr())){
-			disSearchVo.setStartTimeStr(DateUtil.sevenDayBeforeToday());
+			disSearchVo.setStartTimeStr(DateUtil.format(new Date(), "yyyy-MM-dd"));
 		}
 		
 		if(StringUtil.isEmpty(disSearchVo.getEndTimeStr())){
-			disSearchVo.setEndTimeStr(DateUtil.format(new Date(), "yyyy-MM-dd"));
+			disSearchVo.setEndTimeStr(DateUtil.sevenDayAfterToday());
 		}
 		
 		//排班列表
@@ -231,7 +232,6 @@ public class OrderCalendarController extends BaseController {
 						eventList.add(eventVo);
 					}
 				}
-				
 				//加入 排班事件
 				for (StaffDispatchVo staffDisVo : disList) {
 					
