@@ -234,7 +234,8 @@ public class DateUtil {
 		int hours = getHours();
 		int minutes = getMinutes();
 		int seconds = getSeconds();
-		Calendar calendar = new GregorianCalendar(year, month, day, hours, minutes, seconds);
+		Calendar calendar = new GregorianCalendar(year, month, day, hours,
+				minutes, seconds);
 		calendar.add(field, count);
 		String tmpDate = format(calendar.getTime(), format);
 		DEFAULT_CALENDAR.setTime(new Date());
@@ -564,49 +565,62 @@ public class DateUtil {
 		}
 		return list;
 	}
-	
-	public static List<String> getLastWeekArray(String startTimeStr){
-		
-		if(StringUtil.isEmpty(startTimeStr)){
-			
-			//如果没有 时间。。则默认 从 今天起的  7天的 时间
+
+	public static List<String> getLastWeekArray(String startTimeStr) {
+
+		if (StringUtil.isEmpty(startTimeStr)) {
+
+			// 如果没有 时间。。则默认 从 今天起的 7天的 时间
 			startTimeStr = sevenDayBeforeToday();
 		}
-		
+
 		Date startDate = DateUtil.parse(startTimeStr);
-		
-		// 保存  一段  7天的  时间段
+
+		// 保存 一段 7天的 时间段
 		List<String> weekTime = new ArrayList<String>();
- 		
+
 		String curDate = "";
-		
-		for (int i = 0; i < 7 ; i++) {
-			curDate = DateUtil.addDay(startDate, i, Calendar.DATE, "yyyy-MM-dd");
+
+		for (int i = 0; i < 7; i++) {
+			curDate = DateUtil
+					.addDay(startDate, i, Calendar.DATE, "yyyy-MM-dd");
 			weekTime.add(curDate);
 		}
-		
+
 		return weekTime;
 	}
-	
-	
+
 	/*
-	 *  得到 从今天起  7天前的  日期，格式为  yyyy-MM-dd
+	 * 得到 从今天起 7天前的 日期，格式为 yyyy-MM-dd
 	 */
-	public static String sevenDayBeforeToday(){
-		
-		Calendar cal =Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		
+	public static String sevenDayBeforeToday() {
+
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
 		cal.setTime(new Date());
-		
-		cal.add(Calendar.DATE, -6);
-		
-//		System.out.println(df.format(cal.getTime()));
-		
-		return  df.format(cal.getTime());
+
+		 cal.add(Calendar.DATE, -6);
+
+		// System.out.println(df.format(cal.getTime()));
+
+		return df.format(cal.getTime());
 	}
-	
-	
+
+	public static String sevenDayAfterToday() {
+
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+		cal.setTime(new Date());
+
+		cal.add(Calendar.DATE, +6);
+
+		// System.out.println(df.format(cal.getTime()));
+
+		return df.format(cal.getTime());
+	}
+
 	/*
 	 * long 型时间戳转换为 日期类型（yyyy-MM-dd）
 	 */
@@ -620,12 +634,12 @@ public class DateUtil {
 		// System.out.println(date);
 		return Long.parseLong(date);
 	}
-	
-	
+
 	/*
 	 * long 型时间戳转换为 String 类型 字符串日期（yyyy-MM-dd）
 	 */
-	public static String convTimeStampToStringDate(Long timeStamp,String pattern) {
+	public static String convTimeStampToStringDate(Long timeStamp,
+			String pattern) {
 		SimpleDateFormat format1 = new SimpleDateFormat(pattern);
 
 		long unixLong = timeStamp * 1000;
@@ -634,8 +648,7 @@ public class DateUtil {
 
 		return date;
 	}
-	
-	
+
 	/**
 	 * 根据当前月份获得季度
 	 * 
@@ -652,7 +665,8 @@ public class DateUtil {
 	 * 根据 日期格式字符串，得到 对应的 时间戳 ，秒值 “2015-10-10 00:00:00” --> 1444406400
 	 */
 	public static long getUnixTimeStamp(String date) throws ParseException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
 
 		Date parse = dateFormat.parse(date);
 
@@ -700,59 +714,58 @@ public class DateUtil {
 		if (startYear == endYear) {
 			for (i = 0; i <= (endMonth - startMonth); i++) {
 				curDate = DateUtil.addDay(startDate, i, Calendar.MONTH, "M");
-				
-				if(Integer.parseInt(curDate)< 10){
-					timeSeries.add(startYear+"-0"+curDate);
-				}else{
-					timeSeries.add(startYear+"-"+curDate);
+
+				if (Integer.parseInt(curDate) < 10) {
+					timeSeries.add(startYear + "-0" + curDate);
+				} else {
+					timeSeries.add(startYear + "-" + curDate);
 				}
 			}
 		} else {
-			//2016年4月11日15:35:28     如果是横跨  超过 1年以上
-			int duraYear =  endYear - startYear;
-			
-				
-			for (int j = startMonth ; j <= 12 ; j++) {
-				
+			// 2016年4月11日15:35:28 如果是横跨 超过 1年以上
+			int duraYear = endYear - startYear;
+
+			for (int j = startMonth; j <= 12; j++) {
+
 				/*
-				 * 对于月份  统一 时间的格式。为  YYYY-MM  如   2015-07、 2015-11
+				 * 对于月份 统一 时间的格式。为 YYYY-MM 如 2015-07、 2015-11
 				 * 
-				 * 为 最后处理  页面 table时，处理 时间时 使用
+				 * 为 最后处理 页面 table时，处理 时间时 使用
 				 */
-				
-				if(j < 10){
+
+				if (j < 10) {
 					timeSeries.add(startYear + "-0" + j);
-				}else{
+				} else {
 					timeSeries.add(startYear + "-" + j);
 				}
 			}
-			
+
 			for (int k = 1; k <= endMonth; k++) {
-				
-				if(k < 10){
+
+				if (k < 10) {
 					timeSeries.add(endYear + "-0" + k);
-				}else{
+				} else {
 					timeSeries.add(startYear + "-" + k);
 				}
 			}
-			
-			if(duraYear > 1){	
-				
-				//横框超过1年。则 加上中间年份 全年的月份。 
-				
-				for (int m = startYear +1 ; m < endYear; m++) {
+
+			if (duraYear > 1) {
+
+				// 横框超过1年。则 加上中间年份 全年的月份。
+
+				for (int m = startYear + 1; m < endYear; m++) {
 					for (int p = 1; p <= 12; p++) {
-						
-						if(p<10){
+
+						if (p < 10) {
 							timeSeries.add(m + "-0" + p);
-						}else{
+						} else {
 							timeSeries.add(m + "-" + p);
 						}
-						
+
 					}
 				}
 			}
-			
+
 		}
 
 		return timeSeries;
@@ -760,11 +773,12 @@ public class DateUtil {
 
 	/** 计算年龄 */
 	public static String getAge(Date birthDay) throws Exception {
-		
-		if (birthDay == null) return "";
-		
+
+		if (birthDay == null)
+			return "";
+
 		Calendar cal = Calendar.getInstance();
-		
+
 		if (cal.before(birthDay)) {
 			return "";
 		}
@@ -794,14 +808,7 @@ public class DateUtil {
 
 		return age + "";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	public static void main(String[] args) throws Exception {
 		// List<String> result = DateUtil.getLastMonth(6, 12);
 		//
@@ -826,14 +833,14 @@ public class DateUtil {
 		// System.out.println(Collections.frequency(matchList, 2L));
 		// System.out.println(Collections.frequency(matchList, 3L));
 
-//		Long convTimeStampToDate = convTimeStampToDate(1458727667L);
-//		String birth = "1979-09-15";
-//		Date birthDay = DateUtil.parse(birth);
-//		System.out.println(DateUtil.getAge(birthDay));
-//		
-//		long unixTimeStamp = getUnixTimeStamp("2016-05-13 18:35:00");
-//		
-//		System.out.println(unixTimeStamp);
-	
+		// Long convTimeStampToDate = convTimeStampToDate(1458727667L);
+		// String birth = "1979-09-15";
+		// Date birthDay = DateUtil.parse(birth);
+		// System.out.println(DateUtil.getAge(birthDay));
+		//
+		// long unixTimeStamp = getUnixTimeStamp("2016-05-13 18:35:00");
+		//
+		// System.out.println(unixTimeStamp);
+
 	}
 }
