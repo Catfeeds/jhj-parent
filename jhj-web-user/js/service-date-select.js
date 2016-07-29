@@ -3,7 +3,6 @@ function serviceDateSelect() {
 	//时间 选择 插件。  包含了 赋值 默认值 ，所以要放在 回显 代码 的前面
 	var selectedDate, selectedHour;
 	var serviceDateValues = [];
-	
 	var start =0;
 	//当前整点小时数
 	var todayStr = moment().add(0,'days').format('YYYY-MM-DD');
@@ -44,7 +43,7 @@ function serviceDateSelect() {
 		}
 	}
 	
-	if(nowHour > 18 && nowHour <=23){
+	if(nowHour >= 18 && nowHour <=23){
 		serviceHoursValues = [08,09,10,11,12,13,14,15,16,17,18]; 
 	}
 	
@@ -98,7 +97,7 @@ function serviceDateSelect() {
     			if  (todayStr == selectedDate) {
     				wheel[0][1].values = serviceHoursValues;
     			} 
-    			else if (tomorrowStr == selectedDate && nowHour >= 18 && nowHour <=23) {
+    			else if (nowHour >=18 && nowHour <=23) {
     				wheel[0][1].values = serviceHoursValues;
     			} 
     			else {
