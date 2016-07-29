@@ -435,7 +435,6 @@
 		<!-- <if test="searchOrderServiceType !=null">
 			and service_type = #{searchOrderServiceType,jdbcType=NUMERIC}
 		</if>
-		
 		<if test="serviceTypeFlag !=null and serviceTypeFlag ==1">
 			and service_type in(3,4,5,6,7)
 		</if> -->
@@ -456,7 +455,7 @@
    			</foreach> 
 		</if>
 		
-		<if test="searchCloudOrgIdList != null">
+		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
 		   	 and 
 		   	 	org_id in 
 		   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
