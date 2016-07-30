@@ -172,6 +172,7 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 				
 				orderPayType = result.data.pay_type;
 				orderType = result.data.order_type;
+				orderStatus = result.data.order_status;
 				//orderPayType = result.data.pay_type;
 				//如果为余额支付，则直接跳到完成页面
 				if (orderPayType == 0 || orderPayType == 6) {
@@ -219,11 +220,11 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	
 	
 	//点击支付的处理
-	$$("#hour-pay-submit").click(function(){
+	$$("#hour-pay-submit").on('click',function(){
 		
 		$$("#hour-pay-submit").attr("disabled", true);
-		
 		payAjax();
+//		$$("#hour-pay-submit").hide();
 	});			
 	
 	// 点击 评价 操作（2016年5月4日10:16:01 已无用）
@@ -306,7 +307,7 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 myApp.template7Data['page:order-hour-view-0-page'] = function(){
     var result; 
     var postdata = {};
-	var order_no = localStorage['u_order_no_param'];
+	var order_no = localStorage['order_no'];
 //    var order_no = page.query.order_no;
 	postdata.order_no = order_no;
 
