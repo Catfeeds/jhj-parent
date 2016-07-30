@@ -154,6 +154,6 @@ myApp.onPageBeforeInit('order-hour-now-list-page', function (page) {
 
 
 function hrefToUorderView(order_type, order_no) {
-	localStorage.setItem('u_order_no_param', order_no);
+	localStorage.setItem('order_no', order_no);
 	mainView.router.loadPage("order/order-view-"+order_type+".html?order_no="+order_no);
 }
