@@ -3,7 +3,9 @@ function serviceDateSelect() {
 	//时间 选择 插件。  包含了 赋值 默认值 ，所以要放在 回显 代码 的前面
 	var selectedDate, selectedHour;
 	var serviceDateValues = [];
+	var serviceMins = ["00", "30"];
 	var start =0;
+	var defaultValue=null;
 	//当前整点小时数
 	var todayStr = moment().add(0,'days').format('YYYY-MM-DD');
 	var tomorrowStr = moment().add(1,'days').format('YYYY-MM-DD');
@@ -34,6 +36,7 @@ function serviceDateSelect() {
 	
 	if(nowHour >= 0 && nowHour <= 8){
 		serviceHoursValues = [09,10,11,12,13,14,15,16,17,18];
+		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
 	} 
 
 	if(nowHour > 8 && nowHour <= 18){
@@ -41,13 +44,23 @@ function serviceDateSelect() {
 			var tempHour = moment({ hour:i}).format('HH');
 			serviceHoursValues.push(tempHour);
 		}
+		if(moment().minutes()<=20){
+			defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
+			
+		}else if(moment().minutes()>50){
+			defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
+		}else{
+			defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[1];
+		}
 	}
-	
+
 	if(nowHour >= 18 && nowHour <=23){
 		serviceHoursValues = [08,09,10,11,12,13,14,15,16,17,18]; 
+		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
 	}
+	$$("#serviceDateSelect").html(defaultValue);
+	$$("#serviceDate").val(defaultValue);
 	
-	var serviceMins = ["00", "30"];
 	var wheel = [[
 	               {
 	            	   label: '日期',
@@ -65,18 +78,6 @@ function serviceDateSelect() {
                        width : 30
 	               }
 	           ]];
-	var defaultValue=null;
-	if(moment().minutes()<=20){
-		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
-		
-	}else if(moment().minutes()>50){
-		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[0];
-	}else{
-		defaultValue = serviceDateValues[0] + "  " + serviceHoursValues[0] + ":"  + serviceMins[1];
-	}
-	$$("#serviceDateSelect").html(defaultValue);
-	$$("#serviceDate").val(defaultValue);
-	
 	$('#serviceDateSelect').mobiscroll({
 		theme : "ios", 
 		mode : "mixed", // Specify scroller mode like: mode: 'mixed' or omit setting to use default 
