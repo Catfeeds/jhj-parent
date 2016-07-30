@@ -243,7 +243,7 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 	 */
 //	var todayStr = today.getFullYear() + "-" + (parseInt(today.getMonth()) + 1) + "-" + (parseInt(today.getDay()) + 1);
 //	loadOrderList(userId, page, todayStr);
-	$$(document).once('pageAfterAnimation', function () {
+	$$(document).once('pageBeforeAnimation', function () {
 		var date=new Date()
 		var time=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
 		loadOrderList(userId, page, time);
