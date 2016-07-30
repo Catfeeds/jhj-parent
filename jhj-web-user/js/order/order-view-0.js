@@ -222,8 +222,8 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	//点击支付的处理
 	$$("#hour-pay-submit").on('click',function(){
 		
-		$$("#hour-pay-submit").attr("disabled", true);
 		payAjax();
+//		$$("#hour-pay-submit").attr("disabled", true);
 //		$$("#hour-pay-submit").hide();
 	});			
 	
@@ -303,12 +303,10 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	});
 });
 
-
 myApp.template7Data['page:order-hour-view-0-page'] = function(){
     var result; 
     var postdata = {};
 	var order_no = localStorage['order_no'];
-//    var order_no = page.query.order_no;
 	postdata.order_no = order_no;
 
    $$.ajax({
