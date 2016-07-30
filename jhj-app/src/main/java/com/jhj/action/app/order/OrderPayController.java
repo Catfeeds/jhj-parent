@@ -37,7 +37,6 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDeciamlUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -115,7 +114,9 @@ public class OrderPayController extends BaseController {
 		}		
 		
 		Orders order = ordersService.selectByOrderNo(orderNo);
-		if (order == null) return result;
+		if (order == null){
+			return result;
+		}
 		Long orderId = order.getId();
 		
 		if(order.getOrderStatus() >= 4){
@@ -199,7 +200,7 @@ public class OrderPayController extends BaseController {
 		/*
 		 *  2016年4月1日15:34:55
 		 * 
-		 * 	 对于 现金支付。  orderPayType == 6 ，不进行扣款操作。只更改 订单状态
+		 * 	 对于 现金支付。  orderPayType == 6 ，不进行扣款操作。只更改 订单状态 
 		 */
 		
 		//如果是余额支付或者需支付金额为0 
