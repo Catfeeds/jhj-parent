@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -21,6 +22,7 @@ import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -71,13 +73,23 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 	
 	/*
 	 * 所有订单
+	 * 更新过期的订单
 	 */
 	@Override
 	public List<Orders> selectByUserListPage(OrderSearchVo orderSearchVo,int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		
+		long date=TimeStampUtil.getNowSecond();
+		List<Orders> lists = orderMapper.selectByUserListPage(orderSearchVo);
+		for(Orders order:lists){
+			Long serviceDate = order.getServiceDate();
+			if(serviceDate<=date){
+				order.setOrderStatus(Constants.ORDER_STATUS_0);
+				orderMapper.updateByPrimaryKeySelective(order);
+			}
+		}
+			
 		List<Orders> list = orderMapper.selectByUserListPage(orderSearchVo);
-		
 		return list;
 	}	
 	
@@ -184,4 +196,5 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 		
 		return hourListVo;
 	}
+
 }
