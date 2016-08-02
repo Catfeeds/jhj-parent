@@ -5,7 +5,7 @@ myApp.onPageBeforeInit('order-list-shendubaojie-result', function (page) {
 	//to深度保洁详情页面
 	$$("#to-shendu-order-detail").on("click", function() {
 		mainView.router.loadPage("order/order-view-1.html?order_no="+orderNo);
-		localStorage.setItem('u_order_no_param',orderNo);
+		localStorage.setItem('order_no',orderNo);
 	});
 });
 	
