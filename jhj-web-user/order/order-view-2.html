@@ -39,9 +39,14 @@
 				<input type="hidden" id="order_type" name="order_type" value="{{order_type}}"/>
 				<input type="hidden" id="order_id" name="order_id" value="{{id}}"/>
 				<input type="hidden" id="order_no" name="order_no" value="{{order_no}}"/>
-				<input type="hidden" id="order_money" name="order_money" value="{{order_money}}"/>			
+				<input type="hidden" id="order_money" name="order_money" value="{{order_money}}"/>		
+
+
+
+
+				<!-- 其他类型	 -->
 				<ul class="ddxq-xx"style="background:#fffce8">
-					
+					{{#js_compare "this.order_status !=1 "}}
 					<li>
 				      <div class="item-content">
 				        <div class="item-inner">
@@ -53,7 +58,6 @@
 				      </div>
 				    </li>
 				    
-				    
 				    <li>
 						<div class="item-content" style="background:#fffce8;">
 							<div class="item-inner">
@@ -64,7 +68,7 @@
 							</div>
 						</div>
 					</li>
-					
+					{{/js_compare}}
 				    {{#js_compare "this.order_status >=2 "}}
 						<li>
 					      <div class="item-content">
@@ -78,16 +82,53 @@
 					    </li>	
 					{{/js_compare}}
 				</ul>
-			</form>
-		
-				
+				<!-- 深度服务 -->
+				 {{#js_compare "this.order_status ==1 "}}
+				<ul style="background:#fffce8;">
+					 <li class="accordion-item">
+					 	<a href="#" class="item-content" style="color:#000;">
+				        	<div class="item-inner">
+				         		 <div class="item-title" >服务价格</div>
+				        	</div>
+				        </a>
+				        <div class="accordion-item-content" style="height:100%!important;">
+				        	<div class="content-block">
+				         	  <p id="serviceContents">{{service_content}}</p>
+				        	</div>
+				        </div>
+				    </li>
+					<li class="accordion-item">
+					 	<a href="#" class="item-content" style="color:#000;">
+				        	<div class="item-inner">
+				         		 <div class="item-title" >服务介绍</div>
+				        	</div>
+				        </a>
+				        <div class="accordion-item-content" style="height:100%!important;">
+				        	<div class="content-block">
+				         	  <p id="servicePrice">{{remarks}}</p>
+				        	</div>
+				        </div>
+				    </li>
+				    <li class="accordion-item">
+					 	<a href="#" class="item-content" style="color:#000;border-bottom:1px solid #ddd;">
+				        	<div class="item-inner">
+				         		 <div class="item-title" >服务说明</div>
+				        	</div>
+				        </a>
+				        <div class="accordion-item-content" style="height:100%!important;">
+				        	<div class="content-block">
+				         	  <p>北京五环以内，可直接下单；五环以外，请联系我们核实服务情况</p>
+				        	</div>
+				        </div>
+				    </li>
+				</ul>
+				{{/js_compare}}
 				{{#js_compare "this.order_status ===2 "}}
 				<div class="list-block am-pay-type" >
 					<ul style="background:#fffce8;">
 						
 						<!-- 如果是 0元 的订单，优惠券、支付 方式都隐藏-->
 						{{#js_compare "this.order_money !== 0 "}}
-						
 						<li style="background:#F8F8F8" id="orderThreeCoupon">
 							<a href="#" id="selectCoupon" class="item-link">
 								<div class="item-content">
@@ -100,9 +141,7 @@
 								</div>
 							</a>
 						</li>
-						
 						{{/js_compare}}	
-						
 						<li>
 							<div class="item-content" style="background:#fffce8;">
 								<div class="item-inner">
@@ -131,7 +170,7 @@
 		
 						<li>
 							<label class="label-checkbox item-content" name="myPayTypeSelect"> 
-								<div class="item-media"><img src="img/icons/iconfont-qian.png"style="width:45px;"></div>
+								<div class="item-media"><img src="img/icons/iconfont-qian.png"style="width:28px;margin-left:10px;"></div>
 								<div class="item-inner">
 									<div class="item-title"style="margin-left:-15px;">现金支付</div>
 									<!-- 新增支付方式 ，现金支付 -->
@@ -177,7 +216,7 @@
 			{{#js_compare "this.order_status ==3 || this.order_status ==4 "}}
 			<div class="list-block am-pay-type" >
 					<ul>
-						 <li id="user_coupon_view_li">
+						 <li id="user_coupon_view_li"  style="background:#fffce8;">
 					      <div class="item-content">
 					        <div class="item-inner">
 					          	  <div class="item-title label">优&nbsp;&nbsp;惠&nbsp;&nbsp;券:</div>
@@ -189,7 +228,7 @@
 				    	</li>
 
 						<li>
-							<div class="item-content" style="background:#F8F8F8;">
+							<div class="item-content" style="background:#fffce8;">
 								<div class="item-inner">
 									<div class="item-title label"  >支付金额:</div>
 						
@@ -216,7 +255,7 @@
         	{{/js_compare}} -->
         	
         	
-        	{{#js_compare "this.order_status ==1 || this.order_status == 2 || this.order_status == 3 || this.order_status == 4 "}}
+        	{{#js_compare "this.order_status == 2 || this.order_status == 3 || this.order_status == 4 "}}
         		<a href="#" class="button active my-submit"  id="cancleOrder" >取消订单</a>
         	{{/js_compare}}
         	
