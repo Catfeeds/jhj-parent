@@ -44,7 +44,7 @@ myApp.onPageInit('order-pay-success-page', function(page) {
     	}
     	
 		
-		localStorage.setItem('u_order_no_param', orderNo);
+		localStorage.setItem('order_no', orderNo);
 		
 		fromUrl+= "?order_no="+orderNo;
 		
