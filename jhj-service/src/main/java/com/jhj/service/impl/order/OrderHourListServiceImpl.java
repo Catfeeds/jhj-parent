@@ -83,7 +83,8 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 		List<Orders> lists = orderMapper.selectByUserListPage(orderSearchVo);
 		for(Orders order:lists){
 			Long serviceDate = order.getServiceDate();
-			if(serviceDate<=date){
+			short orderStatus=order.getOrderStatus();
+			if(serviceDate!=null && serviceDate!=0&& serviceDate<date && isOrderStatus(orderStatus)){
 				order.setOrderStatus(Constants.ORDER_STATUS_0);
 				orderMapper.updateByPrimaryKeySelective(order);
 			}
@@ -91,7 +92,18 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			
 		List<Orders> list = orderMapper.selectByUserListPage(orderSearchVo);
 		return list;
-	}	
+	}
+	
+	/*
+	 * 判断订单状态
+	 * */
+	public boolean isOrderStatus(short orderstatus){
+		boolean flag=false;
+		if(orderstatus==Constants.ORDER_AM_STATUS_1 || orderstatus==Constants.ORDER_AM_STATUS_2){
+			flag=true;
+		}
+		return flag;
+	}
 	
 	/*
 	 * 当前订单
