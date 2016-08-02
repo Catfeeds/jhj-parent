@@ -251,8 +251,6 @@ myApp.onPageInit('order-hour-view-0-page', function (page) {
 	//取消订单操作
 	$$("#cancleOrder").on('click',function(){
 		
-//		var orderNo = localStorage['u_order_no_param'];
-		
 		var dataCancle = {};
 		dataCancle.order_no = orderNo;
 		
