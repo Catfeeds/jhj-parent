@@ -187,7 +187,7 @@ function saveExpCleanOrderSuccess(data, textStatus, jqXHR) {
 		mainView.router
 				.loadPage("order/order-list-shendubaojie-result.html?order_no="
 						+ orderNo);
-		localStorage.setItem('u_order_no_param', orderNo);
+//		localStorage.setItem('u_order_no_param', orderNo);
 		sessionStorage.removeItem("service_date");
 	}
 }
