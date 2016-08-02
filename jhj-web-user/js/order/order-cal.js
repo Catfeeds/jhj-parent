@@ -189,14 +189,13 @@ myApp.onPageBeforeInit('order-cal-page', function(page) {
 						order.order_hour_type_name);
 				htmlPart = htmlPart.replace(new RegExp('{order_hour_status_name}', "gm"),
 						order.order_hour_status_name);
-				htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "服务时间: "+moment.unix(
-						order.service_date).format("YYYY-MM-DD HH:mm"));
-
-				/*if (order.order_type == 2) {
-					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "下单时间: "+moment.unix(
+				if (order.order_type == 2) {
+					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "预约时间: "+moment.unix(
 							order.add_time).format("YYYY-MM-DD HH:mm"));
 				} else {
-				}*/
+					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "服务时间: "+moment.unix(
+							order.service_date).format("YYYY-MM-DD HH:mm"));
+				}
 
 				htmlPart = htmlPart.replace(new RegExp('{address}', "gm"), order.address);
 
