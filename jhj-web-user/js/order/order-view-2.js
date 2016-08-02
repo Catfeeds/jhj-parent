@@ -239,7 +239,7 @@ myApp.template7Data['page:order-hour-view-2-page'] = function(){
 	
   var result; 
   var userId = localStorage['user_id'];
-  var orderNo = localStorage['u_order_no_param'];
+  var orderNo = localStorage['order_no'];
   var postData = {};
   postData.order_no = orderNo;
    $$.ajax({
