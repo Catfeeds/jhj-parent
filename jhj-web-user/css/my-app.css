@@ -3716,3 +3716,154 @@ label.label-radio input[type="radio"]:checked ~ .item-inner {
   line-height:30px;
   clear: both;
 }
+
+
+
+
+/*充值修改*/
+.minecharge{
+  width:100%;
+  margin-top:60px;
+}
+.minecharge li{
+  width:45.5%;
+  margin-left:3%;
+  float:left;
+  background:#fff;
+  margin-top:10px;
+}
+.minecharge-0{
+  border-radius: 2px 30%;
+}
+.minecharge-0 p{
+  width:100%;
+  color:#35ADF9;
+  font-weight:bold;
+  text-align: center;
+  height:30px;
+  line-height:30px;
+  margin:0;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+.minecharge-0 a{
+  float:left;
+  width:38%;
+  margin-left: 31%;
+  background: #35ADF9;
+  color:#fff;
+  text-align: center;
+  line-height: 30px;
+  height:30px;
+  border-radius: 30% 2px;
+  margin-bottom:5px;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+.minecharge-1{
+  border-radius: 30% 2px;
+}
+.minecharge-1 p{
+  width:100%;
+  color:#35ADF9;
+  font-weight:bold;
+  text-align: center;
+  height:30px;
+  line-height:30px;
+  margin:0;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+.minecharge-1 a{
+  float:left;
+  width:38%;
+  margin-left: 31%;
+  background: #35ADF9;
+  color:#fff;
+  text-align: center;
+  line-height: 30px;
+  height:30px;
+  border-radius: 30% 2px;
+  margin-bottom:5px;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+
+.minecharge-2{
+  border-radius: 2px 30%;
+}
+.minecharge-2 p{
+  width:100%;
+  color:#35ADF9;
+  font-weight:bold;
+  text-align: center;
+  height:30px;
+  line-height:30px;
+  margin:0;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+.minecharge-2 a{
+  float:left;
+  width:38%;
+  margin-left: 31%;
+  background: #35ADF9;
+  color:#fff;
+  text-align: center;
+  line-height: 30px;
+  height:30px;
+  border-radius: 30% 2px;
+  margin-bottom:5px;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+
+.minecharge-3{
+  border-radius: 30% 2px;
+}
+.minecharge-3 p{
+  width:100%;
+  color:#35ADF9;
+  font-weight:bold;
+  text-align: center;
+  height:30px;
+  line-height:30px;
+  margin:0;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+.minecharge-3 a{
+  float:left;
+  width:38%;
+  margin-left: 31%;
+  background: #35ADF9;
+  color:#fff;
+  text-align: center;
+  line-height: 30px;
+  height:30px;
+  border-radius: 30% 2px;
+  margin-bottom:5px;
+  font-family: "造字工房力黑";
+  font-style:italic;
+}
+
+.minecharge-1 p:nth-child(2){
+  font-weight: bold;
+   -webkit-text-fill-color: transparent;
+-webkit-text-stroke: 0.5px #35ADF9;
+}
+.minecharge-1 p:nth-child(2){
+  font-weight: bold;
+   -webkit-text-fill-color: transparent;
+-webkit-text-stroke: 0.5px #35ADF9;
+}
+.minecharge-2 p:nth-child(2){
+  font-weight: bold;
+   -webkit-text-fill-color: transparent;
+-webkit-text-stroke: 0.5px #35ADF9;
+}
+.minecharge-3 p:nth-child(2){
+  font-weight: bold;
+   -webkit-text-fill-color: transparent;
+-webkit-text-stroke: 0.5px #35ADF9;
+}
