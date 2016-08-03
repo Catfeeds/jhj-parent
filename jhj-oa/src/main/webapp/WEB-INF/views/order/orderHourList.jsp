@@ -87,7 +87,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 		                     			
 										<div class="form-group">		
 											选择云店:<cloudOrgSelectTag:select 
-													selectId="${oaOrderSearchVoModel.orgId }"
+													selectId="${orgId }"
 													logInParentOrgId="${loginOrgId }"/>
 										</div>	
 										<div class="form-group">
