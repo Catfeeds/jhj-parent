@@ -52,4 +52,4 @@ myApp.onPageInit('mine-charge-list', function (page) {
 //			$$("#cal_am_mobile_real").click();
 //	    });
 //	}
-//}
+}
