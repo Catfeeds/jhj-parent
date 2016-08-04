@@ -30,6 +30,7 @@ import com.jhj.service.socials.SocialsCallService;
 import com.jhj.service.socials.SocialsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.dict.CardTypeVO;
 import com.jhj.vo.dict.DictCardTypeVo;
 import com.jhj.vo.socials.SocialsVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -75,7 +76,8 @@ public class CardTypeController<T> {
 
     	//获得广告配置定义列表项
     	List<DictCardType> list = cardTypeService.getCardTypes();
-    	List<DictCardTypeVo> clist = cardTypeService.changeToDictCardTypeVo(list,userId);
+//    	List<DictCardTypeVo> clist = cardTypeService.changeToDictCardTypeVo(list,userId);
+    	List<CardTypeVO> clist = cardTypeService.cardSendMoney(list);
     	AppResultData<List> result = null;
     	result = new AppResultData<List>(0, "ok", clist);
 
