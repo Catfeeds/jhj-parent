@@ -4,6 +4,10 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 
 	var cardId = page.query.card_id;
 	var cardPay = page.query.card_pay;
+	var sendMoney=page.query.send_money;
+	
+	localStorage.setItem("card_pay",cardPay);
+	localStorage.setItem("send_money",sendMoney)
 	var orderPayType = 2;
 	if (userId == undefined || userId == '' || userId == 0) {
 		return;
@@ -12,6 +16,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 	$$("#mobile").text(localStorage.getItem("user_mobile"));
 	
     $$("#card_pay_view").text(cardPay);
+    $$("#send-money").text(sendMoney);
 	if (cardPay == undefined || cardPay == '' || cardPay == 0) {
 		var cardInfoSuccess = function(data, textStatus, jqXHR) {
 		  	myApp.hideIndicator();
@@ -64,8 +69,9 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 		
 		var postdata = {};
 		postdata.user_id = userId;
-		postdata.card_type = cardId;
+		postdata.card_id = cardId;
 		postdata.pay_type = 2;
+		postdata.send_money=sendMoney;
 						
 		$$.ajax({
 			type: "post",
