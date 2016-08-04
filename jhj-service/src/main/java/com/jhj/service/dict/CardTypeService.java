@@ -3,6 +3,7 @@ package com.jhj.service.dict;
 import java.util.List;
 
 import com.jhj.po.model.dict.DictCardType;
+import com.jhj.vo.dict.CardTypeVO;
 import com.jhj.vo.dict.DictCardTypeVo;
 
 
@@ -27,5 +28,8 @@ public interface CardTypeService {
 	List<DictCardTypeVo> changeToDictCardTypeVo(List<DictCardType> list);
 	
 	List<DictCardTypeVo> changeToDictCardTypeVo(List<DictCardType> list,Long userId);
+	
+	//充值送金额
+	List<CardTypeVO> cardSendMoney(List<DictCardType> list);
 
 }
