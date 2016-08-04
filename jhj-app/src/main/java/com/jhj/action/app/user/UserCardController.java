@@ -47,7 +47,7 @@ public class UserCardController extends BaseController {
 	@RequestMapping(value = "card_buy", method = RequestMethod.POST)
 	public AppResultData<Object> cardBuy(
 			@RequestParam("user_id")	Long userId,
-			@RequestParam("card_type") Long cardType,
+			@RequestParam("card_id") Long cardId,
 			@RequestParam("pay_type")  Short payType) {
 //	    操作表 order_cards
 //	    根据card_type 传递参数从表 dict_card_type 获取相应的金额
@@ -63,9 +63,9 @@ public class UserCardController extends BaseController {
 			return result;
 		}		
 		
-		DictCardType dictCardType = cardTypeService.selectByPrimaryKey(cardType);
+		DictCardType dictCardType = cardTypeService.selectByPrimaryKey(cardId);
 
-		OrderCards record = orderCardsService.initOrderCards(users, cardType, dictCardType, payType);
+		OrderCards record = orderCardsService.initOrderCards(users, cardId, dictCardType, payType);
 		orderCardsService.insert(record);
 
 		result.setData(record);
