@@ -1,6 +1,8 @@
 myApp.onPageBeforeInit('charge-pay-success-page', function(page) {
 	
 	var userId = localStorage.getItem("user_id");
+	var cardPay=localStorage.getItem("card_pay");
+	var sendMoney=localStorage.getItem("send_money")
 
 	var userInfoSuccess = function(data, textStatus, jqXHR) {
 	  	myApp.hideIndicator();
@@ -15,8 +17,8 @@ myApp.onPageBeforeInit('charge-pay-success-page', function(page) {
 	
 	//获取用户充值信息接口
     $$.ajax({
-        type:"GET",
-        url:siteAPIPath+"user/get_userinfo.json?user_id="+userId,
+        type:"get",
+        url:siteAPIPath+"user/getUserRestMoneyInfo.json?user_id="+userId+"&card_pay="+cardPay+"&send_money="+sendMoney,
         dataType:"json",
         cache:false,
         statusCode : {
