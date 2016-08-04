@@ -1,6 +1,8 @@
 package com.jhj.action.app.user;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -288,6 +290,32 @@ public class UserController extends BaseController {
 
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, vo);
+		return result;
+	}
+	
+	
+	/**
+	 * 该方法为用户充值后，更新用户的rest_money
+	 * 
+	 * */
+	@RequestMapping(value = "getUserRestMoneyInfo", method = RequestMethod.GET)
+	public AppResultData<Object> getUserRestMoneyInfo(
+			@RequestParam("user_id") Long userId,
+			@RequestParam("card_pay") BigDecimal payMoney,
+			@RequestParam("send_money") int sendMoney) {
+
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.ERROR_999, ConstantMsg.USER_NOT_EXIST_MG, "");
+
+		Users user=usersService.selectByUsersId(userId);
+		BigDecimal restMoney=user.getRestMoney();
+		BigDecimal dec=new BigDecimal(sendMoney);
+		restMoney=restMoney.add(payMoney).add(dec);
+		user.setRestMoney(restMoney);
+		usersService.updateByPrimaryKeySelective(user);
+
+		result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, user);
 		return result;
 	}
 }
