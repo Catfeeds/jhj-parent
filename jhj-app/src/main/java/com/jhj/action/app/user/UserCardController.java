@@ -47,11 +47,10 @@ public class UserCardController extends BaseController {
 	@RequestMapping(value = "card_buy", method = RequestMethod.POST)
 	public AppResultData<Object> cardBuy(
 			@RequestParam("user_id")	Long userId,
-			@RequestParam("card_id") Long cardId,
+			@RequestParam("card_type") int cardType,
 			@RequestParam("pay_type")  Short payType) {
 //	    操作表 order_cards
 //	    根据card_type 传递参数从表 dict_card_type 获取相应的金额
-
 		AppResultData<Object> result = new AppResultData<Object>( Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");		
 		
 		Users users = usersService.getUserById(userId);
@@ -62,7 +61,7 @@ public class UserCardController extends BaseController {
 			result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
 			return result;
 		}		
-		
+		long cardId=cardType;
 		DictCardType dictCardType = cardTypeService.selectByPrimaryKey(cardId);
 
 		OrderCards record = orderCardsService.initOrderCards(users, cardId, dictCardType, payType);
