@@ -6,12 +6,13 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="card_value" property="cardValue" jdbcType="DECIMAL" />
     <result column="card_pay" property="cardPay" jdbcType="DECIMAL" />
+    <result column="send_money" property="sendMoney" jdbcType="DECIMAL" />
     <result column="gift_id" property="giftId" jdbcType="NUMERIC" />
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="add_time" property="addTime" jdbcType="NUMERIC" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, card_value, card_pay, gift_id, description, add_time
+    id, name, card_value, card_pay,send_money, gift_id, description, add_time
   </sql>
 
   <select id="selectAll" resultMap="BaseResultMap" >
@@ -50,10 +51,10 @@
   </delete>
   <insert id="insert" parameterType="com.jhj.po.model.dict.DictCardType" >
     insert into dict_card_type (id, name, card_value,
-      card_pay, gift_id, description, add_time
+      card_pay,send_money, gift_id, description, add_time
       )
     values (#{id,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{cardValue,jdbcType=DECIMAL},
-      #{cardPay,jdbcType=DECIMAL}, #{giftId,jdbcType=NUMERIC}
+      #{cardPay,jdbcType=DECIMAL},#{sendMoney,jdbcType=DECIMAL}, #{giftId,jdbcType=NUMERIC}
       #{description,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}
       )
   </insert>
@@ -71,6 +72,9 @@
       </if>
       <if test="cardPay != null" >
         card_pay,
+      </if>
+      <if test="sendMoney != null">
+      	send_money
       </if>
       <if test="giftId != null" >
         gift_id,
@@ -95,6 +99,9 @@
       <if test="cardPay != null" >
         #{cardPay,jdbcType=DECIMAL},
       </if>
+      <if test="sendMoney!=null">
+        #{sendMoney,jdbcType=DECIMAL},
+      </if>
       <if test="giftId != null" >
         #{giftId,jdbcType=NUMERIC},
       </if>       
@@ -118,6 +125,9 @@
       <if test="cardPay != null" >
         card_pay = #{cardPay,jdbcType=DECIMAL},
       </if>
+      <if test="sendMoney != null" >
+        send_money = #{sendMoney,jdbcType=DECIMAL},
+      </if>
       <if test="giftId != null" >
         gift_id = #{giftId,jdbcType=NUMERIC},
       </if>       
@@ -135,6 +145,7 @@
     set name = #{name,jdbcType=VARCHAR},
       card_value = #{cardValue,jdbcType=DECIMAL},
       card_pay = #{cardPay,jdbcType=DECIMAL},
+      send_money=#{sendMoney,jdbcType=DECIMAL},
       description = #{description,jdbcType=VARCHAR},
       gift_id = #{giftId,jdbcType=NUMERIC}
       add_time = #{addTime,jdbcType=NUMERIC}
