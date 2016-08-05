@@ -30,8 +30,6 @@ import com.jhj.service.socials.SocialsCallService;
 import com.jhj.service.socials.SocialsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.dict.CardTypeVO;
-import com.jhj.vo.dict.DictCardTypeVo;
 import com.jhj.vo.socials.SocialsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
