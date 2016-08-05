@@ -50,14 +50,14 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 		}
 		var orderId = result.data.id;
 		//如果为微信支付，则需要跳转到微信支付页面.
-//		if (orderPayType == 2) {
+		if (orderPayType == 2) {
 			 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
 			 wxPayUrl +="?orderId="+orderId;
 			 wxPayUrl +="&userCouponId=0";
 			 wxPayUrl +="&orderType=4";
 			 wxPayUrl +="&payOrderType=1";
 			 location.href = wxPayUrl;
-//		}
+		}
 	};		
 	
 	//点击支付的处理
