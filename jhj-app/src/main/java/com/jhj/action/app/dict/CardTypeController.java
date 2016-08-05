@@ -77,9 +77,9 @@ public class CardTypeController<T> {
     	//获得广告配置定义列表项
     	List<DictCardType> list = cardTypeService.getCardTypes();
 //    	List<DictCardTypeVo> clist = cardTypeService.changeToDictCardTypeVo(list,userId);
-    	List<CardTypeVO> clist = cardTypeService.cardSendMoney(list);
+//    	List<CardTypeVO> clist = cardTypeService.cardSendMoney(list);
     	AppResultData<List> result = null;
-    	result = new AppResultData<List>(0, "ok", clist);
+    	result = new AppResultData<List>(0, "ok", list);
 
     	return result;
     }
