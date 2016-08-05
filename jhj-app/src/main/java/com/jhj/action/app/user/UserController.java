@@ -2,14 +2,11 @@ package com.jhj.action.app.user;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,11 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.tags.UserRefTags;
 import com.jhj.po.model.user.UserAddrs;
-import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
@@ -34,14 +32,13 @@ import com.jhj.service.tags.UserRefTagsService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.OrderSearchVo;
+import com.jhj.vo.user.UserAppVo;
+import com.jhj.vo.user.UserEditViewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
-import com.jhj.vo.OrderSearchVo;
-import com.jhj.vo.user.UserAppVo;
-import com.jhj.vo.user.UserEditViewVo;
-import com.jhj.vo.user.UsersListsVo;
 
 @Controller
 @RequestMapping(value = "/app/user")
@@ -67,7 +64,10 @@ public class UserController extends BaseController {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
-
+	
+	@Autowired
+	private CardTypeService cardTypeService;
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "get_user_list", method = RequestMethod.GET)
 	public AppResultData<Object> Sec(
@@ -301,16 +301,15 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "getUserRestMoneyInfo", method = RequestMethod.GET)
 	public AppResultData<Object> getUserRestMoneyInfo(
 			@RequestParam("user_id") Long userId,
-			@RequestParam("card_pay") BigDecimal payMoney,
-			@RequestParam("send_money") int sendMoney) {
+			@RequestParam("pay_card_id") Long cardId) {
 
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.ERROR_999, ConstantMsg.USER_NOT_EXIST_MG, "");
 
 		Users user=usersService.selectByUsersId(userId);
+		DictCardType card = cardTypeService.selectByPrimaryKey(cardId);
 		BigDecimal restMoney=user.getRestMoney();
-		BigDecimal dec=new BigDecimal(sendMoney);
-		restMoney=restMoney.add(payMoney).add(dec);
+		restMoney=restMoney.add(card.getCardPay()).add(card.getSendMoney());
 		user.setRestMoney(restMoney);
 		usersService.updateByPrimaryKeySelective(user);
 
