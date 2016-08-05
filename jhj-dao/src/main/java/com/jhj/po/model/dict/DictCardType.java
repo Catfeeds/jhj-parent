@@ -9,7 +9,10 @@ public class DictCardType {
 
     private BigDecimal cardValue;
 
-    private BigDecimal cardPay;
+	private BigDecimal cardPay;
+    
+    //新增字段
+    private BigDecimal sendMoney;
     
     private Long giftId;
 
@@ -48,6 +51,14 @@ public class DictCardType {
     public void setCardPay(BigDecimal cardPay) {
         this.cardPay = cardPay;
     }
+    
+    public BigDecimal getSendMoney() {
+		return sendMoney;
+	}
+
+	public void setSendMoney(BigDecimal sendMoney) {
+		this.sendMoney = sendMoney;
+	}
 
     public String getDescription() {
         return description;
