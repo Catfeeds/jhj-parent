@@ -378,18 +378,6 @@ public class Constants {
 	 */
 	public static String MESSAGE_REST_MONEY_LITTLE = "79666";
 	
-	//充值500赠送30元
-	public static int SEND_MONEY_1=30;
-	
-	//充值1000赠送100元
-	public static int SEND_MONEY_2=100;
-	
-	//充值2000赠送300元
-	public static int SEND_MONEY_3=300;
-	
-	//充值5000赠送100元
-	public static int SEND_MONEY_4=1000;
-	
 }
 
 
