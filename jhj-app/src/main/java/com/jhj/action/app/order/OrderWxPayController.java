@@ -80,7 +80,7 @@ public class OrderWxPayController extends BaseController {
 		String orderNo = "";
 		Long userId = 0L;
 		
-
+		
 		String wxPay = "0";
 		// 处理订单支付的情况
 		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_0)) {
@@ -103,7 +103,6 @@ public class OrderWxPayController extends BaseController {
 		
 		//处理充值卡充值的情况
 		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_1)) {
-			tradeName = "叮当到家家庭服务";
 			OrderCards orderCard = orderCardsService.selectByPrimaryKey(orderId);
 			Long cardType = orderCard.getCardType();
 			orderNo = orderCard.getCardOrderNo();
@@ -111,11 +110,12 @@ public class OrderWxPayController extends BaseController {
 			userId = orderCard.getUserId();
 			DictCardType dictCardType = cardTypeService.selectByPrimaryKey(cardType);
 			wxPay = dictCardType.getCardPay().toString();
-			BigDecimal cardPay = dictCardType.getCardPay();
-			BigDecimal p1 = new BigDecimal(100);
-			BigDecimal p2 = MathBigDeciamlUtil.mul(cardPay, p1);
-			BigDecimal orderPayNow = MathBigDeciamlUtil.round(p2, 0);
-			wxPay = orderPayNow.toString();
+//			BigDecimal cardPay = dictCardType.getCardPay();
+//			BigDecimal p1 = new BigDecimal(100);
+//			BigDecimal p2 = MathBigDeciamlUtil.mul(cardPay, p1);
+//			BigDecimal orderPayNow = MathBigDeciamlUtil.round(p2, 0);
+//			wxPay = orderPayNow.toString();
+			tradeName = "叮当到家家庭服务";
 		}
 
 		//TODO 手机话费类充值的 情况 == 类似于 订单 支付的情况
