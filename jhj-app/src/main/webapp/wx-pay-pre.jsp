@@ -18,6 +18,9 @@ redirectUrl += "&userCouponId=" + userCouponId;
 redirectUrl += "&orderType=" + orderType;
 redirectUrl += "&payOrderType=" + payOrderType;
 redirectUrl = URLEncoder.encode(redirectUrl,"utf-8");
+
+String wxAccessUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+WxUtil.appId+"&redirect_uri="+redirectUrl+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+System.out.println("wx-pay-pre.jsp ==" + wxAccessUrl);
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

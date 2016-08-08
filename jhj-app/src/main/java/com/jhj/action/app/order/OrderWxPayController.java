@@ -76,7 +76,7 @@ public class OrderWxPayController extends BaseController {
 			)  throws Exception {
 		
 		System.out.println("=====WX pay Start======");
-		
+		System.out.println("code = " + code);
 		String orderNo = "";
 		Long userId = 0L;
 		
