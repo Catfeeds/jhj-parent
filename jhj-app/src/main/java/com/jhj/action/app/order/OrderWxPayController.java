@@ -110,11 +110,11 @@ public class OrderWxPayController extends BaseController {
 			userId = orderCard.getUserId();
 			DictCardType dictCardType = cardTypeService.selectByPrimaryKey(cardType);
 			wxPay = dictCardType.getCardPay().toString();
-//			BigDecimal cardPay = dictCardType.getCardPay();
-//			BigDecimal p1 = new BigDecimal(100);
-//			BigDecimal p2 = MathBigDeciamlUtil.mul(cardPay, p1);
-//			BigDecimal orderPayNow = MathBigDeciamlUtil.round(p2, 0);
-//			wxPay = orderPayNow.toString();
+			BigDecimal cardPay = dictCardType.getCardPay();
+			BigDecimal p1 = new BigDecimal(100);
+			BigDecimal p2 = MathBigDeciamlUtil.mul(cardPay, p1);
+			BigDecimal orderPayNow = MathBigDeciamlUtil.round(p2, 0);
+			wxPay = orderPayNow.toString();
 			tradeName = "叮当到家家庭服务";
 		}
 
