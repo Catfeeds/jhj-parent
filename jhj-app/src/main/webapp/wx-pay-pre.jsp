@@ -48,7 +48,7 @@ redirectUrl = URLEncoder.encode(redirectUrl,"utf-8");
                 $('#content').removeClass().addClass('fontSize' + fontsize);
             }
 			$(function(){
-				location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=<%=WxUtil.appId%>&redirect_uri=<%=redirectUrl%>&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+				location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=<%=WxUtil.appId%>&redirect_uri=<%=redirectUrl%>&code=CODE&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
 			});
 </script>
 </head>
