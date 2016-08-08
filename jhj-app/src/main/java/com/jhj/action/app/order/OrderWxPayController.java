@@ -147,7 +147,7 @@ public class OrderWxPayController extends BaseController {
 		
 		
 		//测试
-		wxPay = "1";
+//		wxPay = "1";
 		
 		// 临时订单号
 		String tradeno = System.currentTimeMillis() + "" + (int) (Math.random() * 1000000);
