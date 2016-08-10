@@ -110,7 +110,9 @@
         		#{item}
     		</foreach>
 	</if>
-	
+	<if test="status!=null">
+		and status =#{status,jdbcType=NUMERIC} 
+	</if>
 	
 	order by add_time desc  
   </select>
