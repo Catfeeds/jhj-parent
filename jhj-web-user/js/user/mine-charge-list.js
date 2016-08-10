@@ -24,7 +24,6 @@ myApp.onPageInit('mine-charge-list', function (page) {
 	}
      $$(".charge-way").on("click",function(){
     	 var cardId = $$(this).prev().prev().prev().val();
-    	 localStorage.setItem("pay_card_id",cardId);
     	 var cardPay = $$(this).next().val();
     	 var sendMoney = $$(this).next().next().val();
     	 if(cardPay <= 5000){
