@@ -3,6 +3,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 	var userId = localStorage.getItem("user_id");
 
 	var cardId = page.query.card_id;
+	localStorage.setItem("pay_card_id",cardId);
 	var cardPay = page.query.card_pay;
 	var orderPayType = 2;
 	if (userId == undefined || userId == '' || userId == 0) {
