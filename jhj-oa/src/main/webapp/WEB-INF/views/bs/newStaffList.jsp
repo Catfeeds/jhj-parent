@@ -63,7 +63,10 @@
 														logInParentOrgId="${loginOrgId}"
 														selectId="${staffSearchVoModel.orgId }"/>
 									 </div>
-								 </c:if>   
+								 </c:if>
+								 是否可用：
+								 	<form:radiobutton path="status" value="0" />否
+								 	<form:radiobutton path="status" value="1" />是
 									<button type="submit" class="btn btn-primary" >搜索</button>
                            </form:form> 
                           </header>
