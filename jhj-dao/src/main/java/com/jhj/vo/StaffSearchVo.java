@@ -21,7 +21,16 @@ public class StaffSearchVo {
 	  
 	private List<Long> cloudOrgList;
 	
-	
+	private Integer status;
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public List<Long> getCloudOrgList() {
 		return cloudOrgList;
 	}
@@ -95,9 +104,6 @@ public class StaffSearchVo {
 	public void setOrgId(Long orgId) {
 		this.orgId = orgId;
 	}
-
 	
-
-
 
 }
