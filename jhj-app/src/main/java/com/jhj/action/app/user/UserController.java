@@ -309,9 +309,10 @@ public class UserController extends BaseController {
 		Users user=usersService.selectByUsersId(userId);
 		DictCardType card = cardTypeService.selectByPrimaryKey(cardId);
 		BigDecimal restMoney=user.getRestMoney();
+		System.out.println("restMoney="+restMoney+"card_value="+card.getCardValue()+"card_pay"+card.getCardPay());
 		restMoney=restMoney.add(card.getCardPay()).add(card.getSendMoney());
 		System.out.println("cardId="+cardId);
-		System.out.println("restMoney="+restMoney+"getCardPay"+card.getCardPay()+"getSendMoney"+card.getSendMoney());
+		System.out.println("restMoney="+restMoney+"getCardPay="+card.getCardPay()+"getSendMoney="+card.getSendMoney());
 		user.setRestMoney(restMoney);
 		usersService.updateByPrimaryKeySelective(user);
 
