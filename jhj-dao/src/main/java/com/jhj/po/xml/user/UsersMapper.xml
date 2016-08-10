@@ -92,17 +92,15 @@
 			(
 			  SELECT 
 			  	DISTINCT(orders.`user_id`) AS thisUserId 
-			  FROM  orders 
-			  where	 
-			 	 orders.`org_id` 
-			 	 in
-			 	 
+			  FROM  orders
+			  <where>
 			 	 <if test="searchOrgList != null">
+				  	orders.`org_id` in
 					<foreach item="item" index="index" collection="searchOrgList" open="(" separator="," close=")">
 						#{searchOrgList[${index}]}
 					</foreach>
 			 	 </if>
-			 	 
+			  </where>
 			) AS f  
 		
 		WHERE users.`id` = f.thisUserId
