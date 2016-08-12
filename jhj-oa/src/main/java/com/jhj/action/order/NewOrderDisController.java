@@ -175,8 +175,11 @@ public class NewOrderDisController extends BaseController {
 		
 		OrderDispatchs dispatchs  = disService.initOrderDisp();
 		
+		//给原来派工人员发送短信提醒，派工订单被取消
+		String oldStaffMobile=null;
 		if(disList.size() > 0){
-			dispatchs = disList.get(0);		
+			dispatchs = disList.get(0);	
+			oldStaffMobile = dispatchs.getStaffMobile();
 		}else{
 			
 			dispatchs.setUserId(order.getUserId());
@@ -251,9 +254,10 @@ public class NewOrderDisController extends BaseController {
 			 *   oldServiceDate : 未 update 之前的 服务时间，多次派工时，只能取得上次的 服务时间
 			 */
 			
-			String[] changTimeMessage = new String[] {"服务时间为:"+oldServiceDate,beginTimeStr};
-			
-			SmsUtil.SendSms(userMobile, Constants.MESSAGE_ORDER_DATE_CHANGE, changTimeMessage);
+			//订单更换工作人员不需要给用户发送短信提醒
+//			String[] changTimeMessage = new String[] {"服务时间为:"+oldServiceDate,beginTimeStr};
+//			
+//			SmsUtil.SendSms(userMobile, Constants.MESSAGE_ORDER_DATE_CHANGE, changTimeMessage);
 			
 			/*
 			 *  派工 短信通知
@@ -265,6 +269,8 @@ public class NewOrderDisController extends BaseController {
 			dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 			
 			SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
+			
+			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[]{beginTimeStr,order.getOrderNo()});
 			
 		}
 		
