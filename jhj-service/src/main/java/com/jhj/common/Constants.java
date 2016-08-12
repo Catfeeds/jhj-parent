@@ -382,7 +382,7 @@ public class Constants {
 	 *订单取消提醒
 	 *你的{1}的订单{2}已取消，请及时关注叮当到家APP获取相关订单信息。
 	 */
-	 public static String MESSAGE_ORDER_CANCLE="108576";
+	 public static String MESSAGE_ORDER_CANCLE="108638";
 	
 	
 }
