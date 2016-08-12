@@ -1,49 +1,33 @@
 package com.jhj.action.order;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
-import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
-import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.UserAddrs;
-import com.jhj.po.model.user.UserPushBind;
-import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserPushBindService;
-import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
-import com.jhj.vo.org.LeaveSearchVo;
-import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.GsonUtil;
 import com.meijia.utils.OneCareUtil;
-import com.meijia.utils.PushUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -86,6 +70,9 @@ public class NewOrderDisController extends BaseController {
 	
 	@Autowired
 	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerService;
 	
 	/**
 	 * 
@@ -213,11 +200,11 @@ public class NewOrderDisController extends BaseController {
 		
 		
 		// 未更新 记录之前的 服务时间
-		String oldServiceDate = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+//		String oldServiceDate = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
 		
-		Long userId = order.getUserId();
-		Users users = userService.selectByUsersId(userId);
-		String userMobile = users.getMobile();
+//		Long userId = order.getUserId();
+//		Users users = userService.selectByUsersId(userId);
+//		String userMobile = users.getMobile();
 		
 		//对于  钟点工订单, 只有订单状态为    "已支付" 或  "已派工",可以进行 调整派工
 		if(orderStatus  == Constants.ORDER_HOUR_STATUS_2
@@ -270,7 +257,7 @@ public class NewOrderDisController extends BaseController {
 			
 			SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
 			
-			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[]{beginTimeStr,order.getOrderNo()});
+			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[]{beginTimeStr,partnerService.selectByPrimaryKey(order.getServiceType()).getName()});
 			
 		}
 		
