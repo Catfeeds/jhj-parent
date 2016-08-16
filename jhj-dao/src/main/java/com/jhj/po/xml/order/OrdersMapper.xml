@@ -477,6 +477,12 @@
 				remarks like CONCAT('%','${remarks}','%' )
 		</if>
 		
+		<if test="serviceTime1!=null">
+			<![CDATA[ and service_date >= #{serviceTime1}]]>
+		</if>
+		<if test="serviceTime2!=null">
+			<![CDATA[ and service_date <= #{serviceTime2}]]>
+		</if>
 		
 		order by add_time desc
 	</select>
