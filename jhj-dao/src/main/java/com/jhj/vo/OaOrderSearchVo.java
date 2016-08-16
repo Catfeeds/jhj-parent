@@ -70,6 +70,14 @@ public class OaOrderSearchVo {
 	
 	private String remarks;		// 订单的备注查询
 	
+	private String serviceStartTime;
+	
+	private String serviceEndTime;
+	
+	private Long serviceTime1;
+	
+	private Long serviceTime2;
+	
 	public String getRemarks() {
 		return remarks;
 	}
@@ -215,6 +223,29 @@ public class OaOrderSearchVo {
 	public void setOrderStatus(Short orderStatus) {
 		this.orderStatus = orderStatus;
 	}
+	public String getServiceStartTime() {
+		return serviceStartTime;
+	}
+	public void setServiceStartTime(String serviceStartTime) {
+		this.serviceStartTime = serviceStartTime;
+	}
+	public String getServiceEndTime() {
+		return serviceEndTime;
+	}
+	public void setServiceEndTime(String serviceEndTime) {
+		this.serviceEndTime = serviceEndTime;
+	}
+	public Long getServiceTime1() {
+		return serviceTime1;
+	}
+	public void setServiceTime1(Long serviceTime1) {
+		this.serviceTime1 = serviceTime1;
+	}
+	public Long getServiceTime2() {
+		return serviceTime2;
+	}
+	public void setServiceTime2(Long serviceTime2) {
+		this.serviceTime2 = serviceTime2;
+	}
 
-	
 }
