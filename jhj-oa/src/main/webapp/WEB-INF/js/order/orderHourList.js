@@ -1,10 +1,19 @@
 $('.form_datetime').datepicker({
-	format : "yyyy-mm-dd",
+	format: 'yyyy-mm-dd',
 	language : "zh-CN",
 	autoclose : true,
 	startView : 1,
-	todayBtn : true
+	todayBtn : true,
 });
+
+$('.form-datetime').datetimepicker({
+	format: "yyyy-mm-dd hh:ii",
+	language: "zh-CN",
+	autoclose: true,
+	todayBtn:true,
+	minuteStep: 30,
+});
+
 
 function checkEndTime() {
 	var startTime = $("#startTimeStr").val();
