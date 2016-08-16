@@ -28,6 +28,8 @@ import="com.jhj.oa.common.UrlHelper"%>
 	<!--css for this page-->
 	<link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
 	     rel="stylesheet" type="text/css" />
+	<link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>"
+	rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -99,8 +101,16 @@ import="com.jhj.oa.common.UrlHelper"%>
 											下单结束时间：
 											<form:input path="endTimeStr" class="form-control form_datetime" 
 											style="width:110px; margin-bottom:0" readonly="true" />
-										</div> 
+										</div>
 										
+										<div class="form-group">
+			                          		服务日期：
+											<form:input path="serviceStartTime" class="form-control form-datetime"
+											 style="width:180px; margin-bottom:0" readonly="true" />
+											 <span>至</span>
+											 <form:input path="serviceEndTime" class="form-control form-datetime"
+											 style="width:180px; margin-bottom:0" readonly="true" />
+										</div>
 										
 										<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" >搜索</button>
 										
@@ -229,6 +239,11 @@ import="com.jhj.oa.common.UrlHelper"%>
 		src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
 	<script type="text/javascript"
 		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+	
+	<script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>	
+	<script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
 	
 	<script src="<c:url value='/js/order/orderHourList.js'/>"></script>
 	
