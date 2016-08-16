@@ -188,6 +188,7 @@ public class StaffController extends BaseController {
 		
 		// 验证 sms_token是否正确. 注意sms_type = 2
 		UserSmsToken smsToken = smsTokenService.selectByMobileAndType(mobile,smsType);
+		System.out.println("smsToken="+smsToken);
 
 		LoginVo loginVo = new LoginVo(0l, mobile);
 		if (smsToken == null || smsToken.getAddTime() == null
