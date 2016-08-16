@@ -163,7 +163,7 @@ public class OaOrderController extends BaseController {
 		} else {
 			oaOrderSearchVo.setOrderType(Constants.ORDER_TYPE_0);
 		}
-
+ 
 		// 得到 当前登录 的 门店id，并作为搜索条件
 		String org = AuthHelper.getSessionLoginOrg(request);
 
@@ -236,6 +236,17 @@ public class OaOrderController extends BaseController {
 		String endTimeStr = oaOrderSearchVo.getEndTimeStr();
 		if (!StringUtil.isEmpty(endTimeStr)) {
 			oaOrderSearchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		}
+		
+		//服务开始时间
+		String serviceStartTime=oaOrderSearchVo.getServiceStartTime();
+		if(!StringUtil.isEmpty(serviceStartTime)){
+			oaOrderSearchVo.setServiceTime1(DateUtil.getUnixTimeStamp(DateUtil.toDate(serviceStartTime)));
+		}
+		//服务结束时间
+		String serviceEndTime=oaOrderSearchVo.getServiceEndTime();
+		if(!StringUtil.isEmpty(serviceEndTime)){
+			oaOrderSearchVo.setServiceTime2(DateUtil.getUnixTimeStamp(DateUtil.toDate(serviceEndTime)));
 		}
 
 		List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo, pageNo, pageSize);
@@ -798,7 +809,7 @@ public class OaOrderController extends BaseController {
 		// 如果 能 找到 派工 为 1 的 订单记录 , mybatis已修改。 selectByOrderId() 得到 的 是 有效派工 的记录
 		// 。
 		OrderDispatchs disStatuYes = orderDisService.selectByOrderId(id);
-
+		
 		if (disStatuYes != null) {
 			Long staId = disStatuYes.getStaffId();
 			// 如果 没有 选择 新的 staffId ，或 这 staId 为空。。
@@ -815,7 +826,7 @@ public class OaOrderController extends BaseController {
 
 			orderPayService.orderPaySuccessToDoForHour(userId, id, orgStaffsNewVos, isChange);
 		}
-
+		
 		return "redirect:/order/order-list";
 	}
 
