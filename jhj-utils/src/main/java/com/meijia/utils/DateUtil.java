@@ -394,6 +394,17 @@ public class DateUtil {
 		}
 		return day + " 23:59:59";
 	}
+	
+	/**
+	 * 转换日期+时+分的时间转化
+	 * 
+	 * */
+	public static String toDate(String day) {
+		if (StringUtil.isEmpty(day) || !isDate(day)) {
+			return null;
+		}
+		return day + ":00";
+	}
 
 	/**
 	 * 某一天的结束
@@ -674,7 +685,7 @@ public class DateUtil {
 
 		return time;
 	}
-
+	
 	/*
 	 * 字符串时间戳,转换为 日期
 	 */
