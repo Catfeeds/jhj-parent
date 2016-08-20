@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -33,10 +34,14 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.dict.CouponsUseCondition;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
+import com.jhj.service.dict.CouponsUseConditionService;
 import com.jhj.service.dict.DictUtil;
+import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.CouponVo;
@@ -67,6 +72,12 @@ public class DictCouponsController extends BaseController {
 
 	@Autowired
 	private UsersService usersService;
+	
+	@Autowired
+	private CouponsUseConditionService useCondition;
+	
+	@Autowired
+	private OrdersService orderService;
 
 	/**列表显示兑换码的优惠券
 	 * @param request
@@ -102,7 +113,7 @@ public class DictCouponsController extends BaseController {
 	 * @return
 	 */
 	@AuthPassport
-	@RequestMapping(value = "/recharge-coupon-list", method = { RequestMethod.GET })
+	@RequestMapping(value = "/recharge-coupon-list", method = {RequestMethod.GET,RequestMethod.POST})
 	public String rechargeCouponList(HttpServletRequest request, Model model,
 			CouponSearchVo searchVo) {
 		model.addAttribute("requestUrl", request.getServletPath());
@@ -172,14 +183,15 @@ public class DictCouponsController extends BaseController {
 			dictCoupons = couponService.selectByPrimaryKey(id);
 			}
 		
-		CouponVo couponVo = new CouponVo();
-		try {
-			BeanUtils.copyProperties(couponVo,dictCoupons);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		model.addAttribute("dictCoupons", couponVo);
+//		CouponVo couponVo = new CouponVo();
+//		try {
+//			BeanUtils.copyProperties(couponVo,dictCoupons);
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		List<CouponsUseCondition> couponsUseCondition = useCondition.selectAll();
+		model.addAttribute("couponsUseCondition", couponsUseCondition);
+		model.addAttribute("dictCoupons", dictCoupons);
 		model.addAttribute("selectDataSource",couponService.getSelectRangMonthSource());
 		model.addAttribute("serviceTypeMap",couponService.getSelectServiceTypeSource());
 		return "coupons/rechargeCouponForm";
@@ -269,7 +281,8 @@ public class DictCouponsController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/rechargeCouponForm", method = { RequestMethod.POST })
-	public String addRechargeCoupons(HttpServletRequest request, Model model,
+	@ResponseBody
+	public Map<String,String> addRechargeCoupons(HttpServletRequest request, Model model,
 			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
 			BindingResult result) {
 		
@@ -288,6 +301,7 @@ public class DictCouponsController extends BaseController {
 			dictCoupon.setDescription(dictCoupons.getDescription());
 			dictCoupon.setIntroduction(dictCoupons.getIntroduction());
 			dictCoupon.setRangMonth(dictCoupons.getRangMonth());
+			dictCoupon.setUseCondition(dictCoupons.getUseCondition());
 			couponService.updateByPrimaryKeySelective(dictCoupon);
 		} else {
 			//新增充值后赠送优惠券
@@ -300,9 +314,13 @@ public class DictCouponsController extends BaseController {
 			dictCoupon.setDescription(dictCoupons.getDescription());
 			dictCoupon.setIntroduction(dictCoupons.getIntroduction());
 			dictCoupon.setRangMonth(dictCoupons.getRangMonth());
+			dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
+			dictCoupon.setUseCondition(dictCoupons.getUseCondition());
 			couponService.insertSelective(dictCoupon);
 		}
-		return "redirect:recharge-coupon-list";
+		Map<String,String> hashMap=new HashMap<String,String>();
+		hashMap.put("success", "200");
+		return hashMap;
 	}
 	/**
 	 * 添加优惠券
@@ -465,4 +483,58 @@ public class DictCouponsController extends BaseController {
         }
         return listmap;
     }
+    
+    @RequestMapping(value = "/sendCoupons", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,String> sendCoupons(@ModelAttribute DictCoupons dictCoupons){
+    	
+    	Long id = dictCoupons.getId();
+    	DictCoupons coupon = couponService.selectByPrimaryKey(id);
+    	List<Integer> condtion=dictCoupons.getSendCouponsCondtion();
+    	List<UserCoupons> userCouponsList1=new ArrayList<UserCoupons>();
+    	List<UserCoupons> userCouponsList2=new ArrayList<UserCoupons>();
+    	List<UserCoupons> userCouponsList3=new ArrayList<UserCoupons>();
+    	Map<String,String> hashMap=new HashMap<String,String>();
+    	if(condtion!=null && condtion.size()>0){
+    		if(condtion.contains(1)){
+    			Map<String,Long> map=new HashMap<String,Long>();
+    			map.put("serviceStartDate", DateUtil.curStartDate(0));
+    			map.put("serviceEndDate", DateUtil.curLastDate(0));
+    			List<Orders> orders = orderService.selectByMap(map);
+    			for(Orders o:orders){
+    				UserCoupons uc = userCouponsService.initUserCoupons(o.getUserId(),coupon);
+    				userCouponsList1.add(uc);
+    			}
+    			userCouponsService.insertByList(userCouponsList1);
+    		}
+    		if(condtion.contains(2)){
+    			Map<String,Long> map=new HashMap<String,Long>();
+    			map.put("serviceStartDate", DateUtil.curStartDate(1));
+    			map.put("serviceEndDate", DateUtil.curLastDate(1));
+    			List<Orders> orders = orderService.selectByMap(map);
+    			for(Orders o:orders){
+    				UserCoupons uc = userCouponsService.initUserCoupons(o.getUserId(),coupon);
+    				userCouponsList2.add(uc);
+    			}
+    			userCouponsService.insertByList(userCouponsList2);
+    		}
+    		if(condtion.contains(3)){
+    			Map<String,Long> map=new HashMap<String,Long>();
+    			map.put("serviceStartDate", DateUtil.curStartDate(2));
+    			map.put("serviceEndDate", DateUtil.curLastDate(2));
+    			List<Orders> orders = orderService.selectByMap(map);
+    			for(Orders o:orders){
+    				UserCoupons uc = userCouponsService.initUserCoupons(o.getUserId(),coupon);
+    				userCouponsList3.add(uc);
+    			}
+    			userCouponsService.insertByList(userCouponsList3);
+    		}
+    		hashMap.put("success", "200");
+    	}else{
+    		hashMap.put("fail", "100");
+    	}
+    	return hashMap;
+    }
+    
+    
 }
