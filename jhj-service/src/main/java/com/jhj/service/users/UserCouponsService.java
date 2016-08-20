@@ -3,6 +3,7 @@ package com.jhj.service.users;
 import java.util.List;
 
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.user.UserCouponVo;
@@ -53,4 +54,8 @@ public interface UserCouponsService {
 	//该用户是否有  注册大礼包
 	List<Long> selectLoginGift(Long userId);
 	
+	int insertByList(List<UserCoupons> userCouponsList);
+	
+	//为对象
+	UserCoupons initUserCoupons(Long userId,DictCoupons coupons);
 }
