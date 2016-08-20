@@ -349,4 +349,26 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 	public List<Long> selectLoginGift(Long userId) {
 		return userCouponsMapper.selectLoginGift(userId);
 	}
+
+	@Override
+	public int insertByList(List<UserCoupons> userCouponsList) {
+		userCouponsMapper.insertByList(userCouponsList);
+		return 0;
+	}
+
+	@Override
+	public UserCoupons initUserCoupons(Long userId,DictCoupons coupons){
+    	UserCoupons uc=new UserCoupons();
+    	uc.setUserId(userId);
+    	uc.setCouponId(coupons.getId());
+    	uc.setValue(coupons.getValue());
+    	uc.setGiftId(0L);
+    	uc.setServiceType(String.valueOf(coupons.getServiceType()));
+    	uc.setFromDate(coupons.getFromDate());
+    	uc.setToDate(coupons.getToDate());
+    	uc.setIsUsed((short)0);
+    	uc.setUsedTime(0L);
+    	uc.setAddTime(TimeStampUtil.getNow() / 1000);
+    	return uc;
+    }
 }
