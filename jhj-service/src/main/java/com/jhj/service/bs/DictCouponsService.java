@@ -1,5 +1,6 @@
 package com.jhj.service.bs;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,5 +49,5 @@ public interface DictCouponsService {
 	
 	List<DictCoupons> getCouponsByCouponType(Short couponType);
 
-
+	List<DictCoupons> getSelectByMap(Date todate);
 }
