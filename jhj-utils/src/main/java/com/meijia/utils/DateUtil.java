@@ -227,6 +227,7 @@ public class DateUtil {
 	}
 
 	public static String addDay(Date date, int count, int field, String format) {
+
 		DEFAULT_CALENDAR.setTime(date);
 		int year = getYear();
 		int month = getMonth() - 1;
@@ -819,39 +820,31 @@ public class DateUtil {
 
 		return age + "";
 	}
-
-	public static void main(String[] args) throws Exception {
-		// List<String> result = DateUtil.getLastMonth(6, 12);
-		//
-		// System.out.println(result);
-
-		// System.out.println(getToday());
-		//
-		// System.out.println(timeStamp2Date("1444651880", "yyyy-MM-dd"));
-		// System.out.println(getBeginOfDay());
-		// System.out.println(getUnixTimeStamp("2015-10-10 00:00:00"));
-
-		// System.out.println(convTimeStampToDate(1439194701L));
-
-		// List<Long> matchList = new ArrayList<Long>();
-		// matchList.add(1L);
-		// matchList.add(2L);
-		// matchList.add(3L);
-		// matchList.add(1L);
-		// matchList.add(3L);
-		// matchList.add(3L);
-		// System.out.println(Collections.frequency(matchList, 1L));
-		// System.out.println(Collections.frequency(matchList, 2L));
-		// System.out.println(Collections.frequency(matchList, 3L));
-
-		// Long convTimeStampToDate = convTimeStampToDate(1458727667L);
-		// String birth = "1979-09-15";
-		// Date birthDay = DateUtil.parse(birth);
-		// System.out.println(DateUtil.getAge(birthDay));
-		//
-		// long unixTimeStamp = getUnixTimeStamp("2016-05-13 18:35:00");
-		//
-		// System.out.println(unixTimeStamp);
-
+	
+	//日期添加月份
+	public static Date toDate(int month){
+		int mth = getMonth()+month;
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH, mth);
+		return cal.getTime();
+	}
+	
+	//获取每个月的开始日期
+	public static Long curStartDate(int mouth){
+		Calendar cal = Calendar.getInstance();
+		int mou=cal.get(Calendar.MONTH)-mouth;
+		cal.set(Calendar.MONTH, mou);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		String strDate = format(cal.getTime(), "yyyy-MM-dd");
+		return TimeStampUtil.getMillisOfDay(strDate)/1000;
+	}
+	
+	public static Long curLastDate(int mouth){
+		Calendar cal = Calendar.getInstance();
+		int mou=cal.get(Calendar.MONTH)+1-mouth;
+		cal.set(Calendar.MONTH, mou);
+		cal.set(Calendar.DAY_OF_MONTH, 0);
+		String strDate = format(cal.getTime(), "yyyy-MM-dd");
+		return TimeStampUtil.getMillisOfDay(strDate)/1000;
 	}
 }
