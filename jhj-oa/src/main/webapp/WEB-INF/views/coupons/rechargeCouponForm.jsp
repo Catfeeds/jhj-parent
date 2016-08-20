@@ -15,7 +15,6 @@
 	href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
 	rel="stylesheet" type="text/css" />
 
-
 </head>
 
 <body>
@@ -36,8 +35,8 @@
 
 			<div class="panel-body">
 				<form:form modelAttribute="dictCoupons" id="recharge-coupon-form"
-					commandName="dictCoupons" action="rechargeCouponForm"
-					class="form-horizontal" method="POST">
+					commandName="dictCoupons" 
+					class="form-horizontal">
 					<form:hidden path="id" />
 					<div class="form-body">
 						
@@ -71,6 +70,16 @@
 								<form:radiobuttons path="serviceType" items="${serviceTypeMap}"/><br/>
 							</div>
 
+						</div>
+						<div class="form-group">
+							<label class="col-md-2 control-label">使用条件 </label>
+
+							<div class="col-md-5">
+								<%-- <form:radiobuttons path="useCondition" items="${couponsUseCondition}"/> --%>
+								<form:select path="useCondition" items="${couponsUseCondition }" itemLabel="useConditionDescr" itemValue="useConditonId">
+								</form:select>
+								<br />
+							</div>
 						</div>
 						<div class="form-group">
 
@@ -111,16 +120,29 @@
 									保存</button>
 							</div>
 							<!-- Button -->
-							<div class="col-md-8">
+							<div class="col-md-1">
 								<button class="btn btn-success" type="reset">重置</button>
 							</div>
-
+							<div class="col-md-4">
+								<a href="recharge-coupon-list" class="btn btn-success">返回</a>
+							</div>
 						</div>
 					</div>
 					<!-- </fieldset> -->
 				</form:form>
 			</div>
 			</section>
+		</div>
+		<div id="form2-div" style="display:none">
+			<div class="col-lg-12">
+				<form id="form2" method="post">
+					<input type="hidden" id="from2_id" name="id" value="${dictCoupons.id }"/>
+					<input type="checkbox" name="sendCouponsCondtion" value="1" />最近1个月内有下过单
+					<input type="checkbox" name="sendCouponsCondtion" value="2" />最近2个月内有下过单
+					<input type="checkbox" name="sendCouponsCondtion" value="3" />最近3个月内有下过单
+					<input type="button" id="from2-btn" value="发送优惠券" />
+				</form>
+			</div>
 		</div>
 	</div>
 	<!-- page end--> </section> </section> <!--main content end--> <!--footer start--> <%@ include
@@ -136,7 +158,8 @@
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"
 		type="text/javascript"></script>
 	<!-- rechargeCoupon Form表单 js -->
-	<script src="<c:url value='/js/jhj/bs/dictCoupons/rechargeCouponForm.js'/>"
+	<script src="../js/jhj/bs/dictCoupons/rechargeCouponForm.js"
 		type="text/javascript"></script>
+	
 </body>
 </html>
