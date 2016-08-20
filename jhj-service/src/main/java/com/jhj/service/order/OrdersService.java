@@ -89,4 +89,6 @@ public interface OrdersService {
 	 //取消 助理 预约订单（助理）
 	 String cancelAmOrder(Orders order);
 	 
+	 List<Orders> selectByMap(Map<String,Long> map);
+	 
 }
