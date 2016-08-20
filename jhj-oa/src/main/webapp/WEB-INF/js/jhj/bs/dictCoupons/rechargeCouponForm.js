@@ -80,9 +80,46 @@ $('#recharge-coupon-form').validate({
 		});
 
 		$("#addCoupon_btn").click(function(){
+			var form1=$("#recharge-coupon-form").serialize();
 			if (confirm("确认要保存吗?")){
 				if ($('#recharge-coupon-form').validate().form()) {
-					$('#recharge-coupon-form').submit();
+//					$('#recharge-coupon-form').submit();
+					$.ajax({
+						type:"post",
+						url:"rechargeCouponForm",
+						dataType:"json",
+						data:form1,
+						success:function(data){
+							if(data.success==200)
+								alert("优惠券添加成功！！");
+							    $("#form2-div").css("display","block");
+						}
+					});
 				}
 		    }
 		});
+//发送优惠券功能		
+$("#from2-btn").click(function(){
+	var form=$("#form2").serialize();
+	if($("input[name='sendCouponsCondtion']:checked").val()==undefined){
+		return false;
+	}
+	if(confirm("请确定要发送优惠券吗？")){
+		$.ajax({
+			type:"post",
+			url:"sendCoupons",
+			dataType:"json",
+			data:form,
+			success:function(data){
+				if(data.success==200){
+					$("input[name='sendCouponsCondtion']").attr("checked", false);
+					alert("发送优惠券成功！");
+				}
+				if(data.fail==100){
+					alert("请选择发送那种类型的优惠券..");
+				}
+			}
+		});
+	}
+});
+
