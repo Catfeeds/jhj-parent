@@ -2,6 +2,7 @@ package com.jhj.po.model.bs;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class DictCoupons {
     private Long id;
@@ -35,7 +36,15 @@ public class DictCoupons {
 	private Long addTime;
 
 	private Long updateTime;
-
+	
+	/**
+	 * 新增字段
+	 * 优惠券使用条件
+	 * */
+	private String useCondition;
+	
+	private List<Integer> sendCouponsCondtion;
+	
 	public Long getId() {
 		return id;
 	}
@@ -162,6 +171,22 @@ public class DictCoupons {
 
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
+	}
+
+	public String getUseCondition() {
+		return useCondition;
+	}
+
+	public void setUseCondition(String useCondition) {
+		this.useCondition = useCondition;
+	}
+
+	public List<Integer> getSendCouponsCondtion() {
+		return sendCouponsCondtion;
+	}
+
+	public void setSendCouponsCondtion(List<Integer> sendCouponsCondtion) {
+		this.sendCouponsCondtion = sendCouponsCondtion;
 	}
 	
 }
