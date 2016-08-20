@@ -268,5 +268,5 @@ public interface OrdersMapper {
 	
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
 	
-	
+	List<Orders> selectByMap(Map<String,Long> map);
 }
