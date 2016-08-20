@@ -673,5 +673,10 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		return "取消成功,支付款项已退回您的余额";
 	}
+
+	@Override
+	public List<Orders> selectByMap(Map<String, Long> map) {
+		return ordersMapper.selectByMap(map);
+	}
 	
 }
