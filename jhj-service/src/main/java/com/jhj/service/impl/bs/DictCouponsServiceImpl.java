@@ -88,7 +88,6 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 		po.setDescription("");
 		po.setRangMonth((short)1);
 		po.setFromDate(new Date());
-		po.setToDate(new Date());
 		po.setAddTime(TimeStampUtil.getNow() / 1000);
 		po.setUpdateTime(TimeStampUtil.getNow() / 1000);
 		return po;
@@ -236,9 +235,18 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 		conditions.put("couponType",couponSearchVo.getCoupontType());
 		return dictCouponsMapper.selectByListPage(conditions);
 	}
-	
-	
-	
-	
+
+	//按前日期查询优惠券
+	public List<DictCoupons> getSelectByMap(Date todate) {
+		if(todate!=null){
+			Map<String,Object> map=new HashMap<String,Object>();
+			DictCoupons coupons=new DictCoupons();
+			coupons.setToDate(todate);
+			map.put("coupons", coupons);
+			List<DictCoupons> couponsList = dictCouponsMapper.selectByListPage(map);
+			return couponsList;
+		}
+		return null;
+	}
 	
 }
