@@ -1,5 +1,7 @@
-package com.jhj.action.app.user;
+ package com.jhj.action.app.user;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.UserLogined;
 import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.UserSmsToken;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
@@ -70,6 +75,9 @@ public class UserAppController extends BaseController {
 		
 		@Autowired
 		private UserCouponsService userCouponService;
+		
+		@Autowired
+		private DictCouponsService couponsService;
 		
 		/**
 		 * 
@@ -126,65 +134,65 @@ public class UserAppController extends BaseController {
 			
 			
 			//测试手机号
-			if (mobile.equals("18610807136") && sms_token.equals("000000")) {
-
-				Users u = usersService.getUserByMobile(mobile);
-			
-				if(u!=null){
-					result = new AppResultData<Object>(Constants.SUCCESS_0,
-							ConstantMsg.SUCCESS_0_MSG, u);
-				}else{
-					u = usersService.genUser(mobile, Constants.USER_APP);
-				}
-				
-				UserAppVo userAppVo  = new UserAppVo();
-				 try {
-					BeanUtils.copyProperties(userAppVo, u);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				 
-				 List<UserAddrs>  list = userAddrsService.selectByUserId(u.getId());
-				 if(list!=null && list.size()>0){
-					 userAppVo.setHasUserAddr(true);
-				 }else{
-					 userAppVo.setHasUserAddr(false);
-				 }
-				 
-				 //获取用户的默认地址
-				 UserAddrs userAddrs = userAddrsService.selectByDefaultAddr(u.getId());
-				 if (userAddrs != null) {
-					 userAppVo.setDefaultUserAddr(userAddrs);
-				 } else {
-					 //如果没有默认地址，则把第一个地址设置为默认地址.
-					 if (!list.isEmpty()) {
-						 userAddrs = list.get(0);
-						 userAddrs.setIsDefault((short) 1);
-						 userAddrsService.updateByPrimaryKeySelective(userAddrs);
-						 userAppVo.setDefaultUserAddr(userAddrs);
-					 }
-				 }		
-				 
-				 //登录时，获取 用户对应的 助理信息
-				 userAppVo.setAmId(0L);
-				 userAppVo.setMobile("");
-//				 UserRefAm userRefAm = userRefAmService.selectByUserId(u.getId());
+//			if (mobile.equals("18610807136") && sms_token.equals("000000")) {
+//
+//				Users u = usersService.getUserByMobile(mobile);
+//			
+//				if(u!=null){
+//					result = new AppResultData<Object>(Constants.SUCCESS_0,
+//							ConstantMsg.SUCCESS_0_MSG, u);
+//				}else{
+//					u = usersService.genUser(mobile, Constants.USER_APP);
+//				}
+//				
+//				UserAppVo userAppVo  = new UserAppVo();
+//				 try {
+//					BeanUtils.copyProperties(userAppVo, u);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 //				 
-//				 if(userRefAm !=null){
-//					 Long amId = userRefAm.getStaffId();
-//					 
-//					 userAppVo.setAmId(amId);
-//					 
-//					 OrgStaffs orgStaffs = orgStaffService.selectByPrimaryKey(amId);
-//					 
-//					 userAppVo.setAmMobile(orgStaffs.getMobile());
-//					 
-//				 }				 
-				 
-				 
-				result.setData(userAppVo);
-				return result;
-			}
+//				 List<UserAddrs>  list = userAddrsService.selectByUserId(u.getId());
+//				 if(list!=null && list.size()>0){
+//					 userAppVo.setHasUserAddr(true);
+//				 }else{
+//					 userAppVo.setHasUserAddr(false);
+//				 }
+//				 
+//				 //获取用户的默认地址
+//				 UserAddrs userAddrs = userAddrsService.selectByDefaultAddr(u.getId());
+//				 if (userAddrs != null) {
+//					 userAppVo.setDefaultUserAddr(userAddrs);
+//				 } else {
+//					 //如果没有默认地址，则把第一个地址设置为默认地址.
+//					 if (!list.isEmpty()) {
+//						 userAddrs = list.get(0);
+//						 userAddrs.setIsDefault((short) 1);
+//						 userAddrsService.updateByPrimaryKeySelective(userAddrs);
+//						 userAppVo.setDefaultUserAddr(userAddrs);
+//					 }
+//				 }		
+//				 
+//				 //登录时，获取 用户对应的 助理信息
+//				 userAppVo.setAmId(0L);
+//				 userAppVo.setMobile("");
+////				 UserRefAm userRefAm = userRefAmService.selectByUserId(u.getId());
+////				 
+////				 if(userRefAm !=null){
+////					 Long amId = userRefAm.getStaffId();
+////					 
+////					 userAppVo.setAmId(amId);
+////					 
+////					 OrgStaffs orgStaffs = orgStaffService.selectByPrimaryKey(amId);
+////					 
+////					 userAppVo.setAmMobile(orgStaffs.getMobile());
+////					 
+////				 }				 
+//				 
+//				 
+//				result.setData(userAppVo);
+//				return result;
+//			}
 			
 			//1、根据手机后查询 user_sms_token 最新一条记录
 			UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType(mobile,userType);
@@ -220,9 +228,20 @@ public class UserAppController extends BaseController {
 					if (u == null) {// 验证手机号是否已经注册，如果未注册，则自动注册用户，
 						u = usersService.genUser(mobile, Constants.USER_NET);
 						
-						
-						
-						
+						if(userType==0){
+							//给新注册的用户发送优惠券
+							Date date=new Date();
+							List<DictCoupons> coupons = couponsService.getSelectByMap(date);
+							List<UserCoupons> userCouponsList=new ArrayList<UserCoupons>();
+							for(DictCoupons c:coupons){
+								if(c.getToDate().getTime()>=date.getTime()){
+									UserCoupons uc = userCouponService.initUserCoupons(u.getId(), c);
+									userCouponsList.add(uc);
+								}
+							}
+							
+							userCouponService.insertByList(userCouponsList);
+						}
 						
 					}
 				//返回用户是否保存有地址
@@ -267,6 +286,7 @@ public class UserAppController extends BaseController {
 					 userAppVo.setAmMobile(orgStaffs.getMobile());
 					 
 				 }
+				 
 				 
 				 
 				result = new AppResultData<Object>(Constants.SUCCESS_0,	ConstantMsg.SUCCESS_0_MSG, userAppVo);
