@@ -33,7 +33,8 @@ public interface UserCouponsMapper {
 	//该用户是否有  注册大礼包
 	List<Long> selectLoginGift(Long userId);
 	
-	
+	//批量插入数据
+	int insertByList(List<UserCoupons> userCouponsList);
 	
     
 }
