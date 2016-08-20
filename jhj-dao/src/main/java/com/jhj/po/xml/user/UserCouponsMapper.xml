@@ -243,4 +243,22 @@
 		add_time = #{addTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
+	<insert id="insertByList" parameterType="java.util.List">
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into user_coupons (id, user_id, coupon_id, value, 
+		gift_id, service_type, from_date,to_date, is_used,
+		used_time, order_no, add_time
+		) values 
+		<foreach collection="list" item="userCoupons" separator=",">
+			(#{userCoupons.id,jdbcType=NUMERIC}, #{userCoupons.userId,jdbcType=NUMERIC}, #{userCoupons.couponId,jdbcType=NUMERIC},
+			#{userCoupons.value,jdbcType=DECIMAL},
+			#{userCoupons.giftId,jdbcType=NUMERIC}, #{userCoupons.serviceType,jdbcType=VARCHAR}, #{userCoupons.fromDate,jdbcType=DATE}, #{userCoupons.toDate,jdbcType=DATE},
+			#{userCoupons.isUsed,jdbcType=NUMERIC},
+			#{userCoupons.usedTime,jdbcType=NUMERIC}, #{userCoupons.orderNo,jdbcType=VARCHAR}, #{userCoupons.addTime,jdbcType=NUMERIC}
+		)
+		</foreach>
+		
+	</insert>	
 </mapper>
