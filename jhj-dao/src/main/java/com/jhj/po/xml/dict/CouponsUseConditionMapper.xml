@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jhj.po.dao.dict.CouponsUseConditionMapper">
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.CouponsUseCondition">
+    <id column="use_conditon_id" jdbcType="INTEGER" property="useConditonId" />
+    <result column="use_condition_descr" jdbcType="VARCHAR" property="useConditionDescr" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    use_conditon_id, use_condition_descr
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from coupons_use_condition
+    where use_conditon_id = #{useConditonId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from coupons_use_condition
+    where use_conditon_id = #{useConditonId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.dict.CouponsUseCondition">
+    insert into coupons_use_condition (use_conditon_id, use_condition_descr)
+    values (#{useConditonId,jdbcType=INTEGER}, #{useConditionDescr,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.CouponsUseCondition">
+    insert into coupons_use_condition
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="useConditonId != null">
+        use_conditon_id,
+      </if>
+      <if test="useConditionDescr != null">
+        use_condition_descr,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="useConditonId != null">
+        #{useConditonId,jdbcType=INTEGER},
+      </if>
+      <if test="useConditionDescr != null">
+        #{useConditionDescr,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.CouponsUseCondition">
+    update coupons_use_condition
+    <set>
+      <if test="useConditionDescr != null">
+        use_condition_descr = #{useConditionDescr,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where use_conditon_id = #{useConditonId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.CouponsUseCondition">
+    update coupons_use_condition
+    set use_condition_descr = #{useConditionDescr,jdbcType=VARCHAR}
+    where use_conditon_id = #{useConditonId,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from coupons_use_condition
+  </select>
+</mapper>
