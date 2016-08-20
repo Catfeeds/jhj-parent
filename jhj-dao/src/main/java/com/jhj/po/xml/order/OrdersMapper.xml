@@ -2100,5 +2100,17 @@
 		 ) GROUP BY name,series
 	</select>
 	
+	<select id="selectByMap" resultMap="BaseResultMap" resultType="java.util.Map">
+		select <include refid="Base_Column_List"/>
+		from orders
+		<where>
+			<if test="serviceStartDate!=null">
+				<![CDATA[ and service_date >= #{serviceStartDate}]]>
+			</if>
+			<if test="serviceEndDate!=null">
+				<![CDATA[ and service_date <= #{serviceEndDate}]]>
+			</if>
+		</where>
+	</select>
 	
 </mapper>
