@@ -102,6 +102,7 @@ $('#recharge-coupon-form').validate({
 $("#from2-btn").click(function(){
 	var form=$("#form2").serialize();
 	if($("input[name='sendCouponsCondtion']:checked").val()==undefined){
+		alert("请选择发送那种类型的优惠券..");
 		return false;
 	}
 	if(confirm("请确定要发送优惠券吗？")){
