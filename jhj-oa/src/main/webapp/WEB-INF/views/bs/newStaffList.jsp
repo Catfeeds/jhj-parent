@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@ include file="../shared/taglib.jsp"%>
 <%@ include file="../shared/importCss.jsp"%>
@@ -45,16 +45,12 @@
                           		</div>	
                           		
                           		<div class="form-group">
-										性别:<form:select path="sex" class="form-control">
-												<option value=""/> 请选择性别
-												<form:option value="0">男</form:option>
-												<form:option value="1">女</form:option>
-											</form:select> 
+										姓名:<form:input path="name" class="form-control" type="text"/>
 								 </div>				
 								 
-								<%--  <div class="form-group">				
+								<div class="form-group">				
 										选择门店: <orgSelectTag:select  selectId="${staffSearchVoModel.parentId }"/>								
-								 </div>		 --%>
+								 </div>
 								 
 								 <!-- 运营人员登录才有选择云店， 店长登录只能看到自己云店的人员。可以屏蔽该选项 -->
 								 <c:if test="${loginOrgId == 0 }">
