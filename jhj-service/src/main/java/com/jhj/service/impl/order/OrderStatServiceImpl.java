@@ -45,17 +45,14 @@ public class OrderStatServiceImpl implements OrderStatService {
 		conditions.put("orgStaffId",orgStaffId);
 		List<Map<String, Object>> list1 = orderDispatchsMapper.selectOrdersCountByYearAndMonth(conditions);
 		int total = 0;
-		boolean flag = true;
-		for (Iterator iterator = list1.iterator(); iterator.hasNext();) {
+//		boolean flag = true;
+		for (Iterator<Map<String, Object>> iterator = list1.iterator(); iterator.hasNext();) {
 			total = list1.size();
-			Map<String, Object> map = (Map<String, Object>) iterator.next();
+			Map<String, Object> map = iterator.next();
 			Map<String,Object> map1 = new HashMap<String, Object>();
-			String serviceDate = (String)map.get("startTime");
+			//String serviceDate = (String)map.get("startTime");
 			String orderNo = (String)map.get("order_no");
 			Long staffId = (Long)map.get("staff_id");
-			
-			
-			
 			
 			OrgStaffs  orgStaffs = orgStaffsMapper.selectByPrimaryKey(staffId);
 			Orders orders= ordersMapper.selectByOrderNo(orderNo);
@@ -73,36 +70,28 @@ public class OrderStatServiceImpl implements OrderStatService {
 			}
 			
 			UserAddrs userAddrs = userAddrsMapper.selectByPrimaryKey(orders.getAddrId());
-			String detailAddrs = userAddrs.getName()+userAddrs.getAddr();
-			map1.put("id",map.get("id"));
-			map1.put("start",map.get("serviceTime"));
-			map1.put("end",map.get("service_end"));
-			map1.put("title",orgStaffs.getName()+"有1个派工,"+"  服务地址："+detailAddrs);
-			map1.put("color","blue");
-			/*if(flag){
+			if(userAddrs!=null){
+				String detailAddrs = userAddrs.getName()+userAddrs.getAddr();
+				map1.put("id",map.get("id"));
+				map1.put("start",map.get("serviceTime"));
+				map1.put("end",map.get("service_end"));
+				map1.put("title",orgStaffs.getName()+"有1个派工,"+"  服务地址："+detailAddrs);
 				map1.put("color","blue");
-				flag = false;
-			}else {
-				map1.put("color","orange");
-				flag = true;
-			}*/
-			
-			Short orderType = orders.getOrderType();
-			
-			//钟点工订单--钟点工订单列表
-			if(orderType == Constants.ORDER_TYPE_0){
+				
+				Short orderType = orders.getOrderType();
+				
+				//钟点工订单--钟点工订单列表
+				if(orderType == Constants.ORDER_TYPE_0){
 //				map1.put("url","/jhj-oa/order/cal-list?name='agendaDay'&serviceDate="+serviceDate+"&staffId="+orgStaffId);
+					
+					map1.put("url", "/jhj-oa/order/order-hour-list?orderNo="+orderNo);
+				}
 				
-				map1.put("url", "/jhj-oa/order/order-hour-list?orderNo="+orderNo);
+				//助理订单--助理订单列表
+				if(orderType == Constants.ORDER_TYPE_2){
+					map1.put("url", "/jhj-oa/order/order-am-list?orderNo="+orderNo);
+				}
 			}
-			
-			//助理订单--助理订单列表
-			if(orderType == Constants.ORDER_TYPE_2){
-				map1.put("url", "/jhj-oa/order/order-am-list?orderNo="+orderNo);
-			}
-				
-			
-			
 			
 			listMap.add(map1);
 		}
