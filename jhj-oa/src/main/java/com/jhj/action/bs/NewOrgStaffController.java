@@ -132,7 +132,6 @@ public class NewOrgStaffController extends AdminController {
 
 			list.set(i, vo);
 		}
-		System.out.println(list);
 		PageInfo result = new PageInfo(list);
 		
 		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
