@@ -22,6 +22,7 @@ import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.dao.user.UserCouponsMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
@@ -677,6 +678,39 @@ public class OrdersServiceImpl implements OrdersService {
 	@Override
 	public List<Orders> selectByMap(Map<String, Long> map) {
 		return ordersMapper.selectByMap(map);
+	}
+
+	/**
+	 * 后台取消现金支付订单
+	 * @param Long orderId 订单ID
+	 * 
+	 * */
+	@Override
+	public int cancelByOrder(Orders order) {
+		if(order==null){
+			return -1;
+		}
+		String orderNo = order.getOrderNo();
+		Short orderStatus = order.getOrderStatus();
+		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orderNo);
+		Short payType = orderPrices.getPayType();
+		if(payType==Constants.PAY_TYPE_6){
+			if(orderStatus==Constants.ORDER_STATUS_0 || orderStatus<5){
+				order.setOrderStatus(Constants.ORDER_STATUS_0);
+				ordersMapper.updateByPrimaryKeySelective(order);
+				OrderDispatchs orderDispatch = orderDispatchsMapper.selectByOrderNo(orderNo);
+				if(orderDispatch!=null){
+					orderDispatch.setDispatchStatus(Constants.ORDER_DIS_DISABLE);
+					orderDispatchsMapper.updateByPrimaryKeySelective(orderDispatch);
+				}
+				OrderLog orderLog = orderLogService.initOrderLog(order);
+				orderLogService.insert(orderLog);
+			}
+		}else{
+			return -2;
+		}
+		
+		return 0;
 	}
 	
 }
