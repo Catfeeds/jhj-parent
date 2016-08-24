@@ -15,12 +15,14 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.user.UserCouponsMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.Gifts;
+import com.jhj.po.model.dict.CouponsUseCondition;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.GiftsService;
+import com.jhj.service.dict.CouponsUseConditionService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserCouponsService;
@@ -52,6 +54,9 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 
 	@Autowired
 	private OrderPricesService orderPricesService;
+	
+	@Autowired
+	private CouponsUseConditionService useConditionService;
 
 	@Override
 	public UserCoupons initUserCoupons() {
@@ -161,7 +166,6 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		if (list.isEmpty())
 			return result;
 
-		List<DictCoupons> dictCoupons = dictCouponsService.selectAll();
 		List<Gifts> gifts = giftService.selectAll();
 		UserCoupons record = null;
 		for (int i = 0; i < list.size(); i++) {
@@ -176,22 +180,21 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 				}
 			}
 
-			for (DictCoupons dictCoupon : dictCoupons) {
+			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(record.getCouponId());
+			CouponsUseCondition useCondition = useConditionService.selectByPrimaryKey(Integer.parseInt(dictCoupon.getUseCondition()));
+			vo.setValue(dictCoupon.getValue());
+			vo.setMaxValue(dictCoupon.getMaxValue());
+			vo.setCouponType(dictCoupon.getCouponType());
+			vo.setRangType(dictCoupon.getRangType());
+			vo.setRangFrom(dictCoupon.getRangFrom());
+			vo.setIntroduction(dictCoupon.getIntroduction());
+			String fromDateStr = DateUtil.formatDate(vo.getFromDate());
+			String toDateStr = DateUtil.formatDate(vo.getToDate());
 
-				if (dictCoupon.getId().equals(vo.getCouponId())) {
-					vo.setValue(dictCoupon.getValue());
-					vo.setMaxValue(dictCoupon.getMaxValue());
-					vo.setCouponType(dictCoupon.getCouponType());
-					vo.setRangType(dictCoupon.getRangType());
-					vo.setRangFrom(dictCoupon.getRangFrom());
-					vo.setIntroduction(dictCoupon.getIntroduction());
-					String fromDateStr = DateUtil.formatDate(vo.getFromDate());
-					String toDateStr = DateUtil.formatDate(vo.getToDate());
-
-					vo.setFromDateStr(fromDateStr);
-					vo.setToDateStr(toDateStr);
-				}
-			}
+			vo.setFromDateStr(fromDateStr);
+			vo.setToDateStr(toDateStr);
+			vo.setUseCondition(dictCoupon.getUseCondition());
+			vo.setUseConditionDescr(useCondition.getUseConditionDescr());
 			result.add(vo);
 		}
 		return result;
