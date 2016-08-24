@@ -91,4 +91,6 @@ public interface OrdersService {
 	 
 	 List<Orders> selectByMap(Map<String,Long> map);
 	 
+	 //在jhj-oa系统中取消订单
+	 int cancelByOrder(Orders order);
 }
