@@ -299,6 +299,8 @@ public class OaOrderServiceImpl implements OaOrderService {
 		
 		OaOrderListVo oaOrderListVo = completeVo(orders);
 		
+		oaOrderListVo.setApplyStatus("-");
+		oaOrderListVo.setApplyTimeStr("");
 		Long addTime = orders.getAddTime();
 		
 		String date = DateUtil.getDefaultDate(addTime * 1000);
@@ -376,6 +378,25 @@ public class OaOrderServiceImpl implements OaOrderService {
 			Orgs orgs = orgService.selectByPrimaryKey(orgId);
 			
 			oaOrderListVo.setStaffName(orgs.getOrgName()+"--"+dispatchs.getStaffName());
+			
+			
+			//是否接单状态;
+			Short isApply = dispatchs.getIsApply();
+			if (isApply.equals((short)1)) {
+				oaOrderListVo.setApplyStatus("是");
+				oaOrderListVo.setApplyTimeStr(TimeStampUtil.timeStampToDateStr(dispatchs.getApplyTime() * 1000));
+			} else {
+				Long now = TimeStampUtil.getNowSecond();
+				Long dispatchTime = dispatchs.getAddTime();
+				Long lastTime = now - dispatchTime;
+				if ( lastTime > 60 * 30) {
+					oaOrderListVo.setApplyStatus("超");
+				} else {
+					oaOrderListVo.setApplyStatus("否");
+				}
+			}
+			
+			
 		}else{
 			
 			/*
@@ -899,11 +920,27 @@ public class OaOrderServiceImpl implements OaOrderService {
 				
 			}
 			
+			//是否接单状态;
+			Short isApply = dispatchs.getIsApply();
+			if (isApply.equals((short)1)) {
+				oaOrderListNewVo.setApplyStatus("是");
+			} else {
+				Long now = TimeStampUtil.getNowSecond();
+				Long dispatchTime = dispatchs.getAddTime();
+				Long lastTime = now - dispatchTime;
+				if ( lastTime > 60 * 30) {
+					oaOrderListNewVo.setApplyStatus("超");
+				} else {
+					oaOrderListNewVo.setApplyStatus("否");
+				}
+			}
+			
 		}else{
 			oaOrderListNewVo.setStaffName("暂无");
 			
 			oaOrderListNewVo.setCloudOrgName("");
 			oaOrderListNewVo.setOrgName("");
+			oaOrderListNewVo.setApplyStatus("-");
 		}
 		
 		

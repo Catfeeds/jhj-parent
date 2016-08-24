@@ -93,6 +93,29 @@
 							</div>
 						</div>
 						
+						<c:if test="${ oaOrderListVoModel.orderStatus >= 3 && oaOrderListVoModel.orderStatus <= 8}">
+						<div class="form-group">
+
+							<label class="col-md-2 control-label">是否接单</label>
+							<div class="col-md-5">
+								<form:input path="applyStatus" class="form-control"
+									maxLength="32" readonly="true"/>
+							</div>
+						</div>
+						
+						
+						
+						<div class="form-group">
+
+							<label class="col-md-2 control-label">接单时间</label>
+							<div class="col-md-5">
+								<form:input path="applyTimeStr" class="form-control"
+									maxLength="32" readonly="true"/>
+							</div>
+						</div>
+						</c:if>
+						
+						
 						<div class="form-group">
 
 							<label class="col-md-2 control-label">订单状态</label>

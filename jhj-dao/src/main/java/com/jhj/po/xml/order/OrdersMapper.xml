@@ -479,6 +479,12 @@
 			<![CDATA[ and service_date <= #{serviceTime2}]]>
 		</if>
 		
+		<if test="isApply !=null">
+		   	 and order_no in (
+		   	 	select order_no from order_dispatchs where is_apply =  #{isApply,jdbcType=NUMERIC}
+		   	 )
+		</if>
+		
 		order by add_time desc
 	</select>
 	

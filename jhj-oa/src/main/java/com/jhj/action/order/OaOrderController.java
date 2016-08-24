@@ -182,7 +182,7 @@ public class OaOrderController extends BaseController {
 		// 2) 如果没有查询条件，则判断是否为店长，并且只能看店长所在门店下的所有云店.
 		String paramOrgId = request.getParameter("orgId");
 		List<Long> cloudIdList = new ArrayList<Long>();
-		if (!StringUtil.isEmpty(paramOrgId)) {
+		if (!StringUtil.isEmpty(paramOrgId) && !paramOrgId.equals("0")) {
 			cloudIdList.add(Long.valueOf(paramOrgId));
 		} else {
 			

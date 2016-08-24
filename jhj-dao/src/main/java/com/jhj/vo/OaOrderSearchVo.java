@@ -78,6 +78,8 @@ public class OaOrderSearchVo {
 	
 	private Long serviceTime2;
 	
+	private Short isApply;
+	
 	public String getRemarks() {
 		return remarks;
 	}
@@ -246,6 +248,12 @@ public class OaOrderSearchVo {
 	}
 	public void setServiceTime2(Long serviceTime2) {
 		this.serviceTime2 = serviceTime2;
+	}
+	public Short getIsApply() {
+		return isApply;
+	}
+	public void setIsApply(Short isApply) {
+		this.isApply = isApply;
 	}
 
 }

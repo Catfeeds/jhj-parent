@@ -100,6 +100,11 @@ public class OaOrderListVo extends Orders {
 	//2016年5月13日17:35:13
 	private Long parentServiceTypeId;	//对于  助理类--深度养护--需要有 开始时间
 	
+	//是否接单状态;
+	private String applyStatus;
+	
+	private String applyTimeStr;
+	
 	
 	public String getServiceDateStartStr() {
 		return serviceDateStartStr;
@@ -456,6 +461,18 @@ public class OaOrderListVo extends Orders {
 		} else if (!userName.equals(other.userName))
 			return false;
 		return true;
+	}
+	public String getApplyStatus() {
+		return applyStatus;
+	}
+	public void setApplyStatus(String applyStatus) {
+		this.applyStatus = applyStatus;
+	}
+	public String getApplyTimeStr() {
+		return applyTimeStr;
+	}
+	public void setApplyTimeStr(String applyTimeStr) {
+		this.applyTimeStr = applyTimeStr;
 	}
 	
 	
