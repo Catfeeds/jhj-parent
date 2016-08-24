@@ -30,7 +30,7 @@
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 		
 		<result column="is_apply" property="isApply" jdbcType="NUMERIC" />
-		<result column="applyTime" property="applyTime" jdbcType="NUMERIC" />
+		<result column="apply_time" property="applyTime" jdbcType="NUMERIC" />
 	</resultMap>
 	<resultMap id="statByUser" type="java.util.HashMap">
 		<result column="user_id" property="userId" jdbcType="NUMERIC" />
