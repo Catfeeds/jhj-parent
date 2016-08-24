@@ -72,8 +72,7 @@ import com.meijia.utils.vo.AppResultData;
 public class OaOrderController extends BaseController {
 	@Autowired
 	private OaOrderService oaOrderService;
-	@Autowired
-	private OrderDispatchsService orderDisService;
+
 	@Autowired
 	private OrgStaffsService orgStaService;
 	@Autowired
@@ -814,7 +813,7 @@ public class OaOrderController extends BaseController {
 
 		// 如果 能 找到 派工 为 1 的 订单记录 , mybatis已修改。 selectByOrderId() 得到 的 是 有效派工 的记录
 		// 。
-		OrderDispatchs disStatuYes = orderDisService.selectByOrderId(id);
+		OrderDispatchs disStatuYes = disService.selectByOrderId(id);
 		
 		if (disStatuYes != null) {
 			Long staId = disStatuYes.getStaffId();

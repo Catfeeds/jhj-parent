@@ -644,6 +644,7 @@ public class OrderAmController extends BaseController {
 		
 		if(orderDispatchs != null){
 			orderDispatchs.setDispatchStatus((short)0);
+			orderDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 			disPatchService.updateByPrimaryKeySelective(orderDispatchs);
 		}
 		

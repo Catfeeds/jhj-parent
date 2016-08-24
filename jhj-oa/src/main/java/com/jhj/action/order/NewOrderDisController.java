@@ -427,6 +427,7 @@ public class NewOrderDisController extends BaseController {
 				
 		if(orderStatus == Constants.ORDER_AM_STATUS_4){
 			// 已派工。 修改派工表
+			dispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 			disService.updateByPrimaryKeySelective(dispatchs);
 		}
 		

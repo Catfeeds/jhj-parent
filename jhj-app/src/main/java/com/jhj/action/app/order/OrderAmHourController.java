@@ -16,6 +16,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderAmHourService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.order.OrderAmHourViewVo;
 
@@ -90,7 +91,7 @@ public class OrderAmHourController extends BaseController {
 		OrderDispatchs orderDispatchs = orderDisService.selectByOrderNo(orderNo);
 		
 		orderDispatchs.setStaffId(Long.parseLong(staffId));
-		
+		orderDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
 		orderDisService.updateByPrimaryKeySelective(orderDispatchs);
 		
 		result = new AppResultData<Object>(Constants.SUCCESS_0,
