@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.Gson;
 import com.jhj.action.BaseController;
+import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffLeave;
@@ -170,7 +171,7 @@ public class OrderCalendarController extends BaseController {
 				staffSearchVo.setOrgId((long)orgId);
 			}
 		}
-		
+		staffSearchVo.setStatus(1);
 		//登录门店下的 所有 员工
 		List<OrgStaffs>  staffList = staffService.selectNewStaffList(staffSearchVo);
 		
