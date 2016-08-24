@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +27,8 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AccountAuth;
+import com.jhj.oa.auth.AccountRole;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
@@ -568,7 +573,6 @@ public class OaOrderController extends BaseController {
 					orgStaffsNewVo.setDispathStaStr("可派工");
 					orgStaffsNewVo.setDispathStaFlag(1);
 				}
-				
 				list.add(orgStaffsNewVo);
 			}
 			
@@ -590,6 +594,8 @@ public class OaOrderController extends BaseController {
 		}
 
 		short orderType = oaOrderListVo.getOrderType();
+		Map<String, String> map = isRole(request);
+		model.addAttribute("role", map);
 		if (orderType == Constants.ORDER_TYPE_0) {// 钟点工
 			return "order/orderHourViewForm";
 		} else {
@@ -635,10 +641,12 @@ public class OaOrderController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/order-am-view", method = RequestMethod.GET)
-	public String orderAmDetail(String orderNo, Short disStatus, Model model) {
+	public String orderAmDetail(String orderNo, Short disStatus, Model model,HttpServletRequest request) {
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailAm(orderNo, disStatus);
 		oaOrderListVo.setFlag("0");// 标识是否显示服务人员列表
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
+		Map<String, String> map = isRole(request);
+		model.addAttribute("role", map);
 		short orderType = oaOrderListVo.getOrderType();
 		if (orderType == Constants.ORDER_TYPE_2) {// 助理
 			return "order/orderAmViewForm";
@@ -963,5 +971,49 @@ public class OaOrderController extends BaseController {
 		}
 
 		return returnUrl;
+	}
+	
+	/**
+	 * 	取消助理订单
+	 * @param orderId
+	 * 
+	 * */
+	@RequestMapping(value="/cancelOrder/{id}",method=RequestMethod.GET)
+	public String cancelOrder(Model model,@PathVariable("id") Long orderId){
+		
+		Map<String,String> map=new HashMap<String,String>();
+		Orders order = orderService.selectByPrimaryKey(orderId);
+		int status = orderService.cancelByOrder(order);
+		if(status==0){
+			map.put("success", "取消订单成功！");
+		}else{
+			map.put("fail", "订单取消失败！");
+		}
+		model.addAttribute("map", map);
+		String orderNo = order.getOrderNo();
+		Short orderType = order.getOrderType();
+		if(orderType==Constants.ORDER_TYPE_0){
+			return "redirect:../order-hour-view?orderNo="+orderNo+"&disStatus="+orderType;
+		}
+		if(orderType==Constants.ORDER_TYPE_2){
+			return "redirect:../order-am-view?orderNo="+orderNo+"&disStatus="+orderType;
+		}
+		return null;
+	}
+	
+	//判断当前用户的角色
+	//判断用户是否有权限操作页面中的按钮， 如果，则显示该按钮，如果没有，则不显示改按钮
+	public Map<String,String> isRole(HttpServletRequest request){
+		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
+		AccountRole accountRole = auth.getAccountRole();
+		List<String> list=new ArrayList<String>();
+		list.add("系统管理员");
+		list.add("总部运营");
+		Map<String,String> map=null;
+		if(list.contains(accountRole.getName())){
+			map=new HashMap<String,String>();
+			map.put("role", "show");
+		}
+		return map;
 	}
 }
