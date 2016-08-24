@@ -81,7 +81,7 @@
 						<td><form:input path="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 								readonly="true" /></td>
 						<td>服务日期：</td>
-						<td><form:input path="serviceStartTime" class="form-control form-datetime"
+						<td colspan="2"><form:input path="serviceStartTime" class="form-control form-datetime"
 								style="width:180px; margin-bottom:0" readonly="true" /> <span>至</span> <form:input path="serviceEndTime"
 								class="form-control form-datetime" style="width:180px; margin-bottom:0" readonly="true" /></td>
 					</tr>
@@ -94,8 +94,8 @@
 			<table class="table table-striped table-advance table-hover" id="table2excel">
 				<thead>
 					<tr>
-						<th>门店名称</th>
-						<th>云店名称</th>
+						<th>门店</th>
+						<th>云店</th>
 						<th>服务人员</th>
 						<th>下单时间</th>
 						<th>订单类型</th>
@@ -105,7 +105,7 @@
 						<th>是否接单</th>
 						<th>订单状态</th>
 						<th>支付方式</th>
-						<th>总金额</th>
+						
 						<th>支付金额</th>
 						<th>操作</th>
 					</tr>
@@ -119,15 +119,15 @@
 								<td>${ item.orgName }</td>
 								<td>${ item.cloudOrgName }</td>
 								<td>${ item.staffName }</td>
-								<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}" /></td>
+								<td><timestampTag:timestamp patten="MM-dd" t="${item.addTime * 1000}" /></td>
 								<td>${item.orderTypeName }</td>
-								<td><timestampTag:timestamp patten="yyyy-MM-dd HH:mm" t="${item.serviceDate * 1000}" /></td>
+								<td><timestampTag:timestamp patten="MM-dd HH:mm" t="${item.serviceDate * 1000}" /></td>
 								<td>${ item.mobile }</td>
 								<td>${ item.orderAddress }</td>
 								<td>${ item.applyStatus }</td>
 								<td><orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" orderType="${item.orderType }" /></td>
 								<td>${ item.payTypeName }</td>
-								<td>${ item.orderMoney }</td>
+								
 								<td>${ item.orderPay }</td>
 								<td>
 									<button id="btn_update"
