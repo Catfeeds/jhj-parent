@@ -408,9 +408,7 @@
 		<if test="orderNo != null">
 			and  order_no = #{orderNo,jdbcType=VARCHAR}
 		</if>
-		<!-- and
-		order_type in (0,1,2,3,4,5,6) -->
-		
+
 		<if test="orderType !=null">
 			and order_type = #{orderType,jdbcType=NUMERIC}
 		</if>
@@ -432,12 +430,6 @@
 		<if test="searchOrderStatus !=null">
 			and order_status = #{searchOrderStatus,jdbcType=NUMERIC}
 		</if>
-		<!-- <if test="searchOrderServiceType !=null">
-			and service_type = #{searchOrderServiceType,jdbcType=NUMERIC}
-		</if>
-		<if test="serviceTypeFlag !=null and serviceTypeFlag ==1">
-			and service_type in(3,4,5,6,7)
-		</if> -->
 		
 		<if test="startTime !=null">
 			<![CDATA[ and add_time >= #{startTime}]]>
@@ -445,7 +437,6 @@
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-		
 		
 		<if test="searchOrderStatusList != null">
 		   	 and 
@@ -456,11 +447,15 @@
 		</if>
 		
 		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
-		   	 and 
-		   	 	org_id in 
-		   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
-      			${item}  
-   			</foreach> 
+		   	 and order_no in (
+		   	 	select order_no from order_dispatchs where dispatch_status = 1 
+		   	 		and staff_id in (
+			   	 		select staff_id from org_staffs where org_id in 
+					   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
+			      			${item}  
+			   			</foreach>
+		   			) 
+		   	 )
 		</if>
 		
 		<if test="childServiceTypeList != null">
@@ -687,7 +682,8 @@
 		select sum(order_money)from order_prices where order_id in
 		(
 			select id from orders 
-			where id in (select order_id from order_dispatchs where staff_id =#{staffId,jdbcType=NUMERIC}
+			where order_no in (select order_no from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
 			<if test="startTime != null">
 				<![CDATA[	and update_time >= ${startTime} ]]>   
 			</if>	
@@ -704,7 +700,8 @@
 		select sum(order_money)from order_prices where order_id in
 		(
 			select id from orders 
-			where id in (select order_id from order_dispatchs where staff_id =#{staffId,jdbcType=NUMERIC}
+			where order_no in (select order_no from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
 			<if test="startTime != null">
 				<![CDATA[	and update_time >= ${startTime} ]]>   
 			</if>	
@@ -721,7 +718,8 @@
 		select sum(order_money)from order_prices where order_id in
 		(
 			select id from orders 
-			where id in (select order_id from order_dispatchs where staff_id =#{staffId,jdbcType=NUMERIC}
+			where order_no in (select order_no from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
 			<if test="startTime != null">
 				<![CDATA[	and update_time >= ${startTime} ]]>   
 			</if>	
@@ -738,8 +736,8 @@
 		select sum(order_money)from order_prices where order_id in
 		(
 			select id from orders 
-			where id in (select order_id from order_dispatchs where 
-			staff_id =#{staffId,jdbcType=NUMERIC}
+			where order_no in (select order_no from order_dispatchs where 
+			staff_id =#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
 			<if test="startTime != null">
 				<![CDATA[	and update_time >= ${startTime} ]]>   
 			</if>	
@@ -753,9 +751,9 @@
 	</select>
 	<!-- 根据开始时间，接收时间，staff_id ，得出订单总数: -->
 	<select id="getTotalOrderCount" resultType="java.lang.Long" parameterType="com.jhj.vo.OrderQuerySearchVo">
-		select count(*) from orders where id in
+		select count(*) from orders where order_no in
 		(
-			select order_id from order_dispatchs where 
+			select order_no from order_dispatchs where 
 			staff_id =#{staffId,jdbcType=NUMERIC}
 			and dispatch_status = 1
 			<if test="startTime != null">

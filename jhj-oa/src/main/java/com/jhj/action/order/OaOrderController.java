@@ -160,7 +160,12 @@ public class OaOrderController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		// 分页
 		PageHelper.startPage(pageNo, pageSize);
-
+		
+		//查询条件的组合，需要做一些逻辑判断
+		//1. 如果为运营人员，则可以看所有的门店和所有状态
+		//2. 如果为店长，则只能看当前门店和已派工到该门店的人员.
+		
+		//查询条件： 设置为钟点工的订单
 		if (oaOrderSearchVo == null) {
 			oaOrderSearchVo = new OaOrderSearchVo();
 			//钟点工
@@ -168,76 +173,45 @@ public class OaOrderController extends BaseController {
 		} else {
 			oaOrderSearchVo.setOrderType(Constants.ORDER_TYPE_0);
 		}
- 
-		// 得到 当前登录 的 门店id，并作为搜索条件
+		
+		//判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
 		String org = AuthHelper.getSessionLoginOrg(request);
-
+		
+		
+		// 处理查询条件云店--------------------------------开始
+		// 1) 如果有查询条件云店org_id，则以查询条件的云店为准
+		// 2) 如果没有查询条件，则判断是否为店长，并且只能看店长所在门店下的所有云店.
+		String paramOrgId = request.getParameter("orgId");
 		List<Long> cloudIdList = new ArrayList<Long>();
-
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
-
-			/*
-			 * 如果是店长 ，只能看到 自己门店 对应的 所有 云店 的 订单 而且 只能是 已 派工过的 订单。
-			 */
-
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-			groupSearchVo.setParentId(Long.parseLong(org));
-
-			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
-
-			for (Orgs orgs : cloudList) {
-				cloudIdList.add(orgs.getOrgId());
-			}
-
-			List<Short> searchOrderStatusList = new ArrayList<Short>();
-
-			// 店长 可查看的 钟点工 订单状态列表： 已派工 之后的都可以查看
-			// public static short ORDER_HOUR_STATUS_3=3;//已派工
-			// public static short ORDER_HOUR_STATUS_5=5;//开始服务
-			// public static short ORDER_HOUR_STATUS_7=7;//完成服务
-			// public static short ORDER_HOUR_STATUS_8=8;//已评价
-			// public static short ORDER_HOUR_STATUS_9=9;//已关闭
-
-			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
-			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
-			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
-			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
-			searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_9);
-
-			oaOrderSearchVo.setSearchOrderStatusList(searchOrderStatusList);
-
+		if (!StringUtil.isEmpty(paramOrgId)) {
+			cloudIdList.add(Long.valueOf(paramOrgId));
 		} else {
-			// 如果是 运营 人员，则能 查看全部 订单, 查看所有 云店
-			List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+			
+			if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+				GroupSearchVo groupSearchVo = new GroupSearchVo();
+				groupSearchVo.setParentId(Long.parseLong(org));
 
-			for (Orgs orgs : cloudOrgList) {
-				cloudIdList.add(orgs.getOrgId());
+				List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+
+				for (Orgs orgs : cloudList) {
+					cloudIdList.add(orgs.getOrgId());
+				}
 			}
-
-			/*
-			 * 对于 未派工的 订单，，没有 云店， 只有运营人员 可以 看到，以便 后续处理
-			 */
-			cloudIdList.add(0L);
 		}
 
-		// 根据 登录 角色的门店，确定 云店
-		oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
-
-		// 如果在 列表页面，选择了 云店 作为搜索 条件
-		String jspOrgId = request.getParameter("orgId");
-		if (!StringUtil.isEmpty(jspOrgId) && !jspOrgId.equals("0")) {
-
-			cloudIdList.clear();
-			cloudIdList.add(Long.valueOf(jspOrgId));
+		if (!cloudIdList.isEmpty()) {
 			oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
 		}
+		// 处理查询条件云店--------------------------------结束
 
-		// 转换为数据库 参数字段
+		// 处理查询时间条件--------------------------------开始
+		//下单开始时间
 		String startTimeStr = oaOrderSearchVo.getStartTimeStr();
 		if (!StringUtil.isEmpty(startTimeStr)) {
 			oaOrderSearchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
 		}
-
+		
+		//下单结束时间
 		String endTimeStr = oaOrderSearchVo.getEndTimeStr();
 		if (!StringUtil.isEmpty(endTimeStr)) {
 			oaOrderSearchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
@@ -253,7 +227,31 @@ public class OaOrderController extends BaseController {
 		if(!StringUtil.isEmpty(serviceEndTime)){
 			oaOrderSearchVo.setServiceTime2(DateUtil.getUnixTimeStamp(DateUtil.toDate(serviceEndTime)));
 		}
+		// 处理查询时间条件--------------------------------结束
+		
+		// 处理查询状态条件--------------------------------开始
+		if (oaOrderSearchVo.getOrderStatus() == null) {
+			//如果为店长只能看已派工状态之后的订单.
+			if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+				List<Short> searchOrderStatusList = new ArrayList<Short>();
 
+	            // 店长 可查看的 钟点工 订单状态列表： 已派工 之后的都可以查看
+	            // public static short ORDER_HOUR_STATUS_3=3;//已派工
+	            // public static short ORDER_HOUR_STATUS_5=5;//开始服务
+	            // public static short ORDER_HOUR_STATUS_7=7;//完成服务
+	            // public static short ORDER_HOUR_STATUS_8=8;//已评价
+	            // public static short ORDER_HOUR_STATUS_9=9;//已关闭
+
+	            searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
+	            searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
+	            searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+	            searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
+	            searchOrderStatusList.add(Constants.ORDER_HOUR_STATUS_9);
+
+	            oaOrderSearchVo.setSearchOrderStatusList(searchOrderStatusList);
+			}
+		}
+		
 		List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo, pageNo, pageSize);
 
 		Orders orders = null;
