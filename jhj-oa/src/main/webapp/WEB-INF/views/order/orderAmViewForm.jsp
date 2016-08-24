@@ -338,6 +338,9 @@
 									<div class="col-md-offset-6 col-md-6"
 										style="margin-left: 315px">
 										<button type="submit" id="viewForm" class="btn btn-success">确认派工</button>
+										<c:if test="${role.role eq 'show' and oaOrderListVoModel.payType==6}">
+											<a href="cancelOrder/${oaOrderListVoModel.id }" class="btn btn-success">取消订单</a>
+										</c:if> 
 									</div>
 								</div>
 						</div> 
@@ -347,6 +350,7 @@
 				</div>
 			</form:form>
 			</div>
+			
 			</section>
 		</div>
 	</div>
