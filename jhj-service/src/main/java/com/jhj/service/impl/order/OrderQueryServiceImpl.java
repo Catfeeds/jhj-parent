@@ -644,6 +644,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			vo.setServiceAddr(userAddr.getName() + userAddr.getAddr());
 			vo.setServiceAddrLat(userAddr.getLatitude());
 			vo.setServiceAddrLng(userAddr.getLongitude());
+			
+			//如果是未接单，则设置服务地址为 ******
+			Short isApply = orderDispatchs.getIsApply();
+			if (isApply.equals((short)0)) {
+				vo.setServiceAddr("******");
+			}
 		}
 		// 取货地址
 		vo.setPickAddr("");
@@ -663,6 +669,13 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				Double userAddrDisanceM = StringUtil.getKilometre(userAddrDisance);
 				vo.setServiceAddrDistance(userAddrDisanceM.toString() + "千米");
 			}
+			
+			//如果是未接单，则设置距离为 **米
+			Short isApply = orderDispatchs.getIsApply();
+			if (isApply.equals((short)0)) {
+				vo.setServiceAddrDistance("**米");
+			}
+			
 			// 取货地址
 			vo.setPickAddr("");
 			if (orderDispatchs.getPickAddr() != null) {
@@ -694,6 +707,13 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				vo.setServiceAddr(orderDispatchs.getPickAddrName() + orderDispatchs.getPickAddr());
 				vo.setServiceAddrLat(orderDispatchs.getPickAddrLat());
 				vo.setServiceAddrLng(orderDispatchs.getPickAddrLng());
+				
+				
+				//如果是未接单，则设置服务地址为 ******
+				
+				if (isApply.equals((short)0)) {
+					vo.setServiceAddr("******");
+				}
 			}
 		}
 

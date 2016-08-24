@@ -48,6 +48,10 @@ public class OrderDispatchs {
     private Long addTime;
 
     private Long updateTime;
+    
+    private Short isApply;
+    
+    private Long applyTime;
 
     public Long getId() {
         return id;
@@ -231,6 +235,22 @@ public class OrderDispatchs {
 
 	public void setUserAddrDistance(int userAddrDistance) {
 		this.userAddrDistance = userAddrDistance;
+	}
+
+	public Short getIsApply() {
+		return isApply;
+	}
+
+	public void setIsApply(Short isApply) {
+		this.isApply = isApply;
+	}
+
+	public Long getApplyTime() {
+		return applyTime;
+	}
+
+	public void setApplyTime(Long applyTime) {
+		this.applyTime = applyTime;
 	}
 
 

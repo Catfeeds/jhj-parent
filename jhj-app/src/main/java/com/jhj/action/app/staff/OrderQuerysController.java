@@ -14,6 +14,7 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -22,6 +23,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderDetailVo;
 import com.jhj.vo.order.OrderListVo;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
 
@@ -105,6 +107,15 @@ public class OrderQuerysController extends BaseController {
 		
 		result.setData(vo);
 		
+		//设置接单状态
+		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(order.getOrderNo());
+		//如果是未接单，则设置服务地址为 ******
+		Short isApply = orderDispatchs.getIsApply();
+		if (isApply.equals((short)0)) {
+			orderDispatchs.setIsApply((short) 1);
+			orderDispatchs.setApplyTime(TimeStampUtil.getNowSecond());
+			orderDispatchsService.updateByPrimaryKey(orderDispatchs);
+		}
 		return result;
 	}	
 	

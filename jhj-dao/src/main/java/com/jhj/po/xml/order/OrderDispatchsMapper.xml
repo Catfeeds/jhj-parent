@@ -28,6 +28,9 @@
 		
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		
+		<result column="is_apply" property="isApply" jdbcType="NUMERIC" />
+		<result column="applyTime" property="applyTime" jdbcType="NUMERIC" />
 	</resultMap>
 	<resultMap id="statByUser" type="java.util.HashMap">
 		<result column="user_id" property="userId" jdbcType="NUMERIC" />
@@ -47,7 +50,7 @@
 		id, user_id, mobile, order_id, order_no, service_date_pre, service_date, service_hours, org_id,
 		staff_id, staff_name, staff_mobile, remarks, am_id, dispatch_status, 
 		pick_addr_name,pick_addr_lat,pick_addr_lng,pick_addr,pick_distance,user_addr_distance,
-		add_time, update_time
+		add_time, update_time, is_apply, apply_time
 	</sql>
 	
 	
@@ -362,7 +365,7 @@
 		staff_name, staff_mobile, remarks,
 		am_id, dispatch_status, 
 		pick_addr_name,pick_addr_lat,pick_addr_lng,pick_addr,pick_distance,user_addr_distance,
-		add_time,update_time)
+		add_time,update_time, is_apply, apply_time)
 		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
 		#{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, #{serviceDatePre,jdbcType=NUMERIC},
 		#{serviceDate,jdbcType=NUMERIC}, #{serviceHours,jdbcType=NUMERIC}, #{orgId,jdbcType=NUMERIC},
@@ -371,8 +374,8 @@
 		#{amId,jdbcType=NUMERIC}, #{dispatchStatus,jdbcType=NUMERIC},
 		#{pickAddrName,jdbcType=VARCHAR},#{pickAddrLat,jdbcType=VARCHAR},#{pickAddrLng,jdbcType=VARCHAR},
 		#{pickAddr,jdbcType=VARCHAR},#{pickDistance,jdbcType=NUMERIC},#{userAddrDistance,jdbcType=NUMERIC},
-		 #{addTime,jdbcType=NUMERIC},
-		#{updateTime,jdbcType=NUMERIC})
+		 #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},
+		 #{isApply,jdbcType=NUMERIC}, #{applyTime,jdbcType=NUMERIC})
 	</insert>
 
 	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderDispatchs">
@@ -448,6 +451,12 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<if test="isApply != null">
+				is_apply,
+			</if>
+			<if test="applyTime != null">
+				apply_time,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -518,6 +527,12 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="isApply != null">
+				#{isApply,jdbcType=NUMERIC},
+			</if>
+			<if test="applyTime != null">
+				#{applyTime,jdbcType=NUMERIC},
 			</if>
 		</trim>
 
@@ -597,6 +612,12 @@
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=NUMERIC},
 			</if>
+			<if test="isApply != null">
+				is_apply = #{isApply,jdbcType=NUMERIC},
+			</if>
+			<if test="applyTime != null">
+				apply_time = #{applyTime,jdbcType=NUMERIC},
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -623,7 +644,9 @@
 		pick_distance = #{pickDistance,jdbcType=NUMERIC},
 		user_addr_distance = #{userAddrDistance,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
-		update_time = #{updateTime,jdbcType=NUMERIC}
+		update_time = #{updateTime,jdbcType=NUMERIC},
+		is_apply = #{isApply,jdbcType=NUMERIC},
+		apply_time = #{applyTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
 </mapper>

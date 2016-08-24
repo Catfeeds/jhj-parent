@@ -95,7 +95,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	    dispatchs.setUserAddrDistance(0);
 		dispatchs.setAddTime(TimeStampUtil.getNow() / 1000);
 		dispatchs.setUpdateTime(0L);
-		
+		dispatchs.setIsApply((short) 0);
+		dispatchs.setApplyTime(0L);
 		return dispatchs;
 	}
 
