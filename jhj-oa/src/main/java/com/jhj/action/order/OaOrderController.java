@@ -341,7 +341,7 @@ public class OaOrderController extends BaseController {
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		// 分页
-		PageHelper.startPage(pageNo, pageSize);
+//		PageHelper.startPage(pageNo, pageSize);
 
 		if (oaOrderSearchVo == null) {
 			oaOrderSearchVo = new OaOrderSearchVo();
