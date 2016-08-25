@@ -318,7 +318,7 @@
 		<include refid="Base_Column_List" />
 		from orders
 		where 
-		order_status = 6
+		order_status = 7
 		and
 		<![CDATA[
 		UNIX_TIMESTAMP(CURRENT_TIMESTAMP) >= service_date + service_hour*3600 + 7*24*3600
@@ -784,7 +784,7 @@
 			<if test="endTime != null">
 				<![CDATA[	and add_time <= ${endTime} ]]>   
 			</if>
-		)
+		) and order_status in (0,7,8,9)
 	</select>
 
 

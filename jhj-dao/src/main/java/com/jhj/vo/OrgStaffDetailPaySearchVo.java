@@ -1,5 +1,7 @@
 package com.jhj.vo;
 
+import java.util.List;
+
 /**
  *
  * @author :hulj
@@ -9,7 +11,8 @@ package com.jhj.vo;
  */
 public class OrgStaffDetailPaySearchVo {
 	
-
+	private Long staffId;
+	
 	private String mobile;  //手机号
 	
 	private String startTimeStr;
@@ -21,6 +24,12 @@ public class OrgStaffDetailPaySearchVo {
 	private Long endTime;
 
 	private Long orgId;
+	
+	private List<Long> searchCloudOrgIdList;	// 根据登录角色 的 门店 确定的 云店。。
+	
+	private Long orderId;
+	
+	private String orderNo;
 	
 	public Long getOrgId() {
 		return orgId;
@@ -68,6 +77,38 @@ public class OrgStaffDetailPaySearchVo {
 
 	public void setEndTime(Long endTime) {
 		this.endTime = endTime;
+	}
+
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public Long getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
+	}
+
+	public List<Long> getSearchCloudOrgIdList() {
+		return searchCloudOrgIdList;
+	}
+
+	public void setSearchCloudOrgIdList(List<Long> searchCloudOrgIdList) {
+		this.searchCloudOrgIdList = searchCloudOrgIdList;
 	}
 
 }

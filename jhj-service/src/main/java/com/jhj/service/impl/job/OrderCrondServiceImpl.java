@@ -14,12 +14,15 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderRates;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.job.OrderCrondService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.JsonOrderRateItemVo;
@@ -46,6 +49,18 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 	private OrderRatesService orderRateService;
 	@Autowired
 	private OrgStaffsService orgStaffService;
+	
+	@Autowired
+	private OrgStaffFinanceService orgStaffFinanceService;
+	
+	@Autowired
+	private OrderPricesService orderPricesService;
+	
+	@Autowired
+	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchsService;
 	
 	/*
 	 *  1.钟点工--  服务开始前两小时  通知 -- 接收方：  用户
@@ -104,8 +119,21 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 		List<Orders> list = orderMapper.selectAfterService();
 		
 		for (Orders orders : list) {
-			orders.setOrderStatus(Constants.ORDER_STATUS_6);
+			orders.setOrderStatus(Constants.ORDER_STATUS_7);
 			orderMapper.updateByPrimaryKeySelective(orders);
+			
+			//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
+			Long orderId = orders.getId();
+			OrderPrices orderPrices = orderPricesService.selectByOrderId(orderId);
+			
+			String orderNo = orders.getOrderNo();
+			//更新orderdispatchs的更新时间
+			OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(orderNo);
+			Long staffId = orderDispatchs.getStaffId();
+			
+			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
+			orgStaffFinanceService.orderDone(orders, orderPrices, orgStaffs);
+			
 		}
 	}
 	
@@ -139,7 +167,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 			
 			//在  order_rates表生成记录 之后，修改 订单状态为 已评价
 			if(aaa){
-				orders.setOrderStatus(Constants.ORDER_STATUS_7);
+				orders.setOrderStatus(Constants.ORDER_STATUS_8);
 				
 				orderMapper.updateByPrimaryKeySelective(orders);
 			}

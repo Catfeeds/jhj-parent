@@ -62,10 +62,10 @@ public class StaffPayController extends BaseController {
 
 	@Autowired
 	private OrgStaffBlackService orgStaffBlackService;
-	
+
 	@Autowired
 	private UserPushBindService bindService;
-	
+
 	@Autowired
 	private SettingService settingService;
 
@@ -81,20 +81,14 @@ public class StaffPayController extends BaseController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "get_detail", method = RequestMethod.GET)
-	public AppResultData<Object> getPayDetail(
-			HttpServletRequest request,
-			@RequestParam("staff_id") Long staffId,
+	public AppResultData<Object> getPayDetail(HttpServletRequest request, @RequestParam("staff_id") Long staffId,
 			@RequestParam(value = "year", required = false, defaultValue = "0") int year,
 			@RequestParam(value = "month", required = false, defaultValue = "0") int month,
-			@RequestParam(value = "page", required = false, defaultValue = "1") int page)
-			throws ParseException {
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) throws ParseException {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
 
-		String startTimeStr = DateUtil.getFirstDayOfMonth(year, month)
-				+ " 00:00:00";
-		String endTimeStr = DateUtil.getLastDayOfMonth(year, month)
-				+ " 23:59:59";
+		String startTimeStr = DateUtil.getFirstDayOfMonth(year, month) + " 00:00:00";
+		String endTimeStr = DateUtil.getLastDayOfMonth(year, month) + " 23:59:59";
 
 		Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
 		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
@@ -104,14 +98,11 @@ public class StaffPayController extends BaseController {
 		searchVo.setStartTime(startTime);
 		searchVo.setEndTime(endTime);
 
-		List<OrgStaffDetailPay> payList = orgStaffDetailPayService
-				.selectByStaffIdAndTimeListPage(searchVo, page,
-						Constants.PAGE_MAX_NUMBER);
+		List<OrgStaffDetailPay> payList = orgStaffDetailPayService.selectByStaffIdAndTimeListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		List<OrgStaffPayVo> orgStaffPayVoList = new ArrayList<OrgStaffPayVo>();
 		for (int i = 0; i < payList.size(); i++) {
 			OrgStaffDetailPay orgStaffDetailPay = payList.get(i);
-			OrgStaffPayVo vo = orgStaffDetailPayService
-					.getOrgStaffPayVo(orgStaffDetailPay);
+			OrgStaffPayVo vo = orgStaffDetailPayService.getOrgStaffPayVo(orgStaffDetailPay);
 			orgStaffPayVoList.add(vo);
 		}
 		result.setData(orgStaffPayVoList);
@@ -128,19 +119,16 @@ public class StaffPayController extends BaseController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "pay_dept", method = RequestMethod.GET)
-	public AppResultData<Object> getPayDept(HttpServletRequest request,
-			@RequestParam("staff_id") Long staffId,
-			@RequestParam("pay_type") Short payType) throws ParseException {
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+	public AppResultData<Object> getPayDept(HttpServletRequest request, @RequestParam("staff_id") Long staffId, @RequestParam("pay_type") Short payType)
+			throws ParseException {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
 		OrgStaffs orgstaff = orgStaffsService.selectByPrimaryKey(staffId);
 		if (orgstaff == null) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.STAFF_NOT_EXIST_MG);
 			return result;
 		}
-		OrgStaffFinance orgStaffFinance = orgStaffFinanceService
-				.selectByStaffId(staffId);
+		OrgStaffFinance orgStaffFinance = orgStaffFinanceService.selectByStaffId(staffId);
 		if (orgStaffFinance == null) {
 			return result;
 		}
@@ -151,28 +139,28 @@ public class StaffPayController extends BaseController {
 		}
 		// org_staff_pay_dept 新增记录
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
-		OrgStaffPayDept orgstaffPayDept = orgStaffPayDeptService
-				.initOrgStaffPayDept();
+		OrgStaffPayDept orgstaffPayDept = orgStaffPayDeptService.initOrgStaffPayDept();
 		orgstaffPayDept.setStaffId(staffId);
 		orgstaffPayDept.setPayType(payType);
 		orgstaffPayDept.setOrderNo(orderNo);
 		orgstaffPayDept.setMobile(orgstaff.getMobile());
 		orgstaffPayDept.setOrderMoney(orgStaffFinance.getTotalDept());
 		orgStaffPayDeptService.insert(orgstaffPayDept);
-		
+
 		OrgStaffPayDeptVo vo = new OrgStaffPayDeptVo();
 		vo.setStaffId(staffId);
 		vo.setOrderId(orgstaffPayDept.getOrderId());
 		vo.setOrderNo(orderNo);
 		vo.setOrderMoney(orgstaffPayDept.getOrderMoney());
 		vo.setNotifyUrl("http://101.201.197.18/jhj-app/pay/notify_alipay_dep.jsp");
-		
+
 		result.setData(vo);
 		return result;
 	}
 
 	/**
-	 *  支付欠款成功接口
+	 * 支付欠款成功接口
+	 * 
 	 * @param request
 	 * @param staffId
 	 * @param orderNo
@@ -183,22 +171,16 @@ public class StaffPayController extends BaseController {
 	 * @param tradeStatus
 	 * @param payAccount
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "pay_dept_success", method = RequestMethod.POST)
 	public AppResultData<Object> getPayDeptSuccess(
 			HttpServletRequest request,
-//			@RequestParam("staff_id") Long staffId,
-			@RequestParam("order_no") String orderNo,
-			@RequestParam("pay_type") Long payType,
-			@RequestParam("notify_id") String notifyId,
-			@RequestParam("notify_time") String notifyTime,
-			@RequestParam("trade_no") String tradeNo,
-			@RequestParam("trade_status") String tradeStatus,
-			@RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount)
-			throws Exception {
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+			// @RequestParam("staff_id") Long staffId,
+			@RequestParam("order_no") String orderNo, @RequestParam("pay_type") Long payType, @RequestParam("notify_id") String notifyId,
+			@RequestParam("notify_time") String notifyTime, @RequestParam("trade_no") String tradeNo, @RequestParam("trade_status") String tradeStatus,
+			@RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount) throws Exception {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
 
 		// 判断如果不是正确支付状态，则直接返回.
 		Boolean paySuccess = OneCareUtil.isPaySuccess(tradeStatus);
@@ -206,20 +188,20 @@ public class StaffPayController extends BaseController {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.ORDER_PAY_NOT_SUCCESS_MSG);
 			return result;
-		} 
-		
+		}
+
 		// 判断订单号是否存在，操作表 org_staff_pay_dept
 		// 判断订单号的状态是否为已支付，如果为已支付则直接返回。不需要往下继续走流程。
 		OrgStaffPayDept orgstaffPayDept = orgStaffPayDeptService.selectByOrderNo(orderNo);
 		if (orgstaffPayDept == null) {
 			return result;
 		}
-		if (orgstaffPayDept.getOrderStatus().equals((short)2)) {
+		if (orgstaffPayDept.getOrderStatus().equals((short) 2)) {
 			return result;
-		}		
-		
+		}
+
 		Long staffId = orgstaffPayDept.getStaffId();
-		
+
 		// 判断员工是否存在，不存在，则返回错误信息： 员工不存在。
 		OrgStaffs orgstaff = orgStaffsService.selectByPrimaryKey(staffId);
 		if (orgstaff == null) {
@@ -227,14 +209,14 @@ public class StaffPayController extends BaseController {
 			result.setMsg(ConstantMsg.STAFF_NOT_EXIST_MG);
 			return result;
 		}
-		
-		//更新欠款订单状态
+
+		// 更新欠款订单状态
 		orgstaffPayDept.setOrderStatus((short) 2);
 		orgstaffPayDept.setTradeStatus(tradeStatus);
 		orgstaffPayDept.setTradeId(tradeNo);
 		orgstaffPayDept.setPayAccount(payAccount);
 		orgStaffPayDeptService.updateByPrimaryKey(orgstaffPayDept);
-		
+
 		OrgStaffFinance orgStaffFinance = orgStaffFinanceService.selectByStaffId(staffId);
 		if (orgStaffFinance == null) {
 			return result;
@@ -251,8 +233,7 @@ public class StaffPayController extends BaseController {
 		orgStaffDetailPay.setOrderStatusStr("完成支付");
 		orgStaffDetailPayService.insert(orgStaffDetailPay);
 		// 操作服务人员财务表 org_staff_finance， 将总欠款减去 此次支付成功的金额.
-		orgStaffFinance.setTotalDept(orgStaffFinance.getTotalDept().subtract(
-				orgStaffDetailPay.getOrderMoney()));
+		orgStaffFinance.setTotalDept(orgStaffFinance.getTotalDept().subtract(orgStaffDetailPay.getOrderMoney()));
 		orgStaffFinanceService.updateByPrimaryKeySelective(orgStaffFinance);
 		// 如果总欠款，低于设定的1000元，则去检查 org_staff_black , 找出是否有记录，并且black_type = 0
 		// 的情况，如果有记录，则将他删除掉.
@@ -262,7 +243,7 @@ public class StaffPayController extends BaseController {
 		if (jhjSetting != null) {
 			maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
 		}
-		
+
 		if (orgStaffFinance.getTotalDept().compareTo(maxOrderDept) == -1) {
 			OrgStaffBlack orgStaffBlack = orgStaffBlackService.selectByStaffIdAndType(staffId);
 			if (orgStaffBlack != null) {
@@ -271,37 +252,37 @@ public class StaffPayController extends BaseController {
 				orgStaffsService.userOutBlackSuccessTodo(orgstaff.getMobile());
 			}
 		}
-		
-		//发送短信，支付欠款成功
+
+		// 发送短信，支付欠款成功
 		String deptStr = MathBigDeciamlUtil.round2(orgStaffFinance.getTotalDept());
 		String timeStr = DateUtil.getNow("HH:mm");
-		String[] content = new String[] { deptStr, timeStr, "1000"};
+		String[] content = new String[] { deptStr, timeStr, "1000" };
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(orgstaff.getMobile(), Constants.STAFF_PAY_DEPT_SUCCESS, content);
-		
-		//发送推送消息，告知欠款支付成功
+
+		// 发送推送消息，告知欠款支付成功
 		UserPushBind userPushBind = bindService.selectByUserId(staffId);
-		
+
 		if (userPushBind != null) {
 			String clientId = userPushBind.getClientId();
-			//透传消息 参数 map
+			// 透传消息 参数 map
 			HashMap<String, String> paramsMap = new HashMap<String, String>();
-			
+
 			paramsMap.put("cid", clientId);
-			
+
 			HashMap<String, String> transMap = new HashMap<String, String>();
-			
+
 			transMap.put("is_show", "true");
 			transMap.put("action", "msg");
 			transMap.put("remind_title", "支付欠款成功");
 			transMap.put("remind_content", "您好，您的服务订单欠款已还清.");
-			
+
 			String jsonParams = GsonUtil.GsonString(transMap);
-			
+
 			paramsMap.put("transmissionContent", jsonParams);
-			
+
 			PushUtil.AndroidPushToSingle(paramsMap);
 		}
-		
+
 		return result;
 	}
 }

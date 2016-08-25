@@ -50,6 +50,7 @@ public class OrderQuerysController extends BaseController {
 	 * @param page
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "get_list", method = RequestMethod.GET)
 	public AppResultData<Object> list(
 			@RequestParam("user_id") Long staffId,

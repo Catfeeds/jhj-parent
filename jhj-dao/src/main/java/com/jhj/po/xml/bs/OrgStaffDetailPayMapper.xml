@@ -1,207 +1,261 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.bs.OrgStaffDetailPayMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffDetailPay" >
-    <id column="id" property="id" jdbcType="NUMERIC" />
-    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
-    <result column="mobile" property="mobile" jdbcType="CHAR" />
-    <result column="order_type" property="orderType" jdbcType="NUMERIC" />
-    <result column="order_id" property="orderId" jdbcType="NUMERIC" />
-    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
-    <result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
-    <result column="order_pay" property="orderPay" jdbcType="DECIMAL" />
-    <result column="order_status_str" property="orderStatusStr" jdbcType="VARCHAR" />
-    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, staff_id, mobile, order_type, order_id, order_no, order_money, order_pay, order_status_str, 
-    remarks, add_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from org_staff_detail_pay
-    where id = #{id,jdbcType=NUMERIC}
-  </select>
-  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
-  
-  	SELECT 
-  	<include refid="Base_Column_List" /> 
- 	FROM org_staff_detail_pay 
-	WHERE 1=1
-	and
-	staff_id IN (
-		SELECT 
-			c.`staff_id`
-		FROM org_staffs AS b, org_staff_detail_pay AS c
-		WHERE 
-			b.staff_id = c.staff_id 
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffDetailPayMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffDetailPay">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="order_type" property="orderType" jdbcType="NUMERIC" />
+		<result column="order_id" property="orderId" jdbcType="NUMERIC" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
+		<result column="order_pay" property="orderPay" jdbcType="DECIMAL" />
+		<result column="order_status_str" property="orderStatusStr" jdbcType="VARCHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, staff_id, mobile, order_type, order_id, order_no, order_money, order_pay, order_status_str,
+		remarks, add_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_detail_pay
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
+
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM org_staff_detail_pay
+		WHERE 1=1
+		
+		<if test="staffId !=null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
 		<if test="mobile !=null and mobile != ''">
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
+				
+		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
+		   	 and staff_id in (
+			   	 		select staff_id from org_staffs where org_id in 
+					   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
+			      			${item}  
+			   			</foreach>
+		   	 )
+		</if>
+		
+		<if test="startTime !=null and startTime!='' ">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		
+		<if test="endTime !=null and endTime !='' ">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		
+		order by add_time desc
+
+	</select>
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
+
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM org_staff_detail_pay
+		WHERE 1=1
+		<if test="staffId !=null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="mobile !=null and mobile != ''">
+			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		
+		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
+		   	 and staff_id in (
+			   	 		select staff_id from org_staffs where org_id in 
+					   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
+			      			${item}  
+			   			</foreach>
+		   	 )
+		</if>
+		
+		<if test="orderId !=null">
+			and order_id = #{orderId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orderNo !=null">
+			and order_no = #{orderNo,jdbcType=VARCHAR}
+		</if>
+		
 		<if test="startTime !=null and startTime!='' ">
 			<![CDATA[ and add_time >= #{startTime}]]>
 		</if>
 		<if test="endTime !=null and endTime !='' ">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-		<if test="orgId != null and orgId != 0 ">
-			and b.org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-	)
-	order by add_time desc    
+		
+		order by add_time desc
 
-  </select>
-  	<select id="selectByStaffIdAndTimeListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffPaySearchVo">
-		select 
-		<include refid="Base_Column_List" />
-		from org_staff_detail_pay 
-		where staff_id =#{staffId,jdbcType=NUMERIC}
-			<if test="startTime != null">
-				<![CDATA[	and add_time >= ${startTime} ]]>   
-			</if>	
-			<if test="endTime != null">
-				<![CDATA[	and add_time <= ${endTime} ]]>   
-			</if>
-			order by add_time desc
 	</select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from org_staff_detail_pay
-    where id = #{id,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay" >
-    insert into org_staff_detail_pay (id, staff_id, mobile, 
-      order_type, order_id, order_no, 
-      order_money, order_pay, order_status_str, 
-      remarks, add_time)
-    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, 
-      #{orderType,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, 
-      #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL}, #{orderStatusStr,jdbcType=VARCHAR}, 
-      #{remarks,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay" >
-    insert into org_staff_detail_pay
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="staffId != null" >
-        staff_id,
-      </if>
-      <if test="mobile != null" >
-        mobile,
-      </if>
-      <if test="orderType != null" >
-        order_type,
-      </if>
-      <if test="orderId != null" >
-        order_id,
-      </if>
-      <if test="orderNo != null" >
-        order_no,
-      </if>
-      <if test="orderMoney != null" >
-        order_money,
-      </if>
-      <if test="orderPay != null" >
-        order_pay,
-      </if>
-      <if test="orderStatusStr != null" >
-        order_status_str,
-      </if>
-      <if test="remarks != null" >
-        remarks,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=NUMERIC},
-      </if>
-      <if test="staffId != null" >
-        #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="mobile != null" >
-        #{mobile,jdbcType=CHAR},
-      </if>
-      <if test="orderType != null" >
-        #{orderType,jdbcType=NUMERIC},
-      </if>
-      <if test="orderId != null" >
-        #{orderId,jdbcType=NUMERIC},
-      </if>
-      <if test="orderNo != null" >
-        #{orderNo,jdbcType=VARCHAR},
-      </if>
-      <if test="orderMoney != null" >
-        #{orderMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="orderPay != null" >
-        #{orderPay,jdbcType=DECIMAL},
-      </if>
-      <if test="orderStatusStr != null" >
-        #{orderStatusStr,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null" >
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay" >
-    update org_staff_detail_pay
-    <set >
-      <if test="staffId != null" >
-        staff_id = #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="mobile != null" >
-        mobile = #{mobile,jdbcType=CHAR},
-      </if>
-      <if test="orderType != null" >
-        order_type = #{orderType,jdbcType=NUMERIC},
-      </if>
-      <if test="orderId != null" >
-        order_id = #{orderId,jdbcType=NUMERIC},
-      </if>
-      <if test="orderNo != null" >
-        order_no = #{orderNo,jdbcType=VARCHAR},
-      </if>
-      <if test="orderMoney != null" >
-        order_money = #{orderMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="orderPay != null" >
-        order_pay = #{orderPay,jdbcType=DECIMAL},
-      </if>
-      <if test="orderStatusStr != null" >
-        order_status_str = #{orderStatusStr,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null" >
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay" >
-    update org_staff_detail_pay
-    set staff_id = #{staffId,jdbcType=NUMERIC},
-      mobile = #{mobile,jdbcType=CHAR},
-      order_type = #{orderType,jdbcType=NUMERIC},
-      order_id = #{orderId,jdbcType=NUMERIC},
-      order_no = #{orderNo,jdbcType=VARCHAR},
-      order_money = #{orderMoney,jdbcType=DECIMAL},
-      order_pay = #{orderPay,jdbcType=DECIMAL},
-      order_status_str = #{orderStatusStr,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=NUMERIC}
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
+
+
+	<select id="selectByStaffIdAndTimeListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffPaySearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_detail_pay
+		where staff_id =#{staffId,jdbcType=NUMERIC}
+		<if test="startTime != null">
+				<![CDATA[	and add_time >= ${startTime} ]]>
+		</if>
+		<if test="endTime != null">
+				<![CDATA[	and add_time <= ${endTime} ]]>
+		</if>
+		order by add_time desc
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from org_staff_detail_pay
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay">
+		insert into org_staff_detail_pay (id, staff_id, mobile,
+		order_type, order_id, order_no,
+		order_money, order_pay,
+		order_status_str,
+		remarks, add_time)
+		values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
+		#{orderType,jdbcType=NUMERIC},
+		#{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR},
+		#{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL}, #{orderStatusStr,jdbcType=VARCHAR},
+		#{remarks,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay">
+		insert into org_staff_detail_pay
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="orderType != null">
+				order_type,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="orderMoney != null">
+				order_money,
+			</if>
+			<if test="orderPay != null">
+				order_pay,
+			</if>
+			<if test="orderStatusStr != null">
+				order_status_str,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=CHAR},
+			</if>
+			<if test="orderType != null">
+				#{orderType,jdbcType=NUMERIC},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orderMoney != null">
+				#{orderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPay != null">
+				#{orderPay,jdbcType=DECIMAL},
+			</if>
+			<if test="orderStatusStr != null">
+				#{orderStatusStr,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay">
+		update org_staff_detail_pay
+		<set>
+			<if test="staffId != null">
+				staff_id = #{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=CHAR},
+			</if>
+			<if test="orderType != null">
+				order_type = #{orderType,jdbcType=NUMERIC},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orderMoney != null">
+				order_money = #{orderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPay != null">
+				order_pay = #{orderPay,jdbcType=DECIMAL},
+			</if>
+			<if test="orderStatusStr != null">
+				order_status_str = #{orderStatusStr,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay">
+		update org_staff_detail_pay
+		set staff_id = #{staffId,jdbcType=NUMERIC},
+		mobile = #{mobile,jdbcType=CHAR},
+		order_type = #{orderType,jdbcType=NUMERIC},
+		order_id = #{orderId,jdbcType=NUMERIC},
+		order_no = #{orderNo,jdbcType=VARCHAR},
+		order_money =
+		#{orderMoney,jdbcType=DECIMAL},
+		order_pay = #{orderPay,jdbcType=DECIMAL},
+		order_status_str = #{orderStatusStr,jdbcType=VARCHAR},
+		remarks =
+		#{remarks,jdbcType=VARCHAR},
+		add_time = #{addTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
 </mapper>

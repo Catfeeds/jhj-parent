@@ -1,6 +1,9 @@
 package com.jhj.service.bs;
 
+import java.util.List;
+
 import com.jhj.po.model.bs.OrgStaffDetailDept;
+import com.jhj.vo.OrgStaffDetailPaySearchVo;
 
 
 /**
@@ -24,6 +27,8 @@ public interface OrgStaffDetailDeptService {
     int updateByPrimaryKey(OrgStaffDetailDept record);
     
     OrgStaffDetailDept initOrgStaffDetailDept();
+
+	List<OrgStaffDetailDept> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
 
 
 }

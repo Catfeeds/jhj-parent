@@ -6,7 +6,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
-<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld" %>
+
 <html>
   <head>
 	
@@ -58,7 +58,11 @@ import="com.jhj.oa.common.UrlHelper"%>
 									style="width:110px; margin-bottom:0" readonly="true" />
 								</div> 
 								 <div class="form-group">	
-										选择云店: <cloudOrgSelectTag:select selectId="${orgStaffDetailPaySearchVoModel.orgId }"/>
+										选择云店: 
+									<form:select path="orgId">
+										<form:option value="">请选择云店</form:option>
+										<form:options items="${orgList}" itemValue="orgId" itemLabel="orgName" />
+									</form:select>
 								 </div>
 								
 								<button type="submit" class="btn btn-primary" >搜索</button>								

@@ -24,4 +24,6 @@ public interface OrgStaffDetailPayMapper {
 			OrgStaffPaySearchVo searchVo);
 
 	List<OrgStaffDetailPay> selectVoByListPage(OrgStaffDetailPaySearchVo searchVo);
+
+	List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
 }

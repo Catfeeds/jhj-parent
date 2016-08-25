@@ -49,12 +49,8 @@
    	  select
        <include refid="Base_Column_List" />
      from orgs
-     <where>
-     	<if test="parentId !=null and parentId !=0 ">
-	    	parent_id > 0
-     	</if>
-     </where>
-     
+     where parent_id > 0
+
    </select>	
   
    <select id="selectOrgsNoParent" resultMap="BaseResultMap">

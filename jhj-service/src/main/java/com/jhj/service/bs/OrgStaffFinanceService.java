@@ -3,6 +3,9 @@ package com.jhj.service.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffFinance;
+import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.Orders;
 import com.jhj.vo.OrgStaffFinanceSearchVo;
 
 
@@ -32,5 +35,7 @@ public interface OrgStaffFinanceService {
 
 	List<OrgStaffFinance> selectByListPage(OrgStaffFinanceSearchVo searchVo,
 			int pageNo, int pageSize);
+
+	void orderDone(Orders orders, OrderPrices orderPrices, OrgStaffs orgStaffs);
 
 }

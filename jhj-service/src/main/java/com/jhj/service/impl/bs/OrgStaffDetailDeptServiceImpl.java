@@ -1,12 +1,16 @@
 package com.jhj.service.impl.bs;
 
 import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.bs.OrgStaffDetailDeptMapper;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
+import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
+import com.jhj.vo.OrgStaffDetailPaySearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -75,6 +79,11 @@ public class OrgStaffDetailDeptServiceImpl implements OrgStaffDetailDeptService 
 		record.setAddTime(TimeStampUtil.getNowSecond());
 
 		return record;
+	}
+	
+	@Override
+	public List<OrgStaffDetailDept> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo) {		
+		return orgStaffDetailDeptMapper.selectBySearchVo(searchVo);
 	}
 
 	

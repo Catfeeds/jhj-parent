@@ -158,5 +158,10 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		return list;
 				 
 	}
+	
+	@Override
+	public List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo) {		
+		return orgStaffDetailPayMapper.selectBySearchVo(searchVo);
+	}
 
 }

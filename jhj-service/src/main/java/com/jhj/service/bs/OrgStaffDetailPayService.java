@@ -38,4 +38,6 @@ public interface OrgStaffDetailPayService {
 	List<OrgStaffDetailPay> selectVoByListPage(
 			OrgStaffDetailPaySearchVo searchVo, int pageNo, int pageSize);
 
+	List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
+
 }
