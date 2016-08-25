@@ -448,8 +448,8 @@
 		
 		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
 		   	 and order_no in (
-		   	 	select order_no from order_dispatchs where dispatch_status = 1 
-		   	 		and staff_id in (
+		   	 	select order_no from order_dispatchs where 
+		   	 		staff_id in (
 			   	 		select staff_id from org_staffs where org_id in 
 					   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
 			      			${item}  
@@ -457,7 +457,7 @@
 		   			) 
 		   	 )
 		</if>
-		
+		 
 		<if test="childServiceTypeList != null">
 			and
 				service_type in
