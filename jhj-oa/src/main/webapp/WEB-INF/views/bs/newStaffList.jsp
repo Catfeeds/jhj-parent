@@ -38,10 +38,10 @@
                       	
                           <header class="panel-heading">
                           	<h4>数据搜索</h4>
-                       	  <form:form class="form-inline" modelAttribute="staffSearchVoModel" action="new_staff_list" method="get" >
+                       	  <form:form class="form-inline" modelAttribute="staffSearchVoModel" action="new_staff_list" method="post" >
                        	  
                           		<div class="form-group">
-                          				手机号:<form:input path="mobile" class="form-control"  type="number"/>
+                          				手机号:<form:input path="mobile" class="form-control"  type="test"/>
                           		</div>	
                           		
                           		<div class="form-group">
