@@ -1,6 +1,7 @@
 package com.jhj.action.bs;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -94,16 +95,17 @@ public class NewOrgStaffController extends AdminController {
 	
 	
 	/**
+	 * @throws UnsupportedEncodingException 
 	 *  @Title: newStaffList
 	  * @Description: 
 				服务人员列表页
 	  * @param staffSearchVo
 	  * @throws
 	 */
-	@RequestMapping(value = "new_staff_list",method = RequestMethod.GET)
+	@RequestMapping(value = "new_staff_list",method = {RequestMethod.GET,RequestMethod.POST})
 	public String newStaffList(Model model, HttpServletRequest request,
 			@RequestParam(value = "orgId",required = false,defaultValue = "0") Long orgId,
-			@ModelAttribute("staffSearchVoModel")StaffSearchVo staffSearchVo){
+			@ModelAttribute("staffSearchVoModel")StaffSearchVo staffSearchVo) throws UnsupportedEncodingException{
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
