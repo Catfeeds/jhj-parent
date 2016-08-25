@@ -396,7 +396,7 @@ public class OaOrderController extends BaseController {
 		}
 
 		// 根据 登录 角色的门店，确定 云店
-		oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
+//		oaOrderSearchVo.setSearchCloudOrgIdList(cloudIdList);
 
 		// 如果在 列表页面，选择了 云店 作为搜索 条件
 		String jspOrgId = request.getParameter("orgId");
