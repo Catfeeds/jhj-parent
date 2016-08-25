@@ -155,7 +155,21 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (disTwo.size() > 0) {
 
 			for (int j = 0; j < disTwo.size(); j++) {
-				statuNameMap.put(disTwo.get(j).getDispatchStatus() + "," + j, disTwo.get(j).getStaffName());
+				OrderDispatchs od = disTwo.get(j);
+				statuNameMap.put(od.getDispatchStatus() + "," + j, od.getStaffName());
+				Short isApply = od.getIsApply();
+				if(isApply==1){
+					oaOrderListVo.setApplyStatus("否");
+				}else {
+					Long now = TimeStampUtil.getNowSecond();
+					Long dispatchTime = od.getAddTime();
+					Long lastTime = now - dispatchTime;
+					if ( lastTime > 60 * 30) {
+						oaOrderListVo.setApplyStatus("超");
+					} else {
+						oaOrderListVo.setApplyStatus("否");
+					}
+				}
 			}
 
 		} else {
