@@ -90,7 +90,11 @@
 									selectId="${oaOrderSearchVoModel.orgId }"
 									logInParentOrgId="${loginOrgId }"/>
 					</div>	
-					
+						是否接单<form:select path="isApply" class="form-control">
+							<option value="">全部</option>
+							<form:option value="1">是</form:option>
+							<form:option value="0">否</form:option>
+						</form:select>
 					<div class="form-group">
                        	下单开始时间：
 						<form:input path="startTimeStr" class="form-control form_datetime"
@@ -130,6 +134,7 @@
 					<th>用户手机号</th>
 					<th>服务地址</th>
 					<!-- <th>派工状态</th> -->
+					<th>是否接单</th>
 					<th>订单状态</th>
 					<th>支付方式</th>
 					<th>总金额</th>
@@ -157,6 +162,7 @@
 									t="${item.serviceDate * 1000}" /></td>
 							<td>${ item.mobile }</td>
 							<td>${ item.orderAddress }</td>
+							<td>${ item.applyStatus }</td>
 							<td id="payTypeStatus">
 								<orderVoStatusTag:orderstatus
 									orderStatus="${item.orderStatus }"
