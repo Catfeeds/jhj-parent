@@ -103,20 +103,9 @@
 						</div>
 						
 						<div class="form-group">
-
-							<label class="col-md-2 control-label"><font color="green">运营人员备注:</font></label>
-							<div class="col-md-5">
-								<form:textarea path="remarksBussinessConfirm" 
-									maxlength="100" readonly="true" rows="5" cols="50" />
-							</div>
-						</div>
-						
-						
-						
-						<div class="form-group">
 							<label class="col-md-2 control-label">备注</label>
 							<div class="col-md-5">
-								<form:textarea path="serviceContent" rows="5" cols="30" readonly="true" />
+								<form:textarea path="serviceContent" rows="5" cols="57" readonly="true" />
 							</div>
 						</div>
 						
@@ -135,7 +124,7 @@
 
 							<label class="col-md-2 control-label">与用户沟通后需求描述</label>
 							<div class="col-md-5">
-								<form:textarea path="remarksConfirm" rows="5" cols="60" maxlength="200" palceholder="最多200字"/>
+								<form:textarea path="remarksConfirm" rows="5" cols="57" maxlength="200" palceholder="最多200字"/>
 							</div>
 						</div>
 
