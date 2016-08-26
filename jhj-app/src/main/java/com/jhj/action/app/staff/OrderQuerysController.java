@@ -23,6 +23,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderDetailVo;
 import com.jhj.vo.order.OrderListVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -69,6 +70,8 @@ public class OrderQuerysController extends BaseController {
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setAmId(staffId);
 		searchVo.setOrderFrom(orderForm);
+		searchVo.setServiceDateStart(DateUtil.curStartDate(0));
+		searchVo.setServiceDateEnd(DateUtil.curLastDate(0));
 		PageInfo list = orderQueryService.selectByListVoPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
 		List<Orders> orderList = list.getList();
