@@ -34,7 +34,11 @@
 				
 				<form:form class="form-inline" modelAttribute="orgStaffDetailPaySearchVoModel" action="staffPayDept-list" method="GET">
                          <div class="form-group">	
-							选择云店: <cloudOrgSelectTag:select selectId="${orgStaffDetailPaySearchVoModel.orgId }"/>
+							选择云店: <form:select path="orgId">
+										<form:option value="">请选择云店</form:option>
+										<form:options items="${orgList}" itemValue="orgId" itemLabel="orgName" />
+									</form:select>
+							手机号码：<form:input path="mobile"/>
 						</div>
 						<button type="submit" class="btn btn-primary" >搜索</button>						
                  </form:form> 
