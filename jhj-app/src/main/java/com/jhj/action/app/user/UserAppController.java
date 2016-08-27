@@ -239,8 +239,9 @@ public class UserAppController extends BaseController {
 									userCouponsList.add(uc);
 								}
 							}
-							
-							userCouponService.insertByList(userCouponsList);
+							if(userCouponsList!=null &&userCouponsList.size()>0){
+								userCouponService.insertByList(userCouponsList);
+							}
 						}
 						
 					}
