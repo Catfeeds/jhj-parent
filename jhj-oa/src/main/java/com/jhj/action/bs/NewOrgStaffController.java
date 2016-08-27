@@ -96,6 +96,7 @@ public class NewOrgStaffController extends AdminController {
 	
 	/**
 	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException 
 	 *  @Title: newStaffList
 	  * @Description: 
 				服务人员列表页
@@ -118,6 +119,10 @@ public class NewOrgStaffController extends AdminController {
 			staffSearchVo.setOrgId(orgId);
 		}
 		
+		String name = request.getParameter("name");
+		if(name!=null){
+			staffSearchVo.setName(new String(name.getBytes("iso-8859-1"),"UTF-8"));
+		}
 		//得到 当前登录 的 门店id，并作为搜索条件
 		String org = AuthHelper.getSessionLoginOrg(request);
 		
