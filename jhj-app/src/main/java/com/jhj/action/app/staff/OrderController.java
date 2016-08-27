@@ -236,7 +236,7 @@ public class OrderController extends BaseController {
 		
 		
 		//完成服务给用户发送短信
-        ordersService.userOrderPostDoneSuccessTodo(orders);
+//        ordersService.userOrderPostDoneSuccessTodo(orders);
         
 		return result;
 	}
