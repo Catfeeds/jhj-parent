@@ -70,8 +70,8 @@ public class OrderQuerysController extends BaseController {
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setAmId(staffId);
 		searchVo.setOrderFrom(orderForm);
-		searchVo.setServiceDateStart(DateUtil.curStartDate(0));
-		searchVo.setServiceDateEnd(DateUtil.curLastDate(0));
+//		searchVo.setServiceDateStart(DateUtil.curStartDate(0));
+//		searchVo.setServiceDateEnd(DateUtil.curLastDate(0));
 		PageInfo list = orderQueryService.selectByListVoPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
 		List<Orders> orderList = list.getList();
