@@ -207,13 +207,13 @@ public class OrderAmController extends BaseController {
 		 *  您预定的{1}服务已经受理，感谢您的支持，我们会尽快与您联系，如有任何疑问请拨打010-56429112
 		 */
 		
-		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
-		//服务类型名称
-		String name = type.getName();
-		
-		String[] paySuccessForUser = new String[] {name};
-		
-		SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_SERVICE_ORDER_SUCCESS, paySuccessForUser);
+//		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+//		//服务类型名称
+//		String name = type.getName();
+//		
+//		String[] paySuccessForUser = new String[] {name};
+//		
+//		SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_SERVICE_ORDER_SUCCESS, paySuccessForUser);
 		
 		return result;
 	}
@@ -454,9 +454,9 @@ public class OrderAmController extends BaseController {
 			if(orders.getOrderStatus()==Constants.ORDER_STATUS_3){
 				Long serviceDate = orders.getServiceDate();
 				String serviceDateString = TimeStampUtil.timeStampToDateStr(serviceDate*1000, " yyyy-MM-dd HH:MM:ss");
-				String[] content = new String[] { ""+serviceDateString};
-				HashMap<String, String> sendSmsResult = SmsUtil.SendSms(u.getMobile(),
-					Constants.AM_CLEAN_NOTICE_CUSTOMER_Message, content);
+//				String[] content = new String[] { ""+serviceDateString};
+//				HashMap<String, String> sendSmsResult = SmsUtil.SendSms(u.getMobile(),
+//					Constants.AM_CLEAN_NOTICE_CUSTOMER_Message, content);
 			}
 			deepCleanVo.setCouponId(record.getCouponId());
 			deepCleanVo.setList(list);
