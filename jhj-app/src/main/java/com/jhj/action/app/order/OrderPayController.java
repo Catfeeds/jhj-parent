@@ -263,13 +263,13 @@ public class OrderPayController extends BaseController {
 				String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "MM月-dd日HH:mm");
 				
 				Long serviceType = order.getServiceType();
-				PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+//				PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 				//服务类型名称
-				String name = type.getName();
+//				String name = type.getName();
 				
-				String[] paySuccessForUser = new String[] {"服务时间:"+serviceTime,"的"+name};
-				
-				SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_PAY_SUCCESS_TO_SERVICE, paySuccessForUser);
+//				String[] paySuccessForUser = new String[] {"服务时间:"+serviceTime,"的"+name};
+//				
+//				SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_PAY_SUCCESS_TO_SERVICE, paySuccessForUser);
 				
 				
 				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
