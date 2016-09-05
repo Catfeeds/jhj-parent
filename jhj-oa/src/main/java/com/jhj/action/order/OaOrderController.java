@@ -915,9 +915,9 @@ public class OaOrderController extends BaseController {
 
 		Users users = usersService.selectByUsersId(userId);
 
-		String[] paySuccessForUser = new String[] {"您的订单已确认，请在30分钟之内支付"};
-
-		SmsUtil.SendSms(users.getMobile(), Constants.MESSAGE_ORDER_NEED_TO_PAY, paySuccessForUser);
+//		String[] paySuccessForUser = new String[] {"您的订单已确认，请在30分钟之内支付"};
+//
+//		SmsUtil.SendSms(users.getMobile(), Constants.MESSAGE_ORDER_NEED_TO_PAY, paySuccessForUser);
 
 		// 发短信
 		orderService.userOrderAmSuccessTodo(order.getOrderNo());
