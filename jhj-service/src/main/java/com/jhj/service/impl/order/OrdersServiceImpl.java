@@ -206,7 +206,7 @@ public class OrdersServiceImpl implements OrdersService {
 				OrderLog orderLog = orderLogService.initOrderLog(order);
 				orderLogService.insert(orderLog);
 		//助理订单短信推送
-		userOrderAmPushSms(order);
+//		userOrderAmPushSms(order);
 		return true;
 	}
 	private boolean userOrderAmPushSms(Orders order) {
@@ -238,9 +238,6 @@ public class OrdersServiceImpl implements OrdersService {
 		if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
 			String mobile = order.getMobile();
 			String code = RandomUtil.randomNumber();
-			if (mobile.equals("18610807136")) {
-				code = "000000";
-			}
 			String orderMoney = orderPrices.getOrderMoney().toString();
 		
 			String[] content = new String[] { code , orderMoney};
@@ -261,9 +258,6 @@ public class OrdersServiceImpl implements OrdersService {
 			String mobile = orgStaffs.getMobile();
 
 			String code = RandomUtil.randomNumber();
-			if (mobile.equals("18610807136")) {
-				code = "000000";
-			}
 			UserAddrs userAddrs = userAddrsMapper.selectByUserIdAndAddrId(
 					order.getAddrId(), order.getUserId());
 			String addrs = userAddrs.getName() + userAddrs.getAddress()
@@ -271,18 +265,15 @@ public class OrdersServiceImpl implements OrdersService {
 			Long serviceDateLong = order.getServiceDate();
 			String serviceDateStr = TimeStampUtil
 					.timeStampToDateStr(serviceDateLong*1000);
-			String[] content = new String[] { "服务时间：" + serviceDateStr
-					+ "服务地点：" + addrs };
-			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
-					Constants.GET_AM_EXP_CLEAN_ORDER_ID, content);
+//			String[] content = new String[] { "服务时间：" + serviceDateStr
+//					+ "服务地点：" + addrs };
+//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
+//					Constants.GET_AM_EXP_CLEAN_ORDER_ID, content);
 		}
 		// 用户收到未支付的深度保洁订单通知
 		if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
 			String mobile = order.getMobile();
 			String code = RandomUtil.randomNumber();
-			if (mobile.equals("18610807136")) {
-				code = "000000";
-			}
 			String[] content = new String[] { code,
 					Constants.GET_CODE_MAX_VALID };
 			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
@@ -303,9 +294,6 @@ public class OrdersServiceImpl implements OrdersService {
 			String mobile = orgStaffs.getMobile();
 
 			String code = RandomUtil.randomNumber();
-			if (mobile.equals("18610807136")) {
-				code = "000000";
-			}
 			String[] content = new String[] { code,
 					Constants.GET_CODE_MAX_VALID };
 			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
@@ -315,9 +303,6 @@ public class OrdersServiceImpl implements OrdersService {
 		if (orderStatus.equals(Constants.ORDER_STATUS_2)) {
 			String mobile = order.getMobile();
 			String code = RandomUtil.randomNumber();
-			if (mobile.equals("18610807136")) {
-				code = "000000";
-			}
 			String[] content = new String[] { code,
 					Constants.GET_CODE_MAX_VALID };
 			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
@@ -433,9 +418,6 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		String mobile = orders.getMobile();
 		String code = RandomUtil.randomNumber();
-		if (mobile.equals("18610807136")) {
-			code = "000000";
-		}
 		String[] content = new String[] { code,
 				Constants.GET_CODE_MAX_VALID };
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
@@ -447,9 +429,6 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		String mobile = orders.getMobile();
 		String code = RandomUtil.randomNumber();
-		if (mobile.equals("18610807136")) {
-			code = "000000";
-		}
 		String[] content = new String[] { code,
 				Constants.GET_CODE_MAX_VALID };
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
