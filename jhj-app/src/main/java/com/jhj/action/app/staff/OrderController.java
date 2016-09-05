@@ -186,7 +186,7 @@ public class OrderController extends BaseController {
 		vo.setStaffId(staffId);
 		vo.setOrderStatus(orders.getOrderStatus());
 		//开始服务给用户发送短信
-		ordersService.userOrderPostBeginSuccessTodo(orders);
+//		ordersService.userOrderPostBeginSuccessTodo(orders);
 		result.setData(vo);
 		return result;
 	}
