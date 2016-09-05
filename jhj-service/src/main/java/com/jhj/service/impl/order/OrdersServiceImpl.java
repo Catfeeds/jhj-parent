@@ -461,9 +461,6 @@ public class OrdersServiceImpl implements OrdersService {
 	public Boolean userJoinBlackSuccessTodo(String mobile) {
 
 		String code = RandomUtil.randomNumber();
-		if (mobile.equals("18610807136")) {
-			code = "000000";
-		}
 		String[] content = new String[] { code,
 				Constants.GET_CODE_MAX_VALID };
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
