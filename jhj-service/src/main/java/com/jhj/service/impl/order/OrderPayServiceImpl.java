@@ -219,14 +219,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 		SmsUtil.SendSms(staff.getMobile(), "64746", contentForUser);
 		
 		//3)支付完成用户rest_money<60发短信---发送短信
-		Users user =userService.selectByUsersId(userId);
-		BigDecimal restMoney = user.getRestMoney();
-		BigDecimal unit = new BigDecimal(60);
-		if(restMoney.compareTo(unit)<0){
-			String[] content = new String[] {""};
-			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
-				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
-		}
+//		Users user =userService.selectByUsersId(userId);
+//		BigDecimal restMoney = user.getRestMoney();
+//		BigDecimal unit = new BigDecimal(60);
+//		if(restMoney.compareTo(unit)<0){
+//			String[] content = new String[] {""};
+//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
+//				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
+//		}
 		//4)如果有优惠劵，则需要将优惠劵变成已使用。
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
 		Long userCouponId = orderPrice.getCouponId();
@@ -274,15 +274,15 @@ public class OrderPayServiceImpl implements OrderPayService {
 			userCoupon.setOrderNo(orders.getOrderNo());
 			userCouponsService.updateByPrimaryKey(userCoupon);
 		}
-		//支付完成用户rest_money<60发短信
-		Users user =userService.selectByUsersId(orders.getUserId());
-			BigDecimal restMoney = user.getRestMoney();
-			BigDecimal unit = new BigDecimal(60);
-		if(restMoney.compareTo(unit)<0){
-			String[] content = new String[] {};
-			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
-				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
-		}
+//		//支付完成用户rest_money<60发短信
+//		Users user =userService.selectByUsersId(orders.getUserId());
+//			BigDecimal restMoney = user.getRestMoney();
+//			BigDecimal unit = new BigDecimal(60);
+//		if(restMoney.compareTo(unit)<0){
+//			String[] content = new String[] {};
+//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
+//				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
+//		}
 		
 		//2016年1月30日10:39:32  用户支付完  助理订单后，给助理推送消息
 //		Long amId = orderDispatchs.getStaffId();
@@ -336,15 +336,15 @@ public class OrderPayServiceImpl implements OrderPayService {
 			userCoupon.setOrderNo(orders.getOrderNo());
 			userCouponsService.updateByPrimaryKey(userCoupon);
 		}	
-		//支付完成用户rest_money<60发短信
-		Users user =userService.selectByUsersId(orders.getUserId());
-			BigDecimal restMoney = user.getRestMoney();
-			BigDecimal unit = new BigDecimal(60);
-		if(restMoney.compareTo(unit)<0){
-			String[] content = new String[] {""};
-			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
-				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
-		}
+//		//支付完成用户rest_money<60发短信
+//		Users user =userService.selectByUsersId(orders.getUserId());
+//			BigDecimal restMoney = user.getRestMoney();
+//			BigDecimal unit = new BigDecimal(60);
+//		if(restMoney.compareTo(unit)<0){
+//			String[] content = new String[] {""};
+//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
+//				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
+//		}
 	}
 	
 	/*
