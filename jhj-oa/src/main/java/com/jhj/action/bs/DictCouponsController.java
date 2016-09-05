@@ -290,6 +290,7 @@ public class DictCouponsController extends BaseController {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 		
+		Map<String,String> hashMap=new HashMap<String,String>();
 		Long flag = Long.valueOf(request.getParameter("id"));
 		//更新或者新增
 		if (flag != null && flag > 0) {
@@ -318,7 +319,6 @@ public class DictCouponsController extends BaseController {
 			dictCoupon.setUseCondition(dictCoupons.getUseCondition());
 			couponService.insertSelective(dictCoupon);
 		}
-		Map<String,String> hashMap=new HashMap<String,String>();
 		hashMap.put("success", "200");
 		return hashMap;
 	}
@@ -484,11 +484,15 @@ public class DictCouponsController extends BaseController {
         return listmap;
     }
     
-    @RequestMapping(value = "/sendCoupons", method = RequestMethod.POST)
+    @SuppressWarnings("null")
+	@RequestMapping(value = "/sendCoupons", method = RequestMethod.POST)
     @ResponseBody
     public Map<String,String> sendCoupons(@ModelAttribute DictCoupons dictCoupons){
     	
     	Long id = dictCoupons.getId();
+    	if(id==0){
+//    		couponService.select
+    	}
     	DictCoupons coupon = couponService.selectByPrimaryKey(id);
     	List<Integer> condtion=dictCoupons.getSendCouponsCondtion();
     	List<UserCoupons> userCouponsList1=new ArrayList<UserCoupons>();
@@ -501,8 +505,9 @@ public class DictCouponsController extends BaseController {
     			map.put("serviceStartDate", DateUtil.curStartDate(0));
     			map.put("serviceEndDate", DateUtil.curLastDate(0));
     			List<Orders> orders = orderService.selectByMap(map);
-    			for(Orders o:orders){
-    				UserCoupons uc = userCouponsService.initUserCoupons(o.getUserId(),coupon);
+    			List<Long> userIds = isUserId(orders);
+    			for(Long uid:userIds){
+    				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
     				userCouponsList1.add(uc);
     			}
     			userCouponsService.insertByList(userCouponsList1);
@@ -512,8 +517,9 @@ public class DictCouponsController extends BaseController {
     			map.put("serviceStartDate", DateUtil.curStartDate(1));
     			map.put("serviceEndDate", DateUtil.curLastDate(1));
     			List<Orders> orders = orderService.selectByMap(map);
-    			for(Orders o:orders){
-    				UserCoupons uc = userCouponsService.initUserCoupons(o.getUserId(),coupon);
+    			List<Long> userIds = isUserId(orders);
+    			for(Long uid:userIds){
+    				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
     				userCouponsList2.add(uc);
     			}
     			userCouponsService.insertByList(userCouponsList2);
@@ -523,8 +529,9 @@ public class DictCouponsController extends BaseController {
     			map.put("serviceStartDate", DateUtil.curStartDate(2));
     			map.put("serviceEndDate", DateUtil.curLastDate(2));
     			List<Orders> orders = orderService.selectByMap(map);
-    			for(Orders o:orders){
-    				UserCoupons uc = userCouponsService.initUserCoupons(o.getUserId(),coupon);
+    			List<Long> userIds = isUserId(orders);
+    			for(Long uid:userIds){
+    				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
     				userCouponsList3.add(uc);
     			}
     			userCouponsService.insertByList(userCouponsList3);
@@ -536,5 +543,22 @@ public class DictCouponsController extends BaseController {
     	return hashMap;
     }
     
+    //判断用户id是否重复
+	@SuppressWarnings("null")
+	public List<Long> isUserId(List<Orders> orders){
+    	
+    	List<Long> ids=new ArrayList<Long>();
+    	for(Orders o:orders){
+			Long userId = o.getUserId();
+			if(ids==null){
+				ids.add(userId);
+			}else{
+				if(!ids.contains(userId)){
+					ids.add(userId);
+				}
+			}
+		}
+    	return ids;
+    }
     
 }
