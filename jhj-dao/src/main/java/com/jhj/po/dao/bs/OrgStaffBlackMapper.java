@@ -24,7 +24,7 @@ public interface OrgStaffBlackMapper {
 
 	List<OrgStaffBlack> selectVoByListPage(OrgStaffDetailPaySearchVo searchVo);
 
-	OrgStaffBlack selectByStaffIdAndType(Long staffId);
+	List<OrgStaffBlack> selectByStaffIdAndType(Long staffId);
 	
 	List<OrgStaffBlack> selectAllBadRateStaff();
 }

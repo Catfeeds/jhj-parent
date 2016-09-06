@@ -94,7 +94,7 @@ public class OrgStaffCBlackServiceImpl implements OrgStaffBlackService {
 	}
 
 	@Override
-	public OrgStaffBlack selectByStaffIdAndType(Long staffId) {
+	public List<OrgStaffBlack> selectByStaffIdAndType(Long staffId) {
 	
 		return orgStaffBlackMapper.selectByStaffIdAndType(staffId);
 	}

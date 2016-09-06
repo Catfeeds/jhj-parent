@@ -245,9 +245,11 @@ public class StaffPayController extends BaseController {
 		}
 
 		if (orgStaffFinance.getTotalDept().compareTo(maxOrderDept) == -1) {
-			OrgStaffBlack orgStaffBlack = orgStaffBlackService.selectByStaffIdAndType(staffId);
-			if (orgStaffBlack != null) {
-				orgStaffBlackService.deleteByPrimaryKey(orgStaffBlack.getId());
+			List<OrgStaffBlack> orgStaffBlacks = orgStaffBlackService.selectByStaffIdAndType(staffId);
+			if (orgStaffBlacks.isEmpty()) {
+				for (OrgStaffBlack item : orgStaffBlacks) {
+					orgStaffBlackService.deleteByPrimaryKey(item.getId());
+				}
 				// d. 发送短信，告知员工已经支付欠款成功，并告知已不在黑名单中
 				orgStaffsService.userOutBlackSuccessTodo(orgstaff.getMobile());
 			}

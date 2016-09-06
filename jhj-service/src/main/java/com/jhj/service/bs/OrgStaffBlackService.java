@@ -32,7 +32,7 @@ public interface OrgStaffBlackService {
 
 	List<OrgStaffBlack> selectByListPage(OrgStaffDetailPaySearchVo searchVo, int pageNo, int pageSize);
 
-	OrgStaffBlack selectByStaffIdAndType(Long staffId);
+	List<OrgStaffBlack> selectByStaffIdAndType(Long staffId);
 
 /*	List<OrgStaffBlack> selectByStaffId(Long userId);
 
