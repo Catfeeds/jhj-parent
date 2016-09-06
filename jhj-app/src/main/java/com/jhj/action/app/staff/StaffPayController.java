@@ -152,7 +152,7 @@ public class StaffPayController extends BaseController {
 		vo.setOrderId(orgstaffPayDept.getOrderId());
 		vo.setOrderNo(orderNo);
 		vo.setOrderMoney(orgstaffPayDept.getOrderMoney());
-		vo.setNotifyUrl("http://101.201.197.18/jhj-app/pay/notify_alipay_dep.jsp");
+		vo.setNotifyUrl("http://www.jia-he-jia.com/jhj-app/pay/notify_alipay_dep.jsp");
 
 		result.setData(vo);
 		return result;
