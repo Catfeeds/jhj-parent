@@ -92,7 +92,7 @@ $('#recharge-coupon-form').validate({
 						success:function(data){
 							if(data.success==200)
 								alert("优惠券添加成功！！");
-							    $("#form2-div").css("display","block");
+//							    $("#form2-div").css("display","block");
 						}
 					});
 				}
