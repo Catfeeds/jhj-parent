@@ -247,29 +247,25 @@ public class OrderPayController extends BaseController {
 			//记录用户消费明细
 			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, "", "", "");
 			
+			Long serviceDate = order.getServiceDate();
+			//服务时间
+			String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy年MM月dd日HH:mm");
+			
+			Long serviceType = order.getServiceType();
+			PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+			//服务类型名称
+			String name = type.getName();
+			
+			String[] paySuccessForUser = new String[] {serviceTime,name};
 			//订单支付成功后
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
 				
 				/*
 				 *   2016年4月14日10:21:50 
-				 *   
-				 *   新增 短信， 用户 支付成功后，发短信	
-				 *   
 				 *    您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
 				 */
 				
-				Long serviceDate = order.getServiceDate();
-				//服务时间
-				String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "MM月-dd日HH:mm");
-				
-				Long serviceType = order.getServiceType();
-//				PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
-				//服务类型名称
-//				String name = type.getName();
-				
-//				String[] paySuccessForUser = new String[] {"服务时间:"+serviceTime,"的"+name};
-//				
-//				SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_PAY_SUCCESS_TO_SERVICE, paySuccessForUser);
+				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
 				
 				
 				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
@@ -292,7 +288,8 @@ public class OrderPayController extends BaseController {
 				 */
 //				您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
 				
-//				orderPayService.orderPaySuccessToDoForAm(order);
+				orderPayService.orderPaySuccessToDoForAm(order);
+				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
 			}
 		}
 		
