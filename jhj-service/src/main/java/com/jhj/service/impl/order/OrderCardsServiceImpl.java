@@ -94,7 +94,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		
 		BigDecimal cardMoney = orderCards.getCardMoney();
 		BigDecimal restMoney = users.getRestMoney().add(cardMoney);
-		
+		System.out.println(restMoney+"---------------------------::::::::::::::::::::::::::::::");
 		users.setRestMoney(restMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
 		usersService.updateByPrimaryKeySelective(users);
