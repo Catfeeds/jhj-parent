@@ -255,7 +255,7 @@ public class NewOrderDisController extends BaseController {
 			//2)派工成功，为服务人员发送推送消息---推送消息
 			dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 			
-			SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
+			SmsUtil.SendSms(staffs.getMobile(), "114590", contentForUser);
 			
 			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[]{beginTimeStr,partnerService.selectByPrimaryKey(order.getServiceType()).getName()});
 			
@@ -441,7 +441,7 @@ public class NewOrderDisController extends BaseController {
 		//2)派工成功，为服务人员发送推送消息---推送消息
 		dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 		
-		SmsUtil.SendSms(staffs.getMobile(), "64746", contentForUser);
+		SmsUtil.SendSms(staffs.getMobile(), "114590", contentForUser);
 		
 		return resultData;
 	}
