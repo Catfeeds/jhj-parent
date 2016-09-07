@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="com.jhj.oa.common.UrlHelper"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@ include file="../shared/taglib.jsp"%>
 
@@ -37,7 +37,7 @@
 				<form:form modelAttribute="dictCoupons" id="recharge-coupon-form"
 					commandName="dictCoupons" 
 					class="form-horizontal">
-					<form:hidden path="id" />
+					<form:hidden path="id" id="form1-id"/>
 					<div class="form-body">
 						
 
@@ -133,17 +133,20 @@
 			</div>
 			</section>
 		</div>
-		<div id="form2-div" style="display:none">
-			<div class="col-lg-12">
-				<form id="form2" method="post">
-					<input type="hidden" id="from2_id" name="id" value="${dictCoupons.id }"/>
-					<input type="checkbox" name="sendCouponsCondtion" value="1" />最近1个月内有下过单
-					<input type="checkbox" name="sendCouponsCondtion" value="2" />最近2个月内有下过单
-					<input type="checkbox" name="sendCouponsCondtion" value="3" />最近3个月内有下过单
-					<input type="button" id="from2-btn" value="发送优惠券" />
-				</form>
+		<c:if test="${isForm!=0 }">
+			<div id="form2-div">
+				<div class="col-lg-12">
+					<form id="form2" method="post" >
+						<input type="hidden" id="form2_id" name="id" value="${dictCoupons.id }"/>
+						<input type="checkbox" name="sendCouponsCondtion" value="1" />最近1个月内有下过单
+						<input type="checkbox" name="sendCouponsCondtion" value="2" />最近2个月内有下过单
+						<input type="checkbox" name="sendCouponsCondtion" value="3" />最近3个月内有下过单<br/>
+						<span>是否发送短信：</span><input type="checkbox" name="isSendMessage" value="1"/>
+						<input type="button" id="from2-btn" value="发送优惠券" />
+					</form>
+				</div>
 			</div>
-		</div>
+		</c:if>
 	</div>
 	<!-- page end--> </section> </section> <!--main content end--> <!--footer start--> <%@ include
 		file="../shared/pageFooter.jsp"%> <!--footer end-->
