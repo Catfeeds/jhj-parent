@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,6 +51,7 @@ import com.meijia.utils.DateUtil;
 import com.meijia.utils.ExcelUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.RandomUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -179,6 +181,7 @@ public class DictCouponsController extends BaseController {
 		if (id == null) {
 			id = 0L;
 			dictCoupons = couponService.initRechargeCoupon();
+			model.addAttribute("isForm", 0);
 		}else {
 			dictCoupons = couponService.selectByPrimaryKey(id);
 			}
@@ -484,15 +487,12 @@ public class DictCouponsController extends BaseController {
         return listmap;
     }
     
-    @SuppressWarnings("null")
 	@RequestMapping(value = "/sendCoupons", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> sendCoupons(@ModelAttribute DictCoupons dictCoupons){
+    public Map<String,String> sendCoupons(@ModelAttribute DictCoupons dictCoupons,
+    		@RequestParam(value="isSendMessage",required=false) String isSendMessage){
     	
     	Long id = dictCoupons.getId();
-    	if(id==0){
-//    		couponService.select
-    	}
     	DictCoupons coupon = couponService.selectByPrimaryKey(id);
     	List<Integer> condtion=dictCoupons.getSendCouponsCondtion();
     	List<UserCoupons> userCouponsList1=new ArrayList<UserCoupons>();
@@ -539,6 +539,9 @@ public class DictCouponsController extends BaseController {
     		hashMap.put("success", "200");
     	}else{
     		hashMap.put("fail", "100");
+    	}
+    	if(isSendMessage!=null){
+    		SmsUtil.SendSms("", "", new String[]{});
     	}
     	return hashMap;
     }
