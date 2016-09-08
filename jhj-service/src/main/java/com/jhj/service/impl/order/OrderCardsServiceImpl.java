@@ -93,9 +93,10 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 
 		
 		BigDecimal cardMoney = orderCards.getCardMoney();
+		DictCardType dictCardType = dictCardTypeMapper.selectByPrimaryKey(orderCards.getCardType());
 		BigDecimal restMoney = users.getRestMoney().add(cardMoney);
-		System.out.println(restMoney+"---------------------------::::::::::::::::::::::::::::::");
-		users.setRestMoney(restMoney);
+		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
+		users.setRestMoney(lastRestMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
 		usersService.updateByPrimaryKeySelective(users);
 
