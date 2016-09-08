@@ -296,22 +296,16 @@ public class UserController extends BaseController {
 	
 	/**
 	 * 该方法为用户充值后，更新用户的rest_money
-	 * 
+	 * 更新order_cards表中的状态
 	 * */
 	@RequestMapping(value = "getUserRestMoneyInfo", method = RequestMethod.GET)
 	public AppResultData<Object> getUserRestMoneyInfo(
-			@RequestParam("user_id") Long userId,
-			@RequestParam("pay_card_id") Long cardId) {
+			@RequestParam("user_id") Long userId) {
 
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.ERROR_999, ConstantMsg.USER_NOT_EXIST_MG, "");
 
 		Users user=usersService.selectByUsersId(userId);
-		DictCardType card = cardTypeService.selectByPrimaryKey(cardId);
-		BigDecimal restMoney=user.getRestMoney();
-		restMoney=restMoney.add(card.getSendMoney());
-		user.setRestMoney(restMoney);
-		usersService.updateByPrimaryKeySelective(user);
 
 		result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, user);
