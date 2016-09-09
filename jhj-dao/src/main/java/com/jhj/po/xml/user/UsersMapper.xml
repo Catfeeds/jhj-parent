@@ -769,6 +769,9 @@
 		GROUP BY series ORDER BY series ASC
 	</select>
 	
-	
+	<select id="selectUsersByOrderMobile" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from users where mobile not in (select mobile from orders)
+	</select>
 	
 </mapper>
