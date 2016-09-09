@@ -240,7 +240,7 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 	public List<DictCoupons> getSelectByMap(Map<String,Object> map) {
 		List<DictCoupons> couponsList=null;
 		if(map!=null){
-			couponsList = dictCouponsMapper.selectByListPage(map);
+			couponsList = dictCouponsMapper.selectByMap(map);
 		}
 		return couponsList;
 	}
