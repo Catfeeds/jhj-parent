@@ -74,4 +74,6 @@ public interface UsersService {
 	
 	List<Users>	selectBySearchVo(UserSearchVo searchVo);
 	
+	//查询没有下过订单的用户
+	List<Users> selectUsersByOrderMobile();
 }
