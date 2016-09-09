@@ -49,5 +49,5 @@ public interface DictCouponsService {
 	
 	List<DictCoupons> getCouponsByCouponType(Short couponType);
 
-	List<DictCoupons> getSelectByMap(Date todate);
+	List<DictCoupons> getSelectByMap(Map<String,Object> map);
 }
