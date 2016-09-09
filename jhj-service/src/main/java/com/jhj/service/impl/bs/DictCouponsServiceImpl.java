@@ -237,16 +237,12 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 	}
 
 	//按前日期查询优惠券
-	public List<DictCoupons> getSelectByMap(Date todate) {
-		if(todate!=null){
-			Map<String,Object> map=new HashMap<String,Object>();
-			DictCoupons coupons=new DictCoupons();
-			coupons.setToDate(todate);
-			map.put("coupons", coupons);
-			List<DictCoupons> couponsList = dictCouponsMapper.selectByListPage(map);
-			return couponsList;
+	public List<DictCoupons> getSelectByMap(Map<String,Object> map) {
+		List<DictCoupons> couponsList=null;
+		if(map!=null){
+			couponsList = dictCouponsMapper.selectByListPage(map);
 		}
-		return null;
+		return couponsList;
 	}
 	
 }
