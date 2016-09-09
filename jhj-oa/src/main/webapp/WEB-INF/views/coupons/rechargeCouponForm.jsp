@@ -76,7 +76,7 @@
 
 							<div class="col-md-5">
 								<%-- <form:radiobuttons path="useCondition" items="${couponsUseCondition}"/> --%>
-								<form:select path="useCondition" items="${couponsUseCondition }" itemLabel="useConditionDescr" itemValue="useConditonId">
+								<form:select path="couponsTypeId" items="${couponsType }" itemLabel="couponsTypeDesc" itemValue="couponsTypeId">
 								</form:select>
 								<br />
 							</div>
@@ -138,10 +138,10 @@
 				<div class="col-lg-12">
 					<form id="form2" method="post" >
 						<input type="hidden" id="form2_id" name="id" value="${dictCoupons.id }"/>
-						<input type="checkbox" name="sendCouponsCondtion" value="1" />最近1个月内有下过单
-						<input type="checkbox" name="sendCouponsCondtion" value="2" />最近2个月内有下过单
-						<input type="checkbox" name="sendCouponsCondtion" value="3" />最近3个月内有下过单<br/>
-						<span>是否发送短信：</span><input type="checkbox" name="isSendMessage" value="1"/>
+						<input type="checkbox" name="sendCouponsCondtion" value="0" />注册未使用的用户
+						<input type="checkbox" name="sendCouponsCondtion" value="1" />1个月内使用的用户
+						<input type="checkbox" name="sendCouponsCondtion" value="2" />3个月内使用的用户
+						<input type="checkbox" name="sendCouponsCondtion" value="3" />3个月以上使用的用户
 						<input type="button" id="from2-btn" value="发送优惠券" />
 					</form>
 				</div>
