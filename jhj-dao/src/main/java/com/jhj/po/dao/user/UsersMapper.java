@@ -138,4 +138,7 @@ public interface UsersMapper {
 	//得到 不同来源的 用户
 	List<Users> selectUserInAllCoopFrom(List<Long> list);
 	
+	//查询没有下过单的用户
+	List<Users> selectUsersByOrderMobile();
+	
 }
