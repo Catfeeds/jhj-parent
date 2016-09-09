@@ -546,4 +546,9 @@ public class UsersServiceImpl implements UsersService {
 	public List<Users> selectBySearchVo(UserSearchVo searchVo) {
 		return usersMapper.selectByListPages(searchVo);
 	}
+
+	@Override
+	public List<Users> selectUsersByOrderMobile() {
+		return usersMapper.selectUsersByOrderMobile();
+	}
 }
