@@ -21,7 +21,7 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.GiftsService;
-import com.jhj.service.dict.CouponsUseConditionService;
+import com.jhj.service.dict.CouponsTypeService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserCouponsService;
@@ -55,7 +55,7 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 	private OrderPricesService orderPricesService;
 	
 	@Autowired
-	private CouponsUseConditionService useConditionService;
+	private CouponsTypeService couponsTypeService;
 
 	@Override
 	public UserCoupons initUserCoupons() {
@@ -189,8 +189,8 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 					vo.setRangType(dictCoupon.getRangType());
 					vo.setRangFrom(dictCoupon.getRangFrom());
 					vo.setIntroduction(dictCoupon.getIntroduction());
-					vo.setUseCondition(dictCoupon.getUseCondition());
-					vo.setUseConditionDescr(useConditionService.selectByPrimaryKey(Integer.parseInt(dictCoupon.getUseCondition())).getUseConditionDescr());
+					vo.setCouponsTypeId(String.valueOf(dictCoupon.getCouponsTypeId()));
+					vo.setCouponsTypeDesc(couponsTypeService.selectByPrimaryKey(dictCoupon.getCouponsTypeId()).getCouponsTypeDesc());
 					String fromDateStr = DateUtil.formatDate(vo.getFromDate());
 					String toDateStr = DateUtil.formatDate(vo.getToDate());
 
