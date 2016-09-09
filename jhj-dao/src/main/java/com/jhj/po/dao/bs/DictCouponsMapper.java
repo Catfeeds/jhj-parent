@@ -1,5 +1,6 @@
 package com.jhj.po.dao.bs;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +30,6 @@ public interface DictCouponsMapper {
 	List<DictCoupons> selectByListPage(Map<String,Object> conditions);
 	
 	List<DictCoupons> selectByCouponType(Short couponType);
+	
+	List<DictCoupons> selectByMap(Map<String,Object> map);
 }
