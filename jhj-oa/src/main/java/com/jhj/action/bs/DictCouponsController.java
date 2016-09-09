@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,12 +34,12 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.DictCoupons;
-import com.jhj.po.model.dict.CouponsUseCondition;
+import com.jhj.po.model.dict.CouponsType;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
-import com.jhj.service.dict.CouponsUseConditionService;
+import com.jhj.service.dict.CouponsTypeService;
 import com.jhj.service.dict.DictUtil;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserCouponsService;
@@ -51,7 +50,6 @@ import com.meijia.utils.DateUtil;
 import com.meijia.utils.ExcelUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.RandomUtil;
-import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -76,7 +74,7 @@ public class DictCouponsController extends BaseController {
 	private UsersService usersService;
 	
 	@Autowired
-	private CouponsUseConditionService useCondition;
+	private CouponsTypeService couponsTypeService;
 	
 	@Autowired
 	private OrdersService orderService;
@@ -185,15 +183,8 @@ public class DictCouponsController extends BaseController {
 		}else {
 			dictCoupons = couponService.selectByPrimaryKey(id);
 			}
-		
-//		CouponVo couponVo = new CouponVo();
-//		try {
-//			BeanUtils.copyProperties(couponVo,dictCoupons);
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		List<CouponsUseCondition> couponsUseCondition = useCondition.selectAll();
-		model.addAttribute("couponsUseCondition", couponsUseCondition);
+		List<CouponsType> couponsType = couponsTypeService.selectAll();
+		model.addAttribute("couponsType", couponsType);
 		model.addAttribute("dictCoupons", dictCoupons);
 		model.addAttribute("selectDataSource",couponService.getSelectRangMonthSource());
 		model.addAttribute("serviceTypeMap",couponService.getSelectServiceTypeSource());
@@ -305,7 +296,7 @@ public class DictCouponsController extends BaseController {
 			dictCoupon.setDescription(dictCoupons.getDescription());
 			dictCoupon.setIntroduction(dictCoupons.getIntroduction());
 			dictCoupon.setRangMonth(dictCoupons.getRangMonth());
-			dictCoupon.setUseCondition(dictCoupons.getUseCondition());
+			dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
 			couponService.updateByPrimaryKeySelective(dictCoupon);
 		} else {
 			//新增充值后赠送优惠券
@@ -319,7 +310,7 @@ public class DictCouponsController extends BaseController {
 			dictCoupon.setIntroduction(dictCoupons.getIntroduction());
 			dictCoupon.setRangMonth(dictCoupons.getRangMonth());
 			dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
-			dictCoupon.setUseCondition(dictCoupons.getUseCondition());
+			dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());;
 			couponService.insertSelective(dictCoupon);
 		}
 		hashMap.put("success", "200");
@@ -489,17 +480,29 @@ public class DictCouponsController extends BaseController {
     
 	@RequestMapping(value = "/sendCoupons", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> sendCoupons(@ModelAttribute DictCoupons dictCoupons,
-    		@RequestParam(value="isSendMessage",required=false) String isSendMessage){
+    public Map<String,String> sendCoupons(@ModelAttribute DictCoupons dictCoupons){
     	
     	Long id = dictCoupons.getId();
     	DictCoupons coupon = couponService.selectByPrimaryKey(id);
     	List<Integer> condtion=dictCoupons.getSendCouponsCondtion();
+    	List<UserCoupons> userCouponsList0=new ArrayList<UserCoupons>();
     	List<UserCoupons> userCouponsList1=new ArrayList<UserCoupons>();
     	List<UserCoupons> userCouponsList2=new ArrayList<UserCoupons>();
     	List<UserCoupons> userCouponsList3=new ArrayList<UserCoupons>();
     	Map<String,String> hashMap=new HashMap<String,String>();
     	if(condtion!=null && condtion.size()>0){
+    		if(condtion.contains(0)){
+    			List<Users> users = usersService.selectUsersByOrderMobile();
+    			if(users!=null){
+    				for(Users u:users){
+    					UserCoupons uc = userCouponsService.initUserCoupons(u.getId(), coupon);
+    					userCouponsList0.add(uc);
+    				}
+    				if(userCouponsList0!=null){
+    					userCouponsService.insertByList(userCouponsList0);
+    				}
+    			}
+    		}
     		if(condtion.contains(1)){
     			Map<String,Long> map=new HashMap<String,Long>();
     			map.put("serviceStartDate", DateUtil.curStartDate(0));
@@ -510,11 +513,13 @@ public class DictCouponsController extends BaseController {
     				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
     				userCouponsList1.add(uc);
     			}
-    			userCouponsService.insertByList(userCouponsList1);
+    			if(userCouponsList1!=null){
+    				userCouponsService.insertByList(userCouponsList1);
+    			}
     		}
     		if(condtion.contains(2)){
     			Map<String,Long> map=new HashMap<String,Long>();
-    			map.put("serviceStartDate", DateUtil.curStartDate(1));
+    			map.put("serviceStartDate", DateUtil.curStartDate(2));
     			map.put("serviceEndDate", DateUtil.curLastDate(1));
     			List<Orders> orders = orderService.selectByMap(map);
     			List<Long> userIds = isUserId(orders);
@@ -522,26 +527,27 @@ public class DictCouponsController extends BaseController {
     				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
     				userCouponsList2.add(uc);
     			}
-    			userCouponsService.insertByList(userCouponsList2);
+    			if(userCouponsList2!=null){
+    				userCouponsService.insertByList(userCouponsList2);
+    			}
     		}
     		if(condtion.contains(3)){
     			Map<String,Long> map=new HashMap<String,Long>();
-    			map.put("serviceStartDate", DateUtil.curStartDate(2));
-    			map.put("serviceEndDate", DateUtil.curLastDate(2));
+//    			map.put("serviceStartDate", DateUtil.curStartDate(3));
+    			map.put("serviceEndDate", DateUtil.curLastDate(3));
     			List<Orders> orders = orderService.selectByMap(map);
     			List<Long> userIds = isUserId(orders);
     			for(Long uid:userIds){
     				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
     				userCouponsList3.add(uc);
     			}
-    			userCouponsService.insertByList(userCouponsList3);
+    			if(userCouponsList3!=null){
+    				userCouponsService.insertByList(userCouponsList3);
+    			}
     		}
     		hashMap.put("success", "200");
     	}else{
     		hashMap.put("fail", "100");
-    	}
-    	if(isSendMessage!=null){
-    		SmsUtil.SendSms("", "", new String[]{});
     	}
     	return hashMap;
     }
