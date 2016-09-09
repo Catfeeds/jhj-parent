@@ -81,9 +81,6 @@
 	<if test="toDate!=null">
 		<![CDATA[ to_date >=#{toDate,jdbcType=DATE}]]>
 	</if>
-	<if test="couponsTypeId!=null">
-		and coupons_type_id=#{couponsTypeId,jdbcType=INTEGER}
-	</if>
     order by add_time desc
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
@@ -300,4 +297,16 @@
       coupons_type_id = #{couponsTypeId，jdbcType=INTEGER}
     where id = #{id,jdbcType=NUMERIC}
   </update>
+  <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select <include refid="Base_Column_List"/>
+  	from dict_coupons 
+  	<where>
+  		<if test="couponsTypeId!=null">
+  			and coupons_type_id =#{couponsTypeId}
+  		</if>
+  		<if test="toDate!=null">
+  		  	<![CDATA[and to_date > #{toDate}]]>
+  		</if>
+  	</where>
+  </select>
 </mapper>
