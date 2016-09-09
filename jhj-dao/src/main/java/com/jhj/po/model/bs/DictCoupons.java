@@ -41,7 +41,7 @@ public class DictCoupons {
 	 * 新增字段
 	 * 优惠券使用条件
 	 * */
-	private String useCondition;
+	private int couponsTypeId;
 	
 	private List<Integer> sendCouponsCondtion;
 	
@@ -173,12 +173,12 @@ public class DictCoupons {
 		this.toDate = toDate;
 	}
 
-	public String getUseCondition() {
-		return useCondition;
+	public int getCouponsTypeId() {
+		return couponsTypeId;
 	}
 
-	public void setUseCondition(String useCondition) {
-		this.useCondition = useCondition;
+	public void setCouponsTypeId(int couponsTypeId) {
+		this.couponsTypeId = couponsTypeId;
 	}
 
 	public List<Integer> getSendCouponsCondtion() {
