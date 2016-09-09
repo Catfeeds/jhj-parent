@@ -28,9 +28,9 @@ public class UserCouponVo extends UserCoupons {
     
     private String toDateStr;
     
-    private String useCondition;
+    private String couponsTypeId;
     
-    private String useConditionDescr;
+    private String couponsTypeDesc;
 
 
 	public String getServiceTypeItem() {
@@ -127,21 +127,20 @@ public class UserCouponVo extends UserCoupons {
 		this.introduction = introduction;
 	}
 
-	public String getUseCondition() {
-		return useCondition;
+	public String getCouponsTypeId() {
+		return couponsTypeId;
 	}
 
-	public void setUseCondition(String useCondition) {
-		this.useCondition = useCondition;
+	public void setCouponsTypeId(String couponsTypeId) {
+		this.couponsTypeId = couponsTypeId;
 	}
 
-	public String getUseConditionDescr() {
-		return useConditionDescr;
+	public String getCouponsTypeDesc() {
+		return couponsTypeDesc;
 	}
 
-	public void setUseConditionDescr(String useConditionDescr) {
-		this.useConditionDescr = useConditionDescr;
+	public void setCouponsTypeDesc(String couponsTypeDesc) {
+		this.couponsTypeDesc = couponsTypeDesc;
 	}
 
-	
 }
