@@ -1,9 +1,11 @@
  package com.jhj.action.app.user;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,12 +37,13 @@ import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
-import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.user.UserAppVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.IPUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.vo.AppResultData;
 
 
 
@@ -120,6 +123,7 @@ public class UserAppController extends BaseController {
 		 * @param login_from 登录来源
 		 * @param user_type  用户类型
 		 * @return
+		 * @throws ParseException 
 		 */
 		@RequestMapping(value = "login", method = RequestMethod.POST)
 		public AppResultData<Object> login(
@@ -127,72 +131,10 @@ public class UserAppController extends BaseController {
 				@RequestParam("mobile") String mobile,
 				@RequestParam("sms_token") String sms_token,
 				@RequestParam("login_from") int login_from,
-				@RequestParam(value = "user_type", required = false, defaultValue = "0") int userType) {
+				@RequestParam(value = "user_type", required = false, defaultValue = "0") int userType) throws ParseException {
 			
 			AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
-			
-			
-			//测试手机号
-//			if (mobile.equals("18610807136") && sms_token.equals("000000")) {
-//
-//				Users u = usersService.getUserByMobile(mobile);
-//			
-//				if(u!=null){
-//					result = new AppResultData<Object>(Constants.SUCCESS_0,
-//							ConstantMsg.SUCCESS_0_MSG, u);
-//				}else{
-//					u = usersService.genUser(mobile, Constants.USER_APP);
-//				}
-//				
-//				UserAppVo userAppVo  = new UserAppVo();
-//				 try {
-//					BeanUtils.copyProperties(userAppVo, u);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//				 
-//				 List<UserAddrs>  list = userAddrsService.selectByUserId(u.getId());
-//				 if(list!=null && list.size()>0){
-//					 userAppVo.setHasUserAddr(true);
-//				 }else{
-//					 userAppVo.setHasUserAddr(false);
-//				 }
-//				 
-//				 //获取用户的默认地址
-//				 UserAddrs userAddrs = userAddrsService.selectByDefaultAddr(u.getId());
-//				 if (userAddrs != null) {
-//					 userAppVo.setDefaultUserAddr(userAddrs);
-//				 } else {
-//					 //如果没有默认地址，则把第一个地址设置为默认地址.
-//					 if (!list.isEmpty()) {
-//						 userAddrs = list.get(0);
-//						 userAddrs.setIsDefault((short) 1);
-//						 userAddrsService.updateByPrimaryKeySelective(userAddrs);
-//						 userAppVo.setDefaultUserAddr(userAddrs);
-//					 }
-//				 }		
-//				 
-//				 //登录时，获取 用户对应的 助理信息
-//				 userAppVo.setAmId(0L);
-//				 userAppVo.setMobile("");
-////				 UserRefAm userRefAm = userRefAmService.selectByUserId(u.getId());
-////				 
-////				 if(userRefAm !=null){
-////					 Long amId = userRefAm.getStaffId();
-////					 
-////					 userAppVo.setAmId(amId);
-////					 
-////					 OrgStaffs orgStaffs = orgStaffService.selectByPrimaryKey(amId);
-////					 
-////					 userAppVo.setAmMobile(orgStaffs.getMobile());
-////					 
-////				 }				 
-//				 
-//				 
-//				result.setData(userAppVo);
-//				return result;
-//			}
 			
 			//1、根据手机后查询 user_sms_token 最新一条记录
 			UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType(mobile,userType);
@@ -230,8 +172,12 @@ public class UserAppController extends BaseController {
 						
 						if(userType==0){
 							//给新注册的用户发送优惠券
+							Map<String,Object> map=new HashMap<String,Object>();
 							Date date=new Date();
-							List<DictCoupons> coupons = couponsService.getSelectByMap(date);
+							
+							map.put("couponsTypeId", 1);
+							map.put("toDate", DateUtil.getUnixTimeStamp(DateUtil.getNow()));
+							List<DictCoupons> coupons = couponsService.getSelectByMap(map);
 							List<UserCoupons> userCouponsList=new ArrayList<UserCoupons>();
 							for(DictCoupons c:coupons){
 								if(c.getToDate().getTime()>=date.getTime()){
