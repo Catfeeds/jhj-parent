@@ -46,22 +46,12 @@ myApp.onPageInit('mine-coupon-list-page', function (page) {
 		var userCouponId = $$(this).find("#user_coupon_id").val();
 		var userCouponName = $$(this).find("#introduction").html();
 		var userCouponValue = $$(this).find("#user_coupon_value").val();
-		var useCondition=$$(this).find("#use_condition").val();
+		var useCondition=$$(this).find("#coupons_type_id").val();
 		
 		var day =new Date().getDay();
-		if(useCondition==1){
-			if(day>3 && day<0){
-				alert("限周一到周三使用！");
-				return false;
-			}
-		}else if(useCondition==2){
-			if(day!=4 || day!=5){
-				alert("限周四周五使用！");
-				return false;
-			}
-		}else if(useCondition==3){
-			if(day!=0 || day!=6){
-				alert("限周末使用！");
+		if(useCondition==2){
+			if(day>3 || day<0){
+				myApp.alert("限周一到周三使用！");
 				return false;
 			}
 		}
@@ -71,7 +61,7 @@ myApp.onPageInit('mine-coupon-list-page', function (page) {
 			return false;
 		}
 		
-		if (orderMoney != undefined) {
+		if (orderMoney != undefined && useCondition==3) {
 			if (parseFloat(orderMoney) < parseFloat(maxValue)) {
 				myApp.alert("消费满"+ maxValue + "可用!");
 				return false;				
