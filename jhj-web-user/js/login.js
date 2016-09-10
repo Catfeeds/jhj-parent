@@ -10,7 +10,7 @@ myApp.onPageInit('login', function (page) {
         	myApp.alert("请填写正确的手机号码");
         	return false;
         }
-        $$("#get_code").attr("disabled", true);
+        
         $$("#get_code").css("background","#999");
 
         var count = 60;
@@ -26,7 +26,17 @@ myApp.onPageInit('login', function (page) {
             }
             count--;
         }
-
+        
+        $$(this).attr("disabled", true);
+//        $$("#get_code").attr("disabled", true);
+        
+        var smsTokenSuccess = function(data, textStatus, jqXHR) {
+    		
+    		// We have received response and can hide activity indicator
+    	   	myApp.hideIndicator();    			
+    	   	myApp.alert("验证码已发送到您的手机，请注意查收。");
+    	};
+        
         var postdata = {};
         postdata.mobile = moblieStr;
         postdata.sms_type = 0;
@@ -47,12 +57,7 @@ myApp.onPageInit('login', function (page) {
     	    }
     	});
         
-    	var smsTokenSuccess = function(data, textStatus, jqXHR) {
-    		
-    		// We have received response and can hide activity indicator
-    	   	myApp.hideIndicator();    			
-    	   	myApp.alert("验证码已发送到您的手机，请注意查收。");
-    	};
+    	
         
         return false;
 	});
@@ -103,13 +108,13 @@ myApp.onPageInit('login', function (page) {
     	    data: postdata,
 
     	    statusCode: {
-    	    	201: smsTokenSuccess,
+    	    	201: voiceTokenSuccess,
     	    	400: ajaxError,
     	    	500: ajaxError
     	    }
     	});
         
-    	var smsTokenSuccess = function(data, textStatus, jqXHR) {
+    	var voiceTokenSuccess = function(data, textStatus, jqXHR) {
     		
     		// We have received response and can hide activity indicator
     	   	myApp.hideIndicator();    			

@@ -126,6 +126,27 @@ public class OrderHourAddController extends BaseController {
 			return result;
 		}
 		
+		//判断用户地址是否存在
+		if (addrId.equals(0L)) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
+			return result;
+		} else {
+			UserAddrs userAddr = userAddrService.selectByPrimaryKey(addrId);
+			
+			if (userAddr == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
+				return result;
+			}
+			
+			if (!userAddr.getUserId().equals(userId)) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
+				return result;
+			}
+		}
+		
 		// 调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
 				

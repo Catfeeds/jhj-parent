@@ -101,14 +101,14 @@ public class UserAppController extends BaseController {
 			}
 
 			
-			String[] content = new String[] { code, Constants.GET_CODE_MAX_VALID };
-			//2.短信平台发送给用户，并返回相关信息（短信平台是30分钟有效）
-			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
-					Constants.GET_USER_VERIFY_ID, content);
-			UserSmsToken record = userSmsTokenService.initUserSmsToken(mobile,
-					sms_type, code, sendSmsResult);
-			//3.操作user_sms_token，保存验证码信息
-			userSmsTokenService.insert(record);
+//			String[] content = new String[] { code, Constants.GET_CODE_MAX_VALID };
+//			//2.短信平台发送给用户，并返回相关信息（短信平台是30分钟有效）
+//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(mobile,
+//					Constants.GET_USER_VERIFY_ID, content);
+//			UserSmsToken record = userSmsTokenService.initUserSmsToken(mobile,
+//					sms_type, code, sendSmsResult);
+//			//3.操作user_sms_token，保存验证码信息
+//			userSmsTokenService.insert(record);
 
 			AppResultData<String> result = new AppResultData<String>(
 					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
