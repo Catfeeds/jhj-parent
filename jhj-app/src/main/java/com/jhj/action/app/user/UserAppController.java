@@ -180,15 +180,15 @@ public class UserAppController extends BaseController {
 							List<DictCoupons> coupons = couponsService.getSelectByMap(map);
 							System.out.println(coupons.size()+"---------++++++++++++++++++++++++++=");
 							List<UserCoupons> userCouponsList=new ArrayList<UserCoupons>();
-							for(DictCoupons c:coupons){
-								System.out.println(c.getCardNo()+"_____________++++++++++++++=");
-								if(c.getToDate().getTime()>=date.getTime()){
-									UserCoupons uc = userCouponService.initUserCoupons(u.getId(), c);
-									userCouponsList.add(uc);
+							if(coupons!=null && coupons.size()>0){
+								for(DictCoupons c:coupons){
+									if(c.getToDate().getTime()>=date.getTime()){
+										UserCoupons uc = userCouponService.initUserCoupons(u.getId(), c);
+										userCouponsList.add(uc);
+									}
 								}
 							}
 							if(userCouponsList!=null &&userCouponsList.size()>0){
-								System.out.println(userCouponsList.size()+"_-----------------------+++++++++");
 								userCouponService.insertByList(userCouponsList);
 							}
 						}
