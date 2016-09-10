@@ -176,7 +176,7 @@ public class UserAppController extends BaseController {
 							Date date=new Date();
 							
 							map.put("couponsTypeId", 1);
-							map.put("toDate", DateUtil.getUnixTimeStamp(DateUtil.getNow()));
+//							map.put("toDate", DateUtil.getUnixTimeStamp(DateUtil.getNow()));
 							List<DictCoupons> coupons = couponsService.getSelectByMap(map);
 							System.out.println(coupons.size()+"---------++++++++++++++++++++++++++=");
 							List<UserCoupons> userCouponsList=new ArrayList<UserCoupons>();
