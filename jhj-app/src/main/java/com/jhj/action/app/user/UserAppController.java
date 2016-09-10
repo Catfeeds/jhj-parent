@@ -178,6 +178,7 @@ public class UserAppController extends BaseController {
 							map.put("couponsTypeId", 1);
 							map.put("toDate", DateUtil.getUnixTimeStamp(DateUtil.getNow()));
 							List<DictCoupons> coupons = couponsService.getSelectByMap(map);
+							System.out.println(coupons.get(0).getId()+"------------+++++++++++++++++");
 							List<UserCoupons> userCouponsList=new ArrayList<UserCoupons>();
 							for(DictCoupons c:coupons){
 								if(c.getToDate().getTime()>=date.getTime()){
@@ -186,6 +187,7 @@ public class UserAppController extends BaseController {
 								}
 							}
 							if(userCouponsList!=null &&userCouponsList.size()>0){
+								System.out.println(userCouponsList.size()+"_-----------------------+++++++++");
 								userCouponService.insertByList(userCouponsList);
 							}
 						}
