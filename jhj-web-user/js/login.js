@@ -1,8 +1,6 @@
 myApp.onPageInit('login', function (page) {
 	$$('#get_code').on('click',function(e) {
 		var mobile = $$("#user_mobile").val();
-		$$("#get_code").attr("disabled", true);
-		$$("#get_code").css("background","#999");
         if(mobile == undefined || mobile == '') {
         	myApp.alert("请填写手机号。");
             return false;
@@ -12,6 +10,8 @@ myApp.onPageInit('login', function (page) {
         	myApp.alert("请填写正确的手机号码");
         	return false;
         }
+        $$("#get_code").attr("disabled", true);
+        $$("#get_code").css("background","#999");
 
         var count = 60;
         var countdown = setInterval(CountDown, 1000);
