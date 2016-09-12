@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="com.jhj.oa.common.UrlHelper"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <%@ include file="../shared/taglib.jsp"%>
 <!-- taglib for this page -->
 <%@ taglib prefix="orderFromTag" uri="/WEB-INF/tags/orderFromName.tld"%>
@@ -62,28 +62,33 @@
 						<td>选择云店:</td>
 						<td><cloudOrgSelectTag:select selectId="${oaOrderSearchVoModel.orgId }" logInParentOrgId="${loginOrgId }" />
 						</td>
+						<td colspan="3">
+							<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
+							<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
+						</td>
+					</tr>
+					<tr>
+						<td>下单时间：</td>
+						<td><form:input path="startTimeStr" class="form-control form_datetime" style="width:170px; margin-bottom:0"
+								readonly="true" />
+						    <span>至</span>
+							<form:input path="endTimeStr" class="form-control form_datetime" style="width:170px; margin-bottom:0"
+								readonly="true" />
+						</td>
+						<td>服务日期：</td>
+						<td colspan="2"><form:input path="serviceStartTime" class="form-control form-datetime"
+								style="width:170px; margin-bottom:0" readonly="true" /> <span>至</span> <form:input path="serviceEndTime"
+								class="form-control form-datetime" style="width:170px; margin-bottom:0" readonly="true" /></td>
+					</tr>
+					<tr>
+						<td>手机号：</td>
+						<td><form:input path="mobile" class="form-control" placeholder="请输入手机号"/></td>
 						<td>是否接单</td>
 						<td><form:select path="isApply" class="form-control">
 								<option value="">全部</option>
 								<form:option value="1">是</form:option>
 								<form:option value="0">否</form:option>
 							</form:select></td>
-						<td>
-							<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
-							<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
-						</td>
-					</tr>
-					<tr>
-						<td>下单开始时间：</td>
-						<td><form:input path="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
-								readonly="true" /></td>
-						<td>下单结束时间：</td>
-						<td><form:input path="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
-								readonly="true" /></td>
-						<td>服务日期：</td>
-						<td colspan="2"><form:input path="serviceStartTime" class="form-control form-datetime"
-								style="width:180px; margin-bottom:0" readonly="true" /> <span>至</span> <form:input path="serviceEndTime"
-								class="form-control form-datetime" style="width:180px; margin-bottom:0" readonly="true" /></td>
 					</tr>
 				</table>
 			</form:form> </header>
