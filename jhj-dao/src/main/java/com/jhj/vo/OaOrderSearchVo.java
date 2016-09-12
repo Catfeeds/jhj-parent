@@ -80,6 +80,8 @@ public class OaOrderSearchVo {
 	
 	private Short isApply;
 	
+	private String mobile;
+	
 	public String getRemarks() {
 		return remarks;
 	}
@@ -254,6 +256,12 @@ public class OaOrderSearchVo {
 	}
 	public void setIsApply(Short isApply) {
 		this.isApply = isApply;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 }
