@@ -48,9 +48,10 @@ myApp.onPageInit('mine-coupon-list-page', function (page) {
 		var userCouponValue = $$(this).find("#user_coupon_value").val();
 		var useCondition=$$(this).find("#coupons_type_id").val();
 		
-		var day =new Date().getDay();
+		var service_date = localStorage.getItem("service_date");
+		var _week=moment(service_date).format('d');
 		if(useCondition==2){
-			if(day>3 || day<0){
+			if(_week>3 || _week<0){
 				myApp.alert("限周一到周三使用！");
 				return false;
 			}
