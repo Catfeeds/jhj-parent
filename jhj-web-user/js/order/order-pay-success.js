@@ -5,6 +5,7 @@ myApp.onPageInit('order-pay-success-page', function(page) {
 	var orderType = page.query.order_type;
 	
 	var orderPayType = page.query.order_pay_type;
+	locaStorage.removeItem("service_date");
 	
 	if (orderType == 0) {
 		$$("#blackContent").text("订单支付成功!")
