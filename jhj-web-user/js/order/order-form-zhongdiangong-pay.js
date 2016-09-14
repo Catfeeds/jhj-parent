@@ -226,6 +226,7 @@ myApp.template7Data['page:orderHour-pay-page'] = function(){
               //设置时间显示格式
               var timestamp = moment.unix(result.service_date);
   			  var startTime = timestamp.format('YYYY-MM-DD HH:mm');
+  			  localStorage.setItem("service_date",startTime);
   			  result.service_date = startTime;
   			  
           }
