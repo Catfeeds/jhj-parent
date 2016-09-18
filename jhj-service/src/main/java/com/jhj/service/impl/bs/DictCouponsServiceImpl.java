@@ -90,6 +90,7 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 		po.setFromDate(new Date());
 		po.setAddTime(TimeStampUtil.getNow() / 1000);
 		po.setUpdateTime(TimeStampUtil.getNow() / 1000);
+		po.setIsValid("1");
 		return po;
 	}
 	@Override
@@ -115,6 +116,7 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 		po.setToDate(date);
 		po.setAddTime(TimeStampUtil.getNow() / 1000);
 		po.setUpdateTime(TimeStampUtil.getNow() / 1000);
+		po.setIsValid("1");
 		return po;
 	}
 
