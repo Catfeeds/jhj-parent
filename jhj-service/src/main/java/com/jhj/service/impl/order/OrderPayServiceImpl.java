@@ -206,8 +206,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 		
 		//1) 用户收到派工通知---发送短信
-		String[] contentForUser = new String[] { timeStr };
-		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
+//		String[] contentForUser = new String[] { timeStr };
+//		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
 		
 		//2)派工成功，为服务人员发送推送消息---推送消息
 		if(orderDispatchs.getDispatchStatus()==1){
@@ -216,7 +216,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		}
 		//2.1)派工成功,为服务人员发送短信
 
-		SmsUtil.SendSms(staff.getMobile(), "64746", contentForUser);
+		//SmsUtil.SendSms(staff.getMobile(), "64746", contentForUser);
 		
 		//3)支付完成用户rest_money<60发短信---发送短信
 //		Users user =userService.selectByUsersId(userId);
