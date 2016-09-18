@@ -63,8 +63,8 @@ public interface UsersMapper {
 		List<Users> getUserIds(ChartSearchVo chartSearchVo);
 		
 	
-	//统计
-	int statTotalUser(ChartSearchVo chartSearchVo);
+		//统计
+		int statTotalUser(ChartSearchVo chartSearchVo);
 
 		//按季度统计
 		List<ChartMapVo> statOrderCancelByQuarter(ChartSearchVo chartSearchVo);	
