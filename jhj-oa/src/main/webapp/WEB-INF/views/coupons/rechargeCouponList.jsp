@@ -60,6 +60,7 @@
 		                              <th >服务类型</th>
 		                              <th >日期范围</th>
 		                              <th >添加时间</th>
+		                              <th>是否有效</th>
 		                              <th>操作</th>
                               </tr>
                               </thead>
@@ -77,6 +78,10 @@
 							            </td>
 							            <td>
 							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
+							            </td>
+							            <td>
+							            	<c:if test="${item.isValid ==1}">是</c:if>
+							            	<c:if test="${item.isValid ==0}">否</c:if>
 							            </td>
 							            <td>
 							            	<button id="btn_update"  onClick="btn_update('bs/toRechargeCouponForm?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
