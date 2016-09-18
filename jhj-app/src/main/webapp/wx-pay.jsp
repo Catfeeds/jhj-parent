@@ -20,9 +20,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
-<script language="javascript" src="http://res.mail.qq.com/mmr/static/lib/js/jquery.js"></script>
-<script language="javascript" src="http://res.mail.qq.com/mmr/static/lib/js/lazyloadv3.js"></script>
-
+<script src="/jhj-app/js/jquery.js"></script>
+<script src="/jhj-app/js/lazyloadv3.js"></script>
 <style>
 body {
 	margin: 0;
