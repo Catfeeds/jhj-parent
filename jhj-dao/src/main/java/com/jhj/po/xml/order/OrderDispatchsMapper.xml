@@ -73,7 +73,7 @@
 			           open="(" separator="," close=")">
 			      #{item}
 			  	</foreach>
-		 </if>			
+		 </if>
 		 HAVING  
 		 	(	 
 				 <if test="startTimeStr !=null and startTimeStr !='' ">
