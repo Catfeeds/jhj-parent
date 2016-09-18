@@ -19,10 +19,11 @@
     <result column="add_time" jdbcType="NUMERIC" property="addTime" />
     <result column="update_time" jdbcType="NUMERIC" property="updateTime" />
     <result column="coupons_type_id" jdbcType="INTEGER" property="couponsTypeId"/>
+    <result column="is_valid" jdbcType="CHAR" property="isValid"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, card_no, card_passwd, value, max_value,coupon_type, rang_type, rang_from, service_type, introduction,
-    description, rang_month,from_date,to_date,add_time, update_time,coupons_type_id
+    description, rang_month,from_date,to_date,add_time, update_time,coupons_type_id,is_valid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -105,13 +106,13 @@
     insert into dict_coupons (id, card_no, card_passwd,
       value,max_value rang_type, rang_from,
       service_type, introduction, description,
-      rang_month,from_date,to_date,add_time, update_time,coupons_type_id
+      rang_month,from_date,to_date,add_time, update_time,coupons_type_id,is_valid
       )
     values (#{id,jdbcType=NUMERIC}, #{cardNo,jdbcType=VARCHAR}, #{cardPasswd,jdbcType=VARCHAR},
       #{value,jdbcType=DECIMAL}, #{maxValue,jdbcType=DECIMAL},, #{couponType,jdbcType=NUMERIC}, #{rangType,jdbcType=NUMERIC},
       #{rangFrom,jdbcType=SMALLINT},#{serviceType,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
       #{rangMonth,jdbcType=NUMERIC}, #{fromDate,jdbcType=DATE}, #{toDate,jdbcType=DATE}, #{addTime,jdbcType=NUMERIC},
-      #{updateTime,jdbcType=NUMERIC},#{couponsTypeId,jdbcType=INTEGER}
+      #{updateTime,jdbcType=NUMERIC},#{couponsTypeId,jdbcType=INTEGER},#{isValid,jdbcType=CHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.bs.DictCoupons">
@@ -166,7 +167,10 @@
         update_time,
       </if>
       <if test="couponsTypeId!=null">
-      	coupons_type_id
+      	coupons_type_id,
+      </if>
+      <if test="isValid!=null">
+      	is_valid
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -219,7 +223,10 @@
         #{updateTime,jdbcType=NUMERIC},
       </if>
       <if test="couponsTypeId!=null">
-      	#{couponsTypeId,jdbcType=INTEGER}
+      	#{couponsTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="isValid!=null">
+      	#{isValid,jdbcType=CHAR}
       </if>
     </trim>
   </insert>
@@ -272,7 +279,10 @@
         update_time = #{updateTime,jdbcType=NUMERIC},
       </if>
       <if test="couponsTypeId!=null">
-      	coupons_type_id = #{couponsTypeId,jdbcType=INTEGER}
+      	coupons_type_id = #{couponsTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="isValid!=null">
+      	is_valid = #{isValid,jdbcType=CHAR}
       </if>
     </set>
     where id = #{id,jdbcType=NUMERIC}
@@ -293,8 +303,9 @@
       from_date = #{fromDate,jdbcType=DATE},
       to_date = #{toDate,jdbcType=DATE},
       add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC}
-      coupons_type_id = #{couponsTypeId，jdbcType=INTEGER}
+      update_time = #{updateTime,jdbcType=NUMERIC},
+      coupons_type_id = #{couponsTypeId，jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=CHAR}
     where id = #{id,jdbcType=NUMERIC}
   </update>
   <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
