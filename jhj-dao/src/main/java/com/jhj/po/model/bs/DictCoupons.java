@@ -45,6 +45,9 @@ public class DictCoupons {
 	
 	private List<Integer> sendCouponsCondtion;
 	
+	//优惠券是否能够使用
+	private String isValid;
+	
 	public Long getId() {
 		return id;
 	}
@@ -188,5 +191,13 @@ public class DictCoupons {
 	public void setSendCouponsCondtion(List<Integer> sendCouponsCondtion) {
 		this.sendCouponsCondtion = sendCouponsCondtion;
 	}
-	
+
+	public String getIsValid() {
+		return isValid;
+	}
+
+	public void setIsValid(String isValid) {
+		this.isValid = isValid;
+	}
+
 }
