@@ -845,6 +845,6 @@ public class DateUtil {
 		cal.set(Calendar.MONTH, mou);
 		cal.set(Calendar.DAY_OF_MONTH, 0);
 		String strDate = format(cal.getTime(), "yyyy-MM-dd");
-		return TimeStampUtil.getMillisOfDay(strDate)/1000;
+		return TimeStampUtil.getMillisOfDayFull(getEndOfDay(strDate))/1000;
 	}
 }
