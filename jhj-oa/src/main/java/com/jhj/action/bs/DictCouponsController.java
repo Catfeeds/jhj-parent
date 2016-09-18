@@ -9,8 +9,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
+import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.dict.CouponsType;
@@ -53,11 +56,10 @@ import com.meijia.utils.RandomUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
-
 /**
  * @description：
  * @author： kerryg
- * @date:2015年7月16日 
+ * @date:2015年7月16日
  */
 @Controller
 @RequestMapping(value = "/bs")
@@ -65,21 +67,25 @@ public class DictCouponsController extends BaseController {
 
 	@Autowired
 	private DictCouponsService couponService;
-	
+
 	@Autowired
 	private UserCouponsService userCouponsService;
-	
 
 	@Autowired
 	private UsersService usersService;
-	
+
 	@Autowired
 	private CouponsTypeService couponsTypeService;
-	
+
 	@Autowired
 	private OrdersService orderService;
 
-	/**列表显示兑换码的优惠券
+	@Autowired
+	private DictCouponsService dictCouponsService;
+
+	/**
+	 * 列表显示兑换码的优惠券
+	 * 
 	 * @param request
 	 * @param model
 	 * @param searchVo
@@ -91,142 +97,157 @@ public class DictCouponsController extends BaseController {
 			CouponSearchVo searchVo) {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
-		
+
 		model.addAttribute("searchModel", searchVo);
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		
-		PageInfo result = couponService.searchVoListPage(searchVo,(short)0, pageNo,
-				pageSize);
-		
+
+		PageInfo result = couponService.searchVoListPage(searchVo, (short) 0,
+				pageNo, pageSize);
+
 		model.addAttribute("contentModel", result);
 		model.addAttribute("searchModel", searchVo);
-		
+
 		return "coupons/convertCouponList";
 	}
-	/**列表显示充值后赠送的优惠券
+
+	/**
+	 * 列表显示充值后赠送的优惠券
+	 * 
 	 * @param request
 	 * @param model
 	 * @param searchVo
 	 * @return
 	 */
 	@AuthPassport
-	@RequestMapping(value = "/recharge-coupon-list", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/recharge-coupon-list", method = {
+			RequestMethod.GET, RequestMethod.POST })
 	public String rechargeCouponList(HttpServletRequest request, Model model,
 			CouponSearchVo searchVo) {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
-		
+
 		model.addAttribute("searchModel", searchVo);
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		
-		PageInfo result = couponService.searchVoListPage(searchVo,(short)1, pageNo,
-				pageSize);
-		
+
+		PageInfo result = couponService.searchVoListPage(searchVo, (short) 1,
+				pageNo, pageSize);
+
 		model.addAttribute("contentModel", result);
 		return "coupons/rechargeCouponList";
 	}
+
 	/**
 	 * toTo 兑换码优惠券表单
+	 * 
 	 * @param dictCoupons
 	 * @param model
 	 * @param id
 	 * @return
 	 */
-//	@AuthPassport
+	// @AuthPassport
 	@RequestMapping(value = "/toConvertCouponForm", method = { RequestMethod.GET })
 	public String toAddConvertCoupons(
 			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			 Model model,
-			@RequestParam(value="id" ,required = false)Long id) {
-		
+			Model model, @RequestParam(value = "id", required = false) Long id) {
+
 		if (id == null) {
 			id = 0L;
 			dictCoupons = couponService.initConvertCoupon();
-		}else {
+		} else {
 			dictCoupons = couponService.selectByPrimaryKey(id);
-			}
+		}
 		CouponVo couponVo = new CouponVo();
 		try {
-			BeanUtils.copyProperties(couponVo,dictCoupons);
-		}catch (Exception e) {
+			BeanUtils.copyProperties(couponVo, dictCoupons);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		model.addAttribute("dictCoupons", couponVo);  
-		model.addAttribute("serviceTypeMap",couponService.getSelectServiceTypeSource());
+		model.addAttribute("dictCoupons", couponVo);
+		model.addAttribute("serviceTypeMap",
+				couponService.getSelectServiceTypeSource());
 
 		return "coupons/convertCouponForm";
 	}
-	 /**
-	  * toTo 充值后赠送优惠券 表单
-	  * @param dictCoupons
-	  * @param model
-	  * @param id
-	  * @return
-	  */
+
+	/**
+	 * toTo 充值后赠送优惠券 表单
+	 * 
+	 * @param dictCoupons
+	 * @param model
+	 * @param id
+	 * @return
+	 */
 	@AuthPassport
 	@RequestMapping(value = "/toRechargeCouponForm", method = { RequestMethod.GET })
 	public String toAddRechargeCoupons(
 			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			 Model model,
-			@RequestParam(value="id" ,required = false)Long id) {
-		
+			Model model, @RequestParam(value = "id", required = false) Long id) {
+
 		if (id == null) {
 			id = 0L;
 			dictCoupons = couponService.initRechargeCoupon();
 			model.addAttribute("isForm", 0);
-		}else {
+		} else {
 			dictCoupons = couponService.selectByPrimaryKey(id);
-			}
+		}
 		List<CouponsType> couponsType = couponsTypeService.selectAll();
 		model.addAttribute("couponsType", couponsType);
 		model.addAttribute("dictCoupons", dictCoupons);
-		model.addAttribute("selectDataSource",couponService.getSelectRangMonthSource());
-		model.addAttribute("serviceTypeMap",couponService.getSelectServiceTypeSource());
+		model.addAttribute("selectDataSource",
+				couponService.getSelectRangMonthSource());
+		model.addAttribute("serviceTypeMap",
+				couponService.getSelectServiceTypeSource());
 		return "coupons/rechargeCouponForm";
 	}
+
 	/**
 	 * 优惠券对应的用户列表
+	 * 
 	 * @param id
 	 * @param request
 	 * @param model
 	 * @return
 	 */
 	@AuthPassport
-	@RequestMapping(value = "/toRechargeCouponUserList",method = { RequestMethod.GET})
+	@RequestMapping(value = "/toRechargeCouponUserList", method = { RequestMethod.GET })
 	public String toRechargeCouponUserList(
-			@RequestParam(value="id" ,required = false)Long id,
+			@RequestParam(value = "id", required = false) Long id,
 			HttpServletRequest request, Model model) {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
-		
+
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		
+
 		PageHelper.startPage(pageNo, pageSize);
-		
-		List<UserCoupons> userCouponsList = userCouponsService.selectByCouponId(id);
+
+		List<UserCoupons> userCouponsList = userCouponsService
+				.selectByCouponId(id);
 		List<Users> userList = new ArrayList<Users>();
 		if (userCouponsList != null) {
 			List<Long> userIdList = new ArrayList<Long>();
-			for (UserCoupons item :userCouponsList ) {
+			for (UserCoupons item : userCouponsList) {
 				userIdList.add(item.getUserId());
-				userList = usersService.selectByListPage(userIdList, pageNo, pageSize);
+				userList = usersService.selectByListPage(userIdList, pageNo,
+						pageSize);
 			}
 		}
 		PageInfo result = new PageInfo(userList);
 		model.addAttribute("contentModel", result);
 		return "coupons/rechargeCouponUserList";
 	}
+
 	/**
 	 * 根据id 删除充值后赠送优惠券
+	 * 
 	 * @param dictCoupons
 	 * @param id
 	 * @return
@@ -235,20 +256,22 @@ public class DictCouponsController extends BaseController {
 	@RequestMapping(value = "/deleteByRechargeCouponId", method = { RequestMethod.GET })
 	public String deleteByRechargeCouponId(
 			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			@RequestParam(value="id")Long id) {
+			@RequestParam(value = "id") Long id) {
 		String path = "redirect:recharge-coupon-list";
-		if(id!=null){
+		if (id != null) {
 			int result = couponService.deleteByPrimaryKey(id);
-			if(result > 0){
+			if (result > 0) {
 				path = "redirect:recharge-coupon-list";
-			}else{
+			} else {
 				path = "error";
 			}
 		}
 		return path;
 	}
+
 	/**
 	 * 根据Id 删除兑换码优惠券
+	 * 
 	 * @param dictCoupons
 	 * @param id
 	 * @return
@@ -257,38 +280,38 @@ public class DictCouponsController extends BaseController {
 	@RequestMapping(value = "/deleteByConvertCouponId", method = { RequestMethod.GET })
 	public String deleteByConvertCouponId(
 			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			@RequestParam(value="id")Long id) {
-			String path = "redirect:convert-coupon-list";
-			if(id!=null){
-				int result = couponService.deleteByPrimaryKey(id);
-				if(result > 0){
-					path = "redirect:convert-coupon-list";
-				}else{
-					path = "error";
-				}
+			@RequestParam(value = "id") Long id) {
+		String path = "redirect:convert-coupon-list";
+		if (id != null) {
+			int result = couponService.deleteByPrimaryKey(id);
+			if (result > 0) {
+				path = "redirect:convert-coupon-list";
+			} else {
+				path = "error";
 			}
+		}
 		return path;
 	}
-	
+
 	/**
 	 * 新增充值后赠送优惠券
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/rechargeCouponForm", method = { RequestMethod.POST })
 	@ResponseBody
-	public Map<String,String> addRechargeCoupons(HttpServletRequest request, Model model,
+	public Map<String, String> addRechargeCoupons(HttpServletRequest request,
+			Model model,
 			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
 			BindingResult result) {
-		
-		
+
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
-		
-		Map<String,String> hashMap=new HashMap<String,String>();
+
+		Map<String, String> hashMap = new HashMap<String, String>();
 		Long flag = Long.valueOf(request.getParameter("id"));
-		//更新或者新增
+		// 更新或者新增
 		if (flag != null && flag > 0) {
-			//更新充值后赠送优惠券
+			// 更新充值后赠送优惠券
 			DictCoupons dictCoupon = couponService.selectByPrimaryKey(flag);
 			dictCoupon.setServiceType(dictCoupons.getServiceType());
 			dictCoupon.setValue(dictCoupons.getValue());
@@ -297,9 +320,10 @@ public class DictCouponsController extends BaseController {
 			dictCoupon.setIntroduction(dictCoupons.getIntroduction());
 			dictCoupon.setRangMonth(dictCoupons.getRangMonth());
 			dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
+			dictCoupon.setIsValid(dictCoupons.getIsValid());
 			couponService.updateByPrimaryKeySelective(dictCoupon);
 		} else {
-			//新增充值后赠送优惠券
+			// 新增充值后赠送优惠券
 			DictCoupons dictCoupon = couponService.initRechargeCoupon();
 			dictCoupon.setCardNo(RandomUtil.randomNumber(6));
 			dictCoupon.setCardPasswd(RandomUtil.randomCode(8));
@@ -310,264 +334,303 @@ public class DictCouponsController extends BaseController {
 			dictCoupon.setIntroduction(dictCoupons.getIntroduction());
 			dictCoupon.setRangMonth(dictCoupons.getRangMonth());
 			dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
-			dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());;
+			dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
+			dictCoupon.setIsValid(dictCoupons.getIsValid());
 			couponService.insertSelective(dictCoupon);
 		}
 		hashMap.put("success", "200");
 		return hashMap;
 	}
+
 	/**
 	 * 添加优惠券
+	 * 
 	 * @param request
 	 * @param model
 	 * @param dictCoupons
 	 * @param result
 	 * @return
 	 */
-//	@AuthPassport
+	// @AuthPassport
 	@RequestMapping(value = "/convertCouponForm", method = { RequestMethod.POST })
 	public String addConvertCoupons(HttpServletRequest request, Model model,
-		@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-		BindingResult result) {
-		
+			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
+			BindingResult result) {
+
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
-		
-		String  passwordNum = request.getParameter("password_num"); //优惠券兑换码位数
-		String fromDate = request.getParameter("fromDate");			//有效开始时间
-		String toDate = request.getParameter("toDate");				//结束时间
-		Long count = Long.valueOf(request.getParameter("count"));	//生成卡数量
-	
+
+		String passwordNum = request.getParameter("password_num"); // 优惠券兑换码位数
+		String fromDate = request.getParameter("fromDate"); // 有效开始时间
+		String toDate = request.getParameter("toDate"); // 结束时间
+		Long count = Long.valueOf(request.getParameter("count")); // 生成卡数量
+
 		List<DictCoupons> list = couponService.selectAll();
 		Long cardNo = 0L;
-		//count >0 执行插入操作
+		// count >0 执行插入操作
 		if (count != null && count >= 0) {
 			for (int i = 1; i <= count; i++) {
 				dictCoupons.setId(null);
 				if (list != null && list.size() > 0) {
 					cardNo = Long.valueOf(couponService.selectAllByCardNo()
-						.get(0).getCardNo());
+							.get(0).getCardNo());
 					dictCoupons.setCardNo("" + (cardNo + 1));
 				} else {
 					cardNo = (long) 300000000;
 					dictCoupons.setCardNo("130" + (cardNo + i));
 				}
 				dictCoupons.setAddTime(TimeStampUtil.getNow() / 1000);
-				if(passwordNum !=null){
-					dictCoupons.setCardPasswd(RandomUtil.randomCode(Integer.valueOf(passwordNum)));
-				}else {
+				if (passwordNum != null) {
+					dictCoupons.setCardPasswd(RandomUtil.randomCode(Integer
+							.valueOf(passwordNum)));
+				} else {
 					dictCoupons.setCardPasswd(RandomUtil.randomCode(4));
 				}
-				if (!StringUtil.isEmpty(fromDate) && !StringUtil.isEmpty(toDate)) {
+				if (!StringUtil.isEmpty(fromDate)
+						&& !StringUtil.isEmpty(toDate)) {
 					dictCoupons.setFromDate(DateUtil.parse(fromDate));
 					dictCoupons.setToDate(DateUtil.parse(toDate));
 				}
 				dictCoupons.setUpdateTime(TimeStampUtil.getNow() / 1000);
-				//如果兑换码相同，重新生成
-				DictCoupons temp = couponService.selectByCardPasswd(dictCoupons.getCardPasswd());
-				if(temp !=null){
+				// 如果兑换码相同，重新生成
+				DictCoupons temp = couponService.selectByCardPasswd(dictCoupons
+						.getCardPasswd());
+				if (temp != null) {
 					i--;
 					continue;
-				}else {
+				} else {
 					couponService.insertSelective(dictCoupons);
 				}
 			}
 		}
 		return "redirect:convert-coupon-list";
 	}
+
 	/**
 	 * 列表显示用户优惠券
+	 * 
 	 * @param request
 	 * @param model
 	 * @param searchVo
 	 * @return
 	 */
 	// @AuthPassport
-	/*@RequestMapping(value = "/used", method = { RequestMethod.GET })
-	public String userCouponsList(HttpServletRequest request, Model model,
-			UserCouponSearchVo searchVo) {
-		model.addAttribute("requestUrl", request.getServletPath());
-		model.addAttribute("requestQuery", request.getQueryString());
-		model.addAttribute("searchModel", searchVo);
-
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-
-		PageInfo result = userCouponService.searchVoListPage(searchVo, pageNo,
-				pageSize);
-		model.addAttribute("contentModel", result);
-
-		return "coupons/userCouponList";
-	}*/
+	/*
+	 * @RequestMapping(value = "/used", method = { RequestMethod.GET }) public
+	 * String userCouponsList(HttpServletRequest request, Model model,
+	 * UserCouponSearchVo searchVo) { model.addAttribute("requestUrl",
+	 * request.getServletPath()); model.addAttribute("requestQuery",
+	 * request.getQueryString()); model.addAttribute("searchModel", searchVo);
+	 * 
+	 * int pageNo = ServletRequestUtils.getIntParameter(request,
+	 * ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO); int pageSize =
+	 * ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME,
+	 * ConstantOa.DEFAULT_PAGE_SIZE);
+	 * 
+	 * PageInfo result = userCouponService.searchVoListPage(searchVo, pageNo,
+	 * pageSize); model.addAttribute("contentModel", result);
+	 * 
+	 * return "coupons/userCouponList"; }
+	 */
 
 	/**
 	 * 导出优惠券
 	 */
 	@RequestMapping(value = "/download_project", method = { RequestMethod.GET })
-	public void download(HttpServletRequest request,HttpServletResponse response,CouponSearchVo couponSearchVo) throws IOException{
-        String fileName="excel文件";    
+	public void download(HttpServletRequest request,
+			HttpServletResponse response, CouponSearchVo couponSearchVo)
+			throws IOException {
+		String fileName = "excel文件";
 
-        String startDate = request.getParameter("startDate");
-        String endDate = request.getParameter("endDate");
-        //填充projects数据
-        couponSearchVo.setCoupontType((short)0);
-        List<DictCoupons> userses= couponService.selectBySearchVo(couponSearchVo);
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		// 填充projects数据
+		couponSearchVo.setCoupontType((short) 0);
+		List<DictCoupons> userses = couponService
+				.selectBySearchVo(couponSearchVo);
 
-        List<Map<String,Object>> list= createExcelRecord(userses);
+		List<Map<String, Object>> list = createExcelRecord(userses);
 
-        String columnNames[]={"描述","优惠券卡号","优惠券密码","优惠券金额","通用类型","服务类型","开始日期","结束日期","添加时间"};//列名
-        String keys[]   =    {"introdution","cardNo","cardPassword","value","couponType","serviceType","startDate","endDate","addTime"};//map中的key
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try {
-            ExcelUtil.createWorkBook(list,keys,columnNames).write(os);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        byte[] content = os.toByteArray();
-        InputStream is = new ByteArrayInputStream(content);
-        // 设置response参数，可以打开下载页面
-        response.reset();
-        response.setContentType("application/vnd.ms-excel;charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename="+ new String((fileName + ".xls").getBytes(), "iso-8859-1"));
-        ServletOutputStream out = response.getOutputStream();
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
-        try {
-            bis = new BufferedInputStream(is);
-            bos = new BufferedOutputStream(out);
-            byte[] buff = new byte[2048];
-            int bytesRead;
-            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                bos.write(buff, 0, bytesRead);
-            }
-        } catch (final IOException e) {
-            throw e;
-        } finally {
-            if (bis != null)
-                bis.close();
-            if (bos != null)
-                bos.close();
-        }
-    }
+		String columnNames[] = { "描述", "优惠券卡号", "优惠券密码", "优惠券金额", "通用类型",
+				"服务类型", "开始日期", "结束日期", "添加时间" };// 列名
+		String keys[] = { "introdution", "cardNo", "cardPassword", "value",
+				"couponType", "serviceType", "startDate", "endDate", "addTime" };// map中的key
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+			ExcelUtil.createWorkBook(list, keys, columnNames).write(os);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		byte[] content = os.toByteArray();
+		InputStream is = new ByteArrayInputStream(content);
+		// 设置response参数，可以打开下载页面
+		response.reset();
+		response.setContentType("application/vnd.ms-excel;charset=utf-8");
+		response.setHeader("Content-Disposition", "attachment;filename="
+				+ new String((fileName + ".xls").getBytes(), "iso-8859-1"));
+		ServletOutputStream out = response.getOutputStream();
+		BufferedInputStream bis = null;
+		BufferedOutputStream bos = null;
+		try {
+			bis = new BufferedInputStream(is);
+			bos = new BufferedOutputStream(out);
+			byte[] buff = new byte[2048];
+			int bytesRead;
+			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+			}
+		} catch (final IOException e) {
+			throw e;
+		} finally {
+			if (bis != null)
+				bis.close();
+			if (bos != null)
+				bos.close();
+		}
+	}
+
 	/**
 	 * 创建Excle模板
 	 */
-    private List<Map<String, Object>> createExcelRecord(List<DictCoupons> list) {
-        List<Map<String, Object>> listmap = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("sheetName", "sheet1");
-        listmap.add(map);
-        DictCoupons dictCoupons=couponService.initConvertCoupon();
-        for (int j = 0; j < list.size(); j++) {
-        	dictCoupons=list.get(j);
-            Map<String, Object> mapValue = new HashMap<String, Object>();
-            mapValue.put("introdution",dictCoupons.getIntroduction());
-            mapValue.put("cardNo",dictCoupons.getCardNo());
-            mapValue.put("cardPassword",dictCoupons.getCardPasswd());
-            mapValue.put("value",dictCoupons.getValue());
-            mapValue.put("couponType",OneCareUtil.getRangTypeName(dictCoupons.getRangType()));
-            mapValue.put("serviceType",DictUtil.getServiceTypeItemName(dictCoupons.getServiceType()));
-            mapValue.put("startDate",DateUtil.formatDate(dictCoupons.getFromDate()));
-            mapValue.put("endDate",DateUtil.formatDate(dictCoupons.getToDate()));
-            Date addDate =  TimeStampUtil.timeStampToDate(dictCoupons.getAddTime()*1000);
-            mapValue.put("addTime",DateUtil.formatDate(addDate));
-            listmap.add(mapValue);
-        }
-        return listmap;
-    }
-    
+	private List<Map<String, Object>> createExcelRecord(List<DictCoupons> list) {
+		List<Map<String, Object>> listmap = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sheetName", "sheet1");
+		listmap.add(map);
+		DictCoupons dictCoupons = couponService.initConvertCoupon();
+		for (int j = 0; j < list.size(); j++) {
+			dictCoupons = list.get(j);
+			Map<String, Object> mapValue = new HashMap<String, Object>();
+			mapValue.put("introdution", dictCoupons.getIntroduction());
+			mapValue.put("cardNo", dictCoupons.getCardNo());
+			mapValue.put("cardPassword", dictCoupons.getCardPasswd());
+			mapValue.put("value", dictCoupons.getValue());
+			mapValue.put("couponType",
+					OneCareUtil.getRangTypeName(dictCoupons.getRangType()));
+			mapValue.put("serviceType", DictUtil
+					.getServiceTypeItemName(dictCoupons.getServiceType()));
+			mapValue.put("startDate",
+					DateUtil.formatDate(dictCoupons.getFromDate()));
+			mapValue.put("endDate",
+					DateUtil.formatDate(dictCoupons.getToDate()));
+			Date addDate = TimeStampUtil.timeStampToDate(dictCoupons
+					.getAddTime() * 1000);
+			mapValue.put("addTime", DateUtil.formatDate(addDate));
+			listmap.add(mapValue);
+		}
+		return listmap;
+	}
+
 	@RequestMapping(value = "/sendCoupons", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String,String> sendCoupons(@ModelAttribute DictCoupons dictCoupons){
-    	
-    	Long id = dictCoupons.getId();
-    	DictCoupons coupon = couponService.selectByPrimaryKey(id);
-    	List<Integer> condtion=dictCoupons.getSendCouponsCondtion();
-    	List<UserCoupons> userCouponsList0=new ArrayList<UserCoupons>();
-    	List<UserCoupons> userCouponsList1=new ArrayList<UserCoupons>();
-    	List<UserCoupons> userCouponsList2=new ArrayList<UserCoupons>();
-    	List<UserCoupons> userCouponsList3=new ArrayList<UserCoupons>();
-    	Map<String,String> hashMap=new HashMap<String,String>();
-    	if(condtion!=null && condtion.size()>0){
-    		if(condtion.contains(0)){
-    			List<Users> users = usersService.selectUsersByOrderMobile();
-    			if(users!=null){
-    				for(Users u:users){
-    					UserCoupons uc = userCouponsService.initUserCoupons(u.getId(), coupon);
-    					userCouponsList0.add(uc);
-    				}
-    				if(userCouponsList0!=null){
-    					userCouponsService.insertByList(userCouponsList0);
-    				}
-    			}
-    		}
-    		if(condtion.contains(1)){
-    			Map<String,Long> map=new HashMap<String,Long>();
-    			map.put("serviceStartDate", DateUtil.curStartDate(0));
-    			map.put("serviceEndDate", DateUtil.curLastDate(0));
-    			List<Orders> orders = orderService.selectByMap(map);
-    			List<Long> userIds = isUserId(orders);
-    			for(Long uid:userIds){
-    				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
-    				userCouponsList1.add(uc);
-    			}
-    			if(userCouponsList1!=null){
-    				userCouponsService.insertByList(userCouponsList1);
-    			}
-    		}
-    		if(condtion.contains(2)){
-    			Map<String,Long> map=new HashMap<String,Long>();
-    			map.put("serviceStartDate", DateUtil.curStartDate(2));
-    			map.put("serviceEndDate", DateUtil.curLastDate(1));
-    			List<Orders> orders = orderService.selectByMap(map);
-    			List<Long> userIds = isUserId(orders);
-    			for(Long uid:userIds){
-    				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
-    				userCouponsList2.add(uc);
-    			}
-    			if(userCouponsList2!=null){
-    				userCouponsService.insertByList(userCouponsList2);
-    			}
-    		}
-    		if(condtion.contains(3)){
-    			Map<String,Long> map=new HashMap<String,Long>();
-//    			map.put("serviceStartDate", DateUtil.curStartDate(3));
-    			map.put("serviceEndDate", DateUtil.curLastDate(3));
-    			List<Orders> orders = orderService.selectByMap(map);
-    			List<Long> userIds = isUserId(orders);
-    			for(Long uid:userIds){
-    				UserCoupons uc = userCouponsService.initUserCoupons(uid,coupon);
-    				userCouponsList3.add(uc);
-    			}
-    			if(userCouponsList3!=null){
-    				userCouponsService.insertByList(userCouponsList3);
-    			}
-    		}
-    		hashMap.put("success", "200");
-    	}else{
-    		hashMap.put("fail", "100");
-    	}
-    	return hashMap;
-    }
-    
-    //判断用户id是否重复
-	@SuppressWarnings("null")
-	public List<Long> isUserId(List<Orders> orders){
-    	
-    	List<Long> ids=new ArrayList<Long>();
-    	for(Orders o:orders){
-			Long userId = o.getUserId();
-			if(ids==null){
-				ids.add(userId);
-			}else{
-				if(!ids.contains(userId)){
-					ids.add(userId);
+	@ResponseBody
+	public Map<String, String> sendCoupons(
+			@ModelAttribute DictCoupons dictCoupons) {
+
+		Long id = dictCoupons.getId();
+		List<Integer> condtion = dictCoupons.getSendCouponsCondtion();
+		DictCoupons coupon = couponService.selectByPrimaryKey(id);
+		List<UserCoupons> userCouponsList0 = new ArrayList<UserCoupons>();
+		Map<String, String> hashMap = new HashMap<String, String>();
+		if (condtion != null && condtion.size() > 0) {
+			if (condtion.contains(0)) {
+				List<Users> users = usersService.selectUsersByOrderMobile();
+				if (users != null) {
+					for (Users u : users) {
+						UserCoupons uc = userCouponsService.initUserCoupons(
+								u.getId(), coupon);
+						userCouponsList0.add(uc);
+					}
+					if (userCouponsList0 != null) {
+						userCouponsService.insertByList(userCouponsList0);
+					}
 				}
 			}
 		}
-    	return ids;
-    }
-    
+		List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>();
+		List<Orders> orders = orderService.selectByMap(null);
+		List<Long> userIdList = removeReValue(condtion, orders);
+		for (Long _id : userIdList) {
+			UserCoupons uc = userCouponsService.initUserCoupons(_id, coupon);
+			userCouponsList.add(uc);
+		}
+		userCouponsService.insertByList(userCouponsList);
+		// 发送优惠之后，优惠券变成无效状态
+		coupon.setIsValid("0");
+		dictCouponsService.updateByPrimaryKeySelective(coupon);
+		hashMap.put("success", "200");
+		return hashMap;
+	}
+
+	// 去除集合中的重复元素
+	@SuppressWarnings({ "unused", "null" })
+	public List<Long> removeReValue(List<Integer> condition, List<Orders> orders) {
+
+		List<Long> uid = new ArrayList<Long>();
+		List<Long> uid2 = new ArrayList<Long>();
+		List<Long> uid3 = new ArrayList<Long>();
+		List<Long> userIds = new ArrayList<Long>();
+
+		if (condition != null) {
+			for (Orders od : orders) {
+				Long serviceDate = od.getServiceDate();
+				Long userId = od.getUserId();
+				if (condition.contains(1)) {
+					if (serviceDate >= DateUtil.curStartDate(0)
+							&& serviceDate <= DateUtil.curLastDate(0)) {
+						if(!uid2.contains(userId) && !uid3.contains(userId)){
+							if (uid == null) {
+								uid.add(userId);
+							} else {
+								if (!uid.contains(userId)) {
+									uid.add(userId);
+								}
+							}
+						}
+					}
+				}
+				if (condition.contains(2)) {
+					if (serviceDate >= DateUtil.curStartDate(2)
+							&& serviceDate <= DateUtil.curLastDate(1)) {
+						if(!uid.contains(userId) && !uid3.contains(userId)){
+							if (uid2 == null ) {
+								uid2.add(userId);
+							} else {
+								if (!uid2.contains(userId) ) {
+									uid2.add(userId);
+								}
+							}
+						}
+					}
+				}
+				if (condition.contains(3)) {
+					if (serviceDate <= DateUtil.curLastDate(3)) {
+						if(!uid.contains(userId) && !uid2.contains(userId)){
+							if (uid3 == null) {
+								uid3.add(userId);
+							} else {
+								if (!uid3.contains(userId)) {
+									uid3.add(userId);
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+
+		if (uid != null) {
+			userIds.addAll(uid);
+		}
+		if (uid2 != null) {
+			userIds.addAll(uid2);
+		}
+		if (uid3 != null) {
+			userIds.addAll(uid3);
+		}
+
+		return userIds;
+
+	}
+
 }
