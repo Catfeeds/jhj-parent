@@ -25,6 +25,8 @@ public class OaOrderDisSearchVo extends OaOrderSearchVo{
 	//根据当前登录角色 确定 门店下的 所有云店
 	private List<Long> cloudOrgList;
 	
+	private List<Long> orgIdList;
+	
 	public List<Long> getCloudOrgList() {
 		return cloudOrgList;
 	}
@@ -73,7 +75,14 @@ public class OaOrderDisSearchVo extends OaOrderSearchVo{
 	public void setStaffId(Long staffId) {
 		this.staffId = staffId;
 	}
-	
+
+	public List<Long> getOrgIdList() {
+		return orgIdList;
+	}
+
+	public void setOrgIdList(List<Long> orgIdList) {
+		this.orgIdList = orgIdList;
+	}
 	
 	
 }
