@@ -232,8 +232,10 @@ public class UserAppController extends BaseController {
 					 
 					 OrgStaffs orgStaffs = orgStaffService.selectByPrimaryKey(amId);
 					 
-					 userAppVo.setAmMobile(orgStaffs.getMobile());
-					 
+					 userAppVo.setAmMobile("");
+					 if (orgStaffs != null) {
+						 userAppVo.setAmMobile(orgStaffs.getMobile());
+					 }
 				 }
 				 
 				 
