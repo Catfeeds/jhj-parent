@@ -36,9 +36,10 @@ System.out.println("wx-pay-pre.jsp ==" + wxAccessUrl);
 <meta content="black" name="apple-mobile-web-app-status-bar-style" />
 <meta content="telephone=no" name="format-detection" />
 <meta content="false" id="twcClient" name="twcClient" />
-<link rel="stylesheet" type="text/css" href="/css/css.css"/>
-<script language="javascript" src="http://res.mail.qq.com/mmr/static/lib/js/jquery.js"></script>
-<script language="javascript" src="http://res.mail.qq.com/mmr/static/lib/js/lazyloadv3.js"></script>
+
+<script src="/jhj-app/js/jquery.js"></script>
+<script src="/jhj-app/js/lazyloadv3.js"></script>
+
         <script language="javascript">
             function auto_remove(img){
                 div=img.parentNode.parentNode;div.parentNode.removeChild(div);
