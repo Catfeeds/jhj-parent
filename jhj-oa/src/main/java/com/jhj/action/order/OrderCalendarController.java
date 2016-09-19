@@ -1,5 +1,6 @@
 package com.jhj.action.order;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
 import com.jhj.action.BaseController;
@@ -73,6 +75,7 @@ public class OrderCalendarController extends BaseController {
 	
 	/**
 	 * @throws ParseException 
+	 * @throws UnsupportedEncodingException 
 	 * @Title: staffOrderList
 	 * @Description:
 	 * 
@@ -80,7 +83,7 @@ public class OrderCalendarController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "calendar_list", method = RequestMethod.GET)
-	public String staffOrderList(OaOrderDisSearchVo disSearchVo, HttpServletRequest request, Model model) throws ParseException {
+	public String staffOrderList(OaOrderDisSearchVo disSearchVo, HttpServletRequest request, Model model) throws ParseException, UnsupportedEncodingException {
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
 		String org = AuthHelper.getSessionLoginOrg(request);
@@ -172,6 +175,15 @@ public class OrderCalendarController extends BaseController {
 			}
 		}
 		staffSearchVo.setStatus(1);
+		String name = disSearchVo.getStaffName();
+		if(name!=null && name!=""){
+			String staffName=new String(name.getBytes("ISO-8859-1"),"UTF-8");
+			staffSearchVo.setName(staffName);
+			disSearchVo.setStaffName(staffName);
+		}
+		if(disSearchVo.getMobile()!=null && disSearchVo.getMobile()!=""){
+			staffSearchVo.setMobile(disSearchVo.getMobile());
+		}
 		//登录门店下的 所有 员工
 		List<OrgStaffs>  staffList = staffService.selectNewStaffList(staffSearchVo);
 		
