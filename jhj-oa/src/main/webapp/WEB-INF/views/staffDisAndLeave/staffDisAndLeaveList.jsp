@@ -45,9 +45,15 @@ import="com.jhj.oa.common.UrlHelper"%>
 											选择云店:<cloudOrgSelectTag:select 
 													selectId="${disAndLeaveSearchVoModel.orgId }"
 													logInParentOrgId="${loginOrgId }"/>
+										</div>
+										<div class="form-group">
+											    姓名：<form:input class="form-control" path="staffName" placeholder="请输入姓名"/>
+										</div>
+										<div class="form-group">
+											    手机号：<form:input class="form-control" path="mobile" placeholder="请输入手机号"/>
 										</div>	
 										<div class="form-group">
-			                          		开始时间(可选)：
+			                          		开始时间：
 											<form:input path="startTimeStr" class="form-control form_datetime"
 											 style="width:110px; margin-bottom:0" readonly="true" />
 										</div>
