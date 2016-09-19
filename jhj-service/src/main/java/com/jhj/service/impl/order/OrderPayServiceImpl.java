@@ -257,10 +257,10 @@ public class OrderPayServiceImpl implements OrderPayService {
 			orderDispatchs = list.get(0);
 		}
 		
-		OrgStaffs am = orgStaffService.selectByPrimaryKey(orderDispatchs.getStaffId());
-		String[] contentForAy = new String[] {};
-		System.out.println("ayi mobile = " + am.getMobile());
-		System.out.println(SmsUtil.SendSms(am.getMobile(),  "29164", contentForAy));
+//		OrgStaffs am = orgStaffService.selectByPrimaryKey(orderDispatchs.getStaffId());
+//		String[] contentForAy = new String[] {};
+//		System.out.println("ayi mobile = " + am.getMobile());
+//		System.out.println(SmsUtil.SendSms(am.getMobile(),  "29164", contentForAy));
 		
 		
 		//如果有优惠劵，则需要将优惠劵变成已使用。
