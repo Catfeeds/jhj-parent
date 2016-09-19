@@ -113,7 +113,7 @@
 	<if test="status!=null">
 		and status =#{status,jdbcType=NUMERIC} 
 	</if>
-	
+	and name!=''
 	order by add_time desc  
   </select>
   
