@@ -28,7 +28,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<section class="panel"> <header class="panel-heading">
-			优惠券-充值后赠送 </header>
+			优惠券 </header>
 
 			<hr
 				style="width: 100%; color: black; height: 1px; background-color: black;" />
@@ -72,7 +72,7 @@
 
 						</div>
 						<div class="form-group">
-							<label class="col-md-2 control-label">使用条件 </label>
+							<label class="col-md-2 control-label">优惠券类型 </label>
 
 							<div class="col-md-5">
 								<%-- <form:radiobuttons path="useCondition" items="${couponsUseCondition}"/> --%>
@@ -112,6 +112,14 @@
 								</form:select>
 							</div>
 						</div>
+						<div class="form-group">
+							<label class="col-sm-2 col-sm-2 control-label">是否有效</label>
+							<div class="col-md-5">
+								<form:radiobutton path="isValid" value="1"/>是
+								<form:radiobutton path="isValid" value="0"/>否
+							</div>
+						</div>
+						
 					</div>
 					<div class="form-actions">
 						<div class="row">
@@ -133,7 +141,7 @@
 			</div>
 			</section>
 		</div>
-		<c:if test="${isForm!=0 }">
+		<c:if test="${isForm!=0 and dictCoupons.isValid == '1'}">
 			<div id="form2-div">
 				<div class="col-lg-12">
 					<form id="form2" method="post" >
