@@ -44,19 +44,21 @@
                           </div>
                       </section>
                   </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol red">
-                              <i class="icon-tags"></i>
-                          </div>
-                          <div class="value">
-                              <h1 class=" count2">
-                                  0
-                              </h1>
-                              <p>今日新增用户</p>
-                          </div>
-                      </section>
-                  </div>
+                  <a href="../user/home-user-list">
+	                  <div class="col-lg-3 col-sm-6">
+	                      <section class="panel">
+	                          <div class="symbol red">
+	                              <i class="icon-tags"></i>
+	                          </div>
+	                          <div class="value">
+	                              <h1 class=" count2">
+	                                  0
+	                              </h1>
+	                              <p>今日新增用户</p>
+	                          </div>
+	                      </section>
+	                  </div>
+                  </a>
                   <div class="col-lg-3 col-sm-6">
                       <section class="panel">
                           <div class="symbol yellow">
