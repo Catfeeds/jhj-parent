@@ -646,10 +646,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			vo.setServiceAddrLng(userAddr.getLongitude());
 			
 			//如果是未接单，则设置服务地址为 ******
-			Short isApply = orderDispatchs.getIsApply();
-			if (isApply.equals((short)0)) {
-				vo.setServiceAddr("******");
-			}
+//			Short isApply = orderDispatchs.getIsApply();
+//			if (isApply.equals((short)0)) {
+//				vo.setServiceAddr("******");
+//			}
 		}
 		// 取货地址
 		vo.setPickAddr("");
