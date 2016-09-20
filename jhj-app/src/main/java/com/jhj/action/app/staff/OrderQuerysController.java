@@ -79,6 +79,19 @@ public class OrderQuerysController extends BaseController {
 			
 			OrderListVo vo = new OrderListVo(); 
 			vo = orderQueryService.getOrderListVo(item);
+			
+			//如果是未接单，则设置服务地址为 ******
+			OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(vo.getOrderNo());
+			if (orderDispatchs != null) {
+				Short isApply = orderDispatchs.getIsApply();
+				if (isApply.equals((short)0)) {
+					vo.setServiceAddrDistance("**米");
+					vo.setServiceAddr("******");
+				}
+			}
+			
+			
+			
 			orderListVo.add(vo);
 		}
 		result.setData(orderListVo);

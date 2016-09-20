@@ -671,10 +671,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 			
 			//如果是未接单，则设置距离为 **米
-			Short isApply = orderDispatchs.getIsApply();
-			if (isApply.equals((short)0)) {
-				vo.setServiceAddrDistance("**米");
-			}
+//			Short isApply = orderDispatchs.getIsApply();
+//			if (isApply.equals((short)0)) {
+//				vo.setServiceAddrDistance("**米");
+//			}
 			
 			// 取货地址
 			vo.setPickAddr("");
@@ -711,9 +711,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				
 				//如果是未接单，则设置服务地址为 ******
 				
-				if (isApply.equals((short)0)) {
-					vo.setServiceAddr("******");
-				}
+//				if (isApply.equals((short)0)) {
+//					vo.setServiceAddr("******");
+//				}
 			}
 		}
 
