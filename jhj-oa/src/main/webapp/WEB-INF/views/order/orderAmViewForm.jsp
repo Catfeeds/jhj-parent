@@ -105,7 +105,7 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">备注</label>
 							<div class="col-md-5">
-								<form:textarea path="serviceContent" rows="5" cols="57" readonly="true" />
+								<form:textarea path="serviceContent" class="form-control" rows="5" cols="57" readonly="true" />
 							</div>
 						</div>
 						
@@ -124,7 +124,7 @@
 
 							<label class="col-md-2 control-label">与用户沟通后需求描述</label>
 							<div class="col-md-5">
-								<form:textarea path="remarksConfirm" rows="5" cols="57" maxlength="200" palceholder="最多200字"/>
+								<form:textarea path="remarksConfirm" rows="5" cols="57" maxlength="200" palceholder="最多200字" class="form-control"/>
 							</div>
 						</div>
 
