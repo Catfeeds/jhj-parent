@@ -94,7 +94,7 @@
 			  	DISTINCT(orders.`user_id`) AS thisUserId 
 			  FROM  orders
 			  <where>
-			 	 <if test="searchOrgList != null">
+			 	 <if test="searchOrgList != null ||searchOrgList!=''">
 				  	orders.`org_id` in
 					<foreach item="item" index="index" collection="searchOrgList" open="(" separator="," close=")">
 						#{searchOrgList[${index}]}
@@ -772,6 +772,19 @@
 	<select id="selectUsersByOrderMobile" resultMap="BaseResultMap">
 		select <include refid="Base_Column_List"/>
 		from users where mobile not in (select mobile from orders)
+	</select>
+	
+	<select id="selectUserbyDay" resultMap="BaseResultMap" parameterType="com.jhj.vo.UserSearchVo">
+		select <include refid="Base_Column_List"/>
+		from users 
+		<where>
+			<if test="startTime!=null">
+				<![CDATA[ and add_time >= #{startTime}]]>
+			</if>
+			<if test="endTime">
+				<![CDATA[ and add_time <=#{endTime}]]>
+			</if>
+		</where>
 	</select>
 	
 </mapper>
