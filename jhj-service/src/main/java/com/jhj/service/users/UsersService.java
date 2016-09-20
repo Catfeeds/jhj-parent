@@ -76,4 +76,7 @@ public interface UsersService {
 	
 	//查询没有下过订单的用户
 	List<Users> selectUsersByOrderMobile();
+	
+	//查询当天新增的用户
+	PageInfo<Users> selectUserByDay(UserSearchVo vo,int pageNo,int pageSize);
 }
