@@ -57,6 +57,7 @@ import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -250,6 +251,16 @@ public class OaOrderController extends BaseController {
 			}
 		}
 		
+		String flag=request.getParameter("flag");
+		if(flag!=null && flag!=""){
+			if(flag.equals("1")){
+				Long startTime = TimeStampUtil.getMillisOfDayFull(DateUtil.getBeginOfDay()) / 1000;
+				Long endTime = TimeStampUtil.getMillisOfDayFull(DateUtil.getEndOfDay()) / 1000;
+				oaOrderSearchVo.setStartTime(startTime);
+				oaOrderSearchVo.setEndTime(endTime);
+			}
+		}
+		
 		List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo, pageNo, pageSize);
 
 		Orders orders = null;
@@ -433,6 +444,14 @@ public class OaOrderController extends BaseController {
 		String endTimeStr = oaOrderSearchVo.getEndTimeStr();
 		if (!StringUtil.isEmpty(endTimeStr)) {
 			oaOrderSearchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		}
+		
+		String flag=request.getParameter("flag");
+		if(flag!=null && flag!="" && flag.equals("2")){
+	    	Long startTime = TimeStampUtil.getMillisOfDayFull(DateUtil.getBeginOfDay()) / 1000;
+			Long endTime = TimeStampUtil.getMillisOfDayFull(DateUtil.getEndOfDay()) / 1000;
+			oaOrderSearchVo.setStartTime(startTime);
+			oaOrderSearchVo.setEndTime(endTime);
 		}
 
 		List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo, pageNo, pageSize);
