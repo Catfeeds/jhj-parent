@@ -16,6 +16,8 @@ public class OrgStaffFinance {
     private BigDecimal totalDept;
 
     private BigDecimal restMoney;
+    
+    private Short isBlack;
 
     private Long addTime;
 
@@ -92,4 +94,12 @@ public class OrgStaffFinance {
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
+
+	public Short getIsBlack() {
+		return isBlack;
+	}
+
+	public void setIsBlack(Short isBlack) {
+		this.isBlack = isBlack;
+	}
 }

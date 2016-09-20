@@ -17,11 +17,15 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffBlack;
+import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.service.bs.OrgStaffBlackService;
+import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.vo.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffBlackVo;
+import com.jhj.vo.staff.OrgStaffFinanceVo;
 import com.meijia.utils.BeanUtilsExp;
 
 @Controller
@@ -33,11 +37,54 @@ public class OrgStaffBlackController extends BaseController {
 	@Autowired
 	private OrgStaffsService orgStaffsService;
 	
+	@Autowired
+	private OrgStaffFinanceService orgStaffFinanceService;
+	
+	
 	//黑名单列表
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@AuthPassport
 	@RequestMapping(value = "/staffBlack-list", method = RequestMethod.GET)
-	public String getStaffPayList(Model model, HttpServletRequest request,
-			OrgStaffDetailPaySearchVo searchVo){
+	public String blackList(Model model, HttpServletRequest request,
+			OrgStaffFinanceSearchVo searchVo){
+		
+		int pageNo = ServletRequestUtils.getIntParameter(request,
+				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request,
+				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		//分页
+		PageHelper.startPage(pageNo, pageSize);
+		
+		if (searchVo == null)
+			searchVo = new OrgStaffFinanceSearchVo();
+		
+		searchVo.setIsBlack((short) 1);
+		
+		List<OrgStaffFinance> orgStaffBlackList = orgStaffFinanceService.selectByListPage(searchVo,pageNo,pageSize);
+		
+        for (int i = 0; i < orgStaffBlackList.size(); i++) {
+        	OrgStaffFinance orgStaffBlack = orgStaffBlackList.get(i);
+        	
+        	OrgStaffFinanceVo vo = new OrgStaffFinanceVo();
+        	
+        	BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffBlack, vo);
+        	OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffBlack.getStaffId());
+        	vo.setName(orgStaffs.getName());
+        	orgStaffBlackList.set(i, vo);
+		}
+        
+        PageInfo result = new PageInfo(orgStaffBlackList);	
+		
+		model.addAttribute("contentModel", result);
+		return "staff/staffBlackList";
+	}
+	
+	//黑名单日志列表
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@AuthPassport
+	@RequestMapping(value = "/black-log", method = RequestMethod.GET)
+	public String blackLog(Model model, HttpServletRequest request,
+			OrgStaffDetailPaySearchVo searchVo) {
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
@@ -61,7 +108,7 @@ public class OrgStaffBlackController extends BaseController {
 		
 		model.addAttribute("contentModel", result);
 		//model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);
-		return "staff/staffBlackList";
+		return "staff/staffBlackLog";
 	}
 	
 	/*

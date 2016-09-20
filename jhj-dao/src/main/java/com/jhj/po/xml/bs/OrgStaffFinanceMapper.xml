@@ -9,11 +9,12 @@
 		<result column="total_dept" property="totalDept" jdbcType="DECIMAL" />
 		<result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
 		<result column="rest_money" property="restMoney" jdbcType="DECIMAL" />
+		<result column="is_black" property="isBlack" jdbcType="NUMERIC" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, staff_id, mobile, total_incoming,total_dept, total_cash, rest_money, add_time, update_time
+		id, staff_id, mobile, total_incoming,total_dept, total_cash, rest_money, is_black, add_time, update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
@@ -48,6 +49,10 @@
 			</foreach>
 			)
 		</if>
+		
+		<if test="isBlack !=null">
+			and is_black = #{isBlack,jdbcType=NUMERIC}
+		</if>
 
 		order by add_time desc
 
@@ -63,13 +68,13 @@
 			SELECT LAST_INSERT_ID() AS id
 		</selectKey>
 		insert into org_staff_finance (id, staff_id, mobile,
-		total_incoming, total_cash,total_dept, rest_money,
+		total_incoming, total_cash,total_dept, rest_money, is_black
 		add_time, update_time)
 		values (#{id,jdbcType=NUMERIC},
 		#{staffId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
 		#{totalIncoming,jdbcType=DECIMAL}, #{totalDept,jdbcType=DECIMAL},
 		#{totalCash,jdbcType=DECIMAL},
-		#{restMoney,jdbcType=DECIMAL},
+		#{restMoney,jdbcType=DECIMAL}, #{isBlack,jdbcType=NUMERIC},
 		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffFinance">
@@ -98,6 +103,9 @@
 			</if>
 			<if test="restMoney != null">
 				rest_money,
+			</if>
+			<if test="isBlack != null">
+				is_black,
 			</if>
 			<if test="addTime != null">
 				add_time,
@@ -128,6 +136,9 @@
 			<if test="restMoney != null">
 				#{restMoney,jdbcType=DECIMAL},
 			</if>
+			<if test="isBlack != null">
+				#{isBlack,jdbcType=NUMERIC},
+			</if>
 			<if test="addTime != null">
 				#{addTime,jdbcType=NUMERIC},
 			</if>
@@ -157,6 +168,9 @@
 			<if test="restMoney != null">
 				rest_money = #{restMoney,jdbcType=DECIMAL},
 			</if>
+			<if test="isBlack != null">
+				is_black = #{isBlack,jdbcType=NUMERIC},
+			</if>
 			<if test="addTime != null">
 				add_time = #{addTime,jdbcType=NUMERIC},
 			</if>
@@ -173,8 +187,8 @@
 		total_incoming = #{totalIncoming,jdbcType=DECIMAL},
 		total_dept = #{totalDept,jdbcType=DECIMAL},
 		total_cash = #{totalCash,jdbcType=DECIMAL},
-		rest_money =
-		#{restMoney,jdbcType=DECIMAL},
+		rest_money = #{restMoney,jdbcType=DECIMAL},
+		is_black = #{isBlack,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}

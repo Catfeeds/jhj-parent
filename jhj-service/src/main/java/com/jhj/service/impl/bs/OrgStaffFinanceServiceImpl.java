@@ -111,6 +111,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		record.setTotalDept(new BigDecimal(0));
 		record.setTotalCash(new BigDecimal(0));
 		record.setRestMoney(new BigDecimal(0));
+		record.setIsBlack((short) 0);
 		record.setAddTime(TimeStampUtil.getNowSecond());
         record.setUpdateTime(TimeStampUtil.getNowSecond());
 		
@@ -251,6 +252,12 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 					orgStaffBlack.setStaffId(orgStaffDetailDept.getStaffId());
 					orgStaffBlack.setMobile(orgStaffDetailDept.getMobile());
 					orgStaffBlackService.insertSelective(orgStaffBlack);
+					
+					//设置黑名单标识.
+					orgStaffFinance.setIsBlack((short) 1);
+					orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
+					this.updateByPrimaryKey(orgStaffFinance);
+					
 					//欠款大于1000给服务人员发送加入黑名单的短信通知
 			        ordersService.userJoinBlackSuccessTodo(orgStaffs.getMobile());
 				}
