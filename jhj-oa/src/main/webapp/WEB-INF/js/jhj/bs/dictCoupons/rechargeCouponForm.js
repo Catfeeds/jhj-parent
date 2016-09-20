@@ -116,9 +116,6 @@ $("#from2-btn").click(function(){
 					$("input[name='sendCouponsCondtion']").attr("checked", false);
 					alert("发送优惠券成功！");
 				}
-				if(data.fail==100){
-					alert("请选择发送那种类型的优惠券..");
-				}
 			}
 		});
 	}
