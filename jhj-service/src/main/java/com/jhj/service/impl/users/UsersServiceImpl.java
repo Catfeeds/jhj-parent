@@ -551,4 +551,13 @@ public class UsersServiceImpl implements UsersService {
 	public List<Users> selectUsersByOrderMobile() {
 		return usersMapper.selectUsersByOrderMobile();
 	}
+
+	@Override
+	public PageInfo<Users> selectUserByDay(UserSearchVo vo,int pageNo,int pageSize) {
+		
+//		PageHelper.startPage(pageNo, pageSize);
+		List<Users> userList = usersMapper.selectUserbyDay(vo);
+		PageInfo<Users> result = new PageInfo<Users>(userList);
+		return result; 
+	}
 }
