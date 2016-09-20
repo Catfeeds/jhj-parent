@@ -62,10 +62,6 @@
 						<td>选择云店:</td>
 						<td><cloudOrgSelectTag:select selectId="${oaOrderSearchVoModel.orgId }" logInParentOrgId="${loginOrgId }" />
 						</td>
-						<td colspan="3">
-							<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
-							<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
-						</td>
 					</tr>
 					<tr>
 						<td>下单时间：</td>
@@ -89,7 +85,12 @@
 								<form:option value="1">是</form:option>
 								<form:option value="0">否</form:option>
 							</form:select></td>
+						<td colspan="3">
+							<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
+							<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
+						</td>
 					</tr>
+					
 				</table>
 			</form:form> </header>
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
