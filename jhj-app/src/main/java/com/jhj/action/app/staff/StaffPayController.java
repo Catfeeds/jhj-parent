@@ -36,7 +36,7 @@ import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.GsonUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.PushUtil;
@@ -256,7 +256,7 @@ public class StaffPayController extends BaseController {
 		}
 
 		// 发送短信，支付欠款成功
-		String deptStr = MathBigDeciamlUtil.round2(orgStaffFinance.getTotalDept());
+		String deptStr = MathBigDecimalUtil.round2(orgStaffFinance.getTotalDept());
 		String timeStr = DateUtil.getNow("HH:mm");
 		String[] content = new String[] { deptStr, timeStr, "1000" };
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(orgstaff.getMobile(), Constants.STAFF_PAY_DEPT_SUCCESS, content);

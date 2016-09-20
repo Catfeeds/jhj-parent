@@ -3,6 +3,7 @@ package com.jhj.action.bs;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,14 +20,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
+import com.jhj.common.ConstantMsg;
 import com.jhj.common.ConstantOa;
+import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.dict.DictCity;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -150,5 +156,26 @@ public class OrgsController extends BaseController{
 			printWriter.write("yes");
 		}
 		
+	}
+	
+	/**
+	 * 根据门店查询云点
+	 * @return
+	 */
+	@RequestMapping(value = "get-cloud-by-orgid.json", method = RequestMethod.GET)
+	public AppResultData<Object> getCitys(@RequestParam(value = "orgId", required = true, defaultValue = "0") Long orgId) {
+
+		List<Orgs> list = new ArrayList<Orgs>();
+
+		if (orgId > 0) {
+			GroupSearchVo searchVo = new GroupSearchVo();
+			searchVo.setParentId(orgId);
+			searchVo.setOrgStatus((short) 1);
+			list = orgsService.selectCloudOrgByParentOrg(searchVo);
+		}
+
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, list);
+
+		return result;
 	}
 }

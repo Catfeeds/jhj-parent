@@ -5,6 +5,7 @@
 <%@ include file="../shared/taglib.jsp"%>
 <%@ taglib prefix="citySelectTag" uri="/WEB-INF/tags/citySelect.tld"%>
 <%@ taglib prefix="payTypeNameTag" uri="/WEB-INF/tags/payTypeName.tld"%>
+<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld" %>
 <%@ taglib prefix="cloudOrgSelect"	uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
 <html>
 <head>
@@ -158,7 +159,7 @@
 
 							<label class="col-md-2 control-label"><font color="red">用户备注:</font></label>
 							<div class="col-md-5">
-								<form:textarea path="remarks" readonly="true" rows="5" cols="50" />
+								<form:textarea path="remarks" readonly="true" rows="5" cols="50" class="form-control" />
 							</div>
 						</div>
 						
@@ -167,7 +168,7 @@
 							<label class="col-md-2 control-label"><font color="green">运营人员备注:</font></label>
 							<div class="col-md-5">
 								<form:textarea path="remarksBussinessConfirm" 
-									maxlength="100" readonly="true" rows="5" cols="50" />
+									maxlength="100" readonly="true" rows="5" cols="50" class="form-control" />
 							</div>
 						</div>
 						
@@ -199,8 +200,8 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label"><font color="red">派工方案(可调整)</font></label>
 							<div class="col-md-5">
-									<form:radiobutton path="disWay" value="0" />方案一
-									<form:radiobutton path="disWay" value="1" />方案二
+									<form:radiobutton path="disWay" value="0"  />方案一
+									<form:radiobutton path="disWay" value="1"  />方案二
 							</div>						
 						</div>
 						
@@ -211,22 +212,28 @@
 							<label class="col-md-2 control-label"><font color="red">服务时间(可调整)</font></label>
 							<div class="col-md-5">
 								<form:input path="serviceDateStr" class="form-control form_datetime" readonly="true" />
+								<form:hidden path="serviceDate"/>
 							</div>
 							
 							<div class="col-md-5">
 								<font color="red"><strong>如果没有可用服务人员,可尝试更改服务时间</strong></font>
 							</div>
 						</div>
-						
-						
-						<div class="form-group" id="disWayTwo">
 
-							<label class="col-md-2 control-label"><font color="red">选择云店(可调整)</font></label>
+						<div class="form-group required" id="div-org-id">
+							<label class="col-md-2 control-label">选择门店:</label>
 							<div class="col-md-5">
-									<cloudOrgSelect:select logInParentOrgId="${loginOrgId }"/>									
+								<orgSelectTag:select/>
 							</div>
 						</div>
-						
+						<div class="form-group" id="div-cloud-id">
+							<label class="col-md-2 control-label">选择云店:</label>
+							<div class="col-md-5">
+								<select name="cloudId" id="cloudId" class="form-control">
+									<option value="0">全部</option>
+								</select>
+							</div>
+						</div>
 						
 						<div id="staffList"  class="col-sm-8">
 							<section class="panel">
@@ -245,37 +252,14 @@
 												<th>服务人员</th>
 												<th>手机号</th>
 												<th>距用户距离</th>
-												<th>预计到达用时</th>
+												<!-- <th>预计到达用时</th> -->
 												<th>今日接单数</th>
 												<th>是否可派工</th>
 											</tr>
 										</thead>
 										<tbody id="allStaff">
 										
-										   <c:if test="${fn:length(oaOrderListVoModel.voList) > 0}">	
-										   <c:forEach items="${oaOrderListVoModel.voList }" var="item">
-												<tr>
-													<td>
-														<c:if test="${item.dispathStaFlag == 1 }">
-                                                  		 <input name="sample-radio"  id="radio-01" value="${item.staffId }" type="radio" > 
-                                              			</c:if>
-                                              			<input  type="hidden" id="selectStaffId" name="selectStaffId" 
-														value="${item.staffId }">
-                                              			
-                                              			<input type="hidden" value="${item.distanceValue }" id="distanceValue">
-													</td>
-													
-													<td>${ item.staffOrgName }</td>
-													<td>${ item.staffCloudOrgName }</td>
-													<td>${ item.name }</td>
-													<td>${ item.mobile }</td>
-													<td>${ item.distanceText }</td>
-													<td>${ item.durationText }</td>
-													<td>${ item.todayOrderNum }</td>
-													<td>${item.dispathStaStr }</td>
-												</tr>
-											</c:forEach>
-											</c:if>
+										   
 										</tbody>
 									</table>
 							</section>
@@ -314,8 +298,11 @@
 		type="text/javascript"></script>
 	<script type="text/javascript"
 		src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
-
+	
+	<!-- 时间戳类库 -->
+	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
+	
 	<script type="text/javascript" src="<c:url value='/js/order/orderHourViewForm.js'/>"></script>
-
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 </body>
 </html>

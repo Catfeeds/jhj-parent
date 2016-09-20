@@ -19,7 +19,7 @@ import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserCouponsService;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 
@@ -166,13 +166,13 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 			DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(userCoupon.getCouponId());
 			BigDecimal couponValue = dictCoupons.getValue();
 			
-			orderPay = MathBigDeciamlUtil.sub(orderMoney, couponValue);
+			orderPay = MathBigDecimalUtil.sub(orderMoney, couponValue);
 		}		
 
 		// 实际支付金额
 		BigDecimal p1 = new BigDecimal(100);
-		BigDecimal p2 = MathBigDeciamlUtil.mul(orderPay, p1);
-		orderPayNow = MathBigDeciamlUtil.round(p2, 0);
+		BigDecimal p2 = MathBigDecimalUtil.mul(orderPay, p1);
+		orderPayNow = MathBigDecimalUtil.round(p2, 0);
 
 		return orderPayNow;
 	}

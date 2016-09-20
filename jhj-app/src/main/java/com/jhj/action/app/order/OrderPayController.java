@@ -37,7 +37,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -148,7 +148,7 @@ public class OrderPayController extends BaseController {
 			DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(userCoupon.getCouponId());
 			BigDecimal couponValue = dictCoupons.getValue();
 			
-			orderPay = MathBigDeciamlUtil.sub(orderMoney, couponValue);
+			orderPay = MathBigDecimalUtil.sub(orderMoney, couponValue);
 		}
 		
 		long updateTime = TimeStampUtil.getNowSecond();

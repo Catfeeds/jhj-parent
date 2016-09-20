@@ -12,7 +12,7 @@ import com.jhj.po.dao.bs.OrgStaffCashMapper;
 import com.jhj.po.model.bs.OrgStaffCash;
 import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.vo.OrgStaffCashSearchVo;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -108,7 +108,7 @@ public class OrgStaffCashServiceImpl implements OrgStaffCashService {
 			BigDecimal a = new BigDecimal(0);
 			return a;
 		}
-		totalCashMoney = MathBigDeciamlUtil.round(totalCashMoney, 2);
+		totalCashMoney = MathBigDecimalUtil.round(totalCashMoney, 2);
 		return totalCashMoney;
 	}
 

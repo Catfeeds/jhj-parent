@@ -32,13 +32,17 @@ public class TestOrderHourAddController extends JUnitActionBase {
 
      	MockHttpServletRequestBuilder postRequest = post(url);
      	
-     	postRequest = postRequest.param("user_id", "2");                
-     	postRequest = postRequest.param("service_type", "1");
- 	    postRequest = postRequest.param("service_content", "让你干啥你干啥");
- 	    postRequest = postRequest.param("service_date", "7");
- 	    postRequest = postRequest.param("addr_id", "2");
- 	    postRequest = postRequest.param("service_hour", "4");
- 	    postRequest = postRequest.param("service_addons", "1,2");
+     	postRequest = postRequest.param("addrId", "4216");
+     	postRequest = postRequest.param("orderFrom", "1");
+     	postRequest = postRequest.param("serviceDate", "1474174800");
+     	postRequest = postRequest.param("userId", "3717");   
+     	postRequest = postRequest.param("remarks", "基础保洁+卫生间高温消毒149元。美团码。越早到越好！");   
+     	postRequest = postRequest.param("serviceType", "28");
+// 	    postRequest = postRequest.param("service_content", "让你干啥你干啥");
+ 	    
+ 	    
+ 	    postRequest = postRequest.param("serviceHour", "3");
+// 	    postRequest = postRequest.param("service_addons", "1,2");
  	    
  	    ResultActions resultActions = mockMvc.perform(postRequest);
 
@@ -55,9 +59,9 @@ public class TestOrderHourAddController extends JUnitActionBase {
 		
 		MockHttpServletRequestBuilder postRequest = post(url);
 		
-		postRequest = postRequest.param("user_id", "5");                
-		postRequest = postRequest.param("order_no", "692632110820753408");
-		postRequest = postRequest.param("order_pay_type", "0");
+		postRequest = postRequest.param("user_id", "3717");                
+		postRequest = postRequest.param("order_no", "777694512360194048");
+		postRequest = postRequest.param("order_pay_type", "6");
 		postRequest = postRequest.param("user_coupon_id", "0");
 		
 		ResultActions resultActions = mockMvc.perform(postRequest);

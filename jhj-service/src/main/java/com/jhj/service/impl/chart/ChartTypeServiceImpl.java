@@ -16,7 +16,7 @@ import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.meijia.utils.ChartUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.MathDoubleUtil;
 
 
@@ -318,7 +318,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 						if(hourMoney ==null){
 							hourMoney = new BigDecimal(0);
 						}
-						tableDataItem.put("钟点工营业额", MathBigDeciamlUtil.round2(hourMoney));
+						tableDataItem.put("钟点工营业额", MathBigDecimalUtil.round2(hourMoney));
 					}
 						
 //					if (chartSqlData.getName().equals("1")){
@@ -344,7 +344,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 							amMoney = new BigDecimal(0);
 						}
 						
-						tableDataItem.put("助理预约单营业额", MathBigDeciamlUtil.round2(amMoney));
+						tableDataItem.put("助理预约单营业额", MathBigDecimalUtil.round2(amMoney));
 					}
 					
 				}
@@ -361,7 +361,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			
 			BigDecimal moneySum = moneyHour.add(moneyAm);
 			
-			tableDataItem.put("总营业额", MathBigDeciamlUtil.round2(moneySum));
+			tableDataItem.put("总营业额", MathBigDecimalUtil.round2(moneySum));
 			
 			//intValue(), 效果 只取整数位，舍弃小数位  1.11  、 1.61  -->  1
 			if(moneySum.intValue() > 0 ){

@@ -17,7 +17,7 @@ import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.meijia.utils.ChartUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.MathDoubleUtil;
 
 @Service
@@ -120,22 +120,22 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 					
 					
 					oneMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("一千面值", MathBigDeciamlUtil.round2(oneMoney));
+					tableDataItem.put("一千面值", MathBigDecimalUtil.round2(oneMoney));
 				}
 				if (chartSqlData.getName().equals("2")) {
 					
 					twopMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("两千面值", MathBigDeciamlUtil.round2(twopMoney));
+					tableDataItem.put("两千面值", MathBigDecimalUtil.round2(twopMoney));
 				}
 				if (chartSqlData.getName().equals("3")) {
 					
 					fiveMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("五千面值", MathBigDeciamlUtil.round2(fiveMoney));
+					tableDataItem.put("五千面值", MathBigDecimalUtil.round2(fiveMoney));
 				}
 				if (chartSqlData.getName().equals("4")) {
 					
 					tenMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("一万面值", MathBigDeciamlUtil.round2(tenMoney));
+					tableDataItem.put("一万面值", MathBigDecimalUtil.round2(tenMoney));
 				}
 			}	
 			}
@@ -345,7 +345,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
 					
 						allRestMoney =  chartSqlData.getTotalMoney();
-						tableDataItem.put("余额总金额", MathBigDeciamlUtil.round2(allRestMoney));
+						tableDataItem.put("余额总金额", MathBigDecimalUtil.round2(allRestMoney));
 					
 				}	
 				}

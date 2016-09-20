@@ -542,7 +542,7 @@ public class OaOrderController extends BaseController {
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailHour(orderNo, disStatus);
 		
 		Orders orders = orderService.selectByOrderNo(orderNo);
-		Short orderStatus = orders.getOrderStatus();
+//		Short orderStatus = orders.getOrderStatus();
 		
 		OrderSearchVo searchVo = new OrderSearchVo();
 
@@ -551,29 +551,29 @@ public class OaOrderController extends BaseController {
 		
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
 		
-		if(orderStatus  == Constants.ORDER_AM_STATUS_2 || 
-				   orderStatus == Constants.ORDER_AM_STATUS_3){
-			List<OrgStaffsNewVo> volist = oaOrderListVo.getVoList();
-			for (int i =0; i < volist.size(); i++) {
-				OrgStaffsNewVo orgStaffsNewVo = volist.get(i);
-	
-				searchVo.setStaffId(orgStaffsNewVo.getStaffId());
-	
-				// 对应当前订单的日期。。该员工是否 有 派工单
-				Long disNum = disService.getDisNumForStaDuringServiceDate(searchVo);
-	
-				if (disNum > 0L) {
-					orgStaffsNewVo.setDispathStaStr("不可派工");
-					orgStaffsNewVo.setDispathStaFlag(0);
-				} else {
-					orgStaffsNewVo.setDispathStaStr("可派工");
-					orgStaffsNewVo.setDispathStaFlag(1);
-				}
-				list.add(orgStaffsNewVo);
-			}
-			
-			
-		}
+//		if(orderStatus  == Constants.ORDER_AM_STATUS_2 || 
+//				   orderStatus == Constants.ORDER_AM_STATUS_3){
+//			List<OrgStaffsNewVo> volist = oaOrderListVo.getVoList();
+//			for (int i =0; i < volist.size(); i++) {
+//				OrgStaffsNewVo orgStaffsNewVo = volist.get(i);
+//	
+//				searchVo.setStaffId(orgStaffsNewVo.getStaffId());
+//	
+//				// 对应当前订单的日期。。该员工是否 有 派工单
+//				Long disNum = disService.getDisNumForStaDuringServiceDate(searchVo);
+//	
+//				if (disNum > 0L) {
+//					orgStaffsNewVo.setDispathStaStr("不可派工");
+//					orgStaffsNewVo.setDispathStaFlag(0);
+//				} else {
+//					orgStaffsNewVo.setDispathStaStr("可派工");
+//					orgStaffsNewVo.setDispathStaFlag(1);
+//				}
+//				list.add(orgStaffsNewVo);
+//			}
+//			
+//			
+//		}
 		oaOrderListVo.setVoList(list);
 
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);

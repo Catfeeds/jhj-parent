@@ -48,7 +48,7 @@ import com.jhj.vo.OrderQuerySearchVo;
 import com.jhj.vo.staff.OrderBeginVo;
 import com.jhj.vo.staff.StaffOrderVo;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 

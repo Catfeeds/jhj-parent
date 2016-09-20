@@ -203,92 +203,92 @@ public class BaiduMapUtil {
 	
 	public static void main(String[] args) {
 		//计算距离, 并且要做大于5的文本切割
-		String fromLat = "39.894585";
-		String fromLng = "116.471626";
+		String fromLat = "39.988612";
+		String fromLng = "116.420308";
 		
 		//需要计算的地址列表
 		List<BaiduPoiVo> destAddrs = new ArrayList<BaiduPoiVo>();
 		BaiduPoiVo d1 = new BaiduPoiVo();
-		d1.setLat("39.896014");
-		d1.setLng("116.47341");
-		d1.setName("百环家园");
+		d1.setLat("39.796344");
+		d1.setLng("116.357301");
+		d1.setName("大兴西红门");
 		destAddrs.add(d1);
 		
-		BaiduPoiVo d2 = new BaiduPoiVo();
-		d2.setLat("39.915285");
-		d2.setLng("116.403857");	
-		d2.setName("天安门");
-		destAddrs.add(d2);
-		
-		//116.400532,40.00077  奥林匹克公园
-		BaiduPoiVo d3 = new BaiduPoiVo();
-		d3.setLat("40.00077");
-		d3.setLng("116.400532");	
-		d3.setName("奥林匹克公园");	
-		destAddrs.add(d3);
-
-		//116.315732,40.016023 圆明园
-		BaiduPoiVo d4 = new BaiduPoiVo();
-		d4.setLat("40.016023");
-		d4.setLng("116.400532");	
-		d4.setName("圆明园");		
-		destAddrs.add(d4);
-		
-		//116.216846,40.00917  植物园
-		BaiduPoiVo d5 = new BaiduPoiVo();
-		d5.setLat("40.00917");
-		d5.setLng("116.216846");	
-		d5.setName("植物园");		
-		destAddrs.add(d5);
-		
-		//116.620724,40.061982 首都国际机场
-		BaiduPoiVo d6 = new BaiduPoiVo();
-		d6.setLat("40.061982");
-		d6.setLng("116.620724");	
-		d6.setName("首都国际机场");	
-		destAddrs.add(d6);
-		
-		//116.383284,39.870869 北京南站
-		BaiduPoiVo d7 = new BaiduPoiVo();
-		d7.setLat("39.870869");
-		d7.setLng("116.383284");	
-		d7.setName("北京南站");		
-		destAddrs.add(d7);
-		
-		//116.433302,39.910286 北京站
-		BaiduPoiVo d8 = new BaiduPoiVo();
-		d8.setLat("39.910286");
-		d8.setLng("116.433302");	
-		d8.setName("北京站");	
-		destAddrs.add(d8);
-		
-		//116.329242,39.900545 北京西站
-		BaiduPoiVo d9 = new BaiduPoiVo();
-		d9.setLat("39.900545");
-		d9.setLng("116.329242");	
-		d9.setName("北京西站");	
-		destAddrs.add(d9);
-		
-		//117.649823,39.033812 塘沽站
-		BaiduPoiVo d10 = new BaiduPoiVo();
-		d10.setLat("39.033812");
-		d10.setLng("117.649823");	
-		d10.setName("塘沽站");	
-		destAddrs.add(d10);
-		
-		//121.810487,31.156731 上海浦东国际机场
-		BaiduPoiVo d11 = new BaiduPoiVo();
-		d11.setLat("31.156731");
-		d11.setLng("121.810487");	
-		d11.setName("上海浦东国际机场");	
-		destAddrs.add(d11);
-		
-		//108.395552,22.792567 广西南宁青秀山
-		BaiduPoiVo d12 = new BaiduPoiVo();
-		d12.setLat("22.792567");
-		d12.setLng("108.395552");	
-		d12.setName("广西南宁青秀山");	
-		destAddrs.add(d12);
+//		BaiduPoiVo d2 = new BaiduPoiVo();
+//		d2.setLat("39.915285");
+//		d2.setLng("116.403857");	
+//		d2.setName("天安门");
+//		destAddrs.add(d2);
+//		
+//		//116.400532,40.00077  奥林匹克公园
+//		BaiduPoiVo d3 = new BaiduPoiVo();
+//		d3.setLat("40.00077");
+//		d3.setLng("116.400532");	
+//		d3.setName("奥林匹克公园");	
+//		destAddrs.add(d3);
+//
+//		//116.315732,40.016023 圆明园
+//		BaiduPoiVo d4 = new BaiduPoiVo();
+//		d4.setLat("40.016023");
+//		d4.setLng("116.400532");	
+//		d4.setName("圆明园");		
+//		destAddrs.add(d4);
+//		
+//		//116.216846,40.00917  植物园
+//		BaiduPoiVo d5 = new BaiduPoiVo();
+//		d5.setLat("40.00917");
+//		d5.setLng("116.216846");	
+//		d5.setName("植物园");		
+//		destAddrs.add(d5);
+//		
+//		//116.620724,40.061982 首都国际机场
+//		BaiduPoiVo d6 = new BaiduPoiVo();
+//		d6.setLat("40.061982");
+//		d6.setLng("116.620724");	
+//		d6.setName("首都国际机场");	
+//		destAddrs.add(d6);
+//		
+//		//116.383284,39.870869 北京南站
+//		BaiduPoiVo d7 = new BaiduPoiVo();
+//		d7.setLat("39.870869");
+//		d7.setLng("116.383284");	
+//		d7.setName("北京南站");		
+//		destAddrs.add(d7);
+//		
+//		//116.433302,39.910286 北京站
+//		BaiduPoiVo d8 = new BaiduPoiVo();
+//		d8.setLat("39.910286");
+//		d8.setLng("116.433302");	
+//		d8.setName("北京站");	
+//		destAddrs.add(d8);
+//		
+//		//116.329242,39.900545 北京西站
+//		BaiduPoiVo d9 = new BaiduPoiVo();
+//		d9.setLat("39.900545");
+//		d9.setLng("116.329242");	
+//		d9.setName("北京西站");	
+//		destAddrs.add(d9);
+//		
+//		//117.649823,39.033812 塘沽站
+//		BaiduPoiVo d10 = new BaiduPoiVo();
+//		d10.setLat("39.033812");
+//		d10.setLng("117.649823");	
+//		d10.setName("塘沽站");	
+//		destAddrs.add(d10);
+//		
+//		//121.810487,31.156731 上海浦东国际机场
+//		BaiduPoiVo d11 = new BaiduPoiVo();
+//		d11.setLat("31.156731");
+//		d11.setLng("121.810487");	
+//		d11.setName("上海浦东国际机场");	
+//		destAddrs.add(d11);
+//		
+//		//108.395552,22.792567 广西南宁青秀山
+//		BaiduPoiVo d12 = new BaiduPoiVo();
+//		d12.setLat("22.792567");
+//		d12.setLng("108.395552");	
+//		d12.setName("广西南宁青秀山");	
+//		destAddrs.add(d12);
 		
 		
 		

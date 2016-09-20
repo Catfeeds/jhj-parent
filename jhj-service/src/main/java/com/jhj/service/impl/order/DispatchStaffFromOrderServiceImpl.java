@@ -44,7 +44,7 @@ import com.jhj.vo.UserTrailVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.GsonUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.PushUtil;
 import com.meijia.utils.RegexUtil;
@@ -53,6 +53,7 @@ import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
+import com.meijia.utils.baidu.MapPoiUtil;
 
 /**
  * @description：订单派工接口实现
@@ -399,7 +400,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 //				baiduPoiVo1.setName(org.getOrgName());
 				staffAddrList1.add(baiduPoiVo1);
 			}
-			List<BaiduPoiVo> destList1 = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList1);
+			List<BaiduPoiVo> destList1 = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList1);
 			
 			userTrailVo.setBaiduPoiVos(destList1);
 			userTrailVo.setUserTrailReals(userTrailRealList);
@@ -444,10 +445,10 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		 */
 		UserTrailReal item = null;
 		try {
-			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList);
+			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList);
 			List<BaiduPoiVo> baiduPoiVos = new ArrayList<BaiduPoiVo>();
 			
-			baiduPoiVos = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			baiduPoiVos = MapPoiUtil.getMinDest(destList);
 			
 			BaiduPoiVo baiduPoiVo = null;
 			if (!baiduPoiVos.isEmpty()) {
@@ -473,7 +474,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 //				baiduPoiVo1.setName(org.getOrgName());
 				staffAddrList1.add(baiduPoiVo1);
 			}
-			List<BaiduPoiVo> destList1 = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList1);
+			List<BaiduPoiVo> destList1 = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList1);
 			
 			userTrailVo.setBaiduPoiVos(destList1);
 			userTrailVo.setUserTrailReals(userTrailRealList);
@@ -839,7 +840,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    tranParams.put("service_content", serviceContent);
 		    
 		    //服务金额
-		    String orderMoney = MathBigDeciamlUtil.round2(orderPrice.getOrderMoney());
+		    String orderMoney = MathBigDecimalUtil.round2(orderPrice.getOrderMoney());
 		    tranParams.put("order_money", orderMoney);
 		    
 		    //订单类型

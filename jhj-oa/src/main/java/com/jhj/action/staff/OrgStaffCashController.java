@@ -33,7 +33,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.vo.OrgStaffCashSearchVo;
 import com.meijia.utils.GsonUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.PushUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
@@ -130,7 +130,7 @@ public class OrgStaffCashController extends BaseController {
 			//写入员工的用户明细，
 			// 操作服务人员财务明细表 org_staff_detail_pay，插入一条 order_type = 5 提现 的记录
 			BigDecimal orderMoney = orgStaffCash.getOrderMoney();
-			String orderMoneyStr = MathBigDeciamlUtil.round2(orderMoney);
+			String orderMoneyStr = MathBigDecimalUtil.round2(orderMoney);
 			
 			OrgStaffDetailPay orgStaffDetailPay = orgStaffDetailPayService.initStaffDetailPay();
 			orgStaffDetailPay.setStaffId(staffId);

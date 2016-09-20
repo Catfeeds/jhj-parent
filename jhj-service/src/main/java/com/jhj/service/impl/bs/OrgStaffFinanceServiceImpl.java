@@ -27,7 +27,7 @@ import com.jhj.service.orderReview.SettingService;
 import com.jhj.utils.OrderUtils;
 import com.jhj.vo.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.OrgStaffFinanceSearchVo;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -161,7 +161,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		if (jhjSetting != null) {
 			BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
 			orderIncoming = orderPrices.getOrderMoney().multiply(settingValue);
-			orderIncoming = MathBigDeciamlUtil.round(orderIncoming, 2);
+			orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 		}
 		
 		//服务人员财务表

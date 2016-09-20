@@ -13,7 +13,7 @@ import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.vo.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -115,7 +115,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 				|| orgStaffDetailPay.getOrderType() == 2
 				|| orgStaffDetailPay.getOrderType() == 3) {
 			BigDecimal orderMoney = orgStaffDetailPay.getOrderMoney();
-			String orderMoneyStr = MathBigDeciamlUtil.round2(orderMoney);
+			String orderMoneyStr = MathBigDecimalUtil.round2(orderMoney);
 			vo.setOrderTypeName("订单收入,订单金额:" + orderMoneyStr);
 		}
 		if (orgStaffDetailPay.getOrderType() == 4)

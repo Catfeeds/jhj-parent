@@ -39,7 +39,7 @@ import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.user.UserGetAmVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 
@@ -169,7 +169,7 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 				
 				BigDecimal subtract = orderMoney.add(orderPayBackFee).subtract(orderPayBack);
 				
-				sumMoney = MathBigDeciamlUtil.add(sumMoney, subtract);
+				sumMoney = MathBigDecimalUtil.add(sumMoney, subtract);
 				
 			}
 			

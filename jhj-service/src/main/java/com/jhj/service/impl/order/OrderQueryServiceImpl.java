@@ -45,7 +45,7 @@ import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.UserListVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -249,7 +249,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			BigDecimal a = new BigDecimal(0);
 			return a;
 		}
-		orderMoney = MathBigDeciamlUtil.round(orderMoney, 2);
+		orderMoney = MathBigDecimalUtil.round(orderMoney, 2);
 		return orderMoney;
 
 	}
@@ -322,7 +322,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			BigDecimal b = new BigDecimal(0);
 			return b;
 		}
-		totalIncomingMoney = MathBigDeciamlUtil.round(totalIncomingMoney, 2);		
+		totalIncomingMoney = MathBigDecimalUtil.round(totalIncomingMoney, 2);		
 				
 		return totalIncomingMoney;
 	}
@@ -597,7 +597,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
 					BigDecimal orderIncoming = orderPrice.getOrderMoney().multiply(settingValue);
-					orderIncoming = MathBigDeciamlUtil.round(orderIncoming, 2);
+					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 					vo.setOrderIncoming(orderIncoming);
 				}
 			}
@@ -610,7 +610,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
 					BigDecimal orderIncoming = orderPrice.getOrderMoney().multiply(settingValue);
-					orderIncoming = MathBigDeciamlUtil.round(orderIncoming, 2);
+					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 					vo.setOrderIncoming(orderIncoming);
 				}
 			}
@@ -621,7 +621,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
 					BigDecimal orderIncoming = orderPrice.getOrderMoney().multiply(settingValue);
-					orderIncoming = MathBigDeciamlUtil.round(orderIncoming, 2);
+					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 					vo.setOrderIncoming(orderIncoming);
 				}
 			}

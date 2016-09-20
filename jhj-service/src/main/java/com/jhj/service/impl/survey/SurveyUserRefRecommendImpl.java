@@ -23,7 +23,7 @@ import com.jhj.vo.survey.AppSurveyResultPriceVo;
 import com.jhj.vo.survey.OaSurveyUserResultVo;
 import com.jhj.vo.survey.SurveyResultPriceVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -248,7 +248,7 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		}
 		
 		//最终总价
-		BigDecimal sumPrice = MathBigDeciamlUtil.add(sumContentPrice, childSumPrice);
+		BigDecimal sumPrice = MathBigDecimalUtil.add(sumContentPrice, childSumPrice);
 		
 		
 		/*
@@ -292,13 +292,13 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		BigDecimal ratioSumPriceYear = sumPrice.multiply(new BigDecimal(0.85));
 		
 		//平均每月需支付的金额, 保留两位小数
-		BigDecimal divByYear = MathBigDeciamlUtil.div(ratioSumPriceYear, new BigDecimal(12), 2);
+		BigDecimal divByYear = MathBigDecimalUtil.div(ratioSumPriceYear, new BigDecimal(12), 2);
 		
 		SurveyResultPriceVo priceVoYear = new SurveyResultPriceVo();
 		
 		priceVoYear.setSurveyPayType(Constants.SURVEY_PAY_TYPE_0);
 		priceVoYear.setSumPrice(sumPrice);
-		priceVoYear.setDiscountPrice(MathBigDeciamlUtil.saveTwoDigital(ratioSumPriceYear));
+		priceVoYear.setDiscountPrice(MathBigDecimalUtil.saveTwoDigital(ratioSumPriceYear));
 		priceVoYear.setPriceByMonth(divByYear);
 		
 		//按年计费
@@ -311,13 +311,13 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		BigDecimal ratioSumPriceQuarter = sumPrice.multiply(new BigDecimal(0.9));
 		
 		//平均每月需支付的金额
-		BigDecimal divByQuarter = MathBigDeciamlUtil.div(ratioSumPriceQuarter, new BigDecimal(12), 2);
+		BigDecimal divByQuarter = MathBigDecimalUtil.div(ratioSumPriceQuarter, new BigDecimal(12), 2);
 		
 		SurveyResultPriceVo priceVoQuarter = new SurveyResultPriceVo();
 		
 		priceVoQuarter.setSurveyPayType(Constants.SURVEY_PAY_TYPE_1);
 		priceVoQuarter.setSumPrice(sumPrice);
-		priceVoQuarter.setDiscountPrice(MathBigDeciamlUtil.saveTwoDigital(ratioSumPriceQuarter));
+		priceVoQuarter.setDiscountPrice(MathBigDecimalUtil.saveTwoDigital(ratioSumPriceQuarter));
 		priceVoQuarter.setPriceByMonth(divByQuarter);
 		
 		//按半年计费
@@ -329,13 +329,13 @@ public class SurveyUserRefRecommendImpl implements SurveyUserRefRecommendService
 		BigDecimal ratioSumPriceMonth =  sumPrice.multiply(new BigDecimal(0.95));
 		
 		//平均每月需支付的金额
-		BigDecimal divByMonth = MathBigDeciamlUtil.div(ratioSumPriceMonth, new BigDecimal(12), 2);
+		BigDecimal divByMonth = MathBigDecimalUtil.div(ratioSumPriceMonth, new BigDecimal(12), 2);
 		
 		SurveyResultPriceVo priceVoMonth = new SurveyResultPriceVo();
 		
 		priceVoMonth.setSurveyPayType(Constants.SURVEY_PAY_TYPE_2);
 		priceVoMonth.setSumPrice(sumPrice);
-		priceVoMonth.setDiscountPrice(MathBigDeciamlUtil.saveTwoDigital(ratioSumPriceMonth));
+		priceVoMonth.setDiscountPrice(MathBigDecimalUtil.saveTwoDigital(ratioSumPriceMonth));
 		priceVoMonth.setPriceByMonth(divByMonth);
 		
 		//按月计费

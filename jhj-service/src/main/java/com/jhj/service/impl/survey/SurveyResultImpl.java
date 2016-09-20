@@ -18,7 +18,7 @@ import com.jhj.service.survey.SurveyUserService;
 import com.jhj.vo.survey.OaSurveyContentVo;
 import com.jhj.vo.survey.OaSurveyResultVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 
 /*

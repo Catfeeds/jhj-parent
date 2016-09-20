@@ -16,7 +16,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.year.OrderCusYearVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -115,12 +115,12 @@ public class OrderCusYearImpl implements OrderCustomizYearService {
 		yearVo.setPrice(price);
 		
 		//年付
-		yearVo.setYearPrice(MathBigDeciamlUtil.round(MathBigDeciamlUtil.mul(price, new BigDecimal(0.95)), 2));
+		yearVo.setYearPrice(MathBigDecimalUtil.round(MathBigDecimalUtil.mul(price, new BigDecimal(0.95)), 2));
 		
 		//月付
 		// 原价 每月支付（两位小数）
-		BigDecimal div = MathBigDeciamlUtil.div(price, new BigDecimal(12), 2);
-		yearVo.setMonthPrice(MathBigDeciamlUtil.round(MathBigDeciamlUtil.mul(div, new BigDecimal(0.85)), 2));
+		BigDecimal div = MathBigDecimalUtil.div(price, new BigDecimal(12), 2);
+		yearVo.setMonthPrice(MathBigDecimalUtil.round(MathBigDecimalUtil.mul(div, new BigDecimal(0.85)), 2));
 		
 		//年服务频次
 		yearVo.setServiceTimeYear(serviceTimes*52);

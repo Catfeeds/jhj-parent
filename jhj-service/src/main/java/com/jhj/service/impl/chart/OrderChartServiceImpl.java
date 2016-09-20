@@ -17,7 +17,7 @@ import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.meijia.utils.ChartUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.MathDoubleUtil;
 
 /**
@@ -334,19 +334,19 @@ public class OrderChartServiceImpl implements OrderChartService {
 						
 						appMoney =  chartSqlData.getTotalMoney();
 						
-						tableDataItem.put("App营业额", MathBigDeciamlUtil.round2(appMoney));
+						tableDataItem.put("App营业额", MathBigDecimalUtil.round2(appMoney));
 					}
 						
 					if (chartSqlData.getName().equals("1")){
 						tableDataItem.put("微网站来源", String.valueOf(chartSqlData.getTotal()));
 						
 						webMoney = chartSqlData.getTotalMoney();
-						tableDataItem.put("微网站营业额", MathBigDeciamlUtil.round2(webMoney));
+						tableDataItem.put("微网站营业额", MathBigDecimalUtil.round2(webMoney));
 					}
 					
 					add = appMoney.add(webMoney);
 					
-					tableDataItem.put("营业额小计", MathBigDeciamlUtil.round2(add));
+					tableDataItem.put("营业额小计", MathBigDecimalUtil.round2(add));
 				}
 			}
 		}

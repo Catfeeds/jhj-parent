@@ -914,7 +914,7 @@ public class OneCareUtil {
 		BigDecimal ratio = new BigDecimal(0);
 		
 		// 保留3位小数, 之后的 四舍五入
-		Double div = MathBigDeciamlUtil.div(amAndDeepPrice, sumPrice, 3).doubleValue();
+		Double div = MathBigDecimalUtil.div(amAndDeepPrice, sumPrice, 3).doubleValue();
 		
 		//switch 不支持 bigdecimal, 暂时用if/else
 		if(div >= 0 && div < 0.11 ){

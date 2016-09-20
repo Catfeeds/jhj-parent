@@ -41,6 +41,7 @@ import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
+import com.meijia.utils.baidu.MapPoiUtil;
 
 /**
  *
@@ -256,8 +257,8 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		
 		Orgs item = null;
 		try {
-			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
-			List<BaiduPoiVo> baiduPoiVos = BaiduMapUtil.getMinDest(destList, 10000, 3600);
+			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
+			List<BaiduPoiVo> baiduPoiVos = MapPoiUtil.getMinDest(destList);
 			BaiduPoiVo baiduPoiVo = null;
 			
 			if (!baiduPoiVos.isEmpty()) {

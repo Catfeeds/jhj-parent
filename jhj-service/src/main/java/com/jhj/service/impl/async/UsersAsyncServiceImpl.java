@@ -28,6 +28,7 @@ import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
+import com.meijia.utils.baidu.MapPoiUtil;
 
 
 @Service
@@ -82,7 +83,7 @@ public class UsersAsyncServiceImpl implements UsersAsyncService {
 		
 		List<BaiduPoiVo> resultAddrs = new ArrayList<BaiduPoiVo>();
 		try {
-			resultAddrs = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, destAddrs);
+			resultAddrs = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, destAddrs);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -158,7 +159,7 @@ public class UsersAsyncServiceImpl implements UsersAsyncService {
 		
 		List<BaiduPoiVo> resultAddrs = new ArrayList<BaiduPoiVo>();
 		try {
-			resultAddrs = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, destAddrs);
+			resultAddrs = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, destAddrs);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -27,7 +27,7 @@ import com.jhj.vo.staff.OrgStaffCashVo;
 import com.meijia.utils.vo.AppResultData;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
 
@@ -91,7 +91,7 @@ public class OrgStaffCashController extends BaseController {
 		
 		//申请提现短信发送
 		
-		String deptStr = MathBigDeciamlUtil.round2(orgStaffFinance.getTotalDept());
+		String deptStr = MathBigDecimalUtil.round2(orgStaffFinance.getTotalDept());
 		String timeStr = DateUtil.getNow("HH:mm");
 		String[] content = new String[] { timeStr, "7"};
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(orgstaff.getMobile(), Constants.STAFF_CASE_REQ, content);

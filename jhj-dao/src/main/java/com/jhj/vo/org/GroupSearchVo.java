@@ -11,6 +11,8 @@ package com.jhj.vo.org;
 public class GroupSearchVo {
 	
 	private long parentId;
+	
+	private Short orgStatus;
 
 	public long getParentId() {
 		return parentId;
@@ -18,6 +20,14 @@ public class GroupSearchVo {
 
 	public void setParentId(long parentId) {
 		this.parentId = parentId;
+	}
+
+	public Short getOrgStatus() {
+		return orgStatus;
+	}
+
+	public void setOrgStatus(Short orgStatus) {
+		this.orgStatus = orgStatus;
 	}
 	
 }

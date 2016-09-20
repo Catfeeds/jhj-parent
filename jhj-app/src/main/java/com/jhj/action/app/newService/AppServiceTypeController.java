@@ -18,7 +18,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.AppAmPartnerVo;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -139,15 +139,15 @@ public class AppServiceTypeController extends BaseController {
 		BeanUtilsExp.copyPropertiesIgnoreNull(serviceType, vo);
 		
 		BigDecimal price = vo.getPrice();
-		BigDecimal monthPrice = MathBigDeciamlUtil.mul(price, new BigDecimal(0.95));
-		monthPrice = MathBigDeciamlUtil.div(monthPrice, new BigDecimal(12));
+		BigDecimal monthPrice = MathBigDecimalUtil.mul(price, new BigDecimal(0.95));
+		monthPrice = MathBigDecimalUtil.div(monthPrice, new BigDecimal(12));
 		
 		
-		BigDecimal yearPrice = MathBigDeciamlUtil.mul(price, new BigDecimal(0.85));
+		BigDecimal yearPrice = MathBigDecimalUtil.mul(price, new BigDecimal(0.85));
 		
-		String priceStr = "原价:"+MathBigDeciamlUtil.round2(price)+"元";
-		String monthPriceStr = "月付:"+MathBigDeciamlUtil.round2(monthPrice)+"元(享95折)";
-		String yearPriceStr = "年付:"+MathBigDeciamlUtil.round2(yearPrice)+"元(享85折)";
+		String priceStr = "原价:"+MathBigDecimalUtil.round2(price)+"元";
+		String monthPriceStr = "月付:"+MathBigDecimalUtil.round2(monthPrice)+"元(享95折)";
+		String yearPriceStr = "年付:"+MathBigDecimalUtil.round2(yearPrice)+"元(享85折)";
 		vo.setPriceStr(priceStr);
 		vo.setMonthPrice(monthPriceStr);
 		vo.setYearPrice(yearPriceStr);

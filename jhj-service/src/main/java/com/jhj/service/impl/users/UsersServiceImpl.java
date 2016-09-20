@@ -39,7 +39,7 @@ import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Service
@@ -284,7 +284,7 @@ public class UsersServiceImpl implements UsersService {
 		// 显示助理服务时间
 		BigDecimal restMoney = user.getRestMoney();
 		BigDecimal unit = new BigDecimal(100);
-		BigDecimal temp = MathBigDeciamlUtil.div(restMoney, unit, 2);
+		BigDecimal temp = MathBigDecimalUtil.div(restMoney, unit, 2);
 		if (temp.compareTo(unit) >= 100) {
 			temp = new BigDecimal(100);
 		}

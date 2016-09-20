@@ -1,348 +1,343 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.bs.OrgsMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.Orgs" >
-    <id column="org_id" property="orgId" jdbcType="NUMERIC" />
-    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
-    <result column="org_addr" property="orgAddr" jdbcType="VARCHAR" />
-    <result column="org_tel" property="orgTel" jdbcType="VARCHAR" />
-    <result column="org_owner" property="orgOwner" jdbcType="VARCHAR" />
-    <result column="org_owner_tel" property="orgOwnerTel" jdbcType="VARCHAR" />
-    <result column="poi_latitude" property="poiLatitude" jdbcType="VARCHAR" />
-    <result column="poi_longitude" property="poiLongitude" jdbcType="VARCHAR" />
-    <result column="poi_type" property="poiType" jdbcType="NUMERIC" />
-    <result column="poi_name" property="poiName" jdbcType="VARCHAR" />
-    <result column="poi_address" property="poiAddress" jdbcType="VARCHAR" />
-    <result column="poi_city" property="poiCity" jdbcType="VARCHAR" />
-    <result column="poi_uid" property="poiUid" jdbcType="VARCHAR" />
-    <result column="poi_phone" property="poiPhone" jdbcType="VARCHAR" />
-    <result column="poi_post_code" property="poiPostCode" jdbcType="VARCHAR" />
-    <result column="org_status" property="orgStatus" jdbcType="NUMERIC" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
-    <result column="parent_id" property="parentId" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    org_id, org_name, org_addr, org_tel, org_owner, org_owner_tel, poi_latitude, poi_longitude, 
-    poi_type, poi_name, poi_address, poi_city, poi_uid, poi_phone, poi_post_code, org_status, 
-    add_time, update_time, parent_id
-  </sql>
-  
-   <select id="selectCloudOrgByParentOrg" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.GroupSearchVo">
-   	   select
-       <include refid="Base_Column_List" />
-       from orgs
-       <if test="parentId != null and parentId != 0">
-       	where parent_id = #{parentId,jdbcType=NUMERIC}
-       </if>
-   </select>
-  
-   <select id="selectOrgByCloudOrg" resultMap="BaseResultMap" parameterType="java.lang.Long">
-   	 select
-       <include refid="Base_Column_List" />
-     from orgs
-     where 
-		org_id = #{orgId,jdbcType=NUMERIC}   		
-   </select>
-  
-   <select id="selectCloudOrgs" resultMap="BaseResultMap">
-   	  select
-       <include refid="Base_Column_List" />
-     from orgs
-     where parent_id > 0
+<mapper namespace="com.jhj.po.dao.bs.OrgsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.Orgs">
+		<id column="org_id" property="orgId" jdbcType="NUMERIC" />
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="org_addr" property="orgAddr" jdbcType="VARCHAR" />
+		<result column="org_tel" property="orgTel" jdbcType="VARCHAR" />
+		<result column="org_owner" property="orgOwner" jdbcType="VARCHAR" />
+		<result column="org_owner_tel" property="orgOwnerTel" jdbcType="VARCHAR" />
+		<result column="poi_latitude" property="poiLatitude" jdbcType="VARCHAR" />
+		<result column="poi_longitude" property="poiLongitude" jdbcType="VARCHAR" />
+		<result column="poi_type" property="poiType" jdbcType="NUMERIC" />
+		<result column="poi_name" property="poiName" jdbcType="VARCHAR" />
+		<result column="poi_address" property="poiAddress" jdbcType="VARCHAR" />
+		<result column="poi_city" property="poiCity" jdbcType="VARCHAR" />
+		<result column="poi_uid" property="poiUid" jdbcType="VARCHAR" />
+		<result column="poi_phone" property="poiPhone" jdbcType="VARCHAR" />
+		<result column="poi_post_code" property="poiPostCode" jdbcType="VARCHAR" />
+		<result column="org_status" property="orgStatus" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		<result column="parent_id" property="parentId" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		org_id, org_name, org_addr, org_tel, org_owner, org_owner_tel, poi_latitude, poi_longitude,
+		poi_type, poi_name, poi_address, poi_city, poi_uid, poi_phone, poi_post_code, org_status,
+		add_time, update_time, parent_id
+	</sql>
 
-   </select>	
-  
-   <select id="selectOrgsNoParent" resultMap="BaseResultMap">
-   	 select
-       <include refid="Base_Column_List" />
-     from orgs
-     where 
-    	parent_id = 0
-  	order by 
-  		add_time desc
-   </select>
-  
-   <!-- 云店列表页,可根据门店 查询 -->
-   <select id="selectGroupsByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.GroupSearchVo">
-  	select
-    <include refid="Base_Column_List" />
-    from orgs
-    where 
-    	parent_id > 0
-    <if test="parentId !=null and parentId !=0 ">
-    	and parent_id = #{parentId,jdbcType=NUMERIC}
-    </if>
-  	order by 
-  		add_time desc
-  </select>	
-	
-  <select id="selectByPoiAddress" resultMap="BaseResultMap" parameterType="java.lang.String">
-  	select
-    <include refid="Base_Column_List" />
-    from orgs
-    where poi_address = #{poiAddress,jdbcType=VARCHAR}
-  </select>	
-		
-  <select id="selectByOrgName" resultMap="BaseResultMap" parameterType="java.lang.String">
-  	select
-    <include refid="Base_Column_List" />
-    from orgs
-    where org_name = #{orgName,jdbcType=VARCHAR}
-  </select>	
-  
-  <!-- 得到所有的 门店（一级） -->	  
-  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgSearchVo">
-  	select
-    <include refid="Base_Column_List" />
-    from orgs
-    where 1=1
-    and
-    	parent_id = 0
-    <if test="searchOrgId !=null">
-    	and org_id = #{searchOrgId,jdbcType=NUMERIC}
-    </if>
-    order by add_time desc
-  </select>
-  
-  <!-- 所有的云店 
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select
-    <include refid="Base_Column_List" />
-    from orgs
-    where 
-    	parent_id > 0 
-    order by add_time desc
-  </select>
-  -->
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from orgs
-    where org_id = #{orgId,jdbcType=NUMERIC}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from orgs
-    where org_id = #{orgId,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.bs.Orgs" >
-    insert into orgs (org_id, org_name, org_addr, 
-      org_tel, org_owner, org_owner_tel, 
-      poi_latitude, poi_longitude, poi_type, 
-      poi_name, poi_address, poi_city, 
-      poi_uid, poi_phone, poi_post_code, 
-      org_status, add_time, update_time, 
-      parent_id)
-    values (#{orgId,jdbcType=NUMERIC}, #{orgName,jdbcType=VARCHAR}, #{orgAddr,jdbcType=VARCHAR}, 
-      #{orgTel,jdbcType=VARCHAR}, #{orgOwner,jdbcType=VARCHAR}, #{orgOwnerTel,jdbcType=VARCHAR}, 
-      #{poiLatitude,jdbcType=VARCHAR}, #{poiLongitude,jdbcType=VARCHAR}, #{poiType,jdbcType=NUMERIC}, 
-      #{poiName,jdbcType=VARCHAR}, #{poiAddress,jdbcType=VARCHAR}, #{poiCity,jdbcType=VARCHAR}, 
-      #{poiUid,jdbcType=VARCHAR}, #{poiPhone,jdbcType=VARCHAR}, #{poiPostCode,jdbcType=VARCHAR}, 
-      #{orgStatus,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}, 
-      #{parentId,jdbcType=NUMERIC})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.Orgs" >
-    insert into orgs
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="orgId != null" >
-        org_id,
-      </if>
-      <if test="orgName != null" >
-        org_name,
-      </if>
-      <if test="orgAddr != null" >
-        org_addr,
-      </if>
-      <if test="orgTel != null" >
-        org_tel,
-      </if>
-      <if test="orgOwner != null" >
-        org_owner,
-      </if>
-      <if test="orgOwnerTel != null" >
-        org_owner_tel,
-      </if>
-      <if test="poiLatitude != null" >
-        poi_latitude,
-      </if>
-      <if test="poiLongitude != null" >
-        poi_longitude,
-      </if>
-      <if test="poiType != null" >
-        poi_type,
-      </if>
-      <if test="poiName != null" >
-        poi_name,
-      </if>
-      <if test="poiAddress != null" >
-        poi_address,
-      </if>
-      <if test="poiCity != null" >
-        poi_city,
-      </if>
-      <if test="poiUid != null" >
-        poi_uid,
-      </if>
-      <if test="poiPhone != null" >
-        poi_phone,
-      </if>
-      <if test="poiPostCode != null" >
-        poi_post_code,
-      </if>
-      <if test="orgStatus != null" >
-        org_status,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="parentId != null" >
-        parent_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="orgId != null" >
-        #{orgId,jdbcType=NUMERIC},
-      </if>
-      <if test="orgName != null" >
-        #{orgName,jdbcType=VARCHAR},
-      </if>
-      <if test="orgAddr != null" >
-        #{orgAddr,jdbcType=VARCHAR},
-      </if>
-      <if test="orgTel != null" >
-        #{orgTel,jdbcType=VARCHAR},
-      </if>
-      <if test="orgOwner != null" >
-        #{orgOwner,jdbcType=VARCHAR},
-      </if>
-      <if test="orgOwnerTel != null" >
-        #{orgOwnerTel,jdbcType=VARCHAR},
-      </if>
-      <if test="poiLatitude != null" >
-        #{poiLatitude,jdbcType=VARCHAR},
-      </if>
-      <if test="poiLongitude != null" >
-        #{poiLongitude,jdbcType=VARCHAR},
-      </if>
-      <if test="poiType != null" >
-        #{poiType,jdbcType=NUMERIC},
-      </if>
-      <if test="poiName != null" >
-        #{poiName,jdbcType=VARCHAR},
-      </if>
-      <if test="poiAddress != null" >
-        #{poiAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="poiCity != null" >
-        #{poiCity,jdbcType=VARCHAR},
-      </if>
-      <if test="poiUid != null" >
-        #{poiUid,jdbcType=VARCHAR},
-      </if>
-      <if test="poiPhone != null" >
-        #{poiPhone,jdbcType=VARCHAR},
-      </if>
-      <if test="poiPostCode != null" >
-        #{poiPostCode,jdbcType=VARCHAR},
-      </if>
-      <if test="orgStatus != null" >
-        #{orgStatus,jdbcType=NUMERIC},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=NUMERIC},
-      </if>
-      <if test="parentId != null" >
-        #{parentId,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.Orgs" >
-    update orgs
-    <set >
-      <if test="orgName != null" >
-        org_name = #{orgName,jdbcType=VARCHAR},
-      </if>
-      <if test="orgAddr != null" >
-        org_addr = #{orgAddr,jdbcType=VARCHAR},
-      </if>
-      <if test="orgTel != null" >
-        org_tel = #{orgTel,jdbcType=VARCHAR},
-      </if>
-      <if test="orgOwner != null" >
-        org_owner = #{orgOwner,jdbcType=VARCHAR},
-      </if>
-      <if test="orgOwnerTel != null" >
-        org_owner_tel = #{orgOwnerTel,jdbcType=VARCHAR},
-      </if>
-      <if test="poiLatitude != null" >
-        poi_latitude = #{poiLatitude,jdbcType=VARCHAR},
-      </if>
-      <if test="poiLongitude != null" >
-        poi_longitude = #{poiLongitude,jdbcType=VARCHAR},
-      </if>
-      <if test="poiType != null" >
-        poi_type = #{poiType,jdbcType=NUMERIC},
-      </if>
-      <if test="poiName != null" >
-        poi_name = #{poiName,jdbcType=VARCHAR},
-      </if>
-      <if test="poiAddress != null" >
-        poi_address = #{poiAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="poiCity != null" >
-        poi_city = #{poiCity,jdbcType=VARCHAR},
-      </if>
-      <if test="poiUid != null" >
-        poi_uid = #{poiUid,jdbcType=VARCHAR},
-      </if>
-      <if test="poiPhone != null" >
-        poi_phone = #{poiPhone,jdbcType=VARCHAR},
-      </if>
-      <if test="poiPostCode != null" >
-        poi_post_code = #{poiPostCode,jdbcType=VARCHAR},
-      </if>
-      <if test="orgStatus != null" >
-        org_status = #{orgStatus,jdbcType=NUMERIC},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=NUMERIC},
-      </if>
-      <if test="parentId != null" >
-        parent_id = #{parentId,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where org_id = #{orgId,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.Orgs" >
-    update orgs
-    set org_name = #{orgName,jdbcType=VARCHAR},
-      org_addr = #{orgAddr,jdbcType=VARCHAR},
-      org_tel = #{orgTel,jdbcType=VARCHAR},
-      org_owner = #{orgOwner,jdbcType=VARCHAR},
-      org_owner_tel = #{orgOwnerTel,jdbcType=VARCHAR},
-      poi_latitude = #{poiLatitude,jdbcType=VARCHAR},
-      poi_longitude = #{poiLongitude,jdbcType=VARCHAR},
-      poi_type = #{poiType,jdbcType=NUMERIC},
-      poi_name = #{poiName,jdbcType=VARCHAR},
-      poi_address = #{poiAddress,jdbcType=VARCHAR},
-      poi_city = #{poiCity,jdbcType=VARCHAR},
-      poi_uid = #{poiUid,jdbcType=VARCHAR},
-      poi_phone = #{poiPhone,jdbcType=VARCHAR},
-      poi_post_code = #{poiPostCode,jdbcType=VARCHAR},
-      org_status = #{orgStatus,jdbcType=NUMERIC},
-      add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC},
-      parent_id = #{parentId,jdbcType=NUMERIC}
-    where org_id = #{orgId,jdbcType=NUMERIC}
-  </update>
+	<select id="selectCloudOrgByParentOrg" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.GroupSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where 1 = 1
+		<if test="parentId != null and parentId != 0">
+			and parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orgStatus != null">
+			and org_status = #{orgStatus,jdbcType=NUMERIC}
+		</if>
+	</select>
+
+	<select id="selectOrgByCloudOrg" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where
+		org_id = #{orgId,jdbcType=NUMERIC}
+	</select>
+
+	<select id="selectCloudOrgs" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where parent_id > 0
+
+	</select>
+
+	<select id="selectOrgsNoParent" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where parent_id = 0 and org_status = 1
+		order by
+		add_time desc
+	</select>
+
+	<!-- 云店列表页,可根据门店 查询 -->
+	<select id="selectGroupsByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.GroupSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where
+		parent_id > 0
+		<if test="parentId !=null and parentId !=0 ">
+			and parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+		order by
+		add_time desc
+	</select>
+
+	<select id="selectByPoiAddress" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where poi_address = #{poiAddress,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByOrgName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where org_name = #{orgName,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 得到所有的 门店（一级） -->
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where 1=1
+		and
+		parent_id = 0
+		<if test="searchOrgId !=null">
+			and org_id = #{searchOrgId,jdbcType=NUMERIC}
+		</if>
+		order by add_time desc
+	</select>
+
+	<!-- 所有的云店 <select id="selectAll" resultMap="BaseResultMap" > select <include refid="Base_Column_List" /> from orgs where parent_id > 0 order by add_time desc </select> -->
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from orgs
+		where org_id = #{orgId,jdbcType=NUMERIC}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from orgs
+		where org_id = #{orgId,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.bs.Orgs">
+		insert into orgs (org_id, org_name, org_addr,
+		org_tel, org_owner, org_owner_tel,
+		poi_latitude, poi_longitude, poi_type,
+		poi_name, poi_address, poi_city,
+		poi_uid, poi_phone, poi_post_code,
+		org_status, add_time, update_time,
+		parent_id)
+		values (#{orgId,jdbcType=NUMERIC}, #{orgName,jdbcType=VARCHAR}, #{orgAddr,jdbcType=VARCHAR},
+		#{orgTel,jdbcType=VARCHAR}, #{orgOwner,jdbcType=VARCHAR}, #{orgOwnerTel,jdbcType=VARCHAR},
+		#{poiLatitude,jdbcType=VARCHAR}, #{poiLongitude,jdbcType=VARCHAR}, #{poiType,jdbcType=NUMERIC},
+		#{poiName,jdbcType=VARCHAR}, #{poiAddress,jdbcType=VARCHAR}, #{poiCity,jdbcType=VARCHAR},
+		#{poiUid,jdbcType=VARCHAR}, #{poiPhone,jdbcType=VARCHAR}, #{poiPostCode,jdbcType=VARCHAR},
+		#{orgStatus,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},
+		#{parentId,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.Orgs">
+		insert into orgs
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orgId != null">
+				org_id,
+			</if>
+			<if test="orgName != null">
+				org_name,
+			</if>
+			<if test="orgAddr != null">
+				org_addr,
+			</if>
+			<if test="orgTel != null">
+				org_tel,
+			</if>
+			<if test="orgOwner != null">
+				org_owner,
+			</if>
+			<if test="orgOwnerTel != null">
+				org_owner_tel,
+			</if>
+			<if test="poiLatitude != null">
+				poi_latitude,
+			</if>
+			<if test="poiLongitude != null">
+				poi_longitude,
+			</if>
+			<if test="poiType != null">
+				poi_type,
+			</if>
+			<if test="poiName != null">
+				poi_name,
+			</if>
+			<if test="poiAddress != null">
+				poi_address,
+			</if>
+			<if test="poiCity != null">
+				poi_city,
+			</if>
+			<if test="poiUid != null">
+				poi_uid,
+			</if>
+			<if test="poiPhone != null">
+				poi_phone,
+			</if>
+			<if test="poiPostCode != null">
+				poi_post_code,
+			</if>
+			<if test="orgStatus != null">
+				org_status,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orgId != null">
+				#{orgId,jdbcType=NUMERIC},
+			</if>
+			<if test="orgName != null">
+				#{orgName,jdbcType=VARCHAR},
+			</if>
+			<if test="orgAddr != null">
+				#{orgAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="orgTel != null">
+				#{orgTel,jdbcType=VARCHAR},
+			</if>
+			<if test="orgOwner != null">
+				#{orgOwner,jdbcType=VARCHAR},
+			</if>
+			<if test="orgOwnerTel != null">
+				#{orgOwnerTel,jdbcType=VARCHAR},
+			</if>
+			<if test="poiLatitude != null">
+				#{poiLatitude,jdbcType=VARCHAR},
+			</if>
+			<if test="poiLongitude != null">
+				#{poiLongitude,jdbcType=VARCHAR},
+			</if>
+			<if test="poiType != null">
+				#{poiType,jdbcType=NUMERIC},
+			</if>
+			<if test="poiName != null">
+				#{poiName,jdbcType=VARCHAR},
+			</if>
+			<if test="poiAddress != null">
+				#{poiAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="poiCity != null">
+				#{poiCity,jdbcType=VARCHAR},
+			</if>
+			<if test="poiUid != null">
+				#{poiUid,jdbcType=VARCHAR},
+			</if>
+			<if test="poiPhone != null">
+				#{poiPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="poiPostCode != null">
+				#{poiPostCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orgStatus != null">
+				#{orgStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.Orgs">
+		update orgs
+		<set>
+			<if test="orgName != null">
+				org_name = #{orgName,jdbcType=VARCHAR},
+			</if>
+			<if test="orgAddr != null">
+				org_addr = #{orgAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="orgTel != null">
+				org_tel = #{orgTel,jdbcType=VARCHAR},
+			</if>
+			<if test="orgOwner != null">
+				org_owner = #{orgOwner,jdbcType=VARCHAR},
+			</if>
+			<if test="orgOwnerTel != null">
+				org_owner_tel = #{orgOwnerTel,jdbcType=VARCHAR},
+			</if>
+			<if test="poiLatitude != null">
+				poi_latitude = #{poiLatitude,jdbcType=VARCHAR},
+			</if>
+			<if test="poiLongitude != null">
+				poi_longitude = #{poiLongitude,jdbcType=VARCHAR},
+			</if>
+			<if test="poiType != null">
+				poi_type = #{poiType,jdbcType=NUMERIC},
+			</if>
+			<if test="poiName != null">
+				poi_name = #{poiName,jdbcType=VARCHAR},
+			</if>
+			<if test="poiAddress != null">
+				poi_address = #{poiAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="poiCity != null">
+				poi_city = #{poiCity,jdbcType=VARCHAR},
+			</if>
+			<if test="poiUid != null">
+				poi_uid = #{poiUid,jdbcType=VARCHAR},
+			</if>
+			<if test="poiPhone != null">
+				poi_phone = #{poiPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="poiPostCode != null">
+				poi_post_code = #{poiPostCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orgStatus != null">
+				org_status = #{orgStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where org_id = #{orgId,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.Orgs">
+		update orgs
+		set org_name = #{orgName,jdbcType=VARCHAR},
+		org_addr = #{orgAddr,jdbcType=VARCHAR},
+		org_tel = #{orgTel,jdbcType=VARCHAR},
+		org_owner = #{orgOwner,jdbcType=VARCHAR},
+		org_owner_tel = #{orgOwnerTel,jdbcType=VARCHAR},
+		poi_latitude = #{poiLatitude,jdbcType=VARCHAR},
+		poi_longitude = #{poiLongitude,jdbcType=VARCHAR},
+		poi_type = #{poiType,jdbcType=NUMERIC},
+		poi_name = #{poiName,jdbcType=VARCHAR},
+		poi_address = #{poiAddress,jdbcType=VARCHAR},
+		poi_city = #{poiCity,jdbcType=VARCHAR},
+		poi_uid = #{poiUid,jdbcType=VARCHAR},
+		poi_phone = #{poiPhone,jdbcType=VARCHAR},
+		poi_post_code = #{poiPostCode,jdbcType=VARCHAR},
+		org_status = #{orgStatus,jdbcType=NUMERIC},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=NUMERIC},
+		parent_id = #{parentId,jdbcType=NUMERIC}
+		where org_id = #{orgId,jdbcType=NUMERIC}
+	</update>
 </mapper>

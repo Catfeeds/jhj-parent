@@ -53,7 +53,7 @@ import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
 import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
@@ -473,14 +473,14 @@ public class UserController extends BaseController {
 		}else{
 			
 			//如果是任意金额充值。该值就是 充值的具体数字, 保留两位小数
-			cardValue = MathBigDeciamlUtil.round(new BigDecimal(chargeMoney), 2);
+			cardValue = MathBigDecimalUtil.round(new BigDecimal(chargeMoney), 2);
 		}
 		
 		//设置充值金额
 		finace.setRechargeValue(cardValue);
 		
 		//充值后 余额
-		BigDecimal afterMoney = MathBigDeciamlUtil.add(restMoney, cardValue);
+		BigDecimal afterMoney = MathBigDecimalUtil.add(restMoney, cardValue);
 		
 		finace.setRestMoneyAfter(afterMoney);
 		

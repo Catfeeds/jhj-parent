@@ -29,6 +29,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserTrailRealService;
+import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
 import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
@@ -36,6 +37,7 @@ import com.jhj.vo.org.LeaveSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
+import com.meijia.utils.baidu.MapPoiUtil;
 
 /**
  *
@@ -249,7 +251,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		
 		Orgs item = null;
 		try {
-			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
+			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
 			/**
 			 * 
 			 *  2016年6月1日17:46:42 
@@ -257,7 +259,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			 *   临时决定调换成  20Km , 3小时
 			 */
 			
-			List<BaiduPoiVo> voList = BaiduMapUtil.getMinDest(destList, 20000, 3600*3);
+			List<BaiduPoiVo> voList = MapPoiUtil.getMinDest(destList);
 			
 			for (int i =0; i < cloudOrgList.size(); i++) {
 				item = cloudOrgList.get(i);
@@ -319,7 +321,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		UserTrailReal item = null;
 		
 		try {
-			List<BaiduPoiVo> destList = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
+			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
 			
 			Collections.sort(destList, new Comparator<BaiduPoiVo>() {
 			    public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
@@ -488,9 +490,14 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	 * 
 	 */
 	@Override
-	public List<OrgStaffsNewVo> getAbleStaffListByCloudOrg(Long orderId,Long cloudOrgId) {
+	public List<OrgStaffsNewVo> getAbleStaffListByCloudOrg(Long orderId, Long parentId, Long cloudId) {
 		
-		List<OrgStaffs> staffList = staffService.selectByOrgId(cloudOrgId);
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setParentId(parentId);
+		
+		if (cloudId > 0L) searchVo.setOrgId(cloudId);
+	
+		List<OrgStaffs> staffList = staffService.selectNewStaffList(searchVo);
 		
 		List<Long> staffIdList = new ArrayList<Long>();
 		

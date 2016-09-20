@@ -24,7 +24,7 @@ import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.meijia.utils.HttpClientUtil;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.wx.utils.MD5Util;
 import com.meijia.wx.utils.ServletUtil;
@@ -112,8 +112,8 @@ public class OrderWxPayController extends BaseController {
 			wxPay = dictCardType.getCardPay().toString();
 			BigDecimal cardPay = dictCardType.getCardPay();
 			BigDecimal p1 = new BigDecimal(100);
-			BigDecimal p2 = MathBigDeciamlUtil.mul(cardPay, p1);
-			BigDecimal orderPayNow = MathBigDeciamlUtil.round(p2, 0);
+			BigDecimal p2 = MathBigDecimalUtil.mul(cardPay, p1);
+			BigDecimal orderPayNow = MathBigDecimalUtil.round(p2, 0);
 			wxPay = orderPayNow.toString();
 			tradeName = "叮当到家家庭服务";
 		}

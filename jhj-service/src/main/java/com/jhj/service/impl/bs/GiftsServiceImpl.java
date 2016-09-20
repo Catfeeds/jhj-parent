@@ -20,7 +20,7 @@ import com.jhj.vo.bs.GiftCouponVo;
 import com.jhj.vo.bs.GiftVo;
 import com.jhj.vo.bs.GiftsSearchVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDeciamlUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Service
@@ -127,8 +127,8 @@ public class GiftsServiceImpl implements GiftsService {
 		BigDecimal totalGiftMoney = new BigDecimal(0);
 		for (GiftCouponVo item : giftCouponVos) {
 			BigDecimal num = new BigDecimal(item.getNum().intValue());
-			BigDecimal itemTotalMoney = MathBigDeciamlUtil.mul(item.getValue(), num);
-			totalGiftMoney = MathBigDeciamlUtil.add(totalGiftMoney, itemTotalMoney);
+			BigDecimal itemTotalMoney = MathBigDecimalUtil.mul(item.getValue(), num);
+			totalGiftMoney = MathBigDecimalUtil.add(totalGiftMoney, itemTotalMoney);
 		}
 		vo.setTotalGiftMoney(totalGiftMoney);
 		return vo;
