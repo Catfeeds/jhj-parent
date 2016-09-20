@@ -34,6 +34,7 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OaOrderService;
+import com.jhj.service.order.OrdersService;
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.OaOrderSearchVo;
@@ -86,7 +87,7 @@ public class OrderExportExcelController extends BaseController {
 		 *  1. 导出时,搜索条件保持一致 
 		 * 
 		 */
-		PageHelper.startPage(pageNo, pageSize);
+//		PageHelper.startPage(pageNo, pageSize);
 		
 //		if(oaOrderSearchVo == null){
 //			oaOrderSearchVo  = new OaOrderSearchVo();
