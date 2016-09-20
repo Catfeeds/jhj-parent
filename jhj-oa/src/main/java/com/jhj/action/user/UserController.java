@@ -78,22 +78,22 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private OrderCardsService orderCardsService;
-	
+
 	@Autowired
 	private CardTypeService cardTypeService;
 
 	@Autowired
 	private FinanceRechargeService financeService;
-	
+
 	@Autowired
 	private JhjSettingService settingService;
-	
+
 	@Autowired
 	private OrgsService orgService;
-	
+
 	@Autowired
 	private OrdersService orderService;
-	
+
 	@AuthPassport
 	@RequestMapping(value = "/update_name", method = { RequestMethod.POST })
 	public AppResultData<Object> detail(@RequestParam("pk") Long userId,
@@ -122,52 +122,55 @@ public class UserController extends BaseController {
 	@AuthPassport
 	@RequestMapping(value = "/user-list", method = { RequestMethod.GET })
 	public String userList(HttpServletRequest request, Model model,
-			@ModelAttribute("userListSearchVoModel")UserSearchVo searchVo) throws ParseException {
-		
+			@ModelAttribute("userListSearchVoModel") UserSearchVo searchVo)
+			throws ParseException {
+
 		int pageNo = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+
+		// 转换为数据库 参数字段
+//		String startTimeStr = searchVo.getStartTimeStr();
+//		if (!StringUtil.isEmpty(startTimeStr)) {
+//			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil
+//					.getBeginOfDay(startTimeStr)));
+//		}
+//
+//		String endTimeStr = searchVo.getEndTimeStr();
+//		if (!StringUtil.isEmpty(endTimeStr)) {
+//			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil
+//					.getEndOfDay(endTimeStr)));
+//		}
+//
+//		// 得到 当前登录 的 门店id，并作为搜索条件
+//		String org = AuthHelper.getSessionLoginOrg(request);
+//
+//		List<Long> cloudIdList = new ArrayList<Long>();
+//
+//		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+//
+//			GroupSearchVo groupSearchVo = new GroupSearchVo();dqz
+//
+//			groupSearchVo.setParentId(Long.parseLong(org));
+//
+//			List<Orgs> cloudList = orgService
+//					.selectCloudOrgByParentOrg(groupSearchVo);
+//
+//			for (Orgs orgs : cloudList) {
+//				cloudIdList.add(orgs.getOrgId());
+//			}
+//		} else {
+//			cloudIdList.add(0L);
+//		}
 		
-		//转换为数据库 参数字段
-		String startTimeStr = searchVo.getStartTimeStr();
-		if(!StringUtil.isEmpty(startTimeStr)){
-			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
-		}
-		
-		String endTimeStr = searchVo.getEndTimeStr();
-		if(!StringUtil.isEmpty(endTimeStr)){
-			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
-		}
-				
-		
-		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
-		
-		List<Long> cloudIdList = new ArrayList<Long>();
-		
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
-			
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-			
-			groupSearchVo.setParentId(Long.parseLong(org));
-			
-			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
-			
-			
-			for (Orgs orgs : cloudList) {
-				cloudIdList.add(orgs.getOrgId());
-			}
-		}else{
-			cloudIdList.add(0L);
-		}
-		searchVo.setSearchOrgList(cloudIdList);
-		
+		searchVo.setSearchOrgList(getCouldId(request));
+
 		PageInfo result = usersService.searchVoListPage(searchVo, pageNo,
 				pageSize);
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", searchVo);
-		
+
 		return "user/userList";
 	}
 
@@ -199,18 +202,20 @@ public class UserController extends BaseController {
 
 		return "user/userCouponsList";
 	}
-	
+
 	/**
 	 * 
-	 *  @Title: payDetailList
-	  * @Description: 
-	  * 		消费明细列表	
-	  * 	
+	 * @Title: payDetailList
+	 * @Description: 消费明细列表
+	 * 
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/user-pay-detail", method = { RequestMethod.GET })
-	public String payDetailList(HttpServletRequest request, Model model,
-			@ModelAttribute("userPayDetailSearchVoModel")UserDetailSearchVo searchVo) throws ParseException {
+	public String payDetailList(
+			HttpServletRequest request,
+			Model model,
+			@ModelAttribute("userPayDetailSearchVoModel") UserDetailSearchVo searchVo)
+			throws ParseException {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
@@ -219,69 +224,68 @@ public class UserController extends BaseController {
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		
-		//转换为数据库 参数字段
+
+		// 转换为数据库 参数字段
 		String startTimeStr = searchVo.getStartTimeStr();
-		if(!StringUtil.isEmpty(startTimeStr)){
-			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		if (!StringUtil.isEmpty(startTimeStr)) {
+			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil
+					.getBeginOfDay(startTimeStr)));
 		}
-		
+
 		String endTimeStr = searchVo.getEndTimeStr();
-		if(!StringUtil.isEmpty(endTimeStr)){
-			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		if (!StringUtil.isEmpty(endTimeStr)) {
+			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil
+					.getEndOfDay(endTimeStr)));
 		}
-		
-		
-		//得到 当前登录 的 门店id，并作为搜索条件
+
+		// 得到 当前登录 的 门店id，并作为搜索条件
 		String org = AuthHelper.getSessionLoginOrg(request);
-		
+
 		UserSearchVo userSearchVo = new UserSearchVo();
-		
+
 		List<Long> cloudIdList = new ArrayList<Long>();
-		
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
-			
+
+		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+
 			GroupSearchVo groupSearchVo = new GroupSearchVo();
-			
+
 			groupSearchVo.setParentId(Long.parseLong(org));
-			
-			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
-			
-			
+
+			List<Orgs> cloudList = orgService
+					.selectCloudOrgByParentOrg(groupSearchVo);
+
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
 			}
-			
-		}else{
+
+		} else {
 			cloudIdList.add(0L);
 		}
-		
+
 		userSearchVo.setSearchOrgList(cloudIdList);
-		
+
 		/*
-		 *  根据  在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的  消费明细
-		 *  
+		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
 		 */
-		
-		
+
 		// 在店长登录门店 下过单的 用户集合
-		List<Users> userList = usersService.selectBySearchVo(userSearchVo);	
-		
+		List<Users> userList = usersService.selectBySearchVo(userSearchVo);
+
 		List<Long> userIdList = new ArrayList<Long>();
-		
+
 		for (Users users : userList) {
 			userIdList.add(users.getId());
 		}
-		
-		
+
 		searchVo.setUserIdList(userIdList);
-		
+
 		PageHelper.startPage(pageNo, pageSize);
-		
-		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
-		
+
+		List<UserDetailPay> list = userDetailPayService
+				.selectBySearchVo(searchVo);
+
 		PageInfo result = new PageInfo(list);
-		
+
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);
 
@@ -324,20 +328,20 @@ public class UserController extends BaseController {
 		// 设置用户Id;充值方式
 		userChargeVo.setUserId(userId);
 		userChargeVo.setChargeWay((short) 0);// 0=固定充值
-		
+
 		Users users = usersService.selectByUsersId(userId);
-		
+
 		userChargeVo.setUserMobile(users.getMobile());
-		
-		
+
 		/*
-		 *  充值时获取 验证码的 手机号
+		 * 充值时获取 验证码的 手机号
 		 */
-		
-//		JhjSetting jhjSetting = settingService.selectBySettingType(Constants.OA_CHARGE_SETTING_TYPE);
-		
+
+		// JhjSetting jhjSetting =
+		// settingService.selectBySettingType(Constants.OA_CHARGE_SETTING_TYPE);
+
 		userChargeVo.setOwnerMobile("18611289885");
-		
+
 		model.addAttribute("userChargeVo", userChargeVo);
 		model.addAttribute("selectDataSource",
 				usersService.selectDictCardDataSource());
@@ -347,129 +351,131 @@ public class UserController extends BaseController {
 		return "user/chargeForm";
 	}
 
-	
 	/**********
-	 *  2016年3月25日18:28:50 
-	 *  
-	 *    会员充值  相关			
+	 * 2016年3月25日18:28:50
+	 * 
+	 * 会员充值 相关
 	 * 
 	 */
-	
-	/* 
-	 *  运营平台-- 会员充值列表--充值--获取验证码
+
+	/*
+	 * 运营平台-- 会员充值列表--充值--获取验证码
 	 */
-//	@AuthPassport
+	// @AuthPassport
 	@RequestMapping(value = "get_user_sms_token.json", method = RequestMethod.GET)
 	public AppResultData<String> getSmsToken(
 			@RequestParam("userId") Long userId,
 			@RequestParam("userMobile") String userMobile,
 			@RequestParam("smsType") int sms_type) {
-		
+
 		AppResultData<String> result = new AppResultData<String>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		/*
-		 * 校验  手机号 和 用户(主管手机号。接收验证码) 是否匹配
+		 * 校验 手机号 和 用户(主管手机号。接收验证码) 是否匹配
 		 */
-		
-//		JhjSetting setting = settingService.selectBySettingType(Constants.OA_CHARGE_SETTING_TYPE);
-//		
-//		String value = setting.getSettingValue();
-		
+
+		// JhjSetting setting =
+		// settingService.selectBySettingType(Constants.OA_CHARGE_SETTING_TYPE);
+		//
+		// String value = setting.getSettingValue();
+
 		String value = "18611289885";
-		if(!userMobile.equals("18611289885")){
-			
+		if (!userMobile.equals("18611289885")) {
+
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("请联系主管获得验证码");
-			
+
 			return result;
 		}
-		
-		
-		//1.调用RandomUtil.randomNumber()产生六位验证码
+
+		// 1.调用RandomUtil.randomNumber()产生六位验证码
 		String code = RandomUtil.randomNumber(4);
 
 		String[] content = new String[] { code, Constants.GET_CODE_MAX_VALID };
-		//2.短信平台发送给用户，并返回相关信息（短信平台是30分钟有效）
+		// 2.短信平台发送给用户，并返回相关信息（短信平台是30分钟有效）
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(value,
 				Constants.GET_USER_VERIFY_ID, content);
 		UserSmsToken record = userSmsTokenService.initUserSmsToken(value,
 				sms_type, code, sendSmsResult);
-		//3.操作user_sms_token，保存验证码信息
+		// 3.操作user_sms_token，保存验证码信息
 		userSmsTokenService.insert(record);
 
 		result.setStatus(Constants.SUCCESS_0);
 		result.setMsg("发送成功");
-		
+
 		return result;
 	}
-	
-	
+
 	/**
 	 * 
-	 *  @Title: doChargeForm
-	  * @Description: 
-	  *     运营平台--   提交  会员充值 结果
-	  * @param userId	用户id
-	  * @param chargeWay 充值方式
-	  * @param chargeMoney 充值金额	
-	  * 			
-	  * 
-	  * @param userCode  验证码
+	 * @Title: doChargeForm
+	 * @Description: 运营平台-- 提交 会员充值 结果
+	 * @param userId
+	 *            用户id
+	 * @param chargeWay
+	 *            充值方式
+	 * @param chargeMoney
+	 *            充值金额
+	 * 
+	 * 
+	 * @param userCode
+	 *            验证码
 	 */
-//	@AuthPassport
+	// @AuthPassport
 	@RequestMapping(value = "/charge-form.json", method = { RequestMethod.POST })
 	public AppResultData<Object> doChargeForm(HttpServletRequest request,
 			@RequestParam("userId") Long userId,
-			@RequestParam("userMobile")String userMobile,
-			@RequestParam("chargeWay")Short chargeWay,
-			@RequestParam("chargeMoney")Long chargeMoney,
-			@RequestParam("userCode")String userCode) {
-		
-		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
-		
-		//1. 判断 手机号 和 验证码是否 匹配
+			@RequestParam("userMobile") String userMobile,
+			@RequestParam("chargeWay") Short chargeWay,
+			@RequestParam("chargeMoney") Long chargeMoney,
+			@RequestParam("userCode") String userCode) {
+
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, "", "");
+
+		// 1. 判断 手机号 和 验证码是否 匹配
 		Users user = usersService.selectByUsersId(userId);
-		
-		// 最新的 一条 验证码。类型为 3,表示  运营平台--会员充值验证码
-		UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType("18611289885", Constants.SMS_TYPE_3);
+
+		// 最新的 一条 验证码。类型为 3,表示 运营平台--会员充值验证码
+		UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType(
+				"18611289885", Constants.SMS_TYPE_3);
 		if (smsToken == null) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("验证码错误");
 			return result;
 		}
 		String token = smsToken.getSmsToken();
-		
-		if(!token.equals(userCode)){
-			
+
+		if (!token.equals(userCode)) {
+
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("验证码错误");
 			return result;
 		}
-		
-		
+
 		FinanceRecharge finace = financeService.initFinace();
-		
+
 		finace.setUserId(userId);
-		//用户余额
+		// 用户余额
 		BigDecimal restMoney = user.getRestMoney();
-		
+
 		finace.setRestMoneyBefore(restMoney);
-		
-		//充值金额
+
+		// 充值金额
 		BigDecimal cardValue = new BigDecimal(0);
-		
-		
-		//2. 金额相关
-		if(chargeWay == (short) 0){
+
+		// 2. 金额相关
+		if (chargeWay == (short) 0) {
 			/*
 			 * 如果是 固定金额充值
-			 *   
-			 *   chargeMoney 表示在 dict_card_type 表中，该记录的 主键id
+			 * 
+			 * chargeMoney 表示在 dict_card_type 表中，该记录的 主键id
 			 */
-			DictCardType cardType = cardTypeService.selectByPrimaryKey(chargeMoney);
-			
+			DictCardType cardType = cardTypeService
+					.selectByPrimaryKey(chargeMoney);
+
 			cardValue = cardType.getCardValue();
-			
+
 		}else{
 			
 			//如果是任意金额充值。该值就是 充值的具体数字, 保留两位小数
@@ -478,83 +484,80 @@ public class UserController extends BaseController {
 		
 		//设置充值金额
 		finace.setRechargeValue(cardValue);
-		
-		//充值后 余额
+
+		// 充值后 余额
 		BigDecimal afterMoney = MathBigDecimalUtil.add(restMoney, cardValue);
-		
+
 		finace.setRestMoneyAfter(afterMoney);
-		
+
 		/*
-		 *  3. 充值操作的 人员
+		 * 3. 充值操作的 人员
 		 */
 		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
-		
-		//当前登录 用户的 id
+
+		// 当前登录 用户的 id
 		Long id = auth.getId();
-		
+
 		finace.setAdminId(id);
-		
+
 		finace.setAdminName(auth.getUsername());
-		
-		//TODO 登录角色 的 手机号， 无法获得
+
+		// TODO 登录角色 的 手机号， 无法获得
 		finace.setAdminMobile("");
-		
+
 		/*
 		 * 4. 审批手机号、验证码
 		 */
 		finace.setApproveMobile(userMobile);
 		finace.setApproveToken(userCode);
-		
+
 		financeService.insertSelective(finace);
-		
-		//此时 更新 用户 余额
-		
+
+		// 此时 更新 用户 余额
+
 		user.setRestMoney(afterMoney);
 		usersService.updateByPrimaryKeySelective(user);
-		
-		
+
 		/*
-		 *   记录 用户 消费明细
+		 * 记录 用户 消费明细
 		 */
-		
-		
+
 		UserDetailPay userDetailPay = userDetailPayService.initUserDetailPay();
-		
+
 		userDetailPay.setUserId(user.getId());
 		userDetailPay.setMobile(user.getMobile());
 
 		userDetailPay.setOrderType(Constants.ORDER_TYPE_4);
 		/*
-		 *  运营平台的  会员充值， 是由  财务操作。
-		 *  
-		 *  	逻辑上已经保证了。充值后，用户也已经完成了 支付。
-		 *  
-		 *  	 所以总金额和 支付金额 相等即可。
+		 * 运营平台的 会员充值， 是由 财务操作。
 		 * 
+		 * 逻辑上已经保证了。充值后，用户也已经完成了 支付。
+		 * 
+		 * 所以总金额和 支付金额 相等即可。
 		 */
 		userDetailPay.setOrderMoney(cardValue);
 		userDetailPay.setOrderPay(cardValue);
-		
+
 		userDetailPay.setAddTime(TimeStampUtil.getNowSecond());
-		
+
 		userDetailPayService.insert(userDetailPay);
-		
+
 		// TODO 5. 充值成功后,将该验证码。设为无效
-//		userSmsTokenService.deleteByPrimaryKey(smsToken.getId());
-		
+		// userSmsTokenService.deleteByPrimaryKey(smsToken.getId());
+
 		result.setMsg("充值成功");
-		
+
 		return result;
 	}
-	
-	
+
 	/*
 	 * 充值记录
 	 */
 	@AuthPassport
-	@RequestMapping(value = "finace_recharge_list",method = RequestMethod.GET)
-	public String getAllChargeList(Model model,HttpServletRequest request,FinanceSearchVo searchVo){
-		
+	@RequestMapping(value = "finace_recharge_list", method = RequestMethod.GET)
+	public String getAllChargeList(Model model, HttpServletRequest request,
+			FinanceSearchVo searchVo) {
+
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
@@ -564,40 +567,39 @@ public class UserController extends BaseController {
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		PageHelper.startPage(pageNo, pageSize);
-		
-		
-		// 过滤 显示  当前  登录 用户 
+
+		// 过滤 显示 当前 登录 用户
 		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
-		
+
 		Long id = auth.getId();
-		
+
 		searchVo.setAdminId(id);
-		
-		
+
 		List<FinanceRecharge> list = financeService.selectByListPage(searchVo);
-		
+
 		FinanceRecharge finance = null;
 		for (int i = 0; i < list.size(); i++) {
-			
+
 			finance = list.get(i);
-			
-			FinanceRechargeVo financeVo = financeService.transToFinanceVo(finance);
-			
+
+			FinanceRechargeVo financeVo = financeService
+					.transToFinanceVo(finance);
+
 			list.set(i, financeVo);
 		}
-		
+
 		PageInfo result = new PageInfo(list);
-		
+
 		model.addAttribute("financeListModel", result);
 
 		return "user/financeList";
 	}
-	
+
 	/*
-	 *   发起充值操作的 列表页
+	 * 发起充值操作的 列表页
 	 */
-	
-//	@AuthPassport
+
+	// @AuthPassport
 	@RequestMapping(value = "/finance_user-list", method = { RequestMethod.GET })
 	public String getUserList(HttpServletRequest request, Model model,
 			UserSearchVo searchVo) {
@@ -609,13 +611,60 @@ public class UserController extends BaseController {
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		
-		
+
 		PageInfo result = usersService.searchVoListPage(searchVo, pageNo,
 				pageSize);
 		model.addAttribute("userList", result);
 
 		return "user/financeUserList";
 	}
-	
+
+	/*
+	 * 首页新增用户显示信息
+	 */
+	@RequestMapping(value = "/home-user-list", method = RequestMethod.GET)
+	public String showNewUser(Model model, HttpServletRequest request)
+			throws ParseException {
+		int pageNo = ServletRequestUtils.getIntParameter(request,
+				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request,
+				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		UserSearchVo vo = new UserSearchVo();
+		
+		String startTimeStr = DateUtil.getBeginOfDay();
+    	String endTimeStr = DateUtil.getEndOfDay();
+    	Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
+		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
+		vo.setStartTime(startTime);
+		vo.setEndTime(endTime);
+		PageInfo<Users> result=usersService.selectUserByDay(vo,pageNo, pageSize);
+		model.addAttribute("userList", result);
+		model.addAttribute("userListSearchVoModel", vo);
+		return "user/userList";
+	}
+
+	//根据当前登录的用户获取云店id
+	public List<Long> getCouldId(HttpServletRequest request) {
+		String org = AuthHelper.getSessionLoginOrg(request);
+
+		List<Long> cloudIdList = new ArrayList<Long>();
+
+		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+
+			GroupSearchVo groupSearchVo = new GroupSearchVo();
+
+			groupSearchVo.setParentId(Long.parseLong(org));
+
+			List<Orgs> cloudList = orgService
+					.selectCloudOrgByParentOrg(groupSearchVo);
+
+			for (Orgs orgs : cloudList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+		} else {
+			cloudIdList.add(0L);
+		}
+		
+		return cloudIdList;
+	}
 }
