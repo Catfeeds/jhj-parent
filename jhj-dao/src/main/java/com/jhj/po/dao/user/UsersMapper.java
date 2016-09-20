@@ -141,4 +141,7 @@ public interface UsersMapper {
 	//查询没有下过单的用户
 	List<Users> selectUsersByOrderMobile();
 	
+	//查询当天新增的用户
+	List<Users> selectUserbyDay(UserSearchVo vo);
+	
 }
