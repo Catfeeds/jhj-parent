@@ -171,7 +171,7 @@ public interface OrdersMapper {
 	List<ChartMapVo> statOrderCancelByQuarter(ChartSearchVo chartSearchVo);		
 	
 	//订单统计 订单数求和
-	int statTotalOrder(ChartSearchVo chartSearchVo);
+	Map<String,Integer> statTotalOrder(ChartSearchVo chartSearchVo);
 
 	/*
 	 * 订单收入图表
