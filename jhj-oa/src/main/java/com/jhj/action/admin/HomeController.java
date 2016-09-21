@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,8 +58,7 @@ public class HomeController extends AdminController {
     	int totalUser = userChartService.statTotalUser(chartSearchVo);
     	
     	//总订单数
-    	int totalOrder = orderChartService.statTotalOrder(chartSearchVo) ;    	
-    	
+    	Map<String,Integer> totalOrder = orderChartService.statTotalOrder(chartSearchVo) ; 
     	//今日新增用户数
     	String startTimeStr = DateUtil.getBeginOfDay();
     	String endTimeStr = DateUtil.getEndOfDay();
@@ -69,13 +69,12 @@ public class HomeController extends AdminController {
 		chartSearchVo.setEndTime(endTime);
     	int totalUserToday = userChartService.statTotalUser(chartSearchVo);
     	
-    	//今日订单数
-    	int totalOrderToday = orderChartService.statTotalOrder(chartSearchVo);
-    	
+    	//今日订单数总数
+    	Map<String,Integer> totalOrderToday = orderChartService.statTotalOrder(chartSearchVo);
     	
     	model.addAttribute("totalUser", totalUser);
     	model.addAttribute("totalUserToday", totalUserToday);
-    	model.addAttribute("totalOrder", totalOrder);
+    	model.addAttribute("totalOrder", totalOrder.get("total"));
     	model.addAttribute("totalOrderToday", totalOrderToday);
     	
     	//统计最近十天的订单数
