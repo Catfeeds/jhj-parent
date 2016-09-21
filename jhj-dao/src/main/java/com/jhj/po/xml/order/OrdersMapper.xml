@@ -1431,9 +1431,8 @@
 	</select>
 	
 	<!-- 市场订单数求和 -->
-	<select id="statTotalOrder" resultType="java.lang.Integer" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT COUNT(*) AS total 
-			   FROM orders
+	<select id="statTotalOrder" resultType="java.util.HashMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		select count(*) as total,count(case when order_type=0 then 1 else null end) as jc,count(case when order_type=2 then 1 else null end) as sd from orders
 		WHERE 1=1
 		<if test="startTime !=null">
 			<![CDATA[ and add_time >= #{startTime}]]>
@@ -1451,6 +1450,7 @@
 		<if test="orgId !=null">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
+		
 	</select>
 		
 	<!-- ****************************
