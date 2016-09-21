@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<parent> 
+	<parent>
 		<groupId>com.jhj</groupId>
 		<artifactId>jhj-parent2.1</artifactId>
 		<version>2.1-SNAPSHOT</version>
@@ -15,7 +16,7 @@
 		<jackson.version>2.4.2</jackson.version>
 		<spring.version>4.1.1.RELEASE</spring.version>
 	</properties>
-	
+
 	<dependencies>
 
 		<dependency>
@@ -23,30 +24,30 @@
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 		</dependency>
-		
+
 		<!-- jedis包，java操作 redis -->
 		<dependency>
-		    <groupId>redis.clients</groupId>
-		    <artifactId>jedis</artifactId>
-		    <version>2.8.0</version>
-		    <type>jar</type>
-		    <scope>compile</scope>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.8.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>yuntongxun</groupId>
 			<artifactId>ccp.rest.sms</artifactId>
 			<version>2.6.3</version>
 		</dependency>
-		
+
 		<!-- 语音短信验证码包,不完整 -->
-		<dependency> 
+		<dependency>
 			<groupId>yuntongxun</groupId>
 			<artifactId>CCP_REST_SDK_JAVA_v2.7r</artifactId>
 			<version>0.0.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.getui.com</groupId>
 			<artifactId>gexin-rp-sdk-base</artifactId>
@@ -58,13 +59,13 @@
 			<artifactId>gexin-rp-sdk-http</artifactId>
 			<version>4.0.0.2</version>
 		</dependency>
- 
+
 		<dependency>
 			<groupId>com.getui.com</groupId>
 			<artifactId>gexin-rp-sdk-template</artifactId>
 			<version>4.0.0.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -176,22 +177,27 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.10-FINAL</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.baidu.yun</groupId>
 			<artifactId>com.baidu.yun.push</artifactId>
 			<version>3.0.0</version>
-		</dependency>	
-		
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>			
-		
-<dependency>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.1.1.RELEASE</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
@@ -225,30 +231,33 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-lgpl</artifactId>
 			<version>1.8.5</version>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
 			<version>2.6.1</version>
-		</dependency>		
-		
-		<!-- 阿里云消息队列sdk 
-		<dependency> 
-		    <groupId>com.aliyun.openservices</groupId>
-		   <artifactId>ons-client</artifactId>
-		   <version>1.2.1</version>
-		</dependency>  -->
-		 
-		
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.1.1.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- 阿里云消息队列sdk <dependency> <groupId>com.aliyun.openservices</groupId> 
+			<artifactId>ons-client</artifactId> <version>1.2.1</version> </dependency> -->
+
+
 		<!-- poi 导出excel -->
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi</artifactId>
-		    <version>3.14</version>
-		</dependency> 
-		 
-		   
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.14</version>
+		</dependency>
+
+
 	</dependencies>
 	<build>
 		<plugins>
