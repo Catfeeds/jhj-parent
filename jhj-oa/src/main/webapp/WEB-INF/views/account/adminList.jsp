@@ -66,12 +66,12 @@
 						            <td>${ item.roleName }</td>
 						            <td>${ item.enable }</td>
 						            <td>
-						            	<c:if test="${item.orgId==0 }">
+						            	<c:if test="${item.orgsId==0 }">
 						            		<span>--</span>
 						            	</c:if>
-						            	<c:if test="${item.orgId!=0 }">
+						            	<c:if test="${item.orgsId!=0 }">
 							            	<c:forEach items="${org }" var="o">
-							            		<c:if test="${item.orgId==o.orgId }">
+							            		<c:if test="${item.orgsId==o.orgId }">
 							            			<span>${o.orgName }</span>
 							            		</c:if>
 							            		
