@@ -1,6 +1,7 @@
 package com.jhj.service.chart;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartSearchVo;
@@ -18,7 +19,7 @@ public interface OrderChartService {
 	//市场订单图表
 	ChartDataVo statChartDatas(ChartSearchVo chartSearchVo, List<String> timeSeries);
 
-	int statTotalOrder(ChartSearchVo chartSearchVo);
+	Map<String,Integer> statTotalOrder(ChartSearchVo chartSearchVo);
 
 	//订单收入图表
 	
