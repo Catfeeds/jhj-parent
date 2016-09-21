@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@ include file="../shared/taglib.jsp"%>
 
@@ -79,9 +79,17 @@
                           </div>
                           <div class="value">
                               <h1 class=" count4">
-                                  0
+                                  ${totalOrderToday.total }
                               </h1>
                               <p>今日订单</p>
+                              <a href="../order/order-hour-list?flag=1" style="float:left;">
+                              	<p>基础保洁</p>
+                              	<span id="jcbjtj">${totalOrderToday.jc }</span>
+                              </a>
+                              <a href="../order/order-am-list?flag=2" >
+                              	<p>深度服务</p>
+                              	<span id="sdfwtj">${totalOrderToday.sd }</span>
+                              </a>
                           </div>
                       </section>
                   </div>
@@ -118,7 +126,7 @@
 		countUp("${totalUser}");
 		countUp2("${totalUserToday}");
 		countUp3("${totalOrder}");
-		countUp4("${totalOrderToday}");
+		/* countUp4("${totalOrderToday}"); */
 	</script>
 	<script src="<c:url value='/js/jhj/index.js'/>"></script>
 	<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
