@@ -27,96 +27,78 @@
 		poi_type, poi_name, poi_address, poi_city, poi_uid, poi_phone, poi_post_code, org_status,
 		add_time, update_time, parent_id
 	</sql>
-
-	<select id="selectCloudOrgByParentOrg" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.GroupSearchVo">
-		select
-		<include refid="Base_Column_List" />
-		from orgs
-		where 1 = 1
-		<if test="parentId != null and parentId != 0">
-			and parent_id = #{parentId,jdbcType=NUMERIC}
-		</if>
-
-		<if test="orgStatus != null">
-			and org_status = #{orgStatus,jdbcType=NUMERIC}
-		</if>
-	</select>
-
-	<select id="selectOrgByCloudOrg" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from orgs
 		where
 		org_id = #{orgId,jdbcType=NUMERIC}
 	</select>
-
-	<select id="selectCloudOrgs" resultMap="BaseResultMap">
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from orgs
-		where parent_id > 0
-
-	</select>
-
-	<select id="selectOrgsNoParent" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from orgs
-		where parent_id = 0 and org_status = 1
-		order by
-		add_time desc
-	</select>
-
-	<!-- 云店列表页,可根据门店 查询 -->
-	<select id="selectGroupsByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.GroupSearchVo">
-		select
-		<include refid="Base_Column_List" />
-		from orgs
-		where
-		parent_id > 0
-		<if test="parentId !=null and parentId !=0 ">
+		where 1 = 1
+		<if test="parentId != null">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
-		order by
-		add_time desc
-	</select>
+		
+		<if test="isCloud != null">
+			and parent_id > 0
+		</if>
+		
+		<if test="orgId != null">
+			and org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orgName != null">
+			and org_name = #{orgName,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="poiAddress != null">
+			and  poi_address = #{poiAddress,jdbcType=VARCHAR}
+		</if>
 
-	<select id="selectByPoiAddress" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from orgs
-		where poi_address = #{poiAddress,jdbcType=VARCHAR}
+		<if test="orgStatus != null">
+			and org_status = #{orgStatus,jdbcType=NUMERIC}
+		</if>
+		order by add_time desc
 	</select>
-
-	<select id="selectByOrgName" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from orgs
-		where org_name = #{orgName,jdbcType=VARCHAR}
-	</select>
-
+	
 	<!-- 得到所有的 门店（一级） -->
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from orgs
-		where 1=1
-		and
-		parent_id = 0
-		<if test="searchOrgId !=null">
-			and org_id = #{searchOrgId,jdbcType=NUMERIC}
+		where 1 = 1
+		<if test="parentId != null">
+			and parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="isCloud != null">
+			and parent_id > 0
+		</if>
+		
+		<if test="orgId != null">
+			and org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orgName != null">
+			and org_name = #{orgName,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="poiAddress != null">
+			and  poi_address = #{poiAddress,jdbcType=VARCHAR}
+		</if>
+
+		<if test="orgStatus != null">
+			and org_status = #{orgStatus,jdbcType=NUMERIC}
 		</if>
 		order by add_time desc
 	</select>
 
-	<!-- 所有的云店 <select id="selectAll" resultMap="BaseResultMap" > select <include refid="Base_Column_List" /> from orgs where parent_id > 0 order by add_time desc </select> -->
-
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
-		select
-		<include refid="Base_Column_List" />
-		from orgs
-		where org_id = #{orgId,jdbcType=NUMERIC}
-	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from orgs
 		where org_id = #{orgId,jdbcType=NUMERIC}

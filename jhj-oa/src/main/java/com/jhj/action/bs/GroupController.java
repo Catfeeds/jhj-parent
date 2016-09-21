@@ -24,7 +24,7 @@ import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.vo.org.GroupSearchVo;
+import com.jhj.vo.OrgSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -67,7 +67,7 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/group_list", method = {RequestMethod.GET})
 	public String groupList(Model model, HttpServletRequest request, 
-			@ModelAttribute("groupSearchVoModel") GroupSearchVo searchVo,
+			@ModelAttribute("groupSearchVoModel") OrgSearchVo searchVo,
 			@RequestParam(value = "orgId",required = false,defaultValue = "0") Long orgId){
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
@@ -86,15 +86,14 @@ public class GroupController {
 		String org = AuthHelper.getSessionLoginOrg(request);
 		
 		if(!StringUtil.isEmpty(org) && !org.equals("0")){
-			
 			searchVo.setParentId(Long.parseLong(org));
 		}
 		
-		List<Orgs> list = orgsService.selectGroupsByListPage(searchVo);
+		if (searchVo == null) searchVo = new OrgSearchVo();
+		searchVo.setIsCloud((short) 1);
 		
-		
-		PageInfo result = new PageInfo(list);	
-		
+		PageInfo result = orgsService.selectByListPage(searchVo, pageNo, pageSize);
+
 		model.addAttribute("orgsModel", result);
 		
 		model.addAttribute("groupSearchVoModel", searchVo);
@@ -154,8 +153,11 @@ public class GroupController {
 	public void validName(PrintWriter printWriter, String name ) throws UnsupportedEncodingException{
 		
 		String names = URLDecoder.decode(name,"utf-8");
-		List<Orgs> list = orgsService.selectByOrgName(names);
 		
+		OrgSearchVo searchVo = new OrgSearchVo();
+		searchVo.setOrgName(names);
+		
+		List<Orgs> list = orgsService.selectBySearchVo(searchVo);
 		if(list.size()>0 && list !=null){
 			//如果输入的名称能查出来记录，则返回 名称已存在 标识
 			printWriter.write("no");

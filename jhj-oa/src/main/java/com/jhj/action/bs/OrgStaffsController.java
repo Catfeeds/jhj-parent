@@ -25,11 +25,9 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
-import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffTagsService;
@@ -68,6 +66,7 @@ public class OrgStaffsController extends BaseController {
 	
 	
 //	@AuthPassport
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/staff-list", method = RequestMethod.GET)
 	public String orgStaffList(Model model, HttpServletRequest request, StaffSearchVo staffSearchVo) throws UnsupportedEncodingException{
 		
@@ -128,11 +127,6 @@ public class OrgStaffsController extends BaseController {
 		
 		
 		OrgStaffVo orgStaffVo = orgStaffsService.initOrgStaffVo();
-		
-		 //门店列表 
-		
-		//2016年3月9日10:55:13  修改为 服务人员选择 云店
-		List<Orgs> orgList = orgService.selectOrgsNoParent();
 		
 		//标签列表
 		

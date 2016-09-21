@@ -1,18 +1,12 @@
 package com.jhj.action.socials;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,19 +26,15 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthPassport;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.socials.Socials;
 import com.jhj.service.socials.SocialsCallService;
 import com.jhj.service.socials.SocialsService;
 import com.jhj.vo.SocialCallSearchVo;
 import com.jhj.vo.SocialsSearchVo;
-import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.socials.SocialsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
-import com.meijia.utils.RandomUtil;
-import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**

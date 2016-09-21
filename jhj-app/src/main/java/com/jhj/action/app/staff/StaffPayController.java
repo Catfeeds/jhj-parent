@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.model.bs.OrgStaffBlack;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffPayDept;

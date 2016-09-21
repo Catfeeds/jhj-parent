@@ -24,6 +24,7 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserRefOrgService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.OrgSearchVo;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduMapUtil;
@@ -68,7 +69,10 @@ public class UsersAsyncServiceImpl implements UsersAsyncService {
 		if (userRefOrg == null) userRefOrg = userRefOrgService.initUserRefOrg();
 		
 		//找出所有的云店.
-		List<Orgs> orgList = orgsService.selectCloudOrgs();
+		OrgSearchVo searchVo = new OrgSearchVo();
+		searchVo.setIsCloud((short) 1);
+		searchVo.setOrgStatus((short) 1);
+		List<Orgs> orgList = orgsService.selectBySearchVo(searchVo);
 		
 		List<BaiduPoiVo> destAddrs = new ArrayList<BaiduPoiVo>();
 		Orgs item = null;
@@ -144,7 +148,10 @@ public class UsersAsyncServiceImpl implements UsersAsyncService {
 		
 
 		//先找出所有的门店. 后续会根据城市来寻找.
-		List<Orgs> orgList = orgsService.selectAll();
+		OrgSearchVo searchVo = new OrgSearchVo();
+		searchVo.setIsCloud((short) 1);
+		searchVo.setOrgStatus((short) 1);
+		List<Orgs> orgList = orgsService.selectBySearchVo(searchVo);
 		
 		List<BaiduPoiVo> destAddrs = new ArrayList<BaiduPoiVo>();
 		Orgs item = null;

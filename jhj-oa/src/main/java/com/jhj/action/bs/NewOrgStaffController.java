@@ -49,6 +49,7 @@ import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserRefAmService;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
@@ -386,10 +387,18 @@ public class NewOrgStaffController extends AdminController {
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		//获取员工的地理位置
 		PageInfo<Map> pageList = staffService.selectByListPage(mobile,pageNo,pageSize);
+		
+		
+		OrgSearchVo searchVo = new OrgSearchVo();
+		searchVo.setParentId(0L);
+		searchVo.setOrgStatus((short) 1);
 		//获取门店信息
-		List<Orgs> orgsList=orgService.selectOrgsNoParent();
+		List<Orgs> orgsList=orgService.selectBySearchVo(searchVo);
 		//获取云店信息
-		List<Orgs> cloudOrgsList = orgService.selectCloudOrgs();
+		
+		searchVo = new OrgSearchVo();
+		searchVo.setIsCloud((short) 1);
+		List<Orgs> cloudOrgsList = orgService.selectBySearchVo(searchVo);
 		
 		model.addAttribute("orgsList", orgsList);
 		model.addAttribute("cloudOrgsList", cloudOrgsList);

@@ -29,6 +29,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserTrailRealService;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
@@ -234,7 +235,10 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		List<Orgs> matchOrgList = new ArrayList<Orgs>();
 		
 		//目标地点：所有云店的集合 
-		List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+		OrgSearchVo searchVo = new OrgSearchVo();
+		searchVo.setIsCloud((short) 1);
+		searchVo.setOrgStatus((short) 1);
+		List<Orgs> cloudOrgList = orgService.selectBySearchVo(searchVo);
 		
 		if (cloudOrgList.isEmpty()) return matchOrgList;
 		

@@ -36,6 +36,7 @@ import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
@@ -235,7 +236,10 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		String fromLng = userAddrs.getLongitude();
 		
 		//目标地点：所有门店详细地址的集合 、、可以分页取。每次5个。
-		List<Orgs> orgList = orgService.selectAll();
+		OrgSearchVo searchVo = new OrgSearchVo();
+		searchVo.setIsCloud((short) 1);
+		searchVo.setOrgStatus((short) 1);
+		List<Orgs> orgList = orgService.selectBySearchVo(searchVo);
 		
 		if (orgList.isEmpty()) return matchOrg;
 		

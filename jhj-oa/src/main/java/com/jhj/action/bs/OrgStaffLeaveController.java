@@ -31,7 +31,6 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.bs.LeaveStaffVo;
 import com.jhj.vo.order.OaOrderListNewVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.jhj.vo.org.LeaveSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -194,7 +193,7 @@ public class OrgStaffLeaveController extends BaseController {
 		leave.setAdminId(authId);
 		
 		Long orgId = leaveVo.getOrgId();
-		Orgs org = orgService.selectOrgByCloudOrg(orgId);
+		Orgs org = orgService.selectByPrimaryKey(orgId);
 		
 		leave.setOrgId(org.getOrgId());
 		

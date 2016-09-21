@@ -18,9 +18,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
-import com.jhj.po.model.dict.DictAd;
 import com.jhj.po.model.orderReview.JhjSetting;
-import com.jhj.po.model.survey.SurveyBank;
 import com.jhj.service.orderReview.SettingService;
 import com.meijia.utils.BeanUtilsExp;
 

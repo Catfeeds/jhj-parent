@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
-import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -56,7 +54,6 @@ import com.jhj.vo.order.DeepCleanVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
-import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 
 

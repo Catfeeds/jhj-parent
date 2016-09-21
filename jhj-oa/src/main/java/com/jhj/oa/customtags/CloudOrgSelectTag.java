@@ -15,7 +15,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.vo.org.GroupSearchVo;
+import com.jhj.vo.OrgSearchVo;
 import com.meijia.utils.StringUtil;
 
 
@@ -67,12 +67,16 @@ public class CloudOrgSelectTag extends SimpleTagSupport {
 			if(logInParentOrgId != 0){
 				//如果登录的是店长
 				
-				GroupSearchVo searchVo = new GroupSearchVo();
+				OrgSearchVo searchVo = new OrgSearchVo();
 				searchVo.setParentId(logInParentOrgId);
-				orgList = orgService.selectCloudOrgByParentOrg(searchVo);
+				searchVo.setOrgStatus((short) 1);
+				orgList = orgService.selectBySearchVo(searchVo);
 			}else{
 				//如果登录的是 运营人员
-				orgList = orgService.selectCloudOrgs();
+				OrgSearchVo searchVo = new OrgSearchVo();
+				searchVo.setIsCloud((short) 1);
+				searchVo.setOrgStatus((short) 1);
+				orgList = orgService.selectBySearchVo(searchVo);
 			}
 			
 

@@ -18,7 +18,6 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffAuth;
-import com.jhj.po.model.bs.OrgStaffCash;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;

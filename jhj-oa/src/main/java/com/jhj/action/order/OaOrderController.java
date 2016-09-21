@@ -50,10 +50,10 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.OaOrderSearchVo;
 import com.jhj.vo.OrderSearchVo;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
@@ -187,10 +187,10 @@ public class OaOrderController extends BaseController {
 		} else {
 			
 			if (!org.equals("0") && !StringUtil.isEmpty(org)) {
-				GroupSearchVo groupSearchVo = new GroupSearchVo();
-				groupSearchVo.setParentId(Long.parseLong(org));
-
-				List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+				OrgSearchVo searchVo = new OrgSearchVo();
+				searchVo.setParentId(Long.parseLong(org));
+				searchVo.setOrgStatus((short) 1);
+				List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
 
 				for (Orgs orgs : cloudList) {
 					cloudIdList.add(orgs.getOrgId());
@@ -367,10 +367,10 @@ public class OaOrderController extends BaseController {
 
 		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
 
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-			groupSearchVo.setParentId(Long.parseLong(org));
-
-			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setOrgStatus((short) 1);
+			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
 
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
@@ -393,7 +393,10 @@ public class OaOrderController extends BaseController {
 
 		} else {
 			// 如果是 运营 人员，则能 查看全部 订单, 查看所有 云店
-			List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setIsCloud((short) 1);
+			searchVo.setOrgStatus((short) 1);
+			List<Orgs> cloudOrgList = orgService.selectBySearchVo(searchVo);
 
 			for (Orgs orgs : cloudOrgList) {
 				cloudIdList.add(orgs.getOrgId());
@@ -561,8 +564,7 @@ public class OaOrderController extends BaseController {
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailHour(orderNo, disStatus);
 		
 		Orders orders = orderService.selectByOrderNo(orderNo);
-//		Short orderStatus = orders.getOrderStatus();
-		
+
 		OrderSearchVo searchVo = new OrderSearchVo();
 
 		searchVo.setServiceDateStart(orders.getServiceDate());
@@ -570,29 +572,6 @@ public class OaOrderController extends BaseController {
 		
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
 		
-//		if(orderStatus  == Constants.ORDER_AM_STATUS_2 || 
-//				   orderStatus == Constants.ORDER_AM_STATUS_3){
-//			List<OrgStaffsNewVo> volist = oaOrderListVo.getVoList();
-//			for (int i =0; i < volist.size(); i++) {
-//				OrgStaffsNewVo orgStaffsNewVo = volist.get(i);
-//	
-//				searchVo.setStaffId(orgStaffsNewVo.getStaffId());
-//	
-//				// 对应当前订单的日期。。该员工是否 有 派工单
-//				Long disNum = disService.getDisNumForStaDuringServiceDate(searchVo);
-//	
-//				if (disNum > 0L) {
-//					orgStaffsNewVo.setDispathStaStr("不可派工");
-//					orgStaffsNewVo.setDispathStaFlag(0);
-//				} else {
-//					orgStaffsNewVo.setDispathStaStr("可派工");
-//					orgStaffsNewVo.setDispathStaFlag(1);
-//				}
-//				list.add(orgStaffsNewVo);
-//			}
-//			
-//			
-//		}
 		oaOrderListVo.setVoList(list);
 
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);

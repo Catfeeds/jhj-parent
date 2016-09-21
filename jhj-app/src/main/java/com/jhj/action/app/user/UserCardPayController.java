@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.CardTypeService;

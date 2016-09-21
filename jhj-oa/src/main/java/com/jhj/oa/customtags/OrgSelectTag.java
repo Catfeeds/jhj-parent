@@ -12,11 +12,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.vo.OrgSearchVo;
 
 
 public class OrgSelectTag extends SimpleTagSupport {
 
     private String selectId = "0";
+    
+    private Long sessionOrgId = 0L;
 
     // 是否包含全部，  0 = 不包含  1= 包含
     private String hasAll =  "1";
@@ -36,8 +39,13 @@ public class OrgSelectTag extends SimpleTagSupport {
     			WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(((PageContext) getJspContext()).getServletContext());
     			orgService = springContext.getBean(OrgsService.class);
     	    
-    		
-        	List<Orgs> orgList = orgService.selectOrgsNoParent();
+			
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setParentId(sessionOrgId);
+			searchVo.setOrgStatus((short) 1);
+        	List<Orgs> orgList = orgService.selectBySearchVo(searchVo);
+        	
+        	
 
             StringBuffer orgSelect = new StringBuffer();
             
@@ -81,6 +89,14 @@ public class OrgSelectTag extends SimpleTagSupport {
 
 	public void setSelectId(String selectId) {
 		this.selectId = selectId;
+	}
+
+	public Long getSessionOrgId() {
+		return sessionOrgId;
+	}
+
+	public void setSessionOrgId(Long sessionOrgId) {
+		this.sessionOrgId = sessionOrgId;
 	}
 
 

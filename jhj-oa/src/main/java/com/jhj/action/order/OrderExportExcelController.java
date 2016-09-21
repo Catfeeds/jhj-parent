@@ -38,8 +38,8 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.OaOrderSearchVo;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.ExcelUtil;
 import com.meijia.utils.StringUtil;
@@ -108,10 +108,11 @@ public class OrderExportExcelController extends BaseController {
 			 * 而且 只能是 已 派工过的 订单。
 			 */
 			
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-			groupSearchVo.setParentId(Long.parseLong(org));
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setOrgStatus((short) 1);
 			
-			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
 			
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
@@ -129,7 +130,10 @@ public class OrderExportExcelController extends BaseController {
 			
 		}else{
 			// 如果是 运营 人员，则能  查看全部 订单, 查看所有 云店
-			List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setIsCloud((short) 1);
+			searchVo.setOrgStatus((short) 1);
+			List<Orgs> cloudOrgList = orgService.selectBySearchVo(searchVo);
 			
 			for (Orgs orgs : cloudOrgList) {
 				cloudIdList.add(orgs.getOrgId());
@@ -259,10 +263,11 @@ public class OrderExportExcelController extends BaseController {
 		
 		if(!org.equals("0") && !StringUtil.isEmpty(org)){
 			
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-			groupSearchVo.setParentId(Long.parseLong(org));
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setOrgStatus((short) 1);
 			
-			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
 			
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
@@ -279,7 +284,10 @@ public class OrderExportExcelController extends BaseController {
 			
 		}else{
 			// 如果是 运营 人员，则能  查看全部 订单, 查看所有 云店
-			List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setIsCloud((short) 1);
+			searchVo.setOrgStatus((short) 1);
+			List<Orgs> cloudOrgList = orgService.selectBySearchVo(searchVo);
 			
 			for (Orgs orgs : cloudOrgList) {
 				cloudIdList.add(orgs.getOrgId());

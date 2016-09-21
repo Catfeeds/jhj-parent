@@ -38,7 +38,6 @@ import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserAppVo;
-import com.meijia.utils.DateUtil;
 import com.meijia.utils.IPUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;

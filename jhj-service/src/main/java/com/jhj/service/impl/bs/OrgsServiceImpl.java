@@ -12,7 +12,6 @@ import com.jhj.po.dao.bs.OrgsMapper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.OrgSearchVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -31,6 +30,16 @@ public class OrgsServiceImpl implements OrgsService {
 	public int deleteByPrimaryKey(Long orgId) {
 		return orgsMapper.deleteByPrimaryKey(orgId);
 	}
+	
+	@Override
+	public int updateByPrimaryKeySelective(Orgs record) {
+		return orgsMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public int updateByPrimaryKey(Orgs record) {
+		return orgsMapper.updateByPrimaryKey(record);
+	}
 
 	@Override
 	public int insert(Orgs record) {
@@ -48,28 +57,20 @@ public class OrgsServiceImpl implements OrgsService {
 	}
 
 	@Override
-	public int updateByPrimaryKeySelective(Orgs record) {
-		return orgsMapper.updateByPrimaryKeySelective(record);
-	}
+	public List<Orgs> selectBySearchVo(OrgSearchVo searchVo) {
 
-	@Override
-	public int updateByPrimaryKey(Orgs record) {
-		return orgsMapper.updateByPrimaryKey(record);
+		return orgsMapper.selectBySearchVo(searchVo);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List<Orgs> selectAll() {
-		return orgsMapper.selectAll();
-	}
-
-	@Override
-	public PageInfo selectByListPage(OrgSearchVo orgSearchVo,int pageNo,int pageSize) {
+	public PageInfo selectByListPage(OrgSearchVo searchVo,int pageNo,int pageSize) {
 		/* 
 		 * 代码执行顺序 
 		 * 	startPage在   select。。之前才有效果
 		 */
 		PageHelper.startPage(pageNo, pageSize);
-		List<Orgs> lists = orgsMapper.selectByListPage(orgSearchVo);
+		List<Orgs> lists = orgsMapper.selectByListPage(searchVo);
 		PageInfo result = new PageInfo(lists);
 		return result;
 	}
@@ -102,41 +103,4 @@ public class OrgsServiceImpl implements OrgsService {
 		return orgs;
 	}
 
-	@Override
-	public List<Orgs> selectByOrgName(String orgName) {
-		return orgsMapper.selectByOrgName(orgName);
-	}
-
-	@Override
-	public Orgs selectByPoiAddress(String poiAddress) {
-		return orgsMapper.selectByPoiAddress(poiAddress);
-	}
-	
-	
-	@Override
-	public List<Orgs> selectGroupsByListPage(GroupSearchVo searchVo) {
-		
-		return orgsMapper.selectGroupsByListPage(searchVo);
-	}
-
-	@Override
-	public List<Orgs> selectOrgsNoParent() {
-		return orgsMapper.selectOrgsNoParent();
-	}
-
-	@Override
-	public List<Orgs> selectCloudOrgs() {
-		return orgsMapper.selectCloudOrgs();
-	}
-	
-	@Override
-	public Orgs selectOrgByCloudOrg(Long orgId) {
-		return orgsMapper.selectOrgByCloudOrg(orgId);
-	}
-	
-	
-	@Override
-	public List<Orgs> selectCloudOrgByParentOrg(GroupSearchVo searchVo) {
-		return orgsMapper.selectCloudOrgByParentOrg(searchVo);
-	}
 }

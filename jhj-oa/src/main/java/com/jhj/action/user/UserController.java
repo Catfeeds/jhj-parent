@@ -44,11 +44,11 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.UsersSmsTokenVo;
 import com.jhj.vo.finance.FinanceSearchVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
 import com.jhj.vo.user.UserCouponsVo;
@@ -247,12 +247,10 @@ public class UserController extends BaseController {
 
 		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
 
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-
-			groupSearchVo.setParentId(Long.parseLong(org));
-
-			List<Orgs> cloudList = orgService
-					.selectCloudOrgByParentOrg(groupSearchVo);
+			OrgSearchVo searchVo1 = new OrgSearchVo();
+			searchVo1.setParentId(Long.parseLong(org));
+			searchVo1.setOrgStatus((short) 1);
+			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
 
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
@@ -651,13 +649,11 @@ public class UserController extends BaseController {
 
 		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
 
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-
-			groupSearchVo.setParentId(Long.parseLong(org));
-
-			List<Orgs> cloudList = orgService
-					.selectCloudOrgByParentOrg(groupSearchVo);
-
+			OrgSearchVo searchVo1 = new OrgSearchVo();
+			searchVo1.setParentId(Long.parseLong(org));
+			searchVo1.setOrgStatus((short) 1);
+			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
+			
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
 			}

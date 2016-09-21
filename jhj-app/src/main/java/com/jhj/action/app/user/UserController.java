@@ -1,7 +1,6 @@
 package com.jhj.action.app.user;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.tags.UserRefTags;
 import com.jhj.po.model.user.UserAddrs;

@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.UserAddrs;
-import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.async.UsersAsyncService;
 import com.jhj.service.bs.OrgStaffsService;
@@ -25,7 +23,6 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserAddrsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.baiduMap.BaiduMapSearchUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**

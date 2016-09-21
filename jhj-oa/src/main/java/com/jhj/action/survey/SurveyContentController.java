@@ -3,8 +3,6 @@ package com.jhj.action.survey;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;

@@ -3,7 +3,6 @@ package com.jhj.action.order;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -14,11 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.google.gson.Gson;
 import com.jhj.action.BaseController;
-import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffLeave;
@@ -33,12 +29,12 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.OaOrderDisSearchVo;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.dispatch.StaffDispatchVo;
 import com.jhj.vo.order.newDispatch.EventVo;
 import com.jhj.vo.order.newDispatch.OaStaffDisAndLeaveVo;
 import com.jhj.vo.order.newDispatch.TimeEventVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.jhj.vo.org.LeaveSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -100,10 +96,11 @@ public class OrderCalendarController extends BaseController {
 			 * 如果是店长 ，只能看到 自己门店 对应的 所有 云店 的 派工记录  （成功派工）。
 			 */
 
-			GroupSearchVo groupSearchVo = new GroupSearchVo();
-			groupSearchVo.setParentId(Long.parseLong(org));
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setOrgStatus((short) 1);
 
-			List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
 
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
@@ -111,7 +108,10 @@ public class OrderCalendarController extends BaseController {
 
 		} else {
 			// 如果是 运营 人员，查看所有 云店
-			List<Orgs> cloudOrgList = orgService.selectCloudOrgs();
+			OrgSearchVo searchVo = new OrgSearchVo();
+			searchVo.setIsCloud((short) 1);
+			searchVo.setOrgStatus((short) 1);
+			List<Orgs> cloudOrgList = orgService.selectBySearchVo(searchVo);
 
 			for (Orgs orgs : cloudOrgList) {
 				cloudIdList.add(orgs.getOrgId());

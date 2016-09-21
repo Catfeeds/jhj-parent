@@ -25,8 +25,8 @@ import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffPayDeptService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.OrgStaffFinanceSearchVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
@@ -69,10 +69,11 @@ public class OrgStaffPayDeptController extends BaseController {
 		} else {
 
 			if (!org.equals("0") && !StringUtil.isEmpty(org)) {
-				GroupSearchVo groupSearchVo = new GroupSearchVo();
-				groupSearchVo.setParentId(Long.parseLong(org));
+				OrgSearchVo searchVo1 = new OrgSearchVo();
+				searchVo1.setParentId(Long.parseLong(org));
+				searchVo1.setOrgStatus((short) 1);
 
-				List<Orgs> cloudList = orgService.selectCloudOrgByParentOrg(groupSearchVo);
+				List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
 
 				for (Orgs orgs : cloudList) {
 					cloudIdList.add(orgs.getOrgId());
@@ -105,12 +106,16 @@ public class OrgStaffPayDeptController extends BaseController {
 		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
 			//如果登录的是店长
 			
-			GroupSearchVo gsearchVo = new GroupSearchVo();
-			gsearchVo.setParentId(Long.valueOf(org));
-			orgList = orgService.selectCloudOrgByParentOrg(gsearchVo);
+			OrgSearchVo searchVo1 = new OrgSearchVo();
+			searchVo1.setParentId(Long.parseLong(org));
+			searchVo1.setOrgStatus((short) 1);
+			orgList = orgService.selectBySearchVo(searchVo1);
 		}else{
 			//如果登录的是 运营人员
-			orgList = orgService.selectCloudOrgs();
+			OrgSearchVo searchVo2 = new OrgSearchVo();
+			searchVo2.setIsCloud((short) 1);
+			searchVo2.setOrgStatus((short) 1);
+			orgList = orgService.selectBySearchVo(searchVo2);
 		}
 		
 		model.addAttribute("orgList", orgList);

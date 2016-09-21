@@ -9,7 +9,7 @@ $('.form_datetime').datetimepicker({
 
 // 提交派工修改
 $("#submitForm").on('click', function() {
-	
+	$('#submitForm').attr('disabled',"true");
 	var orderStatus = $("#orderStatus").val();
 	
 	// 只有 已支付 和 已派工 的订单，可以有 调整派工操作
@@ -17,7 +17,7 @@ $("#submitForm").on('click', function() {
 	if (orderStatus != 2 && orderStatus != 3) {
 		
 		alert("只有 已支付 或 已派工状态的 订单 ,可以进行调整 派工操作");
-		
+		$('#submitForm').removeAttr("disabled"); 
 		return false;
 	}
 	
@@ -61,7 +61,7 @@ $("#submitForm").on('click', function() {
 	if (selectStaffId == 0 && staffId == 0) {
 		
 		alert("没有可用派工,返回列表页");
-		
+		$('#submitForm').removeAttr("disabled"); 
 		var rootPath = getRootPath();
 		window.location.replace(rootPath + "/order/order-hour-list");
 		
@@ -81,11 +81,12 @@ $("#submitForm").on('click', function() {
 		success : function(data, status, xhr) {
 			
 			alert("保存成功");
-			
+			$('#submitForm').removeAttr("disabled"); 
 			var rootPath = getRootPath();
 			window.location.replace(rootPath + "/order/order-hour-list");
 		},
 		error : function() {
+			$('#submitForm').removeAttr("disabled"); 
 			alert("网络错误");
 		}
 	})

@@ -2,10 +2,7 @@ package com.jhj.action.app.user;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +14,6 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.UserAddrs;
-import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.UserRefOrg;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.async.UsersAsyncService;

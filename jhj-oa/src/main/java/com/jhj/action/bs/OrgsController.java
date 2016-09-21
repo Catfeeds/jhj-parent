@@ -29,7 +29,6 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.dict.DictCity;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.OrgSearchVo;
-import com.jhj.vo.org.GroupSearchVo;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -63,18 +62,19 @@ public class OrgsController extends BaseController{
 			orgSearchVo = new OrgSearchVo();
 		}
 		
+		orgSearchVo.setParentId(0L);
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+		String orgId = AuthHelper.getSessionLoginOrg(request);
+		if(!orgId.equals("0") && !StringUtil.isEmpty(orgId)){
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			orgSearchVo.setSearchOrgId(Long.valueOf(org));
+			orgSearchVo.setOrgId(Long.valueOf(orgId));
 		}
 		
 		//默认将员工级别字段  设置  为 阿姨
 		PageInfo pageInfo = orgsService.selectByListPage(orgSearchVo,pageNo, pageSize);
 		model.addAttribute("orgsModel", pageInfo);
 		
-		model.addAttribute("nowOrgId", org);
+		model.addAttribute("nowOrgId", orgId);
 		
 		return "bs/orgList";
 	}
@@ -147,7 +147,10 @@ public class OrgsController extends BaseController{
 	public void validName(PrintWriter printWriter, String name ) throws UnsupportedEncodingException{
 		
 		String names = URLDecoder.decode(name,"utf-8");
-		List<Orgs> list = orgsService.selectByOrgName(names);
+		OrgSearchVo searchVo = new OrgSearchVo();
+		searchVo.setOrgName(names);
+		
+		List<Orgs> list = orgsService.selectBySearchVo(searchVo);
 		
 		if(list.size()>0 && list !=null){
 			//如果输入的名称能查出来记录，则返回 名称已存在 标识
@@ -168,10 +171,10 @@ public class OrgsController extends BaseController{
 		List<Orgs> list = new ArrayList<Orgs>();
 
 		if (orgId > 0) {
-			GroupSearchVo searchVo = new GroupSearchVo();
+			OrgSearchVo searchVo = new OrgSearchVo();
 			searchVo.setParentId(orgId);
 			searchVo.setOrgStatus((short) 1);
-			list = orgsService.selectCloudOrgByParentOrg(searchVo);
+			list = orgsService.selectBySearchVo(searchVo);
 		}
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, list);

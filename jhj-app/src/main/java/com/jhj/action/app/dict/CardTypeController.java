@@ -139,7 +139,7 @@ public class CardTypeController<T> {
     	List<Socials> list = socialsService.getSocialsList();
     	List<SocialsVo> listVo = new ArrayList<SocialsVo>();
     	for (Iterator<Socials> iterator = list.iterator(); iterator.hasNext();) {
-			Socials socials = (Socials) iterator.next();
+			Socials socials = iterator.next();
 			SocialsVo socialsVo = new SocialsVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(socials,socialsVo);
 			socialsVo.setBeginDateStr(DateUtil.formatDate(socials.getBeginDate()));

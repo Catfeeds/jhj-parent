@@ -30,6 +30,7 @@ import com.jhj.service.admin.AdminAuthorityService;
 import com.jhj.service.admin.AdminRefOrgService;
 import com.jhj.service.admin.AdminRoleService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.admin.AccountSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
@@ -198,7 +199,10 @@ public class AdminAccountController extends AdminController {
 		model.addAttribute("contentModel",
 				adminAccountService.listPage(searchVo, pageNo, pageSize));
 		
-		List<Orgs> org = orgService.selectOrgsNoParent();
+		OrgSearchVo searchVo1 = new OrgSearchVo();
+		searchVo1.setIsCloud((short) 1);
+		searchVo1.setOrgStatus((short) 1);
+		List<Orgs> org = orgService.selectBySearchVo(searchVo1);
 		model.addAttribute("org", org);
 
 		return "account/adminList";

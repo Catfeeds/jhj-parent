@@ -1,7 +1,5 @@
 package com.jhj.action.app.user;
 
-import java.math.BigDecimal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,12 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.meijia.utils.SmsUtil;
-import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
-import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.order.OrderCardsService;
