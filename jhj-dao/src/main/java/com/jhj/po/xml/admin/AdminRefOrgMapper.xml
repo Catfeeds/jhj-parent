@@ -109,4 +109,11 @@
       add_time = #{addTime,jdbcType=NUMERIC}
     where id = #{id,jdbcType=NUMERIC}
   </update>
+  <select id="selectByAdminIdList" resultMap="BaseResultMap" parameterType="java.util.List">
+  	select <include refid="Base_Column_List"/>
+  	from admin_ref_org where admin_id in
+  	<foreach collection="list" item="item" open="(" close=")" separator=",">
+  		#{item}
+  	</foreach>
+  </select>
 </mapper>
