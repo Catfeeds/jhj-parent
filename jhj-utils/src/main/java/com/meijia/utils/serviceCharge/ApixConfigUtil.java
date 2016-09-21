@@ -3,8 +3,6 @@ package com.meijia.utils.serviceCharge;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import com.meijia.utils.baidu.BaiduConfigUtil;
-
 /**
  *
  * @author :hulj

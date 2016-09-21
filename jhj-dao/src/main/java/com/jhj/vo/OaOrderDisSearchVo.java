@@ -35,18 +35,22 @@ public class OaOrderDisSearchVo extends OaOrderSearchVo{
 		this.cloudOrgList = cloudOrgList;
 	}
 
+	@Override
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}
 
+	@Override
 	public void setStartTimeStr(String startTimeStr) {
 		this.startTimeStr = startTimeStr;
 	}
 
+	@Override
 	public String getEndTimeStr() {
 		return endTimeStr;
 	}
 
+	@Override
 	public void setEndTimeStr(String endTimeStr) {
 		this.endTimeStr = endTimeStr;
 	}

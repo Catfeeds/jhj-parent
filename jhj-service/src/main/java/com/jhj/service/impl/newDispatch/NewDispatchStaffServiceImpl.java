@@ -8,9 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
-import com.jhj.po.dao.university.PartnerServiceTypeMapper;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
@@ -32,11 +30,8 @@ import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
-import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
 import com.jhj.vo.org.LeaveSearchVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
 
@@ -328,7 +323,8 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
 			
 			Collections.sort(destList, new Comparator<BaiduPoiVo>() {
-			    public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
+			    @Override
+				public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
 			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 			    }
 			}); 
@@ -392,7 +388,8 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			}
 			
 			Collections.sort(staWithUserList, new Comparator<OrgStaffsNewVo>() {
-			    public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+			    @Override
+				public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
 			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 			    }
 			}); 

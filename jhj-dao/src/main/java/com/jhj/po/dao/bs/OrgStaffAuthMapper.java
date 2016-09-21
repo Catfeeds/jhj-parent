@@ -2,10 +2,7 @@ package com.jhj.po.dao.bs;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.jhj.po.model.bs.OrgStaffAuth;
-import com.jhj.po.model.order.Orders;
 
 public interface OrgStaffAuthMapper {
     int deleteByPrimaryKey(Long id);

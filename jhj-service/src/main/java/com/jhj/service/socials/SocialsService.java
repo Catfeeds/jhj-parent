@@ -2,7 +2,6 @@ package com.jhj.service.socials;
 
 import java.util.List;
 
-import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.socials.Socials;
 import com.jhj.vo.SocialsSearchVo;
 import com.jhj.vo.socials.SocialsVo;

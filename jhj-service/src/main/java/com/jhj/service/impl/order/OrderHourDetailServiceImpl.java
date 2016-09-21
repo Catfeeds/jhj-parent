@@ -10,7 +10,6 @@ import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.model.bs.DictCoupons;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;

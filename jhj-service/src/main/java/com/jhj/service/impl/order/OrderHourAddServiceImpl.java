@@ -40,7 +40,6 @@ import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
-import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
 

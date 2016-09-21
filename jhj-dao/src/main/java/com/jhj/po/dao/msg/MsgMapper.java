@@ -2,8 +2,6 @@ package com.jhj.po.dao.msg;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.jhj.po.model.msg.Msg;
 import com.jhj.vo.MsgSearchVo;
 

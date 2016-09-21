@@ -4,10 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +46,7 @@ public class MapUtil {
 					field.set(t,Integer.parseInt((String)map.get(field.getName())));
 				}else
 				{
-					field.set(t,map.get((String)field.getName()));
+					field.set(t,map.get(field.getName()));
 				}
 				if(flag)
 				{

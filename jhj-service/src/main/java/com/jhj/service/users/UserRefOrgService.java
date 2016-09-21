@@ -1,7 +1,5 @@
 package com.jhj.service.users;
 
-import java.util.Map;
-
 import com.jhj.po.model.user.UserRefOrg;
 
 

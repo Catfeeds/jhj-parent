@@ -3,7 +3,6 @@ package com.jhj.po.dao.dict;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jhj.po.model.dict.DictCity;
 import com.jhj.po.model.dict.DictServiceTypes;
 
 public interface DictServiceTypesMapper {

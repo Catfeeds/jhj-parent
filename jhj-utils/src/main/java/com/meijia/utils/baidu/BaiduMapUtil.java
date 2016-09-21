@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.HttpClientUtil;
 
 /**
@@ -158,6 +157,7 @@ public class BaiduMapUtil {
 		
 		if(firstList.size() > 0){
 			Collections.sort(firstList, new Comparator<BaiduPoiVo>() {
+				@Override
 				public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
 					return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 				}
@@ -296,7 +296,8 @@ public class BaiduMapUtil {
 			List<BaiduPoiVo> resultAddrs = BaiduMapUtil.getMapRouteMatrix(fromLat, fromLng, destAddrs);
 			
 			Collections.sort(resultAddrs, new Comparator<BaiduPoiVo>() {
-			    public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
+			    @Override
+				public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
 			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 			    }
 			});

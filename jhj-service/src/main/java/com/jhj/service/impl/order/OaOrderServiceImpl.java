@@ -2,14 +2,10 @@ package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +42,6 @@ import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;

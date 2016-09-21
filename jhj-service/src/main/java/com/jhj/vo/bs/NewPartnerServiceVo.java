@@ -1,7 +1,6 @@
 package com.jhj.vo.bs;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.jhj.base.model.models.ChainEntity;

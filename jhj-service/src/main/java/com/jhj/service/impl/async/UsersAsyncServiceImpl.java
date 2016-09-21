@@ -27,7 +27,6 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.OrgSearchVo;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.baidu.BaiduMapUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
 

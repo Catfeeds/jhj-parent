@@ -3,7 +3,6 @@ package com.jhj.service.users;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
-import com.jhj.common.Constants;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;

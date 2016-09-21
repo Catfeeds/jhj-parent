@@ -4,16 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 
 /**
@@ -79,6 +70,7 @@ public class MapPoiUtil {
 		
 		if(firstList.size() > 0){
 			Collections.sort(firstList, new Comparator<BaiduPoiVo>() {
+				@Override
 				public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
 					return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 				}
@@ -226,7 +218,8 @@ public class MapPoiUtil {
 			List<BaiduPoiVo> resultAddrs = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, destAddrs);
 			
 			Collections.sort(resultAddrs, new Comparator<BaiduPoiVo>() {
-			    public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
+			    @Override
+				public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
 			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 			    }
 			});

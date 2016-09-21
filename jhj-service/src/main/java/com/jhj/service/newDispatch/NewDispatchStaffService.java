@@ -2,10 +2,7 @@ package com.jhj.service.newDispatch;
 
 import java.util.List;
 
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.jhj.vo.order.newDispatch.DisStaffWithUserVo;
-import com.jhj.vo.order.newDispatch.NewAutoDisStaffVo;
 
 /**
  *

@@ -3,7 +3,6 @@ package com.jhj.service.users;
 import java.util.List;
 
 import com.jhj.po.model.bs.DictCoupons;
-import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.user.UserCouponVo;

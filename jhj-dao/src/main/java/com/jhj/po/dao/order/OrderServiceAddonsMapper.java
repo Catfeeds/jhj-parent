@@ -3,8 +3,6 @@ package com.jhj.po.dao.order;
 import java.util.List;
 
 import com.jhj.po.model.order.OrderServiceAddons;
-import com.jhj.vo.chart.ChartMapVo;
-import com.jhj.vo.chart.ChartSearchVo;
 
 
 public interface OrderServiceAddonsMapper {

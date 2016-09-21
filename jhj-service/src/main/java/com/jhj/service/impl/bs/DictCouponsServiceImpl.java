@@ -239,6 +239,7 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 	}
 
 	//按前日期查询优惠券
+	@Override
 	public List<DictCoupons> getSelectByMap(Map<String,Object> map) {
 		List<DictCoupons> couponsList=null;
 		if(map!=null){

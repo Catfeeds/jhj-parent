@@ -1,7 +1,6 @@
 package com.jhj.vo.survey;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.survey.SurveyUserRefRecommend;

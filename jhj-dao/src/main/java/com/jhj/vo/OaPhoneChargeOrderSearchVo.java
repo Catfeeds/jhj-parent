@@ -1,7 +1,6 @@
 package com.jhj.vo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *

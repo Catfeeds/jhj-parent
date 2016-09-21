@@ -19,13 +19,10 @@ import com.jhj.po.model.survey.SurveyUserRefRecommend;
 import com.jhj.service.survey.SurveyContentChildService;
 import com.jhj.service.survey.SurveyContentService;
 import com.jhj.service.survey.SurveyUserRefRecommendService;
-import com.jhj.vo.survey.AppSurveyResultPriceVo;
 import com.jhj.vo.survey.OaSurveyUserResultVo;
 import com.jhj.vo.survey.SurveyResultPriceVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
-import com.meijia.utils.OneCareUtil;
-import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Service

@@ -1,7 +1,5 @@
 package com.jhj.po.model.order;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-
 public class OrderDispatchs {
     private Long id;
 

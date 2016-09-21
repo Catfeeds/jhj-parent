@@ -134,7 +134,7 @@ public class BarcodeFactory {
         File file = new File(srcImageFile);
         BufferedImage srcImage = ImageIO.read(file);
         Image destImage = srcImage.getScaledInstance(width, height,
-                BufferedImage.SCALE_SMOOTH);
+                Image.SCALE_SMOOTH);
         // 计算比例
         if ((srcImage.getHeight() > height) || (srcImage.getWidth() > width)) {
             if (srcImage.getHeight() > srcImage.getWidth()) {

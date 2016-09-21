@@ -1,14 +1,11 @@
 package com.jhj.vo.bs;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.jhj.po.model.admin.AdminAuthority;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
-import com.meijia.utils.common.extension.ArrayHelper;
 
 /**
  *

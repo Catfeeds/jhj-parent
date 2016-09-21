@@ -1,6 +1,5 @@
 package com.jhj.vo.survey;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.jhj.po.model.survey.SurveyContent;

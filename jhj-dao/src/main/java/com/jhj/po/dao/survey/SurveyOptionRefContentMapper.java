@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.jhj.po.model.survey.SurveyOptionRefContent;
-import com.jhj.po.model.survey.SurveyQuestionOption;
 
 public interface SurveyOptionRefContentMapper {
     int deleteByPrimaryKey(Long id);

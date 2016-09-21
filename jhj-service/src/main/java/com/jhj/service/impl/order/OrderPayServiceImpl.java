@@ -3,7 +3,6 @@ package com.jhj.service.impl.order;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONException;
@@ -19,7 +18,6 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
-import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
@@ -38,10 +36,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.meijia.utils.GsonUtil;
 import com.meijia.utils.OneCareUtil;
-import com.meijia.utils.PushUtil;
-import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.serviceCharge.PhoneReChargeUtil;
 

@@ -21,7 +21,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthHelper;
-import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.OrgSearchVo;

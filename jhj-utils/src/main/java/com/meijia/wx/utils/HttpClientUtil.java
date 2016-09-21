@@ -352,7 +352,7 @@ public class HttpClientUtil {
 				if (headers != null) {  
 					Set<String> keys = headers.keySet();  
 					for (Iterator<String> i = keys.iterator(); i.hasNext();) {  
-						String key = (String) i.next();  
+						String key = i.next();  
 						get.addHeader(key, headers.get(key));  
 					}  
 				}

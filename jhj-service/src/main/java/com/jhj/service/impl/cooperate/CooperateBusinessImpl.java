@@ -1,7 +1,6 @@
 package com.jhj.service.impl.cooperate;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
-import com.jhj.po.model.admin.AdminAccount;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.vo.cooperate.CooperateVo;

@@ -3,7 +3,6 @@ package com.jhj.po.dao.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffTags;
-import com.jhj.po.model.bs.Tags;
 
 public interface OrgStaffTagsMapper {
 	

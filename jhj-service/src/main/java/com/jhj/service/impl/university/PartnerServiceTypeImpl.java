@@ -5,16 +5,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.university.PartnerServiceTypeMapper;
-import com.jhj.po.model.admin.AdminAuthority;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
-import com.jhj.vo.admin.AdminAuthorityVo;
 import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.bs.NewPartnerServiceVo;
 import com.jhj.vo.university.OaPartnerServiceTypeVo;

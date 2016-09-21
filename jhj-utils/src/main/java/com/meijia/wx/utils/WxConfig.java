@@ -1,6 +1,5 @@
 package com.meijia.wx.utils;
 
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.ResourceBundle;
 

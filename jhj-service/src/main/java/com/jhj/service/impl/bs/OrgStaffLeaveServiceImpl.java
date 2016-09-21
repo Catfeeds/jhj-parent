@@ -1,6 +1,5 @@
 package com.jhj.service.impl.bs;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

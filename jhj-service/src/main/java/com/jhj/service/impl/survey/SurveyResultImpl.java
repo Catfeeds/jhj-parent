@@ -2,8 +2,6 @@ package com.jhj.service.impl.survey;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +16,6 @@ import com.jhj.service.survey.SurveyUserService;
 import com.jhj.vo.survey.OaSurveyContentVo;
 import com.jhj.vo.survey.OaSurveyResultVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 
 /*

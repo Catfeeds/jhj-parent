@@ -84,8 +84,8 @@ public class AlipaySubmit {
                       + "\">");
 
         for (int i = 0; i < keys.size(); i++) {
-            String name = (String) keys.get(i);
-            String value = (String) sPara.get(name);
+            String name = keys.get(i);
+            String value = sPara.get(name);
 
             sbHtml.append("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value + "\"/>");
         }

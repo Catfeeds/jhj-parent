@@ -2,8 +2,6 @@ package com.jhj.action.bs;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
@@ -25,17 +22,14 @@ import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
-import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.bs.LeaveStaffVo;
-import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.org.LeaveSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
-import com.meijia.utils.TimeStampUtil;
 
 /**
  *

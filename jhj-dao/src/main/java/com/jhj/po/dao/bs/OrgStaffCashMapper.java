@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffCash;
-import com.jhj.po.model.bs.OrgStaffOnline;
 import com.jhj.vo.OrgStaffCashSearchVo;
 
 public interface OrgStaffCashMapper {

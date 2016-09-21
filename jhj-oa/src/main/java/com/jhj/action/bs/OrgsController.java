@@ -26,7 +26,6 @@ import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
-import com.jhj.po.model.dict.DictCity;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.OrgSearchVo;
 import com.meijia.utils.StringUtil;

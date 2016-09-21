@@ -1,9 +1,6 @@
 package com.jhj.vo.order.newDispatch;
 
 import java.util.List;
-import java.util.Map;
-
-import com.google.gson.Gson;
 
 
 /**

@@ -3,8 +3,6 @@ package com.jhj.service.bs;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.RowBounds;
-
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.Users;

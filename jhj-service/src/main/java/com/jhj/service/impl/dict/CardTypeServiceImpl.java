@@ -116,6 +116,7 @@ public class CardTypeServiceImpl implements CardTypeService {
 		return result;
 	}
 	
+	@Override
 	public List<DictCardTypeVo> changeToDictCardTypeVo(List<DictCardType> list,Long userId) {
 		List<DictCardTypeVo> result = new ArrayList<DictCardTypeVo>();
 		

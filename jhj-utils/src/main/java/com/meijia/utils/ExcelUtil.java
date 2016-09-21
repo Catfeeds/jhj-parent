@@ -1,7 +1,6 @@
 package com.meijia.utils;
 
 import java.awt.Font;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -373,7 +372,7 @@ public class ExcelUtil {
         for (short i = 1; i < list.size(); i++) {
             // Row 行,Cell 方格 , Row 和 Cell 都是从0开始计数的
             // 创建一行，在页sheet上
-            org.apache.poi.ss.usermodel.Row row1 = sheet.createRow((short) i);
+            org.apache.poi.ss.usermodel.Row row1 = sheet.createRow(i);
             // 在row行上创建一个方格
             for(short j=0;j<keys.length;j++){
                 org.apache.poi.ss.usermodel.Cell cell = row1.createCell(j);

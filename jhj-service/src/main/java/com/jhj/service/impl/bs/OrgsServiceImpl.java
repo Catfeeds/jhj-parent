@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgsMapper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;

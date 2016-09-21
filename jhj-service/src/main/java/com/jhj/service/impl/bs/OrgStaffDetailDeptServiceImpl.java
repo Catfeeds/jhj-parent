@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.bs.OrgStaffDetailDeptMapper;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
-import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
 import com.jhj.vo.OrgStaffDetailPaySearchVo;
 import com.meijia.utils.TimeStampUtil;

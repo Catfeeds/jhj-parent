@@ -5,12 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import com.google.zxing.client.result.ResultParser;
 
 public class DateUtil {
 
@@ -296,7 +293,7 @@ public class DateUtil {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		return (Long) (cal.getTimeInMillis() / 1000);
+		return cal.getTimeInMillis() / 1000;
 	}
 
 	/**
@@ -310,7 +307,7 @@ public class DateUtil {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		return (Long) (cal.getTimeInMillis() / 1000);
+		return cal.getTimeInMillis() / 1000;
 	}
 
 	/**

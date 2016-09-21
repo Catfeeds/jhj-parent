@@ -2,8 +2,6 @@ package com.jhj.service.bs;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.vo.OrgSearchVo;

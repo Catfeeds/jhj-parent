@@ -6,10 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
@@ -34,16 +31,13 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OaOrderService;
-import com.jhj.service.order.OrdersService;
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.OaOrderSearchVo;
 import com.jhj.vo.OrgSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.ExcelUtil;
 import com.meijia.utils.StringUtil;
-import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.poi.POIUtils;
 
 /**

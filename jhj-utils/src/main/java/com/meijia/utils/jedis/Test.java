@@ -78,7 +78,7 @@ public class Test {
 		
 		InetAddress address = InetAddress.getLocalHost();
 		
-		Inet6Address address2 = (Inet6Address) Inet6Address.getLocalHost();
+		Inet6Address address2 = (Inet6Address) InetAddress.getLocalHost();
 		
 		System.out.println(address2.getHostName());
 		System.out.println(address2.getHostAddress());

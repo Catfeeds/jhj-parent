@@ -2,25 +2,12 @@ package com.meijia.utils.serviceCharge;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.RequestBuilder;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.alibaba.fastjson.JSON;
-import com.meijia.utils.HttpClientUtil;
 import com.meijia.wx.utils.MD5Util;
 
 /**
