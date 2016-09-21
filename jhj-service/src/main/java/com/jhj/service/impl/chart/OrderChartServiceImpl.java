@@ -248,11 +248,9 @@ public class OrderChartServiceImpl implements OrderChartService {
 	 * 
 	 */
 	@Override
-	public int statTotalOrder(ChartSearchVo chartSearchVo) {	
-		int totalOrder = 0;
+	public Map<String,Integer> statTotalOrder(ChartSearchVo chartSearchVo) {	
 		
-		totalOrder = orderMapper.statTotalOrder(chartSearchVo);
-		return totalOrder;
+		return orderMapper.statTotalOrder(chartSearchVo);
 	}
 	
 	
