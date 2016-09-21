@@ -71,11 +71,10 @@
   </select>
   <!-- 多条件查询，where 1 = 1 会被mysql 过滤，不影响性能 -->
   <select id="selectByListPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
-    select
-    <include refid="Base_Column_List" />,f.org_id as orgsId
-    from admin_account,
-	(SELECT admin_id,org_id from admin_ref_org WHERE admin_id in (SELECT id from admin_account)) as f
-	WHERE admin_account.id=f.admin_id
+     select
+    <include refid="Base_Column_List" />
+    from admin_account
+    where 1=1
       <if test="name != null" >
         and name = #{name,jdbcType=VARCHAR}
       </if>
