@@ -1,6 +1,7 @@
 package com.jhj.action.admin;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -23,10 +24,12 @@ import com.jhj.oa.vo.AccountVo;
 import com.jhj.oa.vo.account.AccountRegisterVo;
 import com.jhj.po.model.admin.AdminAccount;
 import com.jhj.po.model.admin.AdminRefOrg;
+import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.admin.AdminAccountService;
 import com.jhj.service.admin.AdminAuthorityService;
 import com.jhj.service.admin.AdminRefOrgService;
 import com.jhj.service.admin.AdminRoleService;
+import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.admin.AccountSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
@@ -47,6 +50,9 @@ public class AdminAccountController extends AdminController {
 	
 	@Autowired
 	private AdminRefOrgService adminRefOrgService;
+	
+	@Autowired
+	private OrgsService orgService;
 	
 	@RequestMapping(value = "/register", method = { RequestMethod.GET })
 	public String register(HttpServletRequest request, Model model) {
@@ -191,6 +197,9 @@ public class AdminAccountController extends AdminController {
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		model.addAttribute("contentModel",
 				adminAccountService.listPage(searchVo, pageNo, pageSize));
+		
+		List<Orgs> org = orgService.selectOrgsNoParent();
+		model.addAttribute("org", org);
 
 		return "account/adminList";
 	}
