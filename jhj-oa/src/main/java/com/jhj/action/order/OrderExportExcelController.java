@@ -91,11 +91,11 @@ public class OrderExportExcelController extends BaseController {
 //		}
 		
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
 		List<Long> cloudIdList = new ArrayList<Long>();
 		
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+		if (sessionOrgId > 0L) {
 			
 			/*
 			 * 如果是店长 ，只能看到 自己门店 对应的 所有 云店 的 订单
@@ -103,7 +103,7 @@ public class OrderExportExcelController extends BaseController {
 			 */
 			
 			OrgSearchVo searchVo = new OrgSearchVo();
-			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setParentId(sessionOrgId);
 			searchVo.setOrgStatus((short) 1);
 			
 			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
@@ -251,14 +251,14 @@ public class OrderExportExcelController extends BaseController {
 		PageHelper.startPage(pageNo, pageSize);
 		
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
 		List<Long> cloudIdList = new ArrayList<Long>();
 		
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+		if (sessionOrgId > 0L) {
 			
 			OrgSearchVo searchVo = new OrgSearchVo();
-			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setParentId(sessionOrgId);
 			searchVo.setOrgStatus((short) 1);
 			
 			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);

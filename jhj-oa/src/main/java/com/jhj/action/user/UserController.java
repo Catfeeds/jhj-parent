@@ -239,16 +239,16 @@ public class UserController extends BaseController {
 		}
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
 		UserSearchVo userSearchVo = new UserSearchVo();
 
 		List<Long> cloudIdList = new ArrayList<Long>();
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 
 			OrgSearchVo searchVo1 = new OrgSearchVo();
-			searchVo1.setParentId(Long.parseLong(org));
+			searchVo1.setParentId(sessionOrgId);
 			searchVo1.setOrgStatus((short) 1);
 			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
 
@@ -643,14 +643,14 @@ public class UserController extends BaseController {
 
 	//根据当前登录的用户获取云店id
 	public List<Long> getCouldId(HttpServletRequest request) {
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
 		List<Long> cloudIdList = new ArrayList<Long>();
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 
 			OrgSearchVo searchVo1 = new OrgSearchVo();
-			searchVo1.setParentId(Long.parseLong(org));
+			searchVo1.setParentId(sessionOrgId);
 			searchVo1.setOrgStatus((short) 1);
 			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
 			

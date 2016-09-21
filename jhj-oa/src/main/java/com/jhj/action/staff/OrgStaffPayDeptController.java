@@ -57,7 +57,7 @@ public class OrgStaffPayDeptController extends BaseController {
 		PageHelper.startPage(pageNo, pageSize);
 
 		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
 		// 处理查询条件云店--------------------------------开始
 		// 1) 如果有查询条件云店org_id，则以查询条件的云店为准
@@ -68,9 +68,9 @@ public class OrgStaffPayDeptController extends BaseController {
 			cloudIdList.add(Long.valueOf(paramOrgId));
 		} else {
 
-			if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+			if (sessionOrgId > 0L) {
 				OrgSearchVo searchVo1 = new OrgSearchVo();
-				searchVo1.setParentId(Long.parseLong(org));
+				searchVo1.setParentId(sessionOrgId);
 				searchVo1.setOrgStatus((short) 1);
 
 				List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
@@ -103,11 +103,11 @@ public class OrgStaffPayDeptController extends BaseController {
 		//云店下拉框选项
 		List<Orgs> orgList = new ArrayList<Orgs>();
 		
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 			//如果登录的是店长
 			
 			OrgSearchVo searchVo1 = new OrgSearchVo();
-			searchVo1.setParentId(Long.parseLong(org));
+			searchVo1.setParentId(sessionOrgId);
 			searchVo1.setOrgStatus((short) 1);
 			orgList = orgService.selectBySearchVo(searchVo1);
 		}else{

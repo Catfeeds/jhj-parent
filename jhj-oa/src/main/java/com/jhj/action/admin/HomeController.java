@@ -45,14 +45,14 @@ public class HomeController extends AdminController {
 		Long endTime = 0L;
 		
 		//判断店长权限功能.
-		String orgId = AuthHelper.getSessionLoginOrg(request);
+		Long orgId = AuthHelper.getSessionLoginOrg(request);
 		
 //		if (orgId != null && orgId !="0") {
 //			chartSearchVo.setOrgId(Long.valueOf(orgId));
 //		}
 		
-		if (orgId != null && Integer.valueOf(orgId) !=0) {
-			chartSearchVo.setOrgId(Long.valueOf(orgId));
+		if (orgId != null && orgId > 0L) {
+			chartSearchVo.setOrgId(orgId);
 		}	
     	//总用户数
     	int totalUser = userChartService.statTotalUser(chartSearchVo);

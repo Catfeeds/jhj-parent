@@ -82,22 +82,20 @@ public class OrderCalendarController extends BaseController {
 	public String staffOrderList(OaOrderDisSearchVo disSearchVo, HttpServletRequest request, Model model) throws ParseException, UnsupportedEncodingException {
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
 //		 org = "1";
 		
 		List<Long> cloudIdList = new ArrayList<Long>();
 
-		if (org!=null &&
-		   !org.equals("0") && 
-		   !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 
 			/*
 			 * 如果是店长 ，只能看到 自己门店 对应的 所有 云店 的 派工记录  （成功派工）。
 			 */
 
 			OrgSearchVo searchVo = new OrgSearchVo();
-			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setParentId(sessionOrgId);
 			searchVo.setOrgStatus((short) 1);
 
 			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
@@ -153,15 +151,13 @@ public class OrderCalendarController extends BaseController {
 		//门店下的所有员工 ............
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		
-		if (org!=null &&
-		   !org.equals("0") && 
-		   !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 			
 			//所有员工的请假情况
-			leaveSearchVo.setParentOrgId(Long.valueOf(org));
+			leaveSearchVo.setParentOrgId(sessionOrgId);
 			
 			//店长登录，可以看到所在门店下的 所有员工
-			staffSearchVo.setParentId(Long.valueOf(org));
+			staffSearchVo.setParentId(sessionOrgId);
 			
 		}else{
 			//如果是 运营人员，可以查看所有门店的所有员工
@@ -301,7 +297,7 @@ public class OrderCalendarController extends BaseController {
 		
 		model.addAttribute("listVoModel", json);
 		model.addAttribute("disAndLeaveSearchVoModel", disSearchVo);
-		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
 		
 		model.addAttribute("weekDateModel", weekDateList);
 		

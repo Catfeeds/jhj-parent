@@ -125,11 +125,11 @@ public class NewOrgStaffController extends AdminController {
 			staffSearchVo.setName(new String(name.getBytes("iso-8859-1"),"UTF-8"));
 		}
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+		if(sessionOrgId > 0L) {
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			staffSearchVo.setParentId(Long.valueOf(org));
+			staffSearchVo.setParentId(sessionOrgId);
 		}
 		
 		List<OrgStaffs> list = staffService.selectNewStaffList(staffSearchVo);
@@ -142,7 +142,7 @@ public class NewOrgStaffController extends AdminController {
 		}
 		PageInfo result = new PageInfo(list);
 		
-		model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
 		model.addAttribute("staffModel", result);
 		model.addAttribute("staffSearchVoModel", staffSearchVo);
 
@@ -206,15 +206,10 @@ public class NewOrgStaffController extends AdminController {
 		model.addAttribute(treeDataSourceName, JSONArray.fromObject(children, new JsonConfig()).toString());
 		
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
-			
-//			if(orgStaffId != 0){
-//				model.addAttribute("loginOrgId", orgStaffId);
-//			}else{
-				model.addAttribute("loginOrgId", org);	//当前登录的 id,动态显示搜索 条件
-//			}
+		if (sessionOrgId > 0L) {
+			model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
 		}
 		
 		return "bs/newStaffForm";

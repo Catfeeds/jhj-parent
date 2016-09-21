@@ -116,10 +116,10 @@ public class OrderChartController extends BaseController {
 		chartSearchVo.setStatType(statType);
 		
 		//判断店长权限功能.
-		String orgId = AuthHelper.getSessionLoginOrg(request);
-		
-		if (orgId != null && Integer.valueOf(orgId) !=0) {
-			chartSearchVo.setOrgId(Long.valueOf(orgId));
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
+			chartSearchVo.setOrgId(sessionOrgId);
 		}		
 		
 		//根据statType 和 开始结束时间，统计数据
@@ -195,10 +195,10 @@ public class OrderChartController extends BaseController {
 		chartSearchVo.setStatType(statType);
 		
 		//判断店长权限功能.
-		String orgId = AuthHelper.getSessionLoginOrg(request);
-		
-		if (orgId != null && Integer.valueOf(orgId) !=0) {
-			chartSearchVo.setOrgId(Long.valueOf(orgId));
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
+			chartSearchVo.setOrgId(sessionOrgId);
 		}	
 		
 		

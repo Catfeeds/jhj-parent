@@ -111,10 +111,10 @@ public class OrgStaffsAssistantController extends BaseController {
 		
 		// 门店Id,  店长搜索条件
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
-		
-		if(!StringUtil.isEmpty(org)){
-			staffSearchVo.setOrgId(Long.parseLong(org));
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
+			staffSearchVo.setOrgId(sessionOrgId);
 		}
 		
 		
@@ -147,7 +147,7 @@ public class OrgStaffsAssistantController extends BaseController {
 		PageInfo result = new PageInfo(orgStaAslist);
 		
 		
-		model.addAttribute("loginOrgId", org);
+		model.addAttribute("loginOrgId", sessionOrgId);
 		model.addAttribute("orgStaffAsVoModel", result);
 		model.addAttribute("orgStaffAsSearchVoModel", staffSearchVo);
 

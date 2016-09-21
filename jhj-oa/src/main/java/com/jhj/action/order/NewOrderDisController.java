@@ -97,6 +97,7 @@ public class NewOrderDisController extends BaseController {
 
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
 
+		
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus == Constants.ORDER_HOUR_STATUS_2 || orderStatus == Constants.ORDER_HOUR_STATUS_3) {
 

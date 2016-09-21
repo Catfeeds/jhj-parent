@@ -24,11 +24,11 @@ public class AuthHelper {
 		 request.getSession().removeAttribute(accountAuth);
 	}
 	
-	public static void setSessionLoginOrg(HttpServletRequest request, String orgId){
+	public static void setSessionLoginOrg(HttpServletRequest request, Long orgId){
 		request.getSession().setAttribute("loginOrgId", orgId);
 	}
 	
-	public static String getSessionLoginOrg(HttpServletRequest request){
-		return (String)request.getSession().getAttribute("loginOrgId");
+	public static Long getSessionLoginOrg(HttpServletRequest request){
+		return (Long)request.getSession().getAttribute("loginOrgId");
 	}	
 }

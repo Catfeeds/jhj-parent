@@ -197,10 +197,10 @@ public class AdminLoginController extends BaseController {
     	
     	//获得是否有相应的门店，此为店长的权限会有相应的限制
     	AdminRefOrg adminRefOrg = adminRefOrgService.selectByAdminId(userId);
-    	AuthHelper.setSessionLoginOrg(request, "0");
+    	AuthHelper.setSessionLoginOrg(request, 0L);
 
     	if (adminRefOrg != null) {
-    		AuthHelper.setSessionLoginOrg(request, adminRefOrg.getOrgId().toString());
+    		AuthHelper.setSessionLoginOrg(request, adminRefOrg.getOrgId());
 
     	}
     	

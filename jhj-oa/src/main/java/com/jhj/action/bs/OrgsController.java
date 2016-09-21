@@ -63,17 +63,17 @@ public class OrgsController extends BaseController{
 		
 		orgSearchVo.setParentId(0L);
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String orgId = AuthHelper.getSessionLoginOrg(request);
-		if(!orgId.equals("0") && !StringUtil.isEmpty(orgId)){
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+		if (sessionOrgId > 0L) {
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			orgSearchVo.setOrgId(Long.valueOf(orgId));
+			orgSearchVo.setOrgId(Long.valueOf(sessionOrgId));
 		}
 		
 		//默认将员工级别字段  设置  为 阿姨
 		PageInfo pageInfo = orgsService.selectByListPage(orgSearchVo,pageNo, pageSize);
 		model.addAttribute("orgsModel", pageInfo);
 		
-		model.addAttribute("nowOrgId", orgId);
+		model.addAttribute("nowOrgId", sessionOrgId);
 		
 		return "bs/orgList";
 	}

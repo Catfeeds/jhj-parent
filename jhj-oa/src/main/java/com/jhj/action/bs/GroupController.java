@@ -82,10 +82,10 @@ public class GroupController {
 		}
 		
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
-		if(!StringUtil.isEmpty(org) && !org.equals("0")){
-			searchVo.setParentId(Long.parseLong(org));
+		if(sessionOrgId > 0L){
+			searchVo.setParentId(sessionOrgId);
 		}
 		
 		if (searchVo == null) searchVo = new OrgSearchVo();

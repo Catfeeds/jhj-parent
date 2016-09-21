@@ -94,10 +94,10 @@
 			  	DISTINCT(orders.`user_id`) AS thisUserId 
 			  FROM  orders
 			  <where>
-			 	 <if test="searchOrgList != null ||searchOrgList!=''">
+			 	 <if test="searchOrgList != null">
 				  	orders.`org_id` in
 					<foreach item="item" index="index" collection="searchOrgList" open="(" separator="," close=")">
-						#{searchOrgList[${index}]}
+						#{item}
 					</foreach>
 			 	 </if>
 			  </where>

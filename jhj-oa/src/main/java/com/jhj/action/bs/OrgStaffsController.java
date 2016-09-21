@@ -92,10 +92,10 @@ public class OrgStaffsController extends BaseController {
 		
 		// 门店Id,  店长搜索条件
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
-		
-		if(!StringUtil.isEmpty(org)){
-			staffSearchVo.setOrgId(Long.parseLong(org));
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
+			staffSearchVo.setOrgId(sessionOrgId);
 		}
 		
 //		List<OrgStaffs> list = orgStaffsService.selectByListPage(staffSearchVo, pageNo, pageSize);
@@ -147,16 +147,16 @@ public class OrgStaffsController extends BaseController {
 		orgStaffVo = orgStaffsService.genOrgStaffVo(orgStaffs);
 		
 		//动态展示 门店。助理 下拉列表
-		String org = AuthHelper.getSessionLoginOrg(request);
-				
-		if(!StringUtil.isEmpty(org)){
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
 			//如果登录的是 店长
-			List<OrgStaffs> amList = orgStaffsService.selectAmByOrgId(Long.valueOf(org));
+			List<OrgStaffs> amList = orgStaffsService.selectAmByOrgId(sessionOrgId);
 			
 			orgStaffVo.setNowOrgAmList(amList);
 		}
 		
-		model.addAttribute("loginOrgId", org);
+		model.addAttribute("loginOrgId", sessionOrgId);
 		model.addAttribute("tagList", tagList);
 		model.addAttribute("orgStaffVoFormModel", orgStaffVo);
 		

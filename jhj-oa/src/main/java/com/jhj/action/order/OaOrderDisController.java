@@ -68,11 +68,11 @@ public class OaOrderDisController extends BaseController {
 		}
 		
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
-		
-		if(!org.equals("0") && !StringUtil.isEmpty(org)){
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			oaOrderDisSearchVo.setSearchOrgId(Long.valueOf(org));
+			oaOrderDisSearchVo.setSearchOrgId(sessionOrgId);
 		}
 		
 		/*

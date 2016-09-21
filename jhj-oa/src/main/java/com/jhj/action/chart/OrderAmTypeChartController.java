@@ -106,9 +106,10 @@ public class OrderAmTypeChartController extends BaseController {
 		chartSearchVo.setEndTime(endTime);
 		chartSearchVo.setStatType(statType);
 		//增加对门店的过滤
-		String orgId=AuthHelper.getSessionLoginOrg(request);
-		if(orgId!=null && Long.valueOf(orgId)>0L){
-			chartSearchVo.setOrgId(Long.valueOf(orgId));
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
+			chartSearchVo.setOrgId(sessionOrgId);
 		}
 		//根据statType 和 开始结束时间，统计数据
 		ChartDataVo chartDatas = orderAmTypeChartService.statChartAmTypeDatas(chartSearchVo, timeSeries);
@@ -187,9 +188,10 @@ public class OrderAmTypeChartController extends BaseController {
 		chartSearchVo.setEndTime(endTime);
 		chartSearchVo.setStatType(statType);
 		//增加对门店的过滤
-		String orgId=AuthHelper.getSessionLoginOrg(request);
-		if(orgId!=null && Long.valueOf(orgId)>0L){
-			chartSearchVo.setOrgId(Long.valueOf(orgId));
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
+			chartSearchVo.setOrgId(sessionOrgId);
 		}
 		//根据statType 和 开始结束时间，统计数据
 		ChartDataVo chartDatas = orderAmTypeChartService.statServiceTypeDatas(chartSearchVo, timeSeries);

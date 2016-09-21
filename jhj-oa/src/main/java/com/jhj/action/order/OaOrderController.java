@@ -112,11 +112,11 @@ public class OaOrderController extends BaseController {
 		}
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 			// 未选择 门店， 且 当前 登录 用户 为 店长 （ session中的 orgId 不为 0）,设置搜索条件为 店长的门店
-			oaOrderSearchVo.setSearchOrgId(Long.valueOf(org));
+			oaOrderSearchVo.setSearchOrgId(sessionOrgId);
 		}
 
 		// 如果在 订单列表页面，选择了 门店 作为搜索 条件
@@ -136,7 +136,7 @@ public class OaOrderController extends BaseController {
 
 		PageInfo result = new PageInfo(orderList);
 
-		model.addAttribute("loginOrgId", org); // 当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", sessionOrgId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
 
@@ -174,7 +174,7 @@ public class OaOrderController extends BaseController {
 		}
 		
 		//判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
 		
 		// 处理查询条件云店--------------------------------开始
@@ -186,9 +186,9 @@ public class OaOrderController extends BaseController {
 			cloudIdList.add(Long.valueOf(paramOrgId));
 		} else {
 			
-			if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+			if (sessionOrgId > 0L) {
 				OrgSearchVo searchVo = new OrgSearchVo();
-				searchVo.setParentId(Long.parseLong(org));
+				searchVo.setParentId(sessionOrgId);
 				searchVo.setOrgStatus((short) 1);
 				List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
 
@@ -231,7 +231,7 @@ public class OaOrderController extends BaseController {
 		// 处理查询状态条件--------------------------------开始
 		if (oaOrderSearchVo.getOrderStatus() == null) {
 			//如果为店长只能看已派工状态之后的订单.
-			if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+			if (sessionOrgId > 0L) {
 				List<Short> searchOrderStatusList = new ArrayList<Short>();
 
 	            // 店长 可查看的 钟点工 订单状态列表： 已派工 之后的都可以查看
@@ -272,7 +272,7 @@ public class OaOrderController extends BaseController {
 
 		PageInfo result = new PageInfo(orderList);
 
-		model.addAttribute("loginOrgId", org); // 当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", sessionOrgId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
 
@@ -304,11 +304,11 @@ public class OaOrderController extends BaseController {
 		}
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 			// 未选择 门店， 且 当前 登录 用户 为 店长 （ session中的 orgId 不为 0）,设置搜索条件为 店长的门店
-			oaOrderSearchVo.setSearchOrgId(Long.valueOf(org));
+			oaOrderSearchVo.setSearchOrgId(sessionOrgId);
 		}
 
 		// //如果在 订单列表页面，选择了 门店 作为搜索 条件
@@ -328,7 +328,7 @@ public class OaOrderController extends BaseController {
 
 		PageInfo result = new PageInfo(orderList);
 
-		model.addAttribute("loginOrgId", org); // 当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", sessionOrgId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
 
@@ -361,14 +361,16 @@ public class OaOrderController extends BaseController {
 		}
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		
 
 		List<Long> cloudIdList = new ArrayList<Long>();
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 
 			OrgSearchVo searchVo = new OrgSearchVo();
-			searchVo.setParentId(Long.parseLong(org));
+			searchVo.setParentId(sessionOrgId);
 			searchVo.setOrgStatus((short) 1);
 			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
 
@@ -469,7 +471,7 @@ public class OaOrderController extends BaseController {
 
 		PageInfo result = new PageInfo(orderList);
 
-		model.addAttribute("loginOrgId", org); // 当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", sessionOrgId); // 当前登录的 id,动态显示搜索 条件
 
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
@@ -503,11 +505,11 @@ public class OaOrderController extends BaseController {
 		}
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 			// 未选择 门店， 且 当前 登录 用户 为 店长 （ session中的 orgId 不为 0）,设置搜索条件为 店长的门店
-			oaOrderSearchVo.setSearchOrgId(Long.valueOf(org));
+			oaOrderSearchVo.setSearchOrgId(sessionOrgId);
 		}
 
 		// 如果在 订单列表页面，选择了 门店 作为搜索 条件
@@ -527,7 +529,7 @@ public class OaOrderController extends BaseController {
 
 		PageInfo result = new PageInfo(orderList);
 
-		model.addAttribute("loginOrgId", org); // 当前登录的 id,动态显示搜索 条件
+		model.addAttribute("loginOrgId", sessionOrgId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("oaOrderSearchVoModel", oaOrderSearchVo);
 
@@ -577,14 +579,14 @@ public class OaOrderController extends BaseController {
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
 
 		// 得到 当前登录 的 店长所在 门店id，
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
-		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
+		if (sessionOrgId > 0L) {
 
 			/*
 			 * 派工调整时，选择 门店
 			 */
-			model.addAttribute("loginOrgId", org);
+			model.addAttribute("loginOrgId", sessionOrgId);
 		}
 
 		short orderType = oaOrderListVo.getOrderType();

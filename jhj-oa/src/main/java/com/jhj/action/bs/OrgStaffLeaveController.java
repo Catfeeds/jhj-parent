@@ -63,11 +63,10 @@ public class OrgStaffLeaveController extends BaseController {
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		
 		//得到 当前登录 的 门店id，并作为搜索条件
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
-		if(!StringUtil.isEmpty(org) && !org.equals("0")){
-			
-			searchVo.setParentOrgId(Long.parseLong(org));
+		if (sessionOrgId > 0L) {
+			searchVo.setParentOrgId(sessionOrgId);
 		}
 		
 		//转换为数据库 参数字段
@@ -119,7 +118,9 @@ public class OrgStaffLeaveController extends BaseController {
 	public String adForm(Model model,
 			@RequestParam(value = "id") Long id,
 			HttpServletRequest request) {
-		String org = AuthHelper.getSessionLoginOrg(request);
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+
 		
 		if (id == null) {
 			id = 0L; 
@@ -132,7 +133,7 @@ public class OrgStaffLeaveController extends BaseController {
 		}
 		LeaveStaffVo leaveStaffVo = leaveService.transToVO(leave);
 		//如果是新增,则 下拉列表为 登录 角色的id，所确定的
-		model.addAttribute("logInParentOrgId", Long.parseLong(org));
+		model.addAttribute("logInParentOrgId", sessionOrgId);
 		
 		//如果是修改,则下拉列表为  回显的 门店
 		model.addAttribute("leaveModel", leaveStaffVo);
