@@ -27,7 +27,7 @@ public class AdminAccount {
     
     private String nickname;
     
-    private String orgId;
+    private String orgsId;
 
     public Long getId() {
         return id;
@@ -125,12 +125,14 @@ public class AdminAccount {
 		this.nickname = nickname;
 	}
 
-	public String getOrgId() {
-		return orgId;
+	public String getOrgsId() {
+		return orgsId;
 	}
 
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
+	public void setOrgsId(String orgsId) {
+		this.orgsId = orgsId;
 	}
+
+	
 
 }
