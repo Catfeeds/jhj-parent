@@ -52,6 +52,7 @@
                                   <th>邮箱</th>
                                   <th>角色</th>
                                   <th>是否可用</th>
+                                  <th>所属门店</th>
                                   <th>注册时间</th>
                                   <th>操作</th>
                               </tr>
@@ -64,6 +65,19 @@
 						            <td>${ item.email }</td>
 						            <td>${ item.roleName }</td>
 						            <td>${ item.enable }</td>
+						            <td>
+						            	<c:if test="${item.orgId==0 }">
+						            		<span>--</span>
+						            	</c:if>
+						            	<c:if test="${item.orgId!=0 }">
+							            	<c:forEach items="${org }" var="o">
+							            		<c:if test="${item.orgId==o.orgId }">
+							            			<span>${o.orgName }</span>
+							            		</c:if>
+							            		
+							            	</c:forEach>
+						            	</c:if>
+						            </td>
 						            <td><fmt:formatDate value="${item.registerTime}" pattern="yyyy-MM-dd HH:mm:ss " /></td>
                                   	<td>
 	                                    <button id="btn_update" onClick="btn_update('/account/register?id=${item.id}')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
