@@ -15,6 +15,7 @@
     <result column="im_username" property="imUsername" jdbcType="VARCHAR" />
     <result column="nickname" property="nickname" jdbcType="VARCHAR" />
   </resultMap>
+  
   <sql id="Base_Column_List" >
     id, version, enable, name, email, username, password, register_time, role_id, organization_id,im_username,nickname
   </sql>
@@ -71,9 +72,10 @@
   <!-- 多条件查询，where 1 = 1 会被mysql 过滤，不影响性能 -->
   <select id="selectByListPage" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
     select
-    <include refid="Base_Column_List" />
-    from admin_account
-    where 1=1
+    <include refid="Base_Column_List" />,f.org_id as orgId
+    from admin_account,
+	(SELECT admin_id,org_id from admin_ref_org WHERE admin_id in (SELECT id from admin_account)) as f
+	WHERE admin_account.id=f.admin_id
       <if test="name != null" >
         and name = #{name,jdbcType=VARCHAR}
       </if>
