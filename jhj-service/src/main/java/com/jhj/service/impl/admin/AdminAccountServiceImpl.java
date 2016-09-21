@@ -18,8 +18,10 @@ import com.jhj.service.admin.AdminRoleService;
 import com.jhj.vo.admin.AccountSearchVo;
 import com.jhj.vo.admin.AdminAccountVo;
 import com.jhj.po.dao.admin.AdminAccountMapper;
+import com.jhj.po.dao.admin.AdminRefOrgMapper;
 import com.jhj.po.dao.admin.AdminRoleMapper;
 import com.jhj.po.model.admin.AdminAccount;
+import com.jhj.po.model.admin.AdminRefOrg;
 import com.jhj.po.model.admin.AdminRole;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -39,6 +41,9 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 
 	@Autowired
 	public AdminRoleMapper adminRoleMapper;
+	
+	@Autowired
+	AdminRefOrgMapper adminReOrgMapper;
 
 
 	@Override
@@ -164,20 +169,26 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 	@Override
 	public List<AdminAccountVo> getAdminAccountViewList(List<AdminAccount> list) {
 		 List<Long> roleIds = new ArrayList<Long>();
+		 List<Long> adminIdList = new ArrayList<Long>();
 	     AdminAccount item = null;
 	     //将AdminAccount中的roleId放到List集合中
 	     for (int i = 0 ; i < list.size(); i ++) {
 	     	item = list.get(i);
 	     	roleIds.add(item.getRoleId());
+	     	adminIdList.add(item.getId());
 	     }
 	     //根据roleIds查询出对应的AdminRole
 	     List<AdminRole> roleList = adminRoleMapper.selectByRoleIds(roleIds);
+	     
+	     List<AdminRefOrg> adminRefOrgList = adminReOrgMapper.selectByAdminIdList(adminIdList);
 	     List<AdminAccountVo> result = new ArrayList<AdminAccountVo>();
 	     Long roleId = 0L;
+	     Long adminId=0L;
 	     //AdminAccount中的roleId和AdminRole中的Id进行比较，相同则为roleName赋值
 	     for (int i = 0 ; i < list.size(); i ++) {
 	     	item = list.get(i);
 	     	roleId = item.getRoleId();
+	     	adminId=item.getId();
 
 	     	AdminAccountVo vo = new AdminAccountVo();
 	     	BeanUtils.copyProperties(item, vo);
@@ -191,6 +202,15 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 	     			break;
 	     		}
 	     	}
+	     	Long orgId=null;
+	     	for(int a=0;a<adminRefOrgList.size();a++){
+	     		AdminRefOrg adminRefOrg = adminRefOrgList.get(a);
+	     		if(adminId==adminRefOrg.getAdminId()){
+	     			orgId=adminRefOrg.getOrgId();
+	     			break;
+	     		}
+	     	}
+	     	vo.setOrgId(orgId);
 	     	vo.setRoleName(roleName);;
 	     	result.add(vo);
 	     }
