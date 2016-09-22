@@ -82,6 +82,9 @@ public class OaOrderSearchVo {
 	
 	private String mobile;
 	
+	//服务地址
+	private String address;
+	
 	public String getRemarks() {
 		return remarks;
 	}
@@ -263,5 +266,12 @@ public class OaOrderSearchVo {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
+	
 }
