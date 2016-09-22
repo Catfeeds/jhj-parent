@@ -90,6 +90,12 @@
 							<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
 						</td>
 					</tr>
+					<tr>
+						<td>服务地址：</td>
+						<td>
+							<form:input path="address" class="form-control" placeholder="请输入服务地址"/>
+						</td>
+					</tr>
 					
 				</table>
 			</form:form> </header>
