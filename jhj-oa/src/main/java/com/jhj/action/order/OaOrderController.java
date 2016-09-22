@@ -151,10 +151,11 @@ public class OaOrderController extends BaseController {
 	 * @param oaOrderSearchVo
 	 * @return
 	 * @throws ParseException
+	 * @throws UnsupportedEncodingException 
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/order-hour-list", method = RequestMethod.GET)
-	public String getOrderHourList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo) throws ParseException {
+	public String getOrderHourList(Model model, HttpServletRequest request, OaOrderSearchVo oaOrderSearchVo) throws ParseException, UnsupportedEncodingException {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
@@ -261,6 +262,9 @@ public class OaOrderController extends BaseController {
 			}
 		}
 		
+		String address = oaOrderSearchVo.getAddress();
+		String addr = new String(address.getBytes("ISO-8859-1"),"UTF-8");
+		oaOrderSearchVo.setAddress(addr);
 		List<Orders> orderList = oaOrderService.selectVoByListPage(oaOrderSearchVo, pageNo, pageSize);
 
 		Orders orders = null;
