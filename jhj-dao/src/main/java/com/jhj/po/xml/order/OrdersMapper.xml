@@ -487,7 +487,9 @@
 		<if test="mobile!=null">
 			and mobile like CONCAT('%',#{mobile},'%')
 		</if>
-		
+		<if test="address!=null">
+			and addr_id in (select id from user_addrs where MATCH(name) AGAINST (#{address} IN BOOLEAN MODE))  
+		</if>		
 		order by add_time desc
 	</select>
 	
