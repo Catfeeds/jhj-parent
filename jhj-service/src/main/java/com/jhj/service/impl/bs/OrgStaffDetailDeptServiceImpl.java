@@ -6,10 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffDetailDeptMapper;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
-import com.jhj.vo.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -69,7 +70,7 @@ public class OrgStaffDetailDeptServiceImpl implements OrgStaffDetailDeptService 
 		record.setId(0L);
 		record.setStaffId(0L);
 		record.setMobile("");
-		record.setOrderType((short) 0L);
+		record.setOrderType(Constants.ORDER_TYPE_0);
 		record.setOrderId(0L);
 		record.setOrderNo("");
 		record.setOrderMoney(new BigDecimal(0));

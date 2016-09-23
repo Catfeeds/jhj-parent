@@ -76,7 +76,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		// 6) 查看是否有需要赠送的优惠劵，并且赠送到用户下.
 		// 注意以上4个步骤必须为同一个事务。
 		Long userId = orderCards.getUserId();
-		Users users = usersService.getUserById(userId);
+		Users users = usersService.selectByPrimaryKey(userId);
 
 		UserPayStatus userPayStatus = new UserPayStatus();
 		userPayStatus.setMobile(users.getMobile());

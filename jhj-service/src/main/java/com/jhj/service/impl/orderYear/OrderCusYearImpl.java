@@ -95,7 +95,7 @@ public class OrderCusYearImpl implements OrderCustomizYearService {
 		BeanUtilsExp.copyPropertiesIgnoreNull(year, yearVo);
 		
 		Long userId = year.getUserId();
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		//用户手机号
 		yearVo.setUserMobile(users.getMobile());
 		

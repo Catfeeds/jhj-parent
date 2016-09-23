@@ -37,7 +37,7 @@
   		mobile = #{mobile,jdbcType=CHAR}
   </select> -->
   
-     <select id="selectUserSmsTokenByMobile" resultMap="BaseResultMap" parameterType="com.jhj.vo.UsersSmsTokenVo">
+     <select id="selectUserSmsTokenByMobile" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UsersSmsTokenVo">
   	select
     <include refid="Base_Column_List" />
     from user_sms_token
@@ -54,7 +54,7 @@
     order by add_time desc    
 
   </select>
-   <select id="selectAll" resultMap="BaseResultMap" parameterType="com.jhj.vo.UsersSmsTokenVo">
+   <select id="selectAll" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UsersSmsTokenVo">
   	select
     <include refid="Base_Column_List" />
     from user_sms_token

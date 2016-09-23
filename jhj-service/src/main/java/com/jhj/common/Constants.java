@@ -44,8 +44,6 @@ public class Constants {
 	public static short ORDER_STATUS_7 = 7;		//已评价
 	
 	public static short ORDER_STATUS_8 = 8;	    //已评价
-	
-	
 	public static short ORDER_STATUS_9 = 9;     //已关闭
 	
 	// 新增：  提醒类 业务 订单 状态

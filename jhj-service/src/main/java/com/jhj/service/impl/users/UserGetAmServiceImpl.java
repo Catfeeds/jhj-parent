@@ -30,13 +30,15 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserGetAmService;
 import com.jhj.service.users.UserRefAmService;
-import com.jhj.vo.OrderSearchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserGetAmVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -98,7 +100,7 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		map.put("userId", userId);
 		map.put("amId", staffId);
 		
-		int orderNum = orderService.getIntimacyOrders(map);
+		int orderNum = orderService.totalIntimacyOrders(map);
 		
 		userGetAmVo.setOrderNum(orderNum);
 		
@@ -138,7 +140,23 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		String format = com.meijia.utils.DateUtil.format(new Date(), "YYYYMM");
 		
 		//本月该助理  所有助理预约单( 订单状态> 3 && !=9 )  
-		List<Orders> amOrderList = orderMapper.selectByAmIdAndOrderType(amId,format);
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setOrderType((short) 2);
+		searchVo.setAmId(amId);
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 4);
+		orderStatusList.add((short) 5);
+		orderStatusList.add((short) 6);
+		orderStatusList.add((short) 7);
+		searchVo.setOrderStatusList(orderStatusList);
+		
+		int year = DateUtil.getYear();
+		int month = DateUtil.getMonth();
+		Long startTime = TimeStampUtil.getBeginOfMonth(year, month);
+		Long endTime = TimeStampUtil.getEndOfMonth(year, month);
+		searchVo.setStartUpdateTime(startTime);
+		searchVo.setEndUpdateTime(endTime);
+		List<Orders> amOrderList = orderMapper.selectBySearchVo(searchVo);
 		
 		List<Long> orderIdList = new ArrayList<Long>();
 		
@@ -186,7 +204,7 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		UserGetAmVo userGetAmVo = commonConvert(staffId);
 		
 		// 计算  服务人员对  用户的 服务次数。。只要有 派工记录就算，
-		OrderSearchVo searchVo = new OrderSearchVo();
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		
 		searchVo.setUserId(userId);
 		searchVo.setStaffId(staffId);

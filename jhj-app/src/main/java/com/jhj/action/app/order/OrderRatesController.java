@@ -49,7 +49,7 @@ public class OrderRatesController extends BaseController{
 		//orderRate = orderRatesService.initOrderRates();
 		
 		
-		Orders orders = ordersService.selectbyOrderId(orderId);
+		Orders orders = ordersService.selectByPrimaryKey(orderId);
 		if (orders == null) {
 			return result;
 		}
@@ -99,6 +99,7 @@ public class OrderRatesController extends BaseController{
 		
 		//更改订单状态为已评价
 		orders.setOrderStatus(Constants.ORDER_STATUS_7);
+		orders.setUpdateTime(TimeStampUtil.getNowSecond());
 		ordersService.updateByPrimaryKeySelective(orders);
 	return result;
 	}

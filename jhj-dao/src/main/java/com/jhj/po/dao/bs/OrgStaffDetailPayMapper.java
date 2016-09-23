@@ -3,7 +3,7 @@ package com.jhj.po.dao.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffDetailPay;
-import com.jhj.vo.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 
 public interface OrgStaffDetailPayMapper {

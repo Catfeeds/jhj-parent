@@ -117,7 +117,7 @@ public class OrderHourAddController extends BaseController {
 			return result;
 		}
 		
-		Users u = userService.getUserById(userId);
+		Users u = userService.selectByPrimaryKey(userId);
 
 		// 判断是否为注册用户，非注册用户返回 999
 		if (u == null) {

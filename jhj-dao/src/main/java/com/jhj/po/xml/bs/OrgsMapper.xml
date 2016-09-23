@@ -36,7 +36,7 @@
 		org_id = #{orgId,jdbcType=NUMERIC}
 	</select>
 	
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgSearchVo">
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.OrgSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from orgs
@@ -68,7 +68,7 @@
 	</select>
 	
 	<!-- 得到所有的 门店（一级） -->
-	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgSearchVo">
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.OrgSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from orgs

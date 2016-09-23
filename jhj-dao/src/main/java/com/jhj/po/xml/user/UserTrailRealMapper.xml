@@ -1,149 +1,166 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.user.UserTrailRealMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.user.UserTrailReal" >
-    <id column="id" property="id" jdbcType="NUMERIC" />
-    <result column="user_id" property="userId" jdbcType="NUMERIC" />
-    <result column="user_type" property="userType" jdbcType="NUMERIC" />
-    <result column="lat" property="lat" jdbcType="VARCHAR" />
-    <result column="lng" property="lng" jdbcType="VARCHAR" />
-    <result column="poi_name" property="poiName" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, user_id, user_type, lat, lng,poi_name, add_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from user_trail_real
-    where id = #{id,jdbcType=NUMERIC}
-  </select>
-  	
-  	<!-- 得到 传入 用户 集合 中 每个 用户 最近的位置 -->
-  	<select id="selectLatestPositionForUser" resultMap="BaseResultMap">
-  		SELECT 
-  			<include refid="Base_Column_List" />
-  		FROM 
-  			(
-				SELECT 
-					<include refid="Base_Column_List" />
-				 FROM 
-				 	user_trail_real 
-				 ORDER BY add_time DESC 
-			 ) AS p 
-			
-			WHERE 
-			 	user_id IN 
-		   <if test="userIdList.size() > 0">
-				<foreach collection="userIdList" item="userId" index="index"
-	            	open="(" close=")" separator=",">
-	            	#{userId}
-	        	</foreach>
-        	</if>
-		GROUP BY p.user_id 
-		ORDER BY add_time DESC 
-  	</select>
-  	
-    <select id="selectByUserIdAndType" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from user_trail_real
-    where user_id = #{0}
-     and user_type = #{1} 
-  </select>
+<mapper namespace="com.jhj.po.dao.user.UserTrailRealMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.user.UserTrailReal">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="user_type" property="userType" jdbcType="NUMERIC" />
+		<result column="lat" property="lat" jdbcType="VARCHAR" />
+		<result column="lng" property="lng" jdbcType="VARCHAR" />
+		<result column="poi_name" property="poiName" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, user_type, lat, lng,poi_name, add_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_trail_real
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from user_trail_real
-    where id = #{id,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.user.UserTrailReal" >
-    insert into user_trail_real (id, user_id, user_type, 
-      lat, lng, poi_name,add_time)
-    values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{userType,jdbcType=NUMERIC}, 
-      #{lat,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, #{poiName,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.user.UserTrailReal" >
-    insert into user_trail_real
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="userType != null" >
-        user_type,
-      </if>
-      <if test="lat != null" >
-        lat,
-      </if>
-      <if test="lng != null" >
-        lng,
-      </if>
-      <if test="poiName != null" >
-        poiName,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=NUMERIC},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=NUMERIC},
-      </if>
-      <if test="userType != null" >
-        #{userType,jdbcType=NUMERIC},
-      </if>
-      <if test="lat != null" >
-        #{lat,jdbcType=VARCHAR},
-      </if>
-      <if test="lng != null" >
-        #{lng,jdbcType=VARCHAR},
-      </if>
-      <if test="poiName != null" >
-        #{poiName,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.UserTrailReal" >
-    update user_trail_real
-    <set >
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=NUMERIC},
-      </if>
-      <if test="userType != null" >
-        user_type = #{userType,jdbcType=NUMERIC},
-      </if>
-      <if test="lat != null" >
-        lat = #{lat,jdbcType=VARCHAR},
-      </if>
-      <if test="lng != null" >
-        lng = #{lng,jdbcType=VARCHAR},
-      </if>
-      <if test="poiName != null" >
-        poi_name = #{poiName,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.UserTrailReal" >
-    update user_trail_real
-    set user_id = #{userId,jdbcType=NUMERIC},
-      user_type = #{userType,jdbcType=NUMERIC},
-      lat = #{lat,jdbcType=VARCHAR},
-      lng = #{lng,jdbcType=VARCHAR},
-      poi_name = #{poiName,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=NUMERIC}
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserTrailSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from
+		user_trail_real
+		where 1 = 1
+		
+		<if test="userId !=null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="userType !=null">
+			and user_type = #{userType,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="userIds !=null and userIds.size() > 0 ">
+			and staff_id in
+			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		
+	</select>
+	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserTrailSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from
+		user_trail_real
+		where 1 = 1
+		
+		<if test="userId !=null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="userType !=null">
+			and user_type = #{userType,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="userIds !=null and userIds.size() > 0 ">
+			and staff_id in
+			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from user_trail_real
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.user.UserTrailReal">
+		insert into user_trail_real (id, user_id, user_type,
+		lat, lng, poi_name,add_time)
+		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{userType,jdbcType=NUMERIC},
+		#{lat,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, #{poiName,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.user.UserTrailReal">
+		insert into user_trail_real
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="lat != null">
+				lat,
+			</if>
+			<if test="lng != null">
+				lng,
+			</if>
+			<if test="poiName != null">
+				poiName,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=NUMERIC},
+			</if>
+			<if test="lat != null">
+				#{lat,jdbcType=VARCHAR},
+			</if>
+			<if test="lng != null">
+				#{lng,jdbcType=VARCHAR},
+			</if>
+			<if test="poiName != null">
+				#{poiName,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.UserTrailReal">
+		update user_trail_real
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=NUMERIC},
+			</if>
+			<if test="lat != null">
+				lat = #{lat,jdbcType=VARCHAR},
+			</if>
+			<if test="lng != null">
+				lng = #{lng,jdbcType=VARCHAR},
+			</if>
+			<if test="poiName != null">
+				poi_name = #{poiName,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.UserTrailReal">
+		update user_trail_real
+		set user_id = #{userId,jdbcType=NUMERIC},
+		user_type = #{userType,jdbcType=NUMERIC},
+		lat = #{lat,jdbcType=VARCHAR},
+		lng = #{lng,jdbcType=VARCHAR},
+		poi_name = #{poiName,jdbcType=VARCHAR},
+		add_time = #{addTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
 </mapper>

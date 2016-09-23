@@ -11,7 +11,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.user.UserSmsTokenMapper;
 import com.jhj.po.model.user.UserSmsToken;
 import com.jhj.service.users.UserSmsTokenService;
-import com.jhj.vo.UsersSmsTokenVo;
+import com.jhj.vo.user.UsersSmsTokenVo;
 import com.meijia.utils.TimeStampUtil;
 
 @Service

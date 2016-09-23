@@ -10,7 +10,7 @@ import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.bs.OrgStaffPayDeptMapper;
 import com.jhj.po.model.bs.OrgStaffPayDept;
 import com.jhj.service.bs.OrgStaffPayDeptService;
-import com.jhj.vo.OrgStaffFinanceSearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**

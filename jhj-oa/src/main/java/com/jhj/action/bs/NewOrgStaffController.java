@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
@@ -49,10 +47,10 @@ import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserRefAmService;
-import com.jhj.vo.OrgSearchVo;
-import com.jhj.vo.StaffSearchVo;
+import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
@@ -80,8 +78,10 @@ public class NewOrgStaffController extends AdminController {
 	private OrgStaffTagsService orgStaTagService;
 	@Autowired
 	private TagsService tagService;
+	
 	@Autowired
 	private OrgsService orgService;
+	
 	@Autowired
 	private UserRefAmService userRefAmService;
 	
@@ -93,6 +93,9 @@ public class NewOrgStaffController extends AdminController {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private UserTrailRealService userTrailRealService;
 	
 	
 	/**
@@ -132,7 +135,7 @@ public class NewOrgStaffController extends AdminController {
 			staffSearchVo.setParentId(sessionOrgId);
 		}
 		
-		List<OrgStaffs> list = staffService.selectNewStaffList(staffSearchVo);
+		List<OrgStaffs> list = staffService.selectBySearchVo(staffSearchVo);
 		OrgStaffs orgStaff = null;
 		for (int i = 0; i < list.size(); i++) {
 			orgStaff = list.get(i);
@@ -381,23 +384,31 @@ public class NewOrgStaffController extends AdminController {
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		//获取员工的地理位置
-		PageInfo<Map> pageList = staffService.selectByListPage(mobile,pageNo,pageSize);
 		
-		
-		OrgSearchVo searchVo = new OrgSearchVo();
-		searchVo.setParentId(0L);
-		searchVo.setOrgStatus((short) 1);
-		//获取门店信息
-		List<Orgs> orgsList=orgService.selectBySearchVo(searchVo);
-		//获取云店信息
-		
-		searchVo = new OrgSearchVo();
-		searchVo.setIsCloud((short) 1);
-		List<Orgs> cloudOrgsList = orgService.selectBySearchVo(searchVo);
-		
-		model.addAttribute("orgsList", orgsList);
-		model.addAttribute("cloudOrgsList", cloudOrgsList);
-		model.addAttribute("pageInfo", pageList);
+//		UserTrailSearchVo searchVo = new UserTrailSearchVo();
+//		searchVo.setUserType((short) 0);
+//		
+//		
+//		
+//		PageInfo pageList = userTrailRealService.selectByListPage(searchVo, pageNo, pageSize)
+//		
+//		PageInfo<Map> pageList = staffService.selectByListPage(mobile,pageNo,pageSize);
+//		
+//		
+//		OrgSearchVo searchVo = new OrgSearchVo();
+//		searchVo.setParentId(0L);
+//		searchVo.setOrgStatus((short) 1);
+//		//获取门店信息
+//		List<Orgs> orgsList=orgService.selectBySearchVo(searchVo);
+//		//获取云店信息
+//		
+//		searchVo = new OrgSearchVo();
+//		searchVo.setIsCloud((short) 1);
+//		List<Orgs> cloudOrgsList = orgService.selectBySearchVo(searchVo);
+//		
+//		model.addAttribute("orgsList", orgsList);
+//		model.addAttribute("cloudOrgsList", cloudOrgsList);
+//		model.addAttribute("pageInfo", pageList);
 		
 		return "bs/staffRegion";
 	}

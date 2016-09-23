@@ -27,8 +27,7 @@ import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.vo.OrgSearchVo;
-import com.meijia.utils.StringUtil;
+import com.jhj.vo.org.OrgSearchVo;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 

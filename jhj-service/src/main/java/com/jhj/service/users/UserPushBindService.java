@@ -3,6 +3,7 @@ package com.jhj.service.users;
 import java.util.List;
 
 import com.jhj.po.model.user.UserPushBind;
+import com.jhj.vo.user.UserPushBindSearchVo;
 
 public interface UserPushBindService {
 	
@@ -20,9 +21,5 @@ public interface UserPushBindService {
 
     UserPushBind initUserPushBind();
 
-	UserPushBind selectByUserId(Long userId);
-
-	List<UserPushBind> selectByClientId(String clientId);
-	
-	List<UserPushBind> selectByUserType(Short userType);
+	List<UserPushBind> selectBySearchVo(UserPushBindSearchVo searchVo);
 }

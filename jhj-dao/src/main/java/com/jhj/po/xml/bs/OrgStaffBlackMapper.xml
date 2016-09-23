@@ -12,6 +12,7 @@
   <sql id="Base_Column_List" >
     id, staff_id, mobile, black_type, remarks, add_time
   </sql>
+ 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -41,7 +42,7 @@
     from org_staff_black
     where staff_id = #{staffId,jdbcType=NUMERIC} and black_type=0
   </select>
-  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
+  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
   	select
     <include refid="Base_Column_List" />
     from org_staff_black

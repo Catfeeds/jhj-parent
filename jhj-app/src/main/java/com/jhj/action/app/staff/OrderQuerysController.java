@@ -20,9 +20,10 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
-import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderDetailVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -80,9 +81,18 @@ public class OrderQuerysController extends BaseController {
 			vo = orderQueryService.getOrderListVo(item);
 			
 			//如果是未接单，则设置服务地址为 ******
-			OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(vo.getOrderNo());
-			if (orderDispatchs != null) {
-				Short isApply = orderDispatchs.getIsApply();
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setOrderNo(vo.getOrderNo());
+			searchVo1.setDispatchStatus((short) 1);
+			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
+
+			OrderDispatchs orderDispatch = null;
+			if (!orderDispatchs.isEmpty()) {
+				orderDispatch = orderDispatchs.get(0);
+			}
+
+			if (orderDispatch != null) {
+				Short isApply = orderDispatch.getIsApply();
 				if (isApply.equals((short)0)) {
 					vo.setServiceAddrDistance("**米");
 					vo.setServiceAddr("******");
@@ -124,13 +134,22 @@ public class OrderQuerysController extends BaseController {
 		result.setData(vo);
 		
 		//设置接单状态
-		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(order.getOrderNo());
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrderNo(order.getOrderNo());
+		searchVo1.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
+
+		OrderDispatchs orderDispatch = null;
+		if (!orderDispatchs.isEmpty()) {
+			orderDispatch = orderDispatchs.get(0);
+		}
+		
 		//如果是未接单，则设置服务地址为 ******
-		Short isApply = orderDispatchs.getIsApply();
+		Short isApply = orderDispatch.getIsApply();
 		if (isApply.equals((short)0)) {
-			orderDispatchs.setIsApply((short) 1);
-			orderDispatchs.setApplyTime(TimeStampUtil.getNowSecond());
-			orderDispatchsService.updateByPrimaryKey(orderDispatchs);
+			orderDispatch.setIsApply((short) 1);
+			orderDispatch.setApplyTime(TimeStampUtil.getNowSecond());
+			orderDispatchsService.updateByPrimaryKey(orderDispatch);
 		}
 		return result;
 	}	

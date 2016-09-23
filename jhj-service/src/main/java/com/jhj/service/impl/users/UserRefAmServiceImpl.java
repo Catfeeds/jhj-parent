@@ -21,6 +21,7 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.AmSearchListVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UsersListsVo;
 
 @Service
@@ -73,7 +74,7 @@ public class UserRefAmServiceImpl implements UserRefAmService {
 		// 用户手机号
 		vo.setMobile("");
 		if (vo.getUserId() > 0L) {
-			Users user = usersService.getUserById(vo.getUserId());
+			Users user = usersService.selectByPrimaryKey(vo.getUserId());
 			
 			if (user == null) {
 				return vo;
@@ -96,7 +97,9 @@ public class UserRefAmServiceImpl implements UserRefAmService {
 		// 服务次数
 		vo.setServiceTimes("0");
 		// 1.获得用户列表
-		List<Orders> list = ordersService.selectListByAmId(vo.getStaffId());
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setAmId(vo.getStaffId());
+		List<Orders> list = ordersService.selectBySearchVo(searchVo);
 
 		// 2.获得用户对应的ids
 		for (Orders item : list) {

@@ -34,8 +34,8 @@ import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
-import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.bs.OrgStaffVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -151,7 +151,13 @@ public class OrgStaffsController extends BaseController {
 
 		if (sessionOrgId > 0L) {
 			//如果登录的是 店长
-			List<OrgStaffs> amList = orgStaffsService.selectAmByOrgId(sessionOrgId);
+			
+			StaffSearchVo searchVo = new StaffSearchVo();
+			searchVo.setOrgId(sessionOrgId);
+			searchVo.setStaffType((short) 1);
+			searchVo.setStatus(1);
+			
+			List<OrgStaffs> amList = orgStaffsService.selectBySearchVo(searchVo);
 			
 			orgStaffVo.setNowOrgAmList(amList);
 		}
@@ -242,9 +248,14 @@ public class OrgStaffsController extends BaseController {
 	public void validMobile(PrintWriter out,String name) throws UnsupportedEncodingException{
 		
 		String names = URLDecoder.decode(name,"utf-8");
-		OrgStaffs orgStaffs = orgStaffsService.selectByMobile(names);
 		
-		if(orgStaffs !=null){
+		StaffSearchVo searchVo1 = new StaffSearchVo();
+		searchVo1.setMobile(names);
+		List<OrgStaffs> staffList = orgStaffsService.selectBySearchVo(searchVo1);
+		OrgStaffs orgStaff = null;
+		if (!staffList.isEmpty()) orgStaff = staffList.get(0);
+		
+		if(orgStaff !=null){
 			//如果输入的名称能查出来记录，则返回 名称已存在 标识
 			out.write("no");
 		}else{
@@ -259,9 +270,12 @@ public class OrgStaffsController extends BaseController {
 	public void validCard(PrintWriter out,String name) throws UnsupportedEncodingException{
 		
 		String names = URLDecoder.decode(name,"utf-8");
-		OrgStaffs orgStaffs = orgStaffsService.selectByCardId(names);
 		
-		if(orgStaffs !=null){
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setCardId(names);
+		List<OrgStaffs> orgStaffs = orgStaffsService.selectBySearchVo(searchVo);
+		
+		if(!orgStaffs.isEmpty()){
 			//如果输入的名称能查出来记录，则返回 名称已存在 标识
 			out.write("no");
 		}else{

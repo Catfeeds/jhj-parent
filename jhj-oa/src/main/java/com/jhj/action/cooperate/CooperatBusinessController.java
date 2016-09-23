@@ -3,7 +3,9 @@ package com.jhj.action.cooperate;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +32,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.chart.CoopUserOrderVo;
 import com.jhj.vo.cooperate.CooperateVo;
+import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
 
@@ -219,11 +222,16 @@ public class CooperatBusinessController extends BaseController {
 			if(coopIdList.size() <=0){
 				coopIdList.add(0L);
 			}
-			list = userService.selectUserInAllCoopFrom(coopIdList);
+			
+			UserSearchVo searchVo = new UserSearchVo();
+			searchVo.setAddFroms(coopIdList);
+			list = userService.selectBySearchVo(searchVo);
 		}else{
 			
 			//合作商户 登录，只能查看自己 登录id 决定的来源 的用户
-			list = userService.selectUserByAddFrom(id);
+			UserSearchVo searchVo = new UserSearchVo();
+			searchVo.setAddFrom(id);
+			list = userService.selectBySearchVo(searchVo);
 		}
 		
 		List<Long> userIds = new ArrayList<Long>();

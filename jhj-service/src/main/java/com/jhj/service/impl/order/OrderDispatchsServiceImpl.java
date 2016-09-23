@@ -12,9 +12,9 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.service.order.OrderDispatchsService;
-import com.jhj.vo.OaOrderDisSearchVo;
-import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.dispatch.StaffDispatchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -59,13 +59,6 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	public int updateByPrimaryKey(OrderDispatchs record) {
 		return orderDisMapper.updateByPrimaryKey(record);
 	}
-
-	/*@Override
-	public List<Long> getBadOrgStaff(Long userId,List<Long> orderIdList) {
-		return orderDisMapper.getBadOrgStaff(userId,orderIdList);
-	}*/
-	
-	
 	
 	@Override
 	public OrderDispatchs initOrderDisp() {
@@ -81,6 +74,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		dispatchs.setServiceDate(0L);
 		dispatchs.setServiceHours((short) 0);
 		dispatchs.setOrgId(0L);
+		dispatchs.setParentId(0L);
 		dispatchs.setStaffId(0L);
 		dispatchs.setStaffName("");
 		dispatchs.setStaffMobile("");
@@ -99,69 +93,19 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		dispatchs.setApplyTime(0L);
 		return dispatchs;
 	}
-
+	
 	@Override
-	public List<OrderDispatchs> getBadOrgStaff(Map<String, Object> map) {
-		return orderDisMapper.getBadOrgStaff(map);
-	}
-
-	@Override
-	public List<OrderDispatchs> selectEnableStaffNow(Long orgId, Long serviceDateStart, Long serviceDateEnd) {
-		return orderDisMapper.selectEnableStaffNow(orgId, serviceDateStart, serviceDateEnd);
-	}
-
-	@Override
-	public OrderDispatchs selectByOrderNo(String orderNo) {
-		return orderDisMapper.selectByOrderNo(orderNo);
-	}
-	@Override
-	public OrderDispatchs selectByUserId(Long userId) {
-		return orderDisMapper.selectByUserId(userId);
+	public List<OrderDispatchs> selectBySearchVo(OrderDispatchSearchVo searchVo) {
+		return orderDisMapper.selectBySearchVo(searchVo);
 	}
 	
 	@Override
-	public List<HashMap> getUserIdsByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
-		
-		PageHelper.startPage(pageNo, pageSize);
-		List<HashMap> list = orderDisMapper.getUserIdsByListPage(searchVo);
-		return list;
-	}	
-	
-	@Override
-	public List<OrderDispatchs> selectByOrderIds(List<Long> orderIds) {
-		return orderDisMapper.selectByOrderIds(orderIds);
-	}
-
-	@Override
-	public List<OrderDispatchs> selectAll() {
-		return orderDisMapper.selectAll();
-	}
-
-
-	@Override
-	public OrderDispatchs selectByOrderId(Long orderId) {
-		return orderDisMapper.selectByOrderId(orderId);
-	}
-
-
-	@Override
-	public List<OrderDispatchs> selectByNoAndDisStatus(String orderNo, Short disStatus) {
-		return orderDisMapper.selectByNoAndDisStatus(orderNo, disStatus);
-	}	
-
-	@Override
-	public Long getTodayOrderNumForTheSta(Long staffId) {
-		return orderDisMapper.getTodayOrderNumForTheSta(staffId);
+	public List<OrderDispatchs> selectByMatchTime(OrderDispatchSearchVo searchVo) {
+		return orderDisMapper.selectByMatchTime(searchVo);
 	}
 	
 	@Override
-	public Long getDisNumForStaDuringServiceDate(OrderSearchVo searchVo) {
-		return orderDisMapper.getDisNumForStaDuringServiceDate(searchVo);
-	}
-	
-	
-	@Override
-	public List<StaffDispatchVo> selectStaffDisBySevenDay(OaOrderDisSearchVo oaOrderDisSearchVo) {
-		return orderDisMapper.selectStaffDisBySevenDay(oaOrderDisSearchVo);
+	public Long totalStaffTodayOrders(Long staffId) {
+		return orderDisMapper.totalStaffTodayOrders(staffId);
 	}
 }

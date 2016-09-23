@@ -2,7 +2,9 @@ package com.jhj.service.users;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.user.UserTrailReal;
+import com.jhj.vo.user.UserTrailSearchVo;
 
 public interface UserTrailRealService {
 	
@@ -20,9 +22,7 @@ public interface UserTrailRealService {
 
     UserTrailReal initUserTrailReal();
 
-	UserTrailReal selectByUserIdAndType(Long userId, short userType);
+	List<UserTrailReal> selectBySearchVo(UserTrailSearchVo searchVo);
 	
-	//得到  参数集合中，每个用户 最新时间的 位置 
-	List<UserTrailReal> selectLatestPositionForUser(List<Long> userIdList);
-	
+	PageInfo selectByListPage(UserTrailSearchVo searchVo, int pageNo, int pageSize);
 }

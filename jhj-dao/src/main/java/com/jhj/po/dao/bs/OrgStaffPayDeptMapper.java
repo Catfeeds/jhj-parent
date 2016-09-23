@@ -3,7 +3,7 @@ package com.jhj.po.dao.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffPayDept;
-import com.jhj.vo.OrgStaffFinanceSearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 
 public interface OrgStaffPayDeptMapper {
     int deleteByPrimaryKey(Long orderId);

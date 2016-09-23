@@ -8,14 +8,14 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.jhj.po.model.order.Orders;
-import com.jhj.vo.OaOrderSearchVo;
 import com.jhj.vo.OaPhoneChargeOrderSearchVo;
 import com.jhj.vo.OaRemindOrderSearchVo;
-import com.jhj.vo.OrderQuerySearchVo;
-import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.jhj.vo.chart.CoopUserOrderVo;
+import com.jhj.vo.order.OaOrderSearchVo;
+import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 
 public interface OrdersMapper {
 	
@@ -25,130 +25,32 @@ public interface OrdersMapper {
 
     int insertSelective(Orders record);
 
-    Orders selectByPrimaryKey(Long id);
-
     int updateByPrimaryKeySelective(Orders record);
 
     int updateByPrimaryKey(Orders record);
     
-    List<Orders> selectBadOrderRateByUserId(Long userId);
-
-	Orders selectByUserId(Long userId);
-
-	List<Orders> selectByUserIdList(Long userId);
-
 	int updateByUpdateTimeSelective(Orders orders);
-
-    Orders selectByOrderNo(String orderNo);
-
-    List<Orders> selectByListPage(OrderSearchVo orderSearchVo);
-
-    List<Orders> selectByStatus(Short orderStatus);
-
-    List<Orders> selectByStatuses(List<Short> orderStatus);
-
-	List<String> selectByDistinctMobileLists();
-
-	//List<Orders> selectByUserId(Long userId);
 	
-	Orders selectByUser(Long userId);
-	
-	List<Orders> selectAmOrderList(Long amId);
-
-	List<Orders> selectByListPages();
-
 	int updateByCleanUpdateTimeSelective(Orders orders);
-	
-	List<Orders> selectByUserListPage(OrderSearchVo orderSearchVo);
-	
-	List<Orders> selectNowOrderHourByListPage(OrderSearchVo orderSearchVo);
-	
-	List<Orders> selectOldOrderHourByListPage(OrderSearchVo orderSearchVo);
 
-	Orders selectByAmId(Long amId);
+	Orders selectByPrimaryKey(Long id);
+	 
+    Orders selectByOrderNo(String orderNo);
+    
+    List<Orders> selectBySearchVo(OrderSearchVo searchVo);
 
-	List<Orders> selectOaOrderByListPage(OaOrderSearchVo oaOrderSearchVo);
-	
-	List<HashMap> totalByUserIds(List<Long> id);
-
-	List<Orders> selectByAmIdGroupByUserId(Long amId);
-
-	int getIntimacyOrders(Map<String, Long> map);
-	
-	List<Orders> selectByAmIdAndOrderType(@Param("amId")Long amId,@Param("format") String format);
-
-	List<Orders> selectBadOrderRateByUserId(Long userId, Long orgId);
-	
-	
-	List<Orders> selectAllAmOrder(Long amId);
-	
-	
-	List<Orders> selectOaRemindOrderByListPage(OaRemindOrderSearchVo searchVo);
-	
-	
-	
-	/*
-	 *  提醒类 订单
-	 */
-	
-	//我的提醒（当前提醒） 用户端
-	List<Orders>  selectNowRemind(OrderSearchVo orderSearchVo);
-	
-	//历史提醒（历史提醒）用户端
-	List<Orders> selectOldRemind(OrderSearchVo orderSearchVo);	
-	
-	// 已预约提醒 （助理端）
-	List<Orders> selectNowRemindAm(OrderSearchVo orderSearchVo);
-	
-	// 已完成 和 已取消 提醒 （助理端）
-	List<Orders> selectOldRemindAm(OrderSearchVo orderSearchVo);
-	
-	//当前已预约订单的数量
-	Long getRemindCountToDo(Long userId);
-	
-	/*
-	 *	话费充值订单 
-	 */
-	List<Orders>  selectPhoneOrderListPage(OaPhoneChargeOrderSearchVo searchVo);
-	
-	
-	
-	/*
-	 * 定时任务
-	 */
-	
-	List<Orders> selectBeforeService();
-	
-	List<Orders> selectDuringService();
-	
-	List<Orders> selectAfterService();
-	
-	List<Orders> selectOverTimeNotPay();
-	
-	List<Orders> selectOverSevenDay();
-	
-	//,助理 24小时，已支付，变 完成
-	List<Orders> selectAmOrderOverOneDay();
-	
-	//助理和 深度 , 待确认的订单, 超过 3小时变为  已关闭
-	List<Orders> selectChangeToClose();
-	
-	//提醒类 订单 ，超过服务时间，变为 提醒已完成
-	List<Orders> selectRemindOverServiceDate();
-	
-	//提醒类订单，服务时间 前 30分钟 时，给助理发短信
-	List<Orders> selectRemindBeforeHalfHour();
-	
-	//TODO 话费充值订单, 支付时间 超过 1小时, 订单状态由 13(支付中) 变为  16 (取消)
-	List<Orders> selectPhoneOrderOverOneHour();
-	
-	//订单开始服务超过8小时还没点击完成，服务，则需要系统自动变成完成服务
-	List<Orders> selectByOrderStatus();
-	
+    List<Orders> selectByListPage(OrderSearchVo searchVo);
+		
 	/********************************************
 	  				统		计
 	 *********************************************/
 	
+	List<HashMap> totalByUserIds(List<Long> id);
+	
+	int totalIntimacyOrders(Map<String, Long> map);
+	
+	//当前已预约订单的数量
+	Long totalRemindCountToDo(Long userId);
 	/*
 	 *  市场订单图表
 	 */
@@ -267,6 +169,5 @@ public interface OrdersMapper {
 	Long totalOrderInUserIds(List<Long> userIds);
 	
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
-	
-	List<Orders> selectByMap(Map<String,Long> map);
+
 }

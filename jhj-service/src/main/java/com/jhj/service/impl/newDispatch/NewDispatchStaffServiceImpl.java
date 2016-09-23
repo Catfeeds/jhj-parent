@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
 import com.jhj.po.model.bs.OrgStaffLeave;
+import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
@@ -18,6 +19,7 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffBlackService;
+import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
@@ -27,10 +29,13 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserTrailRealService;
-import com.jhj.vo.OrgSearchVo;
-import com.jhj.vo.StaffSearchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.org.LeaveSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
+import com.jhj.vo.staff.OrgStaffSkillSearchVo;
+import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
@@ -57,7 +62,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	private OrdersService orderService;
 	
 	@Autowired
-	private OrderDispatchsService dispatchService;
+	private OrderDispatchsService orderDispatchsService;
 	
 	@Autowired
 	private OrgStaffsService staffService;
@@ -77,12 +82,15 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	@Autowired
 	private PartnerServiceTypeService partService;
 	
+	@Autowired
+	private OrgStaffSkillService orgStaffSkillService;
+	
 	/*
 	 *  助理类订单,手动派工，返回基础派工 逻辑 支持的  员工 id 集合
 	 * 
 	 */
 	@Override
-	public List<Long> autoDispatchForAmOrder(String lat,String lon,Long serviceTye) {
+	public List<Long> autoDispatchForAmOrder(String lat,String lon,Long serviceTypeId) {
 		
 		
 		//返回  所有云店的 所有可用 服务人员
@@ -99,8 +107,20 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			
 			Long orgId = org.getOrgId();
 			// 根据 服务类型 和 门店id, 找到  符合 服务要求 的 服务人员
-			staffIdList = staffService.getProperStaffByOrgAndServiceType(orgId, serviceTye);
 			
+			OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
+			searchVo.setOrgId(orgId);
+			searchVo.setServiceTypeId(serviceTypeId);
+			List<OrgStaffSkill> skillList = orgStaffSkillService.selectBySearchVo(searchVo);
+			
+			if (!skillList.isEmpty()) {
+				for (OrgStaffSkill s : skillList) {
+					if (!staffIdList.contains(s.getStaffId())) {
+						staffIdList.add(s.getStaffId());
+					}
+				}
+			}
+
 			//黑名单
 			List<Long> blackIdList = blackService.selectAllBadRateStaffId();
 			
@@ -121,7 +141,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	@Override
 	public List<Long> autoDispatchForBaseOrder(Long orderId,Long serviceDate) {
 		
-		Orders order = orderService.selectbyOrderId(orderId);
+		Orders order = orderService.selectByPrimaryKey(orderId);
 		
 		Long addrId = order.getAddrId();
 		
@@ -129,7 +149,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		
 		List<Orgs> orgList = getMatchOrgId(addrs.getLatitude(),addrs.getLongitude());
 		
-		Long serviceType = order.getServiceType();
+		Long serviceTypeId = order.getServiceType();
 		
 		//所有符合 距离 要求的  云店  下    所有在订单 时间内已经有 派工的员工
 		List<Long> dispatchIdList = new ArrayList<Long>();
@@ -142,15 +162,33 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				Orgs org = orgList.get(i);
 				Long orgId = org.getOrgId();
 				
+				List<Long> staffIds = new ArrayList<Long>();
 				// 根据 服务类型 和 门店id, 找到  '该云店下 '  符合   '服务类型' 要求 的 服务人员
-				List<Long> staffIds = staffService.getProperStaffByOrgAndServiceType(orgId, serviceType);
+				OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
+				searchVo.setOrgId(orgId);
+				searchVo.setServiceTypeId(serviceTypeId);
+				List<OrgStaffSkill> skillList = orgStaffSkillService.selectBySearchVo(searchVo);
 				
+				
+				if (!skillList.isEmpty()) {
+					for (OrgStaffSkill s : skillList) {
+						if (!staffIds.contains(s.getStaffId())) {
+							staffIds.add(s.getStaffId());
+						}
+					}
+				}
+
 				//服务时间内 已 排班的 阿姨
 				
 				/*
 				 *  2016年5月16日14:39:37  预留 2小时， 将 服务 开始 时间  提前 2小时，用作预留 时间
 				 */
-				List<OrderDispatchs> disList = dispatchService.selectEnableStaffNow(orgId, serviceDate-3600*2, serviceDate+order.getServiceHour()*3600);
+				OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+				searchVo1.setOrgId(orgId);
+				searchVo1.setDispatchStatus((short) 1);
+				searchVo1.setStartServiceTime(serviceDate-3600*2);
+				searchVo1.setEndServiceTime(serviceDate+order.getServiceHour()*3600);
+				List<OrderDispatchs> disList = orderDispatchsService.selectByMatchTime(searchVo1);
 				
 				for (OrderDispatchs orderDispatchs : disList) {
 					dispatchIdList.add(orderDispatchs.getStaffId());
@@ -301,7 +339,9 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		}
 		
 		// 参数中传入服务人员     的 最新 位置   <服务人员：该服务人员的最新位置。。VO>
-		List<UserTrailReal> list = trailRealService.selectLatestPositionForUser(staIdList);
+		UserTrailSearchVo searchVo = new UserTrailSearchVo();
+		searchVo.setUserIds(staIdList);
+		List<UserTrailReal> list = trailRealService.selectBySearchVo(searchVo);
 		
 		List<BaiduPoiVo> orgAddrList = new ArrayList<BaiduPoiVo>();
 		
@@ -342,7 +382,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				Long staffId = item.getUserId();
 				
 				// 该 服务人员 当天 的 派单 数量
-				Long numTodayOrder = dispatchService.getTodayOrderNumForTheSta(staffId);
+				Long numTodayOrder = orderDispatchsService.totalStaffTodayOrders(staffId);
 				
 				//派工页面 服务人员 相关 信息 VO
 				OrgStaffsNewVo staffsNewVo = initStaffsNew();
@@ -438,7 +478,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	@Override
 	public List<OrgStaffsNewVo> getAbleStaffList(Long orderId, Long serviceDate) {
 		
-		Orders orders = orderService.selectbyOrderId(orderId);
+		Orders orders = orderService.selectByPrimaryKey(orderId);
 		
 		Long addrId = orders.getAddrId();
 		
@@ -447,7 +487,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		String latitude = userAddr.getLatitude();
 		String longitude = userAddr.getLongitude();
 		
-//		List<OrderDispatchs> list = dispatchService.selectEnableStaffNow(orders.getOrgId(), serviceDate, serviceDate+3*3600);
+//		List<OrderDispatchs> list = orderDispatchsService.selectEnableStaffNow(orders.getOrgId(), serviceDate, serviceDate+3*3600);
 		
 		//符合基本派工逻辑的  员工
 		List<Long> staIdList = autoDispatchForBaseOrder(orderId, serviceDate);
@@ -497,8 +537,8 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		searchVo.setParentId(parentId);
 		
 		if (cloudId > 0L) searchVo.setOrgId(cloudId);
-	
-		List<OrgStaffs> staffList = staffService.selectNewStaffList(searchVo);
+		
+		List<OrgStaffs> staffList = staffService.selectBySearchVo(searchVo);
 		
 		List<Long> staffIdList = new ArrayList<Long>();
 		
@@ -507,7 +547,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			staffIdList.add(orgStaffs.getStaffId());
 		}
 		
-		Orders orders = orderService.selectbyOrderId(orderId);
+		Orders orders = orderService.selectByPrimaryKey(orderId);
 		
 		Long addrId = orders.getAddrId();
 		

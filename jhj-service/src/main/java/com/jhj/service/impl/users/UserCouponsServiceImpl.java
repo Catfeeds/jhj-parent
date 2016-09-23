@@ -218,7 +218,7 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
 
-		Users u = userService.selectByUsersId(userId);
+		Users u = userService.selectByPrimaryKey(userId);
 
 		UserCoupons userCoupon = selectByPrimaryKey(userCouponId);
 

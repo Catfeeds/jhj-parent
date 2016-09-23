@@ -82,7 +82,7 @@ public class SocialsCallServiceImpl implements SocialsCallService {
 			SocialCall socialCall = (SocialCall) iterator.next();
 			SocialCallVo socialCallVo = new SocialCallVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(socialCall,socialCallVo);
-			Users users = usersService.getUserById(socialCall.getUserId());
+			Users users = usersService.selectByPrimaryKey(socialCall.getUserId());
 			if(users !=null){
 				socialCallVo.setUserName(users.getName());
 			}

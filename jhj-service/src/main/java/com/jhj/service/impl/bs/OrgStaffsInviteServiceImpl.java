@@ -10,7 +10,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffInviteMapper;
 import com.jhj.po.model.bs.OrgStaffInvite;
 import com.jhj.service.bs.OrgStaffInviteService;
-import com.jhj.vo.OrgStaffFinanceSearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;

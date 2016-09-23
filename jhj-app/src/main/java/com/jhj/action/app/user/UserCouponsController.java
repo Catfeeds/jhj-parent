@@ -55,7 +55,7 @@ public class UserCouponsController extends BaseController {
 			AppResultData<List<UserCouponVo>> result = new AppResultData<List<UserCouponVo>>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,new ArrayList<UserCouponVo>());
 			
-			Users u = userService.selectByUsersId(userId);
+			Users u = userService.selectByPrimaryKey(userId);
 			
 			// 判断是否为注册用户，非注册用户返回 999
 			if (u == null) {
@@ -100,7 +100,7 @@ public class UserCouponsController extends BaseController {
 			AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
 			
-			Users u = userService.selectByUsersId(userId);
+			Users u = userService.selectByPrimaryKey(userId);
 			
 			// 判断是否为注册用户，非注册用户返回 999
 			if (u == null) {

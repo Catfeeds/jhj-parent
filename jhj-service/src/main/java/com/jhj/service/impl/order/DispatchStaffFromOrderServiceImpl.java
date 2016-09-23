@@ -14,11 +14,8 @@ import com.jhj.po.dao.bs.OrgStaffAuthMapper;
 import com.jhj.po.dao.bs.OrgStaffBlackMapper;
 import com.jhj.po.dao.bs.OrgStaffOnlineMapper;
 import com.jhj.po.dao.bs.OrgStaffTagsMapper;
-import com.jhj.po.dao.bs.OrgStaffsMapper;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.user.UserAddrsMapper;
-import com.jhj.po.dao.user.UserPushBindMapper;
-import com.jhj.po.dao.user.UserTrailRealMapper;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffBlack;
 import com.jhj.po.model.bs.OrgStaffOnline;
@@ -32,6 +29,8 @@ import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.OrgStaffAuthService;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
@@ -39,8 +38,15 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.service.users.UserPushBindService;
+import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.UserTrailVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.staff.StaffAuthSearchVo;
+import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserPushBindSearchVo;
+import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -62,7 +68,7 @@ import com.meijia.utils.baidu.MapPoiUtil;
 public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrderService {
 
 	@Autowired
-	private OrgStaffsMapper orgStaffsMapper;
+	private OrgStaffsService orgStaffsService;
 
 	@Autowired
 	private OrderDispatchsMapper orderDispatchsMapper;
@@ -77,7 +83,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	private OrgStaffTagsMapper orgStaffTagsMapper;
 
 	@Autowired
-	private UserTrailRealMapper userTrailRealMapper;
+	private UserTrailRealService userTrailRealService;
 	
 	@Autowired
 	private OrderHourAddServiceImpl orderHourAddServiceImpl;
@@ -95,7 +101,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	private OrderPricesService orderPricesService;
 	
 	@Autowired
-	private UserPushBindMapper userPushBindMapper;
+	private UserPushBindService userPushBindService;
 	
 	@Autowired
 	private OrdersService ordersService;
@@ -111,6 +117,9 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		
 	@Autowired
 	PartnerServiceTypeService partnerServiceTypeService;
+	
+	@Autowired
+	private OrgStaffAuthService orgStaffAuthService;
 
 	/**
 	 * 钟点工派工逻辑:
@@ -141,7 +150,28 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		List<OrgStaffAuth> orgStaffAuths =orgStaffAuthMapper.selectHourStaffByServiceTypeIdAndAuthStatus();
 		orgStaffs = staffsIsAuth(orgStaffs,orgStaffAuths);
 	*/
-		List<OrgStaffs> orgStaffs = orgStaffsMapper.selectHourAuthStaff();// 0=服务人员
+		
+		StaffAuthSearchVo searchVo1 = new StaffAuthSearchVo();
+		searchVo1.setAutStatus((short) 1);
+		List<Long> serviceTypeIds = new ArrayList<Long>();
+		serviceTypeIds.add(0L);
+		serviceTypeIds.add(14L);
+		List<OrgStaffAuth> orgStaffAuths = orgStaffAuthService.selectBySearchVo(searchVo1);
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		for (OrgStaffAuth oa : orgStaffAuths) {
+			if (!staffIds.contains(oa.getStaffId())) {
+				staffIds.add(oa.getStaffId());
+			}
+		}
+		
+		List<OrgStaffs> orgStaffs = new ArrayList<OrgStaffs>();
+		
+		if (!staffIds.isEmpty()) {
+			StaffSearchVo searchVo2 = new StaffSearchVo();
+			searchVo2.setStaffIds(staffIds);
+			orgStaffs = orgStaffsService.selectBySearchVo(searchVo2);
+		}
 		
 		// 2.查找处于开工状态的服务人员Id
 		if (BeanUtilsExp.isNullOrEmpty(orgStaffs)) return orgStaffsNewVos;
@@ -150,7 +180,14 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 
 		// 3.排除处于派工状态的人员
 		if (BeanUtilsExp.isNullOrEmpty(orgStaffs))return orgStaffsNewVos;
-		List<OrderDispatchs> orderDispatchs = orderDispatchsMapper.selectByStartTimeAndEndTime(startTime, endTime);
+		
+		OrderDispatchSearchVo searchVo2 = new OrderDispatchSearchVo();
+
+		searchVo2.setDispatchStatus((short) 1);
+		searchVo2.setStartServiceTime(startTime);
+		searchVo2.setEndTime(endTime);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectByMatchTime(searchVo2);
+		
 		orgStaffs = staffsNoDispatch(orgStaffs, orderDispatchs);
 
 		// 4.排除处于黑名单的人员
@@ -188,19 +225,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orgStaffsNewVos =competeNewVo(userTrailVo);
 		return orgStaffsNewVos;
 	}
-	/**
-	 * OrgStaff 转换成  OrgStaffsNewVo
-	 */
-	private List<OrgStaffsNewVo> changeToNewVo(List<OrgStaffs> orgStaffs){
-		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
-		for (Iterator iterator = orgStaffs.iterator(); iterator.hasNext();) {
-			OrgStaffs orgStaff = (OrgStaffs) iterator.next();
-			OrgStaffsNewVo orgStaffsNewVo = new OrgStaffsNewVo();
-			BeanUtilsExp.copyPropertiesIgnoreNull(orgStaff, orgStaffsNewVo);
-			orgStaffsNewVos.add(orgStaffsNewVo);
-		}
-		return orgStaffsNewVos;
-	}
+
 	
 	
 	/**
@@ -218,7 +243,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 				OrgStaffsNewVo vo = new OrgStaffsNewVo();
 				Long staffId = userTrailReals.get(i).getUserId();
 				BaiduPoiVo baiduPoiVo = baiduPoiVos.get(i);
-				OrgStaffs orgStaffs = orgStaffsMapper.selectByPrimaryKey(staffId);
+				OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
 				BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffs,vo);
 				vo.setLocName(userTrailReal.getPoiName());//位置描述
 				vo.setDistanceText(baiduPoiVo.getDistanceText());//线路距离文本描述
@@ -260,7 +285,29 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		List<OrgStaffAuth> orgStaffAuths =orgStaffAuthMapper.selectAmStaffByServiceTypeIdAndAuthStatus();
 		orgStaffs = staffsIsAuth(orgStaffs,orgStaffAuths);
 		*/
-		List<OrgStaffs> orgStaffs = orgStaffsMapper.selectAmAuthStaff();// 1=助理
+		
+		StaffAuthSearchVo searchVo1 = new StaffAuthSearchVo();
+		searchVo1.setAutStatus((short) 1);
+		List<Long> serviceTypeIds = new ArrayList<Long>();
+		serviceTypeIds.add(0L);
+		serviceTypeIds.add(12L);
+		List<OrgStaffAuth> orgStaffAuths = orgStaffAuthService.selectBySearchVo(searchVo1);
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		for (OrgStaffAuth oa : orgStaffAuths) {
+			if (!staffIds.contains(oa.getStaffId())) {
+				staffIds.add(oa.getStaffId());
+			}
+		}
+		
+		List<OrgStaffs> orgStaffs = new ArrayList<OrgStaffs>();
+		
+		if (!staffIds.isEmpty()) {
+			StaffSearchVo searchVo2 = new StaffSearchVo();
+			searchVo2.setStaffIds(staffIds);
+			orgStaffs = orgStaffsService.selectBySearchVo(searchVo2);
+		}
+		
 		
 		// 2.查找处于开工状态的服务人员Id
 		if (BeanUtilsExp.isNullOrEmpty(orgStaffs)) return orgStaffsNewVos;
@@ -297,7 +344,9 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
 		
 		// 1.查找所有可用服务人员
-		List<OrgStaffs> orgStaffs = orgStaffsMapper.selectStaffByStaffType();// 0=服务人员
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setStatus(1);
+		List<OrgStaffs> orgStaffs = orgStaffsService.selectBySearchVo(searchVo);
 		
 		// 2.查找处于开工状态的服务人员Id
 		if (BeanUtilsExp.isNullOrEmpty(orgStaffs)) return orgStaffsNewVos;
@@ -347,13 +396,13 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		String fromLng = userAddrs.getLongitude();
 		
 		//2.服务人员最新地址集合:可以分页取。每次5个
-		List<UserTrailReal> userTrailReals = new ArrayList<UserTrailReal>();
-		for (Long staffId : staffIds) {												//服务人员  type=1;用户 type =0
-			UserTrailReal	userTrailReal = userTrailRealMapper.selectByUserIdAndType(staffId, (short)1);     
-			if(!BeanUtilsExp.isNullOrEmpty(userTrailReal)){
-				userTrailReals.add(userTrailReal);
-			}
-		}
+		
+		
+		UserTrailSearchVo searchVo = new UserTrailSearchVo();
+		searchVo.setUserIds(staffIds);
+		searchVo.setUserType((short) 0);
+		List<UserTrailReal>	userTrailReals = userTrailRealService.selectBySearchVo(searchVo);
+		
 		if (userTrailReals.isEmpty()) return userTrailVo;
 		List<BaiduPoiVo> staffAddrList = new ArrayList<BaiduPoiVo>();
 		//3.组装服务人员百度地图位置Vo
@@ -420,13 +469,11 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		String fromLng = poiLongitude;
 		
 		//2.服务人员最新地址集合:可以分页取。每次5个
-		List<UserTrailReal> userTrailReals = new ArrayList<UserTrailReal>();
-		for (Long staffId : staffIds) {												//服务人员  type=1;用户 type =0
-			UserTrailReal	userTrailReal = userTrailRealMapper.selectByUserIdAndType(staffId, (short)1);     
-			if(!BeanUtilsExp.isNullOrEmpty(userTrailReal)){
-				userTrailReals.add(userTrailReal);
-			}
-		}
+		UserTrailSearchVo searchVo = new UserTrailSearchVo();
+		searchVo.setUserIds(staffIds);
+		searchVo.setUserType((short) 0);
+		List<UserTrailReal>	userTrailReals = userTrailRealService.selectBySearchVo(searchVo);
+		
 		if (userTrailReals.isEmpty()) return userTrailVo;
 		List<BaiduPoiVo> staffAddrList = new ArrayList<BaiduPoiVo>();
 		//3.组装服务人员百度地图位置Vo
@@ -490,6 +537,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	 * @param orgStaffOnlines
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public List<OrgStaffs> staffsIsAuth(List<OrgStaffs> orgStaffs, List<OrgStaffAuth> orgStaffAuths) {
 		List<OrgStaffs> orgStaffNew = new ArrayList<>();
 		// 如果开工状态为空，直接返回集合
@@ -516,6 +564,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	 * @param orgStaffOnlines
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public List<OrgStaffs> staffsIsWork(List<OrgStaffs> orgStaffs, List<OrgStaffOnline> orgStaffOnlines) {
 		List<OrgStaffs> orgStaffNew = new ArrayList<>();
 		// 如果开工状态为空，直接返回集合
@@ -542,6 +591,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	 * @param orderDispatchs
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public List<OrgStaffs> staffsNoDispatch(List<OrgStaffs> orgStaffs, List<OrderDispatchs> orderDispatchs) {
 		List<OrgStaffs> orgStaffNew = new ArrayList<>();
 		for (Iterator iterator = orgStaffs.iterator(); iterator.hasNext();) {
@@ -573,6 +623,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	 * @param orderDispatchs
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public List<OrgStaffs> staffsNoBlack(List<OrgStaffs> orgStaffs, List<OrgStaffBlack> orgStaffBlacks) {
 		List<OrgStaffs> orgStaffNew = new ArrayList<>();
 		for (Iterator iterator = orgStaffs.iterator(); iterator.hasNext();) {
@@ -603,6 +654,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 	 * @param userTrailReals
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public List<OrgStaffs> staffsNear(List<OrgStaffs> orgStaffs, List<UserTrailReal> userTrailReals) {
 		// 如果黑名单为空不进行排除，否则进行筛查
 		List<OrgStaffs> orgStaffNew = new ArrayList<>();
@@ -776,7 +828,12 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		Long orderId,String remindTitle,String remindContent){
 		
 		//1.下单成功，为员工推送消息
-		UserPushBind userPushBind = userPushBindMapper.selectByUserId(staffId);//
+		UserPushBind userPushBind = null;
+		UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+		searchVo.setUserId(staffId);
+		List<UserPushBind> list = userPushBindService.selectBySearchVo(searchVo);
+		if (!list.isEmpty()) userPushBind = list.get(0);
+
 		if(userPushBind!=null){
 			String clientId = userPushBind.getClientId();
 			PushUtil.getUserStatus(clientId);
@@ -798,9 +855,19 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    tranParams.put("remind_content",remindContent);
 		    
 		    
-		    Orders order = ordersService.selectbyOrderId(orderId);
+		    Orders order = ordersService.selectByPrimaryKey(orderId);
 		    OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
-		    OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(order.getOrderNo());
+		    
+		    OrderDispatchSearchVo searchVo3 = new OrderDispatchSearchVo();
+		    searchVo3.setOrderNo(order.getOrderNo());
+		    searchVo3.setDispatchStatus((short) 1);
+		    List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo3);
+
+		    OrderDispatchs orderDispatch = null;
+		    if (!orderDispatchs.isEmpty()) {
+		    	orderDispatch = orderDispatchs.get(0);
+		    }
+		    
 		    //服务地址：
 		    String serviceAddr = "";
 		    if (order.getAddrId() > 0L) {
@@ -809,7 +876,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 			} 
 		    
 		    if (order.getOrderType().equals((short)2)) {
-		    	serviceAddr = orderDispatchs.getPickAddrName() + orderDispatchs.getPickAddr();
+		    	serviceAddr = orderDispatch.getPickAddrName() + orderDispatch.getPickAddr();
 			}
 		    
 		    tranParams.put("service_addr", serviceAddr);

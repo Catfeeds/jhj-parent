@@ -1,6 +1,8 @@
 package com.jhj.service.impl.order;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import com.jhj.service.order.OrderAmHourService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourDetailService;
 import com.jhj.vo.order.OrderAmHourViewVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderHourViewVo;
 import com.meijia.utils.BeanUtilsExp;
 
@@ -31,7 +34,7 @@ public class OrderAmHourServiceImpl implements OrderAmHourService {
 	@Autowired
 	private OrderHourDetailService orderHourDetailService;
 	@Autowired
-	private OrderDispatchsService orderDisService;
+	private OrderDispatchsService orderDispatchsService;
 	@Autowired
 	private OrgStaffsService orgStaffService;
 	@Autowired
@@ -50,10 +53,19 @@ public class OrderAmHourServiceImpl implements OrderAmHourService {
 		BeanUtilsExp.copyPropertiesIgnoreNull(orderHourViewVo, orderAmHourViewVo);
 		
 		//阿姨, 如果有派工表记录，则显示阿姨名字，否则 ，为默认值 ''，前端展示，暂未分配
-		OrderDispatchs orderDispatchs = orderDisService.selectByOrderNo(orderNo);
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+
+		OrderDispatchs orderDispatch = null;
+		if (!orderDispatchs.isEmpty()) {
+			orderDispatch = orderDispatchs.get(0);
+		}
+
 		
-		if(orderDispatchs != null){
-			String staffName = orderDispatchs.getStaffName();
+		if(orderDispatch != null){
+			String staffName = orderDispatch.getStaffName();
 			orderAmHourViewVo.setStaffName(staffName);
 		}
 		

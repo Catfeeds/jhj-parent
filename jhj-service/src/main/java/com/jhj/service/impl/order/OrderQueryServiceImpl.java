@@ -38,12 +38,14 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
-import com.jhj.vo.OrderQuerySearchVo;
-import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderDetailVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
+import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.UserListVo;
+import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
@@ -130,7 +132,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 用户称呼
 		vo.setName("");
 		if (vo.getUserId() > 0L) {
-			Users user = usersService.getUserById(vo.getUserId());
+			Users user = usersService.selectByPrimaryKey(vo.getUserId());
 			vo.setName(user.getName());
 		}
 
@@ -371,8 +373,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		}
 
 		List<OrderPrices> orderPricesList = orderPricesService.selectByOrderIds(orderIds);
-
-		List<Users> userList = usersService.selectByUserIds(userIds);
+		
+		UserSearchVo searchVo = new UserSearchVo();
+		searchVo.setUserIds(userIds);
+		List<Users> userList = usersService.selectBySearchVo(searchVo);
 
 		List<UserAddrs> addrList = new ArrayList<UserAddrs>();
 		if (addrIds.size() > 0) {
@@ -481,7 +485,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 用户称呼
 		vo.setName("");
 		if (vo.getUserId() > 0L) {
-			Users user = usersService.getUserById(vo.getUserId());
+			Users user = usersService.selectByPrimaryKey(vo.getUserId());
 			vo.setName(user.getName());
 		}
 
@@ -510,7 +514,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 服务次数
 		vo.setServiceTimes("0");
 		// 1.获得用户列表
-		List<Orders> list = ordersMapper.selectAmOrderList(order.getAmId());
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setAmId(order.getAmId());
+		List<Orders> list = ordersMapper.selectBySearchVo(searchVo);
 
 		// 2.获得用户对应的ids
 		List<Long> userIds = new ArrayList<Long>();
@@ -538,12 +544,24 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	public OrderListVo getOrderListVo(Orders item) {
 
 		OrderListVo vo = new OrderListVo();
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(item.getOrderNo());
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
 
-		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(item.getOrderNo());
-		Long staffId = orderDispatchs.getStaffId();
+		OrderDispatchs orderDispatch = null;
+		if (!orderDispatchs.isEmpty()) {
+			orderDispatch = orderDispatchs.get(0);
+		}
+		
+		if (orderDispatch == null) return vo;
+		
+
+		Long staffId = orderDispatch.getStaffId();
 		
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(item.getId());
-		Users users = usersService.selectByUsersId(item.getUserId());
+		Users users = usersService.selectByPrimaryKey(item.getUserId());
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
 		BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 		vo.setServiceTypeId(item.getServiceType());
@@ -656,46 +674,46 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 距离服务地址多少米/千米
 		if (orderDispatchs != null) {
 			
-			int userAddrDisance = orderDispatchs.getUserAddrDistance();
+			int userAddrDisance = orderDispatch.getUserAddrDistance();
 			if (userAddrDisance < 0) userAddrDisance = 0;
 			
 			vo.setServiceAddrDistance(String.valueOf(userAddrDisance) + "米");
-			if (orderDispatchs.getUserAddrDistance() > 1000) {
+			if (orderDispatch.getUserAddrDistance() > 1000) {
 				Double userAddrDisanceM = StringUtil.getKilometre(userAddrDisance);
 				vo.setServiceAddrDistance(userAddrDisanceM.toString() + "千米");
 			}
 						
 			// 取货地址
 			vo.setPickAddr("");
-			if (orderDispatchs.getPickAddr() != null) {
-				vo.setPickAddr(orderDispatchs.getPickAddr());
+			if (orderDispatch.getPickAddr() != null) {
+				vo.setPickAddr(orderDispatch.getPickAddr());
 			}
 
 			// 距离多少米/千米
-			int pickDistance = orderDispatchs.getPickDistance();
+			int pickDistance = orderDispatch.getPickDistance();
 			if (pickDistance < 0) pickDistance = 0;
 			vo.setPickAddrDistance(String.valueOf(pickDistance) + "米");
-			if (orderDispatchs.getPickDistance() > 1000) {
+			if (orderDispatch.getPickDistance() > 1000) {
 				Double pickDistanceM = StringUtil.getKilometre(pickDistance);
 				vo.setPickAddrDistance(pickDistanceM.toString() + "千米");
 			}
 			// 取货地址经度
 			vo.setPickAddrLat("");
-			if (orderDispatchs.getPickAddrLat() != null) {
-				vo.setPickAddrLat(orderDispatchs.getPickAddrLat());
+			if (orderDispatch.getPickAddrLat() != null) {
+				vo.setPickAddrLat(orderDispatch.getPickAddrLat());
 			}
 
 			// 取货地址纬度
 			vo.setPickAddrLng("");
-			if (orderDispatchs.getPickAddrLng() != null) {
-				vo.setPickAddrLng(orderDispatchs.getPickAddrLng());
+			if (orderDispatch.getPickAddrLng() != null) {
+				vo.setPickAddrLng(orderDispatch.getPickAddrLng());
 			}
 			
 			//如果为助理订单，则把pickAddr 也赋值到servcieAddr
 			if (vo.getOrderType().equals((short)2)) {
-				vo.setServiceAddr(orderDispatchs.getPickAddrName() + orderDispatchs.getPickAddr());
-				vo.setServiceAddrLat(orderDispatchs.getPickAddrLat());
-				vo.setServiceAddrLng(orderDispatchs.getPickAddrLng());
+				vo.setServiceAddr(orderDispatch.getPickAddrName() + orderDispatch.getPickAddr());
+				vo.setServiceAddrLat(orderDispatch.getPickAddrLat());
+				vo.setServiceAddrLng(orderDispatch.getPickAddrLng());
 
 			}
 		}

@@ -23,11 +23,24 @@ public class TimeStampUtil {
 	}
 	
 	/**
-	 * 当前时间戳, 注意为精确到毫秒
+	 * 当前时间戳, 注意为精确到秒
 	 * @return long
 	 */
 	public static Long getNowSecond() {
 		return getMillisOfDate(DateUtil.getNowOfDate())/1000;
+	}
+	
+	/**
+	 * 当前时间戳分钟, 注意为精确到秒
+	 * @return long
+	 */
+	public static Long getNowMin() {
+		
+		String format = "yyyy-MM-dd HH:mm";
+		SimpleDateFormat df = new SimpleDateFormat(format);
+		String str = df.format(getNow());
+		Date pDate = DateUtil.parse(str, format);
+		return getMillisOfDate(pDate)/1000;
 	}
 
 	/**
@@ -132,6 +145,25 @@ public class TimeStampUtil {
 		return getMillisOfDate(pDate);
 	}
 	
+	/**
+	 * @return long
+	 */
+	public static Long getBeginOfMonth(int year, int month) {
+		String today = DateUtil.getFirstDayOfMonth(year, month);
+		Date d = DateUtil.parse(today);
+		return getMillisOfDate(d) / 1000;
+	}
+	
+	/**
+	 *
+	 * @return long
+	 */
+	public static Long getEndOfMonth(int year, int month) {
+		String today = DateUtil.getLastDayOfMonth(year, month);
+		Date d = DateUtil.parseFull(today + " 23:59:59");
+		return getMillisOfDate(d) / 1000;
+	}
+	
 	
 	
 	
@@ -153,5 +185,6 @@ public class TimeStampUtil {
 		
 		System.out.println(TimeStampUtil.timeStampToDateStr(1464597140L*1000, "HH"));
 		
+		System.out.println(TimeStampUtil.getNowMin());
 	}
 }

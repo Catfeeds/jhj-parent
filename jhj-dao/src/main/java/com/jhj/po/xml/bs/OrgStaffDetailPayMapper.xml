@@ -24,7 +24,7 @@
 		from org_staff_detail_pay
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
-	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
+	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
 
 		SELECT
 		<include refid="Base_Column_List" />
@@ -60,7 +60,7 @@
 
 	</select>
 
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
 
 		SELECT
 		<include refid="Base_Column_List" />

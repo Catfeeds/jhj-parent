@@ -1,5 +1,7 @@
 package com.jhj.action.app.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.users.UserTrailHistoryService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.vo.AppResultData;
 import com.meijia.utils.TimeStampUtil;
 
@@ -40,14 +43,19 @@ public class UserTrailController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "post_user_trail", method = RequestMethod.POST)
-	public AppResultData<String> trail(
-			@RequestParam("user_id") Long userId,
-			@RequestParam("user_type") short userType,
-			@RequestParam("lat") String lat,
-			@RequestParam("lng") String lng,
-			@RequestParam(value = "poi_name" , required = false, defaultValue ="") String poiName) {
-		UserTrailReal record = userTrailRealService.selectByUserIdAndType(
-				userId, userType);
+	public AppResultData<String> trail(@RequestParam("user_id") Long userId, @RequestParam("user_type") short userType, @RequestParam("lat") String lat,
+			@RequestParam("lng") String lng, @RequestParam(value = "poi_name", required = false, defaultValue = "") String poiName) {
+
+		UserTrailReal record = null;
+
+		UserTrailSearchVo searchVo = new UserTrailSearchVo();
+		searchVo.setUserId(userId);
+		searchVo.setUserType(userType);
+
+		List<UserTrailReal> userTrails = userTrailRealService.selectBySearchVo(searchVo);
+		if (!userTrails.isEmpty())
+			record = userTrails.get(0);
+
 		if (record != null) {
 			record.setUserId(userId);
 			record.setLat(lat);
@@ -77,9 +85,8 @@ public class UserTrailController extends BaseController {
 		userTrailHistory.setAddTime(TimeStampUtil.getNow() / 1000);
 
 		userTrailHistoryService.insertSelective(userTrailHistory);
-		
-		AppResultData<String> result = new AppResultData<String>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+		AppResultData<String> result = new AppResultData<String>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		return result;
 	}

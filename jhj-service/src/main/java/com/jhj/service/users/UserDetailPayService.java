@@ -8,8 +8,8 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
-import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.user.AppUserDetailPayVo;
+import com.jhj.vo.user.UserDetailSearchVo;
 
 public interface UserDetailPayService {
 	

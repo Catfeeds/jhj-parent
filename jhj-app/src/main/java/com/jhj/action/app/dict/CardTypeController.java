@@ -190,7 +190,7 @@ public class CardTypeController<T> {
 			socialCall = socialsCallService.initSocialCall();
 			socialCall.setSocialId(socialsId);
 			socialCall.setAddTime(TimeStampUtil.getNowSecond());
-			Users users = usersService.selectByUsersId(userId);
+			Users users = usersService.selectByPrimaryKey(userId);
 			if(users !=null){
 				socialCall.setUserId(userId);
 				socialCall.setUserMobile(users.getMobile());
@@ -210,7 +210,7 @@ public class CardTypeController<T> {
 		
 		//点击报名。给用户推送一条短信
 		
-		Users users = usersService.selectByUsersId(userId);
+		Users users = usersService.selectByPrimaryKey(userId);
 		
 		String[] contentForUser = new String[] {};
 		SmsUtil.SendSms(users.getMobile(),  "43485", contentForUser);

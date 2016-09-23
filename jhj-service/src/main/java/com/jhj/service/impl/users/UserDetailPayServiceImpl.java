@@ -18,8 +18,8 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserDetailPayService;
-import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.user.AppUserDetailPayVo;
+import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -247,7 +247,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	    detailPay.setPayAccount("");
 	    detailPay.setUserId(0L);
 	    detailPay.setMobile("");
-	    detailPay.setOrderType((short)0);
+	    detailPay.setOrderType(Constants.ORDER_TYPE_0);
 	    detailPay.setOrderId(0L);
 	    detailPay.setOrderNo("");
 	    detailPay.setOrderMoney(new BigDecimal(0));

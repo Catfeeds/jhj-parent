@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.jhj.po.dao.bs.OrgStaffAuthMapper;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.service.bs.OrgStaffAuthService;
+import com.jhj.vo.staff.StaffAuthSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -76,14 +77,8 @@ public class OrgStaffAuthServiceImpl implements OrgStaffAuthService {
 	}
 
 	@Override
-	public OrgStaffAuth selectByStaffIdAndServiceTypeId(Long staffId) {
-		
-		return orgStaffAuthMapper.selectByStaffIdAndServiceTypeId(staffId);
-	}
-
-	@Override
-	public List<OrgStaffAuth> selectByStaffId(Long staffId) {
-		return orgStaffAuthMapper.selectByStaffId(staffId);
+	public List<OrgStaffAuth> selectBySearchVo(StaffAuthSearchVo searchVo) {
+		return orgStaffAuthMapper.selectBySearchVo(searchVo);
 	}
 
 	@Override

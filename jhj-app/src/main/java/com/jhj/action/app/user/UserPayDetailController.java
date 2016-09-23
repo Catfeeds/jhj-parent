@@ -15,8 +15,8 @@ import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.UserDetailSearchVo;
 import com.jhj.vo.user.AppUserDetailPayVo;
+import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -47,7 +47,7 @@ public class UserPayDetailController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0,
 				ConstantMsg.SUCCESS_0_MSG, new String());
 		
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		
 		if(users == null){
 			result.setMsg("用户不存在");

@@ -27,7 +27,7 @@
     from org_staff_invite
     where invite_staff_id > 0 and invite_status = 0
   </select>
-  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffFinanceSearchVo">
+  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffFinanceSearchVo">
   	select
     <include refid="Base_Column_List" />
     from org_staff_invite

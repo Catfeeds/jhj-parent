@@ -82,7 +82,7 @@ public class UserCardPayController extends BaseController {
 		userId = orderCards.getUserId();
 		
 		
-		Users u = usersService.selectByUsersId(userId);
+		Users u = usersService.selectByPrimaryKey(userId);
 		//如果已经付款，则直接返回
 		if (orderCards != null && orderCards.getOrderStatus().equals(Constants.PAY_STATUS_1)) {
 			return result;

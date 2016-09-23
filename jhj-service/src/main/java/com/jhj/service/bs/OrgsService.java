@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.Orgs;
-import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
 
 /**
  *

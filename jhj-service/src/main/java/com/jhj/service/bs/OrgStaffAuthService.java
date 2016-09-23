@@ -3,6 +3,7 @@ package com.jhj.service.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffAuth;
+import com.jhj.vo.staff.StaffAuthSearchVo;
 
 
 /**
@@ -26,10 +27,8 @@ public interface OrgStaffAuthService {
     int updateByPrimaryKey(OrgStaffAuth record);
     
     OrgStaffAuth initOrgStaffAuth();
-
-	OrgStaffAuth selectByStaffIdAndServiceTypeId(Long staffId);
-
-	List<OrgStaffAuth> selectByStaffId(Long staffId);
 	
 	void deleteByStaffId(Long staffId);
+
+	List<OrgStaffAuth> selectBySearchVo(StaffAuthSearchVo searchVo);
 }

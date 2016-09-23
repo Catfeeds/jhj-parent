@@ -115,7 +115,7 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		
 		
 		//用户姓名
-		Users users = usersService.selectByUsersId(orders.getUserId());
+		Users users = usersService.selectByPrimaryKey(orders.getUserId());
 		if (users !=null) {
 			orderHourViewVo.setName(users.getName());
 			//用户性别
@@ -190,7 +190,7 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 			orderHourViewVo.setOrderPay(orderPrices.getOrderPay());
 		}
 		
-		Users users = usersService.selectByUsersId(orders.getUserId());
+		Users users = usersService.selectByPrimaryKey(orders.getUserId());
 		if (users !=null) {
 			//账户余额
 			orderHourViewVo.setRestMoney(users.getRestMoney());

@@ -3,6 +3,7 @@ package com.jhj.action.app.user;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +25,10 @@ import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserRefOrgService;
 import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.CompareOrderNumForStaff;
 import com.jhj.vo.user.UserGetAmVo;
+import com.jhj.vo.user.UserSearchVo;
 
 /**
  *
@@ -75,7 +78,11 @@ public class UserGetOrgController extends BaseController {
 		if (userRefOrg == null) return result;
 		
 		Long orgId = userRefOrg.getOrgId();
-		List<OrgStaffs> orgStaffs = orgStaffService.selectByOrgId(orgId);
+		
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setOrgId(orgId);
+		searchVo.setStatus(1);
+		List<OrgStaffs> orgStaffs = orgStaffService.selectBySearchVo(searchVo);
 		
 		List<UserGetAmVo> list = new ArrayList<UserGetAmVo>();
 		
@@ -123,7 +130,8 @@ public class UserGetOrgController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-		List<Users> userlist = userService.selectByAll();
+		UserSearchVo searchVo = new UserSearchVo();
+		List<Users> userlist = userService.selectBySearchVo(searchVo);
 		
 		for (Users u : userlist) {
 			Long userId = u.getId();

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.jhj.po.dao.bs.OrgStaffSkillMapper;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.service.bs.OrgStaffSkillService;
+import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 
 /**
  *
@@ -54,8 +55,8 @@ public class OrgStaffSkillImpl implements OrgStaffSkillService {
 	}
 
 	@Override
-	public List<OrgStaffSkill> selectByStaffId(Long staffId) {
-		return skillMapper.selectByStaffId(staffId);
+	public List<OrgStaffSkill> selectBySearchVo(OrgStaffSkillSearchVo searchVo) {
+		return skillMapper.selectBySearchVo(searchVo);
 	}
 	
 	@Override

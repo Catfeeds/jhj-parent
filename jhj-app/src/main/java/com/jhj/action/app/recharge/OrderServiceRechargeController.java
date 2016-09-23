@@ -138,7 +138,7 @@ public class OrderServiceRechargeController extends BaseController {
 		
 		
 		
-		Users u = userService.getUserById(userId);
+		Users u = userService.selectByPrimaryKey(userId);
 
 		// 判断是否为注册用户，非注册用户返回 999
 		if (u == null) {
@@ -202,7 +202,7 @@ public class OrderServiceRechargeController extends BaseController {
 		
 //		order.setRemarks(chargeMobile);
 		
-		OrgStaffs staffs = orgStaService.selectOrgIdByStaffId(userRefAm.getStaffId());
+		OrgStaffs staffs = orgStaService.selectByPrimaryKey(userRefAm.getStaffId());
 		order.setOrgId(staffs.getOrgId());
 		
 		//mybatis xml 需要增加插入后获取last_insert_id;

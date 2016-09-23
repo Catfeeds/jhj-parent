@@ -38,6 +38,7 @@ import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserAppVo;
+import com.jhj.vo.user.UserPushBindSearchVo;
 import com.meijia.utils.IPUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
@@ -165,7 +166,7 @@ public class UserAppController extends BaseController {
 					return result;
 				} else {
 					
-					Users u = usersService.getUserByMobile(mobile);
+					Users u = usersService.selectByMobile(mobile);
 					if (u == null) {// 验证手机号是否已经注册，如果未注册，则自动注册用户，
 						u = usersService.genUser(mobile, Constants.USER_NET);
 						
@@ -256,7 +257,7 @@ public class UserAppController extends BaseController {
 				@RequestParam(value="name" ,required=false,defaultValue="") String name) {
 			AppResultData<Object> result = new AppResultData<Object>(
 					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-			Users users = usersService.selectByUsersId(userId);
+			Users users = usersService.selectByPrimaryKey(userId);
 
 			// 判断是否为注册用户，非注册用户返回 999
 			if (users == null) {
@@ -316,7 +317,7 @@ public class UserAppController extends BaseController {
 				@RequestParam("client_id") String clientId,
 				@RequestParam("device_type") String deviceType){
 
-			Users u = usersService.selectByUsersId(userId);
+			Users u = usersService.selectByPrimaryKey(userId);
 			AppResultData<String> result = new AppResultData<String>(
 					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 			
@@ -330,7 +331,9 @@ public class UserAppController extends BaseController {
 		    1） 先根据 client_id 查询表中的数据，得到集合A
 
 		    2） 循环集合A， 如果集合A的userId, 跟接口传入的userId 不一样，则删除掉*/
-			List<UserPushBind> recordBind = userPushBindService.selectByClientId(clientId);
+			UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+			searchVo.setClientId(clientId);
+			List<UserPushBind> recordBind = userPushBindService.selectBySearchVo(searchVo);
 			
 			for (int i = 0; i < recordBind.size(); i++) {
 				UserPushBind bind = recordBind.get(i);
@@ -339,7 +342,11 @@ public class UserAppController extends BaseController {
 				}
 			}
 			
-			UserPushBind userPushBind = userPushBindService.selectByUserId(userId);
+			UserPushBind userPushBind = null;
+			searchVo = new UserPushBindSearchVo();
+			searchVo.setUserId(userId);
+			List<UserPushBind> list = userPushBindService.selectBySearchVo(searchVo);
+			if (!list.isEmpty()) userPushBind = list.get(0);
 
 			if (userPushBind == null) {
 				userPushBind = new UserPushBind();

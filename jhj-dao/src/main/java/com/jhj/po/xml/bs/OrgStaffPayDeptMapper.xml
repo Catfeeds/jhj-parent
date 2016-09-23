@@ -31,7 +31,7 @@
     from org_staff_pay_dept
     where order_no = #{orderNo,jdbcType=NUMERIC}
   </select>
-  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffFinanceSearchVo">
+  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffFinanceSearchVo">
   	select
     <include refid="Base_Column_List" />
     from org_staff_pay_dept

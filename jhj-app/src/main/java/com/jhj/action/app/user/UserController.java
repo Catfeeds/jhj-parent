@@ -30,7 +30,7 @@ import com.jhj.service.tags.UserRefTagsService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.OrderSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -66,56 +66,6 @@ public class UserController extends BaseController {
 	@Autowired
 	private CardTypeService cardTypeService;
 	
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "get_user_list", method = RequestMethod.GET)
-	public AppResultData<Object> Sec(
-			HttpServletRequest request,
-			@RequestParam("am_id") Long amId,
-			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-
-		//根据派工找出相应的用户
-		
-		
-		OrderSearchVo searchVo = new OrderSearchVo();
-		searchVo.setAmId(amId);
-		
-		List<HashMap> list = orderDispatchsService.getUserIdsByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
-				
-		List<HashMap> resultList = new ArrayList<HashMap>();
-		
-		if (list.isEmpty()) {
-			result.setData(resultList);
-			return result;
-		}
-		
-		for (HashMap item : list) {
-
-			Long userId = Long.valueOf(item.get("userId").toString());
-			Users user = usersService.getUserById(userId);
-			
-			String serviceAddr = "";
-			UserAddrs userAddr = userAddrsService.selectByDefaultAddr(userId);
-			if (userAddr != null) {
-				serviceAddr = userAddr.getName() + userAddr.getAddr();
-			}
-			
-			HashMap vo = new HashMap();
-			vo.put("staff_id", amId.toString());
-			vo.put("user_id", userId.toString());
-			vo.put("mobile", user.getMobile());
-			vo.put("service_times", item.get("total").toString());
-			vo.put("service_addr", serviceAddr);
-			
-			resultList.add(vo);
-		}
-
-		result.setData(resultList);
-		return result;
-	}
-
 	/**
 	 * 客户列表详情
 	 * 
@@ -128,8 +78,10 @@ public class UserController extends BaseController {
 
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-
-		List<Orders> orders = ordersService.selectByUserIdList(userId);
+		
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setUserId(userId);
+		List<Orders> orders = ordersService.selectBySearchVo(searchVo);
 		if (orders.isEmpty()) {
 			List<UserAddrs> userAddrsList = userAddrsService
 					.selectByUserId(userId);
@@ -172,7 +124,9 @@ public class UserController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
-		List<Orders> orders = ordersService.selectByUserIdList(userId);
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setUserId(userId);
+		List<Orders> orders = ordersService.selectBySearchVo(searchVo);
 		if (orders.isEmpty()) {
 			List<UserAddrs> userAddrsList = userAddrsService
 					.selectByUserId(userId);
@@ -224,7 +178,7 @@ public class UserController extends BaseController {
 			@RequestParam(value = "tag_ids", required = false, defaultValue = "") String tagIds) {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		Users users = usersService.selectByUsersId(userId);
+		Users users = usersService.selectByPrimaryKey(userId);
 
 		if (users != null) {
 
@@ -303,7 +257,7 @@ public class UserController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.ERROR_999, ConstantMsg.USER_NOT_EXIST_MG, "");
 
-		Users user=usersService.selectByUsersId(userId);
+		Users user=usersService.selectByPrimaryKey(userId);
 
 		result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, user);

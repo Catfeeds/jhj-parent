@@ -45,8 +45,8 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
 import com.jhj.service.users.UserRefAmService;
-import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.bs.OrgStaffVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
@@ -323,10 +323,14 @@ public class OrgStaffsAssistantController extends BaseController {
 	public AppResultData<Object> getAmsByOrgId(
 			@RequestParam(value = "orgId", required = true, defaultValue = "0") Long orgId) {
 
-		List<OrgStaffs> allAmList = orgStaAsService.selectAmByOrgId(orgId);
+		List<OrgStaffs> allAmList = new ArrayList<OrgStaffs>();
 
 		if (orgId > 0) {
-			allAmList = orgStaAsService.selectAmByOrgId(orgId);
+			StaffSearchVo searchVo = new StaffSearchVo();
+			searchVo.setOrgId(orgId);
+			searchVo.setStaffType((short) 1);
+			searchVo.setStatus(1);
+			allAmList = orgStaAsService.selectBySearchVo(searchVo);
 		}
 		
 		AppResultData<Object> result = new AppResultData<Object>(
@@ -360,7 +364,13 @@ public class OrgStaffsAssistantController extends BaseController {
 		
 		OrgStaffs orgStaffs = orgStaAsService.selectByPrimaryKey(staffId);
 		Long orgId = orgStaffs.getOrgId();
-		List<OrgStaffs> staffList = orgStaAsService.selectAmByOrgId(orgId);
+		
+		
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setOrgId(orgId);
+		searchVo.setStaffType((short) 1);
+		searchVo.setStatus(1);
+		List<OrgStaffs> staffList = orgStaAsService.selectBySearchVo(searchVo);
 		
 		List<UserRefAm> refList = userRefAmService.selectAllUserByAmId(staffId);
 		

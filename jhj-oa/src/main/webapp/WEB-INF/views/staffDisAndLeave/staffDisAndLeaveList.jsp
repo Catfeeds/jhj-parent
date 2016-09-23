@@ -54,12 +54,12 @@ import="com.jhj.oa.common.UrlHelper"%>
 										</div>	
 										<div class="form-group">
 			                          		开始时间：
-											<form:input path="startTimeStr" class="form-control form_datetime"
+											<input id="startTimeStr" name="startTimeStr" class="form-control form_datetime"
 											 style="width:110px; margin-bottom:0" readonly="true" />
 										</div>
 										<div class="form-group">
 											结束时间：
-											<form:input path="endTimeStr" class="form-control " 
+											<input id="endTimeStr" name="endTimeStr" class="form-control " 
 											style="width:110px; margin-bottom:0" readonly="true" />
 										</div> 
 										

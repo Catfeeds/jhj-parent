@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.ParseException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,8 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
-import com.jhj.vo.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.staff.OrderBeginVo;
 import com.jhj.vo.staff.StaffOrderVo;
 import com.meijia.utils.TimeStampUtil;
@@ -213,12 +216,21 @@ public class OrderController extends BaseController {
 		
 		String orderNo = orders.getOrderNo();
 		//更新orderdispatchs的更新时间
-		OrderDispatchs orderDispatchs = orderDispatchsService.selectByOrderNo(orderNo);
 		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+
+		OrderDispatchs orderDispatch = null;
+		if (!orderDispatchs.isEmpty()) {
+			orderDispatch = orderDispatchs.get(0);
+		}
 		
-		orderDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
-		orderDispatchsService.updateByPrimaryKeySelective(orderDispatchs);
-		
+		if (orderDispatch != null) {
+			orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
+			orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
+		}
 		
 		//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
 		orgStaffFinanceService.orderDone(orders, orderPrices, orgStaffs);

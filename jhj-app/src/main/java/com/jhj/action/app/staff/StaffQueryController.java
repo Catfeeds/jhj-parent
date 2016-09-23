@@ -29,9 +29,11 @@ import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.university.PartnerServiceTypeService;
-import com.jhj.vo.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceAppVo;
+import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.OrgStaffsVo;
+import com.jhj.vo.staff.StaffAuthSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -81,7 +83,13 @@ public class StaffQueryController extends BaseController {
 					ConstantMsg.MINE_NO_EXIST, "");
 			return result;
 		}
-		OrgStaffAuth orgStaffAuth = orgStaffAuthService.selectByStaffIdAndServiceTypeId(staffId);
+		
+		OrgStaffAuth orgStaffAuth = null;
+		StaffAuthSearchVo searchVo2 = new StaffAuthSearchVo();
+		searchVo2.setStaffId(staffId);
+		searchVo2.setServiceTypeId(0L);
+		List<OrgStaffAuth> orgStaffAuths = orgStaffAuthService.selectBySearchVo(searchVo2);
+		if (!orgStaffAuths.isEmpty()) orgStaffAuth = orgStaffAuths.get(0);
 		
 		OrgStaffsVo vo = new OrgStaffsVo();
 		BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffs, vo);
@@ -110,7 +118,10 @@ public class StaffQueryController extends BaseController {
 		
 		//获取技能信息
 		List<String> skills = new ArrayList<String>();
-		List<OrgStaffSkill> hasSkills = orgStaffSkillService.selectByStaffId(staffId);
+		
+		OrgStaffSkillSearchVo searchVo1 = new OrgStaffSkillSearchVo();
+		searchVo1.setStaffId(staffId);
+		List<OrgStaffSkill> hasSkills = orgStaffSkillService.selectBySearchVo(searchVo1);
 		for (OrgStaffSkill item : hasSkills) {
 			PartnerServiceType serviceType = partService.selectByPrimaryKey(item.getServiceTypeId());
 			skills.add(serviceType.getName());

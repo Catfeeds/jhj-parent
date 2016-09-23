@@ -1,144 +1,152 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.bs.OrgStaffAuthMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffAuth" >
-    <id column="id" property="id" jdbcType="NUMERIC" />
-    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
-    <result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
-    <result column="aut_status" property="autStatus" jdbcType="NUMERIC" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, staff_id, service_type_id, aut_status, add_time, update_time
-  </sql>
-  
-  <!-- 修改时，先删除该服务人员的审核信息 -->
-  <delete id="deleteByStaffId" parameterType="java.lang.Long">
-  	 delete from org_staff_auth
-     where 
-     	staff_id = #{staffId,jdbcType=NUMERIC}
-  
-  </delete>
-  
-  
-  <!-- 得到 该 服务人员的  审核情况 -->
-  <select id="selectByStaffId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-  	select 
-    <include refid="Base_Column_List" />
-    from org_staff_auth
-    where staff_id = #{staffId,jdbcType=NUMERIC}
-  </select>
-  
-  <select id="selectHourStaffByServiceTypeIdAndAuthStatus" resultMap="BaseResultMap" >
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffAuthMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffAuth">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+		<result column="aut_status" property="autStatus" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, staff_id, service_type_id, aut_status, add_time, update_time
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from org_staff_auth
-		where 1=1 and service_type_id in (0,12) and aut_status = 1;
+		where id = #{id,jdbcType=NUMERIC}
 	</select>
-  <select id="selectAmStaffByServiceTypeIdAndAuthStatus" resultMap="BaseResultMap" >
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.StaffAuthSearchVo">
 		select
 		<include refid="Base_Column_List" />
-		from org_staff_auth
-		where 1=1 and service_type_id in (0,14) and aut_status = 1;
+		from
+		org_staff_auth
+		where 1 = 1
+		
+		<if test="staffId !=null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="staffIds !=null and staffIds.size() > 0 ">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		<if test="serviceTypeId !=null">
+			and service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="serviceTypeIds !=null and serviceTypeIds.size() > 0 ">
+			and service_type_id in
+			<foreach item="item" index="index" collection="serviceTypeId" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
 	</select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from org_staff_auth
-    where id = #{id,jdbcType=NUMERIC}
-  </select>
- 
-  <select id="selectByStaffIdAndServiceTypeId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from org_staff_auth
-    where staff_id = #{staffId,jdbcType=NUMERIC} and service_type_id=0
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-   
 
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from org_staff_auth
+		where
+		id = #{id,jdbcType=NUMERIC}
+	</delete>
 
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffAuth" >
-    insert into org_staff_auth (id, staff_id, service_type_id, 
-      aut_status, add_time, update_time
-      )
-    values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC}, 
-      #{autStatus,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffAuth" >
-    insert into org_staff_auth
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="staffId != null" >
-        staff_id,
-      </if>
-      <if test="serviceTypeId != null" >
-        service_type_id,
-      </if>
-      <if test="autStatus != null" >
-        aut_status,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=NUMERIC},
-      </if>
-      <if test="staffId != null" >
-        #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceTypeId != null" >
-        #{serviceTypeId,jdbcType=NUMERIC},
-      </if>
-      <if test="autStatus != null" >
-        #{autStatus,jdbcType=NUMERIC},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffAuth" >
-    update org_staff_auth
-    <set >
-      <if test="staffId != null" >
-        staff_id = #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceTypeId != null" >
-        service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
-      </if>
-      <if test="autStatus != null" >
-        aut_status = #{autStatus,jdbcType=NUMERIC},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffAuth" >
-    update org_staff_auth
-    set staff_id = #{staffId,jdbcType=NUMERIC},
-      service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
-      aut_status = #{autStatus,jdbcType=NUMERIC},
-      add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC}
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
+	<!-- 修改时，先删除该服务人员的审核信息 -->
+	<delete id="deleteByStaffId" parameterType="java.lang.Long">
+		delete from org_staff_auth
+		where
+		staff_id = #{staffId,jdbcType=NUMERIC}
+
+	</delete>
+
+	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffAuth">
+		insert into org_staff_auth (id, staff_id, service_type_id,
+		aut_status, add_time, update_time
+		)
+		values
+		(#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC},
+		#{autStatus,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC},
+		#{updateTime,jdbcType=NUMERIC}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffAuth">
+		insert into org_staff_auth
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="serviceTypeId != null">
+				service_type_id,
+			</if>
+			<if test="autStatus != null">
+				aut_status,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceTypeId != null">
+				#{serviceTypeId,jdbcType=NUMERIC},
+			</if>
+			<if test="autStatus != null">
+				#{autStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffAuth">
+		update org_staff_auth
+		<set>
+			<if test="staffId != null">
+				staff_id = #{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceTypeId != null">
+				service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+			</if>
+			<if test="autStatus != null">
+				aut_status = #{autStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffAuth">
+		update org_staff_auth
+		set staff_id = #{staffId,jdbcType=NUMERIC},
+		service_type_id =
+		#{serviceTypeId,jdbcType=NUMERIC},
+		aut_status = #{autStatus,jdbcType=NUMERIC},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time =
+		#{updateTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
 </mapper>

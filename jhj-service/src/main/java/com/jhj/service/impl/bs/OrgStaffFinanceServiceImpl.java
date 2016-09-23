@@ -24,8 +24,8 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.utils.OrderUtils;
-import com.jhj.vo.OrgStaffDetailPaySearchVo;
-import com.jhj.vo.OrgStaffFinanceSearchVo;
+import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 

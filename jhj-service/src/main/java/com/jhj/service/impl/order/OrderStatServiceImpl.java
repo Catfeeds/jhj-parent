@@ -43,7 +43,7 @@ public class OrderStatServiceImpl implements OrderStatService {
 		conditions.put("startTime", startLong);
 		conditions.put("endTime",endLong);
 		conditions.put("orgStaffId",orgStaffId);
-		List<Map<String, Object>> list1 = orderDispatchsMapper.selectOrdersCountByYearAndMonth(conditions);
+		List<Map<String, Object>> list1 = orderDispatchsMapper.totalByYearAndMonth(conditions);
 		int total = 0;
 //		boolean flag = true;
 		for (Iterator<Map<String, Object>> iterator = list1.iterator(); iterator.hasNext();) {
@@ -64,7 +64,7 @@ public class OrderStatServiceImpl implements OrderStatService {
 					Long servicePlanEnd = orders.getServiceDate() + orders.getServiceHour() * 3600 ;
 					if (updateTime < servicePlanEnd) {
 						//%Y-%m-%d %H:%i:%s
-						serviceEnd = TimeStampUtil.timeStampToDateStr(updateTime);
+						serviceEnd = TimeStampUtil.timeStampToDateStr(updateTime * 1000);
 					}
 				}
 			}

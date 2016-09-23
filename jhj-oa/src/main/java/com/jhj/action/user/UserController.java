@@ -44,14 +44,14 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.OrgSearchVo;
-import com.jhj.vo.UserDetailSearchVo;
-import com.jhj.vo.UserSearchVo;
-import com.jhj.vo.UsersSmsTokenVo;
 import com.jhj.vo.finance.FinanceSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
 import com.jhj.vo.user.UserCouponsVo;
+import com.jhj.vo.user.UserDetailSearchVo;
+import com.jhj.vo.user.UserSearchVo;
+import com.jhj.vo.user.UsersSmsTokenVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.RandomUtil;
@@ -96,16 +96,14 @@ public class UserController extends BaseController {
 
 	@AuthPassport
 	@RequestMapping(value = "/update_name", method = { RequestMethod.POST })
-	public AppResultData<Object> detail(@RequestParam("pk") Long userId,
-			@RequestParam("value") String userName) {
+	public AppResultData<Object> detail(@RequestParam("pk") Long userId, @RequestParam("value") String userName) {
 
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		if (userId == null || userName == null) {
 			return result;
 		}
-		Users user = usersService.selectByUsersId(userId);
+		Users user = usersService.selectByPrimaryKey(userId);
 		if (user == null) {
 			return result;
 		}
@@ -114,60 +112,20 @@ public class UserController extends BaseController {
 		user.setUpdateTime(TimeStampUtil.getNow() / 1000);
 
 		usersService.updateByPrimaryKeySelective(user);
-		result = new AppResultData<Object>(Constants.SUCCESS_0,
-				ConstantMsg.SUCCESS_0_MSG, user);
+		result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, user);
 		return result;
 	}
 
 	@AuthPassport
 	@RequestMapping(value = "/user-list", method = { RequestMethod.GET })
-	public String userList(HttpServletRequest request, Model model,
-			@ModelAttribute("userListSearchVoModel") UserSearchVo searchVo)
-			throws ParseException {
+	public String userList(HttpServletRequest request, Model model, @ModelAttribute("userListSearchVoModel") UserSearchVo searchVo) throws ParseException {
 
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
-		// 转换为数据库 参数字段
-//		String startTimeStr = searchVo.getStartTimeStr();
-//		if (!StringUtil.isEmpty(startTimeStr)) {
-//			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil
-//					.getBeginOfDay(startTimeStr)));
-//		}
-//
-//		String endTimeStr = searchVo.getEndTimeStr();
-//		if (!StringUtil.isEmpty(endTimeStr)) {
-//			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil
-//					.getEndOfDay(endTimeStr)));
-//		}
-//
-//		// 得到 当前登录 的 门店id，并作为搜索条件
-//		String org = AuthHelper.getSessionLoginOrg(request);
-//
-//		List<Long> cloudIdList = new ArrayList<Long>();
-//
-//		if (!org.equals("0") && !StringUtil.isEmpty(org)) {
-//
-//			GroupSearchVo groupSearchVo = new GroupSearchVo();dqz
-//
-//			groupSearchVo.setParentId(Long.parseLong(org));
-//
-//			List<Orgs> cloudList = orgService
-//					.selectCloudOrgByParentOrg(groupSearchVo);
-//
-//			for (Orgs orgs : cloudList) {
-//				cloudIdList.add(orgs.getOrgId());
-//			}
-//		} else {
-//			cloudIdList.add(0L);
-//		}
-		
-		searchVo.setSearchOrgList(getCouldId(request));
+		searchVo.setOrgIds(getCouldId(request));
 
-		PageInfo result = usersService.searchVoListPage(searchVo, pageNo,
-				pageSize);
+		PageInfo result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", searchVo);
 
@@ -185,16 +143,13 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/coupons-list", method = { RequestMethod.GET })
 	public String couponsList(Model model, @RequestParam("user_id") Long userId) {
 
-		List<UserCoupons> userCouponsList = usersCounpsService
-				.selectAllByUserId(userId);
+		List<UserCoupons> userCouponsList = usersCounpsService.selectAllByUserId(userId);
 
 		List<UserCouponsVo> userCouponsVos = new ArrayList<UserCouponsVo>();
 		if (userCouponsList != null) {
-			for (Iterator iterator = userCouponsList.iterator(); iterator
-					.hasNext();) {
+			for (Iterator iterator = userCouponsList.iterator(); iterator.hasNext();) {
 				UserCoupons userCoupons = (UserCoupons) iterator.next();
-				UserCouponsVo vo = usersCounpsService
-						.getUsersCounps(userCoupons);
+				UserCouponsVo vo = usersCounpsService.getUsersCounps(userCoupons);
 				userCouponsVos.add(vo);
 			}
 		}
@@ -211,31 +166,24 @@ public class UserController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/user-pay-detail", method = { RequestMethod.GET })
-	public String payDetailList(
-			HttpServletRequest request,
-			Model model,
-			@ModelAttribute("userPayDetailSearchVoModel") UserDetailSearchVo searchVo)
+	public String payDetailList(HttpServletRequest request, Model model, @ModelAttribute("userPayDetailSearchVoModel") UserDetailSearchVo searchVo)
 			throws ParseException {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
 		model.addAttribute("searchModel", searchVo);
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		// 转换为数据库 参数字段
 		String startTimeStr = searchVo.getStartTimeStr();
 		if (!StringUtil.isEmpty(startTimeStr)) {
-			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil
-					.getBeginOfDay(startTimeStr)));
+			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
 		}
 
 		String endTimeStr = searchVo.getEndTimeStr();
 		if (!StringUtil.isEmpty(endTimeStr)) {
-			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil
-					.getEndOfDay(endTimeStr)));
+			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
 		}
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
@@ -260,7 +208,7 @@ public class UserController extends BaseController {
 			cloudIdList.add(0L);
 		}
 
-		userSearchVo.setSearchOrgList(cloudIdList);
+		userSearchVo.setOrgIds(cloudIdList);
 
 		/*
 		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
@@ -279,8 +227,7 @@ public class UserController extends BaseController {
 
 		PageHelper.startPage(pageNo, pageSize);
 
-		List<UserDetailPay> list = userDetailPayService
-				.selectBySearchVo(searchVo);
+		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
 
 		PageInfo result = new PageInfo(list);
 
@@ -291,22 +238,18 @@ public class UserController extends BaseController {
 	}
 
 	@RequestMapping(value = "/token-list", method = { RequestMethod.GET })
-	public String userTokenList(HttpServletRequest request, Model model,
-			UsersSmsTokenVo usersSmsTokenVo) {
+	public String userTokenList(HttpServletRequest request, Model model, UsersSmsTokenVo usersSmsTokenVo) {
 
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		// 分页
 		PageHelper.startPage(pageNo, pageSize);
 
-		List<UserSmsToken> lists = userSmsTokenService.selectByListPage(
-				usersSmsTokenVo, pageNo, pageSize);
+		List<UserSmsToken> lists = userSmsTokenService.selectByListPage(usersSmsTokenVo, pageNo, pageSize);
 
 		PageInfo result = new PageInfo(lists);
 		model.addAttribute("usersSmsTokenVo", usersSmsTokenVo);
@@ -327,7 +270,7 @@ public class UserController extends BaseController {
 		userChargeVo.setUserId(userId);
 		userChargeVo.setChargeWay((short) 0);// 0=固定充值
 
-		Users users = usersService.selectByUsersId(userId);
+		Users users = usersService.selectByPrimaryKey(userId);
 
 		userChargeVo.setUserMobile(users.getMobile());
 
@@ -341,10 +284,8 @@ public class UserController extends BaseController {
 		userChargeVo.setOwnerMobile("18611289885");
 
 		model.addAttribute("userChargeVo", userChargeVo);
-		model.addAttribute("selectDataSource",
-				usersService.selectDictCardDataSource());
-		model.addAttribute("chargeWayDataSource",
-				usersService.getChargeWayDataSource());
+		model.addAttribute("selectDataSource", usersService.selectDictCardDataSource());
+		model.addAttribute("chargeWayDataSource", usersService.getChargeWayDataSource());
 
 		return "user/chargeForm";
 	}
@@ -361,13 +302,10 @@ public class UserController extends BaseController {
 	 */
 	// @AuthPassport
 	@RequestMapping(value = "get_user_sms_token.json", method = RequestMethod.GET)
-	public AppResultData<String> getSmsToken(
-			@RequestParam("userId") Long userId,
-			@RequestParam("userMobile") String userMobile,
+	public AppResultData<String> getSmsToken(@RequestParam("userId") Long userId, @RequestParam("userMobile") String userMobile,
 			@RequestParam("smsType") int sms_type) {
 
-		AppResultData<String> result = new AppResultData<String>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		AppResultData<String> result = new AppResultData<String>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		/*
 		 * 校验 手机号 和 用户(主管手机号。接收验证码) 是否匹配
 		 */
@@ -391,10 +329,8 @@ public class UserController extends BaseController {
 
 		String[] content = new String[] { code, Constants.GET_CODE_MAX_VALID };
 		// 2.短信平台发送给用户，并返回相关信息（短信平台是30分钟有效）
-		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(value,
-				Constants.GET_USER_VERIFY_ID, content);
-		UserSmsToken record = userSmsTokenService.initUserSmsToken(value,
-				sms_type, code, sendSmsResult);
+		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(value, Constants.GET_USER_VERIFY_ID, content);
+		UserSmsToken record = userSmsTokenService.initUserSmsToken(value, sms_type, code, sendSmsResult);
 		// 3.操作user_sms_token，保存验证码信息
 		userSmsTokenService.insert(record);
 
@@ -421,22 +357,16 @@ public class UserController extends BaseController {
 	 */
 	// @AuthPassport
 	@RequestMapping(value = "/charge-form.json", method = { RequestMethod.POST })
-	public AppResultData<Object> doChargeForm(HttpServletRequest request,
-			@RequestParam("userId") Long userId,
-			@RequestParam("userMobile") String userMobile,
-			@RequestParam("chargeWay") Short chargeWay,
-			@RequestParam("chargeMoney") Long chargeMoney,
-			@RequestParam("userCode") String userCode) {
+	public AppResultData<Object> doChargeForm(HttpServletRequest request, @RequestParam("userId") Long userId, @RequestParam("userMobile") String userMobile,
+			@RequestParam("chargeWay") Short chargeWay, @RequestParam("chargeMoney") Long chargeMoney, @RequestParam("userCode") String userCode) {
 
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, "", "");
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 
 		// 1. 判断 手机号 和 验证码是否 匹配
-		Users user = usersService.selectByUsersId(userId);
+		Users user = usersService.selectByPrimaryKey(userId);
 
 		// 最新的 一条 验证码。类型为 3,表示 运营平台--会员充值验证码
-		UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType(
-				"18611289885", Constants.SMS_TYPE_3);
+		UserSmsToken smsToken = userSmsTokenService.selectByMobileAndType("18611289885", Constants.SMS_TYPE_3);
 		if (smsToken == null) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("验证码错误");
@@ -469,18 +399,17 @@ public class UserController extends BaseController {
 			 * 
 			 * chargeMoney 表示在 dict_card_type 表中，该记录的 主键id
 			 */
-			DictCardType cardType = cardTypeService
-					.selectByPrimaryKey(chargeMoney);
+			DictCardType cardType = cardTypeService.selectByPrimaryKey(chargeMoney);
 
 			cardValue = cardType.getCardValue();
 
-		}else{
-			
-			//如果是任意金额充值。该值就是 充值的具体数字, 保留两位小数
+		} else {
+
+			// 如果是任意金额充值。该值就是 充值的具体数字, 保留两位小数
 			cardValue = MathBigDecimalUtil.round(new BigDecimal(chargeMoney), 2);
 		}
-		
-		//设置充值金额
+
+		// 设置充值金额
 		finace.setRechargeValue(cardValue);
 
 		// 充值后 余额
@@ -553,16 +482,13 @@ public class UserController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "finace_recharge_list", method = RequestMethod.GET)
-	public String getAllChargeList(Model model, HttpServletRequest request,
-			FinanceSearchVo searchVo) {
+	public String getAllChargeList(Model model, HttpServletRequest request, FinanceSearchVo searchVo) {
 
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		PageHelper.startPage(pageNo, pageSize);
 
@@ -580,8 +506,7 @@ public class UserController extends BaseController {
 
 			finance = list.get(i);
 
-			FinanceRechargeVo financeVo = financeService
-					.transToFinanceVo(finance);
+			FinanceRechargeVo financeVo = financeService.transToFinanceVo(finance);
 
 			list.set(i, financeVo);
 		}
@@ -599,19 +524,15 @@ public class UserController extends BaseController {
 
 	// @AuthPassport
 	@RequestMapping(value = "/finance_user-list", method = { RequestMethod.GET })
-	public String getUserList(HttpServletRequest request, Model model,
-			UserSearchVo searchVo) {
+	public String getUserList(HttpServletRequest request, Model model, UserSearchVo searchVo) {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
 		model.addAttribute("searchModel", searchVo);
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
-		PageInfo result = usersService.searchVoListPage(searchVo, pageNo,
-				pageSize);
+		PageInfo result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 
 		return "user/financeUserList";
@@ -621,27 +542,24 @@ public class UserController extends BaseController {
 	 * 首页新增用户显示信息
 	 */
 	@RequestMapping(value = "/home-user-list", method = RequestMethod.GET)
-	public String showNewUser(Model model, HttpServletRequest request)
-			throws ParseException {
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+	public String showNewUser(Model model, HttpServletRequest request) throws ParseException {
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		UserSearchVo vo = new UserSearchVo();
-		
+
 		String startTimeStr = DateUtil.getBeginOfDay();
-    	String endTimeStr = DateUtil.getEndOfDay();
-    	Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
+		String endTimeStr = DateUtil.getEndOfDay();
+		Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
 		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
 		vo.setStartTime(startTime);
 		vo.setEndTime(endTime);
-		PageInfo<Users> result=usersService.selectUserByDay(vo,pageNo, pageSize);
+		PageInfo<Users> result = usersService.selectByListPage(vo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", vo);
 		return "user/userList";
 	}
 
-	//根据当前登录的用户获取云店id
+	// 根据当前登录的用户获取云店id
 	public List<Long> getCouldId(HttpServletRequest request) {
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
@@ -653,14 +571,14 @@ public class UserController extends BaseController {
 			searchVo1.setParentId(sessionOrgId);
 			searchVo1.setOrgStatus((short) 1);
 			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
-			
+
 			for (Orgs orgs : cloudList) {
 				cloudIdList.add(orgs.getOrgId());
 			}
 		} else {
 			cloudIdList.add(0L);
 		}
-		
+
 		return cloudIdList;
 	}
 }

@@ -1,13 +1,9 @@
 package com.jhj.service.order;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchs;
-import com.jhj.vo.OaOrderDisSearchVo;
-import com.jhj.vo.OrderSearchVo;
-import com.jhj.vo.dispatch.StaffDispatchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 
 /**
  *
@@ -28,41 +24,13 @@ public interface OrderDispatchsService {
     int updateByPrimaryKeySelective(OrderDispatchs record);
 
     int updateByPrimaryKey(OrderDispatchs record);
-    
-    List<OrderDispatchs> getBadOrgStaff(Map<String,Object> map);
-    
+       
     OrderDispatchs  initOrderDisp();
     
-    OrderDispatchs selectByOrderNo(String orderNo);
-    
-	OrderDispatchs selectByUserId(Long userId);
+    List<OrderDispatchs> selectBySearchVo(OrderDispatchSearchVo searchVo);
 
-	List<OrderDispatchs> selectEnableStaffNow(Long orgId, Long serviceDateStart, Long serviceDateEnd);
+	Long totalStaffTodayOrders(Long staffId);
 
-	List<OrderDispatchs> selectByOrderIds(List<Long> orderIds);
-	
-	//所有 有 阿姨 的 下单 记录
-	List<OrderDispatchs> selectAll();
-	
-	OrderDispatchs selectByOrderId(Long orderId);
-	
-	List<OrderDispatchs> selectByNoAndDisStatus(String orderNo,Short disStatus);
-	
-	
-	//jhj2.1   服务人员 当天的派工数
-	Long getTodayOrderNumForTheSta(Long staffId);
-
-	List<HashMap> getUserIdsByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
-	
-	
-	//jhj2.1  服务人员 在 订单 服务 时间内  是否有 派工
-	Long getDisNumForStaDuringServiceDate(OrderSearchVo searchVo);
-	
-	
-	
-	/**
-	 *  门店派工人员列表
-	 *  	展示 7天 的 派工情况
-	 */
-	List<StaffDispatchVo>   selectStaffDisBySevenDay(OaOrderDisSearchVo oaOrderDisSearchVo);
+	List<OrderDispatchs> selectByMatchTime(OrderDispatchSearchVo searchVo);
+   	
 }

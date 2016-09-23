@@ -2,7 +2,7 @@ package com.jhj.service.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffInvite;
-import com.jhj.vo.OrgStaffFinanceSearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 /**
 *
 * @author :Aimee

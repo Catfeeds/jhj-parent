@@ -24,7 +24,7 @@ import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffInviteService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.orderReview.SettingService;
-import com.jhj.vo.OrgStaffFinanceSearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffInviteVo;
 import com.meijia.utils.BeanUtilsExp;
 

@@ -11,24 +11,25 @@
 		<result column="service_date" property="serviceDate" jdbcType="NUMERIC" />
 		<result column="service_hours" property="serviceHours" jdbcType="NUMERIC" />
 		<result column="org_id" property="orgId" jdbcType="NUMERIC" />
+		<result column="parent_id" property="parentId" jdbcType="NUMERIC" />
 		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
 		<result column="staff_name" property="staffName" jdbcType="VARCHAR" />
 		<result column="staff_mobile" property="staffMobile" jdbcType="CHAR" />
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="am_id" property="amId" jdbcType="NUMERIC" />
 		<result column="dispatch_status" property="dispatchStatus" jdbcType="NUMERIC" />
-		
+
 		<result column="pick_addr_name" property="pickAddrName" jdbcType="VARCHAR" />
 		<result column="pick_addr_lat" property="pickAddrLat" jdbcType="VARCHAR" />
 		<result column="pick_addr_lng" property="pickAddrLng" jdbcType="VARCHAR" />
 		<result column="pick_addr" property="pickAddr" jdbcType="VARCHAR" />
-		
+
 		<result column="pick_distance" property="pickDistance" jdbcType="NUMERIC" />
 		<result column="user_addr_distance" property="userAddrDistance" jdbcType="NUMERIC" />
-		
+
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
-		
+
 		<result column="is_apply" property="isApply" jdbcType="NUMERIC" />
 		<result column="apply_time" property="applyTime" jdbcType="NUMERIC" />
 	</resultMap>
@@ -36,322 +37,187 @@
 		<result column="user_id" property="userId" jdbcType="NUMERIC" />
 		<result column="total" property="total" jdbcType="NUMERIC" />
 	</resultMap>
-	
-	<!-- 2016年5月30日12:25:52  门店派工列表 -->
-	<resultMap id="staffDisMap" type="com.jhj.vo.dispatch.StaffDispatchVo">
-		<result column="serviceDateStr" property="serviceDateStr"  />
-		<result column="staffId" property="staffId"  />
-		<result column="staffName" property="staffName" />
-		<result column="orderId" property="orderId"/>
-	</resultMap>
-	
-	
+
 	<sql id="Base_Column_List">
-		id, user_id, mobile, order_id, order_no, service_date_pre, service_date, service_hours, org_id,
-		staff_id, staff_name, staff_mobile, remarks, am_id, dispatch_status, 
+		id, user_id, mobile, order_id, order_no, service_date_pre, service_date, service_hours, org_id, parent_id,
+		staff_id, staff_name, staff_mobile,
+		remarks, am_id,
+		dispatch_status,
 		pick_addr_name,pick_addr_lat,pick_addr_lng,pick_addr,pick_distance,user_addr_distance,
-		add_time, update_time, is_apply, apply_time
+		add_time, update_time, is_apply,
+		apply_time
 	</sql>
-	
-	
-	<select id="selectStaffDisBySevenDay" resultMap="staffDisMap" parameterType="com.jhj.vo.OaOrderDisSearchVo">
-	
-		SELECT 
-			FROM_UNIXTIME(service_date,'%Y-%m-%d') AS serviceDateStr, 
-			staff_id  AS staffId ,
-			staff_name AS staffName,
-			order_id AS orderId,
-			order_no as orderNo
-		FROM 
-			order_dispatchs  
-		WHERE 
-			dispatch_status = 1
-		 <if test="cloudOrgList != null and cloudOrgList.size() > 0">
-			and
-			org_id in
-				<foreach item="item" index="index" collection="cloudOrgList"
-			           open="(" separator="," close=")">
-			      #{item}
-			  	</foreach>
-		 </if>
-		 HAVING  
-		 	(	 
-				 <if test="startTimeStr !=null and startTimeStr !='' ">
-					<![CDATA[ serviceDateStr >= #{startTimeStr}]]>
-				 </if>
-				 <if test="endTimeStr !=null and endTimeStr !='' ">
-					<![CDATA[ and serviceDateStr <= #{endTimeStr}]]>
-				 </if>
-			)
-		ORDER BY service_date asc
-	</select>
-	
-	
-	<!-- 某个订单确定的服务时间内，服务人员的派工情况，是否有接单 -->
-	<select id="getDisNumForStaDuringServiceDate" resultType="java.lang.Long" parameterType="com.jhj.vo.OrderSearchVo">
-		select
-			count(*)
-		from order_dispatchs	 
-		where
-		staff_id = #{staffId,jdbcType=NUMERIC}
-		<![CDATA[	
-		and 
-			service_date + service_hours*3600 >= #{serviceDateStart,jdbcType=NUMERIC}
-		and
-			service_date + service_hours*3600 <= #{serviceDateEnd,jdbcType=NUMERIC}
-		 ]]>	
-		and dispatch_status = 1	
-	</select>
-	
-	
-	<!--jhj2.1  助理列表页。。  计算员工和对应用户的 服务次数 -->
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrderSearchVo">
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
 		select
 		<include refid="Base_Column_List" />
+		<include refid="bySearchVo" />
+		order by service_date desc
+	</select>
+
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		<include refid="bySearchVo" />
+		order by service_date desc
+	</select>
+
+	<sql id="bySearchVo">
 		from order_dispatchs
 		where 1=1
-         <if test="staffId !=null ">
-         	and staff_id =#{staffId,jdbcType=NUMERIC}
-         </if>
-         <if test="userId !=null">
-         	and user_id = #{userId,jdbcType=NUMERIC}
-         </if>
-		and dispatch_status = 1
-	</select>
-	
-	
-	<!-- 该服务人员  今天的 派工数量 -->
-	<select id="getTodayOrderNumForTheSta" resultType="java.lang.Long" parameterType="java.lang.Long">
+
+		<if test="staffId !=null ">
+			and staff_id =#{staffId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="staffIds != null">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+		<if test="staffMobile !=null ">
+			and staff_mobile =#{staffMobile,jdbcType=VARCHAR}
+		</if>
+
+		<if test="staffName !=null ">
+			and staff_name =#{staffName,jdbcType=VARCHAR}
+		</if>
+
+		<if test="userId !=null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="mobile !=null and mobile !='' ">
+			and mobile = #{mobile}
+		</if>
+
+		<if test="orderId !=null">
+			and order_id = #{orderId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orderIds != null">
+			and order_id in
+			<foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+		<if test="orderNo !=null">
+			and order_no = #{orderNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="orgId != null">
+			and org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="parentId != null">
+			and parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="isApply != null">
+			and is_apply = #{isApply,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orgIds != null">
+			and org_id in
+			<foreach item="item" index="index" collection="orgIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+		<if test="parentIds != null">
+			and parent_id in
+			<foreach item="item" index="index" collection="parentIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+		<if test="startServiceTime !=null">
+			<![CDATA[ and service_date >= #{startServiceTime}]]>
+		</if>
+
+		<if test="endServiceTime !=null">
+			<![CDATA[ and service_date <= #{endServiceTime}]]>
+		</if>
+
+		<if test="startServiceHourTime !=null">
+			<![CDATA[ and (service_date + service_hour *3600) >= #{startServiceHourTime}]]>
+		</if>
+
+		<if test="endServiceHourTime !=null">
+			<![CDATA[ and (service_date + service_hour *3600) <= #{endServiceHourTime}]]>
+		</if>
+
+		<if test="startAddTime !=null">
+			<![CDATA[ and add_time >= #{startAddTime}]]>
+		</if>
+
+		<if test="endAddTime !=null">
+			<![CDATA[ and add_time <= #{endAddTime}]]>
+		</if>
+
+		<if test="startUpdateTime !=null">
+			<![CDATA[ and update_time >= #{startUpdateTime}]]>
+		</if>
+
+		<if test="endUpdateTime !=null">
+			<![CDATA[ and update_time <= #{endUpdateTime}]]>
+		</if>
+
+
+		<if test="dispatchStatus != null">
+			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
+		</if>
+	</sql>
+
+	<!-- 该服务人员 今天的 派工数量 -->
+	<select id="totalStaffTodayOrders" resultType="java.lang.Long" parameterType="java.lang.Long">
 		select
-			count(*)
-		from 
-			order_dispatchs
-		where 
-			staff_id = #{staffId,jdbcType=NUMERIC}
+		count(*)
+		from
+		order_dispatchs
+		where
+		staff_id = #{staffId,jdbcType=NUMERIC}
 		<![CDATA[	
 		 and
 		 	add_time > UNIX_TIMESTAMP(CURDATE())
 		 and
 		 	add_time < UNIX_TIMESTAMP(DATE_ADD(CURDATE(),INTERVAL 1 DAY))			
-		 ]]>	
+		 ]]>
 	</select>
-	
-	
-	<!-- 派工列表 ,所有有效派工-->
-	<select id="selectAbledOrderDis" resultMap="BaseResultMap" parameterType="com.jhj.vo.OaOrderDisSearchVo">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where 1=1
-         
-         <if test="startTimeStr !=null and startTimeStr !='' ">
-			<![CDATA[ and from_unixtime(service_date,'%Y-%m-%d') >= #{startTimeStr}]]>
-		 </if>
-		 <if test="endTimeStr !=null and endTimeStr !='' ">
-			<![CDATA[ and from_unixtime(service_date,'%Y-%m-%d') <= #{endTimeStr}]]>
-		 </if>
-         
-         <if test="staffName !=null and staffName !='' ">
-         	and staff_name =#{staffName,jdbcType=VARCHAR}
-         </if>
-         <if test="searchOrgId !=null">
-         	and org_id = #{searchOrgId,jdbcType=NUMERIC}
-         </if>
-		and dispatch_status = 1
-		
-		order by service_date desc
-		
-	</select>
-	<select id="selectByNoAndDisStatus" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where
-		order_no = #{orderNo,jdbcType = VARCHAR}
-		and
-		dispatch_status = #{disStatus,jdbcType = NUMERIC}
-	</select>
-	
-	<select id="selectAllForOneOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where 	
-		order_id = #{orderId,jdbcType = NUMERIC}
-	
-	</select>
-	<!-- 获得某段时间内的派工列表 -->
-	<select id="selectByStartTimeAndEndTime" resultMap="BaseResultMap" parameterType="java.lang.Long">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs where 1=1 and dispatch_status = 1 and
-	<![CDATA[    
-	  	 (
-	  		(service_date >= #{startTime}  and service_date <= #{endTime} )
-	  		or
-	    	((service_date+ service_hours*3600) >= #{startTime} and (service_date+ service_hours*3600) <= #{endTime})
-	    ) 
-  		]]>
-	</select>
-	
-	<!-- 之前 的 调用 ，默认 应该都是 取得  派工成功   的 记录  TODO -->
-	<select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where 	
-	    order_id = #{orderId,jdbcType=NUMERIC}
-	    and
-	    dispatch_status = 1
-	</select>
-	
-	<select id="selectDisEveryDay" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where 
-		FROM_UNIXTIME(service_date,'%Y-%m-%d') = #{day}
-	
-	</select>
-	
-	<select id="selectAll" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where staff_id != 0
-	</select>
-	
-	
-	
-	<!-- 默认 应该是查询有效派工 的订单 -->
-	<select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where
-		order_no = #{orderNo,jdbcType = VARCHAR}
-		and
-		dispatch_status = 1
-	</select>
-	<!--查询某员工某服务日派工列表  -->
-  <select id="selectDis" resultMap="BaseResultMap" parameterType="com.jhj.vo.OaOrderDisSearchVo">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where 1=1
-		
-		<!-- <if test="serviceType !=null">
-			and service_type = #{serviceType,jdbcType=NUMERIC}
-		</if>	
-		<if test="orderRate != null">
-			and order_rate = #{orderRate,jdbcType=NUMERICQ}
-		</if>
-		<if test="orderStatus !=null">
-			and order_status = #{orderStatus,jdbcType=NUMERIC}
-		</if> -->
-		 <if test="serviceDate != null and staffId !=null ">
-         and staff_id =#{staffId,jdbcType=NUMERIC} and from_unixtime(service_date,'%Y-%m-%d') = #{serviceDate,jdbcType=NUMERIC}  
-         </if>
-	
-	</select>
-	
-			
+
 	<!-- 统计在start和end之间的有效派工单个数 -->
-	<select id="selectOrdersCountByYearAndMonth" resultType="HashMap"  parameterType="java.util.HashMap">
-		select 
-			id,order_no,staff_id, 
-			from_unixtime((service_date+ service_hours*3600),'%Y-%m-%d %H:%i:%s') as service_end,
-			from_unixtime(service_date,'%Y-%m-%d %H:%i:%s') as serviceTime,
-			from_unixtime(service_date,'%Y-%m-%d') as startTime,
-			from_unixtime(service_date,'%Y-%m-%d') as serviceDate,
-			update_time
-		from 
-			order_dispatchs 
-		where 
-			dispatch_status =1 
-			and 
-			service_date 
-				between 
-					#{startTime,jdbcType=NUMERIC}
-				and 
-					#{endTime,jdbcType=NUMERIC} 
-			and 
-				staff_id =#{orgStaffId,jdbcType=NUMERIC}
-	</select>
-	
-	<select id="getUserIdsByListPage" resultMap="statByUser" parameterType="java.lang.Long">
-		select user_id, count(*) as total
-		from order_dispatchs
-		where 1 = 1
-		
-		<if test="userId !=null ">
-        	and user_id =#{userId,jdbcType=NUMERIC}
-        </if> 
-		
-	 	<if test="staffId !=null ">
-        	and staff_id =#{staffId,jdbcType=NUMERIC}
-        </if> 
-			
-		order by total desc
-	</select>
-	
-	
-	<select id="selectEnableStaffNow" resultMap="BaseResultMap">
+	<select id="totalByYearAndMonth" resultType="HashMap" parameterType="java.util.HashMap">
 		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where 
-		org_id = #{orgId}
-		
-		<![CDATA[    
-		  	and (
-		  		(service_date <= #{serviceDateEnd}  and service_date >= #{serviceDateStart} )
-		  		or
-		    	((service_date+ service_hours*3600) >= #{serviceDateStart} and (service_date+ service_hours*3600) <= #{serviceDateEnd})
-		    ) 
-  		]]>		
+		id,order_no,staff_id,
+		from_unixtime((service_date+
+		service_hours*3600),'%Y-%m-%d %H:%i:%s') as service_end,
+		from_unixtime(service_date,'%Y-%m-%d %H:%i:%s') as serviceTime,
+		from_unixtime(service_date,'%Y-%m-%d')
+		as startTime,
+		from_unixtime(service_date,'%Y-%m-%d') as serviceDate,
+		update_time
+		from
+		order_dispatchs
+		where
+		dispatch_status =1
+		and
+		service_date
+		between
+		#{startTime,jdbcType=NUMERIC}
+		and
+		#{endTime,jdbcType=NUMERIC}
+		and
+		staff_id =#{orgStaffId,jdbcType=NUMERIC}
 	</select>
-
-	<select id="getBadOrgStaff" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where user_id = #{userId,jdbcType=NUMERIC}
-
-		<if test="orderIdList !=null and orderIdList.size() !=0">
-			and order_id in
-			<foreach collection="orderIdList" item="item" index="index" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-	</select>
-
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from order_dispatchs
 		where id = #{id,jdbcType=NUMERIC}
-	</select>
-	<select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
-		select
-		<include refid="Base_Column_List" />
-		from order_dispatchs
-		where
-		user_id = #{userId,jdbcType=NUMERIC}
-	</select>
-	
-	<select id="selectByOrderIds" parameterType="java.lang.String" resultMap="BaseResultMap">
-	  select
-	  <include refid="Base_Column_List" />
-	  from order_dispatchs
-	  where order_id in
-		<foreach item="item" index="index" collection="list"
-	           open="(" separator="," close=")">
-	      #{item}
-	  	</foreach>
-	
-	  order by add_time asc
 	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -361,21 +227,26 @@
 	<insert id="insert" parameterType="com.jhj.po.model.order.OrderDispatchs">
 		insert into order_dispatchs (id, user_id, mobile,
 		order_id, order_no, service_date_pre,
-		service_date, service_hours, org_id, staff_id,
+		service_date, service_hours,
+		org_id, parent_id, staff_id,
 		staff_name, staff_mobile, remarks,
-		am_id, dispatch_status, 
+		am_id, dispatch_status,
 		pick_addr_name,pick_addr_lat,pick_addr_lng,pick_addr,pick_distance,user_addr_distance,
 		add_time,update_time, is_apply, apply_time)
-		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
-		#{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, #{serviceDatePre,jdbcType=NUMERIC},
-		#{serviceDate,jdbcType=NUMERIC}, #{serviceHours,jdbcType=NUMERIC}, #{orgId,jdbcType=NUMERIC},
+		values
+		(#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
+		#{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR},
+		#{serviceDatePre,jdbcType=NUMERIC},
+		#{serviceDate,jdbcType=NUMERIC}, #{serviceHours,jdbcType=NUMERIC},
+		#{orgId,jdbcType=NUMERIC}, #{parentId,jdbcType=NUMERIC},
 		#{staffId,jdbcType=NUMERIC},
 		#{staffName,jdbcType=VARCHAR}, #{staffMobile,jdbcType=CHAR}, #{remarks,jdbcType=VARCHAR},
 		#{amId,jdbcType=NUMERIC}, #{dispatchStatus,jdbcType=NUMERIC},
 		#{pickAddrName,jdbcType=VARCHAR},#{pickAddrLat,jdbcType=VARCHAR},#{pickAddrLng,jdbcType=VARCHAR},
 		#{pickAddr,jdbcType=VARCHAR},#{pickDistance,jdbcType=NUMERIC},#{userAddrDistance,jdbcType=NUMERIC},
-		 #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},
-		 #{isApply,jdbcType=NUMERIC}, #{applyTime,jdbcType=NUMERIC})
+		#{addTime,jdbcType=NUMERIC},
+		#{updateTime,jdbcType=NUMERIC},
+		#{isApply,jdbcType=NUMERIC}, #{applyTime,jdbcType=NUMERIC})
 	</insert>
 
 	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderDispatchs">
@@ -408,6 +279,9 @@
 			<if test="orgId != null">
 				org_id,
 			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
 			<if test="staffId != null">
 				staff_id,
 			</if>
@@ -426,7 +300,7 @@
 			<if test="dispatchStatus != null">
 				dispatch_status,
 			</if>
-		    <if test="pickAddrName != null">
+			<if test="pickAddrName != null">
 				pick_addr_name,
 			</if>
 			<if test="pickAddrLat != null">
@@ -444,7 +318,7 @@
 			<if test="userAddrDistance != null">
 				user_addr_distance,
 			</if>
-			
+
 			<if test="addTime != null">
 				add_time,
 			</if>
@@ -486,6 +360,9 @@
 			<if test="orgId != null">
 				#{orgId,jdbcType=NUMERIC},
 			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=NUMERIC},
+			</if>
 			<if test="staffId != null">
 				#{staffId,jdbcType=NUMERIC},
 			</if>
@@ -504,7 +381,7 @@
 			<if test="dispatchStatus != null">
 				#{dispatchStatus,jdbcType=NUMERIC},
 			</if>
-			 <if test="pickAddrName != null">
+			<if test="pickAddrName != null">
 				#{pickAddrName,jdbcType=VARCHAR},
 			</if>
 			<if test="pickAddrLat != null">
@@ -570,6 +447,9 @@
 			<if test="orgId != null">
 				staff_id = #{orgId,jdbcType=NUMERIC},
 			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=NUMERIC},
+			</if>
 			<if test="staffId != null">
 				staff_id = #{staffId,jdbcType=NUMERIC},
 			</if>
@@ -588,7 +468,7 @@
 			<if test="dispatchStatus != null">
 				dispatch_status = #{dispatchStatus,jdbcType=NUMERIC},
 			</if>
-			 <if test="pickAddrName != null">
+			<if test="pickAddrName != null">
 				pick_addr_name = #{pickAddrName,jdbcType=VARCHAR},
 			</if>
 			<if test="pickAddrLat != null">
@@ -625,27 +505,36 @@
 		update order_dispatchs
 		set user_id = #{userId,jdbcType=NUMERIC},
 		mobile = #{mobile,jdbcType=CHAR},
-		order_id = #{orderId,jdbcType=NUMERIC},
+		order_id =
+		#{orderId,jdbcType=NUMERIC},
 		order_no = #{orderNo,jdbcType=VARCHAR},
 		service_date_pre = #{serviceDatePre,jdbcType=NUMERIC},
-		service_date = #{serviceDate,jdbcType=NUMERIC},
+		service_date =
+		#{serviceDate,jdbcType=NUMERIC},
 		service_hours = #{serviceHours,jdbcType=NUMERIC},
 		org_id = #{orgId,jdbcType=NUMERIC},
+		parent_id = #{parentId,jdbcType=NUMERIC},
 		staff_id = #{staffId,jdbcType=NUMERIC},
 		staff_name = #{staffName,jdbcType=VARCHAR},
 		staff_mobile = #{staffMobile,jdbcType=CHAR},
-		remarks = #{remarks,jdbcType=VARCHAR},
+		remarks =
+		#{remarks,jdbcType=VARCHAR},
 		am_id = #{amId,jdbcType=NUMERIC},
 		dispatch_status = #{dispatchStatus,jdbcType=NUMERIC},
-		pick_addr_name = #{pickAddrName,jdbcType=VARCHAR},
+		pick_addr_name =
+		#{pickAddrName,jdbcType=VARCHAR},
 		pick_addr_lat = #{pickAddrLat,jdbcType=VARCHAR},
 		pick_addr_lng = #{pickAddrLng,jdbcType=VARCHAR},
-		pick_addr = #{pickAddr,jdbcType=VARCHAR},
+		pick_addr =
+		#{pickAddr,jdbcType=VARCHAR},
 		pick_distance = #{pickDistance,jdbcType=NUMERIC},
-		user_addr_distance = #{userAddrDistance,jdbcType=NUMERIC},
-		add_time = #{addTime,jdbcType=NUMERIC},
+		user_addr_distance =
+		#{userAddrDistance,jdbcType=NUMERIC},
+		add_time =
+		#{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},
-		is_apply = #{isApply,jdbcType=NUMERIC},
+		is_apply =
+		#{isApply,jdbcType=NUMERIC},
 		apply_time = #{applyTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>

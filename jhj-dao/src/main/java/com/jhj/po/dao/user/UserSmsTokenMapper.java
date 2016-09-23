@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.jhj.po.model.user.UserSmsToken;
-import com.jhj.vo.UsersSmsTokenVo;
+import com.jhj.vo.user.UsersSmsTokenVo;
 
 
 public interface UserSmsTokenMapper {

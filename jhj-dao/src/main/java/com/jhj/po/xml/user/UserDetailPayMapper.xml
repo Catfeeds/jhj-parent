@@ -36,7 +36,7 @@
 		</if>
 		order by add_time desc
 	</select>
-	<select id="selectByListPages" resultMap="BaseResultMap" parameterType="com.jhj.vo.UserDetailSearchVo">
+	<select id="selectByListPages" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserDetailSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from user_detail_pay

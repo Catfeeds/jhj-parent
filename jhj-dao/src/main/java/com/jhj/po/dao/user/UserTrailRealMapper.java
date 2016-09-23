@@ -2,9 +2,8 @@ package com.jhj.po.dao.user;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.jhj.po.model.user.UserTrailReal;
+import com.jhj.vo.user.UserTrailSearchVo;
 
 public interface UserTrailRealMapper {
     int deleteByPrimaryKey(Long id);
@@ -18,9 +17,8 @@ public interface UserTrailRealMapper {
     int updateByPrimaryKeySelective(UserTrailReal record);
 
     int updateByPrimaryKey(UserTrailReal record);
-
-	UserTrailReal selectByUserIdAndType(Long userId, short userType);
 	
-	//得到  参数集合中，每个用户 最新时间的 位置 
-	List<UserTrailReal> selectLatestPositionForUser(@Param("userIdList")List<Long> userIdList);
+	List<UserTrailReal> selectBySearchVo(UserTrailSearchVo searchVo);
+
+	List<UserTrailReal> selectByListPage(UserTrailSearchVo searchVo);
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,10 +38,11 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.OaOrderSearchVo;
-import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
+import com.jhj.vo.order.OaOrderSearchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -57,26 +59,34 @@ import com.meijia.utils.TimeStampUtil;
 public class OaOrderServiceImpl implements OaOrderService {
 	@Autowired
 	private OrdersMapper orderMapper;
+	
 	@Autowired
 	private OrderPricesService orderPriceService;
+	
 	@Autowired
-	private OrderDispatchsService orderDisService;
+	private OrderDispatchsService orderDispatchsService;
+	
 	@Autowired
 	private OrdersService orderService;
+	
 	@Autowired
 	private UserAddrsService userAddrService;
+	
 	@Autowired
 	private DictCouponsService dictCouponService;
+	
 	@Autowired
 	private UsersService userService;
-	@Autowired
-	private OrderDispatchsMapper orderDisMapper;
+
 	@Autowired
 	private UserCouponsService userCouponService;
+	
 	@Autowired
 	private OrderHourAddService hourAddService;
+	
 	@Autowired
 	private OrgsService orgService;
+	
 	@Autowired
 	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 
@@ -90,16 +100,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 	@Autowired
 	private OrgStaffsService staffService;
 	
-	@Override
-	public List<Orders> selectVoByListPage(OaOrderSearchVo oaOrderSearchVo, int pageNo, int pageSize) {
-
-		PageHelper.startPage(pageNo, pageSize);
-
-		List<Orders> orderList = orderMapper.selectOaOrderByListPage(oaOrderSearchVo);
-
-		return orderList;
-	}
-
 	@Override
 	public OaOrderListNewVo completeVo(Orders orders) {
 		OaOrderListVo oaOrderListVo = initVO();
@@ -140,7 +140,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 		/*
 		 * 通过 订单 Id，在 order_dispaths 中 找出 是否 有派工记录
 		 */
-		List<OrderDispatchs> disTwo = orderDisMapper.selectAllForOneOrderId(orders.getId());
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderId(orders.getId());
+		List<OrderDispatchs> disTwo = orderDispatchsService.selectBySearchVo(searchVo);
 
 		// map 存放 <派工状态， 当前派工状态对应的 阿姨 >
 		// IdentityHashMap<Short, String> statuNameMap = new
@@ -224,7 +226,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 姓名
 		Long userId = orders.getUserId();
 
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		if (users != null) {
 			oaOrderListVo.setUserName(users.getName());
 		}
@@ -232,7 +234,13 @@ public class OaOrderServiceImpl implements OaOrderService {
 		/*
 		 * 可能 会有 多次换人，多条 无效记录 的情况，需要分别展示
 		 */
-		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, disStatus);
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus(disStatus);
+		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
+		
+		
 		// 有派工记录 的订单，则展示 当前 阿姨
 
 		for (OrderDispatchs orDis : orderDisList) {
@@ -361,7 +369,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 		
 		
 		// 查找对应订单有效派工
-		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
 		
 		if(orderDisList.size() > 0){
 			
@@ -469,7 +481,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 姓名
 		Long userId = orders.getUserId();
 
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		if (users != null) {
 			oaOrderListVo.setUserName(users.getName());
 		}
@@ -567,7 +579,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}
 		//4.显示用户姓名
 		Long userId = orders.getUserId();
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		if (users != null) {
 			oaOrderListVo.setUserName(users.getName());
 		}
@@ -585,9 +597,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 		/*
 		 * 2016年3月23日19:05:58  jhj2.1     助理类订单 新的基本派工逻辑
 		 */
-		
-		List<OrderDispatchs> list = orderDisService.selectByNoAndDisStatus(orderNo, Constants.ORDER_DIS_ENABLE);
-		
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrderNo(orderNo);
+		searchVo1.setDispatchStatus((short) 1);
+		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo1);
+
 		List<Long> staIdList = new ArrayList<Long>();
 		
 		List<OrgStaffsNewVo> staVoList = new ArrayList<OrgStaffsNewVo>();
@@ -623,21 +637,20 @@ public class OaOrderServiceImpl implements OaOrderService {
 		    //可用 服务人员 VO
 			staVoList = newDisStaService.getTheNearestStaff(dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), staIdList);
 			
-			
+			OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+			searchVo.setStartServiceTime(orders.getServiceDate());
+			searchVo.setEndServiceTime(orders.getServiceDate()+orders.getServiceHour()*3600);
 			for (OrgStaffsNewVo orgStaffsNewVo : staVoList) {
-				
-				 OrderSearchVo searchVo = new OrderSearchVo();
-				 
-				 searchVo.setServiceDateStart(orders.getServiceDate());
-				 searchVo.setServiceDateEnd(orders.getServiceDate()+orders.getServiceHour()*3600);
-				 
-					
+
 					 searchVo.setStaffId(orgStaffsNewVo.getStaffId());
 					 
 					 //对应当前订单的日期。。该员工是否 有 派工单
-					 Long disNum = orderDisMapper.getDisNumForStaDuringServiceDate(searchVo);
+					 List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
 					 
-					 if(disNum > 0L){
+					 int disNum = 0;
+					 if (!orderDispatchs.isEmpty()) disNum = orderDispatchs.size();
+					 
+					 if(disNum > 0){
 						 orgStaffsNewVo.setDispathStaStr("不可派工");
 						 orgStaffsNewVo.setDispathStaFlag(0);
 					 }else{
@@ -648,20 +661,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 			
 		}
 		oaOrderListVo.setVoList(staVoList);
-		
-//		//6.查找对应订单有效派工,显示派工信息
-//		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
-//		for (OrderDispatchs orDis : orderDisList) {
-//			oaOrderListVo.setStaffName(orDis.getStaffName());
-//			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
-//			oaOrderListVo.setPickAddrName(orDis.getPickAddrName());
-//			oaOrderListVo.setPickAddr(orDis.getPickAddr());
-//			oaOrderListVo.setUserAddrDistance(orDis.getUserAddrDistance());
-//			oaOrderListVo.setDisStatus(orDis.getDispatchStatus());
-//			oaOrderListVo.setStaffId(orDis.getStaffId());
-//		}
-		
-		
+				
 		// 助理类订单的   服务 大类    床铺除螨--> 深度养护
 		
 		Long serviceType = orders.getServiceType();
@@ -726,7 +726,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 姓名
 		Long userId = orders.getUserId();
 
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		if (users != null) {
 			oaOrderListVo.setUserName(users.getName());
 		}
@@ -734,7 +734,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 		/*
 		 * 可能 会有 多次换人，多条 无效记录 的情况，需要分别展示
 		 */
-		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short)1);
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
+
 		// 有派工记录 的订单，则展示 当前 阿姨
 
 		for (OrderDispatchs orDis : orderDisList) {
@@ -786,7 +790,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 姓名
 		Long userId = orders.getUserId();
 
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		if (users != null) {
 			oaOrderListVo.setUserName(users.getName());
 		}
@@ -795,8 +799,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (userAddrs != null) {
 			oaOrderListVo.setOrderAddress(userAddrs.getName()+""+userAddrs.getAddr());
 		}
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
 
-		List<OrderDispatchs> orderDisList = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);// 显示有效派工信息
 		// 有派工记录 的订单，则展示 当前 阿姨
 		for (OrderDispatchs orDis : orderDisList) {
 			oaOrderListVo.setStaffName(orDis.getStaffName());
@@ -857,9 +865,16 @@ public class OaOrderServiceImpl implements OaOrderService {
 //			oaOrderListVo.setOrgName(orgs.getOrgName());
 //		}
 		// 查找出有效派工
-		List<OrderDispatchs> disList_yes = orderDisService.selectByNoAndDisStatus(orderNo, (short) 1);
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> disList_yes = orderDispatchsService.selectBySearchVo(searchVo);
+		
 		// 查找出无效派工
-		List<OrderDispatchs> disList_no = orderDisService.selectByNoAndDisStatus(orderNo, (short) 0);
+		searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 0);
+		List<OrderDispatchs> disList_no = orderDispatchsService.selectBySearchVo(searchVo);
 
 		if (disList_yes !=null && disList_yes.size() > 0) {
 			OrderDispatchs orderDispatchs= disList_yes.get(0);
@@ -894,8 +909,10 @@ public class OaOrderServiceImpl implements OaOrderService {
 		 *  
 		 *   云店名称、派工人员姓名(如果已派工)、 订单具体类型
 		 */
-		
-		List<OrderDispatchs> list = orderDisService.selectByNoAndDisStatus(orderNo, Constants.ORDER_DIS_ENABLE);
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrderNo(orderNo);
+		searchVo1.setDispatchStatus((short) 1);
+		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo1);
 		
 		//如果有派工记录
 		if(list.size() >0){

@@ -36,8 +36,10 @@ import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.OrgSearchVo;
-import com.jhj.vo.StaffSearchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
@@ -75,7 +77,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 	private OrderPricesService orderPricesService;
 	
 	@Autowired
-	private OrderDispatchsService orderDisService;
+	private OrderDispatchsService orderDispatchsService;
 	
     @Autowired
     private  OrderServiceAddonsService  orderServiceAddonsService;
@@ -160,10 +162,10 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		 */
 
 		// 1. 找出匹配门店下所有状态可用的阿姨,得到集合A，
-		StaffSearchVo staffSearchVo = new StaffSearchVo();
-		staffSearchVo.setOrgId(orgId);
-		staffSearchVo.setStaffType((short) 0);
-		List<OrgStaffs> orgStaffAllList = orgStaffService.selectByOrgIdAndType(staffSearchVo);
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setOrgId(orgId);
+		searchVo.setStaffType((short) 0);
+		List<OrgStaffs> orgStaffAllList = orgStaffService.selectBySearchVo(searchVo);
 		
 		if (orgStaffAllList.isEmpty()) return matchOrgStaffs;
 		
@@ -176,8 +178,12 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		//结束时间 = 服务开始秒值+ 服务时长秒值
 		Long serviceDateEnd = serviceDate + serviceHour * 3600 ;
 		
-		List<OrderDispatchs> disList = orderDisService.selectEnableStaffNow(orgId, serviceDate, serviceDateEnd);
-				
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrgId(orgId);
+		searchVo1.setStartServiceTime(serviceDate);
+		searchVo1.setEndServiceTime(serviceDateEnd);
+		List<OrderDispatchs> disList = orderDispatchsService.selectByMatchTime(searchVo1);
+						
 		// 2. 找出该订单下开始时间 - 结束时间已经派工的阿姨,得到集合B
 		List<Long> disStaffIds = new ArrayList<Long>();
 		for (OrderDispatchs item : disList) {
@@ -296,8 +302,13 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 	public List<Long> getBadRateStaffIds(Long userId, Long orgId) {
 		List<Long> badStaffIds = new ArrayList<Long>();
 		//根据 userId得到 该用户的 所有  差评 order
-		List<Orders> orderList = ordersMapper.selectBadOrderRateByUserId(userId, orgId);	
-
+		
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setUserId(userId);
+		searchVo.setOrderRate((short) 2);
+		
+		List<Orders> orderList = ordersMapper.selectBySearchVo(searchVo);
+		
 		//如果没有差评。返回 一个 空 list ,即可
 		if(orderList.isEmpty() || orderList ==null){
 			return badStaffIds;
@@ -309,7 +320,10 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 			orderIds.add(order.getId());
 		}
 		
-		List<OrderDispatchs> disPatchList = orderDisService.selectByOrderIds(orderIds);
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrgId(orgId);
+		searchVo1.setOrderIds(orderIds);
+		List<OrderDispatchs> disPatchList = orderDispatchsService.selectBySearchVo(searchVo1);
 		
 		for (OrderDispatchs ord : disPatchList) {
 			badStaffIds.add(ord.getStaffId());

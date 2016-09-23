@@ -10,7 +10,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.bs.OrgsMapper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**

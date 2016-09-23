@@ -1,5 +1,6 @@
 package com.jhj.action.msg;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,140 +17,189 @@ import com.jhj.po.model.user.UserPushBind;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.msg.MsgService;
 import com.jhj.service.users.UserPushBindService;
+import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserPushBindSearchVo;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.PushUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
  *
  * @author :hulj
  * @Date : 2016年1月29日上午11:03:05
- * @Description: 
- *	
- *		消息推送
+ * @Description:
+ *
+ *               消息推送
  */
 @Controller
-@RequestMapping(value ="/msg")
+@RequestMapping(value = "/msg")
 public class MsgSendController extends BaseController {
-	
-	
+
 	@Autowired
 	private UserPushBindService bindService;
 	@Autowired
 	private MsgService msgService;
-	
+
 	@Autowired
 	private OrgStaffsService staffService;
-	
+
 	/*
-	 *  为服务人员 推送  定时消息
+	 * 为服务人员 推送 定时消息
 	 */
-	@RequestMapping(value = "send_msg_by_time.json",method = RequestMethod.GET)
-	public void  sendMsgByTime() throws Exception{
-		
-		//可以 接受推送消息的 服务人员
-		List<OrgStaffs> list = staffService.selectAbleToSendMsgStaff();
-		
-		//服务人员消息--定时推送的消息
+	@RequestMapping(value = "send_msg_by_time.json", method = RequestMethod.GET)
+	public void sendMsgByTime() throws Exception {
+
+		// 可以 接受推送消息的 服务人员
+		UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+		searchVo.setUserType((short) 0);
+		List<UserPushBind> binds = bindService.selectBySearchVo(searchVo);
+
+		List<Long> staffIds = new ArrayList<Long>();
+		for (UserPushBind b : binds) {
+			if (!staffIds.contains(b.getUserId()))
+				staffIds.add(b.getUserId());
+		}
+
+		List<OrgStaffs> list = new ArrayList<OrgStaffs>();
+
+		if (!staffIds.isEmpty()) {
+			StaffSearchVo searchVo1 = new StaffSearchVo();
+			searchVo1.setStaffIds(staffIds);
+			searchVo1.setStatus(1);
+			list = staffService.selectBySearchVo(searchVo1);
+		}
+
+		// 服务人员消息--定时推送的消息
 		List<Msg> msgList = msgService.selectTimeMsgByUserType(Constants.MSG_USER_TYPE_1);
-		
+
 		for (OrgStaffs orgStaffs : list) {
-			
-			//透传消息 参数 map
+
+			// 透传消息 参数 map
 			HashMap<String, String> paramsMap = new HashMap<String, String>();
-			
+
 			Long staffId = orgStaffs.getStaffId();
-			
-			//取得 cid
-			UserPushBind userPushBind = bindService.selectByUserId(staffId);
-			
-			String clientId = userPushBind.getClientId();
-			
+
+			// 取得 cid
+			String clientId = "";
+			for (UserPushBind item : binds) {
+				if (item.getUserId().equals(staffId)) {
+					clientId = item.getClientId();
+					break;
+				}
+			}
+
+			if (StringUtil.isEmpty(clientId))
+				continue;
+
 			paramsMap.put("cid", clientId);
-			
+
 			for (Msg msg : msgList) {
-				
+
 				HashMap<String, String> transMap = new HashMap<String, String>();
-				
+
 				transMap.put("is_show", "true");
 				transMap.put("action", "msg");
 				transMap.put("remind_title", msg.getTitle());
 				transMap.put("remind_content", msg.getSummary());
-				
+
 				String jsonParams = GsonUtil.GsonString(transMap);
-				
+
 				paramsMap.put("transmissionContent", jsonParams);
-				
-				//录入时 设置的 定时发送的时间
+
+				// 录入时 设置的 定时发送的时间
 				Long sendTime = msg.getSendTime();
-				
-				//当前的时间戳
+
+				// 当前的时间戳
 				Long nowSecond = TimeStampUtil.getNowSecond();
-				
-				//定时推送
-				if(sendTime< nowSecond+5 && sendTime-5 > nowSecond){
-					
+
+				// 定时推送
+				if (sendTime < nowSecond + 5 && sendTime - 5 > nowSecond) {
+
 					boolean flag = PushUtil.AndroidPushToSingle(paramsMap);
-					
-					//发送之后,更新 该 消息为 已发送
-					msg.setIsSend((short)1);
-					
+
+					// 发送之后,更新 该 消息为 已发送
+					msg.setIsSend((short) 1);
+
 					msgService.updateByPrimaryKeySelective(msg);
-					
+
 				}
 			}
 		}
 	}
-	
+
 	/*
-	 * 为 服务人员 推送  "立即发送的消息"
+	 * 为 服务人员 推送 "立即发送的消息"
 	 */
-	@RequestMapping(value ="send_msg_right_now.json",method = RequestMethod.GET)
-	public void sendMsgRightNow() throws Exception{
-		
-			//可以 接受推送消息的 服务人员
-			List<OrgStaffs> list = staffService.selectAbleToSendMsgStaff();
-			
-			//服务人员消息--立即发送的消息
-			List<Msg> msgList = msgService.selectRightNowMsgByUserType(Constants.MSG_USER_TYPE_1);
-			
-			for (OrgStaffs orgStaffs : list) {
-				
-				//透传消息 参数 map
-				HashMap<String, String> paramsMap = new HashMap<String, String>();
-				
-				Long staffId = orgStaffs.getStaffId();
-				
-				//取得 cid
-				UserPushBind userPushBind = bindService.selectByUserId(staffId);
-				
-				String clientId = userPushBind.getClientId();
-				
-				paramsMap.put("cid", clientId);
-				
-				for (Msg msg : msgList) {
-					
-					HashMap<String, String> transMap = new HashMap<String, String>();
-					
-					transMap.put("is_show", "true");
-					transMap.put("action", "msg");
-					transMap.put("remind_title", msg.getTitle());
-					transMap.put("remind_content", msg.getSummary());
-					
-					String jsonParams = GsonUtil.GsonString(transMap);
-					
-					paramsMap.put("transmissionContent", jsonParams);
-					
-						
-					boolean flag = PushUtil.AndroidPushToSingle(paramsMap);
-					
-					//发送之后,更新 该 消息为 已发送
-					msg.setIsSend((short)1);
-					
-					msgService.updateByPrimaryKeySelective(msg);
-					
+	@RequestMapping(value = "send_msg_right_now.json", method = RequestMethod.GET)
+	public void sendMsgRightNow() throws Exception {
+
+		// 可以 接受推送消息的 服务人员
+		UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+		searchVo.setUserType((short) 0);
+		List<UserPushBind> binds = bindService.selectBySearchVo(searchVo);
+
+		List<Long> staffIds = new ArrayList<Long>();
+		for (UserPushBind b : binds) {
+			if (!staffIds.contains(b.getUserId()))
+				staffIds.add(b.getUserId());
+		}
+
+		List<OrgStaffs> list = new ArrayList<OrgStaffs>();
+
+		if (!staffIds.isEmpty()) {
+			StaffSearchVo searchVo1 = new StaffSearchVo();
+			searchVo1.setStaffIds(staffIds);
+			searchVo1.setStatus(1);
+			list = staffService.selectBySearchVo(searchVo1);
+		}
+
+		// 服务人员消息--立即发送的消息
+		List<Msg> msgList = msgService.selectRightNowMsgByUserType(Constants.MSG_USER_TYPE_1);
+
+		for (OrgStaffs orgStaffs : list) {
+
+			// 透传消息 参数 map
+			HashMap<String, String> paramsMap = new HashMap<String, String>();
+
+			Long staffId = orgStaffs.getStaffId();
+
+			// 取得 cid
+			String clientId = "";
+			for (UserPushBind item : binds) {
+				if (item.getUserId().equals(staffId)) {
+					clientId = item.getClientId();
+					break;
+				}
+			}
+
+			if (StringUtil.isEmpty(clientId))
+				continue;
+
+			paramsMap.put("cid", clientId);
+
+			for (Msg msg : msgList) {
+
+				HashMap<String, String> transMap = new HashMap<String, String>();
+
+				transMap.put("is_show", "true");
+				transMap.put("action", "msg");
+				transMap.put("remind_title", msg.getTitle());
+				transMap.put("remind_content", msg.getSummary());
+
+				String jsonParams = GsonUtil.GsonString(transMap);
+
+				paramsMap.put("transmissionContent", jsonParams);
+
+				boolean flag = PushUtil.AndroidPushToSingle(paramsMap);
+
+				// 发送之后,更新 该 消息为 已发送
+				msg.setIsSend((short) 1);
+
+				msgService.updateByPrimaryKeySelective(msg);
+
 			}
 		}
-		
+
 	}
 }

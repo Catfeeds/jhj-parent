@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.google.gson.Gson;
 import com.jhj.action.BaseController;
 import com.jhj.oa.auth.AuthHelper;
@@ -20,6 +21,7 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffLeaveService;
@@ -28,14 +30,15 @@ import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
-import com.jhj.vo.OaOrderDisSearchVo;
-import com.jhj.vo.OrgSearchVo;
-import com.jhj.vo.StaffSearchVo;
 import com.jhj.vo.dispatch.StaffDispatchVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.newDispatch.EventVo;
 import com.jhj.vo.order.newDispatch.OaStaffDisAndLeaveVo;
 import com.jhj.vo.order.newDispatch.TimeEventVo;
 import com.jhj.vo.org.LeaveSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -52,26 +55,26 @@ import com.meijia.utils.TimeStampUtil;
 public class OrderCalendarController extends BaseController {
 
 	@Autowired
-	private OrderDispatchsService disPatchService;
+	private OrderDispatchsService orderDispatchsService;
 
 	@Autowired
 	private OrgStaffLeaveService leaveService;
 
 	@Autowired
 	private OrgsService orgService;
-	
+
 	@Autowired
 	private OrgStaffsService staffService;
-	
+
 	@Autowired
 	private OrdersService orderService;
-	
+
 	@Autowired
 	private PartnerServiceTypeService partService;
-	
+
 	/**
-	 * @throws ParseException 
-	 * @throws UnsupportedEncodingException 
+	 * @throws ParseException
+	 * @throws UnsupportedEncodingException
 	 * @Title: staffOrderList
 	 * @Description:
 	 * 
@@ -79,228 +82,171 @@ public class OrderCalendarController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "calendar_list", method = RequestMethod.GET)
-	public String staffOrderList(OaOrderDisSearchVo disSearchVo, HttpServletRequest request, Model model) throws ParseException, UnsupportedEncodingException {
+	public String staffOrderList(OrderDispatchSearchVo searchVo, HttpServletRequest request, Model model) throws ParseException, UnsupportedEncodingException {
 
 		// 得到 当前登录 的 门店id，并作为搜索条件
-		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
-		
-//		 org = "1";
-		
-		List<Long> cloudIdList = new ArrayList<Long>();
-
-		if (sessionOrgId > 0L) {
-
-			/*
-			 * 如果是店长 ，只能看到 自己门店 对应的 所有 云店 的 派工记录  （成功派工）。
-			 */
-
-			OrgSearchVo searchVo = new OrgSearchVo();
-			searchVo.setParentId(sessionOrgId);
-			searchVo.setOrgStatus((short) 1);
-
-			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo);
-
-			for (Orgs orgs : cloudList) {
-				cloudIdList.add(orgs.getOrgId());
-			}
-
-		} else {
-			// 如果是 运营 人员，查看所有 云店
-			OrgSearchVo searchVo = new OrgSearchVo();
-			searchVo.setIsCloud((short) 1);
-			searchVo.setOrgStatus((short) 1);
-			List<Orgs> cloudOrgList = orgService.selectBySearchVo(searchVo);
-
-			for (Orgs orgs : cloudOrgList) {
-				cloudIdList.add(orgs.getOrgId());
-			}
-
-			/*
-			 * 对于 未派工的 订单，，没有 云店， 只有运营人员 可以 看到，以便 后续处理
-			 */
-			cloudIdList.add(0L);
-		}
-
-		
-		//1. 能查看的云店
-		disSearchVo.setCloudOrgList(cloudIdList);
-		
-		/*
-		 * 2. 时间段, 默认从今天起  往前 7天  
-		 * 
-		 * 	选择 时间段时, 也只能是  一个  跨度为7天的时间段
-		 * 
-		 *  格式为  "yyyy-MM-dd"
-		 */
-		
-		if(StringUtil.isEmpty(disSearchVo.getStartTimeStr())){
-			disSearchVo.setStartTimeStr(DateUtil.format(new Date(), "yyyy-MM-dd"));
-		}
-		
-		if(StringUtil.isEmpty(disSearchVo.getEndTimeStr())){
-			disSearchVo.setEndTimeStr(DateUtil.sevenDayAfterToday());
-		}
-		
-		//排班列表
-		List<StaffDispatchVo> disList = disPatchService.selectStaffDisBySevenDay(disSearchVo);
-		
-		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
-		
-		
-		
-		//门店下的所有员工 ............
+		Long parentId = AuthHelper.getSessionLoginOrg(request);
+		//==================================================所有员工
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
-		
-		if (sessionOrgId > 0L) {
-			
-			//所有员工的请假情况
-			leaveSearchVo.setParentOrgId(sessionOrgId);
-			
-			//店长登录，可以看到所在门店下的 所有员工
-			staffSearchVo.setParentId(sessionOrgId);
-			
-		}else{
-			//如果是 运营人员，可以查看所有门店的所有员工
-			staffSearchVo.setCloudOrgList(cloudIdList);
-			
-			//如果选择了云店
-			Short orgId = disSearchVo.getOrgId();
-			
-			if(orgId != null ){
-				staffSearchVo.setOrgId((long)orgId);
-			}
-		}
 		staffSearchVo.setStatus(1);
-		String name = disSearchVo.getStaffName();
-		if(name!=null && name!=""){
-			String staffName=new String(name.getBytes("ISO-8859-1"),"UTF-8");
+		if (parentId > 0L) {
+			staffSearchVo.setParentId(parentId);
+		}
+		String name = searchVo.getStaffName();
+		if (name != null && name != "") {
+			String staffName = new String(name.getBytes("ISO-8859-1"), "UTF-8");
 			staffSearchVo.setName(staffName);
-			disSearchVo.setStaffName(staffName);
+			searchVo.setStaffName(staffName);
 		}
-		if(disSearchVo.getMobile()!=null && disSearchVo.getMobile()!=""){
-			staffSearchVo.setMobile(disSearchVo.getMobile());
+		if (searchVo.getMobile() != null && searchVo.getMobile() != "") {
+			staffSearchVo.setMobile(searchVo.getMobile());
 		}
-		//登录门店下的 所有 员工
-		List<OrgStaffs>  staffList = staffService.selectNewStaffList(staffSearchVo);
+		// 登录门店下的 所有 员工
+		List<OrgStaffs> staffList = staffService.selectBySearchVo(staffSearchVo);
+		//==================================================查出派工列表
+
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		if (parentId > 0L) {
+			searchVo1.setParentId(parentId);
+		}
 		
-		leaveSearchVo.setDispatchDateStartStr(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(disSearchVo.getStartTimeStr())));
+		String startTimeStr = request.getParameter("startTimeStr");
+		if (StringUtil.isEmpty(startTimeStr)) startTimeStr = DateUtil.getToday();
+		Long startTime = TimeStampUtil.getMillisOfDay(startTimeStr) / 1000;
+		searchVo.setStartServiceTime(startTime);
 		
-		leaveSearchVo.setDispatchDateEndStr(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(disSearchVo.getEndTimeStr())));
-		//请假列表
+		
+		
+		String endTimeStr = request.getParameter("endTimeStr");
+		if (StringUtil.isEmpty(endTimeStr)) endTimeStr =  DateUtil.sevenDayAfterToday();
+		
+		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr + " 23:59:59") / 1000;
+		searchVo.setEndServiceTime(endTime);
+
+		// 排班列表
+		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+		
+
+		//==================================================查出请假信息
+		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
+		if (parentId > 0L) {
+			// 所有员工的请假情况
+			leaveSearchVo.setParentOrgId(parentId);
+		}
+		leaveSearchVo.setDispatchDateStartStr(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		leaveSearchVo.setDispatchDateEndStr(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(endTimeStr)));
+		// 请假列表
 		List<OrgStaffLeave> leaveList = leaveService.selectByLeaveSearchVo(leaveSearchVo);
 		
 		
-		//页面 Vo
+		// 页面 Vo
 		List<OaStaffDisAndLeaveVo> listVo = new ArrayList<OaStaffDisAndLeaveVo>(staffList.size());
-		
-		//一个 7天的 时间段, 由 开始时间决定。如果没有，则从今天起 往前 7天
-		List<String> weekDateList = DateUtil.getLastWeekArray(disSearchVo.getStartTimeStr());
-		
-		
+
+		// 一个 7天的 时间段, 由 开始时间决定。如果没有，则从今天起 往前 7天
+		List<String> weekDateList = DateUtil.getLastWeekArray(startTimeStr);
+
 		// 初始化时间、staff
 		for (OrgStaffs orgStaff : staffList) {
-			
+
 			Long staffId = orgStaff.getStaffId();
-			
-			
+
 			OaStaffDisAndLeaveVo disAndLeaveVo = new OaStaffDisAndLeaveVo();
-			
+
 			disAndLeaveVo.setStaffId(orgStaff.getStaffId());
 			disAndLeaveVo.setStaffName(orgStaff.getName());
-			
-			
-			
+
 			List<TimeEventVo> timeEventList = new ArrayList<TimeEventVo>();
-			
-			for (String  weekDate : weekDateList) {
-				
+
+			for (String weekDate : weekDateList) {
+
 				TimeEventVo timeEventVo = new TimeEventVo();
 				timeEventVo.setTimeStr(weekDate);
-				
-				//具体事件
+
+				// 具体事件
 				List<EventVo> eventList = new ArrayList<EventVo>();
-				
-				//加入请假事件
+
+				// 加入请假事件
 				for (OrgStaffLeave staffLeave : leaveList) {
-					
+
 					Long leaveStaffId = staffLeave.getStaffId();
-					String leaveDate =  DateUtil.formatDate(staffLeave.getLeaveDate());
-					
-					if(leaveStaffId == staffId && leaveDate.equals(weekDate)){
-						
+					String leaveDate = DateUtil.formatDate(staffLeave.getLeaveDate());
+
+					if (leaveStaffId == staffId && leaveDate.equals(weekDate)) {
+
 						EventVo eventVo = new EventVo();
-						
-						//请假开始时间点
+
+						// 请假开始时间点
 						Short start = staffLeave.getStart();
-						//请假结束时间点
+						// 请假结束时间点
 						Short end = staffLeave.getEnd();
-						
-						eventVo.setDateDuration(start +"点~"+end+"点");
+
+						eventVo.setDateDuration(start + "点~" + end + "点");
 						eventVo.setEventName("请假");
-						
+
 						eventList.add(eventVo);
 					}
 				}
-				//加入 排班事件
-				for (StaffDispatchVo staffDisVo : disList) {
+				// 加入 排班事件
+				for (OrderDispatchs staffDisVo : disList) {
+
+					// 服务日期 , 格式 'yyyy-MM-dd'
+					Long serviceDate = staffDisVo.getServiceDate() * 1000;
 					
-					// 服务日期 , 格式  'yyyy-MM-dd'
-					String serviceDateStr = staffDisVo.getServiceDateStr();
-					
+					String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
+
 					Long disStaffId = staffDisVo.getStaffId();
-					
+
 					Long orderId = staffDisVo.getOrderId();
-					
+
 					String orderNo = staffDisVo.getOrderNo();
-					
+
 					if (disStaffId == staffId && serviceDateStr.equals(weekDate)) {
-						
+
 						EventVo eventVo = new EventVo();
-						
+
 						Orders orders = orderService.selectByOrderNo(orderNo);
-						
-						Long serviceDate = orders.getServiceDate()*1000;
+
 						Short serviceHour = orders.getServiceHour();
-						
+
 						Long serviceType = orders.getServiceType();
-						
+
 						// 得到 订单服务时间的 时间点--> 如 16:30、 08:00
 						String startHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate, "HH:mm");
-						
+
 						// 订单服务时间的 结束时间点
-						String endHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate + serviceHour*3600*1000, "HH:mm");
-						
+						String endHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate + serviceHour * 3600 * 1000, "HH:mm");
+
 						eventVo.setEventName("");
 						PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 						if (type != null) {
 							eventVo.setEventName(type.getName());
 						}
-						eventVo.setDateDuration(startHourMinStr +"~"+ endHourMinStr);
-						
+						eventVo.setDateDuration(startHourMinStr + "~" + endHourMinStr);
+
 						eventList.add(eventVo);
 					}
-			    }
-				
-				timeEventVo.setEventList(eventList);	
+				}
+
+				timeEventVo.setEventList(eventList);
 				timeEventList.add(timeEventVo);
 			}
 			disAndLeaveVo.setTimeEventList(timeEventList);
-			
+
 			listVo.add(disAndLeaveVo);
 		}
-		
+
 		Gson gson = new Gson();
-		
+
 		String json = gson.toJson(listVo);
-		
+
 		System.out.println(json);
-		
+
 		model.addAttribute("listVoModel", json);
-		model.addAttribute("disAndLeaveSearchVoModel", disSearchVo);
-		model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
-		
+		model.addAttribute("disAndLeaveSearchVoModel", searchVo);
+		model.addAttribute("loginOrgId", parentId); // 当前登录的 id,动态显示搜索 条件
+
 		model.addAttribute("weekDateModel", weekDateList);
-		
+
 		return "staffDisAndLeave/staffDisAndLeaveList";
 	}
 }

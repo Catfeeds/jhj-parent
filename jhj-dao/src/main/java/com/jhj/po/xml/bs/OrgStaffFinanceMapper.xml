@@ -30,7 +30,7 @@
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</select>
 
-	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffDetailPaySearchVo">
+	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
 
 		SELECT
 		<include refid="Base_Column_List" />

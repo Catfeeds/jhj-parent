@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +46,8 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.CouponVo;
 import com.jhj.vo.dict.CouponSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.ExcelUtil;
 import com.meijia.utils.OneCareUtil;
@@ -89,19 +92,15 @@ public class DictCouponsController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/convert-coupon-list", method = { RequestMethod.GET })
-	public String convertCouponList(HttpServletRequest request, Model model,
-			CouponSearchVo searchVo) {
+	public String convertCouponList(HttpServletRequest request, Model model, CouponSearchVo searchVo) {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
 		model.addAttribute("searchModel", searchVo);
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
-		PageInfo result = couponService.searchVoListPage(searchVo, (short) 0,
-				pageNo, pageSize);
+		PageInfo result = couponService.searchVoListPage(searchVo, (short) 0, pageNo, pageSize);
 
 		model.addAttribute("contentModel", result);
 		model.addAttribute("searchModel", searchVo);
@@ -118,21 +117,16 @@ public class DictCouponsController extends BaseController {
 	 * @return
 	 */
 	@AuthPassport
-	@RequestMapping(value = "/recharge-coupon-list", method = {
-			RequestMethod.GET, RequestMethod.POST })
-	public String rechargeCouponList(HttpServletRequest request, Model model,
-			CouponSearchVo searchVo) {
+	@RequestMapping(value = "/recharge-coupon-list", method = { RequestMethod.GET, RequestMethod.POST })
+	public String rechargeCouponList(HttpServletRequest request, Model model, CouponSearchVo searchVo) {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
 		model.addAttribute("searchModel", searchVo);
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
-		PageInfo result = couponService.searchVoListPage(searchVo, (short) 1,
-				pageNo, pageSize);
+		PageInfo result = couponService.searchVoListPage(searchVo, (short) 1, pageNo, pageSize);
 
 		model.addAttribute("contentModel", result);
 		return "coupons/rechargeCouponList";
@@ -148,9 +142,7 @@ public class DictCouponsController extends BaseController {
 	 */
 	// @AuthPassport
 	@RequestMapping(value = "/toConvertCouponForm", method = { RequestMethod.GET })
-	public String toAddConvertCoupons(
-			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			Model model, @RequestParam(value = "id", required = false) Long id) {
+	public String toAddConvertCoupons(@ModelAttribute("dictCoupons") DictCoupons dictCoupons, Model model, @RequestParam(value = "id", required = false) Long id) {
 
 		if (id == null) {
 			id = 0L;
@@ -165,8 +157,7 @@ public class DictCouponsController extends BaseController {
 			e.printStackTrace();
 		}
 		model.addAttribute("dictCoupons", couponVo);
-		model.addAttribute("serviceTypeMap",
-				couponService.getSelectServiceTypeSource());
+		model.addAttribute("serviceTypeMap", couponService.getSelectServiceTypeSource());
 
 		return "coupons/convertCouponForm";
 	}
@@ -181,9 +172,8 @@ public class DictCouponsController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/toRechargeCouponForm", method = { RequestMethod.GET })
-	public String toAddRechargeCoupons(
-			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			Model model, @RequestParam(value = "id", required = false) Long id) {
+	public String toAddRechargeCoupons(@ModelAttribute("dictCoupons") DictCoupons dictCoupons, Model model,
+			@RequestParam(value = "id", required = false) Long id) {
 
 		if (id == null) {
 			id = 0L;
@@ -195,10 +185,8 @@ public class DictCouponsController extends BaseController {
 		List<CouponsType> couponsType = couponsTypeService.selectAll();
 		model.addAttribute("couponsType", couponsType);
 		model.addAttribute("dictCoupons", dictCoupons);
-		model.addAttribute("selectDataSource",
-				couponService.getSelectRangMonthSource());
-		model.addAttribute("serviceTypeMap",
-				couponService.getSelectServiceTypeSource());
+		model.addAttribute("selectDataSource", couponService.getSelectRangMonthSource());
+		model.addAttribute("serviceTypeMap", couponService.getSelectServiceTypeSource());
 		return "coupons/rechargeCouponForm";
 	}
 
@@ -212,32 +200,30 @@ public class DictCouponsController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/toRechargeCouponUserList", method = { RequestMethod.GET })
-	public String toRechargeCouponUserList(
-			@RequestParam(value = "id", required = false) Long id,
-			HttpServletRequest request, Model model) {
+	public String toRechargeCouponUserList(@RequestParam(value = "id", required = false) Long id, HttpServletRequest request, Model model) {
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
 
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
-		PageHelper.startPage(pageNo, pageSize);
-
-		List<UserCoupons> userCouponsList = userCouponsService
-				.selectByCouponId(id);
-		List<Users> userList = new ArrayList<Users>();
+		List<UserCoupons> userCouponsList = userCouponsService.selectByCouponId(id);
+		List<Long> userIdList = new ArrayList<Long>();
 		if (userCouponsList != null) {
-			List<Long> userIdList = new ArrayList<Long>();
 			for (UserCoupons item : userCouponsList) {
 				userIdList.add(item.getUserId());
-				userList = usersService.selectByListPage(userIdList, pageNo,
-						pageSize);
 			}
 		}
-		PageInfo result = new PageInfo(userList);
-		model.addAttribute("contentModel", result);
+
+		if (!userIdList.isEmpty()) {
+			UserSearchVo searchVo = new UserSearchVo();
+			searchVo.setUserIds(userIdList);
+			PageInfo result = usersService.selectByListPage(searchVo, pageNo, pageSize);
+			model.addAttribute("contentModel", result);
+		} else {
+			model.addAttribute("contentModel", "");
+		}
+
 		return "coupons/rechargeCouponUserList";
 	}
 
@@ -250,9 +236,7 @@ public class DictCouponsController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/deleteByRechargeCouponId", method = { RequestMethod.GET })
-	public String deleteByRechargeCouponId(
-			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			@RequestParam(value = "id") Long id) {
+	public String deleteByRechargeCouponId(@ModelAttribute("dictCoupons") DictCoupons dictCoupons, @RequestParam(value = "id") Long id) {
 		String path = "redirect:recharge-coupon-list";
 		if (id != null) {
 			int result = couponService.deleteByPrimaryKey(id);
@@ -274,9 +258,7 @@ public class DictCouponsController extends BaseController {
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/deleteByConvertCouponId", method = { RequestMethod.GET })
-	public String deleteByConvertCouponId(
-			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			@RequestParam(value = "id") Long id) {
+	public String deleteByConvertCouponId(@ModelAttribute("dictCoupons") DictCoupons dictCoupons, @RequestParam(value = "id") Long id) {
 		String path = "redirect:convert-coupon-list";
 		if (id != null) {
 			int result = couponService.deleteByPrimaryKey(id);
@@ -295,9 +277,7 @@ public class DictCouponsController extends BaseController {
 	@AuthPassport
 	@RequestMapping(value = "/rechargeCouponForm", method = { RequestMethod.POST })
 	@ResponseBody
-	public Map<String, String> addRechargeCoupons(HttpServletRequest request,
-			Model model,
-			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
+	public Map<String, String> addRechargeCoupons(HttpServletRequest request, Model model, @ModelAttribute("dictCoupons") DictCoupons dictCoupons,
 			BindingResult result) {
 
 		model.addAttribute("requestUrl", request.getServletPath());
@@ -349,9 +329,7 @@ public class DictCouponsController extends BaseController {
 	 */
 	// @AuthPassport
 	@RequestMapping(value = "/convertCouponForm", method = { RequestMethod.POST })
-	public String addConvertCoupons(HttpServletRequest request, Model model,
-			@ModelAttribute("dictCoupons") DictCoupons dictCoupons,
-			BindingResult result) {
+	public String addConvertCoupons(HttpServletRequest request, Model model, @ModelAttribute("dictCoupons") DictCoupons dictCoupons, BindingResult result) {
 
 		model.addAttribute("requestUrl", request.getServletPath());
 		model.addAttribute("requestQuery", request.getQueryString());
@@ -368,8 +346,7 @@ public class DictCouponsController extends BaseController {
 			for (int i = 1; i <= count; i++) {
 				dictCoupons.setId(null);
 				if (list != null && list.size() > 0) {
-					cardNo = Long.valueOf(couponService.selectAllByCardNo()
-							.get(0).getCardNo());
+					cardNo = Long.valueOf(couponService.selectAllByCardNo().get(0).getCardNo());
 					dictCoupons.setCardNo("" + (cardNo + 1));
 				} else {
 					cardNo = (long) 300000000;
@@ -377,20 +354,17 @@ public class DictCouponsController extends BaseController {
 				}
 				dictCoupons.setAddTime(TimeStampUtil.getNow() / 1000);
 				if (passwordNum != null) {
-					dictCoupons.setCardPasswd(RandomUtil.randomCode(Integer
-							.valueOf(passwordNum)));
+					dictCoupons.setCardPasswd(RandomUtil.randomCode(Integer.valueOf(passwordNum)));
 				} else {
 					dictCoupons.setCardPasswd(RandomUtil.randomCode(4));
 				}
-				if (!StringUtil.isEmpty(fromDate)
-						&& !StringUtil.isEmpty(toDate)) {
+				if (!StringUtil.isEmpty(fromDate) && !StringUtil.isEmpty(toDate)) {
 					dictCoupons.setFromDate(DateUtil.parse(fromDate));
 					dictCoupons.setToDate(DateUtil.parse(toDate));
 				}
 				dictCoupons.setUpdateTime(TimeStampUtil.getNow() / 1000);
 				// 如果兑换码相同，重新生成
-				DictCoupons temp = couponService.selectByCardPasswd(dictCoupons
-						.getCardPasswd());
+				DictCoupons temp = couponService.selectByCardPasswd(dictCoupons.getCardPasswd());
 				if (temp != null) {
 					i--;
 					continue;
@@ -433,24 +407,19 @@ public class DictCouponsController extends BaseController {
 	 * 导出优惠券
 	 */
 	@RequestMapping(value = "/download_project", method = { RequestMethod.GET })
-	public void download(HttpServletRequest request,
-			HttpServletResponse response, CouponSearchVo couponSearchVo)
-			throws IOException {
+	public void download(HttpServletRequest request, HttpServletResponse response, CouponSearchVo couponSearchVo) throws IOException {
 		String fileName = "excel文件";
 
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		// 填充projects数据
 		couponSearchVo.setCoupontType((short) 0);
-		List<DictCoupons> userses = couponService
-				.selectBySearchVo(couponSearchVo);
+		List<DictCoupons> userses = couponService.selectBySearchVo(couponSearchVo);
 
 		List<Map<String, Object>> list = createExcelRecord(userses);
 
-		String columnNames[] = { "描述", "优惠券卡号", "优惠券密码", "优惠券金额", "通用类型",
-				"服务类型", "开始日期", "结束日期", "添加时间" };// 列名
-		String keys[] = { "introdution", "cardNo", "cardPassword", "value",
-				"couponType", "serviceType", "startDate", "endDate", "addTime" };// map中的key
+		String columnNames[] = { "描述", "优惠券卡号", "优惠券密码", "优惠券金额", "通用类型", "服务类型", "开始日期", "结束日期", "添加时间" };// 列名
+		String keys[] = { "introdution", "cardNo", "cardPassword", "value", "couponType", "serviceType", "startDate", "endDate", "addTime" };// map中的key
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
 			ExcelUtil.createWorkBook(list, keys, columnNames).write(os);
@@ -462,8 +431,7 @@ public class DictCouponsController extends BaseController {
 		// 设置response参数，可以打开下载页面
 		response.reset();
 		response.setContentType("application/vnd.ms-excel;charset=utf-8");
-		response.setHeader("Content-Disposition", "attachment;filename="
-				+ new String((fileName + ".xls").getBytes(), "iso-8859-1"));
+		response.setHeader("Content-Disposition", "attachment;filename=" + new String((fileName + ".xls").getBytes(), "iso-8859-1"));
 		ServletOutputStream out = response.getOutputStream();
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
@@ -501,16 +469,11 @@ public class DictCouponsController extends BaseController {
 			mapValue.put("cardNo", dictCoupons.getCardNo());
 			mapValue.put("cardPassword", dictCoupons.getCardPasswd());
 			mapValue.put("value", dictCoupons.getValue());
-			mapValue.put("couponType",
-					OneCareUtil.getRangTypeName(dictCoupons.getRangType()));
-			mapValue.put("serviceType", DictUtil
-					.getServiceTypeItemName(dictCoupons.getServiceType()));
-			mapValue.put("startDate",
-					DateUtil.formatDate(dictCoupons.getFromDate()));
-			mapValue.put("endDate",
-					DateUtil.formatDate(dictCoupons.getToDate()));
-			Date addDate = TimeStampUtil.timeStampToDate(dictCoupons
-					.getAddTime() * 1000);
+			mapValue.put("couponType", OneCareUtil.getRangTypeName(dictCoupons.getRangType()));
+			mapValue.put("serviceType", DictUtil.getServiceTypeItemName(dictCoupons.getServiceType()));
+			mapValue.put("startDate", DateUtil.formatDate(dictCoupons.getFromDate()));
+			mapValue.put("endDate", DateUtil.formatDate(dictCoupons.getToDate()));
+			Date addDate = TimeStampUtil.timeStampToDate(dictCoupons.getAddTime() * 1000);
 			mapValue.put("addTime", DateUtil.formatDate(addDate));
 			listmap.add(mapValue);
 		}
@@ -519,8 +482,7 @@ public class DictCouponsController extends BaseController {
 
 	@RequestMapping(value = "/sendCoupons", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> sendCoupons(
-			@ModelAttribute DictCoupons dictCoupons) {
+	public Map<String, String> sendCoupons(@ModelAttribute DictCoupons dictCoupons) {
 
 		Long id = dictCoupons.getId();
 		List<Integer> condtion = dictCoupons.getSendCouponsCondtion();
@@ -529,11 +491,12 @@ public class DictCouponsController extends BaseController {
 		Map<String, String> hashMap = new HashMap<String, String>();
 		if (condtion != null && condtion.size() > 0) {
 			if (condtion.contains(0)) {
+
+				// 找出未下过单的用户.
 				List<Users> users = usersService.selectUsersByOrderMobile();
 				if (users != null) {
 					for (Users u : users) {
-						UserCoupons uc = userCouponsService.initUserCoupons(
-								u.getId(), coupon);
+						UserCoupons uc = userCouponsService.initUserCoupons(u.getId(), coupon);
 						userCouponsList0.add(uc);
 					}
 					if (userCouponsList0 != null) {
@@ -543,7 +506,9 @@ public class DictCouponsController extends BaseController {
 			}
 		}
 		List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>();
-		List<Orders> orders = orderService.selectByMap(null);
+		
+		OrderSearchVo searchVo = new OrderSearchVo();
+		List<Orders> orders = orderService.selectBySearchVo(searchVo);
 		List<Long> userIdList = removeReValue(condtion, orders);
 		for (Long _id : userIdList) {
 			UserCoupons uc = userCouponsService.initUserCoupons(_id, coupon);
@@ -571,9 +536,8 @@ public class DictCouponsController extends BaseController {
 				Long serviceDate = od.getServiceDate();
 				Long userId = od.getUserId();
 				if (condition.contains(1)) {
-					if (serviceDate >= DateUtil.curStartDate(0)
-							&& serviceDate <= DateUtil.curLastDate(0)) {
-						if(!uid2.contains(userId) && !uid3.contains(userId)){
+					if (serviceDate >= DateUtil.curStartDate(0) && serviceDate <= DateUtil.curLastDate(0)) {
+						if (!uid2.contains(userId) && !uid3.contains(userId)) {
 							if (uid == null) {
 								uid.add(userId);
 							} else {
@@ -585,13 +549,12 @@ public class DictCouponsController extends BaseController {
 					}
 				}
 				if (condition.contains(2)) {
-					if (serviceDate >= DateUtil.curStartDate(2)
-							&& serviceDate <= DateUtil.curLastDate(1)) {
-						if(!uid.contains(userId) && !uid3.contains(userId)){
-							if (uid2 == null ) {
+					if (serviceDate >= DateUtil.curStartDate(2) && serviceDate <= DateUtil.curLastDate(1)) {
+						if (!uid.contains(userId) && !uid3.contains(userId)) {
+							if (uid2 == null) {
 								uid2.add(userId);
 							} else {
-								if (!uid2.contains(userId) ) {
+								if (!uid2.contains(userId)) {
 									uid2.add(userId);
 								}
 							}
@@ -600,7 +563,7 @@ public class DictCouponsController extends BaseController {
 				}
 				if (condition.contains(3)) {
 					if (serviceDate <= DateUtil.curLastDate(3)) {
-						if(!uid.contains(userId) && !uid2.contains(userId)){
+						if (!uid.contains(userId) && !uid2.contains(userId)) {
 							if (uid3 == null) {
 								uid3.add(userId);
 							} else {

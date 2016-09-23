@@ -20,13 +20,5 @@ public interface OrderCrondService {
 	void setOrderRateOverServenDay();
 	
 	void amOrderStatusOverOneDay();
-	
-	void remindOverServiceDate();
-	
-	void remindAmToDoService();
-	
-	void phoneRechargeOverOneHour();
-	
-	
-	void changeToClose();
+		
 }

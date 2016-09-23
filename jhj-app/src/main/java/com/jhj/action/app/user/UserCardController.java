@@ -48,7 +48,7 @@ public class UserCardController extends BaseController {
 //	    根据card_type 传递参数从表 dict_card_type 获取相应的金额
 		AppResultData<Object> result = new AppResultData<Object>( Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");		
 		
-		Users users = usersService.getUserById(userId);
+		Users users = usersService.selectByPrimaryKey(userId);
 		
 		// 判断是否为注册用户，非注册用户返回 999
 		if (users == null) {

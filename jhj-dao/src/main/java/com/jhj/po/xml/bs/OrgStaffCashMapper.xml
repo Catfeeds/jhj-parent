@@ -32,7 +32,7 @@
 		from org_staff_cash
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</select>
-  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.OrgStaffCashSearchVo">
+  <select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffCashSearchVo">
   	select
     <include refid="Base_Column_List" />
     from org_staff_cash

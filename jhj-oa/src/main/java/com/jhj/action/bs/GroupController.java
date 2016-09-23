@@ -23,9 +23,8 @@ import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**

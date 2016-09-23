@@ -24,9 +24,10 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OaOrderDisService;
 import com.jhj.service.order.OrderDispatchsService;
-import com.jhj.vo.OaOrderDisSearchVo;
 import com.jhj.vo.order.OaOrderDisVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -43,64 +44,11 @@ public class OaOrderDisController extends BaseController {
 	@Autowired
 	private OaOrderDisService oaDisService;
 	@Autowired
-	private OrderDispatchsService orderDisService;
+	private OrderDispatchsService orderDispatchsService;
 	
 	@Autowired
 	private OrgStaffsService staffService;
-	
-	
-	/*
-	 * 下单表 所有记录
-	 */
-	@AuthPassport
-	@RequestMapping(value = "/cal-list" , method =RequestMethod.GET)
-	public String getOrderDisList(Model model, HttpServletRequest request,OaOrderDisSearchVo oaOrderDisSearchVo) throws UnsupportedEncodingException, ParseException{
 		
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		//分页
-		PageHelper.startPage(pageNo, pageSize);
-		
-		if(oaOrderDisSearchVo == null){
-			oaOrderDisSearchVo = new OaOrderDisSearchVo();
-		}
-		
-		//得到 当前登录 的 门店id，并作为搜索条件
-		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
-
-		if (sessionOrgId > 0L) {
-			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
-			oaOrderDisSearchVo.setSearchOrgId(sessionOrgId);
-		}
-		
-		/*
-		 * 2016年5月3日16:23:03  设置搜索条件
-		 */
-		String staffName = oaOrderDisSearchVo.getStaffName();
-		if(!StringUtil.isEmpty(staffName)){
-			String name = new String(staffName.getBytes("iso-8859-1"),"utf-8");
-			oaOrderDisSearchVo.setStaffName(name);
-		}
-		
-		List<OrderDispatchs> disList = oaDisService.selectOrderDisByListPage(oaOrderDisSearchVo, pageNo, pageSize);
-		
-		OrderDispatchs orderDis = null;
-		for (int i = 0; i < disList.size(); i++) {
-			orderDis = disList.get(i);
-			OaOrderDisVo oaOrderDisVo = oaDisService.compleVo(orderDis);
-			disList.set(i, oaOrderDisVo);
-		}
-		
-		PageInfo result = new PageInfo(disList);	
-		
-		model.addAttribute("oaOrderDisVoModel", result);
-		model.addAttribute("oaOrderDisSearchVoModel", oaOrderDisSearchVo);
-		
-		return "order/orderDisList";
-	}
-	
 	/**
 	 *   
 	 *  订单日历--控件展示

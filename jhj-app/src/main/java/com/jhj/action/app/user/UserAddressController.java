@@ -167,7 +167,7 @@ public class UserAddressController extends BaseController {
 			userAddrs = userAddrsService.selectByPrimaryKey(addrId);
 		}
 
-		Users u  = usersService.getUserById(userId);
+		Users u  = usersService.selectByPrimaryKey(userId);
 		
 			userAddrs.setId(addrId);
 			if(u!=null){

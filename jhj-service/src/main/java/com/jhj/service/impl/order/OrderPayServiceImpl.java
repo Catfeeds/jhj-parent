@@ -35,7 +35,9 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.serviceCharge.PhoneReChargeUtil;
@@ -103,19 +105,28 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		//先判断该订单是否已经派过工，如果已经派工成功，则不需要再次派工.
 		//如果为换人派工，则需要将原有派工取消后，再重新派工.
-		OrderDispatchs orderDispatched = orderDispatchService.selectByOrderNo(order.getOrderNo());
-		if (orderDispatched != null && !isChangeDispatch) {
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrderNo(order.getOrderNo());
+		searchVo1.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
+
+		OrderDispatchs orderDispatch = null;
+		if (!orderDispatchs.isEmpty()) {
+			orderDispatch = orderDispatchs.get(0);
+		}
+
+		if (orderDispatch != null && !isChangeDispatch) {
 			return true;
 		}
 		
 		
-		if (orderDispatched != null && isChangeDispatch) {
-			orderDispatched.setDispatchStatus((short) 0);
-			orderDispatched.setUpdateTime(TimeStampUtil.getNowSecond());
-			orderDispatchService.updateByPrimaryKeySelective(orderDispatched);
+		if (orderDispatch != null && isChangeDispatch) {
+			orderDispatch.setDispatchStatus((short) 0);
+			orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
+			orderDispatchService.updateByPrimaryKeySelective(orderDispatch);
 		}
 		
-		Users u = userService.getUserById(userId);
+		Users u = userService.selectByPrimaryKey(userId);
 		
 		List<OrgStaffs> staList = new ArrayList<OrgStaffs>();
 		
@@ -128,8 +139,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 				//如果无可用派工。则设置 一个 为 0 的 staffId
 				staIdList.add(0L);
 			}
-			
-			staList = orgStaffService.selectByids(staIdList);
+			StaffSearchVo searchVo = new StaffSearchVo();
+			searchVo.setStaffIds(staIdList);
+			staList = orgStaffService.selectBySearchVo(searchVo);
 			
 		}
 		
@@ -142,18 +154,19 @@ public class OrderPayServiceImpl implements OrderPayService {
 		//取第一个
 		OrgStaffs staff = staList.get(0);
 		
-		OrderDispatchs orderDispatchs = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
+		orderDispatch = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
 		
-		orderDispatchs.setUserId(userId);
-		orderDispatchs.setOrgId(staff.getOrgId());
-		orderDispatchs.setMobile(u.getMobile());
-		orderDispatchs.setOrderId(order.getId());
-		orderDispatchs.setOrderNo(order.getOrderNo());
+		orderDispatch.setUserId(userId);
+		orderDispatch.setOrgId(staff.getOrgId());
+		orderDispatch.setParentId(staff.getParentOrgId());
+		orderDispatch.setMobile(u.getMobile());
+		orderDispatch.setOrderId(order.getId());
+		orderDispatch.setOrderNo(order.getOrderNo());
 		
 		// 服务开始时间， serviceDate（服务时间）的前一小时， 当前秒值 -3600s
-		orderDispatchs.setServiceDatePre(order.getServiceDate() - 3600);  
-		orderDispatchs.setServiceDate(order.getServiceDate());
-		orderDispatchs.setServiceHours(order.getServiceHour());
+		orderDispatch.setServiceDatePre(order.getServiceDate() - 3600);  
+		orderDispatch.setServiceDate(order.getServiceDate());
+		orderDispatch.setServiceHours(order.getServiceHour());
 		
 		//更新服务人员与用户地址距离
 		
@@ -169,14 +182,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		int distance = newDisStaService.getLatestDistance(latitude, longitude, staffId);
 		
-		orderDispatchs.setUserAddrDistance(distance);
+		orderDispatch.setUserAddrDistance(distance);
 		
 		//工作人员相关
-		orderDispatchs.setStaffId(staff.getStaffId());
-		orderDispatchs.setStaffName(staff.getName());
-		orderDispatchs.setStaffMobile(staff.getMobile());
+		orderDispatch.setStaffId(staff.getStaffId());
+		orderDispatch.setStaffName(staff.getName());
+		orderDispatch.setStaffMobile(staff.getMobile());
 		
-		orderDispatchService.insertSelective(orderDispatchs);
+		orderDispatchService.insertSelective(orderDispatch);
 		
 		/*
 		 *  2016年5月17日11:27:17 
@@ -205,7 +218,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 //		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
 		
 		//2)派工成功，为服务人员发送推送消息---推送消息
-		if(orderDispatchs.getDispatchStatus()==1){
+		if(orderDispatch.getDispatchStatus()==1){
 			
 			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
 		}
@@ -243,13 +256,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 	@Override
 	public void orderPaySuccessToDoForAm(Orders orders) {
 		
-		
-		List<OrderDispatchs> list = orderDispatchService.selectByNoAndDisStatus(orders.getOrderNo(),(short)1);
-		
-		OrderDispatchs orderDispatchs = new OrderDispatchs();
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrderNo(orders.getOrderNo());
+		searchVo1.setDispatchStatus((short) 1);
+		List<OrderDispatchs> list = orderDispatchService.selectBySearchVo(searchVo1);		
+		OrderDispatchs orderDispatch = new OrderDispatchs();
 		
 		if(list.size() > 0){
-			orderDispatchs = list.get(0);
+			orderDispatch = list.get(0);
 		}
 		
 //		OrgStaffs am = orgStaffService.selectByPrimaryKey(orderDispatchs.getStaffId());

@@ -13,7 +13,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
 
 
 /**

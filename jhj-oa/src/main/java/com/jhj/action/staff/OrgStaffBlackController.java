@@ -22,9 +22,9 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
-import com.jhj.vo.OrgStaffDetailPaySearchVo;
-import com.jhj.vo.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffBlackVo;
+import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceVo;
 import com.meijia.utils.BeanUtilsExp;
 

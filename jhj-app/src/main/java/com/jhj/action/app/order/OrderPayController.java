@@ -14,7 +14,6 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
@@ -104,7 +103,7 @@ public class OrderPayController extends BaseController {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
-		Users u = userService.getUserById(userId);
+		Users u = userService.selectByPrimaryKey(userId);
 
 		// 判断是否为注册用户，非注册用户返回 999
 		if (u == null) {
@@ -166,30 +165,8 @@ public class OrderPayController extends BaseController {
 		}		
 		
 		//判断当前是否有满足条件阿姨，没有则返回提示信息.
-		Short orderType = order.getOrderType();
-		List<OrgStaffs> orgStaffs = new ArrayList<OrgStaffs>();
 		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
-		
-		
-		// jhj2.1 基础保洁类订单
-		if (orderType.equals(Constants.ORDER_TYPE_0)) {
-			
-//			Long addrId = order.getAddrId();
-//			
-//			Long startTime = order.getServiceDate();
-//			Long endTime = startTime+order.getServiceHour()*3600;
-			//jhj2.0派工逻辑
-//			orgStaffsNewVos = dispatchStaffFromOrderService.getNewBestStaffForHour(startTime, endTime, order.getAddrId(), orderId);
-			
-//			if (orgStaffsNewVos.isEmpty()) {
-//				
-//				//2015-10-16 16:10:34   新需求： 无可用派工,让用户联系助理, 此处用 102 错误码，区分这种情况
-//				result.setStatus(Constants.ERROR_102);
-//				result.setMsg("当前无可用的派工,请更换您的服务时间.");
-//				return result;				
-//			}
-		}
-		
+				
 		orderPrice.setOrderPay(orderPay);
 		orderPrice.setPayType(orderPayType);
 		orderPrice.setUpdateTime(updateTime);

@@ -107,7 +107,7 @@ public class OrderOnlinePayController extends BaseController {
 			return result;
 		}
 		
-		Users u = userService.getUserById(order.getUserId());
+		Users u = userService.selectByPrimaryKey(order.getUserId());
 		
 		// 判断是否为注册用户，非注册用户返回 999
 		if (u == null) {

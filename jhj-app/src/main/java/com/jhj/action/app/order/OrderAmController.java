@@ -49,12 +49,15 @@ import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
-import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.DeepCleanVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
+
+
 
 
 
@@ -122,7 +125,7 @@ public class OrderAmController extends BaseController {
 	private UserDetailPayService userDetailPayService;
 	
 	@Autowired
-	private OrderDispatchsService disPatchService;
+	private OrderDispatchsService orderDispatchsService;
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
@@ -149,7 +152,7 @@ public class OrderAmController extends BaseController {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
-		Users u = userService.getUserById(userId);
+		Users u = userService.selectByPrimaryKey(userId);
 
 		// 判断是否为注册用户，非注册用户返回 999
 		if (u == null) {
@@ -383,7 +386,7 @@ public class OrderAmController extends BaseController {
 			return result;
 		}
 		
-		Users u = userService.getUserById(orders.getUserId());
+		Users u = userService.selectByPrimaryKey(orders.getUserId());
 		/**
 		 * 更新订单信息
 		 */
@@ -637,12 +640,20 @@ public class OrderAmController extends BaseController {
 		 * 			需要将其派工状态 设置为 无效 0 。
 		 *      解决，后台派工列表  空指针 bug
 		 */
-		OrderDispatchs orderDispatchs = disPatchService.selectByOrderNo(orderNo);
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
 		
-		if(orderDispatchs != null){
-			orderDispatchs.setDispatchStatus((short)0);
-			orderDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
-			disPatchService.updateByPrimaryKeySelective(orderDispatchs);
+		OrderDispatchs orderDispatch = null;
+		if (!orderDispatchs.isEmpty()) {
+			orderDispatch = orderDispatchs.get(0);
+		}
+		
+		if(orderDispatch != null){
+			orderDispatch.setDispatchStatus((short)0);
+			orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
+			orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
 		}
 		
 		

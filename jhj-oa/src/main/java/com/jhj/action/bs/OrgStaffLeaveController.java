@@ -2,6 +2,7 @@ package com.jhj.action.bs;
 
 import java.text.ParseException;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.bs.LeaveStaffVo;
 import com.jhj.vo.org.LeaveSearchVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -87,9 +89,14 @@ public class OrgStaffLeaveController extends BaseController {
 		
 		//员工 手机号
 		String mobile = searchVo.getStaffMobile();
-		OrgStaffs staffs = staffService.selectByMobile(mobile);
-		if(staffs != null){
-			searchVo.setStaffId(staffs.getStaffId());
+		StaffSearchVo searchVo1 = new StaffSearchVo();
+		searchVo1.setMobile(mobile);
+		List<OrgStaffs> staffList = staffService.selectBySearchVo(searchVo1);
+		OrgStaffs orgStaff = null;
+		if (!staffList.isEmpty()) orgStaff = staffList.get(0);
+		
+		if(orgStaff != null){
+			searchVo.setStaffId(orgStaff.getStaffId());
 		}
 		
 		List<OrgStaffLeave> list = leaveService.selectByListPage(searchVo,pageNo,pageSize);

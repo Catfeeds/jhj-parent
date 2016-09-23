@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.jhj.po.model.user.UserSmsToken;
-import com.jhj.vo.UsersSmsTokenVo;
+import com.jhj.vo.user.UsersSmsTokenVo;
 
 
 

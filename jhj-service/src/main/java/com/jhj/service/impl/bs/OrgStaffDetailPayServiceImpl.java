@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffDetailPayMapper;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.service.bs.OrgStaffDetailPayService;
-import com.jhj.vo.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -73,7 +74,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		record.setId(0L);
 		record.setStaffId(0L);
 		record.setMobile("");
-		record.setOrderType((short) 0L);
+		record.setOrderType(Constants.ORDER_TYPE_0);
 		record.setOrderId(0L);
 		record.setOrderNo("");
 		record.setRemarks("");

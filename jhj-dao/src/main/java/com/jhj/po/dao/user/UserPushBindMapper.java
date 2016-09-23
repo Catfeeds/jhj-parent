@@ -2,6 +2,7 @@ package com.jhj.po.dao.user;
 import java.util.List;
 
 import com.jhj.po.model.user.UserPushBind;
+import com.jhj.vo.user.UserPushBindSearchVo;
 
 
 
@@ -19,9 +20,5 @@ public interface UserPushBindMapper {
 
     UserPushBind selectByPrimaryKey(Long id);
 
-	UserPushBind selectByUserId(Long userId);
-
-	List<UserPushBind> selectByClientId(String clientId);
-	
-	List<UserPushBind> selectByUserType(Short userType);
+	List<UserPushBind> selectBySearchVo(UserPushBindSearchVo searchVo);
 }

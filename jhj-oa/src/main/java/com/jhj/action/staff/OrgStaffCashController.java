@@ -18,6 +18,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
+import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffCash;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
@@ -29,7 +30,8 @@ import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UserPushBindService;
-import com.jhj.vo.OrgStaffCashSearchVo;
+import com.jhj.vo.staff.OrgStaffCashSearchVo;
+import com.jhj.vo.user.UserPushBindSearchVo;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.PushUtil;
@@ -132,7 +134,7 @@ public class OrgStaffCashController extends BaseController {
 			OrgStaffDetailPay orgStaffDetailPay = orgStaffDetailPayService.initStaffDetailPay();
 			orgStaffDetailPay.setStaffId(staffId);
 			orgStaffDetailPay.setMobile(orgstaff.getMobile());
-			orgStaffDetailPay.setOrderType((short) 5);
+			orgStaffDetailPay.setOrderType(Constants.ORDER_TYPE_5);
 			orgStaffDetailPay.setOrderId(orgStaffCash.getOrderId());
 			orgStaffDetailPay.setOrderNo(orgStaffCash.getOrderNo());
 			orgStaffDetailPay.setOrderMoney(orderMoney);
@@ -149,7 +151,11 @@ public class OrgStaffCashController extends BaseController {
 			
 			//给员工发送通知信息
 			//发送推送消息，告知欠款支付成功
-			UserPushBind userPushBind = bindService.selectByUserId(staffId);
+			UserPushBind userPushBind = null;
+			UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+			searchVo.setUserId(staffId);
+			List<UserPushBind> list = bindService.selectBySearchVo(searchVo);
+			if (!list.isEmpty()) userPushBind = list.get(0);
 			
 			if (userPushBind != null) {
 				String clientId = userPushBind.getClientId();

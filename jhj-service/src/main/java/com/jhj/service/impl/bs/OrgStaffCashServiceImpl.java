@@ -11,7 +11,7 @@ import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.bs.OrgStaffCashMapper;
 import com.jhj.po.model.bs.OrgStaffCash;
 import com.jhj.service.bs.OrgStaffCashService;
-import com.jhj.vo.OrgStaffCashSearchVo;
+import com.jhj.vo.staff.OrgStaffCashSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 

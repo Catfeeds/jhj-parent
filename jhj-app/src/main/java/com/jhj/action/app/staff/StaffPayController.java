@@ -33,6 +33,7 @@ import com.jhj.service.users.UserPushBindService;
 import com.jhj.vo.staff.OrgStaffPayDeptVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
+import com.jhj.vo.user.UserPushBindSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -259,7 +260,11 @@ public class StaffPayController extends BaseController {
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(orgstaff.getMobile(), Constants.STAFF_PAY_DEPT_SUCCESS, content);
 
 		// 发送推送消息，告知欠款支付成功
-		UserPushBind userPushBind = bindService.selectByUserId(staffId);
+		UserPushBind userPushBind = null;
+		UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+		searchVo.setUserId(staffId);
+		List<UserPushBind> list = bindService.selectBySearchVo(searchVo);
+		if (!list.isEmpty()) userPushBind = list.get(0);
 
 		if (userPushBind != null) {
 			String clientId = userPushBind.getClientId();

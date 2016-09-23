@@ -19,7 +19,8 @@ import com.jhj.service.bs.OrgStaffInviteService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.orderReview.SettingService;
-import com.jhj.vo.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.vo.AppResultData;
 
 @Controller
@@ -56,8 +57,14 @@ public class StaffTimeController extends BaseController {
 		
 		for (int i = 0; i < list.size(); i++) {
 			OrgStaffInvite orgStaffInvite = list.get(i);
-			OrgStaffs orgStaffs = orgStaffsService.selectByMobile(orgStaffInvite.getInviteMobile());
-			if (orgStaffs != null) {
+			
+			StaffSearchVo searchVo1 = new StaffSearchVo();
+			searchVo1.setMobile(orgStaffInvite.getInviteMobile());
+			List<OrgStaffs> staffList = orgStaffsService.selectBySearchVo(searchVo1);
+			
+			OrgStaffs orgStaff = null;
+			if (!staffList.isEmpty()) orgStaff = staffList.get(0);
+			if (orgStaff != null) {
 				orgStaffInvite.setInviteStatus((short)1);
 				orgStaffInviteService.updateByPrimaryKeySelective(orgStaffInvite);
 			}
@@ -75,7 +82,7 @@ public class StaffTimeController extends BaseController {
 			if (count != null) {
 				//把推荐这个用户的id更新，完成多少单更新
 				orgStaffInvite.setInviteOrderCount(count.shortValue());
-				orgStaffInvite.setInviteStaffId(orgStaffs.getStaffId());
+				orgStaffInvite.setInviteStaffId(orgStaff.getStaffId());
 				orgStaffInviteService.updateByPrimaryKeySelective(orgStaffInvite);
 			}
 			

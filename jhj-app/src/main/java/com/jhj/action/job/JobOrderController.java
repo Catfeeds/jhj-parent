@@ -26,6 +26,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.utils.OrderUtils;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -66,7 +67,15 @@ public class JobOrderController extends BaseController {
 		 */
 
 		// 查找出订单开始服务8小时还没点击完成的订单
-		List<Orders> list = ordersService.selectByOrderStatus();
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setOrderStatus((short) 5);
+		
+		Long now = TimeStampUtil.getNowSecond();
+		Long endAddTime = now - 3600 * 8;
+		
+		searchVo.setEndAddTime(endAddTime);
+		
+		List<Orders> list = ordersService.selectBySearchVo(searchVo);
 
 		for (int i = 0; i < list.size(); i++) {
 			// 订单状态设置为0 已关闭

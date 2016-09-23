@@ -112,7 +112,7 @@ public class FinanceRechargeServiceImpl implements FinanceRechargeService {
 		
 		Long userId = recharge.getUserId();
 		
-		Users users = userService.selectByUsersId(userId);
+		Users users = userService.selectByPrimaryKey(userId);
 		
 		initVo.setUserName(users.getName());
 		initVo.setUserMobile(users.getMobile());

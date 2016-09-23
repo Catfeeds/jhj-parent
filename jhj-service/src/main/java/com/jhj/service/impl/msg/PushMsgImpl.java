@@ -1,5 +1,6 @@
 package com.jhj.service.impl.msg;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,8 +14,11 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.msg.MsgService;
 import com.jhj.service.msg.PushMsgService;
 import com.jhj.service.users.UserPushBindService;
+import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserPushBindSearchVo;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.PushUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -43,8 +47,24 @@ public class PushMsgImpl implements PushMsgService {
 		Msg msg = msgService.selectByPrimaryKey(msgId);
 		
 		//可以 接受推送消息的 --服务人员
-		List<OrgStaffs> list = staffService.selectAbleToSendMsgStaff();
-		
+		UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+		searchVo.setUserType((short) 0);
+		List<UserPushBind> binds = bindService.selectBySearchVo(searchVo);
+
+		List<Long> staffIds = new ArrayList<Long>();
+		for (UserPushBind b : binds) {
+			if (!staffIds.contains(b.getUserId()))
+				staffIds.add(b.getUserId());
+		}
+
+		List<OrgStaffs> list = new ArrayList<OrgStaffs>();
+
+		if (!staffIds.isEmpty()) {
+			StaffSearchVo searchVo1 = new StaffSearchVo();
+			searchVo1.setStaffIds(staffIds);
+			searchVo1.setStatus(1);
+			list = staffService.selectBySearchVo(searchVo1);
+		}		
 		for (OrgStaffs orgStaffs : list) {
 			
 			/*
@@ -55,10 +75,18 @@ public class PushMsgImpl implements PushMsgService {
 			
 			Long staffId = orgStaffs.getStaffId();
 			
-			//取得 cid
-			UserPushBind userPushBind = bindService.selectByUserId(staffId);
 			
-			String clientId = userPushBind.getClientId();
+			// 取得 cid
+			String clientId = "";
+			for (UserPushBind item : binds) {
+				if (item.getUserId().equals(staffId)) {
+					clientId = item.getClientId();
+					break;
+				}
+			}
+
+			if (StringUtil.isEmpty(clientId))
+				continue;
 			
 			paramsMap.put("cid", clientId);
 			

@@ -13,7 +13,7 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.service.order.OrderQueryService;
-import com.jhj.vo.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderQuerySearchVo;
 import com.meijia.utils.vo.AppResultData;
 
 @Controller

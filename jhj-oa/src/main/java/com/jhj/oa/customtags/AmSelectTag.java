@@ -12,6 +12,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.vo.staff.StaffSearchVo;
 
 /**
  *
@@ -41,7 +42,10 @@ public class AmSelectTag extends SimpleTagSupport{
     			WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(((PageContext) getJspContext()).getServletContext());
     			orgStaffService = springContext.getBean(OrgStaffsService.class);
     	        
-    			List<OrgStaffs> amList = orgStaffService.selectAllAm();
+    			StaffSearchVo searchVo = new StaffSearchVo();
+    			searchVo.setStaffType((short) 1);
+    			searchVo.setStatus(1);
+    			List<OrgStaffs> amList = orgStaffService.selectBySearchVo(searchVo);
     			
 //    			orgStaffService.selectAmByOrgId(orgId)
     			

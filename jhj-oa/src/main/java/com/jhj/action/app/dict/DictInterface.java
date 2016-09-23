@@ -21,6 +21,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.AdService;
 import com.jhj.service.dict.DictService;
 import com.jhj.service.dict.ServiceTypeService;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.vo.AppResultData;
 
 @Controller
@@ -152,9 +153,12 @@ public class DictInterface extends BaseController {
 
 		AppResultData<Object> result = new AppResultData<Object>(
 		Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, false);
-
-		List<OrgStaffs> list = staffService.selectByOrgId(cloudOrgId);
 		
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setOrgId(cloudOrgId);
+		searchVo.setStatus(1);
+		List<OrgStaffs> list = staffService.selectBySearchVo(searchVo);
+				
 		result.setData(list);
 		
 		return result;

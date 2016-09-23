@@ -24,7 +24,8 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserRefOrgService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
@@ -194,7 +195,11 @@ public class UsersAsyncServiceImpl implements UsersAsyncService {
 		if (matchOrg == null) return new AsyncResult<Boolean>(true);
 
 		//根据OrgId 找到对应的助理列表
-		List<OrgStaffs> amList = orgStaffsService.selectAmByOrgId(matchOrg.getOrgId());
+		StaffSearchVo searchVo1 = new StaffSearchVo();
+		searchVo1.setOrgId(matchOrg.getOrgId());
+		searchVo1.setStaffType((short) 1);
+		searchVo1.setStatus(1);
+		List<OrgStaffs> amList = orgStaffsService.selectBySearchVo(searchVo1);
 		
 		List<Long> amIds = new ArrayList<Long>();
 		for (OrgStaffs orgStaff : amList) {

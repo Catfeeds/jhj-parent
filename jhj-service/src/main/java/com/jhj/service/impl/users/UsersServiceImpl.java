@@ -32,9 +32,9 @@ import com.jhj.service.tags.UserRefTagsService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.UserSearchVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
+import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -65,17 +65,16 @@ public class UsersServiceImpl implements UsersService {
 
 	@Autowired
 	private OrderRatesService orderRatesService;
-	
+
 	@Autowired
 	private DictCardTypeMapper dictCardTypeMapper;
-	
+
 	@Autowired
 	private GiftCouponsMapper giftCouponMapper;
-	
+
 	@Autowired
 	private DictCouponsService dictCouponService;
-	
-	
+
 	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return usersMapper.deleteByPrimaryKey(id);
@@ -100,137 +99,26 @@ public class UsersServiceImpl implements UsersService {
 	public int updateByPrimaryKey(Users record) {
 		return usersMapper.updateByPrimaryKey(record);
 	}
-
-	@Override
-	public PageInfo searchVoListPage(UserSearchVo searchVo, int pageNo,
-			int pageSize) {
-
-		PageHelper.startPage(pageNo, pageSize);
-		List<Users> list = usersMapper.selectByListPages(searchVo);
-		PageInfo result = new PageInfo(list);
-		return result;
-	}
-
-	@Override
-	public Users selectByUsersId(Long id) {
-		return usersMapper.selectByPrimaryKey(id);
-	}
-
-	@Override
-	public Users getUserById(Long id) {
-		return usersMapper.selectByPrimaryKey(id);
-	}
-
-	@Override
-	public List<Users> selectByUserIds(List<Long> ids) {
-		return usersMapper.selectByUserIds(ids);
-	}
 	
 	@Override
-	public List<Users> selectByAll() {
-		return usersMapper.selectByAll();
-	}
-
-	@Override
-	public Users getUserByMobile(String mobile) {
-		return usersMapper.selectByMobile(mobile);
+	public Users selectByPrimaryKey(Long id) {
+		return usersMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
 	public Users genUser(String mobile, Short addFrom) {
-		Users u = this.getUserByMobile(mobile);
+		Users u = this.selectByMobile(mobile);
 		if (u == null) {
 			// 验证手机号是否已经注册，如果未注册，则自动注册用户，
 			u = this.initUsers(mobile, addFrom);
 			String provinceName = "";
-			
-			/*
-			 *  2015-11-5 16:48:30 决定将这处 求 号码归属地的代码去掉。。老报错.没什么意义
-			 */
-//			try {
-//				provinceName = MobileUtil.calcMobileCity(mobile);
-//			} catch (MalformedURLException e) {
-//				e.printStackTrace();
-//			}
 
 			u.setProvinceName(provinceName);
-			
+
 			usersMapper.insertSelective(u);
 		}
-			
-			return u;
-			
-			/* 
-			  * 2015年10月27日18:27:17
-			  * 	
-			  *	    新用户注册，赠送注册优惠券礼包
-			  *    1. 只有第一次登陆送，
-			  *    2. 送的用完了，不能再送了
-			  */
-			 
-			
-			 //此处可以设置一个 固定时间的时间戳，作为活动  的 截止日期
-			 
-			 /*
-			  * gifts 表中 id 为 5的 礼包 表示  注册大礼包
-			  * 
-			  */
-			
-//			  UserCoupons userCoupons = new UserCoupons();
-//			 
-//			  //id 为 5的是 注册大礼包
-//			  List<GiftCoupons> giftCouponList = giftCouponMapper.selectByGiftId(5L);
-//			  
-//			  for (GiftCoupons giftCoupons : giftCouponList) {
-//				  
-//				  Long couponId = giftCoupons.getCouponId();
-//				  DictCoupons dictCoupons = dictCouponService.selectByPrimaryKey(couponId);
-//				  
-//				  
-//				  //根据 优惠券数量，生成多条记录
-//				  Short num = giftCoupons.getNum();
-//				  for (int i =(short)0; i < num; i++) {
-//					
-//					  //coupon_id	
-//					  userCoupons.setCouponId(couponId);
-//					  //user_id
-//					  userCoupons.setUserId(u.getId()); 
-//					  
-//					  //gift_id
-//					  userCoupons.setGiftId(giftCoupons.getGiftId());
-//					  
-//					  Date fromDate = dictCoupons.getFromDate();
-//					  Date toDate = dictCoupons.getToDate();
-//					  BigDecimal couponValue = dictCoupons.getValue();
-//					  String serviceType = dictCoupons.getServiceType();
-//					  
-//					  //value
-//					  userCoupons.setValue(couponValue);
-//					  //service_Type
-//					  userCoupons.setServiceType(serviceType);
-//					  //from_date
-//					  userCoupons.setFromDate(fromDate);
-//					  //to_date
-//					  userCoupons.setToDate(toDate);
-//					  //is_used
-//					  userCoupons.setIsUsed((short)0);
-//					  //used_time
-//					  userCoupons.setUsedTime(0L);
-//					  //order_no
-//					  userCoupons.setOrderNo("");
-//					  //add_time
-//					  userCoupons.setAddTime(TimeStampUtil.getNowSecond());
-//					  
-//					  //  生成新记录  mybatis 主键自增 useGenerateKeys = "ture"
-//					  userCouponsService.insertSelective(userCoupons);
-//					  
-//				  }
-//				  
-//			  }
-//			
 
-//		}
-//		return u;
+		return u;
 	}
 
 	@Override
@@ -263,7 +151,7 @@ public class UsersServiceImpl implements UsersService {
 	public UserAppVo changeToUserAppVo(Long userId) {
 		UserAppVo vo = new UserAppVo();
 
-		Users user = selectByUsersId(userId);
+		Users user = this.selectByPrimaryKey(userId);
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(user, vo);
 		vo.setHasUserAddr(false);
@@ -271,8 +159,7 @@ public class UsersServiceImpl implements UsersService {
 		if (!userAddrs.isEmpty())
 			vo.setHasUserAddr(true);
 
-		List<UserCoupons> userCoupons = userCouponsService
-				.selectByUserId(userId);
+		List<UserCoupons> userCoupons = userCouponsService.selectByUserId(userId);
 		vo.setTotalCoupon(userCoupons.size());
 		// 显示优惠个数
 		vo.setTotalCouponSpan(userCoupons.size() + "张");
@@ -314,31 +201,27 @@ public class UsersServiceImpl implements UsersService {
 
 		if (userAddrs != null) {
 
-			userEditViewVo.setAddrName(userAddrs.getName() + " "
-					+ userAddrs.getAddr());
+			userEditViewVo.setAddrName(userAddrs.getName() + " " + userAddrs.getAddr());
 		}
 
 		// 用户标签
-		List<UserRefTags> userRefTagsList = userRefTagsService
-				.selectListByUserId(userId);
-		
-		if (!userRefTagsList.isEmpty()) {
-			
-		
-		//获得UserRefTags 里面的id的集合ids
-		List<Long> tagIds = new ArrayList<Long>();
-		for (UserRefTags item : userRefTagsList) {
-			tagIds.add(item.getTagId());
-		}
-		
-		List<Tags> tag = tagsService.selectByIds(tagIds);
+		List<UserRefTags> userRefTagsList = userRefTagsService.selectListByUserId(userId);
 
-		userEditViewVo.setList(tag);
+		if (!userRefTagsList.isEmpty()) {
+
+			// 获得UserRefTags 里面的id的集合ids
+			List<Long> tagIds = new ArrayList<Long>();
+			for (UserRefTags item : userRefTagsList) {
+				tagIds.add(item.getTagId());
+			}
+
+			List<Tags> tag = tagsService.selectByIds(tagIds);
+
+			userEditViewVo.setList(tag);
 		}
 		return userEditViewVo;
 	}
 
-	
 	private UserEditViewVo initOHVO() {
 
 		UserEditViewVo userEditViewVo = new UserEditViewVo();
@@ -366,8 +249,7 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public UserEditViewVo getUserAddrDetail(List<UserAddrs> userAddrsList,
-			Long userId) {
+	public UserEditViewVo getUserAddrDetail(List<UserAddrs> userAddrsList, Long userId) {
 		UserEditViewVo userEditViewVo = initOHVO();
 
 		Users users = usersMapper.selectByPrimaryKey(userId);
@@ -379,56 +261,59 @@ public class UsersServiceImpl implements UsersService {
 		for (UserAddrs item : userAddrsList) {
 			userIds.add(item.getId());
 		}
-		
+
 		Collections.sort(userIds);
-		
+
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(userIds.get(0));
-		
+
 		userEditViewVo.setAddrName(userAddrs.getName() + userAddrs.getAddr());
 		// 用户标签
-		
-		/*List<UserRefTags> userRefTagsList = userRefTagsService.selectList();
-		if (!userRefTagsList.isEmpty()) {
-		//获得UserRefTags 里面的id的集合ids
-		List<Long> tagIds = new ArrayList<Long>();
-		for (UserRefTags item : userRefTagsList) {
-			tagIds.add(item.getTagId());
-		}
-		//通过ids到tag表里面获得tag的集合
-		
-		List<Tags> tag = tagsService.selectByIds(tagIds);*/
 
-		/*List<Tags> tag = tagsService.selectList();
-		userEditViewVo.setList(tag);
-		
-		List<UserRefTags> userRefTags = userRefTagsService.selectListByUserId(userId);
-		
-		List<Long> tagList =new ArrayList<Long>();
-		for (UserRefTags item : userRefTags) {
-			tagList.add(item.getTagId());
-		}
-		userEditViewVo.setTagList(tagList);*/
-		List<UserRefTags> userRefTagsList = userRefTagsService
-				.selectListByUserId(userId);
-		
-		if (!userRefTagsList.isEmpty()) {
-			
-		
-		//获得UserRefTags 里面的id的集合ids
-		List<Long> tagIds = new ArrayList<Long>();
-		for (UserRefTags item : userRefTagsList) {
-			tagIds.add(item.getTagId());
-		}
-		
-		List<Tags> tag = tagsService.selectByIds(tagIds);
+		/*
+		 * List<UserRefTags> userRefTagsList = userRefTagsService.selectList();
+		 * if (!userRefTagsList.isEmpty()) {
+		 * //获得UserRefTags 里面的id的集合ids
+		 * List<Long> tagIds = new ArrayList<Long>();
+		 * for (UserRefTags item : userRefTagsList) {
+		 * tagIds.add(item.getTagId());
+		 * }
+		 * //通过ids到tag表里面获得tag的集合
+		 * 
+		 * List<Tags> tag = tagsService.selectByIds(tagIds);
+		 */
 
-		userEditViewVo.setList(tag);
+		/*
+		 * List<Tags> tag = tagsService.selectList();
+		 * userEditViewVo.setList(tag);
+		 * 
+		 * List<UserRefTags> userRefTags =
+		 * userRefTagsService.selectListByUserId(userId);
+		 * 
+		 * List<Long> tagList =new ArrayList<Long>();
+		 * for (UserRefTags item : userRefTags) {
+		 * tagList.add(item.getTagId());
+		 * }
+		 * userEditViewVo.setTagList(tagList);
+		 */
+		List<UserRefTags> userRefTagsList = userRefTagsService.selectListByUserId(userId);
+
+		if (!userRefTagsList.isEmpty()) {
+
+			// 获得UserRefTags 里面的id的集合ids
+			List<Long> tagIds = new ArrayList<Long>();
+			for (UserRefTags item : userRefTagsList) {
+				tagIds.add(item.getTagId());
+			}
+
+			List<Tags> tag = tagsService.selectByIds(tagIds);
+
+			userEditViewVo.setList(tag);
 		}
- 		return userEditViewVo;
+		return userEditViewVo;
 	}
+
 	@Override
-	public UserEditViewVo getUserAddrEditDetail(List<UserAddrs> userAddrsList,
-			Long userId) {
+	public UserEditViewVo getUserAddrEditDetail(List<UserAddrs> userAddrsList, Long userId) {
 		UserEditViewVo userEditViewVo = initOHVO();
 
 		Users users = usersMapper.selectByPrimaryKey(userId);
@@ -440,30 +325,31 @@ public class UsersServiceImpl implements UsersService {
 		for (UserAddrs item : userAddrsList) {
 			userIds.add(item.getId());
 		}
-		
+
 		Collections.sort(userIds);
-		
+
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(userIds.get(0));
-		
+
 		userEditViewVo.setAddrName(userAddrs.getName() + userAddrs.getAddr());
 		// 用户标签
-		
+
 		List<Tags> tag = tagsService.selectList();
 		userEditViewVo.setList(tag);
 		List<UserRefTags> userRefTags = userRefTagsService.selectListByUserId(userId);
-		
-		List<Long> tagList =new ArrayList<Long>();
+
+		List<Long> tagList = new ArrayList<Long>();
 		for (UserRefTags item : userRefTags) {
 			tagList.add(item.getTagId());
 		}
 		userEditViewVo.setTagList(tagList);
-		
- 		return userEditViewVo;
+
+		return userEditViewVo;
 	}
-//用户修改页面展示
+
+	// 用户修改页面展示
 	@Override
 	public UserEditViewVo getUserEditViewDetail(String orderNo, Long userId) {
-		
+
 		UserEditViewVo userEditViewVo = initOHVO();
 
 		Users users = usersMapper.selectByPrimaryKey(userId);
@@ -479,17 +365,16 @@ public class UsersServiceImpl implements UsersService {
 
 		if (userAddrs != null) {
 
-			userEditViewVo.setAddrName(userAddrs.getName() + " "
-					+ userAddrs.getAddr());
+			userEditViewVo.setAddrName(userAddrs.getName() + " " + userAddrs.getAddr());
 		}
 
 		// 用户标签
-		
+
 		List<Tags> tag = tagsService.selectList();
 		userEditViewVo.setList(tag);
 		List<UserRefTags> userRefTags = userRefTagsService.selectListByUserId(userId);
-		
-		List<Long> tagList =new ArrayList<Long>();
+
+		List<Long> tagList = new ArrayList<Long>();
 		for (UserRefTags item : userRefTags) {
 			tagList.add(item.getTagId());
 		}
@@ -499,13 +384,13 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public Map<Long, String> selectDictCardDataSource() {
-			Map<Long,String> map  = new HashMap<Long, String>();
-			List<DictCardType> list = dictCardTypeMapper.selectAll();
-			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				DictCardType dictCardType = (DictCardType) iterator.next();
-				map.put(dictCardType.getId(),dictCardType.getName());
-			}
-			return map;
+		Map<Long, String> map = new HashMap<Long, String>();
+		List<DictCardType> list = dictCardTypeMapper.selectAll();
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			DictCardType dictCardType = (DictCardType) iterator.next();
+			map.put(dictCardType.getId(), dictCardType.getName());
+		}
+		return map;
 	}
 
 	@Override
@@ -515,46 +400,34 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public Map<String, String> getChargeWayDataSource() {
-		Map<String ,String> map = new HashMap<String, String>();
-		map.put("0","固定金额充值");
-		map.put("1","任意金额充值");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("0", "固定金额充值");
+		map.put("1", "任意金额充值");
 		return map;
 	}
 
 	@Override
-	public List<Users> selectByListPage(List<Long> userIdList, int pageNo,
-			int pageSize) {
+	public PageInfo selectByListPage(UserSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
-		List<Users> list = usersMapper.selectByUserIdPage(userIdList);
-		return list;
+		List<Users> list = usersMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		return result;
 	}
-	
-	@Override
-	public List<Users> selectUserByAddFrom(Long addFrom) {
-		return usersMapper.selectUserByAddFrom(addFrom);
-	}
-	
-	@Override
-	public List<Users> selectUserInAllCoopFrom(List<Long> list) {
-		return usersMapper.selectUserInAllCoopFrom(list);
-	}
-	
+
 	@Override
 	public List<Users> selectBySearchVo(UserSearchVo searchVo) {
-		return usersMapper.selectByListPages(searchVo);
+		return usersMapper.selectBySearchVo(searchVo);
+	}
+
+	@Override
+	public Users selectByMobile(String mobile) {
+		// TODO Auto-generated method stub
+		return usersMapper.selectByMobile(mobile);
 	}
 
 	@Override
 	public List<Users> selectUsersByOrderMobile() {
+		// TODO Auto-generated method stub
 		return usersMapper.selectUsersByOrderMobile();
-	}
-
-	@Override
-	public PageInfo<Users> selectUserByDay(UserSearchVo vo,int pageNo,int pageSize) {
-		
-		PageHelper.startPage(pageNo, pageSize);
-		List<Users> userList = usersMapper.selectUserbyDay(vo);
-		PageInfo<Users> result = new PageInfo<Users>(userList);
-		return result; 
 	}
 }

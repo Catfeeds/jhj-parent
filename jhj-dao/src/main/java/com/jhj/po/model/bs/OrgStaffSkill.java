@@ -4,6 +4,10 @@ public class OrgStaffSkill {
     private Long id;
 
     private Long staffId;
+    
+    private Long orgId;
+    
+    private Long parentId;
 
     private Long serviceTypeId;
 
@@ -40,4 +44,20 @@ public class OrgStaffSkill {
     public void setAddTime(Long addTime) {
         this.addTime = addTime;
     }
+
+	public Long getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Long orgId) {
+		this.orgId = orgId;
+	}
+
+	public Long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
 }

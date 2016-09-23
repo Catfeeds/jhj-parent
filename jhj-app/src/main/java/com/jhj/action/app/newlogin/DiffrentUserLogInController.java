@@ -62,7 +62,7 @@ public class DiffrentUserLogInController extends BaseController {
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-		Users u = userService.getUserByMobile(mobile);
+		Users u = userService.selectByMobile(mobile);
 		
 		if (u == null) {
 			// 验证手机号是否已经注册，如果未注册，则自动注册用户，

@@ -18,8 +18,8 @@ import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
-import com.jhj.vo.OrderSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -80,7 +80,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 		PageHelper.startPage(pageNo, pageSize);
 		
 		long date=TimeStampUtil.getNowSecond();
-		List<Orders> lists = orderMapper.selectByUserListPage(orderSearchVo);
+		List<Orders> lists = orderMapper.selectByListPage(orderSearchVo);
 		for(Orders order:lists){
 			Long serviceDate = order.getServiceDate();
 			short orderStatus=order.getOrderStatus();
@@ -90,7 +90,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			}
 		}
 			
-		List<Orders> list = orderMapper.selectByUserListPage(orderSearchVo);
+		List<Orders> list = orderMapper.selectByListPage(orderSearchVo);
 		return list;
 	}
 	
@@ -114,7 +114,17 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 		
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setUserId(userId);
-		List<Orders> list = orderMapper.selectNowOrderHourByListPage(orderSearchVo);
+		
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 1);
+		orderStatusList.add((short) 2);
+		orderStatusList.add((short) 3);
+		orderStatusList.add((short) 4);
+		orderStatusList.add((short) 5);
+		orderStatusList.add((short) 6);
+		orderSearchVo.setOrderStatusList(orderStatusList);
+		
+		List<Orders> list = orderMapper.selectByListPage(orderSearchVo);
 		
 		return list;
 	}
@@ -128,7 +138,14 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 		
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setUserId(userId);
-		List<Orders> list = orderMapper.selectOldOrderHourByListPage(orderSearchVo);
+		
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 0);
+		orderStatusList.add((short) 7);
+		orderStatusList.add((short) 9);
+		orderSearchVo.setOrderStatusList(orderStatusList);
+		
+		List<Orders> list = orderMapper.selectByListPage(orderSearchVo);
 		
 		return list;
 	}

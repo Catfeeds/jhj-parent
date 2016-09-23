@@ -3,7 +3,7 @@ package com.jhj.po.dao.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.Orgs;
-import com.jhj.vo.OrgSearchVo;
+import com.jhj.vo.org.OrgSearchVo;
 
 public interface CopyOfOrgsMapper {
 	int deleteByPrimaryKey(Long orgId);

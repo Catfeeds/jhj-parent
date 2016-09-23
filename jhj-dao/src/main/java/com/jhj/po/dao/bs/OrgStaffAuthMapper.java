@@ -3,6 +3,7 @@ package com.jhj.po.dao.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffAuth;
+import com.jhj.vo.staff.StaffAuthSearchVo;
 
 public interface OrgStaffAuthMapper {
     int deleteByPrimaryKey(Long id);
@@ -17,14 +18,8 @@ public interface OrgStaffAuthMapper {
 
     int updateByPrimaryKey(OrgStaffAuth record);
 
-	OrgStaffAuth selectByStaffIdAndServiceTypeId(Long staffId);
-	
-	List<OrgStaffAuth> selectByStaffId(Long staffId);
+	List<OrgStaffAuth> selectBySearchVo(StaffAuthSearchVo searchVo);
 	
 	void deleteByStaffId(Long staffId);
-	
-	List<OrgStaffAuth> selectHourStaffByServiceTypeIdAndAuthStatus();
-
-	List<OrgStaffAuth> selectAmStaffByServiceTypeIdAndAuthStatus();
 
 }

@@ -18,6 +18,8 @@ public class OrderDispatchs {
     private Short serviceHours;
     
     private Long orgId;
+    
+    private Long parentId;
 
     private Long staffId;
 
@@ -249,6 +251,14 @@ public class OrderDispatchs {
 
 	public void setApplyTime(Long applyTime) {
 		this.applyTime = applyTime;
+	}
+
+	public Long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
 	}
 
 
