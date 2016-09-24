@@ -41,6 +41,7 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.dict.CouponsTypeService;
 import com.jhj.service.dict.DictUtil;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
@@ -78,6 +79,9 @@ public class DictCouponsController extends BaseController {
 
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 
 	@Autowired
 	private DictCouponsService dictCouponsService;
@@ -508,7 +512,7 @@ public class DictCouponsController extends BaseController {
 		List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>();
 		
 		OrderSearchVo searchVo = new OrderSearchVo();
-		List<Orders> orders = orderService.selectBySearchVo(searchVo);
+		List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
 		List<Long> userIdList = removeReValue(condtion, orders);
 		for (Long _id : userIdList) {
 			UserCoupons uc = userCouponsService.initUserCoupons(_id, coupon);

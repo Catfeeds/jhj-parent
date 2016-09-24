@@ -24,6 +24,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.job.OrderCrondService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPricesService;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UsersService;
@@ -45,6 +46,9 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
@@ -54,6 +58,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 
 	@Autowired
 	private OrderRatesService orderRateService;
+	
 	@Autowired
 	private OrgStaffsService orgStaffService;
 
@@ -81,7 +86,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 		searchVo.setStartServiceTime(twoHourBefore);
 		searchVo.setEndServiceTime(twoHourBefore);
 
-		List<Orders> list = orderService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		for (Orders order : list) {
 
@@ -135,7 +140,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 		searchVo.setEndAddTime(now);
 		searchVo.setStartServiceHourTime(now);
 
-		List<Orders> list = orderService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		for (Orders orders : list) {
 			orders.setOrderStatus(Constants.ORDER_STATUS_5);
@@ -156,7 +161,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 
 		searchVo.setEndServiceHourTime(now);
 
-		List<Orders> list = orderService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		for (Orders orders : list) {
 			orders.setOrderStatus(Constants.ORDER_STATUS_7);
@@ -198,7 +203,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 
 		searchVo.setStartAddTime(now + 1800);
 
-		List<Orders> list = orderService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		for (Orders orders : list) {
 			orders.setOrderStatus(Constants.ORDER_STATUS_9);
@@ -221,7 +226,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 		
 		searchVo.setEndServiceHourTime(now - 7*24*3600);
 		
-		List<Orders> list = orderService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		String rateDatas = "[{'rateType':0, 'rateValue': 0}," + "{'rateType':1, 'rateValue': 0}," + "{'rateType':2, 'rateValue': 0},"
 				+ "{'rateType':3, 'rateValue': 0}," + "{'rateType':4, 'rateValue': 0}]"; // 默认全
@@ -298,7 +303,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 		
 		searchVo.setEndUpdateTime(now - 24*3600);
 		
-		List<Orders> list = orderService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 		
 		for (Orders orders : list) {
 			orders.setOrderStatus(Constants.ORDER_STATUS_7);

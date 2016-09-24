@@ -84,15 +84,28 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 	@Autowired
 	private SettingService settingService;
-	
+
 	@Autowired
 	private OrgStaffsService orgStaffsService;
-	
+
 	@Autowired
 	private OrgsService orgsService;
-	
+
 	@Autowired
 	PartnerServiceTypeService partnerServiceTypeService;
+	
+	@Override
+	public List<Orders> selectBySearchVo(OrderSearchVo searchVo) {
+		return ordersMapper.selectBySearchVo(searchVo);
+	}
+	
+	@Override
+	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<Orders> list = ordersMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		return result;
+	}
 
 	/*
 	 * 进行orderViewVo 结合了 orders , order_prices, 两张表的元素
@@ -224,136 +237,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	}
 
 	@Override
-	public PageInfo selectByListPage(OrderSearchVo orderSearchVo, int pageNo, int pageSize) {
-
-		PageHelper.startPage(pageNo, pageSize);
-		List<Orders> list = ordersMapper.selectByListPage(orderSearchVo);
-		if (list != null && list.size() != 0) {
-			List<OrderViewVo> orderViewList = this.getOrderViewList(list);
-
-			for (int i = 0; i < list.size(); i++) {
-				if (orderViewList.get(i) != null) {
-					list.set(i, orderViewList.get(i));
-				}
-			}
-		}
-		PageInfo result = new PageInfo(list);
-		return result;
-	}
-
-	// . 根据开始时间，接收时间，staff_id ，得出订单总金额
-	@Override
-	public BigDecimal getTotalOrderMoney(OrderQuerySearchVo vo) {
-
-		BigDecimal orderMoney = ordersMapper.getTotalOrderMoney(vo);
-
-		if (orderMoney == null) {
-			BigDecimal a = new BigDecimal(0);
-			return a;
-		}
-		orderMoney = MathBigDecimalUtil.round(orderMoney, 2);
-		return orderMoney;
-
-	}
-
-	// . 根据开始时间，接收时间，staff_id ，得出订单总收入金额
-	@Override
-	public BigDecimal getTotalOrderIncomeMoney(OrderQuerySearchVo vo) {
-
-		//BigDecimal money = ordersMapper.getTotalOrderIncomeMoney(vo);
-		//钟点工订单0订单总金额
-		BigDecimal hourMoney = ordersMapper.getTotalOrderIncomeHourMoney(vo);
-		//深度保洁1订单总金额
-		BigDecimal cleanMoney = ordersMapper.getTotalOrderIncomeCleanMoney(vo);
-		//助理订单2订单总金额
-		BigDecimal staffMoney = ordersMapper.getTotalOrderIncomeStaffMoney(vo);
-		//配送订单3订单总金额
-		BigDecimal disMoney = ordersMapper.getTotalOrderIncomeRunMoney(vo);
-		
-		Long staffId = vo.getStaffId();
-		
-		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
-		
-		Short level = staffs.getLevel();
-		String settingLevel = "-level-"+level.toString();
-		
-		String hoursettingType = "hour-ratio" + settingLevel;
-		String cleansettingType = "deep-ratio" + settingLevel;
-		String amsettingType = "am-ratio" + settingLevel;
-		String dissettingType = "dis-ratio" + settingLevel;
-		
-		JhjSetting hour = settingService.selectBySettingType(hoursettingType);
-		JhjSetting clean = settingService.selectBySettingType(cleansettingType);
-		JhjSetting am = settingService.selectBySettingType(amsettingType);
-		JhjSetting dis = settingService.selectBySettingType(dissettingType);
-		
-		//钟点工提成
-		BigDecimal hourRate = new BigDecimal(hour.getSettingValue());	
-		//深度保洁提成
-		BigDecimal cleanRate = new BigDecimal(clean.getSettingValue());	
-		//助理提成
-		BigDecimal amRate = new BigDecimal(am.getSettingValue());		
-		//配送订单提成
-		BigDecimal disRate = new BigDecimal(dis.getSettingValue());		
-		
-		if (hourMoney == null ) {
-			hourMoney = new BigDecimal(0);
-		}
-		if (cleanMoney == null ) {
-			cleanMoney = new BigDecimal(0);
-		}
-		if (staffMoney == null ) {
-			staffMoney = new BigDecimal(0);
-		}
-		if (disMoney == null ) {
-			disMoney = new BigDecimal(0);
-		}
-		//钟点工收入
-		BigDecimal hourIncomingMoney = hourMoney.multiply(hourRate);
-		//深度保洁收入
-		BigDecimal cleanIncomingMoney = cleanMoney.multiply(cleanRate);
-		//助理收入
-		BigDecimal amIncomingMoney = staffMoney.multiply(amRate);
-		//配送订单收入
-		BigDecimal disIncomingMoney = disMoney.multiply(disRate);
-		//订单总收入
-		BigDecimal totalIncomingMoney =hourIncomingMoney.add(cleanIncomingMoney)
-				.add(amIncomingMoney).add(disIncomingMoney);
-		
-		if (totalIncomingMoney == null ) {
-			BigDecimal b = new BigDecimal(0);
-			return b;
-		}
-		totalIncomingMoney = MathBigDecimalUtil.round(totalIncomingMoney, 2);		
-				
-		return totalIncomingMoney;
-	}
-
-	// . 根据开始时间，接收时间，staff_id ，得出订单总数:
-	@Override
-	public Long getTotalOrderCount(OrderQuerySearchVo vo) {
-
-		return ordersMapper.getTotalOrderCount(vo);
-	}
-
-	// 当月订单总数（order_status=7,8)
-	@Override
-	public Long getTotalOrderCountByMouth(OrderQuerySearchVo searchVo) {
-
-		return ordersMapper.getTotalOrderCountByMouth(searchVo);
-	}
-
-	@Override
-	public PageInfo selectByListVoPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
-
-		PageHelper.startPage(pageNo, pageSize);
-		List<Orders> list = ordersMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
-
-		return result;
-	}
-
-	@Override
 	public List<OrderViewVo> getOrderViewList(List<Orders> list) {
 
 		// 加载更多订单的信息
@@ -373,7 +256,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		}
 
 		List<OrderPrices> orderPricesList = orderPricesService.selectByOrderIds(orderIds);
-		
+
 		UserSearchVo searchVo = new UserSearchVo();
 		searchVo.setUserIds(userIds);
 		List<Users> userList = usersService.selectBySearchVo(searchVo);
@@ -544,7 +427,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	public OrderListVo getOrderListVo(Orders item) {
 
 		OrderListVo vo = new OrderListVo();
-		
+
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(item.getOrderNo());
 		searchVo.setDispatchStatus((short) 1);
@@ -554,12 +437,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		if (!orderDispatchs.isEmpty()) {
 			orderDispatch = orderDispatchs.get(0);
 		}
-		
-		if (orderDispatch == null) return vo;
-		
+
+		if (orderDispatch == null)
+			return vo;
 
 		Long staffId = orderDispatch.getStaffId();
-		
+
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(item.getId());
 		Users users = usersService.selectByPrimaryKey(item.getUserId());
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
@@ -571,12 +454,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 服务日期
 		Long addTime = item.getServiceDate() * 1000;
 		vo.setServiceDate(TimeStampUtil.timeStampToDateStr(addTime, "MM-dd HH:mm"));
-		
-		//如果为助理订单，则取addTime
-		if (vo.getOrderType().equals((short)2)) {
+
+		// 如果为助理订单，则取addTime
+		if (vo.getOrderType().equals((short) 2)) {
 			vo.setServiceDate(TimeStampUtil.timeStampToDateStr(item.getAddTime() * 1000, "MM-dd HH:mm"));
 		}
-		
+
 		// 服务类型名称
 		vo.setServiceTypeName("");
 		if (item.getServiceType() > 0L) {
@@ -586,21 +469,21 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setOrderTypeName("");
 		// 订单类型
 		if (item.getServiceType() > 0L) {
-	    	PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(item.getServiceType());
-	    	vo.setOrderTypeName(serviceType.getName());
+			PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(item.getServiceType());
+			vo.setOrderTypeName(serviceType.getName());
 		}
-		
+
 		// 订单支付名称
-		
+
 		vo.setPayTypeName("");
 		if (orderPrices != null) {
 			vo.setPayType(orderPrices.getPayType());
 			vo.setPayTypeName(OrderUtils.getPayTypeName(item.getOrderStatus(), orderPrices.getPayType()));
 		}
-		
+
 		Short level = orgStaffs.getLevel();
-		String settingLevel = "-level-"+level.toString();
-		
+		String settingLevel = "-level-" + level.toString();
+
 		// 订单价格信息
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(item.getId());
 		vo.setOrderIncoming(new BigDecimal(0));
@@ -619,11 +502,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 					vo.setOrderIncoming(orderIncoming);
 				}
 			}
-			
-			
+
 			if (vo.getOrderType() == 2) {
 				// 助理收入比例 am-ratio
-				String settingType = "am-ratio" +settingLevel;
+				String settingType = "am-ratio" + settingLevel;
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -634,7 +516,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 			if (vo.getOrderType() == 3) {
 				// 配送服务收入比例 dispatch-ratio
-				String settingType = "dis-ratio" +settingLevel;
+				String settingType = "dis-ratio" + settingLevel;
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -647,10 +529,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 		// button_word
 		vo.setButtonWord(OrderUtils.getButtonWordName(item.getOrderType(), item.getOrderStatus()));
-		
+
 		// 订单状态名称
 		vo.setOrderStatusStr(OrderUtils.getOrderStatusName(item.getOrderType(), item.getOrderStatus()));
-		
+
 		// 服务地址
 		vo.setServiceAddr("");
 		// 服务地址经度
@@ -662,7 +544,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			vo.setServiceAddr(userAddr.getName() + userAddr.getAddr());
 			vo.setServiceAddrLat(userAddr.getLatitude());
 			vo.setServiceAddrLng(userAddr.getLongitude());
-			
+
 		}
 		// 取货地址
 		vo.setPickAddr("");
@@ -673,16 +555,17 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 		// 距离服务地址多少米/千米
 		if (orderDispatchs != null) {
-			
+
 			int userAddrDisance = orderDispatch.getUserAddrDistance();
-			if (userAddrDisance < 0) userAddrDisance = 0;
-			
+			if (userAddrDisance < 0)
+				userAddrDisance = 0;
+
 			vo.setServiceAddrDistance(String.valueOf(userAddrDisance) + "米");
 			if (orderDispatch.getUserAddrDistance() > 1000) {
 				Double userAddrDisanceM = StringUtil.getKilometre(userAddrDisance);
 				vo.setServiceAddrDistance(userAddrDisanceM.toString() + "千米");
 			}
-						
+
 			// 取货地址
 			vo.setPickAddr("");
 			if (orderDispatch.getPickAddr() != null) {
@@ -691,7 +574,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 			// 距离多少米/千米
 			int pickDistance = orderDispatch.getPickDistance();
-			if (pickDistance < 0) pickDistance = 0;
+			if (pickDistance < 0)
+				pickDistance = 0;
 			vo.setPickAddrDistance(String.valueOf(pickDistance) + "米");
 			if (orderDispatch.getPickDistance() > 1000) {
 				Double pickDistanceM = StringUtil.getKilometre(pickDistance);
@@ -708,9 +592,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			if (orderDispatch.getPickAddrLng() != null) {
 				vo.setPickAddrLng(orderDispatch.getPickAddrLng());
 			}
-			
-			//如果为助理订单，则把pickAddr 也赋值到servcieAddr
-			if (vo.getOrderType().equals((short)2)) {
+
+			// 如果为助理订单，则把pickAddr 也赋值到servcieAddr
+			if (vo.getOrderType().equals((short) 2)) {
 				vo.setServiceAddr(orderDispatch.getPickAddrName() + orderDispatch.getPickAddr());
 				vo.setServiceAddrLat(orderDispatch.getPickAddrLat());
 				vo.setServiceAddrLng(orderDispatch.getPickAddrLng());
@@ -720,16 +604,16 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 		return vo;
 	}
-	
+
 	@Override
 	public OrderDetailVo getOrderDetailVo(Orders item) {
-		
+
 		OrderDetailVo result = new OrderDetailVo();
 		OrderListVo vo = this.getOrderListVo(item);
-		
+
 		BeanUtilsExp.copyPropertiesIgnoreNull(vo, result);
-		
-		//计算订单的收入比例
+
+		// 计算订单的收入比例
 		result.setOrderRatio("");
 		String settingType = "";
 		if (vo.getOrderType() == 0) {
@@ -740,40 +624,39 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			// 配送服务收入比例 am-ratio
 			settingType = "am-ratio";
 		}
-		
+
 		if (vo.getOrderType() == 3) {
 			// 配送服务收入比例 am-ratio
 			settingType = "dis-ratio";
 		}
-		
+
 		JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 		if (jhjSetting != null) {
 			result.setOrderRatio(jhjSetting.getSettingValue());
 		}
-		
-		//得出服务人员的客服电话
-		
+
+		// 得出服务人员的客服电话
+
 		jhjSetting = settingService.selectBySettingType("tell-staff");
 		if (jhjSetting != null) {
 			result.setTelStaff(jhjSetting.getSettingValue());
 		}
-		
+
 		Long staffId = vo.getStaffId();
 		Long orgId = 0L;
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
-		
+
 		if (orgStaffs != null) {
 			orgId = orgStaffs.getOrgId();
 		}
-		
+
 		if (orgId != null && orgId > 0L) {
 			Orgs org = orgsService.selectByPrimaryKey(orgId);
 			if (org != null) {
 				result.setTelStaff(org.getOrgTel());
 			}
 		}
-		
-		
+
 		return result;
 	}
 }

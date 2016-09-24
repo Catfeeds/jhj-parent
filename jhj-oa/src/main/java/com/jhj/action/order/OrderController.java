@@ -45,6 +45,7 @@ import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderPricesService;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
@@ -96,6 +97,9 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 
 	/**
 	 * 钟点工-----订单列表---orderType=0
@@ -105,7 +109,7 @@ public class OrderController extends BaseController {
 	 * @param oaOrderSearchVo
 	 * @return
 	 * @throws ParseException
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@AuthPassport
@@ -115,84 +119,89 @@ public class OrderController extends BaseController {
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ConstantOa.DEFAULT_PAGE_SIZE;
 		// 分页
-		
-		//查询条件的组合，需要做一些逻辑判断
-		//1. 如果为运营人员，则可以看所有的门店和所有状态
-		//2. 如果为店长，则只能看当前门店和已派工到该门店的人员.
-		
-		//查询条件： 设置为钟点工的订单
+
+		// 查询条件的组合，需要做一些逻辑判断
+		// 1. 如果为运营人员，则可以看所有的门店和所有状态
+		// 2. 如果为店长，则只能看当前门店和已派工到该门店的人员.
+
+		// 查询条件： 设置为钟点工的订单
 		if (searchVo == null) {
 			searchVo = new OrderSearchVo();
 		}
-		
-		//此方法只查普通服务
+
+		// 此方法只查普通服务
 		searchVo.setOrderType(Constants.ORDER_TYPE_0);
-		
-		//判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
+
+		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
-		if (sessionParentId > 0L) searchVo.setParentId(sessionParentId);
+		if (sessionParentId > 0L)
+			searchVo.setParentId(sessionParentId);
 		// 处理查询条件云店--------------------------------开始
 		// 1) 如果有查询条件云店org_id，则以查询条件的云店为准
 		// 2) 如果没有查询条件，则判断是否为店长，并且只能看店长所在门店下的所有云店.
-		
+
 		Long parentId = 0L;
 		String parentIdParam = request.getParameter("parentId");
-		if (!StringUtil.isEmpty(parentIdParam)) parentId = Long.valueOf(parentIdParam);
+		if (!StringUtil.isEmpty(parentIdParam))
+			parentId = Long.valueOf(parentIdParam);
 
-		if (parentId > 0L) searchVo.setParentId(parentId);
-		
+		if (parentId > 0L)
+			searchVo.setParentId(parentId);
+
 		Long orgId = 0L;
 		String orgIdParam = request.getParameter("orgId");
-		
-		if (!StringUtil.isEmpty(orgIdParam)) orgId = Long.valueOf(orgIdParam);
-		
-		if (orgId > 0L) searchVo.setOrgId(orgId);
-		
+
+		if (!StringUtil.isEmpty(orgIdParam))
+			orgId = Long.valueOf(orgIdParam);
+
+		if (orgId > 0L)
+			searchVo.setOrgId(orgId);
+
 		// 处理查询时间条件--------------------------------开始
-		//下单开始时间
+		// 下单开始时间
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr)) {
 			searchVo.setStartAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
-			
+
 			model.addAttribute("startTimeStr", startTimeStr);
 		}
 
-		//下单结束时间
+		// 下单结束时间
 		String endTimeStr = request.getParameter("endTimeStr");
 		if (!StringUtil.isEmpty(endTimeStr)) {
 			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
-			
+
 			model.addAttribute("endTimeStr", endTimeStr);
 		}
-		
-		//服务开始时间
+
+		// 服务开始时间
 		String serviceStartTime = request.getParameter("serviceStartTime");
 		if (!StringUtil.isEmpty(serviceStartTime)) {
 			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDay(serviceStartTime) / 1000);
-			
+
 			model.addAttribute("serviceStartTime", serviceStartTime);
 		}
-		//服务结束时间
+		// 服务结束时间
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
 			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDay(serviceEndTimeStr) / 1000);
-			
+
 			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
 		}
 		// 处理查询时间条件--------------------------------结束
-		
+
 		// 处理查询状态条件--------------------------------开始
 		if (searchVo.getOrderStatus() == null) {
-			//如果为店长只能看已派工状态之后的订单.
+			// 如果为店长只能看已派工状态之后的订单.
 			if (sessionParentId > 0L) {
 				List<Short> orderStatusList = new ArrayList<Short>();
 
-	            // 店长 可查看的 钟点工 订单状态列表： 已派工 之后的都可以查看
-	            // public static short ORDER_HOUR_STATUS_3=3;//已派工
-	            // public static short ORDER_HOUR_STATUS_5=5;//开始服务
-	            // public static short ORDER_HOUR_STATUS_7=7;//完成服务
-	            // public static short ORDER_HOUR_STATUS_8=8;//已评价
-	            // public static short ORDER_HOUR_STATUS_9=9;//已关闭
+				// 店长 可查看的 钟点工 订单状态列表： 已派工 之后的都可以查看
+				// public static short ORDER_HOUR_STATUS_3=3;//已派工
+				// public static short ORDER_HOUR_STATUS_5=5;//开始服务
+				// public static short ORDER_HOUR_STATUS_7=7;//完成服务
+				// public static short ORDER_HOUR_STATUS_8=8;//已评价
+				// public static short ORDER_HOUR_STATUS_9=9;//已关闭
 
 				orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
 				orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
@@ -204,8 +213,8 @@ public class OrderController extends BaseController {
 			}
 		}
 
-		PageInfo result = orderService.selectByListPage(searchVo, pageNo, pageSize);
-		
+		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
+
 		List<Orders> orderList = result.getList();
 		Orders orders = null;
 		for (int i = 0; i < orderList.size(); i++) {
@@ -219,7 +228,7 @@ public class OrderController extends BaseController {
 		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("searchModel", searchVo);
-		
+
 		return "order/orderHourList";
 	}
 
@@ -237,12 +246,13 @@ public class OrderController extends BaseController {
 	@AuthPassport
 	@RequestMapping(value = "/order-hour-view", method = RequestMethod.GET)
 	public String orderHourDetail(String orderNo, Short disStatus, Model model, HttpServletRequest request) {
+
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailHour(orderNo, disStatus);
-		
+
 		Orders orders = orderService.selectByOrderNo(orderNo);
-		
+
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
-		
+
 		oaOrderListVo.setVoList(list);
 
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
@@ -288,45 +298,6 @@ public class OrderController extends BaseController {
 		short orderType = oaOrderListVo.getOrderType();
 		if (orderType == Constants.ORDER_TYPE_1) {// 深度保洁
 			return "order/orderExpViewForm";
-		} else {
-			return "order/orderViewForm";
-		}
-	}
-
-	/*
-	 * 跳转显示可用服务人员列表
-	 * 
-	 * @param orderNo
-	 * 
-	 * @param disStatus
-	 * 
-	 * @param model
-	 * 
-	 * @param poiLongitude
-	 * 
-	 * @param poiLatitude
-	 * 
-	 * @param pickAddrName
-	 * 
-	 * @param pickAddr
-	 * 
-	 * @return
-	 */
-	// @AuthPassport
-	@RequestMapping(value = "/order-am-staff", method = RequestMethod.POST)
-	public String orderAmDetail(String orderNo, Short disStatus, Model model, String poiLongitude, String poiLatitude, String pickAddrName, String pickAddr,
-			String userAddrKey) {
-		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailAm(orderNo, disStatus, poiLongitude, poiLatitude);
-		oaOrderListVo.setPoiLongitude(poiLongitude);// 服务地址经度
-		oaOrderListVo.setPoiLatitude(poiLatitude);// 服务地址维度
-		oaOrderListVo.setPickAddr(pickAddr);// 服务地址门牌号
-		oaOrderListVo.setPickAddrName(pickAddrName);// 服务地址名称
-		oaOrderListVo.setUserAddrKey(userAddrKey);
-		oaOrderListVo.setFlag("1");// 是否显示服务人员列表1=显示，0=不显示
-		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
-		short orderType = oaOrderListVo.getOrderType();
-		if (orderType == Constants.ORDER_TYPE_2) {// 助理
-			return "order/orderAmViewForm";
 		} else {
 			return "order/orderViewForm";
 		}
@@ -388,7 +359,7 @@ public class OrderController extends BaseController {
 		if (!orderDispatchs.isEmpty()) {
 			orderDispatch = orderDispatchs.get(0);
 		}
-				
+
 		if (orderDispatch != null) {
 			Long staId = orderDispatch.getStaffId();
 			// 如果 没有 选择 新的 staffId ，或 这 staId 为空。。
@@ -405,11 +376,9 @@ public class OrderController extends BaseController {
 
 			orderPayService.orderPaySuccessToDoForHour(userId, id, orgStaffsNewVos, isChange);
 		}
-		
+
 		return "redirect:/order/order-list";
 	}
-
-
 
 	/**
 	 * 运营人员 为订单 添加 备注
@@ -453,46 +422,47 @@ public class OrderController extends BaseController {
 
 		return returnUrl;
 	}
-	
+
 	/**
-	 * 	取消助理订单
+	 * 取消助理订单
+	 * 
 	 * @param orderId
 	 * 
 	 * */
-	@RequestMapping(value="/cancelOrder/{id}",method=RequestMethod.GET)
-	public String cancelOrder(Model model,@PathVariable("id") Long orderId){
-		
-		Map<String,String> map=new HashMap<String,String>();
+	@RequestMapping(value = "/cancelOrder/{id}", method = RequestMethod.GET)
+	public String cancelOrder(Model model, @PathVariable("id") Long orderId) {
+
+		Map<String, String> map = new HashMap<String, String>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
 		int status = orderService.cancelByOrder(order);
-		if(status==0){
+		if (status == 0) {
 			map.put("success", "取消订单成功！");
-		}else{
+		} else {
 			map.put("fail", "订单取消失败！");
 		}
 		model.addAttribute("map", map);
 		String orderNo = order.getOrderNo();
 		Short orderType = order.getOrderType();
-		if(orderType==Constants.ORDER_TYPE_0){
-			return "redirect:../order-hour-view?orderNo="+orderNo+"&disStatus="+orderType;
+		if (orderType == Constants.ORDER_TYPE_0) {
+			return "redirect:../order-hour-view?orderNo=" + orderNo + "&disStatus=" + orderType;
 		}
-		if(orderType==Constants.ORDER_TYPE_2){
-			return "redirect:../order-am-view?orderNo="+orderNo+"&disStatus="+orderType;
+		if (orderType == Constants.ORDER_TYPE_2) {
+			return "redirect:../order-am-view?orderNo=" + orderNo + "&disStatus=" + orderType;
 		}
 		return null;
 	}
-	
-	//判断当前用户的角色
-	//判断用户是否有权限操作页面中的按钮， 如果，则显示该按钮，如果没有，则不显示改按钮
-	public Map<String,String> isRole(HttpServletRequest request){
+
+	// 判断当前用户的角色
+	// 判断用户是否有权限操作页面中的按钮， 如果，则显示该按钮，如果没有，则不显示改按钮
+	public Map<String, String> isRole(HttpServletRequest request) {
 		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
 		AccountRole accountRole = auth.getAccountRole();
-		List<String> list=new ArrayList<String>();
+		List<String> list = new ArrayList<String>();
 		list.add("系统管理员");
 		list.add("总部运营");
-		Map<String,String> map=null;
-		if(list.contains(accountRole.getName())){
-			map=new HashMap<String,String>();
+		Map<String, String> map = null;
+		if (list.contains(accountRole.getName())) {
+			map = new HashMap<String, String>();
 			map.put("role", "show");
 		}
 		return map;

@@ -28,6 +28,7 @@ import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceAppVo;
@@ -63,6 +64,10 @@ public class StaffQueryController extends BaseController {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrderStatService orderStatService;
+	
 	/**
 	 * 我的接口
 	 * @param request
@@ -110,10 +115,10 @@ public class StaffQueryController extends BaseController {
 		searchVo.setStaffId(staffId);
 		
 		//当月订单总数
-		Long totalOrder = orderQueryService.getTotalOrderCountByMouth(searchVo);
+		Long totalOrder = orderStatService.getTotalOrderCountByMouth(searchVo);
 		vo.setTotalOrder(totalOrder);
 		//当月收入
-		BigDecimal totalIncoming = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		BigDecimal totalIncoming = orderStatService.getTotalOrderIncomeMoney(searchVo);
 		vo.setTotalIncoming(totalIncoming);
 		
 		//获取技能信息

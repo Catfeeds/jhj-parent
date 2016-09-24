@@ -28,6 +28,7 @@ import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.admin.AdminAccountService;
 import com.jhj.service.cooperate.CooperateBusinessService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.chart.CoopUserOrderVo;
@@ -58,6 +59,9 @@ public class CooperatBusinessController extends BaseController {
 	
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private OrderStatService orderStatService;
 	/*
 	 * 合作商户列表
 	 */
@@ -249,7 +253,7 @@ public class CooperatBusinessController extends BaseController {
 		}
 		
 		//总订单数
-		Long sumOrder = orderService.totalOrderInUserIds(userIds);
+		Long sumOrder = orderStatService.totalOrderInUserIds(userIds);
 		
 		model.addAttribute("sumOrder",sumOrder);
 		
@@ -260,7 +264,7 @@ public class CooperatBusinessController extends BaseController {
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		PageHelper.startPage(pageNo, pageSize);
 		
-		List<CoopUserOrderVo> userOrderList = orderService.totalUserAndOrder(userIds);
+		List<CoopUserOrderVo> userOrderList = orderStatService.totalUserAndOrder(userIds);
 		
 		
 		PageInfo result = new PageInfo(userOrderList);

@@ -26,15 +26,9 @@ public interface OaOrderService {
 	OaOrderListVo getOrderExpVoDetail(String orderNo,Short disStatus); 
 	//获取钟点工订单详情
 	OaOrderListVo getOrderVoDetailHour(String orderNo,Short disStatus); 
-	//获取助理订单详情
-	OaOrderListVo getOrderVoDetailAm(String orderNo,Short disStatus,String poiLongitude,String poiLatitude); 
 	
-	OaOrderListVo getOrderVoDetailAm(String orderNo,Short disStatus); 
-	//获取配送订单详情
-	OaOrderListVo getOrderVoDetailDel(String orderNo,Short disStatus); 
-	//助理 and 配送订单 vo转换
-	OaOrderListNewVo completeNewVo(Orders orders);
-
 	Map<String, String> getUserAddrMap(Long userId);
+
+	OaOrderListNewVo completeNewVo(Orders orders);
 	
 }

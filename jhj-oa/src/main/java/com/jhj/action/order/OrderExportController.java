@@ -32,6 +32,7 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OaOrderService;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
@@ -73,6 +74,9 @@ public class OrderExportController extends BaseController {
 
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 
 	/*
 	 * 导出 钟点工订单列表
@@ -173,7 +177,7 @@ public class OrderExportController extends BaseController {
 			;
 		}
 
-		List<Orders> orderList = orderService.selectBySearchVo(searchVo);
+		List<Orders> orderList = orderQueryService.selectBySearchVo(searchVo);
 
 		/*
 		 * 2. 转换导出字段为 页面的 vo字段

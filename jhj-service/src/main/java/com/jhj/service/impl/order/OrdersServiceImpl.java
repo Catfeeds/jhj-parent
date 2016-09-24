@@ -47,6 +47,7 @@ public class OrdersServiceImpl implements OrdersService {
 
 	@Autowired
 	private OrdersMapper ordersMapper;
+	
 	@Autowired
 	private OrderPricesMapper orderPricesMapper;
 
@@ -277,28 +278,9 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public List<Orders> selectOrderListByAmId(Long amId, int pageNo, int pageSize) {
-		PageHelper.startPage(pageNo, pageSize);
-		OrderSearchVo orderSearchVo = new OrderSearchVo();
-		orderSearchVo.setAmId(amId);
-		List<Orders> list = ordersMapper.selectByListPage(orderSearchVo);
-		return list;
-	}
-
-	@Override
-	public List<HashMap> totalByUserIds(List<Long> id) {
-		return ordersMapper.totalByUserIds(id);
-	}
-
-	@Override
 	public int updateCleanUpdateTime(Orders orders) {
 
 		return ordersMapper.updateByCleanUpdateTimeSelective(orders);
-	}
-
-	@Override
-	public int totalIntimacyOrders(Map<String, Long> map) {
-		return ordersMapper.totalIntimacyOrders(map);
 	}
 
 	@Override
@@ -328,16 +310,6 @@ public class OrdersServiceImpl implements OrdersService {
 		String[] content = new String[] { code, Constants.GET_CODE_MAX_VALID };
 		SmsUtil.SendSms(mobile, Constants.STAFF_JOIN_BLACK, content);
 		return true;
-	}
-
-	@Override
-	public Long totalOrderInUserIds(List<Long> userIds) {
-		return ordersMapper.totalOrderInUserIds(userIds);
-	}
-
-	@Override
-	public List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds) {
-		return ordersMapper.totalUserAndOrder(userIds);
 	}
 
 	@Override
@@ -573,18 +545,4 @@ public class OrdersServiceImpl implements OrdersService {
 
 		return 0;
 	}
-
-	@Override
-	public List<Orders> selectBySearchVo(OrderSearchVo searchVo) {
-		return ordersMapper.selectBySearchVo(searchVo);
-	}
-
-	@Override
-	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
-		PageHelper.startPage(pageNo, pageSize);
-		List<Orders> list = ordersMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
-		return result;
-	}
-
 }

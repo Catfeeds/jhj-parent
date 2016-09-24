@@ -16,6 +16,8 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
@@ -38,6 +40,12 @@ public class UserRefAmServiceImpl implements UserRefAmService {
 
 	@Autowired
 	private UserAddrsService userAddrsService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
+	
+	@Autowired
+	private OrderStatService orderStatService;
 
 	@Override
 	public UserRefAm selectByAmId(Long userId) {
@@ -99,7 +107,7 @@ public class UserRefAmServiceImpl implements UserRefAmService {
 		// 1.获得用户列表
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setAmId(vo.getStaffId());
-		List<Orders> list = ordersService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		// 2.获得用户对应的ids
 		for (Orders item : list) {
@@ -108,7 +116,7 @@ public class UserRefAmServiceImpl implements UserRefAmService {
 		// 3.获得ids的数量
 		List<HashMap> counts = new ArrayList<HashMap>();
 		if (!userIds.isEmpty()) {
-			counts = ordersService.totalByUserIds(userIds);
+			counts = orderStatService.totalByUserIds(userIds);
 		}
 
 		for (HashMap serviceCounts : counts) {

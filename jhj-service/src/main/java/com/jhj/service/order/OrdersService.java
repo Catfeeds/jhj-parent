@@ -33,17 +33,7 @@ public interface OrdersService {
 
 	Orders selectByOrderNo(String orderNo);
 
-	List<Orders> selectOrderListByAmId(Long amId, int pageNo, int pageSize);
-
-	List<Orders> selectBySearchVo(OrderSearchVo searchVo);
-
-	PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
-	
 	OrderViewVo changeOrderViewVo(Orders orders);
-
-	int totalIntimacyOrders(Map<String, Long> map);
-
-	List<HashMap> totalByUserIds(List<Long> userIds);
 
 	Boolean orderAmSuccessTodo(String orderNo);
 
@@ -56,14 +46,6 @@ public interface OrdersService {
 	Boolean userOrderPostDoneSuccessTodo(Orders orders);
 
 	Boolean userJoinBlackSuccessTodo(String mobile);
-
-	Long totalOrderInUserIds(List<Long> userIds);
-
-	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
-
-	/*
-	 * 2016年5月4日10:32:26 jhj2.1 取消订单 通用 处理
-	 */
 
 	// 取消 基础服务订单（钟点工）
 	String cancelBaseOrder(Orders order);

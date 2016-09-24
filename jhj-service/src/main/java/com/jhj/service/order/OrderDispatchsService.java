@@ -1,6 +1,7 @@
 package com.jhj.service.order;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.vo.order.OrderDispatchSearchVo;
@@ -32,5 +33,7 @@ public interface OrderDispatchsService {
 	Long totalStaffTodayOrders(Long staffId);
 
 	List<OrderDispatchs> selectByMatchTime(OrderDispatchSearchVo searchVo);
+
+	List<Map<String, Object>> totalByYearAndMonth(Map<String, Object> conditions);
    	
 }

@@ -26,6 +26,7 @@ import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserGetAmService;
@@ -76,6 +77,9 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 	private PartnerServiceTypeService partService;
 	
 	@Autowired
+	private OrderStatService orderStatService;
+	
+	@Autowired
 	private OrderDispatchsMapper disMapper;
 	
 	/*
@@ -100,7 +104,7 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		map.put("userId", userId);
 		map.put("amId", staffId);
 		
-		int orderNum = orderService.totalIntimacyOrders(map);
+		int orderNum = orderStatService.totalIntimacyOrders(map);
 		
 		userGetAmVo.setOrderNum(orderNum);
 		

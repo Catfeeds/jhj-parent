@@ -18,6 +18,7 @@ import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.service.bs.OrgStaffInviteService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
@@ -39,6 +40,9 @@ public class StaffTimeController extends BaseController {
 	
 	@Autowired
 	private OrderQueryService orderQueryService;
+	
+	@Autowired
+	private OrderStatService orderStatService;
 	/**
 	 * 定时任务
 	 */
@@ -78,7 +82,7 @@ public class StaffTimeController extends BaseController {
 			searchVo.setOrderStatus((short)7);
 			searchVo.setStaffId(orgStaffInvite.getInviteStaffId());
 			//被邀请的服务人员的订单
-			Long count = orderQueryService.getTotalOrderCountByMouth(searchVo);
+			Long count = orderStatService.getTotalOrderCountByMouth(searchVo);
 			if (count != null) {
 				//把推荐这个用户的id更新，完成多少单更新
 				orgStaffInvite.setInviteOrderCount(count.shortValue());

@@ -105,6 +105,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 	
 	@Override
+	public List<Map<String, Object>> totalByYearAndMonth(Map<String, Object> conditions) {
+		return orderDisMapper.totalByYearAndMonth(conditions);
+	}
+	
+	@Override
 	public Long totalStaffTodayOrders(Long staffId) {
 		return orderDisMapper.totalStaffTodayOrders(staffId);
 	}

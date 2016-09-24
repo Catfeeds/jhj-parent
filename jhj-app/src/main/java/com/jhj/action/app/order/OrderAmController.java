@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
@@ -57,17 +58,6 @@ import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
 
-
-
-
-
-
-
-
-
-
-
-
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
@@ -87,7 +77,7 @@ public class OrderAmController extends BaseController {
 
 	@Autowired
 	private OrderExpCleanService orderExpCleanService;
-	
+
 	@Autowired
 	private OrderPricesService orderPricesService;
 
@@ -108,27 +98,28 @@ public class OrderAmController extends BaseController {
 
 	@Autowired
 	private OrderServiceAddonsService orderServiceAddonsService;
-	
+
 	@Autowired
 	private UserAddrsService userAddrsService;
-	
+
 	@Autowired
 	private UserCouponsService userCouponsService;
-	
+
 	@Autowired
 	private DictCouponsService dictCouponsService;
 
 	@Autowired
 	private OrderLogService orderLogService;
-	
+
 	@Autowired
 	private UserDetailPayService userDetailPayService;
-	
+
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
-	
+
 	@Autowired
 	private PartnerServiceTypeService partService;
+
 	/**
 	 * 用户预约下单接口
 	 * 
@@ -141,16 +132,12 @@ public class OrderAmController extends BaseController {
 	 */
 
 	@RequestMapping(value = "post_user", method = RequestMethod.POST)
-	public AppResultData<Object> saveUserOrder(
-			Model model,
-			HttpServletRequest request,
-			@RequestParam("user_id") Long userId,
+	public AppResultData<Object> saveUserOrder(Model model, HttpServletRequest request, @RequestParam("user_id") Long userId,
 			@RequestParam("service_type") Long serviceType,
-			@RequestParam(value ="service_content",required = false,defaultValue= "") String serviceContent,
-			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom){
+			@RequestParam(value = "service_content", required = false, defaultValue = "") String serviceContent,
+			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom) {
 
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		Users u = userService.selectByPrimaryKey(userId);
 
@@ -163,8 +150,7 @@ public class OrderAmController extends BaseController {
 
 		// 服务内容进行urldecode;
 		try {
-			serviceContent = URLDecoder.decode(serviceContent,
-					Constants.URL_ENCODE);
+			serviceContent = URLDecoder.decode(serviceContent, Constants.URL_ENCODE);
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -172,7 +158,6 @@ public class OrderAmController extends BaseController {
 			result.setMsg(ConstantMsg.ERROR_100_MSG);
 			return result;
 		}
-
 
 		// 调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
@@ -195,26 +180,27 @@ public class OrderAmController extends BaseController {
 			ordersService.userOrderAmSuccessTodo(orderNo);
 		}
 
-		//  返回orderView
+		// 返回orderView
 		OrderViewVo vo = orderQueryService.getOrderView(order);
 
-		result = new AppResultData<Object>(Constants.SUCCESS_0,
-				ConstantMsg.SUCCESS_0_MSG, vo);
-		
+		result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, vo);
+
 		/*
-		 *  2016年4月14日10:48:53  
-		 *  
-		 *  您预定的{1}服务已经受理，感谢您的支持，我们会尽快与您联系，如有任何疑问请拨打010-56429112
+		 * 2016年4月14日10:48:53
+		 * 
+		 * 您预定的{1}服务已经受理，感谢您的支持，我们会尽快与您联系，如有任何疑问请拨打010-56429112
 		 */
-		
-//		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
-//		//服务类型名称
-//		String name = type.getName();
-//		
-//		String[] paySuccessForUser = new String[] {name};
-//		
-//		SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_SERVICE_ORDER_SUCCESS, paySuccessForUser);
-		
+
+		// PartnerServiceType type =
+		// partService.selectByPrimaryKey(serviceType);
+		// //服务类型名称
+		// String name = type.getName();
+		//
+		// String[] paySuccessForUser = new String[] {name};
+		//
+		// SmsUtil.SendSms(u.getMobile(),
+		// Constants.MESSAGE_SERVICE_ORDER_SUCCESS, paySuccessForUser);
+
 		return result;
 	}
 
@@ -228,12 +214,10 @@ public class OrderAmController extends BaseController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "get_user_am", method = RequestMethod.POST)
-	public AppResultData<Object> Am(HttpServletRequest request,
-			@RequestParam("order_id") Long orderId,
-			@RequestParam("order_no") Long orderNo) throws ParseException {
+	public AppResultData<Object> Am(HttpServletRequest request, @RequestParam("order_id") Long orderId, @RequestParam("order_no") Long orderNo)
+			throws ParseException {
 
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		Orders orders = ordersService.selectByPrimaryKey(orderId);
 
@@ -261,45 +245,39 @@ public class OrderAmController extends BaseController {
 	 */
 
 	@RequestMapping(value = "post_user_am", method = RequestMethod.POST)
-	public AppResultData<Object> saveUserAm(HttpServletRequest request,
-			OrderSearchVo searchVo, Model model,
-			@RequestParam("order_no") String orderNo,
-			@RequestParam("service_content") String serviceContent,
-			@RequestParam("order_money") BigDecimal orderMoney)
-			throws IllegalAccessException, InvocationTargetException {
+	public AppResultData<Object> saveUserAm(HttpServletRequest request, OrderSearchVo searchVo, Model model, @RequestParam("order_no") String orderNo,
+			@RequestParam("service_content") String serviceContent, @RequestParam("order_money") BigDecimal orderMoney) throws IllegalAccessException,
+			InvocationTargetException {
 
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
-//		boolean isMoneyNum = MathBigDeciamlUtil.decideIsMoneyNum(orderMoney);
-//		
-//		//后台校验。如果是 负数，返回错误信息
-//		if(!isMoneyNum){
-//			result = new AppResultData<Object>(Constants.ERROR_999, "订单金额不合法", "");
-//			return result;
-//		}
-		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+		// boolean isMoneyNum = MathBigDeciamlUtil.decideIsMoneyNum(orderMoney);
+		//
+		// //后台校验。如果是 负数，返回错误信息
+		// if(!isMoneyNum){
+		// result = new AppResultData<Object>(Constants.ERROR_999, "订单金额不合法",
+		// "");
+		// return result;
+		// }
+
 		// 根据order_id查找记录，没有则返回“订单不存在”
 		// Orders orders = ordersService.selectByPrimaryKey(orderId);
 		Orders orders = ordersService.selectByOrderNo(orderNo);
 
 		if (orders == null) {
-			result = new AppResultData<Object>(Constants.ERROR_999,
-					ConstantMsg.ORDER_NO_NOT_EXIST_MG, "");
+			result = new AppResultData<Object>(Constants.ERROR_999, ConstantMsg.ORDER_NO_NOT_EXIST_MG, "");
 			return result;
 		}
 		// 根据订单状态order_status判断是否为 1 （待确认），不是则返回“订单已确认过，不需要重复处理”
 		if (orders.getOrderStatus() != 1) {
-			result = new AppResultData<Object>(Constants.ERROR_999,
-					ConstantMsg.ORDER_NO_NOT_CONFIRM, "");
+			result = new AppResultData<Object>(Constants.ERROR_999, ConstantMsg.ORDER_NO_NOT_CONFIRM, "");
 			return result;
 		}
 		// 更新新订单信息, 注意更新为两张表 order表的update_time, orderPrice 做更新
 
 		// 服务内容进行urldecode;
 		try {
-			serviceContent = URLDecoder.decode(serviceContent,
-					Constants.URL_ENCODE);
+			serviceContent = URLDecoder.decode(serviceContent, Constants.URL_ENCODE);
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -325,67 +303,62 @@ public class OrderAmController extends BaseController {
 			record.setOrderMoney(orderMoney);
 			record.setAddTime(TimeStampUtil.getNow() / 1000);
 			orderPricesService.insertSelective(record);
-			
+
 		}
 		// 记录订单状态到order_log表
 		if (orderNo != null) {
 			// 记录订单日志
 			ordersService.userOrderAmSuccessTodo(orderNo);
-			
+
 		}
 
-		/*OrderLog orderLog = new OrderLog();
-		orderLog.setOrderId(orders.getId());
-		orderLog.setMobile(orders.getMobile());
-		orderLog.setOrderNo(orders.getOrderNo());
-		orderLog.setOrderStatus(orders.getOrderStatus());
-		orderLog.setRemarks("");
-		orderLog.setAddTime(TimeStampUtil.getNow() / 1000);
-
-		ordersService.insert(orderLog);
-*/
+		/*
+		 * OrderLog orderLog = new OrderLog();
+		 * orderLog.setOrderId(orders.getId());
+		 * orderLog.setMobile(orders.getMobile());
+		 * orderLog.setOrderNo(orders.getOrderNo());
+		 * orderLog.setOrderStatus(orders.getOrderStatus());
+		 * orderLog.setRemarks("");
+		 * orderLog.setAddTime(TimeStampUtil.getNow() / 1000);
+		 * 
+		 * ordersService.insert(orderLog);
+		 */
 		OrderViewVo vo = orderQueryService.getOrderView(orders);
 
-		result = new AppResultData<Object>(Constants.SUCCESS_0,
-				ConstantMsg.SUCCESS_0_MSG, vo);
+		result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, vo);
 		return result;
 	}
-    /**
-     * 助理修改深度保洁订单
-     * @param request
-     * @param searchVo
-     * @param model
-     * @param serviceContent
-     * @param orderNo
-     * @param orderMoney	//2015-10-31 14:10:33 此处 由于存在  “手动” 价格调整，传参应该是    alter-order-view-1页面的  order_moneys  ！！！
-     * @param orderDate
-     * @return
-     */
-	@RequestMapping(value="post_am_clean", method = RequestMethod.POST)
-	public AppResultData<Object> saveCleanAm(HttpServletRequest request,
-			Model model,
-			@RequestParam("order_no") String orderNo,
-			@RequestParam("order_moneys") BigDecimal orderMoney,
-			@RequestParam("service_addons_datas") String serviceAddonsDatas
-			){
-		
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
-		
-		
-		
+
+	/**
+	 * 助理修改深度保洁订单
+	 * 
+	 * @param request
+	 * @param searchVo
+	 * @param model
+	 * @param serviceContent
+	 * @param orderNo
+	 * @param orderMoney
+	 *            //2015-10-31 14:10:33 此处 由于存在 “手动” 价格调整，传参应该是
+	 *            alter-order-view-1页面的 order_moneys ！！！
+	 * @param orderDate
+	 * @return
+	 */
+	@RequestMapping(value = "post_am_clean", method = RequestMethod.POST)
+	public AppResultData<Object> saveCleanAm(HttpServletRequest request, Model model, @RequestParam("order_no") String orderNo,
+			@RequestParam("order_moneys") BigDecimal orderMoney, @RequestParam("service_addons_datas") String serviceAddonsDatas) {
+
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
 		Orders orders = ordersService.selectByOrderNo(orderNo);
 		if (orders == null) {
 			return result;
 		}
-		//如果订单不是待确认状态，就提示已经确认过
+		// 如果订单不是待确认状态，就提示已经确认过
 		if (orders.getOrderStatus() != 1) {
-			result = new AppResultData<Object>(Constants.ERROR_100,
-					ConstantMsg.ORDER_NO_NOT_CONFIRM, "");
+			result = new AppResultData<Object>(Constants.ERROR_100, ConstantMsg.ORDER_NO_NOT_CONFIRM, "");
 			return result;
 		}
-		
+
 		Users u = userService.selectByPrimaryKey(orders.getUserId());
 		/**
 		 * 更新订单信息
@@ -398,7 +371,7 @@ public class OrderAmController extends BaseController {
 			record.setOrderMoney(orderMoney);
 			record.setUpdateTime(TimeStampUtil.getNow() / 1000);
 			orderPricesService.updateByPrimaryKeySelective(record);
-		}else {
+		} else {
 			record = orderPricesService.initOrderPrices();
 			record.setOrderNo(orders.getOrderNo());
 			record.setOrderId(orders.getId());
@@ -411,71 +384,71 @@ public class OrderAmController extends BaseController {
 		/*
 		 * 3.更新订单附加服务表
 		 */
-		
+
 		int results = orderServiceAddonsService.deleteByOrderNo(orderNo);
-		List<OrderServiceAddons> lists = orderExpCleanService.updateOrderServiceAddons(orders.getServiceType(),serviceAddonsDatas);
+		List<OrderServiceAddons> lists = orderExpCleanService.updateOrderServiceAddons(orders.getServiceType(), serviceAddonsDatas);
 		for (Iterator iterator = lists.iterator(); iterator.hasNext();) {
 			OrderServiceAddons orderServiceAddons = (OrderServiceAddons) iterator.next();
 			orderServiceAddons.setOrderId(orders.getId());
 			orderServiceAddons.setUserId(u.getId());
 			orderServiceAddons.setOrderNo(orderNo);
-			if(orderServiceAddons.getItemNum()!=0){
+			if (orderServiceAddons.getItemNum() != 0) {
 				orderServiceAddonsService.insertSelective(orderServiceAddons);
 			}
 		}
-		
-			ordersService.orderExpCleanSuccessTodo(orderNo);
-			// 记录订单状态到order_log表
-			OrderLog orderLog = new OrderLog();
-			orderLog.setOrderId(orders.getId());
-			orderLog.setMobile(orders.getMobile());
-			orderLog.setOrderNo(orders.getOrderNo());
-			orderLog.setOrderStatus(orders.getOrderStatus());
-			orderLog.setRemarks("");
-			orderLog.setAddTime(TimeStampUtil.getNow() / 1000);
 
-			ordersService.insert(orderLog);
-			
-			OrderViewVo vo = orderQueryService.getOrderView(orders);
-		
-			DeepCleanVo deepCleanVo = new DeepCleanVo();
-			
-			//通过orderNo到order_service_addons查找对应的记录(为了得到ItemUnit、ItemNum的值)
-			List<OrderServiceAddons> listPre = orderServiceAddonsService.selectByOrderNo(orderNo);
-			List<OrderServiceAddonViewVo> list = orderServiceAddonsService.changeToOrderServiceAddons(listPre);
-			try {
-				BeanUtils.copyProperties(deepCleanVo,vo);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-			//助理调整订单成功给用户发短信
-			if(orders.getOrderStatus()==Constants.ORDER_STATUS_3){
-				Long serviceDate = orders.getServiceDate();
-				String serviceDateString = TimeStampUtil.timeStampToDateStr(serviceDate*1000, " yyyy-MM-dd HH:MM:ss");
-//				String[] content = new String[] { ""+serviceDateString};
-//				HashMap<String, String> sendSmsResult = SmsUtil.SendSms(u.getMobile(),
-//					Constants.AM_CLEAN_NOTICE_CUSTOMER_Message, content);
-			}
-			deepCleanVo.setCouponId(record.getCouponId());
-			deepCleanVo.setList(list);
-			result.setData(deepCleanVo);
+		ordersService.orderExpCleanSuccessTodo(orderNo);
+		// 记录订单状态到order_log表
+		OrderLog orderLog = new OrderLog();
+		orderLog.setOrderId(orders.getId());
+		orderLog.setMobile(orders.getMobile());
+		orderLog.setOrderNo(orders.getOrderNo());
+		orderLog.setOrderStatus(orders.getOrderStatus());
+		orderLog.setRemarks("");
+		orderLog.setAddTime(TimeStampUtil.getNow() / 1000);
+
+		ordersService.insert(orderLog);
+
+		OrderViewVo vo = orderQueryService.getOrderView(orders);
+
+		DeepCleanVo deepCleanVo = new DeepCleanVo();
+
+		// 通过orderNo到order_service_addons查找对应的记录(为了得到ItemUnit、ItemNum的值)
+		List<OrderServiceAddons> listPre = orderServiceAddonsService.selectByOrderNo(orderNo);
+		List<OrderServiceAddonViewVo> list = orderServiceAddonsService.changeToOrderServiceAddons(listPre);
+		try {
+			BeanUtils.copyProperties(deepCleanVo, vo);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		// 助理调整订单成功给用户发短信
+		if (orders.getOrderStatus() == Constants.ORDER_STATUS_3) {
+			Long serviceDate = orders.getServiceDate();
+			String serviceDateString = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, " yyyy-MM-dd HH:MM:ss");
+			// String[] content = new String[] { ""+serviceDateString};
+			// HashMap<String, String> sendSmsResult =
+			// SmsUtil.SendSms(u.getMobile(),
+			// Constants.AM_CLEAN_NOTICE_CUSTOMER_Message, content);
+		}
+		deepCleanVo.setCouponId(record.getCouponId());
+		deepCleanVo.setList(list);
+		result.setData(deepCleanVo);
 		return result;
 	}
+
 	/**
 	 * 根据amId查询助理预约订单
 	 * 
 	 * @param amId
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "get_am_order_list", method = RequestMethod.GET)
-	public AppResultData<Object> getAmOrderList(
-			@RequestParam("am_id") Long amId,
-			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+	public AppResultData<Object> getAmOrderList(@RequestParam("am_id") Long amId, @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		// 验证userId是否是秘书
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(amId);
@@ -483,9 +456,11 @@ public class OrderAmController extends BaseController {
 			return result;
 		}
 
-		List<Orders> list = ordersService.selectOrderListByAmId(amId, page,
-				Constants.PAGE_MAX_NUMBER);
-
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setAmId(amId);
+		PageInfo pageResult = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
+		
+		List<Orders> list = pageResult.getList();
 		List<OrderViewVo> listView = new ArrayList<OrderViewVo>();
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Orders orders = (Orders) iterator.next();
@@ -498,6 +473,7 @@ public class OrderAmController extends BaseController {
 
 	/**
 	 * 深度保洁助理订单展示
+	 * 
 	 * @param amId
 	 * @param orderNo
 	 * @return
@@ -505,40 +481,37 @@ public class OrderAmController extends BaseController {
 	 * @throws InvocationTargetException
 	 */
 	@RequestMapping(value = "get_am_clean_detail", method = RequestMethod.GET)
-	public AppResultData<Object> getAmClean(@RequestParam("am_id") Long amId,
-			@RequestParam("order_no") String orderNo)
-		 {
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-        //验证是否是秘书
+	public AppResultData<Object> getAmClean(@RequestParam("am_id") Long amId, @RequestParam("order_no") String orderNo) {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		// 验证是否是秘书
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(amId);
 		if (orgStaffs == null) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
 			return result;
 		}
-        //通过orderNo找到对应的定单
+		// 通过orderNo找到对应的定单
 		Orders orders = ordersService.selectByOrderNo(orderNo);
 		if (orders == null) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.ORDER_NO_NOT_EXIST_MG);
 			return result;
 		}
-          
+
 		OrderViewVo vo = orderQueryService.getOrderView(orders);
-        
+
 		if (vo == null) {
 
 			return result;
 
-		}		
+		}
 		DeepCleanVo deepCleanVo = new DeepCleanVo();
-		 
-		//通过orderNo到order_service_addons查找对应的记录(为了得到ItemUnit、ItemNum的值)
+
+		// 通过orderNo到order_service_addons查找对应的记录(为了得到ItemUnit、ItemNum的值)
 		List<OrderServiceAddons> listPre = orderServiceAddonsService.selectByOrderNo(orderNo);
-		
+
 		List<OrderServiceAddonViewVo> list = orderServiceAddonsService.changeToOrderServiceAddons(listPre);
-		//通过orderNo到order_price查找对应的记录(为了得到CouponId的值)
+		// 通过orderNo到order_price查找对应的记录(为了得到CouponId的值)
 		OrderPrices orderPrices = orderPricesService.selectByOrderIds(orderNo);
 
 		if (list == null || orderPrices == null) {
@@ -546,22 +519,22 @@ public class OrderAmController extends BaseController {
 			return result;
 
 		}
-         
-	    try {
-			BeanUtils.copyProperties(deepCleanVo,vo);
+
+		try {
+			BeanUtils.copyProperties(deepCleanVo, vo);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-	    
+
 		deepCleanVo.setCouponId(orderPrices.getCouponId());
 		deepCleanVo.setList(list);
-		
-		UserCoupons  userCoupons = userCouponsService.selectByOrderNo(deepCleanVo.getOrderNo());
-		if(userCoupons !=null){
+
+		UserCoupons userCoupons = userCouponsService.selectByOrderNo(deepCleanVo.getOrderNo());
+		if (userCoupons != null) {
 			DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(userCoupons.getCouponId());
-			if(dictCoupons !=null){
+			if (dictCoupons != null) {
 				deepCleanVo.setIntroduction(dictCoupons.getIntroduction());
 			}
 		}
@@ -574,17 +547,15 @@ public class OrderAmController extends BaseController {
 
 	/**
 	 * 助理预约单详情
+	 * 
 	 * @param orderNo
 	 * @param amId
 	 * @return
 	 */
 	@RequestMapping(value = "get_am_order_detail", method = RequestMethod.GET)
-	public AppResultData<Object> getAmOrderDetail(
-			@RequestParam("order_no") String orderNo,
-			@RequestParam("am_id") Long amId) {
+	public AppResultData<Object> getAmOrderDetail(@RequestParam("order_no") String orderNo, @RequestParam("am_id") Long amId) {
 
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		OrgStaffs orderStaffs = orgStaffsService.selectByPrimaryKey(amId);
 
@@ -607,106 +578,103 @@ public class OrderAmController extends BaseController {
 		result.setData(vo);
 		return result;
 	}
-	
+
 	/**
 	 * 取消订单
+	 * 
 	 * @param orderNo
 	 * @return
 	 */
-	@RequestMapping(value="cancle_am_order", method = RequestMethod.POST)
-	public AppResultData<Object> cancleAmAlder(
-			@RequestParam("order_no") String orderNo){
-		
-		AppResultData<Object> result = new AppResultData<Object>(
-				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
+	@RequestMapping(value = "cancle_am_order", method = RequestMethod.POST)
+	public AppResultData<Object> cancleAmAlder(@RequestParam("order_no") String orderNo) {
+
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
 		Orders orders = ordersService.selectByOrderNo(orderNo);
-		
+
 		if (orders == null) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.ORDER_NO_NOT_EXIST_MG);
 			return result;
 		}
-		
+
 		// 防止重复 取消
-		if(orders.getOrderStatus() == 0){
+		if (orders.getOrderStatus() == 0) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.HAVE_CANCLE);
 			return result;
 		}
-		
+
 		/*
-		 * 取消订单时，对于 已经在 order_dispatches 表中 有 派工  的订单，
-		 * 			需要将其派工状态 设置为 无效 0 。
-		 *      解决，后台派工列表  空指针 bug
+		 * 取消订单时，对于 已经在 order_dispatches 表中 有 派工 的订单，
+		 * 需要将其派工状态 设置为 无效 0 。
+		 * 解决，后台派工列表 空指针 bug
 		 */
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(orderNo);
 		searchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
-		
+
 		OrderDispatchs orderDispatch = null;
 		if (!orderDispatchs.isEmpty()) {
 			orderDispatch = orderDispatchs.get(0);
 		}
-		
-		if(orderDispatch != null){
-			orderDispatch.setDispatchStatus((short)0);
+
+		if (orderDispatch != null) {
+			orderDispatch.setDispatchStatus((short) 0);
 			orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
 			orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
 		}
-		
-		
+
 		/**
-		 *  2016年5月4日10:24:14 
-		 * 	
-		 * 	jhj2.1 取消订单逻辑 
+		 * 2016年5月4日10:24:14
 		 * 
-		 * 	可以取消订单的 大类：  
+		 * jhj2.1 取消订单逻辑
 		 * 
-		 * 			钟点工：  已支付=2 (可以取消，退全款) 
-		 * 				       已派工=3 (可以取消，2小时以上退全款，2小时内不退款)
-		 * 			
-		 * 			助理:  已预约 = 1(可以取消)
-		 * 				    已确认 = 2 (可以取消)		
-		 * 			              已支付 = 3（可以取消）
-		 * 				   已派工 = 4（可以取消，退全款）					
+		 * 可以取消订单的 大类：
+		 * 
+		 * 钟点工： 已支付=2 (可以取消，退全款)
+		 * 已派工=3 (可以取消，2小时以上退全款，2小时内不退款)
+		 * 
+		 * 助理: 已预约 = 1(可以取消)
+		 * 已确认 = 2 (可以取消)
+		 * 已支付 = 3（可以取消）
+		 * 已派工 = 4（可以取消，退全款）
 		 * 
 		 */
-		
-		String  cancelResultStr = "";
-		
-		//钟点工，取消
-		if(orders.getOrderType() == Constants.ORDER_TYPE_0){
-			
+
+		String cancelResultStr = "";
+
+		// 钟点工，取消
+		if (orders.getOrderType() == Constants.ORDER_TYPE_0) {
+
 			OrderPrices orderPrices = orderPricesService.selectByOrderNo(orderNo);
 			if (orderPrices == null) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg(ConstantMsg.ORDER_NO_NOT_EXIST_MG);
 				return result;
 			}
-			
+
 			cancelResultStr = ordersService.cancelBaseOrder(orders);
 		}
-		
-		
+
 		// 助理类订单取消
-		if(orders.getOrderType() == Constants.ORDER_TYPE_2){
-			
+		if (orders.getOrderType() == Constants.ORDER_TYPE_2) {
+
 			OrderPrices orderPrices = orderPricesService.selectByOrderNo(orderNo);
 			if (orderPrices == null) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg(ConstantMsg.ORDER_NO_NOT_EXIST_MG);
 				return result;
 			}
-			
+
 			cancelResultStr = ordersService.cancelAmOrder(orders);
-			
+
 		}
-		
+
 		result.setStatus(Constants.SUCCESS_0);
 		result.setMsg(cancelResultStr);
 		return result;
-				
+
 	}
 }

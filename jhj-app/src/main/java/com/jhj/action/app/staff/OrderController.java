@@ -35,6 +35,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
@@ -86,6 +87,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private SettingService settingService;
+	
+	@Autowired
+	private OrderStatService orderStatService;
 
 	/**
 	 * 当日统计数接口
@@ -134,14 +138,14 @@ public class OrderController extends BaseController {
 		vo.setTotalOnline((long) 0);
 		
 		// 订单总数
-		Long totalOrder = orderQueryService.getTotalOrderCount(searchVo);
+		Long totalOrder = orderStatService.getTotalOrderCount(searchVo);
 		vo.setTotalOrder(totalOrder);
 		
 		// 订单总金额
-		BigDecimal totalOrderMoney = orderQueryService.getTotalOrderMoney(searchVo);
+		BigDecimal totalOrderMoney = orderStatService.getTotalOrderMoney(searchVo);
 		vo.setTotalOrderMoney(totalOrderMoney);
 		// 订单收入总金额
-		BigDecimal totalOrderIncoming = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		BigDecimal totalOrderIncoming = orderStatService.getTotalOrderIncomeMoney(searchVo);
 		vo.setTotalIncoming(totalOrderIncoming);
 		
 		result.setData(vo);
