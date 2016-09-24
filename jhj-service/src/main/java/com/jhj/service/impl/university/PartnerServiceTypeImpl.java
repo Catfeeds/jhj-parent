@@ -89,7 +89,9 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		
 		type.setServiceContent("");
 		
+		type.setIsAuto((short) 1);
 		
+		type.setIsMulti((short) 0);
 		return type;
 	}
 

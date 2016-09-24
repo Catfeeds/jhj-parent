@@ -33,6 +33,7 @@ import com.jhj.action.admin.AdminController;
 import com.jhj.common.Constants;
 import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.meijia.utils.BeanUtilsExp;
@@ -62,6 +63,7 @@ public class NewPartnerServiceTypeController extends AdminController {
 	  * @Description: 
 	  * 		jhj2.1 服务类别树形展示		
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/service_type_list", method = { RequestMethod.GET })
 	public String serviceTypeList(HttpServletRequest request, Model model) {
 		if (!model.containsAttribute("contentModel")) {
@@ -88,6 +90,7 @@ public class NewPartnerServiceTypeController extends AdminController {
 	  * @return String    返回类型
 	  * @throws
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/add/{id}", method = { RequestMethod.GET })
 	public String toAddServiceForm(HttpServletRequest request, Model model,
 			@PathVariable(value = "id") Integer id) {
@@ -127,6 +130,7 @@ public class NewPartnerServiceTypeController extends AdminController {
 	 * @return 权限的树形展示页面
 	 * @throws IOException 
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/add/{id}", method = { RequestMethod.POST })
 	public String addService(HttpServletRequest request,Model model,
 			@Valid @ModelAttribute("contentModelForm") PartnerServiceType paramServiceType,
@@ -188,6 +192,7 @@ public class NewPartnerServiceTypeController extends AdminController {
 	 * @param id
 	 * @return 跳转到编辑页面
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/edit/{id}", method = { RequestMethod.GET })
 	public String edit(HttpServletRequest request, Model model,
 			@PathVariable(value = "id") Long id) {
@@ -231,6 +236,7 @@ public class NewPartnerServiceTypeController extends AdminController {
 			
 			2.第二种方法，可以使用 @initBinder 注解处理 date、double等类型 在 springmvc的处理
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/edit/{id}", method = { RequestMethod.POST })
 	public String editIt(HttpServletRequest request,	Model model,
 			@Valid @ModelAttribute("contentModelForm") PartnerServiceType partnerServiceType,
@@ -298,6 +304,7 @@ public class NewPartnerServiceTypeController extends AdminController {
 	 * @param id
 	 * @return 跳转到权限树形展示
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/delete/{id}", method = { RequestMethod.GET })
 	public String delete(HttpServletRequest request, Model model,@PathVariable(value = "id") String id) {
 		

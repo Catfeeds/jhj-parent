@@ -74,7 +74,7 @@
                            <div class="form-group required">
                               <label  class="col-md-2 control-label">服务内容</label>
                               <div class="col-md-5">
-                                 <form:textarea path="serviceContent" rows="5" cols="50"
+                                 <form:textarea path="serviceContent" class="form-control" rows="5" cols="50"
                                  		placeholder="不超过120字,助理类订单,该字段作为服务说明" maxlength="120"/>
                               </div>
                            </div>
@@ -106,15 +106,21 @@
                            		</div>
                            </div>
                            
-                           
-                           <%-- <div class="form-group">
-                              <label  class="col-md-2 control-label">服务类别</label>
+                           <div class="form-group">
+                              <label  class="col-md-2 control-label">自动派工</label>
                               <div class="col-md-5">
-                              	 <form:radiobutton path="viewType" value="1" label="商品" />
-								 <form:radiobutton path="viewType" value="0" label="类别" />
+                              	 <form:radiobutton path="isAuto" value="1" label="是" />
+								 <form:radiobutton path="isAuto" value="0" label="否" />
                               </div>
-                           </div> --%>
+                           </div>
                            
+                           <div class="form-group">
+                              <label  class="col-md-2 control-label">一单多人</label>
+                              <div class="col-md-5">
+                              	 <form:radiobutton path="isMulti" value="1" label="是" />
+								 <form:radiobutton path="isMulti" value="0" label="否" />
+                              </div>
+                           </div>
                            
                            <div class="form-group">
                               <label  class="col-md-2 control-label">是否可用</label>
@@ -123,8 +129,7 @@
 								 <form:radiobutton path="enable" value="0" label="不可用" />
                               </div>
                            </div>
-                           
-                           
+
                            <div class="form-group">
                               <label  class="col-md-2 control-label">列表排序</label>
                               <div class="col-md-5">
@@ -132,16 +137,14 @@
                                  <form:errors path="no" class="field-has-error"/>
                               </div>
                            </div>
-                           
-                           
+
 	                       <div class="form-group">
 								<label class="col-md-2 control-label">图片</label>
 								<div class="col-md-5">
 									<img src="${contentModelForm.serviceImgUrl }" style="display:block;width:100%;max-width:200px;max-height:200px;"/>
 								</div>
 							</div>
-							
-	
+
 							<div class="form-group">
 								<label class="col-md-2 control-label">服务类别图标</label>
 								<div class="col-md-5">
@@ -149,8 +152,7 @@
 										data-show-upload="false">
 								</div>
 							</div> 
-                           
-                           
+
                            <div class="form-group">
                               <label  class="col-md-2 control-label">隶属于&nbsp;*</label>
                               <div class="col-md-5">

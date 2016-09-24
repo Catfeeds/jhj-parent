@@ -1,271 +1,301 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.university.PartnerServiceTypeMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.university.PartnerServiceType" >
-    <id column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="parent_id" property="parentId" jdbcType="NUMERIC" />
-    <result column="unit" property="unit" jdbcType="VARCHAR" />
-    <result column="default_num" property="defaultNum" jdbcType="NUMERIC" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
-    <result column="view_type" property="viewType" jdbcType="NUMERIC" />
-    <result column="no" property="no" jdbcType="NUMERIC" />
-    <result column="service_img_url" property="serviceImgUrl" jdbcType="VARCHAR" />
-    <result column="enable" property="enable" jdbcType="NUMERIC" />
-    <result column="service_property" property="serviceProperty" jdbcType="NUMERIC" />
-    <result column="service_times" property="serviceTimes" jdbcType="NUMERIC" />
-    <result column="service_content" property="serviceContent" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    service_type_id, name, parent_id, unit, default_num, price, remarks, view_type, no, 
-    service_img_url, enable, service_property, service_times, service_content
-  </sql>
-  
-  
-  
-   <resultMap id="AmKillVoMap" type="com.jhj.vo.app.AmSkillVo">
-		<result column="firstServiceType" property="firstServiceType"/>
-		<result column="childrenServiceName" property="childrenServiceName"  />
-  </resultMap>
-  
-  <!-- 根据 员工会的 二级技能， 得到  一级技能和 二级技能（会的）名称 -->
-  <select id="selectSkillNameAndParent" resultMap="AmKillVoMap">
-  	SELECT 
-  		parent_id AS firstServiceType,
-  		GROUP_CONCAT(name) AS childrenServiceName
-  	FROM 
-  		partner_service_type
-	WHERE 
-		service_type_id IN 
+<mapper namespace="com.jhj.po.dao.university.PartnerServiceTypeMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.university.PartnerServiceType">
+		<id column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="NUMERIC" />
+		<result column="unit" property="unit" jdbcType="VARCHAR" />
+		<result column="default_num" property="defaultNum" jdbcType="NUMERIC" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="view_type" property="viewType" jdbcType="NUMERIC" />
+		<result column="no" property="no" jdbcType="NUMERIC" />
+		<result column="service_img_url" property="serviceImgUrl" jdbcType="VARCHAR" />
+		<result column="enable" property="enable" jdbcType="NUMERIC" />
+		<result column="service_property" property="serviceProperty" jdbcType="NUMERIC" />
+		<result column="service_times" property="serviceTimes" jdbcType="NUMERIC" />
+		<result column="service_content" property="serviceContent" jdbcType="VARCHAR" />
+		<result column="is_auto" property="isAuto" jdbcType="NUMERIC" />
+		<result column="is_multi" property="isMulti" jdbcType="NUMERIC" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		service_type_id, name, parent_id, unit, default_num, price, remarks, view_type, no,
+		service_img_url, enable, service_property, service_times, service_content, is_auto, is_multi
+	</sql>
+
+
+
+	<resultMap id="AmKillVoMap" type="com.jhj.vo.app.AmSkillVo">
+		<result column="firstServiceType" property="firstServiceType" />
+		<result column="childrenServiceName" property="childrenServiceName" />
+	</resultMap>
+
+	<!-- 根据 员工会的 二级技能， 得到 一级技能和 二级技能（会的）名称 -->
+	<select id="selectSkillNameAndParent" resultMap="AmKillVoMap">
+		SELECT
+		parent_id AS firstServiceType,
+		GROUP_CONCAT(name) AS childrenServiceName
+		FROM
+		partner_service_type
+		WHERE
+		service_type_id IN
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-				#{item}
+			#{item}
 		</foreach>
-	GROUP BY parent_id
-  </select>
-  
-  
-  <!-- 所有的 没有子服务的 最底层的 服务 -->
-  <select id="selectAllNoChildService" resultMap="BaseResultMap">
-  	select 
-    	<include refid="Base_Column_List" />
-    from 
-    	partner_service_type
-    where
-    	service_type_id NOT IN
-    	(
-    		select parent_id from partner_service_type
-    	)
-  </select>
-  
-  <!-- 根据 parentId得到 service --> 
-  <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
-  	select 
-    	<include refid="Base_Column_List" />
-    from 
-    	partner_service_type
-    where 
-    	parent_id = #{parentId,jdbcType=NUMERIC}
-  </select>
-  
-  <select id="selectNoParentService" resultMap="BaseResultMap">
-  	select 
-    <include refid="Base_Column_List" />
-    from partner_service_type
-  	where 
-  	parent_id = 0
-  </select>
-  
-  <!-- 下拉选择类别 -->
-  <select id="selectAll" resultMap="BaseResultMap">
-  	select 
-    <include refid="Base_Column_List" />
-    from partner_service_type
-  </select>
-  
-  <!-- 2015-12-2 16:21:38 运营平台 列表展示  -->
-  <select id="selectByListPage" resultMap="BaseResultMap">
-  	select 
-    <include refid="Base_Column_List" />
-    from partner_service_type
-  </select>
-  
-  
-  
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from partner_service_type
-    where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from partner_service_type
-    where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.university.PartnerServiceType" >
-    insert into partner_service_type (service_type_id, name, parent_id, 
-      unit, default_num, price, 
-      remarks, view_type, no, 
-      service_img_url, enable, service_property, 
-      service_times, service_content)
-    values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC}, 
-      #{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL}, 
-      #{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC}, 
-      #{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC}, 
-      #{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType" >
-    insert into partner_service_type
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="serviceTypeId != null" >
-        service_type_id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="parentId != null" >
-        parent_id,
-      </if>
-      <if test="unit != null" >
-        unit,
-      </if>
-      <if test="defaultNum != null" >
-        default_num,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-      <if test="remarks != null" >
-        remarks,
-      </if>
-      <if test="viewType != null" >
-        view_type,
-      </if>
-      <if test="no != null" >
-        no,
-      </if>
-      <if test="serviceImgUrl != null" >
-        service_img_url,
-      </if>
-      <if test="enable != null" >
-        enable,
-      </if>
-      <if test="serviceProperty != null" >
-        service_property,
-      </if>
-      <if test="serviceTimes != null" >
-        service_times,
-      </if>
-      <if test="serviceContent != null" >
-        service_content,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="serviceTypeId != null" >
-        #{serviceTypeId,jdbcType=NUMERIC},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="parentId != null" >
-        #{parentId,jdbcType=NUMERIC},
-      </if>
-      <if test="unit != null" >
-        #{unit,jdbcType=VARCHAR},
-      </if>
-      <if test="defaultNum != null" >
-        #{defaultNum,jdbcType=NUMERIC},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="remarks != null" >
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="viewType != null" >
-        #{viewType,jdbcType=NUMERIC},
-      </if>
-      <if test="no != null" >
-        #{no,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceImgUrl != null" >
-        #{serviceImgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="enable != null" >
-        #{enable,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceProperty != null" >
-        #{serviceProperty,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceTimes != null" >
-        #{serviceTimes,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceContent != null" >
-        #{serviceContent,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.PartnerServiceType" >
-    update partner_service_type
-    <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="parentId != null" >
-        parent_id = #{parentId,jdbcType=NUMERIC},
-      </if>
-      <if test="unit != null" >
-        unit = #{unit,jdbcType=VARCHAR},
-      </if>
-      <if test="defaultNum != null" >
-        default_num = #{defaultNum,jdbcType=NUMERIC},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="remarks != null" >
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="viewType != null" >
-        view_type = #{viewType,jdbcType=NUMERIC},
-      </if>
-      <if test="no != null" >
-        no = #{no,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceImgUrl != null" >
-        service_img_url = #{serviceImgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="enable != null" >
-        enable = #{enable,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceProperty != null" >
-        service_property = #{serviceProperty,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceTimes != null" >
-        service_times = #{serviceTimes,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceContent != null" >
-        service_content = #{serviceContent,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.PartnerServiceType" >
-    update partner_service_type
-    set name = #{name,jdbcType=VARCHAR},
-      parent_id = #{parentId,jdbcType=NUMERIC},
-      unit = #{unit,jdbcType=VARCHAR},
-      default_num = #{defaultNum,jdbcType=NUMERIC},
-      price = #{price,jdbcType=DECIMAL},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      view_type = #{viewType,jdbcType=NUMERIC},
-      no = #{no,jdbcType=NUMERIC},
-      service_img_url = #{serviceImgUrl,jdbcType=VARCHAR},
-      enable = #{enable,jdbcType=NUMERIC},
-      service_property = #{serviceProperty,jdbcType=NUMERIC},
-      service_times = #{serviceTimes,jdbcType=NUMERIC},
-      service_content = #{serviceContent,jdbcType=VARCHAR}
-    where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
-  </update>
+		GROUP BY parent_id
+	</select>
+
+
+	<!-- 所有的 没有子服务的 最底层的 服务 -->
+	<select id="selectAllNoChildService" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		partner_service_type
+		where
+		service_type_id NOT IN
+		(
+		select parent_id from partner_service_type
+		)
+	</select>
+
+	<!-- 根据 parentId得到 service -->
+	<select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		partner_service_type
+		where
+		parent_id = #{parentId,jdbcType=NUMERIC}
+
+		and enable = 1
+	</select>
+
+	<select id="selectNoParentService" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from partner_service_type
+		where
+		parent_id = 0
+		and enable = 1
+	</select>
+
+	<!-- 下拉选择类别 -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from partner_service_type where enable = 1
+	</select>
+
+	<!-- 2015-12-2 16:21:38 运营平台 列表展示 -->
+	<select id="selectByListPage" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from partner_service_type where enable = 1
+	</select>
+
+
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from partner_service_type
+		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from partner_service_type
+		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.university.PartnerServiceType">
+		insert into partner_service_type (service_type_id, name, parent_id,
+		unit, default_num, price,
+		remarks, view_type, no,
+		service_img_url, enable, service_property,
+		service_times, service_content, is_auto, is_multi)
+		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC},
+		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL},
+		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC},
+		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
+		#{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR}, 
+		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType">
+		insert into partner_service_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="serviceTypeId != null">
+				service_type_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			<if test="defaultNum != null">
+				default_num,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="viewType != null">
+				view_type,
+			</if>
+			<if test="no != null">
+				no,
+			</if>
+			<if test="serviceImgUrl != null">
+				service_img_url,
+			</if>
+			<if test="enable != null">
+				enable,
+			</if>
+			<if test="serviceProperty != null">
+				service_property,
+			</if>
+			<if test="serviceTimes != null">
+				service_times,
+			</if>
+			<if test="serviceContent != null">
+				service_content,
+			</if>
+			<if test="isAuto != null">
+				is_auto,
+			</if>
+			
+			<if test="isMulti != null">
+				is_multi,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="serviceTypeId != null">
+				#{serviceTypeId,jdbcType=NUMERIC},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultNum != null">
+				#{defaultNum,jdbcType=NUMERIC},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="viewType != null">
+				#{viewType,jdbcType=NUMERIC},
+			</if>
+			<if test="no != null">
+				#{no,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceImgUrl != null">
+				#{serviceImgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="enable != null">
+				#{enable,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceProperty != null">
+				#{serviceProperty,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceTimes != null">
+				#{serviceTimes,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceContent != null">
+				#{serviceContent,jdbcType=VARCHAR},
+			</if>
+			<if test="isAuto != null">
+				#{isAuto,jdbcType=NUMERIC},
+			</if>
+			
+			<if test="isMulti != null">
+				#{isMulti,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.university.PartnerServiceType">
+		update partner_service_type
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="unit != null">
+				unit = #{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultNum != null">
+				default_num = #{defaultNum,jdbcType=NUMERIC},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="viewType != null">
+				view_type = #{viewType,jdbcType=NUMERIC},
+			</if>
+			<if test="no != null">
+				no = #{no,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceImgUrl != null">
+				service_img_url = #{serviceImgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="enable != null">
+				enable = #{enable,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceProperty != null">
+				service_property = #{serviceProperty,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceTimes != null">
+				service_times = #{serviceTimes,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceContent != null">
+				service_content = #{serviceContent,jdbcType=VARCHAR},
+			</if>
+			<if test="isAuto != null">
+				is_auto = #{isAuto,jdbcType=NUMERIC},
+			</if>
+			
+			<if test="isMulti != null">
+				is_multi = #{isMulti,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.university.PartnerServiceType">
+		update partner_service_type
+		set name = #{name,jdbcType=VARCHAR},
+		parent_id = #{parentId,jdbcType=NUMERIC},
+		unit = #{unit,jdbcType=VARCHAR},
+		default_num = #{defaultNum,jdbcType=NUMERIC},
+		price = #{price,jdbcType=DECIMAL},
+		remarks = #{remarks,jdbcType=VARCHAR},
+		view_type = #{viewType,jdbcType=NUMERIC},
+		no = #{no,jdbcType=NUMERIC},
+		service_img_url = #{serviceImgUrl,jdbcType=VARCHAR},
+		enable = #{enable,jdbcType=NUMERIC},
+		service_property = #{serviceProperty,jdbcType=NUMERIC},
+		service_times = #{serviceTimes,jdbcType=NUMERIC},
+		service_content = #{serviceContent,jdbcType=VARCHAR},
+		is_auto = #{isAuto,jdbcType=NUMERIC},
+		is_multi = #{isMulti,jdbcType=NUMERIC},
+		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+	</update>
 </mapper>
