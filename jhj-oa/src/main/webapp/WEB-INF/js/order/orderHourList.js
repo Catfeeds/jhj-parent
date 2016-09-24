@@ -1,3 +1,5 @@
+$("#parentId").trigger("change");
+
 $('.form_datetime').datepicker({
 	format: 'yyyy-mm-dd',
 	language : "zh-CN",

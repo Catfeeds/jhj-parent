@@ -47,6 +47,10 @@
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 		<include refid="bySearchVo" />
 	</select>
+	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
+		<include refid="bySearchVo" />
+	</select>
 
 	<sql id="bySearchVo">
 		select
@@ -148,15 +152,19 @@
 		</if>
 		
 		<if test="parentId !=null">
-			and order_id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC})
 		</if>
 		
-		<if test="orgId !=null">
-			and order_id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC})
+		<if test="orgId !=null and orgId != 0">
+			and id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC})
 		</if>
 		
 		<if test="isApply !=null">
-			and order_id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC})
+		</if>
+		
+		<if test="addrName !=null and addrName !=''">
+			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE)  )
 		</if>
 
 		order by add_time desc

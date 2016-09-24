@@ -45,6 +45,14 @@
 									action="order-hour-list" method="GET" id="oaSearchForm">
 									<table class="table">
 										<tr>
+											<td>选择门店:</td>
+											<td><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
+											<td>选择云店:</td>
+											<td>
+												<select name="orgId" id="orgId" class="form-control">
+													<option value="0">全部</option>
+												</select>
+											</td>
 											<td>订单状态：</td>
 											<td><c:if test="${loginOrgId == 0 }">
 													<form:select path="orderStatus" class="form-control">
@@ -67,39 +75,45 @@
 														<form:option value="8">已评价</form:option>
 														<form:option value="9">已关闭</form:option>
 													</form:select>
-												</c:if></td>
-											<td>选择云店:</td>
-											<td><cloudOrgSelectTag:select selectId="${searchModel.orgId }" logInParentOrgId="${loginOrgId }" /></td>
+												</c:if>
+											</td>
 										</tr>
-										<tr>
-											<td>下单时间：</td>
-											<td>
-												<input id="startTimeStr" name="startTimeStr" class="form-control form_datetime" style="width:170px; margin-bottom:0" readonly="true" /> 
-												<span>至</span> 
-												<input id="endTimeStr" name="endTimeStr" class="form-control form_datetime" style="width:170px; margin-bottom:0" readonly="true" /></td>
-											<td>服务日期：</td>
-											<td colspan="2">
-												<input id="serviceStartTimeStr" name="serviceStartTimeStr" class="form-control form-datetime" style="width:170px; margin-bottom:0" readonly="true" /> 
-												<span>至</span> 
-												<input id="serviceEndTimeStr" name="serviceEndTimeStr" class="form-control form-datetime" style="width:170px; margin-bottom:0" readonly="true" /></td>
-										</tr>
+										
 										<tr>
 											<td>手机号：</td>
 											<td><form:input path="mobile" class="form-control" placeholder="请输入手机号" /></td>
+											<td>服务地址：</td>
+											<td><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
+											
 											<td>是否接单</td>
 											<td><form:select path="isApply" class="form-control">
 													<option value="">全部</option>
 													<form:option value="1">是</form:option>
 													<form:option value="0">否</form:option>
 												</form:select></td>
-											<td colspan="3">
+											
+										</tr>
+										
+										<tr>
+											<td>下单时间：</td>
+											<td><input id="startTimeStr" name="startTimeStr" value="${startTimeStr }" class="form-control form_datetime"
+													style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> <input id="endTimeStr"
+													name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" /></td>
+											<td>服务日期：</td>
+											<td colspan="2"><input id="serviceStartTimeStr" name="serviceStartTimeStr" value="${serviceStartTimeStr }"
+													class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span>
+												<input id="serviceEndTimeStr" name="serviceEndTimeStr" value="${serviceEndTimeStr }" class="form-control form-datetime"
+													style="width: 170px; margin-bottom: 0" readonly="true" /></td>
+											<td></td>
+											<td></td>
+											
+										</tr>
+										
+										<tr>
+											<td colspan="6">
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
-											</td>
-										</tr>
-										<tr>
-											<td>服务地址：</td>
-											<td><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
+											</td>					
 										</tr>
 									</table>
 								</form:form>
@@ -179,15 +193,14 @@
 	<!-- js placed at the end of the document so the pages load faster -->
 	<!--common script for all pages-->
 	<%@ include file="../shared/importJs.jsp"%>
-	<script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script>
+	<script src="<c:url value='/assets/jquery.table2excel.js'/>"></script>
 	<!--script for this page-->
-	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
-	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
-	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>
-	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
+	
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<script src="<c:url value='/js/order/orderHourList.js'/>"></script>
 </body>
 </html>

@@ -181,10 +181,6 @@
 	<%}%>
 </div>
 
-
-<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
-<script src="http://libs.baidu.com/jqueryui/1.10.2/jquery-ui.min.js"></script>
-
 <script type="text/javascript">
 
 $("#gotoUrl").on("click",function(){

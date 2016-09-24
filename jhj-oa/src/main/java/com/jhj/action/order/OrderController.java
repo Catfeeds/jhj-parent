@@ -107,6 +107,7 @@ public class OrderController extends BaseController {
 	 * @throws ParseException
 	 * @throws UnsupportedEncodingException 
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@AuthPassport
 	@RequestMapping(value = "/order-hour-list", method = RequestMethod.GET)
 	public String getOrderHourList(Model model, HttpServletRequest request, OrderSearchVo searchVo) throws ParseException, UnsupportedEncodingException {
@@ -152,23 +153,31 @@ public class OrderController extends BaseController {
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr)) {
 			searchVo.setStartAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
+			
+			model.addAttribute("startTimeStr", startTimeStr);
 		}
 
 		//下单结束时间
 		String endTimeStr = request.getParameter("endTimeStr");
 		if (!StringUtil.isEmpty(endTimeStr)) {
 			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
+			
+			model.addAttribute("endTimeStr", endTimeStr);
 		}
 		
 		//服务开始时间
 		String serviceStartTime = request.getParameter("serviceStartTime");
 		if (!StringUtil.isEmpty(serviceStartTime)) {
 			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDay(serviceStartTime) / 1000);
+			
+			model.addAttribute("serviceStartTime", serviceStartTime);
 		}
 		//服务结束时间
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
 			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDay(serviceEndTimeStr) / 1000);
+			
+			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
 		}
 		// 处理查询时间条件--------------------------------结束
 		
@@ -194,13 +203,7 @@ public class OrderController extends BaseController {
 				searchVo.setOrderStatusList(orderStatusList);
 			}
 		}
-		
-		String addrName = searchVo.getAddrName();
-		if(!StringUtil.isEmpty(addrName)){
-			addrName = new String(addrName.getBytes("ISO-8859-1"),"UTF-8");
-			searchVo.setAddrName(addrName);;
-		}
-		
+
 		PageInfo result = orderService.selectByListPage(searchVo, pageNo, pageSize);
 		
 		List<Orders> orderList = result.getList();
@@ -216,7 +219,7 @@ public class OrderController extends BaseController {
 		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("searchModel", searchVo);
-
+		
 		return "order/orderHourList";
 	}
 

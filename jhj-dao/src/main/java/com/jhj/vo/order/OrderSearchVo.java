@@ -58,6 +58,8 @@ public class OrderSearchVo {
 	private Long orgId;
 	
 	private String addrName;
+	
+	private Short isApply;
 
 	public String getMobile() {
 		return mobile;
@@ -273,5 +275,13 @@ public class OrderSearchVo {
 
 	public void setAddrName(String addrName) {
 		this.addrName = addrName;
+	}
+
+	public Short getIsApply() {
+		return isApply;
+	}
+
+	public void setIsApply(Short isApply) {
+		this.isApply = isApply;
 	}
 }
