@@ -359,15 +359,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setOrderAddress(userAddrs.getName()+""+userAddrs.getAddr());
 		}
 		
-		/*
-		 * 2016年3月23日19:05:58  jhj2.1     基础保洁类订单 新的基本派工逻辑
-		 */
-		List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orders.getId(),orders.getServiceDate());
-		
-		Long addrId = orders.getAddrId();
-		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
-		
-		
 		// 查找对应订单有效派工
 		
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
@@ -378,16 +369,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if(orderDisList.size() > 0){
 			
 			OrderDispatchs dispatchs = orderDisList.get(0);
-			
-			/*
-			 *  如果  派工逻辑 未找到可用 派工。
-			 * 
-			 *  但是 已经有派工记录
-			 */
-			if(staIdList.size() == 0){
-				staIdList.add(0, dispatchs.getStaffId());
-			}
-			
+						
 			//已经派工的员工id
 			oaOrderListVo.setStaffId(dispatchs.getStaffId());
 			
@@ -418,31 +400,8 @@ public class OaOrderServiceImpl implements OaOrderService {
 			}
 			
 			
-		}else{
-			
-			/*
-			 * 如果派工逻辑 未找到 可用派工 
-			 * 	
-			 * 也无 派工记录	
-			 */
-			if(staIdList.size() == 0){
-				staIdList.add(0,0L);
-			}
 		}
-		
-		// //可用 服务人员 VO
-		// List<OrgStaffsNewVo> staVoList =
-		// newDisStaService.getTheNearestStaff(addrs.getLatitude(),
-		// addrs.getLongitude(), staIdList);
-		//
-		// if(staVoList.size() <= 0){
-		//
-		// OrgStaffsNewVo staffNewVo = staffService.initOrgStaffNewVo();
-		// staVoList.add(staffNewVo);
-		// }
-		//
-		// oaOrderListVo.setVoList(staVoList);
-		
+				
 		return oaOrderListVo;
 	}
 	
@@ -545,12 +504,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderAddress(userAddrs.getName()+ " " + userAddrs.getAddress());
 			}
 		}
-//		// 门店名称
-//		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
-//
-//		if (orgs != null) {
-//			oaOrderListVo.setOrgName(orgs.getOrgName());
-//		}
+
 		// 查找出有效派工
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(orderNo);

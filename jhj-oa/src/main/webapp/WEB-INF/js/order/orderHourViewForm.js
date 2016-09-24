@@ -186,7 +186,7 @@ $("#parentId").on('change', function() {
 	loadStaffs();
 });
 
-$("#cloudId").on('change', function() {
+$("#orgId").on('change', function() {
 	loadStaffs();
 });
 
@@ -203,15 +203,15 @@ function loadStaffs() {
 		return false;
 	}
 	
-	var cloudId = $("#cloudId").val();
+	var orgId = $("#orgId").val();
 	
 	$.ajax({
 		type : "get",
 		url : "/jhj-oa/new_dispatch/load_staff_by_change_cloud_org.json",
 		data : {
 			"orderId" : orderId,
-			"orgId" : parentId,
-			"cloudId" : cloudId
+			"parentId" : parentId,
+			"orgId" : orgId
 		},
 		dataType : "json",
 		success : loadStaffDynamic

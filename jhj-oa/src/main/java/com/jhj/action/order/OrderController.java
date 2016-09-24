@@ -249,12 +249,6 @@ public class OrderController extends BaseController {
 
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailHour(orderNo, disStatus);
 
-		Orders orders = orderService.selectByOrderNo(orderNo);
-
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
-
-		oaOrderListVo.setVoList(list);
-
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
 
 		// 得到 当前登录 的 店长所在 门店id，

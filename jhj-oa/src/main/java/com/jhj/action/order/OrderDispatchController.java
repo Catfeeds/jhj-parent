@@ -452,8 +452,8 @@ public class OrderDispatchController extends BaseController {
 	 */
 	@RequestMapping(value = "load_staff_by_change_cloud_org.json", method = RequestMethod.GET)
 	public List<OrgStaffsNewVo> loadProperStaffListForBaseByCloudOrg(Model model, 
-			@RequestParam("orderId") Long orderId, @RequestParam("orgId") Long orgId,
-			@RequestParam("cloudId") Long cloudId) {
+			@RequestParam("orderId") Long orderId, @RequestParam("parentId") Long parentId,
+			@RequestParam("orgId") Long orgId) {
 
 		Orders orders = orderSevice.selectByPrimaryKey(orderId);
 
@@ -464,7 +464,7 @@ public class OrderDispatchController extends BaseController {
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus == Constants.ORDER_HOUR_STATUS_2 || orderStatus == Constants.ORDER_HOUR_STATUS_3) {
 
-			list = newDisService.getAbleStaffListByCloudOrg(orderId, orgId, cloudId);
+			list = newDisService.getAbleStaffListByCloudOrg(orderId, parentId, orgId);
 
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setDispatchStatus((short) 1);

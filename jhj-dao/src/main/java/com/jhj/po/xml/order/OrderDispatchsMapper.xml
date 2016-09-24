@@ -143,11 +143,11 @@
 		</if>
 
 		<if test="startServiceHourTime !=null">
-			<![CDATA[ and (service_date + service_hour *3600) >= #{startServiceHourTime}]]>
+			<![CDATA[ and (service_date + service_hours *3600) >= #{startServiceHourTime}]]>
 		</if>
 
 		<if test="endServiceHourTime !=null">
-			<![CDATA[ and (service_date + service_hour *3600) <= #{endServiceHourTime}]]>
+			<![CDATA[ and (service_date + service_hours *3600) <= #{endServiceHourTime}]]>
 		</if>
 
 		<if test="startAddTime !=null">
@@ -171,6 +171,19 @@
 			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
 		</if>
 	</sql>
+	
+	<select id="selectByMatchTime" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from order_dispatchs where 1=1 and dispatch_status = 1 and
+	<![CDATA[    
+	  	 (
+	  		(service_date >= #{startTime}  and service_date <= #{endTime} )
+	  		or
+	    	((service_date+ service_hours*3600) >= #{startTime} and (service_date+ service_hours*3600) <= #{endTime})
+	    ) 
+  		]]>
+	</select>
 
 	<!-- 该服务人员 今天的 派工数量 -->
 	<select id="totalStaffTodayOrders" resultType="java.lang.Long" parameterType="java.lang.Long">
@@ -219,7 +232,7 @@
 		from order_dispatchs
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
-	
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from order_dispatchs
 		where id = #{id,jdbcType=NUMERIC}
@@ -241,7 +254,8 @@
 		#{orgId,jdbcType=NUMERIC}, #{parentId,jdbcType=NUMERIC},
 		#{staffId,jdbcType=NUMERIC},
 		#{staffName,jdbcType=VARCHAR}, #{staffMobile,jdbcType=CHAR}, #{remarks,jdbcType=VARCHAR},
-		#{amId,jdbcType=NUMERIC}, #{dispatchStatus,jdbcType=NUMERIC},
+		#{amId,jdbcType=NUMERIC},
+		#{dispatchStatus,jdbcType=NUMERIC},
 		#{pickAddrName,jdbcType=VARCHAR},#{pickAddrLat,jdbcType=VARCHAR},#{pickAddrLng,jdbcType=VARCHAR},
 		#{pickAddr,jdbcType=VARCHAR},#{pickDistance,jdbcType=NUMERIC},#{userAddrDistance,jdbcType=NUMERIC},
 		#{addTime,jdbcType=NUMERIC},
