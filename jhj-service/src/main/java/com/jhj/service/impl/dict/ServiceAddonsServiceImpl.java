@@ -1,6 +1,9 @@
 package com.jhj.service.impl.dict;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,20 +15,47 @@ import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.vo.ServiceAddonSearchVo;
+import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
+
 /**
  * @description：
  * @author： kerryg
- * @date:2015年7月31日 
+ * @date:2015年7月31日
  */
 @Service
 public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 
 	@Autowired
 	private DictServiceAddonsMapper dictServiceAddonsMapper;
-	
+
+	@Override
+	public DictServiceAddons initDictServiceAddons() {
+		DictServiceAddons record = new DictServiceAddons();
+
+		record.setServiceAddonId(0L);
+		record.setServiceType(0L);
+		record.setName("");
+		record.setKeyword("");
+		record.setPrice(new BigDecimal(0));
+		record.setDisPrice(new BigDecimal(0));
+		record.setDescUrl("");
+		record.setTips("");
+		record.setAddTime(TimeStampUtil.getNow() / 1000);
+		record.setUpdateTime(0L);
+		record.setEnable((short) 0);
+
+		return record;
+	}
+
 	@Override
 	public int deleteByPrimaryKey(Long serviceAddonId) {
 		return dictServiceAddonsMapper.deleteByPrimaryKey(serviceAddonId);
+	}
+
+	@Override
+	public int deleteByServiceType(Long serviceType) {
+		return dictServiceAddonsMapper.deleteByServiceType(serviceType);
 	}
 
 	@Override
@@ -60,12 +90,95 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 
 	@Override
 	public PageInfo selectByListPage(ServiceAddonSearchVo searchVo, int pageNo, int pageSize) {
-		
+
 		PageHelper.startPage(pageNo, pageSize);
-		List<DictServiceAddons> list =  dictServiceAddonsMapper.selectByListPage(searchVo);
+		List<DictServiceAddons> list = dictServiceAddonsMapper.selectByListPage(searchVo);
 		PageInfo result = new PageInfo(list);
-		
+
 		return result;
 	}
 
+	@Override
+	public boolean updateByRequest(HttpServletRequest request, Long serviceTypeId) {
+
+		// 处理服务子项数据
+
+		// 1. 先把修改前的项都置为不可用
+		ServiceAddonSearchVo searchVo = new ServiceAddonSearchVo();
+		searchVo.setServiceType(serviceTypeId);
+		searchVo.setEnable((short) 1);
+		List<DictServiceAddons> serviceAddons = this.selectBySearchVo(searchVo);
+
+		if (!serviceAddons.isEmpty()) {
+			for (DictServiceAddons item : serviceAddons) {
+				item.setEnable((short) 0);
+				this.updateByPrimaryKey(item);
+			}
+		}
+
+		String serviceAddonIds[] = request.getParameterValues("serviceAddonIds");
+		String serviceAddonName[] = request.getParameterValues("serviceAddonName");
+		String itemUnit[] = request.getParameterValues("itemUnit");
+		String price[] = request.getParameterValues("serviceAddonPrice");
+		String disPrice[] = request.getParameterValues("serviceAddonDisPrice");
+		String defaultNum[] = request.getParameterValues("defaultNum");
+
+		String serviceAddonIdsItem = "";
+		String serviceAddonNameItem = "";
+		String itemUnitItem = "";
+		String priceItem = "";
+		String disPriceItem = "";
+		String defaultNumItem = "";
+
+		for (int i = 0; i < serviceAddonIds.length; i++) {
+
+			serviceAddonIdsItem = serviceAddonIds[i];
+			serviceAddonNameItem = serviceAddonName[i];
+			itemUnitItem = itemUnit[i];
+			priceItem = price[i];
+			disPriceItem = disPrice[i];
+			defaultNumItem = defaultNum[i];
+
+			if (StringUtil.isEmpty(serviceAddonNameItem) && StringUtil.isEmpty(itemUnitItem) && (StringUtil.isEmpty(priceItem) || priceItem.equals("0"))
+					&& (StringUtil.isEmpty(disPriceItem) || disPriceItem.equals("0")) && (StringUtil.isEmpty(defaultNumItem) || defaultNumItem.equals("0"))) {
+				continue;
+			}
+
+			DictServiceAddons d = this.initDictServiceAddons();
+			Long serviceAddonId = 0L;
+			if (StringUtil.isEmpty(serviceAddonIdsItem))
+				serviceAddonIdsItem = "0";
+
+			if (!serviceAddonIdsItem.equals("0"))
+				serviceAddonId = Long.valueOf(serviceAddonIdsItem);
+
+			if (serviceAddonId > 0L) {
+				for (DictServiceAddons item : serviceAddons) {
+					if (item.getServiceAddonId().equals(serviceAddonId)) {
+						d = item;
+						break;
+					}
+				}
+			}
+
+			d.setServiceType(serviceTypeId);
+			d.setServiceAddonId(serviceAddonId);
+			d.setName(serviceAddonNameItem);
+			d.setItemUnit(itemUnitItem);
+			d.setPrice(new BigDecimal(priceItem));
+			d.setDisPrice(new BigDecimal(disPriceItem));
+			d.setDefaultNum(Integer.valueOf(defaultNumItem));
+			d.setEnable((short) 1);
+			d.setUpdateTime(TimeStampUtil.getNowSecond());
+
+			if (serviceAddonId > 0L) {
+				this.updateByPrimaryKey(d);
+			} else {
+				this.insert(d);
+			}
+
+		}
+
+		return true;
+	}
 }

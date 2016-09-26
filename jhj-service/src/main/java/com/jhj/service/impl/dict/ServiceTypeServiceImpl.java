@@ -86,26 +86,6 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
 		return record;
 	}
-	
-	@Override
-	public DictServiceAddons initServiceAdd() {
-		DictServiceAddons record = new DictServiceAddons();
-		
-		record.setServiceAddonId(0L);
-		record.setServiceType(0L);
-        record.setName("");
-        record.setKeyword("");
-        record.setPrice(new BigDecimal(0));
-        record.setDisPrice(new BigDecimal(0));
-        record.setDescUrl("");
-        record.setTips("");
-        record.setAddTime(TimeStampUtil.getNow()/1000);
-        record.setUpdateTime(0L);
-        record.setEnable((short)0);
-
-		return record;
-	}
-
 
 	/*
 	 * 获取表dict_service_types的所有数据

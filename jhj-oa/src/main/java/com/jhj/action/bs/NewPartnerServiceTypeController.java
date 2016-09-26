@@ -1,6 +1,7 @@
 package com.jhj.action.bs;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,11 +35,15 @@ import com.jhj.common.Constants;
 import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
 import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.ImgServerUtil;
+import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.common.extension.StringHelper;
 
 /**
@@ -119,6 +124,17 @@ public class NewPartnerServiceTypeController extends AdminController {
 		}
 		model.addAttribute(treeDataSourceName,JSONArray.fromObject(treeModels, new JsonConfig()).toString());
 		
+		
+		//附加子项的信息
+
+		List<DictServiceAddons> serviceAddons = new ArrayList<DictServiceAddons>();
+		
+		DictServiceAddons d = serviceAddonsService.initDictServiceAddons();
+		serviceAddons.add(d);
+		
+		model.addAttribute("serviceAddons", serviceAddons);
+		
+		
 		return "bs/serviceType/serviceForm";
 	}
 	
@@ -181,6 +197,11 @@ public class NewPartnerServiceTypeController extends AdminController {
 		
 		partService.insert(partner);
 		
+		Long serviceTypeId = partner.getServiceTypeId();
+			
+		//处理子项内容
+		serviceAddonsService.updateByRequest(request, serviceTypeId);
+		
 		if (returnUrl == null)	returnUrl = "newbs/service_type_list";
 		
 		return "redirect:" + returnUrl;
@@ -202,7 +223,8 @@ public class NewPartnerServiceTypeController extends AdminController {
 		if (!model.containsAttribute("contentModelForm")) {
 			
 			PartnerServiceType serviceType = partService.selectByPrimaryKey(id);
-			
+			if (serviceType == null)
+			serviceType = partService.initPartner();
 			model.addAttribute("contentModelForm", serviceType);
 		}
 		List<TreeModel> treeModels;
@@ -227,6 +249,17 @@ public class NewPartnerServiceTypeController extends AdminController {
 		
 		
 		//附加子项的信息
+		ServiceAddonSearchVo searchVo = new ServiceAddonSearchVo();
+		searchVo.setServiceType(id);
+		searchVo.setEnable((short) 1);
+		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectBySearchVo(searchVo);
+		
+		if (serviceAddons.isEmpty()) {
+			DictServiceAddons d = serviceAddonsService.initDictServiceAddons();
+			serviceAddons.add(d);
+		}
+		
+		model.addAttribute("serviceAddons", serviceAddons);
 		
 		return "bs/serviceType/serviceForm";
 	}
@@ -250,53 +283,58 @@ public class NewPartnerServiceTypeController extends AdminController {
 		
 		String returnUrl = ServletRequestUtils.getStringParameter(request,"returnUrl", null);
 		
-		if(partnerServiceType!=null){
+		if (returnUrl == null) returnUrl = "newbs/service_type_list";
+		
+		if(partnerServiceType ==null ){
+			return "redirect:" + returnUrl;
+		}
+		partnerServiceType.setServiceTypeId(id);
+		
+		//处理子项内容
+		serviceAddonsService.updateByRequest(request, id);
 			
-			// 添加时： 处理上传头像
-			CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
-					request.getSession().getServletContext());
-			if (multipartResolver.isMultipart(request)) {
-				// 判断 request 是否有文件上传,即多部分请求...
-				MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) (request);
-				Iterator<String> iter = multiRequest.getFileNames();
-				while (iter.hasNext()) {
-					MultipartFile file = multiRequest.getFile(iter.next());
-					if (file != null && !file.isEmpty()) {
+		// 添加时： 处理上传图片
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+				request.getSession().getServletContext());
+		if (multipartResolver.isMultipart(request)) {
+			// 判断 request 是否有文件上传,即多部分请求...
+			MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) (request);
+			Iterator<String> iter = multiRequest.getFileNames();
+			while (iter.hasNext()) {
+				MultipartFile file = multiRequest.getFile(iter.next());
+				if (file != null && !file.isEmpty()) {
 
-						//在图片服务器上的 图片 存放位置
-	                	String url = Constants.IMG_SERVER_HOST + "/upload/";
-	                	
-						String fileName = file.getOriginalFilename();
-						String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
-						fileType = fileType.toLowerCase();
-						String sendResult = ImgServerUtil.sendPostBytes(url, file.getBytes(), fileType);
-						
-						ObjectMapper mapper = new ObjectMapper();
+					//在图片服务器上的 图片 存放位置
+                	String url = Constants.IMG_SERVER_HOST + "/upload/";
+                	
+					String fileName = file.getOriginalFilename();
+					String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+					fileType = fileType.toLowerCase();
+					String sendResult = ImgServerUtil.sendPostBytes(url, file.getBytes(), fileType);
+					
+					ObjectMapper mapper = new ObjectMapper();
 
-						HashMap<String, Object> o = mapper.readValue(sendResult, HashMap.class);
+					HashMap<String, Object> o = mapper.readValue(sendResult, HashMap.class);
 
-						HashMap<String, String> info = (HashMap<String, String>) o.get("info");
+					HashMap<String, String> info = (HashMap<String, String>) o.get("info");
 
-						String imgUrl = Constants.IMG_SERVER_HOST + "/" + info.get("md5").toString();
-						
-						partnerServiceType.setServiceImgUrl(imgUrl);
-					}
+					String imgUrl = Constants.IMG_SERVER_HOST + "/" + info.get("md5").toString();
+					
+					partnerServiceType.setServiceImgUrl(imgUrl);
 				}
 			}
-			
-			partnerServiceType.setServiceTypeId(id);
-			
-			/*
-			 * 2016年4月1日19:11:30
-			 * 
-			 *   每周服务次数、服务性质（单品/全年订制）
-			 */
-			
-			
-			partService.updateByPrimaryKeySelective(partnerServiceType);
 		}
 		
-		if (returnUrl == null) returnUrl = "newbs/service_type_list";
+		
+		
+		/*
+		 * 2016年4月1日19:11:30
+		 * 
+		 *   每周服务次数、服务性质（单品/全年订制）
+		 */
+		
+		
+		partService.updateByPrimaryKeySelective(partnerServiceType);
 		
 		return "redirect:" + returnUrl;
 	}
@@ -315,7 +353,24 @@ public class NewPartnerServiceTypeController extends AdminController {
 		Long ids = Long.valueOf(id.trim());
 		
 		//根据id查找出对应的该权限对象
-		partService.deleteByPrimaryKey(ids);
+		PartnerServiceType serviceType = partService.selectByPrimaryKey(ids);
+		
+		if (serviceType != null) {
+			serviceType.setEnable((short) 0);
+			
+			ServiceAddonSearchVo searchVo = new ServiceAddonSearchVo();
+			searchVo.setServiceType(serviceType.getServiceTypeId());
+			searchVo.setEnable((short) 1);
+			List<DictServiceAddons> serviceAddons = serviceAddonsService.selectBySearchVo(searchVo);
+
+			if (!serviceAddons.isEmpty()) {
+				for (DictServiceAddons item : serviceAddons) {
+					item.setEnable((short) 0);
+					serviceAddonsService.updateByPrimaryKey(item);
+				}
+			}
+		}
+		
 		
 		String returnUrl = ServletRequestUtils.getStringParameter(request,
 				"returnUrl", null);

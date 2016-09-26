@@ -11,6 +11,8 @@ public class ServiceAddonSearchVo {
 	private Long serviceType;
 	
 	private List<Long> serviceTypes;
+	
+	private Short enable;
 
 	public Long getServiceAddonId() {
 		return serviceAddonId;
@@ -42,5 +44,13 @@ public class ServiceAddonSearchVo {
 
 	public void setServiceTypes(List<Long> serviceTypes) {
 		this.serviceTypes = serviceTypes;
+	}
+
+	public Short getEnable() {
+		return enable;
+	}
+
+	public void setEnable(Short enable) {
+		this.enable = enable;
 	}
 }

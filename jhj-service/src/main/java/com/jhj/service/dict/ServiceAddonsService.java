@@ -2,6 +2,8 @@ package com.jhj.service.dict;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderServiceAddons;
@@ -24,5 +26,11 @@ public interface ServiceAddonsService {
 	List<DictServiceAddons> selectBySearchVo(ServiceAddonSearchVo searchVo);
 
 	PageInfo selectByListPage(ServiceAddonSearchVo searchVo, int pageNo, int pageSize);
+
+	DictServiceAddons initDictServiceAddons();
+
+	int deleteByServiceType(Long serviceType);
+
+	boolean updateByRequest(HttpServletRequest request, Long serviceTypeId);
 	
 }

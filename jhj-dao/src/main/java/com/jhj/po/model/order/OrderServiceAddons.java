@@ -17,7 +17,7 @@ public class OrderServiceAddons {
 
     private String itemUnit;
 
-    private Short itemNum;
+    private int itemNum;
     
     private Long addTime;
 
@@ -77,11 +77,11 @@ public class OrderServiceAddons {
         this.itemUnit = itemUnit == null ? null : itemUnit.trim();
     }
 
-    public Short getItemNum() {
+    public int getItemNum() {
         return itemNum;
     }
 
-    public void setItemNum(Short itemNum) {
+    public void setItemNum(int itemNum) {
         this.itemNum = itemNum;
     }
 

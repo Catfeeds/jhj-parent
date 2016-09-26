@@ -270,7 +270,7 @@ public class DictServiceTypesController extends BaseController {
 		if (id == null) {
 			id = 0L;
 		}
-		DictServiceAddons dictServiceAddons = serviceTypeService.initServiceAdd();
+		DictServiceAddons dictServiceAddons = serviceAddonsService.initDictServiceAddons();
 		if (id !=null && id > 0) {
 			dictServiceAddons = serviceAddonsService.selectByPrimaryKey(id);
 			

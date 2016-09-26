@@ -23,4 +23,6 @@ public interface DictServiceAddonsMapper {
 			
 	List<DictServiceAddons> selectByListPage(ServiceAddonSearchVo searchVo);
 
+	int deleteByServiceType(Long serviceType);
+
 }

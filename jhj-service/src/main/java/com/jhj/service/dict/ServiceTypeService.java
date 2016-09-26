@@ -44,8 +44,6 @@ public interface ServiceTypeService {
 
 	int deleteById(Long id);
 
-	DictServiceAddons initServiceAdd();
-
 	int updateById(DictServiceAddons record);
 
 	int insertServiceAddSelect(DictServiceAddons record);

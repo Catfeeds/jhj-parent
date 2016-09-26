@@ -65,6 +65,10 @@
 			</foreach>
 		</if>
 		
+		<if test="enable != null">
+			and enable = #{enable,jdbcType=NUMERIC}
+		</if>
+		
 		order by add_time desc
 	</sql>
 	
@@ -72,6 +76,12 @@
 		delete from dict_service_addons
 		where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
 	</delete>
+	
+	<delete id="deleteByServiceType" parameterType="java.lang.Long">
+		delete from dict_service_addons
+		where service_type = #{serviceType,jdbcType=NUMERIC}
+	</delete>
+	
 	<insert id="insert" parameterType="com.jhj.po.model.dict.DictServiceAddons">
 		insert into dict_service_addons (service_addon_id, service_type, name,
 		keyword, tips, price,
