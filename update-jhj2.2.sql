@@ -44,3 +44,6 @@ update `partner_service_type` set enable = 0 WHERE parent_id = 25 or service_typ
 
 
 ALTER TABLE `partner_service_type` ADD `is_auto` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否自动派工 0 = 否 1 = 是' AFTER `service_content`, ADD `is_multi` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '一单多人 0 = 否 1 = 是' AFTER `is_auto`;
+
+
+update `org_staffs` set head_img = 'http://www.jia-he-jia.com/u/img/default-head-img.png' WHERE head_img = '';

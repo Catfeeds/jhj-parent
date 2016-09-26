@@ -39,7 +39,7 @@
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
 		
-		<if test="orgId !=null">
+		<if test="orgId !=null and orgId != 0">
 			and staff_id IN ( select staff_id from org_staffs where org_id = #{orgId,jdbcType=NUMERIC} )
 		</if>
 		

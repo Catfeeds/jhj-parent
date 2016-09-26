@@ -37,6 +37,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.ServiceAddonSearchVo;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
@@ -435,8 +436,10 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		searchVo1.setServiceAddonIds(serviceAddonIds);
 		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
 		
-		//获得所有tags的名称.
-		List<Tags> tagList = tagService.selectAll();
+		//获得所有阿姨tags的名称.
+		TagSearchVo searchVo3 = new TagSearchVo();
+		searchVo3.setTagType((short) 0);
+		List<Tags> tagList = tagService.selectBySearchVo(searchVo3);
 		
 		List<Long> tagIds = new ArrayList<Long>();
 		//tags名称与选择的服务类型进行比较.

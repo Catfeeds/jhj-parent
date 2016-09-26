@@ -249,7 +249,7 @@
 						<div class="form-group required">
 							<label class="col-md-2 control-label">员工自我介绍</label>
 							<div class="col-md-5">
-								 <form:textarea path="intro" rows="5" cols="50"
+								 <form:textarea path="intro" rows="5" cols="50" class="form-control" 
                                  	placeholder="不超过120字" maxlength="120"/>	
 							</div>
 						</div> 

@@ -32,6 +32,7 @@ import com.jhj.service.tags.UserRefTagsService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.jhj.vo.user.UserSearchVo;
@@ -214,8 +215,11 @@ public class UsersServiceImpl implements UsersService {
 			for (UserRefTags item : userRefTagsList) {
 				tagIds.add(item.getTagId());
 			}
+			
+			TagSearchVo searchVo1 = new TagSearchVo();
+			searchVo1.setTagIds(tagIds);
+			List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
 
-			List<Tags> tag = tagsService.selectByIds(tagIds);
 
 			userEditViewVo.setList(tag);
 		}
@@ -304,8 +308,11 @@ public class UsersServiceImpl implements UsersService {
 			for (UserRefTags item : userRefTagsList) {
 				tagIds.add(item.getTagId());
 			}
+			
+			TagSearchVo searchVo1 = new TagSearchVo();
+			searchVo1.setTagIds(tagIds);
+			List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
 
-			List<Tags> tag = tagsService.selectByIds(tagIds);
 
 			userEditViewVo.setList(tag);
 		}
@@ -332,8 +339,10 @@ public class UsersServiceImpl implements UsersService {
 
 		userEditViewVo.setAddrName(userAddrs.getName() + userAddrs.getAddr());
 		// 用户标签
-
-		List<Tags> tag = tagsService.selectList();
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagType((short) 2);
+		List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
+		
 		userEditViewVo.setList(tag);
 		List<UserRefTags> userRefTags = userRefTagsService.selectListByUserId(userId);
 
@@ -369,8 +378,11 @@ public class UsersServiceImpl implements UsersService {
 		}
 
 		// 用户标签
+		
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagType((short) 2);
+		List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
 
-		List<Tags> tag = tagsService.selectList();
 		userEditViewVo.setList(tag);
 		List<UserRefTags> userRefTags = userRefTagsService.selectListByUserId(userId);
 

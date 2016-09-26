@@ -56,18 +56,8 @@ public class TagsServiceImpl implements TagsService {
 	}
 
 	@Override
-	public List<Tags> selectByIds(List<Long> tagIds) {
-		
-		if(tagIds.size() <= 0){
-			tagIds.add(0L);
-		}
-		
-		return tagsMapper.selectByIds(tagIds);
-	}
-
-	@Override
-	public List<Tags> selectAll() {
-		return tagsMapper.selectAll();
+	public List<Tags> selectBySearchVo(TagSearchVo tagSearchVo) {		
+		return tagsMapper.selectBySearchVo(tagSearchVo);
 	}
 
 	@Override
@@ -87,22 +77,5 @@ public class TagsServiceImpl implements TagsService {
 		tags.setIsEnable((short)0);
 		tags.setAddTime(TimeStampUtil.getNow() /1000);
 		return tags;
-	}
-
-	@Override
-	public List<Tags> selectByTagName(String name) {
-		return tagsMapper.selectByTagName(name);
-	}
-
-	@Override
-	public List<String> selectTagNamesByTagIds(List<Long> tagIds) {
-		return tagsMapper.selectTagNamesByTagIds(tagIds);
-	}
-
-	@Override
-	public List<Tags> selectList() {
-		
-		return tagsMapper.selectList();
-	}
-	
+	}	
 }

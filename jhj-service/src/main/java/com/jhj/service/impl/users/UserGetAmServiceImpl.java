@@ -31,6 +31,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserGetAmService;
 import com.jhj.service.users.UserRefAmService;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserGetAmVo;
@@ -230,7 +231,9 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 			tagIdList.add(orgStaffTags.getTagId());
 		}
 		
-		List<Tags> tagsList = tagService.selectByIds(tagIdList);
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagIds(tagIdList);
+		List<Tags> tagsList = tagService.selectBySearchVo(searchVo1);
 		
 		// 标签
 		userGetAmVo.setTagList(tagsList);
@@ -316,7 +319,10 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 				tagIdList.add(orgStaTags.getTagId());
 			}
 			
-			List<Tags> tagList = tagService.selectByIds(tagIdList);
+			TagSearchVo searchVo1 = new TagSearchVo();
+			searchVo1.setTagIds(tagIdList);
+			List<Tags> tagList = tagService.selectBySearchVo(searchVo1);
+			
 			userGetAmVo.setTagList(tagList);
 		}else{
 			userGetAmVo.setTagList(new ArrayList<Tags>());

@@ -24,18 +24,11 @@ public interface TagsService {
     int updateByPrimaryKeySelective(Tags record);
 
     int updateByPrimaryKey(Tags record);
-        
-    List<Tags> selectAll();
     
     List<Tags> selectByListPage(TagSearchVo tagSearchVo,int pageNo,int pageSize);
 
-	List<Tags> selectByIds(List<Long> tagIds);
-	
 	Tags initTags();
-	List<Tags> selectByTagName(String name);
-	
-	List<String> selectTagNamesByTagIds(List<Long> tagIds);
 
-	List<Tags> selectList();
+	List<Tags> selectBySearchVo(TagSearchVo tagSearchVo);
 	
 }
