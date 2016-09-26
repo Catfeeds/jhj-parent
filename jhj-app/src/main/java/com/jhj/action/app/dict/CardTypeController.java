@@ -113,25 +113,25 @@ public class CardTypeController<T> {
 	    		
 		return result;
 }
-	@RequestMapping(value = "get_serviceType",method = RequestMethod.GET)
-	public AppResultData<Object> serviceTypeList(){
-		
-		List<DictServiceTypes> list = serviceTypeService.getServiceTypes();
-		
-		AppResultData<Object> result = null;
-    	result = new AppResultData<Object>(0, "ok", list);
-
-    	return result;
-	}
-	@RequestMapping(value = "get_service_addons_type",method = RequestMethod.GET)
-	public AppResultData<List> serviceAddonsTypeList(){
-		
-		List<DictServiceAddons> list = serviceAddonsService.getServiceAddonsTypes();
-		AppResultData<List> result = null;
-		result = new AppResultData<List>(0, "ok", list);
-		
-		return result;
-	}
+//	@RequestMapping(value = "get_serviceType",method = RequestMethod.GET)
+//	public AppResultData<Object> serviceTypeList(){
+//		
+//		List<DictServiceTypes> list = serviceTypeService.getServiceTypes();
+//		
+//		AppResultData<Object> result = null;
+//    	result = new AppResultData<Object>(0, "ok", list);
+//
+//    	return result;
+//	}
+//	@RequestMapping(value = "get_service_addons_type",method = RequestMethod.GET)
+//	public AppResultData<List> serviceAddonsTypeList(){
+//		
+//		List<DictServiceAddons> list = serviceAddonsService.getServiceAddonsTypes();
+//		AppResultData<List> result = null;
+//		result = new AppResultData<List>(0, "ok", list);
+//		
+//		return result;
+//	}
 	@RequestMapping(value = "get_socilas", method = RequestMethod.GET)  
     public AppResultData<Object> getSocials () {
 

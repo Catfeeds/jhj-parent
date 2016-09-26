@@ -24,7 +24,9 @@ import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.dict.DictServiceTypes;
 import com.jhj.service.bs.GiftsService;
+import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.dict.ServiceTypeService;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 @Controller
@@ -33,6 +35,9 @@ public class DictServiceTypesController extends BaseController {
 
 	@Autowired
     private ServiceTypeService serviceTypeService;
+	
+	@Autowired
+	private ServiceAddonsService serviceAddonsService;
 	
 	@Autowired
 	private GiftsService giftService;	
@@ -237,7 +242,11 @@ public class DictServiceTypesController extends BaseController {
 			
 			Long id = Long.valueOf(request.getParameter("id"));
 			
-			PageInfo result=serviceTypeService.selectByServiceType(id,pageNo,pageSize);
+			
+			ServiceAddonSearchVo searchVo = new ServiceAddonSearchVo();
+			searchVo.setServiceType(id);
+			
+			PageInfo result=serviceAddonsService.selectByListPage(searchVo, pageNo, pageSize);
 			
         model.addAttribute("contentModel",result);
         model.addAttribute("serviceTypeId",id);
@@ -263,7 +272,7 @@ public class DictServiceTypesController extends BaseController {
 		}
 		DictServiceAddons dictServiceAddons = serviceTypeService.initServiceAdd();
 		if (id !=null && id > 0) {
-			dictServiceAddons = serviceTypeService.selectByAddId(id);
+			dictServiceAddons = serviceAddonsService.selectByPrimaryKey(id);
 			
 		}
 		dictServiceAddons.setServiceType(ids);

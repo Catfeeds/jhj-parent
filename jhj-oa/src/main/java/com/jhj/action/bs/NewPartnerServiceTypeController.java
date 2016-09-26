@@ -35,6 +35,7 @@ import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.ImgServerUtil;
@@ -56,7 +57,8 @@ public class NewPartnerServiceTypeController extends AdminController {
 	@Autowired
 	private PartnerServiceTypeService partService;
 	
-	
+	@Autowired
+	private ServiceAddonsService serviceAddonsService;
 	/**
 	 * 
 	 *  @Title: serviceTypeList
@@ -223,6 +225,8 @@ public class NewPartnerServiceTypeController extends AdminController {
 		model.addAttribute("treeDataSource",
 				JSONArray.fromObject(treeModels, new JsonConfig()).toString());
 		
+		
+		//附加子项的信息
 		
 		return "bs/serviceType/serviceForm";
 	}

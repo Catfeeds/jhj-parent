@@ -36,6 +36,7 @@ import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
@@ -357,7 +358,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 				//这里 的 附加服务 单价，从最新 的  dict_service_addons表中 取，
 				// order_service_addons 表中 的单价，可以视为“历史 单价”
 				
-				DictServiceAddons dictServiceAddons = dictServiceTypeService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				
 				if(dictServiceAddons.getPrice()!=null){
 					realPrice =  dictServiceAddons.getPrice().add(realPrice);
@@ -429,7 +430,10 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		for (OrderServiceAddons item : orderServiceAddonList) {
 			serviceAddonIds.add(item.getServiceAddonId());
 		}
-		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectByServiceAddonIds(serviceAddonIds);
+		
+		ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+		searchVo1.setServiceAddonIds(serviceAddonIds);
+		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
 		
 		//获得所有tags的名称.
 		List<Tags> tagList = tagService.selectAll();

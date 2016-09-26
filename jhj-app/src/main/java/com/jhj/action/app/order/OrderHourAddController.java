@@ -36,6 +36,7 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.order.OrderHourAddVo;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.StringUtil;
@@ -178,7 +179,10 @@ public class OrderHourAddController extends BaseController {
 					serviceAddonIds.add(serviceAddonId);
 				}
 			}
-			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectByServiceAddonIds(serviceAddonIds);
+			
+			ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+			searchVo1.setServiceAddonIds(serviceAddonIds);
+			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
 			
 			for (int i = 0; i < serviceAddonArray.length; i++) {	
 				Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
@@ -232,38 +236,4 @@ public class OrderHourAddController extends BaseController {
 		
 		return result;
 	}
-	
-	
-	/*
-	 * 
-	 * 用户版-钟点工 --提交订单 页面加载，调用这个接口
-	 */
-	@RequestMapping(value = "get_some_list.json" ,method = RequestMethod.GET)
-	public AppResultData<Object> getReleativeList(
-			@RequestParam(value = "userId") Long userId){
-
-		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
-		OrderHourAddVo orderHourAddVo = new OrderHourAddVo();
-		
-		//用户地址列表
-		List<UserAddrs> userAddrList = userAddrService.selectByUserId(userId);
-		if(userAddrList!=null){
-			orderHourAddVo.setUserAddrList(userAddrList);
-		}else{
-			orderHourAddVo.setUserAddrList(new ArrayList<UserAddrs>());
-		}
-		
-		//附加服务列表，页面已经确定。。，即 钟点工
-		
-		List<DictServiceAddons> dictList = dictServiceAddonService.selectAllHourAddons();
-		
-		orderHourAddVo.setDictServiceAddonList(dictList);
-		
-		result.setData(orderHourAddVo);
-		
-		return result;
-		
-	}
-	
 }

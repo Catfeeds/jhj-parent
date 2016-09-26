@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderServiceAddons;
+import com.jhj.vo.ServiceAddonSearchVo;
 
 public interface DictServiceAddonsMapper {
     int deleteByPrimaryKey(Long serviceAddonId);
@@ -12,20 +13,14 @@ public interface DictServiceAddonsMapper {
 
     int insertSelective(DictServiceAddons record);
 
-    List<DictServiceAddons> selectByPrimaryKey(Long serviceAddonId);
+    DictServiceAddons selectByPrimaryKey(Long serviceAddonId);
 
     int updateByPrimaryKeySelective(DictServiceAddons record);
 
     int updateByPrimaryKey(DictServiceAddons record);
 
-	DictServiceAddons selectByAddId(Long serviceAddonId);
-		
-	OrderServiceAddons selectByAddonId(Long serviceAddonId);
-	
-	List<DictServiceAddons> selectAll();
-	
-	List<DictServiceAddons> selectAllHourAddons();
-
-	List<DictServiceAddons> selectByServiceAddonIds(List<Long> serviceAddonIds);
+    List<DictServiceAddons> selectBySearchVo(ServiceAddonSearchVo searchVo);
+			
+	List<DictServiceAddons> selectByListPage(ServiceAddonSearchVo searchVo);
 
 }

@@ -70,7 +70,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				JsonServiceAddonsItemVo = gson.fromJson(e,JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =orderMoney.add(price.multiply(itemNumBigDecimal));
@@ -83,7 +83,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 						jsonObj, JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =price.multiply(itemNumBigDecimal);
@@ -121,7 +121,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				JsonServiceAddonsItemVo = gson.fromJson(e,JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				
 				
 				//为附加服务赋值
@@ -142,7 +142,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 						jsonObj, JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				
 				//为附加服务赋值
 				orderServiceAddons.setItemNum(itemNum);

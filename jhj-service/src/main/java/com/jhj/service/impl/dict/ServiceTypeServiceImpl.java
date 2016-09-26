@@ -221,20 +221,6 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 		
 		return dictCardTypeMapper.selectByPrimaryKey(id);
 	}
-	
-	@Override
-	public DictServiceAddons selectByAddId(Long serviceAddonId) {
-		
-		return dictServiceAddonsMapper.selectByAddId(serviceAddonId);
-	}
-	@Override
-	public PageInfo selectByServiceType(Long serviceType,int pageNo, int pageSize) {
-
-		PageHelper.startPage(pageNo, pageSize);
-		List<DictServiceAddons> list = dictServiceAddonsMapper.selectByPrimaryKey(serviceType);
-		PageInfo result = new PageInfo(list);
-		return result;
-	}
 
 	@Override
 	public int deleteById(Long serviceAddonId) {

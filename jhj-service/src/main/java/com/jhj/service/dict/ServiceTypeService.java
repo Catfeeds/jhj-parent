@@ -41,13 +41,10 @@ public interface ServiceTypeService {
 
 	int insertSelect(DictCardType record);
 
-	PageInfo selectByServiceType(Long id, int pageNo, int pageSize);
 
 	int deleteById(Long id);
 
 	DictServiceAddons initServiceAdd();
-
-	DictServiceAddons selectByAddId(Long serviceAddonId);
 
 	int updateById(DictServiceAddons record);
 

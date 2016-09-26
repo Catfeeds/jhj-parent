@@ -213,27 +213,6 @@ myApp.onPageInit('order-form-zhongdiangong-page', function(page) {
 		
 	});
 	
-	
-//	var serTypeList = JSON.parse(localStorage.getItem("service_type_addons_list"));
-//	
-//	for (var i = 0; i < serTypeList.length; i++) {
-//		var item =  serTypeList[i];
-//		
-//		if(item.name == "做饭"){
-//			$$("#zuofanPrice").val(item.price);
-//			$$("#zuofanId").val(item.service_addon_id);
-//		}
-//		if(item.name == "洗衣"){
-//			$$("#xiyiPrice").val(item.price);
-//			$$("#xiyiId").val(item.service_addon_id);
-//		}
-//		if(item.name == "清洁用品"){
-//			$$("#qingjiePrice").val(item.price);
-//			$$("#qingjieId").val(item.service_addon_id);
-//		}
-//	}
-	
-	
 	var addonIds = sessionStorage.getItem('serviceAddons');
 	
 	if(addonIds != undefined && addonIds.length > 0){

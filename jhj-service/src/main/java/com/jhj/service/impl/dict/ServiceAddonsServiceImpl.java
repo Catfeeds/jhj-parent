@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.dict.DictServiceAddonsMapper;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.service.dict.ServiceAddonsService;
+import com.jhj.vo.ServiceAddonSearchVo;
 /**
  * @description：
  * @author： kerryg
@@ -36,7 +39,7 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 	}
 
 	@Override
-	public List<DictServiceAddons> selectByPrimaryKey(Long serviceAddonId) {
+	public DictServiceAddons selectByPrimaryKey(Long serviceAddonId) {
 		return dictServiceAddonsMapper.selectByPrimaryKey(serviceAddonId);
 	}
 
@@ -51,28 +54,18 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 	}
 
 	@Override
-	public DictServiceAddons selectByAddId(Long serviceAddonId) {
-		return dictServiceAddonsMapper.selectByAddId(serviceAddonId);
+	public List<DictServiceAddons> selectBySearchVo(ServiceAddonSearchVo searchVo) {
+		return dictServiceAddonsMapper.selectBySearchVo(searchVo);
 	}
 
 	@Override
-	public List<DictServiceAddons> selectByServiceAddonIds(List<Long> serviceAddonIds) {
-		return dictServiceAddonsMapper.selectByServiceAddonIds(serviceAddonIds);
-	}
-
-	@Override
-	public OrderServiceAddons selectByAddonId(Long serviceAddonId) {
-		return dictServiceAddonsMapper.selectByAddonId(serviceAddonId);
-	}
-
-	@Override
-	public List<DictServiceAddons> getServiceAddonsTypes() {
-		return dictServiceAddonsMapper.selectAll();
-	}
-
-	@Override
-	public List<DictServiceAddons> selectAllHourAddons() {
-		return dictServiceAddonsMapper.selectAllHourAddons();
+	public PageInfo selectByListPage(ServiceAddonSearchVo searchVo, int pageNo, int pageSize) {
+		
+		PageHelper.startPage(pageNo, pageSize);
+		List<DictServiceAddons> list =  dictServiceAddonsMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		
+		return result;
 	}
 
 }

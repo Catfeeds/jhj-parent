@@ -12,6 +12,7 @@ import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.order.OrderServiceAddonsService;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.TimeStampUtil;
@@ -93,7 +94,9 @@ public class OrderServiceAddonsServiceImpl implements OrderServiceAddonsService 
 		
 		List<OrderServiceAddonViewVo> result = new ArrayList<OrderServiceAddonViewVo>();
 		
-		List<DictServiceAddons> dictServiceAddons = serviceAddonsService.getServiceAddonsTypes();
+		ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+		
+		List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
 		
 		DictServiceAddons item = null;
 		

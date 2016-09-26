@@ -4,7 +4,6 @@ myApp.onPageBeforeInit('order-get-rate-page', function(page) {
 	var orderId = page.query.order_id;
 	//var result = JSON.parse(data.response);
 	//var order = result.data;
-	//var servcieTypeAddonsList = JSON.parse(localStorage.getItem("service_type_addons_list"));
 	
 	
 	//获取订单详情
