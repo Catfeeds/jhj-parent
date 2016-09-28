@@ -53,7 +53,7 @@ public class OrgSelectTag extends SimpleTagSupport {
             orgSelect.append("<select id = \"parentId\" name=\"parentId\" class=\"form-control\">" );
 
             if (hasAll.equals("1")) {
-            	orgSelect.append("<option value='0' >请选择门店</option>");
+            	orgSelect.append("<option value='' >请选择门店</option>");
             }
 
             Orgs item = null;
