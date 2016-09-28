@@ -28,33 +28,33 @@
 //	getAm();
 //}
 
-function serviceTypeList() {
-	$$.ajax({
-		type : "GET",
-		url : siteAPIPath + "dict/get_serviceType.json?",
-		dataType : "json",
-		cache : true,
-		statusCode : {
-				200 : ajaxServiceTypeListSuccess,
-				400 : ajaxError,
-				500 : ajaxError
-			}
-	});
-}
+//function serviceTypeList() {
+//	$$.ajax({
+//		type : "GET",
+//		url : siteAPIPath + "dict/get_serviceType.json?",
+//		dataType : "json",
+//		cache : true,
+//		statusCode : {
+//				200 : ajaxServiceTypeListSuccess,
+//				400 : ajaxError,
+//				500 : ajaxError
+//			}
+//	});
+//}
 
-function serviceTypeAddonsList() {
-	$$.ajax({
-		type : "GET",
-		url : siteAPIPath + "dict/get_service_addons_type.json?",
-		dataType : "json",
-		cache : true,
-		statusCode : {
-			200 : ajaxServiceTypeAddonsListSuccess,
-			400 : ajaxError,
-			500 : ajaxError
-		}
-	});
-}
+//function serviceTypeAddonsList() {
+//	$$.ajax({
+//		type : "GET",
+//		url : siteAPIPath + "dict/get_service_addons_type.json?",
+//		dataType : "json",
+//		cache : true,
+//		statusCode : {
+//			200 : ajaxServiceTypeAddonsListSuccess,
+//			400 : ajaxError,
+//			500 : ajaxError
+//		}
+//	});
+//}
 
 function ajaxServiceTypeListSuccess(data, textStatus, jqXHR) {
 //	console.log("cityListSuccess");
@@ -69,16 +69,16 @@ function ajaxServiceTypeListSuccess(data, textStatus, jqXHR) {
 	localStorage.setItem('service_type_list', serviceTypeList);
 }
 
-function ajaxServiceTypeAddonsListSuccess(data, textStatus, jqXHR) {
-	var result = JSON.parse(data.response);
-	if (result.status == "999") {
-		myApp.alert(result.msg);
-		return;
-	}
-	var serviceTypeList = JSON.stringify(result.data);
-	localStorage.setItem('service_type_addons_list', serviceTypeList);
-//	console.log(localStorage.getItem("service_type_addons_list"));
-}
+//function ajaxServiceTypeAddonsListSuccess(data, textStatus, jqXHR) {
+//	var result = JSON.parse(data.response);
+//	if (result.status == "999") {
+//		myApp.alert(result.msg);
+//		return;
+//	}
+//	var serviceTypeList = JSON.stringify(result.data);
+//	localStorage.setItem('service_type_addons_list', serviceTypeList);
+////	console.log(localStorage.getItem("service_type_addons_list"));
+//}
 
 
 function getServiceAddonName(serviceAddonId) {

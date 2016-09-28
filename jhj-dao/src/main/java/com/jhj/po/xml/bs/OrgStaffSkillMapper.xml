@@ -30,11 +30,11 @@
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="orgId !=null">
+		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="parentId !=null">
+		<if test="parentId != null and parentId != 0">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
 		

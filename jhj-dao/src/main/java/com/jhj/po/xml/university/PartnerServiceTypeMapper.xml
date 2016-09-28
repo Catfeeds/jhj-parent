@@ -110,6 +110,9 @@
 		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
 	</delete>
 	<insert id="insert" parameterType="com.jhj.po.model.university.PartnerServiceType">
+	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
+			SELECT LAST_INSERT_ID() AS service_type_id
+		</selectKey>
 		insert into partner_service_type (service_type_id, name, parent_id,
 		unit, default_num, price,
 		remarks, view_type, no,
@@ -123,6 +126,9 @@
 		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType">
+	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
+			SELECT LAST_INSERT_ID() AS service_type_id
+		</selectKey>
 		insert into partner_service_type
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="serviceTypeId != null">

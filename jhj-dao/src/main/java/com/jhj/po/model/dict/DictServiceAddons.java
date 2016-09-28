@@ -27,15 +27,15 @@ public class DictServiceAddons {
     
     private String itemUnit;
     
-    private Short defaultNum;
+    private int defaultNum;
     
     
     
-	public Short getDefaultNum() {
+	public int getDefaultNum() {
 		return defaultNum;
 	}
 
-	public void setDefaultNum(Short defaultNum) {
+	public void setDefaultNum(int defaultNum) {
 		this.defaultNum = defaultNum;
 	}
 

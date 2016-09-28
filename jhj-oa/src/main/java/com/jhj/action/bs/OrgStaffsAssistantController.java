@@ -45,6 +45,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
 import com.jhj.service.users.UserRefAmService;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -169,7 +170,9 @@ public class OrgStaffsAssistantController extends BaseController {
 		/*
 		 *  2016-3-7 17:16:24  修改为 不再与员工类型相关，都取得全部标签 
 		 */
-		List<Tags> tagList = tagService.selectAll();
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagId((long) 0);
+		List<Tags> tagList = tagService.selectBySearchVo(searchVo1);
 
 		OrgStaffs orgStaffs = orgStaAsService.initOrgStaffs();
 		

@@ -5,7 +5,7 @@ myApp.onPageBeforeInit('am-mine-page', function (page) {
 	$$('#sec-logout').on('click', function() {
 		  localStorage.removeItem("am_id");
 		  localStorage.removeItem('am_mobile');
-		  localStorage.removeItem('service_type_addons_list');
+//		  localStorage.removeItem('service_type_addons_list');
 		  localStorage.removeItem('service_type_list');
 		  mainView.router.loadPage("index.html");
 	});

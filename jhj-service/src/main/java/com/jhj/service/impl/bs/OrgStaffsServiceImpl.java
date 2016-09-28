@@ -40,6 +40,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.university.StudyStaffPassQueryService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
 import com.jhj.vo.bs.OrgStaffVo;
@@ -577,7 +578,10 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 			}
 			// 处理 列表中 标签字段的 展示
 			if (tagIdList.size() > 0) {
-				tags = tagService.selectByIds(tagIdList);
+				
+				TagSearchVo searchVo1 = new TagSearchVo();
+				searchVo1.setTagIds(tagIdList);
+				tags = tagService.selectBySearchVo(searchVo1);
 				for (Tags item : tags) {
 					// 查找 tagId对应的 tagName
 					tagNames += item.getTagName() + " ";
@@ -586,8 +590,10 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		}
 
 		formVo.setTagIds(tagIds);
-
-		List<Tags> list = tagService.selectAll();
+		
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagType((short) 0);
+		List<Tags> list = tagService.selectBySearchVo(searchVo1);
 
 		formVo.setTagList(list);
 

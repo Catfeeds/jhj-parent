@@ -1,230 +1,243 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.dict.DictServiceAddonsMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictServiceAddons" >
-    <id column="service_addon_id" property="serviceAddonId" jdbcType="NUMERIC" />
-    <result column="service_type" property="serviceType" jdbcType="NUMERIC" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
-    <result column="tips" property="tips" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="dis_price" property="disPrice" jdbcType="DECIMAL" />
-    <result column="desc_url" property="descUrl" jdbcType="VARCHAR" />
-    <result column="item_unit" property="itemUnit" jdbcType="VARCHAR" />
-    <result column="default_num" property="defaultNum" jdbcType="SMALLINT" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
-    <result column="enable" property="enable" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    service_addon_id, service_type, name, keyword, tips, price, dis_price, desc_url, item_unit,default_num,
-    add_time, update_time, enable
-  </sql>
-  
-  <select id="selectAllHourAddons" resultMap="BaseResultMap">
-  		select 
-   		 <include refid="Base_Column_List" />
-    	from dict_service_addons
-  		where service_type = 1
-  </select>
-  
-  <select id="selectByAddonId" resultMap="BaseResultMap" parameterType="java.lang.Long">
-  	 select 
-    <include refid="Base_Column_List" />
-    from dict_service_addons
-    where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
-  </select>
-  
-  <select id="selectByServiceAddonIds" resultMap="BaseResultMap" parameterType="java.util.List">
-  		select 
-	    <include refid="Base_Column_List" />
-	    from dict_service_addons 
-	    where 
-	    service_addon_id in
-	    <foreach item="item" index="index" collection="list"
-             open="(" separator="," close=")">
-        	#{item,jdbcType=NUMERIC}
-    	</foreach>
-  </select>
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from dict_service_addons
-    where service_type = #{serviceType,jdbcType=NUMERIC}
-  </select>
-   <select id="selectAll" resultMap="BaseResultMap" >
-    select
-    <include refid="Base_Column_List" />
-    from dict_service_addons
-    order by service_addon_id 
-  </select>
-  <select id="selectByAddId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select
-    <include refid="Base_Column_List" />
-    from dict_service_addons
-    where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from dict_service_addons
-    where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.dict.DictServiceAddons" >
-    insert into dict_service_addons (service_addon_id, service_type, name, 
-      keyword, tips, price, 
+<mapper namespace="com.jhj.po.dao.dict.DictServiceAddonsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictServiceAddons">
+		<id column="service_addon_id" property="serviceAddonId" jdbcType="NUMERIC" />
+		<result column="service_type" property="serviceType" jdbcType="NUMERIC" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="keyword" property="keyword" jdbcType="VARCHAR" />
+		<result column="tips" property="tips" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="dis_price" property="disPrice" jdbcType="DECIMAL" />
+		<result column="desc_url" property="descUrl" jdbcType="VARCHAR" />
+		<result column="item_unit" property="itemUnit" jdbcType="VARCHAR" />
+		<result column="default_num" property="defaultNum" jdbcType="SMALLINT" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		<result column="enable" property="enable" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		service_addon_id, service_type, name, keyword, tips, price, dis_price, desc_url, item_unit,default_num,
+		add_time, update_time, enable
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from dict_service_addons
+		where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.ServiceAddonSearchVo">
+	    <include refid="bySearchVo" />
+	</select>
+	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.ServiceAddonSearchVo">
+	    <include refid="bySearchVo" />
+	</select>
+	
+	
+	<sql id="bySearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from dict_service_addons
+		where 1 = 1
+		
+		<if test="serviceAddonId != null">
+			and service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="serviceAddonIds != null">
+			and service_addon_id in
+			<foreach item="item" index="index" collection="serviceAddonIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		<if test="serviceType != null">
+			and service_type = #{serviceType,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="serviceTypes != null">
+			and service_type in
+			<foreach item="item" index="index" collection="serviceTypes" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		<if test="enable != null">
+			and enable = #{enable,jdbcType=NUMERIC}
+		</if>
+		
+		order by add_time desc
+	</sql>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from dict_service_addons
+		where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
+	</delete>
+	
+	<delete id="deleteByServiceType" parameterType="java.lang.Long">
+		delete from dict_service_addons
+		where service_type = #{serviceType,jdbcType=NUMERIC}
+	</delete>
+	
+	<insert id="insert" parameterType="com.jhj.po.model.dict.DictServiceAddons">
+		insert into dict_service_addons (service_addon_id, service_type, name,
+		keyword, tips, price,
 
-      dis_price, desc_url,item_unit,default_num, add_time, 
-      update_time, enable)
-    values (#{serviceAddonId,jdbcType=NUMERIC}, #{serviceType,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, 
-      #{keyword,jdbcType=VARCHAR}, #{tips,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
-      #{disPrice,jdbcType=DECIMAL}, #{descUrl,jdbcType=VARCHAR},#{itemUnit,jdbcType=VARCHAR},
-      #{defaultNum,jdbcType=SMALLINT}, #{addTime,jdbcType=NUMERIC}, 
-      #{updateTime,jdbcType=NUMERIC}, #{enable,jdbcType=NUMERIC})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictServiceAddons" >
-    insert into dict_service_addons
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="serviceAddonId != null" >
-        service_addon_id,
-      </if>
-      <if test="serviceType != null" >
-        service_type,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="keyword != null" >
-        keyword,
-      </if>
-      <if test="tips != null" >
-        tips,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-      <if test="disPrice != null" >
-        dis_price,
-      </if>
-      <if test="descUrl != null" >
-        desc_url,
-      </if>
-      <if test="itemUnit != null" >
-        item_unit,
-      </if>
-      <if test="defaultNum != null" >
-        default_num,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="enable != null" >
-        enable,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="serviceAddonId != null" >
-        #{serviceAddonId,jdbcType=NUMERIC},
-      </if>
-      <if test="serviceType != null" >
-        #{serviceType,jdbcType=NUMERIC},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="keyword != null" >
-        #{keyword,jdbcType=VARCHAR},
-      </if>
-      <if test="tips != null" >
-        #{tips,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="disPrice != null" >
-        #{disPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="descUrl != null" >
-        #{descUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="itemUnit != null" >
-        #{itemUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="defaultNum != null" >
-        #{defaultNum,jdbcType=SMALLINT},
-      </if>
-      <if test="defaultNum != null" >
-        #{defaultNum,jdbcType=SMALLINT},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=NUMERIC},
-      </if>
-      <if test="enable != null" >
-        #{enable,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictServiceAddons" >
-    update dict_service_addons
-    <set >
-      <if test="serviceType != null" >
-        service_type = #{serviceType,jdbcType=NUMERIC},
-      </if>
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="keyword != null" >
-        keyword = #{keyword,jdbcType=VARCHAR},
-      </if>
-      <if test="tips != null" >
-        tips = #{tips,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="disPrice != null" >
-        dis_price = #{disPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="descUrl != null" >
-        desc_url = #{descUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="itemUnit != null" >
-        item_unit = #{itemUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="defaultNum != null" >
-        default_num = #{defaultNum,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=NUMERIC},
-      </if>
-      <if test="enable != null" >
-        enable = #{enable,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictServiceAddons" >
-    update dict_service_addons
-    set service_type = #{serviceType,jdbcType=NUMERIC},
-      name = #{name,jdbcType=VARCHAR},
-      keyword = #{keyword,jdbcType=VARCHAR},
-      tips = #{tips,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL},
-      dis_price = #{disPrice,jdbcType=DECIMAL},
-      desc_url = #{descUrl,jdbcType=VARCHAR},
-      item_unit = #{itemUnit,jdbcType=VARCHAR},
-      default_num = #{defaultNum,jdbcType=SMALLINT},
-      add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC},
-      enable = #{enable,jdbcType=NUMERIC}
-    where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
-  </update>
+		dis_price, desc_url,item_unit,default_num, add_time,
+		update_time, enable)
+		values (#{serviceAddonId,jdbcType=NUMERIC}, #{serviceType,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
+		#{keyword,jdbcType=VARCHAR}, #{tips,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
+		#{disPrice,jdbcType=DECIMAL}, #{descUrl,jdbcType=VARCHAR},#{itemUnit,jdbcType=VARCHAR},
+		#{defaultNum,jdbcType=SMALLINT}, #{addTime,jdbcType=NUMERIC},
+		#{updateTime,jdbcType=NUMERIC}, #{enable,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.dict.DictServiceAddons">
+		insert into dict_service_addons
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="serviceAddonId != null">
+				service_addon_id,
+			</if>
+			<if test="serviceType != null">
+				service_type,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="keyword != null">
+				keyword,
+			</if>
+			<if test="tips != null">
+				tips,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="disPrice != null">
+				dis_price,
+			</if>
+			<if test="descUrl != null">
+				desc_url,
+			</if>
+			<if test="itemUnit != null">
+				item_unit,
+			</if>
+			<if test="defaultNum != null">
+				default_num,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="enable != null">
+				enable,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="serviceAddonId != null">
+				#{serviceAddonId,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceType != null">
+				#{serviceType,jdbcType=NUMERIC},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="keyword != null">
+				#{keyword,jdbcType=VARCHAR},
+			</if>
+			<if test="tips != null">
+				#{tips,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="disPrice != null">
+				#{disPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="descUrl != null">
+				#{descUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="itemUnit != null">
+				#{itemUnit,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultNum != null">
+				#{defaultNum,jdbcType=SMALLINT},
+			</if>
+			<if test="defaultNum != null">
+				#{defaultNum,jdbcType=SMALLINT},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="enable != null">
+				#{enable,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.dict.DictServiceAddons">
+		update dict_service_addons
+		<set>
+			<if test="serviceType != null">
+				service_type = #{serviceType,jdbcType=NUMERIC},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="keyword != null">
+				keyword = #{keyword,jdbcType=VARCHAR},
+			</if>
+			<if test="tips != null">
+				tips = #{tips,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="disPrice != null">
+				dis_price = #{disPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="descUrl != null">
+				desc_url = #{descUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="itemUnit != null">
+				item_unit = #{itemUnit,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultNum != null">
+				default_num = #{defaultNum,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="enable != null">
+				enable = #{enable,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictServiceAddons">
+		update dict_service_addons
+		set service_type = #{serviceType,jdbcType=NUMERIC},
+		name = #{name,jdbcType=VARCHAR},
+		keyword = #{keyword,jdbcType=VARCHAR},
+		tips = #{tips,jdbcType=VARCHAR},
+		price = #{price,jdbcType=DECIMAL},
+		dis_price = #{disPrice,jdbcType=DECIMAL},
+		desc_url = #{descUrl,jdbcType=VARCHAR},
+		item_unit = #{itemUnit,jdbcType=VARCHAR},
+		default_num = #{defaultNum,jdbcType=SMALLINT},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=NUMERIC},
+		enable = #{enable,jdbcType=NUMERIC}
+		where service_addon_id = #{serviceAddonId,jdbcType=NUMERIC}
+	</update>
 </mapper>

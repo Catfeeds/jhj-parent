@@ -62,6 +62,57 @@
                               </div>
                            </div>
                            
+<div class="form-group">
+                              <label  class="col-md-2 control-label">自动派工</label>
+                              <div class="col-md-5">
+                              	 <form:radiobutton path="isAuto" value="1" label="是" />
+								 <form:radiobutton path="isAuto" value="0" label="否" />
+                              </div>
+                           </div>
+                           
+                           <div class="form-group">
+                              <label  class="col-md-2 control-label">一单多人</label>
+                              <div class="col-md-5">
+                              	 <form:radiobutton path="isMulti" value="1" label="是" />
+								 <form:radiobutton path="isMulti" value="0" label="否" />
+                              </div>
+                           </div>
+                           
+
+                           
+                           <div class="form-group ">
+							<label class="col-md-2 control-label">服务子项(没有可不填)</label>
+							<div class="col-md-8">
+								<table id="serviceAddonTable" class="table table-hover table-condensed controls">
+									<thead>
+										<tr>
+											<th>类别</th>
+											<th>单位</th>
+											<th>原价</th>
+											<th>折扣价</th>
+											<th>起步数量</th>
+											<th>#</th>
+										</tr>
+									</thead>
+									<c:forEach items="${serviceAddons}" var="item">
+										<tr class="odd gradeX">
+											<td><input type="hidden" name="serviceAddonIds" value="${item.serviceAddonId}"/>
+												<input type="text" name="serviceAddonName" value="${item.name}" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="itemUnit" value="${item.itemUnit}" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonPrice" value="${item.price}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonDisPrice" value="${item.disPrice}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="defaultNum" value="${item.defaultNum}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><span class="input-group-btn">
+													<button class="btn btn-success btn-add" type="button">
+														<span class="glyphicon glyphicon-plus"></span>
+													</button>
+												</span></td>
+										</tr>
+									</c:forEach>
+								</table>
+							</div>
+						</div>                           
+                           
                            
                            <div class="form-group required">
                               <label  class="col-md-2 control-label">备注(副标题)/服务介绍</label>
@@ -106,21 +157,7 @@
                            		</div>
                            </div>
                            
-                           <div class="form-group">
-                              <label  class="col-md-2 control-label">自动派工</label>
-                              <div class="col-md-5">
-                              	 <form:radiobutton path="isAuto" value="1" label="是" />
-								 <form:radiobutton path="isAuto" value="0" label="否" />
-                              </div>
-                           </div>
                            
-                           <div class="form-group">
-                              <label  class="col-md-2 control-label">一单多人</label>
-                              <div class="col-md-5">
-                              	 <form:radiobutton path="isMulti" value="1" label="是" />
-								 <form:radiobutton path="isMulti" value="0" label="否" />
-                              </div>
-                           </div>
                            
                            <div class="form-group">
                               <label  class="col-md-2 control-label">是否可用</label>

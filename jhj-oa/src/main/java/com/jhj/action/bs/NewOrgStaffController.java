@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
@@ -33,6 +34,7 @@ import com.jhj.common.Constants;
 import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
 import com.jhj.oa.auth.AuthHelper;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
@@ -107,6 +109,7 @@ public class NewOrgStaffController extends AdminController {
 	  * @param staffSearchVo
 	  * @throws
 	 */
+	@AuthPassport
 	@RequestMapping(value = "new_staff_list",method = {RequestMethod.GET,RequestMethod.POST})
 	public String newStaffList(Model model, HttpServletRequest request,
 			@RequestParam(value = "orgId",required = false,defaultValue = "0") Long orgId,
@@ -116,17 +119,7 @@ public class NewOrgStaffController extends AdminController {
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		// 分页
-		PageHelper.startPage(pageNo, pageSize);
-		
-		if(orgId != 0L){
-			staffSearchVo.setOrgId(orgId);
-		}
-		
-		String name = request.getParameter("name");
-		if(name!=null){
-			staffSearchVo.setName(new String(name.getBytes("iso-8859-1"),"UTF-8"));
-		}
+
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
@@ -135,7 +128,10 @@ public class NewOrgStaffController extends AdminController {
 			staffSearchVo.setParentId(sessionOrgId);
 		}
 		
-		List<OrgStaffs> list = staffService.selectBySearchVo(staffSearchVo);
+		if (staffSearchVo.getStatus() == null) staffSearchVo.setStatus(1);
+		
+		PageInfo infoList = staffService.selectByListPage(staffSearchVo, pageNo, pageSize);
+		List<OrgStaffs> list = infoList.getList();
 		OrgStaffs orgStaff = null;
 		for (int i = 0; i < list.size(); i++) {
 			orgStaff = list.get(i);
@@ -155,6 +151,7 @@ public class NewOrgStaffController extends AdminController {
 	/*
 	 *  跳转form页
 	 */
+	@AuthPassport
 	@RequestMapping(value = "new_staff_form", method = RequestMethod.GET)
 	public String toOrgStaffAsForm(Model model,HttpServletRequest request,
 			@RequestParam("orgStaffId") Long orgStaffId) {
@@ -221,6 +218,7 @@ public class NewOrgStaffController extends AdminController {
 	/*
 	 * 提交表单
 	 */
+	@AuthPassport
 	@RequestMapping(value = "new_staff_form", method = RequestMethod.POST)
 	public String doOrgStaffAsForm(HttpServletRequest request, Model model,
 			@ModelAttribute("newStaffFormVoModel") NewStaffFormVo formVo,
@@ -280,7 +278,7 @@ public class NewOrgStaffController extends AdminController {
 			}
 		}
 		
-		if (StringUtil.isEmpty(orgStaffs.getHeadImg())) {
+		if (StringUtil.isEmpty(orgStaffs.getHeadImg().trim())) {
 			orgStaffs.setHeadImg("http://www.jia-he-jia.com/u/img/default-head-img.png");
 		}
 		
@@ -375,6 +373,7 @@ public class NewOrgStaffController extends AdminController {
 	/*
 	 * 获取服务人员最新的地理位置
 	 * */
+	@AuthPassport
 	@RequestMapping(value="/staffRegion",method={RequestMethod.GET,RequestMethod.POST})
 	public String staffRegion(Model model,HttpServletRequest request,
 			@RequestParam(value="mobile",required=false) String mobile){

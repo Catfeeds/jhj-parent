@@ -41,6 +41,7 @@
 		<include refid="Base_Column_List" />
 		from orgs
 		where 1 = 1
+
 		<if test="parentId != null">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
@@ -49,7 +50,7 @@
 			and parent_id > 0
 		</if>
 		
-		<if test="orgId != null">
+		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
 		
@@ -73,7 +74,7 @@
 		<include refid="Base_Column_List" />
 		from orgs
 		where 1 = 1
-		<if test="parentId != null">
+		<if test="parentId != null and parentId != 0">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
 		
@@ -81,7 +82,7 @@
 			and parent_id > 0
 		</if>
 		
-		<if test="orgId != null">
+		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
 		
