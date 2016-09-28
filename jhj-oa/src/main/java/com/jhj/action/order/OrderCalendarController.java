@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
 import com.jhj.action.BaseController;
@@ -71,6 +72,22 @@ public class OrderCalendarController extends BaseController {
 
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	/**
+	 *   
+	 *  订单日历--控件展示
+	 *  
+	 */
+	
+	@AuthPassport
+	@RequestMapping(value = "/order-scheduling", method = RequestMethod.GET )
+	public String orderCalender(HttpServletRequest request, Model model,
+		@RequestParam("org_staff_id") Long orgStaffId) {
+		
+		model.addAttribute("orgStaffId", orgStaffId);
+
+		return "order/orderCalendarList";
+	}
 
 	/**
 	 * @throws ParseException

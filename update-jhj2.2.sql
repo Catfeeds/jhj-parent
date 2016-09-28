@@ -47,3 +47,14 @@ ALTER TABLE `partner_service_type` ADD `is_auto` TINYINT(1) UNSIGNED NOT NULL DE
 
 
 update `org_staffs` set head_img = 'http://www.jia-he-jia.com/u/img/default-head-img.png' WHERE head_img = '';
+
+
+ALTER TABLE `orders` ADD `order_op_from` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '运营平台下单类型 0 = 默认自助 1 = 来电下单 ' AFTER `order_from`;	
+
+UPDATE `admin_authority` SET `url` = '/order/order-exp-list' WHERE `admin_authority`.`id` = 70;
+UPDATE `admin_authority` SET `match_url` = '/order' WHERE `admin_authority`.`id` = 70;
+
+
+update `orders` set order_type = 1 WHERE service_type in (SELECT service_type_id FROM `partner_service_type` WHERE parent_id = 26);
+
+	ALTER TABLE `order_prices` CHANGE `pay_type` `pay_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '付款方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位） 6 = 现金支付 7 = 第三方支付';

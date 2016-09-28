@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,12 +95,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 	@Autowired
 	PartnerServiceTypeService partnerServiceTypeService;
-	
+
 	@Override
 	public List<Orders> selectBySearchVo(OrderSearchVo searchVo) {
 		return ordersMapper.selectBySearchVo(searchVo);
 	}
-	
+
 	@Override
 	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
@@ -658,5 +660,95 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		}
 
 		return result;
+	}
+
+	/**
+	 * 获得查询条件方法，要考虑几个点
+	 * 1. 用户登录角色，店长
+	 * 2. 时间
+	 * 
+	 * @return
+	 */
+	@Override
+	public OrderSearchVo getOrderSearchVo(HttpServletRequest request, OrderSearchVo searchVo, Short orderType, Long sessionParentId) {
+		
+		// 查询条件的组合，需要做一些逻辑判断
+		// 1. 如果为运营人员，则可以看所有的门店和所有状态
+		// 2. 如果为店长，则只能看当前门店和已派工到该门店的人员.
+		
+		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
+		searchVo.setOrderType(orderType);
+		if (sessionParentId > 0L)
+			searchVo.setParentId(sessionParentId);
+		// 处理查询条件云店--------------------------------开始
+		// 1) 如果有查询条件云店org_id，则以查询条件的云店为准
+		// 2) 如果没有查询条件，则判断是否为店长，并且只能看店长所在门店下的所有云店.
+
+		Long parentId = 0L;
+		String parentIdParam = request.getParameter("parentId");
+		if (!StringUtil.isEmpty(parentIdParam))
+			parentId = Long.valueOf(parentIdParam);
+
+		if (parentId > 0L)
+			searchVo.setParentId(parentId);
+
+		Long orgId = 0L;
+		String orgIdParam = request.getParameter("orgId");
+
+		if (!StringUtil.isEmpty(orgIdParam))
+			orgId = Long.valueOf(orgIdParam);
+
+		if (orgId > 0L)
+			searchVo.setOrgId(orgId);
+
+		// 处理查询时间条件--------------------------------开始
+		// 下单开始时间
+		String startTimeStr = request.getParameter("startTimeStr");
+		if (!StringUtil.isEmpty(startTimeStr)) {
+			searchVo.setStartAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
+		}
+
+		// 下单结束时间
+		String endTimeStr = request.getParameter("endTimeStr");
+		if (!StringUtil.isEmpty(endTimeStr)) {
+			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
+		}
+
+		// 服务开始时间
+		String serviceStartTime = request.getParameter("serviceStartTime");
+		if (!StringUtil.isEmpty(serviceStartTime)) {
+			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDay(serviceStartTime) / 1000);
+		}
+		// 服务结束时间
+		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
+		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
+			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDay(serviceEndTimeStr) / 1000);
+		}
+		// 处理查询时间条件--------------------------------结束
+
+		// 处理查询状态条件--------------------------------开始
+		if (searchVo.getOrderStatus() == null) {
+			// 如果为店长只能看已派工状态之后的订单.
+			if (sessionParentId > 0L) {
+				List<Short> orderStatusList = new ArrayList<Short>();
+
+				// 店长 可查看的 钟点工 订单状态列表： 已派工 之后的都可以查看
+				// public static short ORDER_HOUR_STATUS_3=3;//已派工
+				// public static short ORDER_HOUR_STATUS_5=5;//开始服务
+				// public static short ORDER_HOUR_STATUS_7=7;//完成服务
+				// public static short ORDER_HOUR_STATUS_8=8;//已评价
+				// public static short ORDER_HOUR_STATUS_9=9;//已关闭
+
+				orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
+				orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
+				orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+				orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
+				orderStatusList.add(Constants.ORDER_HOUR_STATUS_9);
+
+				searchVo.setOrderStatusList(orderStatusList);
+			}
+		}
+
+		return searchVo;
 	}
 }

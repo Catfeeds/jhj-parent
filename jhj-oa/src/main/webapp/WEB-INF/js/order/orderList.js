@@ -48,22 +48,26 @@ $("tbody").find("tr").each(function(k, v) {
 });
 
 
-// 点击按钮, 确定是 搜索 还是 导出excel 
-$("button[name='searchForm']").on("click",function(){
-	
-	var id = $(this).attr("id");
-	
-	if(id == "btnSearch"){
-		$("#oaSearchForm").attr("action","order-hour-list");
-	}else{
-		$("#oaSearchForm").attr("action","export_base_order");
-	}
-	
+
+$("#btnSearch").on("click",function() {
+	$("#oaSearchForm").attr("action","order-hour-list");
 	$("#oaSearchForm").submit();
-	
 });
 
+$("#btnExport").on("click",function() {
+	$("#oaSearchForm").attr("action","export_base_order");
+	$("#oaSearchForm").submit();
+});
 
+function btnDetail(orderNo, orderType, disStatus) {
+	if (orderType == 0) {
+		location.href = "/" + appName +"/order/order-hour-view?orderNo="+orderNo+"&disStatus="+disStatus;
+	}
+	
+	if (orderType == 1) {
+		location.href = "/" + appName + "/order/order-exp-view?orderNo="+orderNo+"&disStatus="+disStatus;
+	}
+}
 
 
 

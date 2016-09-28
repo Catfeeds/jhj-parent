@@ -218,7 +218,7 @@
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3">
 								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
-								<c:if test="${role.role eq 'show' and oaOrderListVoModel.payType==6}">
+								<c:if test="${oaOrderListVoModel.payType==6 and (sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3) }">
 									<a href="cancelOrder/${oaOrderListVoModel.id }" class="btn btn-success">取消订单</a>
 								</c:if>
 							</div>

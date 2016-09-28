@@ -1,33 +1,22 @@
 package com.jhj.action.order;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
-import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
-import com.jhj.oa.auth.AccountAuth;
-import com.jhj.oa.auth.AccountRole;
-import com.jhj.oa.auth.AuthHelper;
-import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
@@ -46,13 +35,8 @@ import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.order.OaOrderListNewVo;
-import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.meijia.utils.StringUtil;
-import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -99,201 +83,7 @@ public class OrderController extends BaseController {
 	@Autowired
 	private PartnerServiceTypeService serviceType;
 
-	/**
-	 * 钟点工-----订单列表---orderType=0
-	 * 
-	 * @param model
-	 * @param request
-	 * @param oaOrderSearchVo
-	 * @return
-	 * @throws ParseException
-	 * @throws UnsupportedEncodingException
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@AuthPassport
-	@RequestMapping(value = "/order-hour-list", method = RequestMethod.GET)
-	public String getOrderHourList(Model model, HttpServletRequest request, OrderSearchVo searchVo) throws ParseException, UnsupportedEncodingException {
 
-		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ConstantOa.DEFAULT_PAGE_SIZE;
-		// 分页
-
-		// 查询条件的组合，需要做一些逻辑判断
-		// 1. 如果为运营人员，则可以看所有的门店和所有状态
-		// 2. 如果为店长，则只能看当前门店和已派工到该门店的人员.
-
-		// 查询条件： 设置为钟点工的订单
-		if (searchVo == null) {
-			searchVo = new OrderSearchVo();
-		}
-
-		// 此方法只查普通服务
-		searchVo.setOrderType(Constants.ORDER_TYPE_0);
-
-		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
-		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
-		if (sessionParentId > 0L)
-			searchVo.setParentId(sessionParentId);
-		// 处理查询条件云店--------------------------------开始
-		// 1) 如果有查询条件云店org_id，则以查询条件的云店为准
-		// 2) 如果没有查询条件，则判断是否为店长，并且只能看店长所在门店下的所有云店.
-
-		Long parentId = 0L;
-		String parentIdParam = request.getParameter("parentId");
-		if (!StringUtil.isEmpty(parentIdParam))
-			parentId = Long.valueOf(parentIdParam);
-
-		if (parentId > 0L)
-			searchVo.setParentId(parentId);
-
-		Long orgId = 0L;
-		String orgIdParam = request.getParameter("orgId");
-
-		if (!StringUtil.isEmpty(orgIdParam))
-			orgId = Long.valueOf(orgIdParam);
-
-		if (orgId > 0L)
-			searchVo.setOrgId(orgId);
-
-		// 处理查询时间条件--------------------------------开始
-		// 下单开始时间
-		String startTimeStr = request.getParameter("startTimeStr");
-		if (!StringUtil.isEmpty(startTimeStr)) {
-			searchVo.setStartAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
-
-			model.addAttribute("startTimeStr", startTimeStr);
-		}
-
-		// 下单结束时间
-		String endTimeStr = request.getParameter("endTimeStr");
-		if (!StringUtil.isEmpty(endTimeStr)) {
-			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
-
-			model.addAttribute("endTimeStr", endTimeStr);
-		}
-
-		// 服务开始时间
-		String serviceStartTime = request.getParameter("serviceStartTime");
-		if (!StringUtil.isEmpty(serviceStartTime)) {
-			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDay(serviceStartTime) / 1000);
-
-			model.addAttribute("serviceStartTime", serviceStartTime);
-		}
-		// 服务结束时间
-		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
-		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
-			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDay(serviceEndTimeStr) / 1000);
-
-			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
-		}
-		// 处理查询时间条件--------------------------------结束
-
-		// 处理查询状态条件--------------------------------开始
-		if (searchVo.getOrderStatus() == null) {
-			// 如果为店长只能看已派工状态之后的订单.
-			if (sessionParentId > 0L) {
-				List<Short> orderStatusList = new ArrayList<Short>();
-
-				// 店长 可查看的 钟点工 订单状态列表： 已派工 之后的都可以查看
-				// public static short ORDER_HOUR_STATUS_3=3;//已派工
-				// public static short ORDER_HOUR_STATUS_5=5;//开始服务
-				// public static short ORDER_HOUR_STATUS_7=7;//完成服务
-				// public static short ORDER_HOUR_STATUS_8=8;//已评价
-				// public static short ORDER_HOUR_STATUS_9=9;//已关闭
-
-				orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
-				orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
-				orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
-				orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
-				orderStatusList.add(Constants.ORDER_HOUR_STATUS_9);
-
-				searchVo.setOrderStatusList(orderStatusList);
-			}
-		}
-
-		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
-
-		List<Orders> orderList = result.getList();
-		Orders orders = null;
-		for (int i = 0; i < orderList.size(); i++) {
-			orders = orderList.get(i);
-			OaOrderListNewVo completeVo = oaOrderService.completeNewVo(orders);
-			orderList.set(i, completeVo);
-		}
-
-		result = new PageInfo(orderList);
-
-		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
-		model.addAttribute("oaOrderListVoModel", result);
-		model.addAttribute("searchModel", searchVo);
-
-		return "order/orderHourList";
-	}
-
-	/**
-	 * 钟点工---订单详情
-	 * 
-	 * @param orderNo
-	 * @param disStatus
-	 * 
-	 *            2016年4月20日15:39:00 该参数已无 实际用处。但为了兼顾 老数据，暂时保留
-	 * 
-	 * @param model
-	 * @return
-	 */
-	@AuthPassport
-	@RequestMapping(value = "/order-hour-view", method = RequestMethod.GET)
-	public String orderHourDetail(String orderNo, Short disStatus, Model model, HttpServletRequest request) {
-
-		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailHour(orderNo, disStatus);
-
-		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
-
-		// 得到 当前登录 的 店长所在 门店id，
-		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
-
-		if (sessionOrgId > 0L) {
-
-			/*
-			 * 派工调整时，选择 门店
-			 */
-			model.addAttribute("loginOrgId", sessionOrgId);
-		}
-
-		short orderType = oaOrderListVo.getOrderType();
-		Map<String, String> map = isRole(request);
-		model.addAttribute("role", map);
-		if (orderType == Constants.ORDER_TYPE_0) {// 钟点工
-			return "order/orderHourViewForm";
-		} else {
-			return "order/orderViewForm";
-		}
-	}
-
-	/**
-	 * 深度保洁---订单详情
-	 * 
-	 * 2016年4月20日15:39:44 该方法 已经没有用处。。jhj2.1 没有深度保洁订单了
-	 * 
-	 * @param orderNo
-	 * @param disStatus
-	 * 
-	 *            2016年4月20日15:39:00 该参数已无 实际用处。但为了兼顾 老数据，暂时保留
-	 * @param model
-	 * @return
-	 */
-	@AuthPassport
-	@RequestMapping(value = "/order-exp-view", method = RequestMethod.GET)
-	public String orderExpDetail(String orderNo, Short disStatus, Model model) {
-		OaOrderListVo oaOrderListVo = oaOrderService.getOrderExpVoDetail(orderNo, disStatus);
-		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
-		short orderType = oaOrderListVo.getOrderType();
-		if (orderType == Constants.ORDER_TYPE_1) {// 深度保洁
-			return "order/orderExpViewForm";
-		} else {
-			return "order/orderViewForm";
-		}
-	}
 
 	/*
 	 * 深度保洁派工----固定派工人员
@@ -407,16 +197,17 @@ public class OrderController extends BaseController {
 		if (orders.getOrderType() == Constants.ORDER_TYPE_0) {
 			// 钟点工订单
 			returnUrl = "redirect:order-hour-list";
-		} else {
-			// 助理订单
-			returnUrl = "redirect:order-am-list";
+		}
+		if (orders.getOrderType() == Constants.ORDER_TYPE_1) {
+			// 深度保洁
+			returnUrl = "redirect:order-deep-list";
 		}
 
 		return returnUrl;
 	}
 
 	/**
-	 * 取消助理订单
+	 * 取消订单
 	 * 
 	 * @param orderId
 	 * 
@@ -438,28 +229,12 @@ public class OrderController extends BaseController {
 		if (orderType == Constants.ORDER_TYPE_0) {
 			return "redirect:../order-hour-view?orderNo=" + orderNo + "&disStatus=" + orderType;
 		}
-		if (orderType == Constants.ORDER_TYPE_2) {
-			return "redirect:../order-am-view?orderNo=" + orderNo + "&disStatus=" + orderType;
+		if (orderType == Constants.ORDER_TYPE_1) {
+			return "redirect:../order-exp-view?orderNo=" + orderNo + "&disStatus=" + orderType;
 		}
 		return null;
 	}
 
-	// 判断当前用户的角色
-	// 判断用户是否有权限操作页面中的按钮， 如果，则显示该按钮，如果没有，则不显示改按钮
-	public Map<String, String> isRole(HttpServletRequest request) {
-		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
-		AccountRole accountRole = auth.getAccountRole();
-		List<String> list = new ArrayList<String>();
-		list.add("系统管理员");
-		list.add("总部运营");
-		Map<String, String> map = null;
-		if (list.contains(accountRole.getName())) {
-			map = new HashMap<String, String>();
-			map.put("role", "show");
-		}
-		return map;
-	}
-	
 	@RequestMapping(value="/oaOrderHourAdd",method=RequestMethod.GET)
 	public String oaOrderHourAdd(Model model){
 		//订单的来源
