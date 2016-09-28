@@ -39,6 +39,7 @@ import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserPushBindSearchVo;
+import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.IPUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
@@ -367,6 +368,20 @@ public class UserAppController extends BaseController {
 				userPushBindService.insertSelective(userPushBind);
 			}
 			return result;
-		}	
+		}
+		
+		//注册用户
+		@RequestMapping(value="/reg",method=RequestMethod.POST)
+		public AppResultData<String> reg(@RequestParam("mobile") String mobile){
+			AppResultData<String> result = new AppResultData<String>(
+					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+			Users user=null;
+			if(mobile!=null){
+				user = usersService.genUser(mobile, (short)2);
+			}
+			result = new AppResultData<String>(
+					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, user.getId().toString());
+			return result;
+		}
 		
 }
