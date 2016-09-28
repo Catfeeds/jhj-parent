@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -580,5 +582,20 @@ public class UserController extends BaseController {
 		}
 
 		return cloudIdList;
+	}
+	
+	@RequestMapping(value="/getUser",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> selectByMobile(@RequestParam("mobile") String mobile){
+		Map<String,Object> map=new HashMap<String,Object>();
+		UserSearchVo searchVo=new UserSearchVo();
+		searchVo.setMobile(mobile);
+		List<Users> users = usersService.selectBySearchVo(searchVo);
+		if(users!=null && users.size()>0){
+			map.put("data", users.get(0));
+		}else{
+			map.put("data", false);
+		}
+		return map;
 	}
 }
