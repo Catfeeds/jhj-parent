@@ -118,6 +118,9 @@
 									</table>
 								</form:form>
 							</header>
+							<a href="oaOrderHourAdd">基本保洁</a>
+							<a href="orderAmAdd">深度服务</a>
+							
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<header class="panel-heading">
 								<h4>钟点工订单列表</h4>

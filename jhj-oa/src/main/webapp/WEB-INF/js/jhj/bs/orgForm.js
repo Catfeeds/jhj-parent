@@ -110,6 +110,7 @@ $("#orgForm_btn").click(function(form) {
 });
 
 //baiduMap 相关
+function init(){
 var map = new BMap.Map("containers");//初始化地图       
 map.addControl(new BMap.NavigationControl());  //初始化地图控件              
 map.addControl(new BMap.ScaleControl());                   
@@ -139,7 +140,7 @@ var gc = new BMap.Geocoder();//地址解析类
         	});
     });
 
- 
+}
 //信息窗口
 function showLocationInfo(pt, rs){
     var opts = {
@@ -264,5 +265,8 @@ function showLocationInfo(pt, rs){
     }
     
 //修改页面一加载就回显地图位置
-window.onload = hhh;
+$(function(){
+	init();
+	fff();
+});
 

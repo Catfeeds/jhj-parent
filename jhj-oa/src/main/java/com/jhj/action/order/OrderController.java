@@ -1,8 +1,6 @@
 package com.jhj.action.order;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
@@ -32,14 +29,14 @@ import com.jhj.oa.auth.AccountRole;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
-import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -51,16 +48,11 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
-import com.jhj.vo.order.OaOrderSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.jhj.vo.org.OrgSearchVo;
-import com.meijia.utils.DateUtil;
-import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -100,6 +92,12 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private OrderQueryService orderQueryService;
+	
+	@Autowired
+	private CooperateBusinessService cooperateBusinessService;
+	
+	@Autowired
+	private PartnerServiceTypeService serviceType;
 
 	/**
 	 * 钟点工-----订单列表---orderType=0
@@ -461,4 +459,29 @@ public class OrderController extends BaseController {
 		}
 		return map;
 	}
+	
+	@RequestMapping(value="/oaOrderHourAdd",method=RequestMethod.GET)
+	public String oaOrderHourAdd(Model model){
+		//订单的来源
+		List<CooperativeBusiness> selectByListPage = cooperateBusinessService.selectByListPage();
+		if(selectByListPage!=null){
+			model.addAttribute("cooperativeBusiness", selectByListPage);
+		}
+		return "order/oaOrderHourAdd";
+	}
+	
+	@RequestMapping(value="/orderAmAdd",method=RequestMethod.GET)
+	public String orderAmAdd(Model model){
+		
+		List<CooperativeBusiness> selectByListPage = cooperateBusinessService.selectByListPage();
+		if(selectByListPage!=null){
+			model.addAttribute("cooperativeBusiness", selectByListPage);
+		}
+		
+		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(26L);
+		model.addAttribute("serviceType", serviceTypeList);
+		
+		return "order/orderAmAdd";
+	}
+	
 }
