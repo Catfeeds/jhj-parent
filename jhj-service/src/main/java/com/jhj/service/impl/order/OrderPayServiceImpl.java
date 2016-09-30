@@ -16,6 +16,7 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -30,6 +31,7 @@ import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
@@ -91,6 +93,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 	@Autowired
 	private NewDispatchStaffService newDisStaService;
 	
+	@Autowired
+	private PartnerServiceTypeService partnerServiceTypeService;
+	
 	
 	/**
 	 * 钟点工订单支付成功,后续通知功能
@@ -102,6 +107,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 	public boolean orderPaySuccessToDoForHour(Long userId, Long orderId, List<OrgStaffsNewVo> orgStaffsNewVos, boolean isChangeDispatch) {
 		
 		Orders order = ordersService.selectByPrimaryKey(orderId);
+		
+		Long serviceTypeId = order.getServiceType();
+		//增加判断，是否可以自动派工.
+	    PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+	    
+	    if (serviceType == null) return false;
+	    
+	    if (serviceType.getIsAuto().equals((short)0)) return false;
 		
 		//先判断该订单是否已经派过工，如果已经派工成功，则不需要再次派工.
 		//如果为换人派工，则需要将原有派工取消后，再重新派工.
@@ -128,31 +141,15 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		Users u = userService.selectByPrimaryKey(userId);
 		
-		List<OrgStaffs> staList = new ArrayList<OrgStaffs>();
-		
 		//实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
-		if (orgStaffsNewVos.isEmpty()) {
-			
-			List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orderId, order.getServiceDate());
-			
-			if(staIdList.size() == 0){
-				//如果无可用派工。则设置 一个 为 0 的 staffId
-				staIdList.add(0L);
-			}
-			StaffSearchVo searchVo = new StaffSearchVo();
-			searchVo.setStaffIds(staIdList);
-			staList = orgStaffService.selectBySearchVo(searchVo);
-			
-		}
+		Long serviceDate = order.getServiceDate();
+		Double serviceHour = (double)order.getServiceHour();
+		Long staffId = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour);
 		
-		
-		if(staList.isEmpty()) return false;
-		
-		//乱序
-		Collections.shuffle(staList);
+		if (staffId.equals(0L)) return false;
 		
 		//取第一个
-		OrgStaffs staff = staList.get(0);
+		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 		
 		orderDispatch = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
 		
@@ -169,9 +166,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		orderDispatch.setServiceHours(order.getServiceHour());
 		
 		//更新服务人员与用户地址距离
-		
-		Long staffId = staff.getStaffId();
-		
+				
 		Long addrId = order.getAddrId();
 		
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
