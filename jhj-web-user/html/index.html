@@ -7,184 +7,300 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>叮当到家</title>
-<link rel="stylesheet" href="../css/framework7.css">
-<link rel="stylesheet" href="../css/framework7.themes.css">
-<link rel="stylesheet" href="../css/my-app.css">
+<link rel="stylesheet" href="css/framework7.ios.min.css">
+<link rel="stylesheet" href="css/mobiscroll.custom-2.16.1.min.css">
+<link rel="stylesheet" href="css/my-app.css">
 
+   
 </head>
 <body>
-	<!-- Status bar overlay for fullscreen mode-->
-	<div class="statusbar-overlay"></div>
-	<!-- Panels overlay-->
-	<div class="panel-overlay"></div>
 
-
-
-	<!-- Views-->
 	<div class="views">
 
-		<!-- Your main view, should have "view-main" class-->
 		<div class="view view-main">
 
-			<!-- Pages, because we need fixed-through navbar and toolbar, it has additional appropriate classes-->
 			<div class="pages navbar-through toolbar-through">
-				<!-- Page, data-page contains page name-->
-				<div data-page="index" class="page"style="overflow:auto;">
-					<!-- Scrollable page content-->
-					<div class="page-content  shouye-bg" style="margin:0;padding:0;height:712px;">
-						<div class="swiper-container">
-							<div class="swiper-wrapper">
-								<div class="swiper-slide"style="height:168px;">
-									<img src="../img/tmp/1.png">
+			
+				<div data-page="index"  class="page">
+					
+					<div id="indexPageContentDiv" class="page-content">
+						<img src="img/indexthree/banner.png" alt="" style="width:100%;padding:0;">
+						<div class="beijing-index">
+							<div class="index-title">
+								<div class="index-title-1">
+									
 								</div>
+								<p>家政保洁服务</p>
 							</div>
-							<!-- <div class="swiper-pagination"></div> -->
+							<div class="mincircle mincircle1">
+								<a href="order-jinpai.html" onclick="orderLink('order/fiveservice/jinpaibaojie.html', 23)">
+									<div class="mincircle-one">
+										<p>金牌保洁</p>
+										<p>首单立减30元</p>
+										<p></p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-1.png" alt="">
+									</div>
+								</a>
+							</div>
+
+							<div class="mincircle mincircle2">
+								<a href="#" onclick="orderLink('order/fiveservice/cook.html', 24)">
+									<div class="mincircle-one">
+										<p>深度养护</p>
+										<p>开荒，擦玻璃</p>
+										<p>满减50元</p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-2.png" alt="">
+									</div>
+								</a>
+							</div>
+
+							<div class="mincircle mincircle3">
+								<a href="survey/survey-user.html">
+									<div class="mincircle-one">
+										<p>养老助残</p>
+										<p></p>
+										<p></p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-3.png" alt="">
+									</div>
+								</a>
+							</div>
+
+							<div class="mincircle mincircle4">
+								<a href="#" onclick="orderLink('order/fiveservice/qiyefuwu.html', 27)">
+									<div class="mincircle-one">
+										<p>家务定制</p>
+										<p>家务包年85折优惠</p>
+										<p></p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-4.png" alt="">
+									</div>
+								</a>
+							</div>
+							<div class="index-title1">
+								<div class="index-title-2">
+									
+								</div>
+								<p>母婴到家</p>
+							</div>
+
+							
+
+
+							<div class="mincircle mincircle5">
+								<a href="#" onclick="orderLink('order/fiveservice/tiexinjiashi.html', 25)">
+									<div class="mincircle-one">
+										<p>孕家洁</p>
+										<p style="color:#999;">为孕妇家庭定制的</p>
+										<p style="color:#999;">专属清洁方案</p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-5.png" alt="">
+									</div>
+								</a>
+							</div>
+
+							<div class="mincircle mincircle6">
+								<a href="#" onclick="orderLink('order/fiveservice/tiexinjiashi.html', 26)">
+									<div class="mincircle-one">
+										<p>月子房</p>
+										<p style="color:#999;">孕妇产前</p>
+										<p style="color:#999;">月子房清洁消毒</p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-6.png" alt="">
+									</div>
+								</a>
+							</div>
+
+							<div class="mincircle mincircle7">
+								<a href="#" onclick="orderLink('order/fiveservice/tiexinjiashi.html', 26)">
+									<div class="mincircle-one">
+										<p>洁宝宝</p>
+										<p style="color:#999;">0-3岁宝宝家庭</p>
+										<p style="color:#999;">母婴房清洁玩具消毒</p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-7.png" alt="">
+									</div>
+								</a>
+							</div>
+
+							<div class="mincircle mincircle8">
+								<a href="#" onclick="orderLink('order/fiveservice/tiexinjiashi.html', 26)">
+									<div class="mincircle-one">
+										<p>安居宝</p>
+										<p style="color:#999;">儿童安全防护</p>
+										<p style="color:#999;">解决方案</p>
+									</div>
+									<div class="mincircle-two">
+										<img src="img/indexthree/index-8.png" alt="">
+									</div>
+								</a>
+							</div>
 						</div>
 						
-						<div class="content-block shouye-neirong">
-						      <div class="row no-gutter">
-						        <div class="col-50">
-						        	<div class="row btn">
-										<div class="col-100"><img src="../img/icons/yingji-2x.png"style="width:24%;" /></div>
-										<div class="col-100">应急</div>
-									</div>
-						        </div>
-						        <div class="col-50">
-						        	<div class="row btn">
-										<div class="col-100"><img src="../img/icons/chongzhi-2x.png"style="width:24%;" /></div>
-										<div class="col-100">充值</div>
-									</div>
-						        </div>
-						      </div> 
-						      <div class="row no-gutter">
-						        <div class="col-50">
-						        	<div class="row btn">
-										<div class="col-100">
-											<a href="order/order-jingpai.html" class="no-animation link"> 
-												<img src="../img/icons/jingpai-2x.png" style="width:36%"/>
-											</a>
-										</div>
-										<div class="col-100"style="color:#666!important">金牌家政</div>
-									</div>
-						        </div>
-						        <div class="col-50">
-						        	<div class="row btn">
-										<div class="col-100">
-											<a href="order/order-am.html" class="no-animation link"> 
-												<img src="../img/icons/jiatingzhuli-2x.png" style="width:36%" />
-											</a>
-										</div>
-									<div class="col-100"style="color:#666;">家庭助理</div>
-									</div>
-								</div>
-						      </div>
-						      <div class="row no-gutter">
-						        <div class="col-50">
-						        	<div class="row btn">
-										<div class="col-100">
-											<a href="order/order-am.html" class="no-animation link"> 
-												<img src="../img/icons/shangcheng-2x.png" style="width:36%" />
-											</a>
-										</div>
-									<div class="col-100"style="color:#666;">网上商城</div>
-									</div>
-						        </div>
-						        <div class="col-50">
-						        	<div class="row btn">
-										<div class="col-100">
-											<img src="../img/icons/huodong-2x.png"  style="width:36%"/>
-										</div>
-										<div class="col-100"style="color:#666">社区活动</div>
-									</div>
-						        </div>
-						      </div>
-						    </div>
-						</div>
+						
 					</div>
 				</div>
 			</div>
-
-			<!-- Bottom Toolbar-->
+		</div>
 			
 			<div class="toolbar tabbar tabbar-labels">
 			    <div class="toolbar-inner-jhj">
-			        <a href="index.html" class="no-animation link" style="color:#FF7E00">
-			            <i class="icon toolbar-icon-index"style="width:25px;"></i>
+			        <a href="#" id="toolbar-index" class="no-animation link active" onclick="toolBarHref('index.html', 'toolbar-index');" style="color:#000;">
+			            <i class="icon toolbar-icon-index"></i>
 			            <span class="tabbar-label">首页</span>
 			        </a>
-			       <!--  <a id="order-list" href="order/order-list.html" class="no-animation link">
-			            <i class="icon demo-icon-2"></i>
+			        
+			        <a href="#" id="toolbar-am" onclick="toolBarHref('user/user-am-list.html', 'toolbar-am');"  class="no-animation link" style="color:#000;">
+			            <i class="icon toolbar-icon-order"></i>
 			            <span class="tabbar-label">订单</span>
-			        </a> -->
-			        
-			        <a id="order-hour-list" href="order/order-hour-now-list.html" class="no-animation link">
-			            <i class="icon demo-icon-2"></i>
-			            <span class="tabbar-label">用户订单</span>
+			        </a>
+			        			        
+			        <a href="#" id="toolbar-huodong" onclick="toolBarHref('huodong-list.html', 'toolbar-huodong')" class="no-animation link" style="color:#000;">
+			            <i class="icon toolbar-icon-zhuli"></i>
+			            <span class="tabbar-label">充值</span>
 			        </a>
 			        
-			        <a id="order-hour-list" href="order/order-hour-old-list.html" class="no-animation link">
-			            <i class="icon demo-icon-2"></i>
-			            <span class="tabbar-label">历史订单</span>
-			        </a>
-			        
-			        <a id="am-list" href="order/order-list.html" class="no-animation link">
-			            <i class="icon demo-icon-3"></i>
-			            <span class="tabbar-label">助理</span>
-			        </a>
-			        <a href="user/mine.html" class="no-animation link"> 
-			            <i class="icon demo-icon-4"></i>
-			            <span class="tabbar-label">我的</span>
-			        </a>
+			        <a href="#" id="toolbar-youzan" onclick="toolBarHref('youzan.html', 'toolbar-youzan')" class="no-animation link" style="color:#000;">
+						<i class="icon toolbar-icon-my"></i>
+						<span class="tabbar-label">我的</span>
+					</a>
 		    	</div>
 			</div>
 
 		</div>
-
-	</div>
-
-
-	<!-- Path to Framework7 Library JS-->
+	
 	
 	<script type="text/javascript" src="js/framework7.min.js"></script>
 	
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="js/lib/moment-with-locales.min.js"></script>
-	
+	<!-- 服务时间选择类库 -->
+	<script type="text/javascript" src="js/lib/appframework.min.js"></script>
+	<script type="text/javascript" src="js/lib/mobiscroll.custom-2.16.1.min.js"></script>
+
+
 	<!-- Path to your app js-->
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/login.js"></script>
 	<script type="text/javascript" src="js/require-data.js"></script>
 	<script type="text/javascript" src="js/utils.js"></script>
 	
+	<script type="text/javascript" src="js/index.js"></script>
+	<!-- 时间选择js-->
+	<script type="text/javascript" src="js/service-date-select.js"></script>
+	<script type="text/javascript" src="js/cook-date-select.js"></script>
+	
+	
+	<!-- 历史订单录入相关js -->	
+	<!-- <script type="text/javascript" src="js/history-service-date-select.js"></script> -->
+	
+		
  	<!-- 用户地址列表显示-->
 	<script type="text/javascript" src="js/user/mine.js"></script>  
 	<script type="text/javascript" src="js/user/mine-addr-list.js"></script>  
 	
+	<!-- 用户意见详情 -->
+	<script type="text/javascript"  src="js/user/mine-feed-back.js"></script> 
+	<!-- 更多详情 -->
+	<script type="text/javascript" src="js/user/more.js"></script>  
+	<!--我的信息  -->
+	<script type="text/javascript" src="js/user/user-wancheng.js"></script>  
+	<!-- 社区活动 -->
+	<script type="text/javascript" src="js/user/huodong-detail.js"></script>  
+	<script type="text/javascript" src="js/user/huodong-list.js"></script>  
+	
 	<!-- 用户添加地址 -->
 	<script type="text/javascript"  src="js/user/mine-add-addrs.js"></script>  
+	<!-- 用户，查看 助理页签 -->
+	<script type="text/javascript" src="js/user/user-am-list.js"></script>
+	<script type="text/javascript" src="js/user/user-am-detail.js"></script>
 	
 	<!-- 钟点工提交订单页面 js -->	
 	<script type="text/javascript" src="js/order/order-form-zhongdiangong.js"></script>
 	<!-- 钟点工支付页面 -->
 	<script type="text/javascript" src="js/order/order-form-zhongdiangong-pay.js"></script>
+	
+	<!-- 用户版，当前订单列表 -->
+	<script type="text/javascript" src="js/order/order-cal.js"></script>
 	<!-- 用户版，当前订单列表 -->
 	<script type="text/javascript" src="js/order/order-hour-now-list.js"></script>
-	<!-- 用户版，历史订单列表 -->
-	<script type="text/javascript" src="js/order/order-hour-old-list.js"></script>
+
 	<!-- 钟点工-订单详情 -->
 	<script type="text/javascript" src="js/order/order-view-0.js"></script>
+	<!-- 助理-跑腿订单 -->
+	<script type="text/javascript" src="js/order/order-view-2.js"></script>
+	<!-- 订单详情 -->
+	<script type="text/javascript" src="js/order/user-am-result.js"></script>
 	<!-- 用户预约订单 -->
 	<script type="text/javascript" src="js/order/order-am.js"></script>
 
 	<script type="text/javascript" src="js/order/order-am-faqiyuyue.js"></script>
+	
+	<script type="text/javascript" src="js/order/order-pay-success.js"></script>
 
 	<!-- 用户兑换优惠券 -->
 	<script type="text/javascript"  src="js/user/mine-coupon-list.js"></script>  
-	
-	<!-- 深度保洁附加服务选择 -->
-	<script type="text/javascript"  src="js/order/order-list-shendubaojiezl.js"></script>  
-	<script type="text/javascript"  src="js/order/order-list-shendubaojie-yuyue.js"></script>  
-	
+	<!-- 用户充值列表 -->
+	<script type="text/javascript"  src="js/user/mine-charge-list.js"></script>  
+	<script type="text/javascript"  src="js/user/mine-charge-way.js"></script>  
+	<script type="text/javascript"  src="js/user/mine-charge-pay-success.js"></script> 
+	<!--用户助理时间 baidu.echarts-->
 
+
+	<!-- 深度保洁附加服务选择 -->
+	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojiezl.js"></script>  
+	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojie-yuyue.js"></script>  
+	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojie-result.js"></script>  
+	<script type="text/javascript"  src="js/order/shendubaojie/order-view-1.js"></script>  
+	
+	<!-- 用户订单评价 -->
+	<script type="text/javascript"  src="js/order/order-rate.js"></script>
+	
+	<!-- 订单评价详情 -->
+    <script type="text/javascript" src="js/order/order-get-rate.js"></script>
+    
+    
+    <!--新增类型： 首页，提醒业务 -->
+	<script type="text/javascript" src="js/remind-date-select.js"></script>
+	<script type="text/javascript" src="js/order/remind/order-remind-tixing.js"></script>
+    <script type="text/javascript" src="js/order/remind/order-remind-list.js"></script>
+    <script type="text/javascript" src="js/order/remind/order-remind-detail.js"></script>
+    <script type="text/javascript" src="js/order/remind/order-remind-tixing-success.js"></script>
+    
+    <!-- 话费充值页面  -->
+    
+    <script type="text/javascript" src="js/user/serviceCharge/order-service-charge.js"></script>
+    <script type="text/javascript" src="js/user/serviceCharge/order-service-charge-success.js"></script>
+    
+    <!-- 历史订单录入 -->
+    <script type="text/javascript" src="js/order/history/historyUser.js"></script>
+    <script type="text/javascript" src="js/order/history/historyZhongdiangong.js"></script>
+    <script type="text/javascript" src="js/order/history/historyAm.js"></script>
+    <script type="text/javascript" src="js/order/history/order-jinpai.js"></script>
+    
+    <!-- 2015-12-22 14:46:08 问卷调查 -->
+    <script type="text/javascript" src="js/survey/survey-user.js"></script>
+    <script type="text/javascript" src="js/survey/survey-question.js"></script>
+    <script type="text/javascript" src="js/survey/survey-result.js"></script>
+    <script type="text/javascript" src="js/survey/survey-result-child.js"></script>
+    <script type="text/javascript" src="js/survey/survey-result-price.js"></script>
+    
+    
+    <script type="text/javascript" src="js/order/fiveservice/jinpaibaojie.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/cook.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/tiexinjiashi.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/quanniandingzhi.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/qiyefuwu.js"></script>
+    <!-- 我的 余额  消费明细 -->
+    <script type="text/javascript" src="js/user/mine-rest-money-detail.js"></script>
 </body>
 </html>
