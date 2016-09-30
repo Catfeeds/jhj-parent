@@ -13,6 +13,8 @@ public class OrgStaffFinanceSearchVo {
 	
 	private Long orgId;
 	
+	private List<Long> staffIds;
+	
 	private List<Long> searchCloudOrgIdList;	// 根据登录角色 的 门店 确定的 云店。。
 	
 	private Short isBlack;
@@ -63,5 +65,13 @@ public class OrgStaffFinanceSearchVo {
 
 	public void setIsBlack(Short isBlack) {
 		this.isBlack = isBlack;
+	}
+
+	public List<Long> getStaffIds() {
+		return staffIds;
+	}
+
+	public void setStaffIds(List<Long> staffIds) {
+		this.staffIds = staffIds;
 	}
 }

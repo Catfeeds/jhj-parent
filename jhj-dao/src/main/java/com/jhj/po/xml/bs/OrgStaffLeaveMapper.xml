@@ -1,226 +1,224 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.bs.OrgStaffLeaveMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffLeave" >
-    <id column="id" property="id" jdbcType="NUMERIC" />
-    <result column="org_id" property="orgId" jdbcType="NUMERIC" />
-    <result column="parent_id" property="parentId" jdbcType="NUMERIC" />
-    <result column="staff_id" property="staffId" jdbcType="NUMERIC" />
-    <result column="leave_date" property="leaveDate" jdbcType="DATE" />
-    <result column="start" property="start" jdbcType="NUMERIC" />
-    <result column="end" property="end" jdbcType="NUMERIC" />
-    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
-    <result column="admin_id" property="adminId" jdbcType="NUMERIC" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, org_id, parent_id, staff_id, leave_date, start, end, remarks, admin_id, add_time
-  </sql>
-  
-  	
-  <!-- 假期中的员工 -->
-  <select id="selectLeavingStaff" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.LeaveSearchVo">
-  	select 
-    <include refid="Base_Column_List" />
-    from org_staff_leave
-  	where 1=1
-  	
-  	<if test="orderServiceDateStart != null and orderServiceDateEnd !=null ">
+<mapper namespace="com.jhj.po.dao.bs.OrgStaffLeaveMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.OrgStaffLeave">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="org_id" property="orgId" jdbcType="NUMERIC" />
+		<result column="parent_id" property="parentId" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="leave_date" property="leaveDate" jdbcType="DATE" />
+		<result column="start" property="start" jdbcType="NUMERIC" />
+		<result column="end" property="end" jdbcType="NUMERIC" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="admin_id" property="adminId" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, org_id, parent_id, staff_id, leave_date, start, end, remarks, admin_id, add_time
+	</sql>
+
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.LeaveSearchVo">
+		<include refid="bySearchVo" />
+	</select>
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.LeaveSearchVo">
+		<include refid="bySearchVo" />
+	</select>
+
+	<sql id="bySearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_leave
+		where 1=1
+		<if test="parentId !=null and parentId != 0 ">
+			and
+			parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orgId !=null and orgId != 0 ">
+			and
+			org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="staffId != null and staffId !=0 ">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="mobile != null">
+			and staff_id in (select staff_id from org_staffs where mobile = #{mobile,jdbcType=VARCHAR})
+		</if>
+
+		<if test="leaveStartTime != null ">
+		    <![CDATA[ 
+		    	and (UNIX_TIMESTAMP(leave_date) + start*3600) >= #{leaveStartTime,jdbcType=NUMERIC}
+		    ]]>
+		</if>
+
+		<if test="leaveEndTime != null ">
+		    <![CDATA[ 
+		    	and (UNIX_TIMESTAMP(leave_date) + end*3600) < #{leaveEndTime,jdbcType=NUMERIC}
+		    ]]>
+		</if>
+
+		<if test="serviceStartTime != null and serviceEndTime !=null ">
 		<![CDATA[
 				and
 				(
-					(UNIX_TIMESTAMP(leave_date) + start*3600) > #{orderServiceDateStart}
+					(UNIX_TIMESTAMP(leave_date) + start*3600) > #{serviceStartTime}
 					 and
-					(UNIX_TIMESTAMP(leave_date) + start*3600) < #{orderServiceDateEnd}
+					(UNIX_TIMESTAMP(leave_date) + start*3600) < #{serviceEndTime}
 				)	
 				or
 				(
-					(UNIX_TIMESTAMP(leave_date) + end*3600) > #{orderServiceDateStart}
+					(UNIX_TIMESTAMP(leave_date) + end*3600) > #{serviceStartTime}
 					 and
-					(UNIX_TIMESTAMP(leave_date) + end*3600) < #{orderServiceDateEnd}
+					(UNIX_TIMESTAMP(leave_date) + end*3600) < #{serviceEndTime}
 				)
 		]]>
-  	</if>
-  
-  </select>
-  
-  
-  
-  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.LeaveSearchVo">
-  	select 
-    <include refid="Base_Column_List" />
-    from org_staff_leave
-    where 1=1
-    <if test="parentOrgId !=null and parentOrgId != 0 ">
-	    and
-		    parent_id = #{parentOrgId,jdbcType=NUMERIC}
-    </if>
-    
-    <if test="staffId != null and staffId !=0 ">
-    	and staff_id = #{staffId,jdbcType=NUMERIC}
-    </if>
-    
-    <if test="addStartTime !=null and addEndTime !=null">
-    	<![CDATA[ 
-    	and 
-    		add_time > #{addStartTime,jdbcType=NUMERIC}
-    	and	
-    		add_time < #{addEndTime,jdbcType=NUMERIC}
-		]]>
-    </if>
-    
-  	<if test="leaveTimeStamp != null ">
-    	<![CDATA[ 
-    	and 
-    		UNIX_TIMESTAMP(leave_date) =  #{leaveTimeStamp,jdbcType=NUMERIC}
-    	]]>	
-    </if> 
-    
-    <if test="dispatchDateStartStr != null and dispatchDateEndStr != null ">
-    
-    	<![CDATA[ 
-    	and 
-    		UNIX_TIMESTAMP(leave_date) >=  #{dispatchDateStartStr}
-    		and
-    		UNIX_TIMESTAMP(leave_date) <=  #{dispatchDateEndStr}
-    	]]>	
-    </if>
-    
-    order by add_time desc
-  </select>
-  
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from org_staff_leave
-    where id = #{id,jdbcType=NUMERIC}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from org_staff_leave
-    where id = #{id,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffLeave" >
-    insert into org_staff_leave (id, org_id, parent_id, 
-      staff_id, leave_date, start, 
-      end, remarks, admin_id, 
-      add_time)
-    values (#{id,jdbcType=NUMERIC}, #{orgId,jdbcType=NUMERIC}, #{parentId,jdbcType=NUMERIC}, 
-      #{staffId,jdbcType=NUMERIC}, #{leaveDate,jdbcType=DATE}, #{start,jdbcType=NUMERIC}, 
-      #{end,jdbcType=NUMERIC}, #{remarks,jdbcType=VARCHAR}, #{adminId,jdbcType=NUMERIC}, 
-      #{addTime,jdbcType=NUMERIC})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffLeave" >
-    insert into org_staff_leave
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="orgId != null" >
-        org_id,
-      </if>
-      <if test="parentId != null" >
-        parent_id,
-      </if>
-      <if test="staffId != null" >
-        staff_id,
-      </if>
-      <if test="leaveDate != null" >
-        leave_date,
-      </if>
-      <if test="start != null" >
-        start,
-      </if>
-      <if test="end != null" >
-        end,
-      </if>
-      <if test="remarks != null" >
-        remarks,
-      </if>
-      <if test="adminId != null" >
-        admin_id,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=NUMERIC},
-      </if>
-      <if test="orgId != null" >
-        #{orgId,jdbcType=NUMERIC},
-      </if>
-      <if test="parentId != null" >
-        #{parentId,jdbcType=NUMERIC},
-      </if>
-      <if test="staffId != null" >
-        #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="leaveDate != null" >
-        #{leaveDate,jdbcType=DATE},
-      </if>
-      <if test="start != null" >
-        #{start,jdbcType=NUMERIC},
-      </if>
-      <if test="end != null" >
-        #{end,jdbcType=NUMERIC},
-      </if>
-      <if test="remarks != null" >
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="adminId != null" >
-        #{adminId,jdbcType=NUMERIC},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffLeave" >
-    update org_staff_leave
-    <set >
-      <if test="orgId != null" >
-        org_id = #{orgId,jdbcType=NUMERIC},
-      </if>
-      <if test="parentId != null" >
-        parent_id = #{parentId,jdbcType=NUMERIC},
-      </if>
-      <if test="staffId != null" >
-        staff_id = #{staffId,jdbcType=NUMERIC},
-      </if>
-      <if test="leaveDate != null" >
-        leave_date = #{leaveDate,jdbcType=DATE},
-      </if>
-      <if test="start != null" >
-        start = #{start,jdbcType=NUMERIC},
-      </if>
-      <if test="end != null" >
-        end = #{end,jdbcType=NUMERIC},
-      </if>
-      <if test="remarks != null" >
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="adminId != null" >
-        admin_id = #{adminId,jdbcType=NUMERIC},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffLeave" >
-    update org_staff_leave
-    set org_id = #{orgId,jdbcType=NUMERIC},
-      parent_id = #{parentId,jdbcType=NUMERIC},
-      staff_id = #{staffId,jdbcType=NUMERIC},
-      leave_date = #{leaveDate,jdbcType=DATE},
-      start = #{start,jdbcType=NUMERIC},
-      end = #{end,jdbcType=NUMERIC},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      admin_id = #{adminId,jdbcType=NUMERIC},
-      add_time = #{addTime,jdbcType=NUMERIC}
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
+		</if>
+
+		<if test="leaveDate != null ">
+			and leave_date = #{leaveDate,jdbcType=DATE}
+		</if>
+
+		order by add_time desc
+	</sql>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_leave
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from org_staff_leave
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffLeave">
+		insert into org_staff_leave (id, org_id, parent_id,
+		staff_id, leave_date, start,
+		end, remarks, admin_id,
+		add_time)
+		values
+		(#{id,jdbcType=NUMERIC}, #{orgId,jdbcType=NUMERIC}, #{parentId,jdbcType=NUMERIC},
+		#{staffId,jdbcType=NUMERIC}, #{leaveDate,jdbcType=DATE},
+		#{start,jdbcType=NUMERIC},
+		#{end,jdbcType=NUMERIC}, #{remarks,jdbcType=VARCHAR}, #{adminId,jdbcType=NUMERIC},
+		#{addTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffLeave">
+		insert into org_staff_leave
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orgId != null">
+				org_id,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="leaveDate != null">
+				leave_date,
+			</if>
+			<if test="start != null">
+				start,
+			</if>
+			<if test="end != null">
+				end,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="adminId != null">
+				admin_id,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="orgId != null">
+				#{orgId,jdbcType=NUMERIC},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="leaveDate != null">
+				#{leaveDate,jdbcType=DATE},
+			</if>
+			<if test="start != null">
+				#{start,jdbcType=NUMERIC},
+			</if>
+			<if test="end != null">
+				#{end,jdbcType=NUMERIC},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="adminId != null">
+				#{adminId,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffLeave">
+		update org_staff_leave
+		<set>
+			<if test="orgId != null">
+				org_id = #{orgId,jdbcType=NUMERIC},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				staff_id = #{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="leaveDate != null">
+				leave_date = #{leaveDate,jdbcType=DATE},
+			</if>
+			<if test="start != null">
+				start = #{start,jdbcType=NUMERIC},
+			</if>
+			<if test="end != null">
+				end = #{end,jdbcType=NUMERIC},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="adminId != null">
+				admin_id = #{adminId,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.OrgStaffLeave">
+		update org_staff_leave
+		set org_id = #{orgId,jdbcType=NUMERIC},
+		parent_id = #{parentId,jdbcType=NUMERIC},
+		staff_id = #{staffId,jdbcType=NUMERIC},
+		leave_date = #{leaveDate,jdbcType=DATE},
+		start = #{start,jdbcType=NUMERIC},
+		end = #{end,jdbcType=NUMERIC},
+		remarks =
+		#{remarks,jdbcType=VARCHAR},
+		admin_id = #{adminId,jdbcType=NUMERIC},
+		add_time = #{addTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
 </mapper>

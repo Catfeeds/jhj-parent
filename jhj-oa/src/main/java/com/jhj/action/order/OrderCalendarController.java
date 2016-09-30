@@ -148,12 +148,16 @@ public class OrderCalendarController extends BaseController {
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 		if (parentId > 0L) {
 			// 所有员工的请假情况
-			leaveSearchVo.setParentOrgId(parentId);
+			leaveSearchVo.setParentId(parentId);
 		}
-		leaveSearchVo.setDispatchDateStartStr(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
-		leaveSearchVo.setDispatchDateEndStr(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(endTimeStr)));
+		
+		Long leaveStartTime = DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr));
+		Long leaveEndTime = DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(endTimeStr));
+		leaveSearchVo.setLeaveStartTime(leaveStartTime);
+		leaveSearchVo.setLeaveEndTime(leaveEndTime);
+
 		// 请假列表
-		List<OrgStaffLeave> leaveList = leaveService.selectByLeaveSearchVo(leaveSearchVo);
+		List<OrgStaffLeave> leaveList = leaveService.selectBySearchVo(leaveSearchVo);
 		
 		
 		// 页面 Vo

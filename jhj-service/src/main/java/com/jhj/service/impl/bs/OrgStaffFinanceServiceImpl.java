@@ -1,12 +1,13 @@
 package com.jhj.service.impl.bs;
 
-
 import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.bs.OrgStaffFinanceMapper;
 import com.jhj.po.model.bs.OrgStaffBlack;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
@@ -33,7 +34,7 @@ import com.meijia.utils.TimeStampUtil;
  *
  * @author :hulj
  * @Date : 2015年7月6日下午2:44:25
- * @Description: 
+ * @Description:
  *
  */
 @Service
@@ -41,7 +42,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 	@Autowired
 	private OrgStaffFinanceMapper orgStaffFinanceMapper;
-	
+
 	@Autowired
 	private OrderPricesService orderPricesService;
 
@@ -50,57 +51,55 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 	@Autowired
 	private OrgStaffDetailPayService orgStaffDetailPayService;
-	
+
 	@Autowired
 	private SettingService settingService;
-	
+
 	@Autowired
 	private OrgStaffBlackService orgStaffBlackService;
-	
+
 	@Autowired
 	private OrdersService ordersService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		
+
 		return orgStaffFinanceMapper.deleteByPrimaryKey(id);
 	}
 
 	@Override
 	public Long insert(OrgStaffFinance record) {
-		
+
 		return orgStaffFinanceMapper.insert(record);
 	}
 
 	@Override
 	public Long insertSelective(OrgStaffFinance record) {
-	
+
 		return orgStaffFinanceMapper.insertSelective(record);
 	}
 
 	@Override
 	public OrgStaffFinance selectByPrimaryKey(Long orderId) {
-		
+
 		return orgStaffFinanceMapper.selectByPrimaryKey(orderId);
 	}
-	
-	
 
 	@Override
 	public int updateByPrimaryKeySelective(OrgStaffFinance record) {
-		
+
 		return orgStaffFinanceMapper.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
 	public int updateByPrimaryKey(OrgStaffFinance record) {
-		
+
 		return orgStaffFinanceMapper.updateByPrimaryKey(record);
 	}
 
 	@Override
 	public OrgStaffFinance initOrgStaffFinance() {
-		
+
 		OrgStaffFinance record = new OrgStaffFinance();
 
 		record.setId(0L);
@@ -112,31 +111,37 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		record.setRestMoney(new BigDecimal(0));
 		record.setIsBlack((short) 0);
 		record.setAddTime(TimeStampUtil.getNowSecond());
-        record.setUpdateTime(TimeStampUtil.getNowSecond());
-		
-		return record; 
+		record.setUpdateTime(TimeStampUtil.getNowSecond());
+
+		return record;
 	}
 
 	@Override
 	public OrgStaffFinance selectByStaffId(Long userId) {
-		
+
 		return orgStaffFinanceMapper.selectByStaffId(userId);
 	}
 
 	@Override
-	public List<OrgStaffFinance> selectByListPage(
-			OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize) {
-		List<OrgStaffFinance> list = orgStaffFinanceMapper.selectVoByListPage(searchVo);
-		return list;
+	public PageInfo selectByListPage(OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<OrgStaffFinance> list = orgStaffFinanceMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		return result;
 	}
 	
+	@Override
+	public List<OrgStaffFinance> selectBySearchVo(OrgStaffFinanceSearchVo searchVo) {
+		return orgStaffFinanceMapper.selectBySearchVo(searchVo);
+	}
+
 	@Override
 	public void orderDone(Orders orders, OrderPrices orderPrices, OrgStaffs orgStaffs) {
 		Long orderId = orders.getId();
 		Long staffId = orgStaffs.getStaffId();
 		Short level = orgStaffs.getLevel();
-		String settingLevel = "-level-"+level.toString();
-		//得到订单收入
+		String settingLevel = "-level-" + level.toString();
+		// 得到订单收入
 		String settingType = "";
 		if (orders.getOrderType() == 0) {
 			// 钟点功能收入比例 hour-ratio
@@ -146,14 +151,14 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			// 助理服务收入比例 am-ratio
 			settingType = "am-ratio";
 		}
-		
+
 		if (orders.getOrderType() == 3) {
 			// 配送服务收入比例 am-ratio
 			settingType = "dis-ratio";
 		}
-		
-		settingType+= settingLevel;
-		
+
+		settingType += settingLevel;
+
 		BigDecimal orderIncoming = new BigDecimal(0);
 		BigDecimal orderMoney = orderPrices.getOrderMoney();
 
@@ -163,23 +168,23 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			orderIncoming = orderPrices.getOrderMoney().multiply(settingValue);
 			orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 		}
-		
-		//服务人员财务表
+
+		// 服务人员财务表
 		OrgStaffFinance orgStaffFinance = this.selectByStaffId(staffId);
 		if (orgStaffFinance == null) {
 			orgStaffFinance = this.initOrgStaffFinance();
 			orgStaffFinance.setStaffId(staffId);
 		}
 		orgStaffFinance.setMobile(orgStaffs.getMobile());
-		
+
 		// 新增服务人员交易明细表 org_staff_detail_pay
-		
-		//先判断是否已经存在，如果存在则跳过.
+
+		// 先判断是否已经存在，如果存在则跳过.
 		OrgStaffDetailPaySearchVo paySearchVo = new OrgStaffDetailPaySearchVo();
 		paySearchVo.setStaffId(staffId);
 		paySearchVo.setOrderId(orderId);
 		List<OrgStaffDetailPay> orgStaffDetailPays = orgStaffDetailPayService.selectBySearchVo(paySearchVo);
-		
+
 		if (orgStaffDetailPays.isEmpty()) {
 			OrgStaffDetailPay orgStaffDetailPay = orgStaffDetailPayService.initStaffDetailPay();
 			// 新增收入明细表 org_staff_detail_pay
@@ -190,34 +195,31 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			orgStaffDetailPay.setOrderNo(orders.getOrderNo());
 			orgStaffDetailPay.setOrderMoney(orderMoney);
 			orgStaffDetailPay.setOrderPay(orderIncoming);
-			orgStaffDetailPay.setOrderStatusStr(OrderUtils.getOrderStatusName(
-					orders.getOrderType(), orders.getOrderStatus()));
+			orgStaffDetailPay.setOrderStatusStr(OrderUtils.getOrderStatusName(orders.getOrderType(), orders.getOrderStatus()));
 			orgStaffDetailPay.setRemarks(orders.getRemarks());
 			orgStaffDetailPayService.insert(orgStaffDetailPay);
-			
-			
+
 			// 订单金额
-			
+
 			// 总收入
 			BigDecimal totalIncoming = orgStaffFinance.getTotalIncoming();
 			// 最终总收入
 			BigDecimal totalIncomingend = totalIncoming.add(orderIncoming);
 			orgStaffFinance.setTotalIncoming(totalIncomingend);
 			orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
-			
+
 			if (orgStaffFinance.getId() > 0L) {
 				this.updateByPrimaryKeySelective(orgStaffFinance);
 			} else {
 				this.insert(orgStaffFinance);
 			}
 		}
-		
-	
-		if (orderPrices.getPayType().equals((short)6)) {
-			
-			//判断是否已经存在欠款
+
+		if (orderPrices.getPayType().equals((short) 6)) {
+
+			// 判断是否已经存在欠款
 			List<OrgStaffDetailDept> orgStaffDetailDepts = orgStaffDetailDeptService.selectBySearchVo(paySearchVo);
-			
+
 			if (orgStaffDetailDepts.isEmpty()) {
 				OrgStaffDetailDept orgStaffDetailDept = orgStaffDetailDeptService.initOrgStaffDetailDept();
 				// 新增欠款明细表 org_staff_detail_dept
@@ -228,37 +230,36 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				orgStaffDetailDept.setOrderNo(orders.getOrderNo());
 				orgStaffDetailDept.setOrderMoney(orderMoney);
 				orgStaffDetailDept.setOrderDept(orderMoney);
-				orgStaffDetailDept.setOrderStatusStr(OrderUtils.getOrderStatusName(
-						orders.getOrderType(), orders.getOrderStatus()));
+				orgStaffDetailDept.setOrderStatusStr(OrderUtils.getOrderStatusName(orders.getOrderType(), orders.getOrderStatus()));
 				orgStaffDetailDept.setRemarks(orders.getRemarks());
 				orgStaffDetailDeptService.insert(orgStaffDetailDept);
-				
-				//更新欠款总表
+
+				// 更新欠款总表
 				BigDecimal totalDept = orgStaffFinance.getTotalDept();
 				totalDept = totalDept.add(orderMoney);
 				orgStaffFinance.setTotalDept(totalDept);
 				orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 				this.updateByPrimaryKeySelective(orgStaffFinance);
-				
+
 				BigDecimal maxOrderDept = new BigDecimal(1000);
 				jhjSetting = settingService.selectBySettingType("total-dept-blank");
 				if (jhjSetting != null) {
 					maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
 				}
-				
+
 				if (totalDept.compareTo(maxOrderDept) >= 0) {
 					OrgStaffBlack orgStaffBlack = orgStaffBlackService.initOrgStaffBlack();
 					orgStaffBlack.setStaffId(orgStaffDetailDept.getStaffId());
 					orgStaffBlack.setMobile(orgStaffDetailDept.getMobile());
 					orgStaffBlackService.insertSelective(orgStaffBlack);
-					
-					//设置黑名单标识.
+
+					// 设置黑名单标识.
 					orgStaffFinance.setIsBlack((short) 1);
 					orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 					this.updateByPrimaryKey(orgStaffFinance);
-					
-					//欠款大于1000给服务人员发送加入黑名单的短信通知
-			        ordersService.userJoinBlackSuccessTodo(orgStaffs.getMobile());
+
+					// 欠款大于1000给服务人员发送加入黑名单的短信通知
+					ordersService.userJoinBlackSuccessTodo(orgStaffs.getMobile());
 				}
 			}
 		}

@@ -2,12 +2,12 @@ package com.jhj.service.bs;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
-
 
 /**
  *
@@ -19,23 +19,24 @@ import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 public interface OrgStaffFinanceService {
 	int deleteByPrimaryKey(Long id);
 
-    Long insert(OrgStaffFinance record);
+	Long insert(OrgStaffFinance record);
 
-    Long insertSelective(OrgStaffFinance record);
+	Long insertSelective(OrgStaffFinance record);
 
-    OrgStaffFinance selectByPrimaryKey(Long id);
+	OrgStaffFinance selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(OrgStaffFinance record);
+	int updateByPrimaryKeySelective(OrgStaffFinance record);
 
-    int updateByPrimaryKey(OrgStaffFinance record);
-    
-    OrgStaffFinance initOrgStaffFinance();
+	int updateByPrimaryKey(OrgStaffFinance record);
+
+	OrgStaffFinance initOrgStaffFinance();
 
 	OrgStaffFinance selectByStaffId(Long userId);
 
-	List<OrgStaffFinance> selectByListPage(OrgStaffFinanceSearchVo searchVo,
-			int pageNo, int pageSize);
+	PageInfo selectByListPage(OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize);
 
 	void orderDone(Orders orders, OrderPrices orderPrices, OrgStaffs orgStaffs);
+
+	List<OrgStaffFinance> selectBySearchVo(OrgStaffFinanceSearchVo searchVo);
 
 }

@@ -20,6 +20,6 @@ public interface OrgStaffLeaveMapper {
     
     List<OrgStaffLeave> selectByListPage(LeaveSearchVo searchVo);
     
-    List<OrgStaffLeave> selectLeavingStaff(LeaveSearchVo searchVo);
-    
+    List<OrgStaffLeave> selectBySearchVo(LeaveSearchVo searchVo);
+        
 }

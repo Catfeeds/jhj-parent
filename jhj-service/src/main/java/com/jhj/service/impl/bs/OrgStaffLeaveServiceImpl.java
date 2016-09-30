@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
@@ -60,16 +61,6 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 	@Override
 	public int updateByPrimaryKeySelective(OrgStaffLeave record) {
 		return leaveMapper.updateByPrimaryKeySelective(record);
-	}
-
-	@Override
-	public List<OrgStaffLeave> selectByListPage(LeaveSearchVo searchVo,int pageNo,int pageSize) {
-		
-		PageHelper.startPage(pageNo, pageSize);
-		
-		List<OrgStaffLeave> list = leaveMapper.selectByListPage(searchVo);
-		
-		return list; 
 	}
 	
 	@Override
@@ -206,7 +197,15 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 	}
 	
 	@Override
-	public List<OrgStaffLeave> selectByLeaveSearchVo(LeaveSearchVo searchVo) {
-		return leaveMapper.selectByListPage(searchVo);
+	public List<OrgStaffLeave> selectBySearchVo(LeaveSearchVo searchVo) {
+		return leaveMapper.selectBySearchVo(searchVo);
+	}
+	
+	@Override
+	public PageInfo selectByListPage(LeaveSearchVo searchVo, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<OrgStaffLeave> list = leaveMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		return result;
 	}
 }

@@ -19,6 +19,7 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffBlackService;
+import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -77,7 +78,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	private OrderHourAddService orderHourAddService;
 	
 	@Autowired
-	private OrgStaffLeaveMapper leaveMapper;
+	private OrgStaffLeaveService orgStaffLeaveService;
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
@@ -230,12 +231,12 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		Long orderServiceDateEnd = serviceDate + serviceHour*3600;
 		
 		//订单服务开始时间
-		searchVo.setOrderServiceDateStart(serviceDate);
+		searchVo.setServiceStartTime(serviceDate);
 		//订单服务结束时间
-		searchVo.setOrderServiceDateEnd(orderServiceDateEnd);
+		searchVo.setServiceEndTime(orderServiceDateEnd);
 		
 		// 服务时间内  ，同时也在  假期内的 员工
-		List<OrgStaffLeave> leaveList = leaveMapper.selectLeavingStaff(searchVo);
+		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo);
 		
 		List<Long> leaveStaffIdList = new ArrayList<Long>();
 		
@@ -593,12 +594,12 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
  			Long orderServiceDateEnd = serviceDate + serviceHour*3600;
  			
  			//订单服务开始时间
- 			searchVo.setOrderServiceDateStart(serviceDate);
+ 			searchVo.setServiceStartTime(serviceDate);
  			//订单服务结束时间
- 			searchVo.setOrderServiceDateEnd(orderServiceDateEnd);
+ 			searchVo.setServiceEndTime(orderServiceDateEnd);
  			
  			// 服务时间内  ，同时也在  假期内的 员工
- 			List<OrgStaffLeave> leaveList = leaveMapper.selectLeavingStaff(searchVo);
+ 			List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo);
  			
  			for (OrgStaffLeave orgStaffLeave : leaveList) {
  				leaveStaffIdList.add(orgStaffLeave.getStaffId());

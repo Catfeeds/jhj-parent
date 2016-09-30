@@ -29,16 +29,29 @@
 		from org_staff_finance
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</select>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		<include refid="bySearchVo" />
+	</select>
 
-	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
-
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		<include refid="bySearchVo" />
+	</select>
+	
+	<sql id="bySearchVo">
 		SELECT
 		<include refid="Base_Column_List" />
 		FROM org_staff_finance
 		WHERE 1=1
-
 		<if test="mobile !=null and mobile != ''">
 			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		
+		<if test="staffIds!=null and staffIds.size()>0">
+			and staff_id in 
+			<foreach item="item" collection="staffIds" separator="," open="(" close=")" index="">
+				${item}
+			</foreach>
 		</if>
 
 		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
@@ -49,14 +62,14 @@
 			</foreach>
 			)
 		</if>
-		
+
 		<if test="isBlack !=null">
 			and is_black = #{isBlack,jdbcType=NUMERIC}
 		</if>
 
 		order by add_time desc
 
-	</select>
+	</sql>
 
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -70,7 +83,8 @@
 		insert into org_staff_finance (id, staff_id, mobile,
 		total_incoming, total_cash,total_dept, rest_money, is_black
 		add_time, update_time)
-		values (#{id,jdbcType=NUMERIC},
+		values
+		(#{id,jdbcType=NUMERIC},
 		#{staffId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
 		#{totalIncoming,jdbcType=DECIMAL}, #{totalDept,jdbcType=DECIMAL},
 		#{totalCash,jdbcType=DECIMAL},
@@ -187,10 +201,12 @@
 		total_incoming = #{totalIncoming,jdbcType=DECIMAL},
 		total_dept = #{totalDept,jdbcType=DECIMAL},
 		total_cash = #{totalCash,jdbcType=DECIMAL},
-		rest_money = #{restMoney,jdbcType=DECIMAL},
+		rest_money =
+		#{restMoney,jdbcType=DECIMAL},
 		is_black = #{isBlack,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC}
-		where id = #{id,jdbcType=NUMERIC}
+		where
+		id = #{id,jdbcType=NUMERIC}
 	</update>
 </mapper>

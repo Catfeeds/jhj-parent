@@ -85,8 +85,8 @@ public class OrgStaffPayDeptController extends BaseController {
 			searchVo.setSearchCloudOrgIdList(cloudIdList);
 		}
 		// 处理查询条件云店--------------------------------结束
-
-		List<OrgStaffFinance> orgStaffFinanceList = orgStaffFinanceService.selectByListPage(searchVo, pageNo, pageSize);
+		PageInfo result = orgStaffFinanceService.selectByListPage(searchVo, pageNo, pageSize);
+		List<OrgStaffFinance> orgStaffFinanceList = result.getList();
 
 		for (int i = 0; i < orgStaffFinanceList.size(); i++) {
 
@@ -120,7 +120,7 @@ public class OrgStaffPayDeptController extends BaseController {
 		
 		model.addAttribute("orgList", orgList);
 
-		PageInfo result = new PageInfo(orgStaffFinanceList);
+		result = new PageInfo(orgStaffFinanceList);
 
 		model.addAttribute("contentModel", result);
 		model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);

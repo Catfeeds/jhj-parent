@@ -35,5 +35,7 @@ public interface OrderDispatchsService {
 	List<OrderDispatchs> selectByMatchTime(OrderDispatchSearchVo searchVo);
 
 	List<Map<String, Object>> totalByYearAndMonth(Map<String, Object> conditions);
+
+	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour);
    	
 }

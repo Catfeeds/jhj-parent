@@ -20,5 +20,7 @@ public interface OrgStaffFinanceMapper {
 
 	OrgStaffFinance selectByStaffId(Long staffId);
 
-	List<OrgStaffFinance> selectVoByListPage(OrgStaffFinanceSearchVo searchVo);
+	List<OrgStaffFinance> selectByListPage(OrgStaffFinanceSearchVo searchVo);
+	
+	List<OrgStaffFinance> selectBySearchVo(OrgStaffFinanceSearchVo searchVo);
 }
