@@ -25,9 +25,11 @@ public interface OrderDispatchsMapper {
 	
 	List<OrderDispatchs> selectByListPage(OrderDispatchSearchVo searchVo);
 	
+	List<HashMap> totalByStaff(OrderDispatchSearchVo searchVo);
+	
 	List<Map<String, Object>> totalByYearAndMonth(Map<String, Object> conditions);
 	
-	Long totalStaffTodayOrders(Long staffId);
+	int totalStaffTodayOrders(Long staffId);
 	
 	List<HashMap> totalByUserIds(OrderSearchVo searchVo);
 

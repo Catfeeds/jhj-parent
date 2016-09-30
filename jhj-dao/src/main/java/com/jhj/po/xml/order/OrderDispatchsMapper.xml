@@ -61,6 +61,13 @@
 		<include refid="bySearchVo" />
 		order by service_date desc
 	</select>
+	
+	<select id="totalByStaff" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		select
+		staff_id, count(*) as total
+		<include refid="bySearchVo" />
+		group by staff_id
+	</select>
 
 	<sql id="bySearchVo">
 		from order_dispatchs

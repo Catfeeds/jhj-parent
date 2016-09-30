@@ -1,10 +1,12 @@
 package com.jhj.service.order;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrgStaffsNewVo;
 
 /**
  *
@@ -30,12 +32,20 @@ public interface OrderDispatchsService {
     
     List<OrderDispatchs> selectBySearchVo(OrderDispatchSearchVo searchVo);
 
-	Long totalStaffTodayOrders(Long staffId);
+	int totalStaffTodayOrders(Long staffId);
 
 	List<OrderDispatchs> selectByMatchTime(OrderDispatchSearchVo searchVo);
 
 	List<Map<String, Object>> totalByYearAndMonth(Map<String, Object> conditions);
 
-	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour);
+	List<HashMap> totalByStaff(OrderDispatchSearchVo searchVo);
+	
+	Long autoDispatch(Long orderId, Long serviceDate, Double serviceHour);
+
+	List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour);
+
+	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
+
+	List<OrgStaffsNewVo> manualDispatchByOrg(Long orderId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
    	
 }

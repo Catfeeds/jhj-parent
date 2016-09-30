@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffTagsMapper;
 import com.jhj.po.dao.dict.DictServiceAddonsMapper;
 import com.jhj.po.dao.order.OrdersMapper;
@@ -269,7 +270,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		Orgs item = null;
 		try {
 			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
-			List<BaiduPoiVo> baiduPoiVos = MapPoiUtil.getMinDest(destList);
+			List<BaiduPoiVo> baiduPoiVos = MapPoiUtil.getMinDest(destList, Constants.maxDistance);
 			BaiduPoiVo baiduPoiVo = null;
 			
 			if (!baiduPoiVos.isEmpty()) {

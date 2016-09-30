@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffSkill;
@@ -297,7 +298,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			 *   临时决定调换成  20Km , 3小时
 			 */
 			
-			List<BaiduPoiVo> voList = MapPoiUtil.getMinDest(destList);
+			List<BaiduPoiVo> voList = MapPoiUtil.getMinDest(destList, Constants.maxDistance);
 			
 			for (int i =0; i < cloudOrgList.size(); i++) {
 				item = cloudOrgList.get(i);
@@ -383,7 +384,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				Long staffId = item.getUserId();
 				
 				// 该 服务人员 当天 的 派单 数量
-				Long numTodayOrder = orderDispatchsService.totalStaffTodayOrders(staffId);
+				int numTodayOrder = orderDispatchsService.totalStaffTodayOrders(staffId);
 				
 				//派工页面 服务人员 相关 信息 VO
 				OrgStaffsNewVo staffsNewVo = initStaffsNew();
@@ -514,12 +515,13 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		newVo.setDistanceText("");
 		newVo.setDurationValue(0);
 		newVo.setDurationText("");
-		newVo.setTodayOrderNum(0L);
+		newVo.setTodayOrderNum(0);
 		
 		newVo.setStaffOrgName("");
 		newVo.setStaffCloudOrgName("");
 		newVo.setDispathStaFlag(0);
 		newVo.setDispathStaStr("");
+		newVo.setReason("");
 		
 		return newVo;
 	}

@@ -647,7 +647,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		newVo.setDistanceText("");
 		newVo.setDurationValue(0);
 		newVo.setDurationText("");
-		newVo.setTodayOrderNum(0L);
+		newVo.setTodayOrderNum(0);
 		newVo.setStaffOrgName("");
 		newVo.setStaffCloudOrgName("");
 		newVo.setDispathStaStr("");

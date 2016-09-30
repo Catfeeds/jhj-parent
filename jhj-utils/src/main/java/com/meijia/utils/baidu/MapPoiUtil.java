@@ -15,7 +15,7 @@ import com.meijia.utils.MathBigDecimalUtil;
 public class MapPoiUtil {
 	
 	
-	public static List<BaiduPoiVo> getMapRouteMatrix(String fromLat, String fromLng, List<BaiduPoiVo> destAddrs) throws Exception {
+	public static List<BaiduPoiVo> getMapRouteMatrix(String fromLat, String fromLng, List<BaiduPoiVo> destAddrs) {
 		List<BaiduPoiVo> resultAddrs = new ArrayList<BaiduPoiVo>();
 		
 		
@@ -53,10 +53,8 @@ public class MapPoiUtil {
 	 *  距离符合20公里内即可
 	 */
 	
-	public static List<BaiduPoiVo>  getMinDest(List<BaiduPoiVo> resultAddrs){
-		
-		int maxDistance = 20000;
-		
+	public static List<BaiduPoiVo>  getMinDest(List<BaiduPoiVo> resultAddrs, int maxDistance){
+				
 		List<BaiduPoiVo> firstList = new ArrayList<BaiduPoiVo>();
 		
 		//取得 符合20公里  的Vo
