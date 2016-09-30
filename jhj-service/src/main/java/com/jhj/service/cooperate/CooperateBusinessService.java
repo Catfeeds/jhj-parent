@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.vo.cooperate.CooperateVo;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 
 /**
  *
@@ -39,4 +40,6 @@ public interface CooperateBusinessService {
     
     // 所有 合作商户 的 主键 id
     List<Long> getAllCoopId();
+    
+    List<CooperativeBusiness> selectCooperativeBusinessVo(CooperativeBusinessSearchVo vo);
 }

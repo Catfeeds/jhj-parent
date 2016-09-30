@@ -179,4 +179,28 @@
       update_time = #{updateTime,jdbcType=NUMERIC}
     where id = #{id,jdbcType=NUMERIC}
   </update>
+  
+  <select id="selectCooperativeBusinessVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.dict.CooperativeBusinessSearchVo">
+  	select <include refid="Base_Column_List"/>
+  	from cooperative_business
+  	where 1=1
+  	<if test="id!=null">
+  		and id = #{id,jdbcType=NUMERIC}
+  	</if>
+  	<if test="businessName!=null">
+  		and business_name = #{businessName,jdbcType=VARCHAR}
+  	</if>
+  	<if test="appName!=null">
+  		and app_name = #{appName,jdbcType=VARCHAR}
+  	</if>
+  	<if test="businessLoginName!=null">
+  		and business_login_name = #{businessLoginName,jdbcType=VARCHAR}
+  	</if>
+  	<if test="businessPassWord!=null">
+  		and business_pass_word = #{businessPassWord,jdbcType=VARCHAR}
+  	</if>
+  	<if test="enable!=null">
+  		and enable = #{enable,jdbcType=NUMERIC}
+  	</if>
+  </select>
 </mapper>

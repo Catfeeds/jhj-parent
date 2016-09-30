@@ -1,5 +1,6 @@
 package com.jhj.action.order;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderLog;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
@@ -29,14 +34,19 @@ import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderHourAddService;
+import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.OrderNoUtil;
+import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -73,18 +83,25 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
-	
+
 	@Autowired
 	private OrderQueryService orderQueryService;
-	
+
 	@Autowired
 	private CooperateBusinessService cooperateBusinessService;
-	
+
 	@Autowired
 	private PartnerServiceTypeService serviceType;
 
-
-
+	@Autowired
+	private OrderLogService orderLogService;
+	
+	@Autowired
+	private OrderPricesService orderPriceService;
+	
+	@Autowired
+	private OrderHourAddService orderHourAddservice;
+	
 	/*
 	 * 深度保洁派工----固定派工人员
 	 * 
@@ -99,7 +116,8 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = "/disStaffByExpOrderNo", method = RequestMethod.POST)
 	public String disStaffForExpOrder(Long userId, Long id) {
 
-		OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(Long.valueOf("17"));
+		OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(Long
+				.valueOf("17"));
 		Orders order = orderService.selectByPrimaryKey(id);
 		Users user = usersService.selectByPrimaryKey(userId);
 
@@ -135,7 +153,8 @@ public class OrderController extends BaseController {
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderId(id);
 		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService
+				.selectBySearchVo(searchVo);
 
 		OrderDispatchs orderDispatch = null;
 		if (!orderDispatchs.isEmpty()) {
@@ -156,7 +175,8 @@ public class OrderController extends BaseController {
 			List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
 			orgStaffsNewVos.add(orgStaffsNewVo);
 
-			orderPayService.orderPaySuccessToDoForHour(userId, id, orgStaffsNewVos, isChange);
+			orderPayService.orderPaySuccessToDoForHour(userId, id,
+					orgStaffsNewVos, isChange);
 		}
 
 		return "redirect:/order/order-list";
@@ -167,7 +187,8 @@ public class OrderController extends BaseController {
 	 */
 
 	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.GET)
-	public String toBussinessRemarkForm(Model model, @RequestParam("orderId") Long orderId) {
+	public String toBussinessRemarkForm(Model model,
+			@RequestParam("orderId") Long orderId) {
 
 		Orders orders = orderService.selectByPrimaryKey(orderId);
 
@@ -181,13 +202,16 @@ public class OrderController extends BaseController {
 	 */
 
 	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.POST)
-	public String submitBussinessRemarkForm(@ModelAttribute("orderModel") Orders orderForm, BindingResult bindingResult) {
+	public String submitBussinessRemarkForm(
+			@ModelAttribute("orderModel") Orders orderForm,
+			BindingResult bindingResult) {
 
 		Long id = orderForm.getId();
 
 		Orders orders = orderService.selectByPrimaryKey(id);
 
-		orders.setRemarksBussinessConfirm(orderForm.getRemarksBussinessConfirm());
+		orders.setRemarksBussinessConfirm(orderForm
+				.getRemarksBussinessConfirm());
 
 		// 这里不设置修改时间。。与1期的定时任务，可能会冲突
 		orderService.updateByPrimaryKeySelective(orders);
@@ -227,36 +251,90 @@ public class OrderController extends BaseController {
 		String orderNo = order.getOrderNo();
 		Short orderType = order.getOrderType();
 		if (orderType == Constants.ORDER_TYPE_0) {
-			return "redirect:../order-hour-view?orderNo=" + orderNo + "&disStatus=" + orderType;
+			return "redirect:../order-hour-view?orderNo=" + orderNo
+					+ "&disStatus=" + orderType;
 		}
 		if (orderType == Constants.ORDER_TYPE_1) {
-			return "redirect:../order-exp-view?orderNo=" + orderNo + "&disStatus=" + orderType;
+			return "redirect:../order-exp-view?orderNo=" + orderNo
+					+ "&disStatus=" + orderType;
 		}
 		return null;
 	}
 
-	@RequestMapping(value="/oaOrderHourAdd",method=RequestMethod.GET)
-	public String oaOrderHourAdd(Model model){
-		//订单的来源
-		List<CooperativeBusiness> selectByListPage = cooperateBusinessService.selectByListPage();
-		if(selectByListPage!=null){
-			model.addAttribute("cooperativeBusiness", selectByListPage);
+	@RequestMapping(value = "/oaOrderHourAdd", method = RequestMethod.GET)
+	public String oaOrderHourAdd(Model model) {
+		// 订单的来源
+		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
+		vo.setEnable((short) 1);
+		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
+				.selectCooperativeBusinessVo(vo);
+
+		PartnerServiceType serviceType = partService.selectByPrimaryKey(28L);
+		if (CooperativeBusinessList != null) {
+			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
 		}
+		model.addAttribute("serviceType", serviceType);
 		return "order/oaOrderHourAdd";
 	}
-	
-	@RequestMapping(value="/orderAmAdd",method=RequestMethod.GET)
-	public String orderAmAdd(Model model){
-		
-		List<CooperativeBusiness> selectByListPage = cooperateBusinessService.selectByListPage();
-		if(selectByListPage!=null){
-			model.addAttribute("cooperativeBusiness", selectByListPage);
+
+	@AuthPassport
+	@RequestMapping(value = "/save_order_hour", method = RequestMethod.POST)
+	@ResponseBody
+	public Orders saveOrderHour(Model model, Orders order,
+			@RequestParam("payway") short payway,
+			@RequestParam("orderPay") double orderPay) {
+
+		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
+		order.setOrderNo(orderNo);
+		order.setOrderStatus(Constants.ORDER_STATUS_4);
+		// order.setOrderType(Constants.ORDER_TYPE_0);
+		order.setAddTime(TimeStampUtil.getNowSecond());
+		order.setUpdateTime(TimeStampUtil.getNowSecond());
+		order.setServiceContent("基础保洁");
+		order.setRemarksConfirm("");
+
+		orderService.insertSelective(order);
+
+		// 设置订单总金额。插入 order_prices表
+		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(order
+				.getServiceType());
+
+		orderPrices.setUserId(order.getUserId());
+		orderPrices.setOrderId(order.getId());
+		orderPrices.setMobile(order.getMobile());
+		orderPrices.setOrderNo(orderNo);
+		orderPrices.setPayType(payway);
+		BigDecimal d = new BigDecimal(orderPay);
+		orderPrices.setOrderPay(d);
+
+		orderPriceService.insert(orderPrices);
+
+		/*
+		 * 2.插入订单日志表 order_log
+		 */
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+
+		orderLogService.insert(orderLog);
+
+		return order;
+	}
+
+	@RequestMapping(value = "/orderAmAdd", method = RequestMethod.GET)
+	public String orderAmAdd(Model model) {
+
+		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
+		vo.setEnable((short) 1);
+		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
+				.selectCooperativeBusinessVo(vo);
+		if (CooperativeBusinessList != null) {
+			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
 		}
-		
-		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(26L);
+
+		List<PartnerServiceType> serviceTypeList = serviceType
+				.selectByParentId(26L);
 		model.addAttribute("serviceType", serviceTypeList);
-		
+
 		return "order/orderAmAdd";
 	}
-	
+
 }

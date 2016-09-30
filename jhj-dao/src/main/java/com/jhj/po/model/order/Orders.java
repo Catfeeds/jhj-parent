@@ -34,6 +34,8 @@ public class Orders {
     private String orderRateContent;
 
     private Short orderFrom;
+    
+    private Long orderOpFrom;
 
     private String remarks;
     
@@ -188,8 +190,16 @@ public class Orders {
     public void setOrderFrom(Short orderFrom) {
         this.orderFrom = orderFrom;
     }
+    
+    public Long getOrderOpFrom() {
+		return orderOpFrom;
+	}
 
-    public String getRemarks() {
+	public void setOrderOpFrom(Long orderOpFrom) {
+		this.orderOpFrom = orderOpFrom;
+	}
+
+	public String getRemarks() {
         return remarks;
     }
 

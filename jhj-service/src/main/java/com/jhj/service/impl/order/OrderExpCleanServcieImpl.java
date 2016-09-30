@@ -71,7 +71,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
 				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
-				BigDecimal price = dictServiceAddons.getPrice();
+				BigDecimal price = dictServiceAddons.getDisPrice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =orderMoney.add(price.multiply(itemNumBigDecimal));
 			}
@@ -84,12 +84,13 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
 				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
-				BigDecimal price = dictServiceAddons.getPrice();
+				BigDecimal price = dictServiceAddons.getDisPrice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =price.multiply(itemNumBigDecimal);
 			}
 		}
 		orderPrices.setOrderMoney(orderMoney);
+		orderPrices.setOrderPay(orderMoney);
 		return orderPrices;
 	}
 

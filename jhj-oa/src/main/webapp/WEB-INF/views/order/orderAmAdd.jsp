@@ -45,6 +45,7 @@
 							<div class="panel-body">
 								<form:form class="form-horizontal" method="POST" name="form">
 									<input id="from-user-id" name="userId" type="hidden"/>
+									<input name="orderType" type="hidden" value="1"/>
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
@@ -57,12 +58,14 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务地址</label>
 											<div class="col-md-5">
-												<select name="addrId" class="form-control" id="from-addr" onclick="address()">
+												<select name="addrId" class="form-control" id="from-addr" >
 													<option value="">--请选择服务地址--</option>
 												</select>
 											</div>
+											<div>
+												<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="" onclick="address()">添加地址</button>
+											</div>
 											<div id="from-add-addr" style="display:none">
-												<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="">添加地址</button>
 												<%@include file="address.jsp"%>
 											</div>
 										</div>
@@ -70,7 +73,7 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务类型</label>
 											<div class="col-md-5">
-												<select name="serviceType" class="form-control" onchange="serviceTypeChange(this)">
+												<select name="serviceType" class="form-control" onchange="serviceTypeChange()">
 													<option value="">--请选择服务类型--</option>
 													<c:forEach items="${serviceType }" var="service">
 														<option value="${service.serviceTypeId }">${service.name }</option>
@@ -82,18 +85,46 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务子项</label>
 											<div class="col-md-5">
-												类别：<input type="checkbox" name="">
-												数量：<input name=""/>
-												原价：
-												折扣价：
+												<table border='1' class="table table-bordered">
+													<thead>
+														<tr>
+															<td>类别</td>
+															<td>原价</td>
+															<td>折扣价</td>
+															<td>数量</td>
+														</tr>
+													</thead>
+													<tbody id="service-content"></tbody>
+												</table>
+											</div>
+											<input type="hidden" name="service_addons_datas" value=""/>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label"><font
+												color="red">*</font>总价格</label>
+											<div class="col-md-5">
+												<input class="form-control" type="number" id="service-price" name="price" value="0" readonly="readonly"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label"><font
+												color="red">*</font>下单方式</label>
+											<div class="col-md-5">
+												<select name="orderFrom" class="form-control">
+													<option value="">--请选择下单方式--</option>
+													<option value="0">app</option>
+													<option value="1">微网站</option>
+													<option value="2">管理后台</option>
+												</select>
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>
 											<div class="col-md-5">
-												<select name="orderFrom" id="from-src" class="form-control">
+												<select name="orderOpFrom" class="form-control">
 													<option value="">--请选择订单来源--</option>
+													<option value="1">来电订单</option>
 													<c:forEach items="${cooperativeBusiness }" var="src">
 														<option value="${src.id }">${src.businessName }</option>
 													</c:forEach>
@@ -114,7 +145,7 @@
 												<select id="f-paywawy" name="payway" class="form-control">
 													<option value="">--请选择支付方式--</option>
 													<option value="6">现金支付</option>
-													<option value="4">已支付</option>
+													<option value="7">第三方支付</option>
 												</select>
 											</div>
 										</div>
@@ -122,6 +153,13 @@
 											<label class="col-md-2 control-label">用户备注:</label>
 											<div class="col-md-5">
 												<textarea id="ft-eara" name="remarks" rows="5" cols="50"
+													class="form-control"></textarea>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label">运营人员备注:</label>
+											<div class="col-md-5">
+												<textarea id="ft-confirm" name="remarksBussinessConfirm" rows="5" cols="50"
 													class="form-control"></textarea>
 											</div>
 										</div>
@@ -153,7 +191,6 @@
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>" type="text/javascript"></script>
-	<script type="text/javascript" src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderAmAdd.js'/>"></script>
 	
 </body>

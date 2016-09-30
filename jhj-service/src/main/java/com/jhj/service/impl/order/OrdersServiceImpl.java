@@ -105,6 +105,7 @@ public class OrdersServiceImpl implements OrdersService {
 		record.setOrderRateContent("");
 		record.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);
 		record.setOrderFrom(Constants.USER_NET);
+		record.setOrderOpFrom(0L);
 		record.setRemarks("");
 		record.setRemarksConfirm("");
 

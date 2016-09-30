@@ -161,7 +161,7 @@ public class OrderExpCleanController extends BaseController {
 		 * 3.更新订单附加服务表
 		 */
 		List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(serviceType,serviceAddonsDatas);
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+		for (Iterator<OrderServiceAddons> iterator = list.iterator(); iterator.hasNext();) {
 			OrderServiceAddons orderServiceAddons = (OrderServiceAddons) iterator.next();
 			orderServiceAddons.setOrderId(order.getId());
 			orderServiceAddons.setUserId(u.getId());
@@ -181,6 +181,105 @@ public class OrderExpCleanController extends BaseController {
 		result.setData(order);
 		return result;
 	}
+	
+	@RequestMapping(value = "save_am_order.json", method = RequestMethod.POST)
+	public AppResultData<Object> saveAmOrder(
+			@RequestParam("user_id") Long userId,
+			@RequestParam("mobile") String mobile,
+			@RequestParam("service_type") Long serviceType,
+			@RequestParam("service_date") String serviceDate,
+			@RequestParam("addr_id") Long addrId,
+			@RequestParam("service_addons_datas") String serviceAddonsDatas,
+			@RequestParam(value="remarks",required=false,defaultValue="") String remarks,
+			@RequestParam(value="remarks_bussiness_confirm",required=false,defaultValue="") String remarksBussinessConfirm,
+			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom,
+			@RequestParam(value ="order_op_from",required=false)Long orderOpFrom,
+			@RequestParam(value ="pay_way",required=false)short payway) throws Exception{
+		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		Users u = userService.selectByPrimaryKey(userId);
+
+		/*
+		 *  1.判断是否为注册用户，非注册用户返回 999
+		 */
+		if (u == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
+			return result;
+		}
+		// 1.1.调用公共订单号类，生成唯一订单号
+		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
+		
+		//处理日期 ，前台js 已经将 日期 类型 处理 为 string 时间戳了， 存表 存为 long（int） ,方便统计！
+		//服务日期 ，（yyyy-MM-dd HH:mm）的 时间戳值（秒数）
+		long serviceDateTable = Long.parseLong(serviceDate);
+		
+		//1.2.保存订单信息 
+		Orders order = ordersService.initOrders();
+//		order.setAmId(amId);
+		order.setMobile(mobile);
+		order.setUserId(userId);
+		if(orderFrom==2){
+			order.setOrderStatus(Constants.ORDER_STATUS_4);
+			order.setOrderOpFrom(orderOpFrom);
+		}else{
+			order.setOrderStatus(Constants.ORDER_STATUS_1);
+			order.setOrderOpFrom(0L);
+		}
+		order.setOrderType(Constants.ORDER_TYPE_1);
+		order.setServiceType(serviceType);
+		order.setServiceDate(serviceDateTable);
+		order.setAddrId(addrId);
+		order.setOrderFrom(orderFrom);
+		order.setOrderNo(orderNo);
+		if(!StringUtil.isEmpty(remarks)){
+			order.setRemarks(remarks);
+		}
+		if(!StringUtil.isEmpty(remarksBussinessConfirm)){
+			order.setRemarksBussinessConfirm(remarksBussinessConfirm);
+		}
+		//mybatis xml 需要增加插入后获取last_insert_id;
+		ordersService.insertSelective(order);
+		/*
+		 * 2.设置订单总金额。插入 order_prices表
+		 */
+		OrderPrices orderPrices =  orderExpCleanService.getOrderPriceOfOrderExpClean(serviceType, serviceAddonsDatas);
+		orderPrices.setUserId(userId);
+		orderPrices.setMobile(u.getMobile());
+		orderPrices.setOrderNo(orderNo);
+		orderPrices.setOrderId(order.getId());
+		if(orderFrom==2){
+			orderPrices.setPayType(payway);
+		}
+		orderPricesService.insertSelective(orderPrices);
+		
+		/*
+		 * 3.更新订单附加服务表
+		 */
+		List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(serviceType,serviceAddonsDatas);
+		for (Iterator<OrderServiceAddons> iterator = list.iterator(); iterator.hasNext();) {
+			OrderServiceAddons orderServiceAddons = (OrderServiceAddons) iterator.next();
+			orderServiceAddons.setOrderId(order.getId());
+			orderServiceAddons.setUserId(u.getId());
+			orderServiceAddons.setOrderNo(orderNo);
+
+			orderServiceAddonsService.insertSelective(orderServiceAddons);
+		}
+		
+		/*
+		 * 4.插入订单日志表  order_log,短信通知助理订单信息
+		 */
+		if (orderNo != null) {
+			//记录订单日志
+			ordersService.orderExpCleanSuccessTodo(orderNo);
+		}
+//		OrderViewVo vo =  orderQueryService.getOrderView(order);
+		result.setData(order);
+		return result;
+	}
+	
+	
 	/**
 	 * 根据orderNo获取深度保洁订单详情
 	 * @param orderNo

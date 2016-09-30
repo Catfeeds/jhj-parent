@@ -26,6 +26,8 @@ public class OrderSearchVo {
 	
 	private Short orderFrom;
 	
+	private Long orderOpFrom;
+	
 	private Short orderStatus;
 	
 	private List<Short> orderStatusList;
@@ -83,6 +85,14 @@ public class OrderSearchVo {
 
 	public void setOrderFrom(Short orderFrom) {
 		this.orderFrom = orderFrom;
+	}
+	
+	public Long getOrderOpFrom() {
+		return orderOpFrom;
+	}
+
+	public void setOrderOpFrom(Long orderOpFrom) {
+		this.orderOpFrom = orderOpFrom;
 	}
 
 	public Short getOrderStatus() {

@@ -45,6 +45,7 @@
 							<div class="panel-body">
 								<form:form class="form-horizontal" method="POST" name="form">
 									<input id="from-user-id" name="userId" type="hidden"/>
+									<input name="orderType" type="hidden" />
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
@@ -57,12 +58,14 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务地址</label>
 											<div class="col-md-5">
-												<select name="addrId" class="form-control" id="from-addr" onclick="address()">
+												<select name="addrId" class="form-control" id="from-addr" >
 													<option value="">--请选择服务地址--</option>
 												</select>
 											</div>
+											<div>
+												<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="" onclick="address()">添加地址</button>
+											</div>
 											<div id="from-add-addr" style="display:none">
-												<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="">添加地址</button>
 												<%@include file="address.jsp"%>
 											</div>
 										</div>
@@ -70,16 +73,36 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务类型</label>
 											<div class="col-md-5">
-												<input type="hidden" name="serviceType" class="form-control" value="28" />
-												<input class="form-control" value="基础保洁" disabled="disabled">
+												<input type="hidden" name="serviceType" class="form-control" value="${serviceType.serviceTypeId }" />
+												<input class="form-control" value="${serviceType.name }" readonly="readonly">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label"><font
+												color="red">*</font>价格</label>
+											<div class="col-md-5">
+												<input class="form-control" type="number" name="orderPay" value="${serviceType.price }">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label"><font
+												color="red">*</font>下单方式</label>
+											<div class="col-md-5">
+												<select name="orderFrom" id="from-src" class="form-control">
+													<option value="">--请选择下单方式--</option>
+													<option value="0">app</option>
+													<option value="1">微网站</option>
+													<option value="2">管理后台</option>
+												</select>
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>
 											<div class="col-md-5">
-												<select name="orderFrom" id="from-src" class="form-control">
+												<select name="orderOpFrom" id="from-src" class="form-control">
 													<option value="">--请选择订单来源--</option>
+													<option value="1">来电订单</option>
 													<c:forEach items="${cooperativeBusiness }" var="src" varStatus="in">
 														<option value="${src.id }">${src.businessName }</option>
 													</c:forEach>
@@ -107,7 +130,7 @@
 												<select id="f-paywawy" name="payway" class="form-control">
 													<option value="">--请选择支付方式--</option>
 													<option value="6">现金支付</option>
-													<option value="4">已支付</option>
+													<option value="7">第三方支付</option>
 												</select>
 											</div>
 										</div>
@@ -118,6 +141,14 @@
 													class="form-control"></textarea>
 											</div>
 										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label">运营人员备注:</label>
+											<div class="col-md-5">
+												<textarea id="ft-confirm" name="remarksBussinessConfirm" rows="5" cols="50"
+													class="form-control"></textarea>
+											</div>
+										</div>
+										
 										<div class="form-actions fluid">
 											<div class="col-md-offset-3 col-md-3">
 												<button type="button" class="btn btn-success"

@@ -19,6 +19,7 @@
 		<result column="order_rate" property="orderRate" jdbcType="NUMERIC" />
 		<result column="order_rate_content" property="orderRateContent" jdbcType="VARCHAR" />
 		<result column="order_from" property="orderFrom" jdbcType="NUMERIC" />
+		<result column="order_op_from" property="orderOpFrom" jdbcType="NUMERIC"/>
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="remarks_confirm" property="remarksConfirm" jdbcType="VARCHAR" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
@@ -30,7 +31,7 @@
 		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_no, order_type,
 		service_type,service_content, service_date, service_hour, order_status,
 		order_rate,
-		order_rate_content, order_from, remarks,remarks_confirm, add_time, update_time
+		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time
 		,remarks_bussiness_confirm
 	</sql>
 
@@ -117,6 +118,10 @@
 
 		<if test="orderFrom != null">
 			and order_from = #{orderFrom,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orderOpFrom != null">
+			and order_op_from = #{orderOpFrom,jdbcType=NUMERIC}
 		</if>
 
 		<if test="startServiceTime !=null">
@@ -450,7 +455,7 @@
 		order_type, service_type,
 		service_content, service_date, service_hour,
 		order_status, order_rate, order_rate_content,
-		order_from, remarks,remarks_confirm,add_time, update_time,
+		order_from,order_op_from, remarks,remarks_confirm,add_time, update_time,
 		remarks_bussiness_confirm
 		)
 		values
@@ -464,7 +469,9 @@
 		#{serviceDate,jdbcType=NUMERIC}, #{serviceHour,jdbcType=NUMERIC},
 		#{orderStatus,jdbcType=NUMERIC}, #{orderRate,jdbcType=NUMERIC},
 		#{orderRateContent,jdbcType=VARCHAR},
-		#{orderFrom,jdbcType=NUMERIC},#{remarks,jdbcType=VARCHAR},
+		#{orderFrom,jdbcType=NUMERIC},
+		#{orderOpFrom,jdbcType=NUMERIC},
+		#{remarks,jdbcType=VARCHAR},
 		#{remarksConfirm,jdbcType=VARCHAR},
 		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},
 		#{remarksBussinessConfirm,jdbcType=VARCHAR}
@@ -528,6 +535,9 @@
 			<if test="orderFrom != null">
 				order_from,
 			</if>
+			<if test="orderOpFrom != null">
+				order_op_from,
+			</if>
 			<if test="remarks !=null">
 				remarks,
 			</if>
@@ -542,7 +552,7 @@
 			</if>
 
 			<if test="remarksBussinessConfirm !=null">
-				remarks_bussiness_confirm,
+				remarks_bussiness_confirm
 			</if>
 
 
@@ -599,6 +609,9 @@
 			<if test="orderFrom != null">
 				#{orderFrom,jdbcType=NUMERIC},
 			</if>
+			<if test="orderOpFrom != null">
+				#{orderOpFrom,jdbcType=NUMERIC},
+			</if>
 			<if test="remarks !=null">
 				#{remarks,jdbcType=VARCHAR},
 			</if>
@@ -610,6 +623,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="remarksBussinessConfirm !=null">
+				#{remarksBussinessConfirm,jdbcType=VARCHAR}
 			</if>
 		</trim>
 	</insert>
@@ -663,6 +679,9 @@
 			</if>
 			<if test="orderFrom != null">
 				order_from = #{orderFrom,jdbcType=NUMERIC},
+			</if>
+			<if test="orderOpFrom != null">
+				and order_op_from = #{orderOpFrom,jdbcType=NUMERIC}
 			</if>
 			<!-- TODO 当初 因为这里有bug ,给注释了 ,现在改好了 -->
 			<if test="remarks !=null and remarks !='' ">
@@ -739,6 +758,7 @@
 		order_rate_content = #{orderRateContent,jdbcType=VARCHAR},
 		order_from =
 		#{orderFrom,jdbcType=NUMERIC},
+		order_op_from = #{orderOpFrom,jdbcType=NUMERIC}
 		remarks = #{remarks,jdbcType=VARCHAR},
 		remarks_confirm = #{remarksConfirm,jdbcType=VARCHAR},
 		add_time =

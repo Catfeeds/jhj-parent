@@ -6,11 +6,14 @@ $(function(){
             	required:true,
 				minlength:11,
 				maxlength:11,
+				isMobile:true
             },
             addrId : "required",
             serviceType : "required",
             orderFrom : "required",
-            serviceDate : "required"
+            orderOpFrom: "required",
+            serviceDate : "required",
+            payway:"required"
         },  
         messages:{  
         	mobile : {
@@ -20,8 +23,10 @@ $(function(){
         	},
             addrId : "用户地址不能为空",
             serviceType : "服务类型不能为空",
-            orderFrom : "订单来源不能为空",
-            serviceDate : "服务时间不能为空"  
+            orderFrom : "下单方式不能为空",
+            orderOpFrom: "订单来源不能为空",
+            serviceDate : "服务时间不能为空",
+            payway:"支付方式不能为空"
         },
         highlight : function(element) {
             $(element).closest('.form-control').css({borderColor:"red"});
@@ -37,8 +42,8 @@ $(function(){
             form.ajaxSubmit();
         }
     });
-	 $.validator.addMethod("mobile",function(value,element,params){  
-          var mobile = /^1[3,5,7,8]\d{9}$/;  
+	 $.validator.addMethod("isMobile",function(value,element,params){  
+          var mobile = /^(0|86|17951)?(13[0-9]|14[0-9]|15[0-9]|16[0-9]|17[0-9]|18[0-9]|19[0-9])[0-9]{8}$/;  
           return this.optional(element)||(mobile.test(value));  
       },"*请输入正确的手机号码！");
 	  
@@ -57,6 +62,7 @@ $('#from-servicedate').datetimepicker('setStartDate', new Date());
 //输入完手机号获取用户信息，根据用户的id获取用户的服务地址
 function getAddrByMobile(){
 	var mobile=$("#from-mobile").val();
+	$("#from-addr").find(":nth-child(2)").remove();
 	var reg = /^1[3,5,7,8]\d{9}$/;
 	if(reg.test(mobile)){
 		$.ajax({
@@ -67,6 +73,8 @@ function getAddrByMobile(){
 			success:function(data){
 				if(data.data!=false){
 					var userId=data.data.id;
+					$("#from-user-id").data("userId",userId)
+					$("#from-mobile").data("mobile",mobile);
 					$("#from-user-id").text(userId);
 					$.ajax({
 						type:"get",
@@ -99,58 +107,32 @@ function getAddrByMobile(){
  * */
 function saveFrom(){
 	var from={};
-	from.userId=$("#from-user-id").text();
+	from.user_id=$("#from-user-id").text();
 	from.mobile=$("#from-mobile").val();
-	from.addrId=$("#from-addr").val();
-	from.serviceType=$("input[name='serviceType']").val();
-	from.orderFrom=$("#from-src").val();
+	from.addr_id=$("#from-addr").val();
+	from.service_type=$("select[name='serviceType']").val();
+	from.order_from=$("select[name='orderFrom']").val();
+	from.order_op_from=$("select[name='orderOpFrom']").val();
 	var serviceDate=$("#from-servicedate").val();
-	from.serviceDate =  moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
-	from.serviceHour=$("input[name='serviceHour']").val();;
+	from.service_date =  moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 	from.remarks=$("#ft-eara").val();
-	var order_pay_type=$("#f-paywawy").val();
+	from.pay_way=$("#f-paywawy").val();
+	from.service_addons_datas=$("input[name='service_addons_datas']").val();
 	if($(".form-horizontal").valid()){
 		$.ajax({
 			type:"post",
-			url:"/jhj-app/app/order/post_hour.json",
+			url:"/jhj-app/app/order/save_am_order.json",
 			data:from,
 			dataType:"json",
 			success:function(data){
-				var orderNo=data.data.order_no;
-				var userId=data.data.user_id;
-				if(data.status==0){
-					alert("订单添加成功！");
-					if(order_pay_type==6){
-						savePay(order_pay_type,orderNo,userId);
-					}
-				}
-				if(data.status==999){
-					alert("现在不能下过去的单啦！！");
-				}
+				var orderNo=data.data.orderNo;
+				var userId=data.data.userId;
+				alert("订单添加成功！");
+				location.href="order-am-list";
 			}
 		});
 	}
 }
-
-//订单的支付方式
-function savePay(payway,orderNo,userId){
-	var data={};
-	data.order_pay_type=payway;
-	data.order_no=orderNo;
-	data.user_id=userId;
-	if(orderNo!=null && userId!=null){
-		$.ajax({
-			type:"post",
-			url:"/jhj-app/app/order/post_pay.json",
-			data:data,
-			dataType:"json",
-			success:function(data){
-				
-			}
-		});
-	}
-}
-
 /*
  * 如果用户在系统中不存，注册新用户到系统中
  * 
@@ -176,22 +158,15 @@ function regUser(mobile){
 function address(){
 	if($("#from-mobile").val()!='' || $("#from-mobile").val()!=undefined){
 		$("#from-add-addr").show();
-		$('#exampleModal').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget) // Button that triggered the modal
-			var recipient = button.data('whatever') // Extract info from data-* attributes
-			var modal = $(this)
-			modal.find('.modal-title').text('添加地址' + recipient)
-			modal.find('.modal-body input').val(recipient)
-		});
+//		$('#exampleModal').on('show.bs.modal');
 	}else{
-		alert("请先输入手机号码！");
+		return;
 	}
 	
 }
 
 function saveAddress(){
 	var form={}
-	//$("#from-user-id").val()
 	form.user_id=$("#from-user-id").data("userId");
 	form.phone=$("#from-mobile").data("mobile");
 	form.longitude=$("#poiLongitude").val();
@@ -209,6 +184,8 @@ function saveAddress(){
 		success:function(data){
 			$("#from-add-addr").hide();
 			alert("地址添加成功");
+			$("#from-user-id").removeData("userId");
+			$("#from-mobile").removeData("mobile");
 			getAddrByMobile();
 		}
 	});
@@ -217,22 +194,48 @@ function saveAddress(){
 
 function serviceTypeChange(){
 	var serviceType=$("select[name='serviceType']").val();
-//	alert(serviceType);
 	$.ajax({
-		type:"post",
-		url:"",
-		data:{"serviceType":serviceType},
+		type:"get",
+		url:"/jhj-app/app/dictServiceAddons/get_service_type.json",
+		data:{"service_type_id":serviceType},
 		dataType:"json",
 		success:function(data){
-			
+			$("#service-content").children().remove();
+			var serviceType=data.data;
+			for(var i=0;i<serviceType.length;i++){
+				$("#service-content").append("<tr>");
+				$("#service-content").append("<input type='hidden'value='"+serviceType[i].service_addon_id+"'/>");
+	            $("#service-content").append("<td>"+serviceType[i].name+"</td>");
+	            $("#service-content").append("<td>"+serviceType[i].price+"&nbsp;<span>"+serviceType[i].item_unit+"</span></td>");
+	            $("#service-content").append("<td>"+serviceType[i].dis_price+"&nbsp;<span>"+serviceType[i].item_unit+"</span></td>");
+	            $("#service-content").append("<td><input name='defaultNum' value='"+serviceType[i].default_num+"' onchange='changePrice()'/></td>");// "+serviceType[i].default_num+"</td>
+	            $("#service-content").append("</tr>");
+			}
 		}
 	});
 }
 
-
-
-
-
+function changePrice(){
+	var num=$("input[name='defaultNum']");
+	var _totalPrice=0;
+	var serviceAddonsJson="";
+	for(var i=0;i<num.length;i++){
+		var val=num[i].value;
+		var _input=$(num[i]);
+		var id=_input.parent().prev().prev().prev().prev().val();
+		var price = parseInt(_input.parent().prev().text());
+		if(val!=0){
+			var total=val*price
+			_totalPrice+=total;
+			serviceAddonsJson+="{serviceAddonId:"+id+","+"itemNum:"+val+",";
+			serviceAddonsJson=serviceAddonsJson.substring(0,serviceAddonsJson.length-1)+"},"
+		}
+	}
+	var index = serviceAddonsJson.lastIndexOf(",");
+	serviceAddonsJson="["+serviceAddonsJson.substring(0, index)+"]";
+	$("input[name='service_addons_datas']").attr("value",serviceAddonsJson);
+	$("#service-price").attr("value",_totalPrice);
+}
 
 //baiduMap 相关
 
