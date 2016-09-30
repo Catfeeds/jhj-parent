@@ -13,3 +13,7 @@ target
 .classpath
 .settings
 .metadata
+
+# ignore windows files
+*Thumbs.db
+*thumbs.db
