@@ -14,6 +14,10 @@ $('#service-form').validate({
 			required : true,
 			number : true
 		},
+		serviceHour:{
+			required : true,
+			number : true
+		},
 		serviceTimes : {
 			required : true,
 			number : true
@@ -36,6 +40,10 @@ $('#service-form').validate({
 		price : {
 			required : "请输入单价",
 			number : "请输入合法的单价数字"
+		},
+		serviceHour:{
+			required:"请输入服务时长",
+			number:"请输入合法的时间"
 		},
 		serviceTimes : {
 			required : "请输入每周服务次数",
