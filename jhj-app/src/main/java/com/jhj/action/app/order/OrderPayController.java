@@ -91,7 +91,7 @@ public class OrderPayController extends BaseController {
 	 * @param mobile true string 手机号 
 	 * @param order_id true int 订单id 
 	 * @param order_no true string 订单号
-	 * @param pay_type true int 支付方式： 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付(保留,暂不开发) 4 = 上门刷卡（保留，暂不开发） 
+	 * @param pay_type true int 支付方式： 付款方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位） 6 = 现金支付 7 = 第三方支付
 	 * @return  OrderViewVo
 	 */
 	@RequestMapping(value = "post_pay", method = RequestMethod.POST)
@@ -183,6 +183,7 @@ public class OrderPayController extends BaseController {
 		//如果是余额支付或者需支付金额为0 
 		if (orderPayType.equals(Constants.PAY_TYPE_0) || 
 				orderPayType.equals(Constants.PAY_TYPE_6) ||
+				orderPayType.equals(Constants.PAY_TYPE_7) ||
 				orderPay.compareTo(new BigDecimal(0)) == 0) {
 			// 1. 扣除用户余额.
 			// 2. 用户账号明细增加.

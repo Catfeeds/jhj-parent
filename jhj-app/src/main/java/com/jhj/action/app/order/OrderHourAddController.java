@@ -103,7 +103,8 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam("serviceHour") Short serviceHour,
 			@RequestParam(value = "serviceAddons", required = false, defaultValue = "") String serviceAddons,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
-			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom) throws Exception{
+			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom,
+			@RequestParam(value = "orderOpFrom", required = false, defaultValue = "0") Long orderOpFrom) throws Exception{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
@@ -161,7 +162,8 @@ public class OrderHourAddController extends BaseController {
 		order.setServiceHour(serviceHour);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);//钟点工未支付
 		order.setOrderNo(orderNo);
-		
+		order.setOrderFrom(orderFrom);
+		order.setOrderOpFrom(orderOpFrom);
 		
 		PartnerServiceType partnerServiceType = partService.selectByPrimaryKey(serviceType);
 		

@@ -19,7 +19,7 @@
 		<result column="order_rate" property="orderRate" jdbcType="NUMERIC" />
 		<result column="order_rate_content" property="orderRateContent" jdbcType="VARCHAR" />
 		<result column="order_from" property="orderFrom" jdbcType="NUMERIC" />
-		<result column="order_op_from" property="orderOpFrom" jdbcType="NUMERIC"/>
+		<result column="order_op_from" property="orderOpFrom" jdbcType="NUMERIC" />
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="remarks_confirm" property="remarksConfirm" jdbcType="VARCHAR" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
@@ -48,7 +48,7 @@
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 		<include refid="bySearchVo" />
 	</select>
-	
+
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 		<include refid="bySearchVo" />
 	</select>
@@ -119,7 +119,7 @@
 		<if test="orderFrom != null">
 			and order_from = #{orderFrom,jdbcType=NUMERIC}
 		</if>
-		
+
 		<if test="orderOpFrom != null">
 			and order_op_from = #{orderOpFrom,jdbcType=NUMERIC}
 		</if>
@@ -155,21 +155,21 @@
 		<if test="endUpdateTime !=null">
 			<![CDATA[ and update_time <= #{endUpdateTime}]]>
 		</if>
-		
+
 		<if test="parentId !=null">
 			and id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC})
 		</if>
-		
+
 		<if test="orgId !=null and orgId != 0">
 			and id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC})
 		</if>
-		
+
 		<if test="isApply !=null">
 			and id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC})
 		</if>
-		
+
 		<if test="addrName !=null and addrName !=''">
-			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE)  )
+			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE) )
 		</if>
 
 		order by add_time desc
@@ -681,7 +681,7 @@
 				order_from = #{orderFrom,jdbcType=NUMERIC},
 			</if>
 			<if test="orderOpFrom != null">
-				and order_op_from = #{orderOpFrom,jdbcType=NUMERIC}
+				order_op_from = #{orderOpFrom,jdbcType=NUMERIC},
 			</if>
 			<!-- TODO 当初 因为这里有bug ,给注释了 ,现在改好了 -->
 			<if test="remarks !=null and remarks !='' ">
@@ -758,14 +758,16 @@
 		order_rate_content = #{orderRateContent,jdbcType=VARCHAR},
 		order_from =
 		#{orderFrom,jdbcType=NUMERIC},
-		order_op_from = #{orderOpFrom,jdbcType=NUMERIC}
+		order_op_from = #{orderOpFrom,jdbcType=NUMERIC},
 		remarks = #{remarks,jdbcType=VARCHAR},
-		remarks_confirm = #{remarksConfirm,jdbcType=VARCHAR},
+		remarks_confirm =
+		#{remarksConfirm,jdbcType=VARCHAR},
 		add_time =
 		#{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},
 
-		remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR},
+		remarks_bussiness_confirm =
+		#{remarksBussinessConfirm,jdbcType=VARCHAR},
 
 		where id =
 		#{id,jdbcType=NUMERIC}

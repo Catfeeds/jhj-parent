@@ -46,7 +46,7 @@
 								<form:form class="form-horizontal" method="POST" name="form">
 									<input id="from-user-id" name="userId" type="hidden"/>
 									<input name="orderType" type="hidden" />
-									<input type="hidden" name="orderFrom" value="2">
+									<input type="hidden" name="orderFrom" id="orderForm" value="2">
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
@@ -90,7 +90,7 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>
 											<div class="col-md-5">
-												<select name="orderOpFrom" id="from-src" class="form-control">
+												<select name="orderOpFrom" id="orderOpFrom" class="form-control">
 													<option value="">--请选择订单来源--</option>
 													<option value="1">来电订单</option>
 													<c:forEach items="${cooperativeBusiness }" var="src" varStatus="in">
@@ -128,13 +128,6 @@
 											<label class="col-md-2 control-label">用户备注:</label>
 											<div class="col-md-5">
 												<textarea id="ft-eara" name="remarks" rows="5" cols="50"
-													class="form-control"></textarea>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">运营人员备注:</label>
-											<div class="col-md-5">
-												<textarea id="ft-confirm" name="remarksBussinessConfirm" rows="5" cols="50"
 													class="form-control"></textarea>
 											</div>
 										</div>

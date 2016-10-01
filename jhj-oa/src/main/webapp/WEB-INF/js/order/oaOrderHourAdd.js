@@ -6,7 +6,7 @@ $(function() {
 				required : true,
 				minlength : 11,
 				maxlength : 11,
-				isMobile:true
+				isMobile : true
 			},
 			addrId : "required",
 			serviceType : "required",
@@ -48,11 +48,14 @@ $(function() {
 			form.ajaxSubmit();
 		}
 	});
-	$.validator.addMethod("isMobile", function(value, element, params) {
-		var mobile = /^(0|86|17951)?(13[0-9]|14[0-9]|15[0-9]|16[0-9]|17[0-9]|18[0-9]|19[0-9])[0-9]{8}$/;
-		return this.optional(element) || (mobile.test(value));
-	}, "*请输入正确的手机号码！");
-
+	$.validator
+			.addMethod(
+					"isMobile",
+					function(value, element, params) {
+						var mobile = /^(0|86|17951)?(13[0-9]|14[0-9]|15[0-9]|16[0-9]|17[0-9]|18[0-9]|19[0-9])[0-9]{8}$/;
+						return this.optional(element) || (mobile.test(value));
+					}, "*请输入正确的手机号码！");
+	
 });
 
 // 设置日历控件
@@ -68,6 +71,10 @@ $('#from-servicedate').datetimepicker('setStartDate', new Date());
 // 输入完手机号获取用户信息，根据用户的id获取用户的服务地址
 function getAddrByMobile() {
 	var mobile = $("#from-mobile").val();
+	
+	if (mobile == "" || mobile == undefined) return false;
+	
+	
 	$("#from-addr").find(":nth-child(2)").remove();
 	var reg = /^1[3,5,7,8]\d{9}$/;
 	if (reg.test(mobile)) {
@@ -87,14 +94,13 @@ function getAddrByMobile() {
 					$.ajax({
 						type : "get",
 						dataType : "json",
-						url : "/jhj-app/app/user/get_user_addrs.json?user_id="
-								+ userId,
+						url : "/jhj-app/app/user/get_user_addrs.json?user_id=" + userId,
 						success : function(result) {
 							var userAddr = result.data;
-							var selectid = document
-									.getElementById("from-addr");
+							var selectid = document.getElementById("from-addr");
 							for (var i = 0; i < userAddr.length; i++) {
-								selectid[i + 1] = new Option(userAddr[i].name,userAddr[i].id, false,false);
+								selectid[i + 1] = new Option(userAddr[i].name, userAddr[i].id,
+										false, false);
 							}
 						}
 					});
@@ -103,42 +109,62 @@ function getAddrByMobile() {
 					if (isResult) {
 						regUser(mobile);
 					}
-
+					
 				}
 			}
 		});
 	}
 }
 
-/*
- * 提交订单
- */
+//页面第一次加载
+getAddrByMobile();
+
 function saveFrom() {
 	var from = {};
 	from.userId = $("#from-user-id").text();
 	from.mobile = $("#from-mobile").val();
 	from.addrId = $("#from-addr").val();
 	from.serviceType = $("input[name='serviceType']").val();
-	from.orderFrom = $("#from-src").val();
+	from.orderFrom = $("#orderForm").val();
 	var serviceDate = $("#from-servicedate").val();
-	from.serviceDate = moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss")
-			.unix();
+	from.serviceDate = moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 	from.serviceHour = $("input[name='serviceHour']").val();
+	form.orderOpFrom = $("#orderOpFrom").val();
 	from.remarks = $("#ft-eara").val();
-	from.payway = $("#f-paywawy").val();
-	from.orderPay = $("input[name='orderPay']").val();
-	from.remarksBussinessConfirm = $("#ft-confirm").val();
+	var order_pay_type = $("#f-paywawy").val();
 	if ($(".form-horizontal").valid()) {
 		$.ajax({
 			type : "post",
-			url : "save_order_hour",
+			url : "/jhj-app/app/order/post_hour.json",
 			data : from,
 			dataType : "json",
 			success : function(data) {
-				var orderNo = data.orderNo;
-				var userId = data.userId;
-				$("#from-user-id").removeData("userId")
-				$("#from-mobile").removeData("mobile");
+				var orderNo = data.data.order_no;
+				var userId = data.data.user_id;
+				if (data.status == 0) {
+					savePay(order_pay_type, orderNo, userId);
+				}
+				if (data.status == 999) {
+					alert(data.msg);
+				}
+			}
+		});
+	}
+}
+
+// 订单的支付方式
+function savePay(payway, orderNo, userId) {
+	var data = {};
+	data.order_pay_type = payway;
+	data.order_no = orderNo;
+	data.user_id = userId;
+	if (orderNo != null && userId != null) {
+		$.ajax({
+			type : "post",
+			url : "/jhj-app/app/order/post_pay.json",
+			data : data,
+			dataType : "json",
+			success : function(data) {
 				alert("订单添加成功！");
 				location.href="order-hour-list";
 			}
@@ -177,7 +203,7 @@ function address() {
 	} else {
 		alert("请先输入手机号码！");
 	}
-
+	
 }
 
 function saveAddress() {
@@ -215,7 +241,7 @@ $(function() {
 	var point = new BMap.Point(116.404, 39.915);
 	map.centerAndZoom(point, 15);// 初始化地图中心点
 	var marker = '';
-
+	
 	var gc = new BMap.Geocoder();// 地址解析类
 	map.addEventListener("click", function(e) {
 		marker = new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat));
@@ -227,14 +253,14 @@ $(function() {
 		marker.addEventListener("dragstart", function(e) {
 			document.getElementById("poiLongitude").value = e.point.lng;
 			document.getElementById("poiLatitude").value = e.point.lat;
-
+			
 			gc.getLocation(e.point, function(rs) {
-
+				
 				showLocationInfo(e.point, rs);
 			});
 		});
 	});
-
+	
 	// 信息窗口
 	function showLocationInfo(pt, rs) {
 		var opts = {
@@ -244,101 +270,98 @@ $(function() {
 		}
 
 		var addComp = rs.addressComponents;
-		var addr = addComp.province + ", " + addComp.city + ", "
-				+ addComp.district + ", " + addComp.street + ", "
-				+ addComp.streetNumber + "<br/>";
+		var addr = addComp.province + ", " + addComp.city + ", " + addComp.district + ", "
+				+ addComp.street + ", " + addComp.streetNumber + "<br/>";
 		addr += "纬度: " + pt.lat + ", " + "经度：" + pt.lng;
 		// alert(addr);
-
+		
 		// var searchTxt = document.getElementById("suggestId").value;
-		document.getElementById("poiAddress").value = addComp.district
-				+ addComp.street + addComp.streetNumber;
+		document.getElementById("poiAddress").value = addComp.district + addComp.street
+				+ addComp.streetNumber;
 		document.getElementById("poiCity").value = addComp.city;
-
+		
 		var infoWindow = new BMap.InfoWindow(addr, opts); // 创建信息窗口对象
 		marker.openInfoWindow(infoWindow);
 	}
-
+	
 	// 搜索提示
 	function G(id) {
 		return document.getElementById(id);
 	}
-
+	
 	var ac = new BMap.Autocomplete( // 建立一个自动完成的对象
 	{
 		"input" : "suggestId",
 		"location" : map
 	});
-
+	
 	ac.addEventListener("onhighlight", function(e) { // 鼠标放在下拉列表上的事件
 		var str = "";
 		var _value = e.fromitem.value;
 		var value = "";
 		if (e.fromitem.index > -1) {
-			value = _value.province + _value.city + _value.district
-					+ _value.street + _value.business;
+			value = _value.province + _value.city + _value.district + _value.street
+					+ _value.business;
 		}
-		str = "FromItem<br />index = " + e.fromitem.index + "<br />value = "
-				+ value;
-
+		str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+		
 		value = "";
 		if (e.toitem.index > -1) {
 			_value = e.toitem.value;
-			value = _value.province + _value.city + _value.district
-					+ _value.street + _value.business;
-
+			value = _value.province + _value.city + _value.district + _value.street
+					+ _value.business;
+			
 			// jhj2.1 地址 名称
-			$("#poiAddress").val(
-					_value.district + _value.street + _value.business);
+			$("#poiAddress").val(_value.district + _value.street + _value.business);
 			$("#poiCity").val(_value.city);
-
+			
 		}
-		str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = "
-				+ value;
+		str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
 		G("searchResultPanel").innerHTML = str;
 	});
-
+	
 	var myValue;
-	ac.addEventListener("onconfirm", function(e) { // 鼠标点击下拉列表后的事件
-		var _value = e.item.value;
-		myValue = _value.province + _value.city + _value.district
-				+ _value.street + _value.business;
-		G("searchResultPanel").innerHTML = "onconfirm<br />index = "
-				+ e.item.index + "<br />myValue = " + myValue;
-
-		setPlace();
-
-	});
-
+	ac.addEventListener("onconfirm",
+			function(e) { // 鼠标点击下拉列表后的事件
+				var _value = e.item.value;
+				myValue = _value.province + _value.city + _value.district + _value.street
+						+ _value.business;
+				G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index
+						+ "<br />myValue = " + myValue;
+				
+				setPlace();
+				
+			});
+	
 	function setPlace() {
 		map.clearOverlays(); // 清除地图上所有覆盖物
 		function myFun() {
 			var pp = local.getResults().getPoi(0).point; // 获取第一个智能搜索的结果
 			map.centerAndZoom(pp, 18);
-
+			
 			// jhj2.1 使用搜索后,设置 选中 目标地点的 坐标
 			$("#poiLongitude").val(pp.lng);
 			$("#poiLatitude").val(pp.lat);
-
+			
 			var marker = new BMap.Marker(pp);
 			map.addOverlay(new BMap.Marker(pp)); // 添加标注
 			marker.enableDragging();
-
+			
 		}
 		var local = new BMap.LocalSearch(map, { // 智能搜索
 			onSearchComplete : myFun
 		});
 		local.search(myValue);
 	}
-
+	
 	// 页面加载时，判断是否回显地图信息
 	function hhh() {
 		var b = document.getElementById("poiLatitude").value;
 		var c = document.getElementById("poiLongitude").value;
-
+		
 		var pt = new BMap.Point(c, b);
 		var marker = new BMap.Marker(pt); // 初始化地图标记，通过标记窗口，回显地图信息
-
+		
 		var myGeo = new BMap.Geocoder();
 		// 解析记录中 经纬度 确定的 标记点，在信息窗中回显该地址信息
 		myGeo.getLocation(pt, function(rs) {
@@ -348,7 +371,7 @@ $(function() {
 				title : "当前位置:" // 信息窗口标题
 			}
 			var addComp = rs.addressComponents;
-
+			
 			var addr = document.getElementById("poiAddress").value;
 			if (addr == "") {
 				// 若是新增页面。则定位在天安门，不显示信息窗
