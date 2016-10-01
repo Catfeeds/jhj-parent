@@ -52,6 +52,7 @@ import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
+import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -208,9 +209,9 @@ public class NewOrgStaffController extends AdminController {
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
-		if (sessionOrgId > 0L) {
-			model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
-		}
+
+		model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
+
 		
 		return "bs/newStaffForm";
 	}

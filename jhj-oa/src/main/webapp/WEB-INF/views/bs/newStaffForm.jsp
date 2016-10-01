@@ -6,6 +6,7 @@
 <%@ taglib prefix="citySelectTag" uri="/WEB-INF/tags/citySelect.tld"%>
 <%@ taglib prefix="provinceSelectTag" uri="/WEB-INF/tags/provinceSelect.tld"%>
 <%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
+<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="staffLevelSelectTag" uri="/WEB-INF/tags/staffLevelSelect.tld"%>
 
 <%@ taglib prefix="degreeSelectTag" uri="/WEB-INF/tags/degreeTypeSelect.tld" %>
@@ -60,17 +61,24 @@
 	
 					<input type="hidden" name="authIds" id="authIds" value="${newStaffFormVoModel.authIds }">		
 								
-					<input type="hidden" name="tagIds" id="tagIds" value="${newStaffFormVoModel.tagIds }"/>			
+					<input type="hidden" name="tagIds" id="tagIds" value="${newStaffFormVoModel.tagIds }"/>	
 								
-					<div class="form-body">
-					 
+						<div class="form-group required">
+							<label class="col-md-2 control-label">选择门店*</label>
+							<div class="col-md-5">
+								<orgSelectTag:select selectId="${newStaffFormVoModel.parentOrgId }" sessionOrgId="${loginOrgId }"/>
+							</div>
+						</div>
 						<div class="form-group required">
 							<label class="col-md-2 control-label">选择云店*</label>
 							<div class="col-md-5">
 								
-								<cloudOrgSelectTag:select 
+								<select name="orgId" id="orgId" class="form-control">
+										<option value="0">全部</option>
+								</select>
+								<%-- <cloudOrgSelectTag:select 
 										logInParentOrgId="${loginOrgId}"
-										selectId="${newStaffFormVoModel.orgId }"/>	
+										selectId="${newStaffFormVoModel.orgId }"/>	 --%>
 							    		
 							</div>
 						</div>
@@ -357,6 +365,8 @@
 	<script type="text/javascript"  src="<c:url value='/js/jhj/select-province.js'/>"	></script>
 	<!-- 当前页面校验js -->
 	<script type="text/javascript"  src="<c:url value='/js/jhj/validate-reg.js'/>"	></script>
+	
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	
 	<script type="text/javascript"  src="<c:url value='/js/jhj/bs/newStaffForm.js'/>"	></script> 
 </body>
