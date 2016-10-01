@@ -8,7 +8,7 @@ $('#org-form').validate({
 		},
 		orgTel:{
 			required: true,
-			number: true
+			isTel: true
 		},
 		orgOwner:{
 			required: true
@@ -67,6 +67,11 @@ $('#org-form').validate({
 	}
 
 });
+
+$.validator.addMethod("isTel",function(value,element,param){
+	var reg= /^\d{3,4}-?\d{7,9}$/;
+	return this.optional(element) || (reg.test(value));
+},"请输入正确的电话号码");
 
 //校验门店名称是否重复
 function valid(){
