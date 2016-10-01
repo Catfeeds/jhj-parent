@@ -35,7 +35,7 @@
                   <div class="col-lg-12">
                       <section class="panel">
                           <header class="panel-heading">
-                                门店管理
+                              	  门店管理
                           </header>
                           
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
@@ -96,7 +96,7 @@
 									
 									<div class="form-group required">
 												<label class="col-md-2 control-label">门店地址*</label>
-												请输入:<input type="text" id="suggestId" size="20" value="请输入位置" style="width:150px;" />
+												请输入:<input type="text" id="suggestId" size="20" placeholder="请输入位置" style="width:150px;" />
    											<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 												
 										<br/><br/>
