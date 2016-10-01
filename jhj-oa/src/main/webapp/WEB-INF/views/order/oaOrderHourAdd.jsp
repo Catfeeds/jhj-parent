@@ -92,7 +92,7 @@
 													<option value="">--请选择下单方式--</option>
 													<option value="0">app</option>
 													<option value="1">微网站</option>
-													<option value="2">管理后台</option>
+													<option value="2" selected="selected">管理后台</option>
 												</select>
 											</div>
 										</div>

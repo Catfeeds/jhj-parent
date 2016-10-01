@@ -13,7 +13,11 @@ $(function(){
             orderFrom : "required",
             orderOpFrom: "required",
             serviceDate : "required",
-            payway:"required"
+            payway:"required",
+            defaultNum:{
+            	required:true,
+            	number:true
+            }
         },  
         messages:{  
         	mobile : {
@@ -26,17 +30,21 @@ $(function(){
             orderFrom : "下单方式不能为空",
             orderOpFrom: "订单来源不能为空",
             serviceDate : "服务时间不能为空",
-            payway:"支付方式不能为空"
+            payway:"支付方式不能为空",
+            defaultNum:{
+            	required:"数量不能为空",
+            	number:"请输入有效的数字"
+            }
         },
         highlight : function(element) {
-            $(element).closest('.form-control').css({borderColor:"red"});
+            $(element).css({borderColor:"red"}).closest('.form-control');
         },
         success : function(errorElement , element) {
             $(element).css({borderColor:"#79FF36"});
             $(errorElement).remove();
         },
         errorPlacement : function(error, element) {
-        	element.parent('div').append(error);
+        	element.parent('div').append(error) ||element.parent('td').append(error);
         },
         submitHandler : function(form) {
             form.ajaxSubmit();
@@ -208,7 +216,7 @@ function serviceTypeChange(){
 	            $("#service-content").append("<td>"+serviceType[i].name+"</td>");
 	            $("#service-content").append("<td>"+serviceType[i].price+"&nbsp;<span>"+serviceType[i].item_unit+"</span></td>");
 	            $("#service-content").append("<td>"+serviceType[i].dis_price+"&nbsp;<span>"+serviceType[i].item_unit+"</span></td>");
-	            $("#service-content").append("<td><input name='defaultNum' value='"+serviceType[i].default_num+"' onchange='changePrice()'/></td>");// "+serviceType[i].default_num+"</td>
+	            $("#service-content").append("<td><div><input name='defaultNum' value='"+serviceType[i].default_num+"' onchange='changePrice()'/><div></td>");
 	            $("#service-content").append("</tr>");
 			}
 		}
@@ -222,8 +230,8 @@ function changePrice(){
 	for(var i=0;i<num.length;i++){
 		var val=num[i].value;
 		var _input=$(num[i]);
-		var id=_input.parent().prev().prev().prev().prev().val();
-		var price = parseInt(_input.parent().prev().text());
+		var id=_input.parent().parent().prev().prev().prev().prev().val();
+		var price = parseInt(_input.parent().parent().prev().text());
 		if(val!=0){
 			var total=val*price
 			_totalPrice+=total;
