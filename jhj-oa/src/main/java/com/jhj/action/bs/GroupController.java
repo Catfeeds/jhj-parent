@@ -21,6 +21,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthHelper;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.vo.org.OrgSearchVo;
@@ -63,6 +64,7 @@ public class GroupController {
 	  * @return String    返回类型
 	  * @throws
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/group_list", method = {RequestMethod.GET})
 	public String groupList(Model model, HttpServletRequest request, 
 			@ModelAttribute("groupSearchVoModel") OrgSearchVo searchVo,
@@ -102,6 +104,7 @@ public class GroupController {
 	/*
 	 * 通过判断页面隐藏域  orgId，确定 页面功能是 添加还是修改
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/groupForm", method = { RequestMethod.GET })
 	public String adForm(Model model,
 			@RequestParam(value = "orgId") Long id,
@@ -121,6 +124,7 @@ public class GroupController {
 		return "bs/groupForm";
 	}
 	
+	@AuthPassport
 	@RequestMapping(value = "/doGroupForm", method = { RequestMethod.POST })
 	public String doAdForm(HttpServletRequest request, Model model,
 			@ModelAttribute("orgsModel") Orgs orgs){

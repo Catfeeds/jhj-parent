@@ -60,7 +60,7 @@ public class OrgsController extends BaseController{
 			orgSearchVo = new OrgSearchVo();
 		}
 		
-		orgSearchVo.setParentId(0L);
+		orgSearchVo.setIsParent(1);
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		if (sessionOrgId > 0L) {

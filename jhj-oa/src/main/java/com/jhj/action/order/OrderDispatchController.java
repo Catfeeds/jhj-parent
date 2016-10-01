@@ -97,37 +97,18 @@ public class OrderDispatchController extends BaseController {
 		Short orderStatus = orders.getOrderStatus();
 
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
-
 		
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
-		if (orderStatus == Constants.ORDER_HOUR_STATUS_2 || orderStatus == Constants.ORDER_HOUR_STATUS_3) {
-
-			list = newDisService.getAbleStaffList(orderId, newServiceDate);
-			
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStartServiceTime(orders.getServiceDate());
-			searchVo1.setStartServiceHourTime(orders.getServiceDate() + orders.getServiceHour() * 3600);
-			
-			for (OrgStaffsNewVo orgStaffsNewVo : list) {
-
-				// 对应当前订单的日期。。该员工是否 有 派工单				
-				searchVo1.setStaffId(orgStaffsNewVo.getStaffId());
-				
-				List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
-				int disNum = 0;
-				if (!orderDispatchs.isEmpty()) disNum = orderDispatchs.size();
-
-				if (disNum > 0) {
-					orgStaffsNewVo.setDispathStaStr("不可派工");
-					orgStaffsNewVo.setDispathStaFlag(0);
-				} else {
-					orgStaffsNewVo.setDispathStaStr("可派工");
-					orgStaffsNewVo.setDispathStaFlag(1);
-				}
-			}
+		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
+			return list;
 		}
-
+		
+		Long serviceDate = orders.getServiceDate();
+		double serviceHour = (double)orders.getServiceHour();
+		list = orderDispatchsService.manualDispatch(orderId, serviceDate, serviceHour);
+		
+//		list = newDisService.getAbleStaffList(orderId, newServiceDate);
+			
 		return list;
 	}
 
@@ -462,33 +443,15 @@ public class OrderDispatchController extends BaseController {
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
 
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
-		if (orderStatus == Constants.ORDER_HOUR_STATUS_2 || orderStatus == Constants.ORDER_HOUR_STATUS_3) {
-
-			list = newDisService.getAbleStaffListByCloudOrg(orderId, parentId, orgId);
-
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStartServiceTime(orders.getServiceDate());
-			searchVo1.setStartServiceHourTime(orders.getServiceDate() + orders.getServiceHour() * 3600);
-			
-			for (OrgStaffsNewVo orgStaffsNewVo : list) {
-
-				searchVo1.setStaffId(orgStaffsNewVo.getStaffId());
-				List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
-
-				// 对应当前订单的日期。。该员工是否 有 派工单
-				int disNum = 0;
-				if (!orderDispatchs.isEmpty()) disNum = orderDispatchs.size();
-
-				if (disNum > 0) {
-					orgStaffsNewVo.setDispathStaStr("不可派工");
-					orgStaffsNewVo.setDispathStaFlag(0);
-				} else {
-					orgStaffsNewVo.setDispathStaStr("可派工");
-					orgStaffsNewVo.setDispathStaFlag(1);
-				}
-			}
+		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
+			return list;
 		}
+		Long serviceDate = orders.getServiceDate();
+		double serviceHour = (double)orders.getServiceHour();
+		list = orderDispatchsService.manualDispatchByOrg(orderId, serviceDate, serviceHour, parentId, orgId);
+//		list = newDisService.getAbleStaffListByCloudOrg(orderId, parentId, orgId);
+
+	
 
 		return list;
 	}
