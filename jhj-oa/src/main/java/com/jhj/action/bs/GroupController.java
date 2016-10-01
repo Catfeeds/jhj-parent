@@ -76,10 +76,11 @@ public class GroupController {
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		
 		
-		PageHelper.startPage(pageNo, pageSize);
+//		PageHelper.startPage(pageNo, pageSize);
 		
 		if(orgId != 0L){
 			searchVo.setParentId(orgId);
+			searchVo.setOrgId(0L);
 		}
 		
 		//得到 当前登录 的 门店id，并作为搜索条件
