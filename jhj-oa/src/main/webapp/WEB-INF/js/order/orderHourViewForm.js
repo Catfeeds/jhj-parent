@@ -119,13 +119,12 @@ var loadStaffDynamic = function(data, status, xhr) {
 		var item = data[i];
 		
 		var radioinput = "";
-		// if(item.dispatch_sta_flag == 1){
 		radioinput = "<input name='sample-radio' type='radio' value=" + item.staff_id + ">";
-		// }
+
 		
 		var htmlStr = "<tr>";
 		
-		htmlStr+= "<td>"; + radioinput
+		htmlStr+= "<td>";
 		if (item.dispath_sta_flag == 1) {
 			htmlStr+= radioinput;
 		}
@@ -133,11 +132,13 @@ var loadStaffDynamic = function(data, status, xhr) {
 		+ "<input type='hidden' id='distanceValue' value=" + item.distance_value + "></td>" 
 		+ "<td>" + item.staff_org_name + "</td>" 
 		+ "<td>" + item.staff_cloud_org_name + "</td>" 
+		+ "<td>" + item.org_distance_text + "</td>" 
 		+ "<td>" + item.name + "</td>" 
 		+ "<td>" + item.mobile + "</td>" 
 		+ "<td>" + item.distance_text + "</td>" 
 		+ "<td>" + item.today_order_num + "</td>"
-		+ "<td>" + item.dispath_sta_str + "</td>";
+		+ "<td>" + item.dispath_sta_str + "</td>"
+		+ "<td>" + item.reason + "</td>";
 		
 		htmlStr+="</tr>";
 		

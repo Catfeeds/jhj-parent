@@ -46,6 +46,7 @@ import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
@@ -79,6 +80,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 	@Autowired
 	private UserTrailRealService trailRealService;
+	
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -292,13 +294,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			searchVo5.setStaffIds(staffIds);
 			searchVo5.setStatus(1);
 			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
-
-			OrderDispatchSearchVo searchVo6 = new OrderDispatchSearchVo();
-			searchVo6.setStaffIds(staffIds);
-			List<HashMap> totalStaffs = this.totalByStaff(searchVo6);
+			
+			//员工服务日期当天的订单数
+			List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, staffIds);
 
 			for (OrgStaffs item : staffList) {
-				OrgStaffsNewVo vo = new OrgStaffsNewVo();
+				OrgStaffsNewVo vo = this.initStaffsNew();
 				BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 				vo.setDispathStaFlag(1);
 				for (HashMap totalItem : totalStaffs) {
@@ -394,48 +395,44 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 
-			if (staffIds.isEmpty())
-				continue;
+			if (staffIds.isEmpty()) continue;
 
-			// ---3.排除掉在黑名单中的服务人员
-			OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
-			searchVo2.setStaffIds(staffIds);
-			searchVo2.setIsBlack((short) 1);
-			List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);
+		}
+		
+		// ---3.排除掉在黑名单中的服务人员
+		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
+		searchVo2.setStaffIds(staffIds);
+		searchVo2.setIsBlack((short) 1);
+		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);
 
-			if (!blackList.isEmpty()) {
-				for (OrgStaffFinance os : blackList) {
-					if (staffIds.contains(os.getStaffId())) {
-						staffIds.remove(os.getStaffId());
-					}
+		if (!blackList.isEmpty()) {
+			for (OrgStaffFinance os : blackList) {
+				if (staffIds.contains(os.getStaffId())) {
+					staffIds.remove(os.getStaffId());
 				}
 			}
+		}
+		
+		if (staffIds.isEmpty()) return list;
+		
+		//---4. 在订单服务时间内请假的员工.
+		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 
-			if (staffIds.isEmpty())
-				continue;
+		Long orderServiceDateEnd = (long) (serviceDate + serviceHour * 3600);
+		// 订单服务开始时间
+		leaveSearchVo.setLeaveStartTime(serviceDate);
+		// 订单服务结束时间
+		leaveSearchVo.setLeaveEndTime(orderServiceDateEnd);
 
-			// ---4.排除请假的员工.
-			LeaveSearchVo searchVo3 = new LeaveSearchVo();
-
-			searchVo3.setOrgId(orgId);
-			Long orderServiceDateEnd = (long) (serviceDate + serviceHour * 3600);
-
-			// 订单服务开始时间
-			searchVo3.setLeaveStartTime(serviceDate);
-			// 订单服务结束时间
-			searchVo3.setLeaveEndTime(orderServiceDateEnd);
-
-			// 服务时间内 ，同时也在 假期内的 员工
-			List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
-
-			if (!leaveList.isEmpty()) {
-				for (OrgStaffLeave ol : leaveList) {
-					if (staffIds.contains(ol.getStaffId())) {
-						staffIds.remove(ol.getStaffId());
-					}
+		// 服务时间内 ，同时也在 假期内的 员工
+		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);	
+		
+		if (!leaveList.isEmpty()) {
+			for (OrgStaffLeave ol : leaveList) {
+				if (staffIds.contains(ol.getStaffId())) {
+					staffIds.remove(ol.getStaffId());
 				}
 			}
-
 		}
 		
 		if (staffIds.isEmpty()) return list;
@@ -446,27 +443,45 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		searchVo5.setStaffIds(staffIds);
 		searchVo5.setStatus(1);
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
+		
+		// 员工服务日期的订单数
+		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, staffIds);
+		
+		//门店名称
+		OrgSearchVo orgSearchVo = new OrgSearchVo();
+		orgSearchVo.setIsParent(1);
+		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
+		
 
 		for (OrgStaffs item : staffList) {
-			OrgStaffsNewVo vo = new OrgStaffsNewVo();
+			OrgStaffsNewVo vo = this.initStaffsNew();
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+			vo.setReason("");
 			vo.setDispathStaFlag(1);
+			vo.setDispathStaStr("可派工");
+			
+			//门店名称
+			for (Orgs o : orgParents) {
+				if (o.getOrgId().equals(vo.getParentOrgId())) {
+					vo.setStaffOrgName(o.getOrgName());
+					break;
+				}
+			}
+			
 			// 门店距离
 			for (OrgDispatchPoiVo poiVo : orgList) {
 				if (vo.getOrgId().equals(poiVo.getOrgId())) {
+					vo.setStaffCloudOrgName(poiVo.getOrgName());
 					vo.setOrgDistanceValue(poiVo.getDistanceValue());
 					vo.setOrgDistanceText(poiVo.getDistanceText());
 					break;
 				}
 			}
 
-			// 员工服务日期的订单数
-			OrderDispatchSearchVo searchVo6 = new OrderDispatchSearchVo();
-			searchVo6.setStaffIds(staffIds);
-			List<HashMap> totalStaffs = this.totalByStaff(searchVo6);
+			
 			for (HashMap totalItem : totalStaffs) {
 				Long staffId = (Long) totalItem.get("staff_id");
-				int total = (int) totalItem.get("total");
+				int total = Integer.valueOf(totalItem.get("total").toString());
 
 				if (staffId.equals(vo.getStaffId())) {
 					vo.setTodayOrderNum(total);
@@ -519,12 +534,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 		
 		List<Long> staffIds = new ArrayList<Long>();
+		List<Long> noSkillstaffIds = new ArrayList<Long>();
 		for (OrgStaffs staff : staffList) {
-			OrgStaffsNewVo vo = new OrgStaffsNewVo();
+			OrgStaffsNewVo vo = this.initStaffsNew();
 			BeanUtilsExp.copyPropertiesIgnoreNull(staff, vo);
 			vo.setDispathStaFlag(1);
+			vo.setDispathStaStr("可派工");
 			list.add(vo);
 			if (!staffIds.contains(staff.getStaffId())) staffIds.add(staff.getStaffId());
+			if (!noSkillstaffIds.contains(staff.getStaffId())) noSkillstaffIds.add(staff.getStaffId());
 		}
 		
 		//1. 找出云店距离目标位置集合,判断如果超出20Km，则写上原因, 距离超出.
@@ -534,7 +552,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Long> overMaxDistanceOrgIds = new ArrayList<Long>();
 		for (int i = 0; i < orgList.size(); i++) {
 			OrgDispatchPoiVo poiVo = orgList.get(i);
-			if(poiVo.getDistanceValue() < Constants.maxDistance) {
+			if(poiVo.getDistanceValue() > Constants.maxDistance) {
 				overMaxDistanceOrgIds.add(poiVo.getOrgId());
 			}
 		}
@@ -543,6 +561,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			for (OrgStaffsNewVo vo : list) {
 				if (vo.getOrgId().equals(maxOrgId)) {
 					vo.setDispathStaFlag(0);
+					vo.setDispathStaStr("不可派工");
 					vo.setReason(ConstantMsg.NOT_DISPATCH_OVER_MAX_DISTANCE);
 				}
 			}
@@ -561,13 +580,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 		
 		//找出有技能和没技能的差集
-		List<Long> staffIdsAll = staffIds;
-		staffIdsAll.removeAll(skillStaffIds);
+		
+		noSkillstaffIds.removeAll(skillStaffIds);
 		
 		for (OrgStaffsNewVo vo : list) {
-			for (Long item : staffIdsAll) {
+			for (Long item : noSkillstaffIds) {
 				if (vo.getStaffId().equals(item)) {
 					vo.setDispathStaFlag(0);
+					vo.setDispathStaStr("不可派工");
 					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_NOT_SKILL);
 				}
 			}
@@ -589,15 +609,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		for (OrderDispatchs item : disList) {
 			if (!haveDispatchStaffIds.contains(item.getStaffId())) haveDispatchStaffIds.add(item.getStaffId());
 		}
-		
-		//找出有派工和没派工的差集
-		staffIdsAll = staffIds;
-		staffIdsAll.removeAll(haveDispatchStaffIds);
-		
+				
 		for (OrgStaffsNewVo vo : list) {
-			for (Long item : staffIdsAll) {
+			for (Long item : haveDispatchStaffIds) {
 				if (vo.getStaffId().equals(item)) {
 					vo.setDispathStaFlag(0);
+					vo.setDispathStaStr("不可派工");
 					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_SERVICE_DATE_CONFLIT);
 				}
 			}
@@ -613,6 +630,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			for (OrgStaffFinance os : blackList) {
 				if (vo.getStaffId().equals(os.getStaffId())) {
 					vo.setDispathStaFlag(0);
+					vo.setDispathStaStr("不可派工");
 					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_BLACK_LIST);
 				}
 			}
@@ -634,16 +652,37 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			for (OrgStaffLeave os : leaveList) {
 				if (vo.getStaffId().equals(os.getStaffId())) {
 					vo.setDispathStaFlag(0);
+					vo.setDispathStaStr("不可派工");
 					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_LEAVE);
 				}
 			}
 		}
 		
+		
+		//门店名称
+		OrgSearchVo orgSearchVo = new OrgSearchVo();
+		orgSearchVo.setIsParent(1);
+		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
+		
+		// 员工服务日期的订单数
+		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, staffIds);
+		
 		for (OrgStaffsNewVo vo : list) {
+			
+			
+			
+			//门店名称
+			for (Orgs o : orgParents) {
+				if (o.getOrgId().equals(vo.getParentOrgId())) {
+					vo.setStaffOrgName(o.getOrgName());
+					break;
+				}
+			}
 
 			// 门店距离
 			for (OrgDispatchPoiVo poiVo : orgList) {
 				if (vo.getOrgId().equals(poiVo.getOrgId())) {
+					vo.setStaffCloudOrgName(poiVo.getOrgName());
 					vo.setOrgDistanceValue(poiVo.getDistanceValue());
 					vo.setOrgDistanceText(poiVo.getDistanceText());
 					break;
@@ -651,19 +690,16 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 员工服务日期的订单数
-			OrderDispatchSearchVo searchVo6 = new OrderDispatchSearchVo();
-			searchVo6.setStaffIds(staffIds);
-			List<HashMap> totalStaffs = this.totalByStaff(searchVo6);
 			for (HashMap totalItem : totalStaffs) {
 				Long staffId = (Long) totalItem.get("staff_id");
-				int total = (int) totalItem.get("total");
+				int total = Integer.valueOf( totalItem.get("total").toString());
 
 				if (staffId.equals(vo.getStaffId())) {
 					vo.setTodayOrderNum(total);
 				}
 			}
 
-			list.add(vo);
+
 		}
 		
 		//员工距离
@@ -803,6 +839,56 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 		}
 		return list;
+	}
+	
+	private List<HashMap> getTotalStaffs(Long serviceDate , List<Long> staffIds) {
+		List<HashMap> totalStaffs = new ArrayList<HashMap>();
+		
+		if (staffIds.isEmpty()) return totalStaffs;
+		
+		OrderDispatchSearchVo searchVo6 = new OrderDispatchSearchVo();
+		searchVo6.setStaffIds(staffIds);
+		
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd");
+		//得到服务日期的开始时间戳 00:00:00
+		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(DateUtil.getBeginOfDay(serviceDateStr)) /1000;
+		searchVo6.setStartServiceTime(startServiceTime);
+		//得到服务日期的结束时间戳 23:59:59
+		Long endServiceTime = TimeStampUtil.getMillisOfDayFull(DateUtil.getEndOfDay(serviceDateStr)) / 1000;
+		searchVo6.setEndServiceTime(endServiceTime);
+		
+		totalStaffs = this.totalByStaff(searchVo6);
+		
+		return totalStaffs;
+		
+	}
+	
+	@Override
+	public OrgStaffsNewVo initStaffsNew(){
+		
+		OrgStaffs staffs = orgStaffService.initOrgStaffs();
+		
+		OrgStaffsNewVo newVo = new OrgStaffsNewVo();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, newVo);
+		
+		newVo.setLat("");
+		newVo.setLat("");
+		newVo.setDistanceValue(0);
+		newVo.setDistanceText("");
+		newVo.setDurationValue(0);
+		newVo.setDurationText("");
+		newVo.setOrgDistanceText("");
+		newVo.setOrgDistanceValue(0);
+		newVo.setTodayOrderNum(0);
+		
+		newVo.setStaffOrgName("");
+		newVo.setStaffCloudOrgName("");
+		newVo.setDispathStaFlag(0);
+		newVo.setDispathStaStr("");
+		newVo.setReason("");
+		
+		return newVo;
 	}
 
 }

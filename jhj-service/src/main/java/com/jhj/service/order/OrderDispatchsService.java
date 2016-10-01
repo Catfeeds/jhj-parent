@@ -47,5 +47,7 @@ public interface OrderDispatchsService {
 	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
 
 	List<OrgStaffsNewVo> manualDispatchByOrg(Long orderId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
+
+	OrgStaffsNewVo initStaffsNew();
    	
 }

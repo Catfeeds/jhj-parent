@@ -61,8 +61,8 @@
 		<include refid="bySearchVo" />
 		order by service_date desc
 	</select>
-	
-	<select id="totalByStaff" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+
+	<select id="totalByStaff" resultType="HashMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
 		select
 		staff_id, count(*) as total
 		<include refid="bySearchVo" />
@@ -178,18 +178,24 @@
 			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
 		</if>
 	</sql>
-	
-	<select id="selectByMatchTime" resultMap="BaseResultMap" parameterType="java.lang.Long">
+
+	<select id="selectByMatchTime" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
 		select
 		<include refid="Base_Column_List" />
-		from order_dispatchs where 1=1 and dispatch_status = 1 and
-	<![CDATA[    
-	  	 (
-	  		(service_date >= #{startTime}  and service_date <= #{endTime} )
-	  		or
-	    	((service_date+ service_hours*3600) >= #{startTime} and (service_date+ service_hours*3600) <= #{endTime})
-	    ) 
-  		]]>
+		from order_dispatchs where 1=1 
+		
+		<if test="dispatchStatus != null">
+			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
+		</if>
+		<if test="startServiceTime !=null and endServiceTime != null">
+			<![CDATA[    
+		  	and (
+		  		(service_date >= #{startServiceTime}  and service_date <= #{endServiceTime} )
+		  		or
+		    	((service_date+ service_hours*3600) >= #{startServiceTime} and (service_date+ service_hours*3600) <= #{endServiceTime})
+		    ) 
+	  		]]>
+	  	</if>
 	</select>
 
 	<!-- 该服务人员 今天的 派工数量 -->

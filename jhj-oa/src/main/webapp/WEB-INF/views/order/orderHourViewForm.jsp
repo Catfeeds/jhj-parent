@@ -164,7 +164,7 @@
 							</label>
 							<div class="col-md-5">
 								<form:radiobutton path="disWay" value="0" />
-								自动匹配
+								匹配员工
 								<form:radiobutton path="disWay" value="1" />
 								门店派工
 							</div>
@@ -195,19 +195,22 @@
 								</select>
 							</div>
 						</div>
-						<div id="staffList" class="col-sm-8">
+						<div id="staffList" class="col-sm-12">
 							
-							<table class="table table-bordered table-hover table-condensed" style="margin-left: 180px;">
+							
+							<table class="table table-striped table-advance table-hover" >
 								<thead>
 									<tr>
 										<th>选派员工</th>
 										<th>地区门店</th>
 										<th>云店</th>
+										<th>云店距用户距离</th>
 										<th>服务人员</th>
 										<th>手机号</th>
 										<th>距用户距离</th>
 										<th>今日接单数</th>
 										<th>是否可派工</th>
+										<th>原因</th>
 									</tr>
 								</thead>
 								<tbody id="allStaff">
