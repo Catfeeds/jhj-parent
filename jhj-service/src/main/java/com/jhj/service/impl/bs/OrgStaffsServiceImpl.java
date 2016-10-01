@@ -182,7 +182,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		orgStaffs.setEdu("");
 		orgStaffs.setAstro((short) 0);
 		orgStaffs.setBloodType("");
-		orgStaffs.setHeadImg("");
+		orgStaffs.setHeadImg("http://www.jia-he-jia.com/u/img/default-head-img.png");
 		orgStaffs.setIntro("");
 		orgStaffs.setAddTime(TimeStampUtil.getNow() / 1000);
 		orgStaffs.setUpdateTime(0L);
