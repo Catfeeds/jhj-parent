@@ -4,6 +4,7 @@
 	<resultMap id="BaseResultMap" type="com.jhj.po.model.dict.DictServiceAddons">
 		<id column="service_addon_id" property="serviceAddonId" jdbcType="NUMERIC" />
 		<result column="service_type" property="serviceType" jdbcType="NUMERIC" />
+		<result column="service_hour" property="serviceHour" jdbcType="NUMERIC" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="keyword" property="keyword" jdbcType="VARCHAR" />
 		<result column="tips" property="tips" jdbcType="VARCHAR" />
@@ -17,7 +18,7 @@
 		<result column="enable" property="enable" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		service_addon_id, service_type, name, keyword, tips, price, dis_price, desc_url, item_unit,default_num,
+		service_addon_id, service_type, service_hour, name, keyword, tips, price, dis_price, desc_url, item_unit,default_num,
 		add_time, update_time, enable
 	</sql>
 	
@@ -83,12 +84,12 @@
 	</delete>
 	
 	<insert id="insert" parameterType="com.jhj.po.model.dict.DictServiceAddons">
-		insert into dict_service_addons (service_addon_id, service_type, name,
+		insert into dict_service_addons (service_addon_id, service_type, service_hour, name,
 		keyword, tips, price,
-
 		dis_price, desc_url,item_unit,default_num, add_time,
 		update_time, enable)
-		values (#{serviceAddonId,jdbcType=NUMERIC}, #{serviceType,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
+		values (#{serviceAddonId,jdbcType=NUMERIC}, #{serviceType,jdbcType=NUMERIC}, 
+		#{serviceHour,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
 		#{keyword,jdbcType=VARCHAR}, #{tips,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
 		#{disPrice,jdbcType=DECIMAL}, #{descUrl,jdbcType=VARCHAR},#{itemUnit,jdbcType=VARCHAR},
 		#{defaultNum,jdbcType=SMALLINT}, #{addTime,jdbcType=NUMERIC},
@@ -103,6 +104,11 @@
 			<if test="serviceType != null">
 				service_type,
 			</if>
+			
+			<if test="serviceHour != null">
+				service_hour,
+			</if>
+			
 			<if test="name != null">
 				name,
 			</if>
@@ -144,6 +150,11 @@
 			<if test="serviceType != null">
 				#{serviceType,jdbcType=NUMERIC},
 			</if>
+			
+			<if test="serviceHour != null">
+				#{serviceHour,jdbcType=NUMERIC},
+			</if>
+			
 			<if test="name != null">
 				#{name,jdbcType=VARCHAR},
 			</if>
@@ -188,6 +199,9 @@
 			<if test="serviceType != null">
 				service_type = #{serviceType,jdbcType=NUMERIC},
 			</if>
+			<if test="serviceHour != null">
+				service_hour = #{serviceHour,jdbcType=NUMERIC},
+			</if>
 			<if test="name != null">
 				name = #{name,jdbcType=VARCHAR},
 			</if>
@@ -227,6 +241,7 @@
 	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.dict.DictServiceAddons">
 		update dict_service_addons
 		set service_type = #{serviceType,jdbcType=NUMERIC},
+		service_hour = #{serviceHour,jdbcType=NUMERIC},
 		name = #{name,jdbcType=VARCHAR},
 		keyword = #{keyword,jdbcType=VARCHAR},
 		tips = #{tips,jdbcType=VARCHAR},

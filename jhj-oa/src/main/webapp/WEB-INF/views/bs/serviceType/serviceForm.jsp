@@ -99,6 +99,7 @@
 											<th>原价</th>
 											<th>折扣价</th>
 											<th>起步数量</th>
+											<th>服务时长</th>
 											<th>#</th>
 										</tr>
 									</thead>
@@ -110,6 +111,7 @@
 											<td><input type="text" name="serviceAddonPrice" value="${item.price}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
 											<td><input type="text" name="serviceAddonDisPrice" value="${item.disPrice}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
 											<td><input type="text" name="defaultNum" value="${item.defaultNum}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonServiceHour" value="${item.serviceHour}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
 											<td><span class="input-group-btn">
 													<button class="btn btn-success btn-add" type="button">
 														<span class="glyphicon glyphicon-plus"></span>

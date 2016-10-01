@@ -114,6 +114,7 @@ function validateServiceAddons() {
 		var serviceAddonPrice = "";
 		var serviceAddonDisPrice = ""
 		var defaultNum = "";
+		var serviceAddonServiceHour = "";
 			
 		$(this).find("td input").each(function(){
 			console.log("attr = " + $(this).attr("name"));
@@ -122,6 +123,7 @@ function validateServiceAddons() {
 			if($(this).attr("name") == "serviceAddonPrice") serviceAddonPrice = $(this).val();
 			if($(this).attr("name") == "serviceAddonDisPrice") serviceAddonDisPrice = $(this).val();
 			if($(this).attr("name") == "defaultNum") defaultNum = $(this).val();
+			if($(this).attr("name") == "serviceAddonServiceHour") serviceAddonServiceHour = $(this).val();
 		});
 		
 		console.log("name = " + serviceAddonName);
@@ -133,7 +135,9 @@ function validateServiceAddons() {
 			itemUnit == "" && 
 			(serviceAddonPrice == "" || serviceAddonPrice == "0")  && 
 			(serviceAddonDisPrice == "" || serviceAddonDisPrice == "0") &&
-			(defaultNum == "" || defaultNum == "0") ) {
+			(defaultNum == "" || defaultNum == "0") &&
+			(serviceAddonServiceHour == "" || serviceAddonServiceHour == "0.0")
+			) {
 			return;
 		}
 		
@@ -142,7 +146,8 @@ function validateServiceAddons() {
 			itemUnit == "" || 
 			serviceAddonPrice == "" || 
 			serviceAddonDisPrice == "" ||
-			defaultNum == "" ) {
+			defaultNum == "" ||
+			serviceAddonServiceHour == "") {
 			v = false;
 			return false;
 		}

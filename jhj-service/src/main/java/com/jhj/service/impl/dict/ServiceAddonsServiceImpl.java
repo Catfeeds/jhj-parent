@@ -35,6 +35,7 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 
 		record.setServiceAddonId(0L);
 		record.setServiceType(0L);
+		record.setServiceHour(0);
 		record.setName("");
 		record.setKeyword("");
 		record.setPrice(new BigDecimal(0));
@@ -122,6 +123,7 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 		String price[] = request.getParameterValues("serviceAddonPrice");
 		String disPrice[] = request.getParameterValues("serviceAddonDisPrice");
 		String defaultNum[] = request.getParameterValues("defaultNum");
+		String serviceAddonServiceHour[] = request.getParameterValues("serviceAddonServiceHour");
 
 		String serviceAddonIdsItem = "";
 		String serviceAddonNameItem = "";
@@ -129,6 +131,7 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 		String priceItem = "";
 		String disPriceItem = "";
 		String defaultNumItem = "";
+		String serviceAddonServiceHourItem = "";
 
 		for (int i = 0; i < serviceAddonIds.length; i++) {
 
@@ -138,9 +141,15 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 			priceItem = price[i];
 			disPriceItem = disPrice[i];
 			defaultNumItem = defaultNum[i];
+			serviceAddonServiceHourItem = serviceAddonServiceHour[i];
 
-			if (StringUtil.isEmpty(serviceAddonNameItem) && StringUtil.isEmpty(itemUnitItem) && (StringUtil.isEmpty(priceItem) || priceItem.equals("0"))
-					&& (StringUtil.isEmpty(disPriceItem) || disPriceItem.equals("0")) && (StringUtil.isEmpty(defaultNumItem) || defaultNumItem.equals("0"))) {
+			if (StringUtil.isEmpty(serviceAddonNameItem) && 
+				StringUtil.isEmpty(itemUnitItem) && 
+				(StringUtil.isEmpty(priceItem) || priceItem.equals("0")) && 
+				(StringUtil.isEmpty(disPriceItem) || disPriceItem.equals("0")) && 
+				(StringUtil.isEmpty(defaultNumItem) || defaultNumItem.equals("0")) &&
+				(StringUtil.isEmpty(serviceAddonServiceHourItem) || serviceAddonServiceHourItem.equals("0.0"))
+			   ) {
 				continue;
 			}
 
@@ -162,6 +171,7 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 			}
 
 			d.setServiceType(serviceTypeId);
+			d.setServiceHour(Double.valueOf(serviceAddonServiceHourItem));
 			d.setServiceAddonId(serviceAddonId);
 			d.setName(serviceAddonNameItem);
 			d.setItemUnit(itemUnitItem);
