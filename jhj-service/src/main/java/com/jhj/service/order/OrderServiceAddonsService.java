@@ -33,5 +33,7 @@ public interface OrderServiceAddonsService {
     List<OrderServiceAddons> selectByOrderNo(String orderNo);
 
 	List<OrderServiceAddonViewVo> changeToOrderServiceAddons(List<OrderServiceAddons> list);
+
+	List<OrderServiceAddons> selectByOrderId(Long orderId);
     
 }

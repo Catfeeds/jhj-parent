@@ -9,7 +9,7 @@ public interface OrderPayService {
 
 	void orderPaySuccessToDoForAm(Orders orders);
 
-	void orderPaySuccessToDoForDeep(Orders orders);
+	boolean orderPaySuccessToDoForDeep(Orders orders);
 
 	boolean orderPaySuccessToDoForHour(Long userId, Long orderId, List<OrgStaffsNewVo> orgStaffsNewVos, boolean isChangeDispatch);
 	

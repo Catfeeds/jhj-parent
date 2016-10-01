@@ -15,6 +15,7 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
@@ -38,199 +39,77 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.serviceCharge.PhoneReChargeUtil;
 
-
-
 @Service
 public class OrderPayServiceImpl implements OrderPayService {
 	@Autowired
 	private OrdersService ordersService;
-	
+
 	@Autowired
 	private OrderPricesService orderPricesService;
-	
+
 	@Autowired
-	private OrderHourAddService orderHourAddservice;	
+	private OrderHourAddService orderHourAddservice;
 
 	@Autowired
 	private UserDetailPayService userDetailPayService;
-	
+
 	@Autowired
-	private UserAddrsService userAddrService;	
-		
+	private UserAddrsService userAddrService;
+
 	@Autowired
 	OrderLogService orderLogService;
-	
+
 	@Autowired
-	private UsersService userService;	
-	
+	private UsersService userService;
+
 	@Autowired
-	private OrderDispatchsService orderDispatchService;	
-	
-    @Autowired
-    private  OrderServiceAddonsService  orderServiceAddonsService;	
-    
-    @Autowired
-    private ServiceAddonsService serviceAddonsService;     
-    
+	private OrderDispatchsService orderDispatchService;
+
 	@Autowired
-	private OrgStaffsService orgStaffService;    
-	
+	private OrderServiceAddonsService orderServiceAddonsService;
+
 	@Autowired
-	private UserCouponsService userCouponsService;	
-	
+	private ServiceAddonsService serviceAddonsService;
+
+	@Autowired
+	private OrgStaffsService orgStaffService;
+
+	@Autowired
+	private UserCouponsService userCouponsService;
+
 	@Autowired
 	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
-	
+
 	@Autowired
 	private UserPushBindService bindService;
-	
+
 	@Autowired
 	private NewDispatchStaffService newDisStaService;
-	
+
 	@Autowired
 	private PartnerServiceTypeService partnerServiceTypeService;
-	
 	
 	/**
 	 * 钟点工订单支付成功,后续通知功能
 	 * 1. 进行派工操作
 	 * 2. 进行发送短信
-	 * @param isChangeDispatch  是否换人，如果是换人，则需要将原有派工取消，再重新派工.
+	 * 
+	 * @param isChangeDispatch
+	 *            是否换人，如果是换人，则需要将原有派工取消，再重新派工.
 	 */
 	@Override
 	public boolean orderPaySuccessToDoForHour(Long userId, Long orderId, List<OrgStaffsNewVo> orgStaffsNewVos, boolean isChangeDispatch) {
-		
+
 		Orders order = ordersService.selectByPrimaryKey(orderId);
 		
-		Long serviceTypeId = order.getServiceType();
-		//增加判断，是否可以自动派工.
-	    PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
-	    
-	    if (serviceType == null) return false;
-	    
-	    if (serviceType.getIsAuto().equals((short)0)) return false;
-		
-		//先判断该订单是否已经派过工，如果已经派工成功，则不需要再次派工.
-		//如果为换人派工，则需要将原有派工取消后，再重新派工.
-		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-		searchVo1.setOrderNo(order.getOrderNo());
-		searchVo1.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
-
-		OrderDispatchs orderDispatch = null;
-		if (!orderDispatchs.isEmpty()) {
-			orderDispatch = orderDispatchs.get(0);
-		}
-
-		if (orderDispatch != null && !isChangeDispatch) {
-			return true;
-		}
-		
-		
-		if (orderDispatch != null && isChangeDispatch) {
-			orderDispatch.setDispatchStatus((short) 0);
-			orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
-			orderDispatchService.updateByPrimaryKeySelective(orderDispatch);
-		}
-		
-		Users u = userService.selectByPrimaryKey(userId);
-		
-		//实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
-		Long serviceDate = order.getServiceDate();
-		Double serviceHour = (double)order.getServiceHour();
-		Long staffId = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour);
-		
-		if (staffId.equals(0L)) return false;
-		
-		//取第一个
-		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
-		
-		orderDispatch = orderDispatchService.initOrderDisp(); //派工状态默认有效  1
-		
-		orderDispatch.setUserId(userId);
-		orderDispatch.setOrgId(staff.getOrgId());
-		orderDispatch.setParentId(staff.getParentOrgId());
-		orderDispatch.setMobile(u.getMobile());
-		orderDispatch.setOrderId(order.getId());
-		orderDispatch.setOrderNo(order.getOrderNo());
-		
-		// 服务开始时间， serviceDate（服务时间）的前一小时， 当前秒值 -3600s
-		orderDispatch.setServiceDatePre(order.getServiceDate() - 3600);  
-		orderDispatch.setServiceDate(order.getServiceDate());
-		orderDispatch.setServiceHours(order.getServiceHour());
-		
-		//更新服务人员与用户地址距离
-				
-		Long addrId = order.getAddrId();
-		
-		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
-		
-		String latitude = userAddrs.getLatitude();
-		
-		String longitude = userAddrs.getLongitude();
-		
-		int distance = newDisStaService.getLatestDistance(latitude, longitude, staffId);
-		
-		orderDispatch.setUserAddrDistance(distance);
-		
-		//工作人员相关
-		orderDispatch.setStaffId(staff.getStaffId());
-		orderDispatch.setStaffName(staff.getName());
-		orderDispatch.setStaffMobile(staff.getMobile());
-		
-		orderDispatchService.insertSelective(orderDispatch);
-		
-		/*
-		 *  2016年5月17日11:27:17 
-		 * 	
-		 *  派工后。。修改  orders表 的  org_id 为 staff 所在 的 云店
-		 * 	
-		 */
-		order.setOrgId(staff.getOrgId());
-		
-		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);//更新订单状态---已派工
-		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付 的助理单，需要用到这个 修改时间
-		ordersService.updateByPrimaryKeySelective(order);
-		
-		
-		//2.插入订单日志表  order_log
-		OrderLog orderLog = orderLogService.initOrderLog(order);
-		orderLogService.insert(orderLog);
-		
-		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
-		String timeStr = beginTimeStr + "-" + endTimeStr;
-
-		
-		//1) 用户收到派工通知---发送短信
-//		String[] contentForUser = new String[] { timeStr };
-//		SmsUtil.SendSms(u.getMobile(),  "29152", contentForUser);
-		
-		//2)派工成功，为服务人员发送推送消息---推送消息
-		if(orderDispatch.getDispatchStatus()==1){
-			
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true","dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()), Constants.ALERT_STAFF_MSG);
-		}
-		//2.1)派工成功,为服务人员发送短信
-
-		//SmsUtil.SendSms(staff.getMobile(), "64746", contentForUser);
-		
-		//3)支付完成用户rest_money<60发短信---发送短信
-//		Users user =userService.selectByUsersId(userId);
-//		BigDecimal restMoney = user.getRestMoney();
-//		BigDecimal unit = new BigDecimal(60);
-//		if(restMoney.compareTo(unit)<0){
-//			String[] content = new String[] {""};
-//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
-//				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
-//		}
-		//4)如果有优惠劵，则需要将优惠劵变成已使用。
+		// 4)如果有优惠劵，则需要将优惠劵变成已使用。
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
 		Long userCouponId = orderPrice.getCouponId();
 		if (userCouponId > 0L) {
@@ -240,6 +119,139 @@ public class OrderPayServiceImpl implements OrderPayService {
 			userCoupon.setOrderNo(order.getOrderNo());
 			userCouponsService.updateByPrimaryKey(userCoupon);
 		}
+		
+		Long serviceTypeId = order.getServiceType();
+		// 增加判断，是否可以自动派工.
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+
+		if (serviceType == null)
+			return false;
+
+		if (serviceType.getIsAuto().equals((short) 0))
+			return false;
+
+		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
+		Long serviceDate = order.getServiceDate();
+		Double serviceHour = (double) order.getServiceHour();
+		Long staffId = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour);
+
+		if (staffId.equals(0L))
+			return false;
+
+		// 进行派工
+		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId, isChangeDispatch);
+
+		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
+
+		order.setOrgId(staff.getOrgId());
+		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);// 更新订单状态---已派工
+		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付
+															// 的助理单，需要用到这个 修改时间
+		ordersService.updateByPrimaryKeySelective(order);
+
+		// 2.插入订单日志表 order_log
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLogService.insert(orderLog);
+
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
+
+		// 1) 用户收到派工通知---发送短信
+		// String[] contentForUser = new String[] { timeStr };
+		// SmsUtil.SendSms(u.getMobile(), "29152", contentForUser);
+
+		// 2)派工成功，为服务人员发送推送消息---推送消息
+		if (doOrderDispatch.equals(true)) {
+			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+					Constants.ALERT_STAFF_MSG);
+		}
+
+		
+		return true;
+	}
+
+	/**
+	 * 深度保洁订单支付成功,后续通知功能
+	 * 1. 如果为
+	 */
+	@Override
+	public boolean orderPaySuccessToDoForDeep(Orders order) {
+
+		// 如果有优惠劵，则需要将优惠劵变成已使用。
+		Long orderId = order.getId();
+		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
+		Long userCouponId = orderPrice.getCouponId();
+		if (userCouponId > 0L) {
+			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
+			userCoupon.setIsUsed((short) 1);
+			userCoupon.setUsedTime(TimeStampUtil.getNowSecond());
+			userCoupon.setOrderNo(order.getOrderNo());
+			userCouponsService.updateByPrimaryKey(userCoupon);
+		}
+		
+		Long serviceTypeId = order.getServiceType();
+		// 增加判断，是否可以自动派工.
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+
+		if (serviceType == null)
+			return false;
+
+		if (serviceType.getIsAuto().equals((short) 0))
+			return false;
+		
+		//深度养护需要根据服务子项来计算服务时长，小时
+		Double serviceHour = (double) order.getServiceHour();
+		
+		List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+		
+		if (!orderAddons.isEmpty()) {
+			serviceHour = (double) 0;
+			List<OrderServiceAddonViewVo> orderAddonVos = orderServiceAddonsService.changeToOrderServiceAddons(orderAddons);
+			for (OrderServiceAddonViewVo vo : orderAddonVos) {
+				Double serviceHourAddon = vo.getServiceHour();
+				int itemNum = vo.getItemNum();
+				serviceHour+= serviceHourAddon * itemNum;
+			}
+		}
+
+		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
+		Long serviceDate = order.getServiceDate();
+		
+		Long staffId = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour);
+
+		if (staffId.equals(0L))
+			return false;
+
+		// 进行派工
+		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId, false);
+
+		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
+
+		order.setOrgId(staff.getOrgId());
+		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);// 更新订单状态---已派工
+		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付
+															// 的助理单，需要用到这个 修改时间
+		ordersService.updateByPrimaryKeySelective(order);
+
+		// 2.插入订单日志表 order_log
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLogService.insert(orderLog);
+
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
+
+		// 1) 用户收到派工通知---发送短信
+		// String[] contentForUser = new String[] { timeStr };
+		// SmsUtil.SendSms(u.getMobile(), "29152", contentForUser);
+
+		// 2)派工成功，为服务人员发送推送消息---推送消息
+		if (doOrderDispatch.equals(true)) {
+			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+					Constants.ALERT_STAFF_MSG);
+		}
+		
 		return true;
 	}
 	
@@ -247,27 +259,21 @@ public class OrderPayServiceImpl implements OrderPayService {
 	 * 助理订单支付成功,后续通知功能
 	 * 
 	 */
-	
+
 	@Override
 	public void orderPaySuccessToDoForAm(Orders orders) {
-		
+
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrderNo(orders.getOrderNo());
 		searchVo1.setDispatchStatus((short) 1);
-		List<OrderDispatchs> list = orderDispatchService.selectBySearchVo(searchVo1);		
+		List<OrderDispatchs> list = orderDispatchService.selectBySearchVo(searchVo1);
 		OrderDispatchs orderDispatch = new OrderDispatchs();
-		
-		if(list.size() > 0){
+
+		if (list.size() > 0) {
 			orderDispatch = list.get(0);
 		}
-		
-//		OrgStaffs am = orgStaffService.selectByPrimaryKey(orderDispatchs.getStaffId());
-//		String[] contentForAy = new String[] {};
-//		System.out.println("ayi mobile = " + am.getMobile());
-//		System.out.println(SmsUtil.SendSms(am.getMobile(),  "29164", contentForAy));
-		
-		
-		//如果有优惠劵，则需要将优惠劵变成已使用。
+
+		// 如果有优惠劵，则需要将优惠劵变成已使用。
 		Long orderId = orders.getId();
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
 		Long userCouponId = orderPrice.getCouponId();
@@ -278,136 +284,63 @@ public class OrderPayServiceImpl implements OrderPayService {
 			userCoupon.setOrderNo(orders.getOrderNo());
 			userCouponsService.updateByPrimaryKey(userCoupon);
 		}
-//		//支付完成用户rest_money<60发短信
-//		Users user =userService.selectByUsersId(orders.getUserId());
-//			BigDecimal restMoney = user.getRestMoney();
-//			BigDecimal unit = new BigDecimal(60);
-//		if(restMoney.compareTo(unit)<0){
-//			String[] content = new String[] {};
-//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
-//				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
-//		}
-		
-		//2016年1月30日10:39:32  用户支付完  助理订单后，给助理推送消息
-//		Long amId = orderDispatchs.getStaffId();
-//		
-//		UserPushBind userPushBind = bindService.selectByUserId(amId);
-//		
-//		//助理的 cid
-//		String clientId = userPushBind.getClientId();
-//		
-//		HashMap<String, String> params = new HashMap<String, String>();
-//		params.put("cid", clientId);
-//		
-//		HashMap<String, String> tranParams = new HashMap<String, String>();
-//		 
-//		tranParams.put("is_show", "true");		
-//		tranParams.put("action", "msg");		
-//		tranParams.put("remind_title", "助理预约单");
-//		tranParams.put("remind_content", "您好，你的助理预约单，用户已经完成支付，请尽快处理.");
-//
-//		String jsonParams = GsonUtil.GsonString(tranParams);
-//		
-//		params.put("transmissionContent", jsonParams);
-//		try {
-//			boolean flag = PushUtil.AndroidPushToSingle(params);
-//		} catch (Exception e) {
-//			System.out.println("助理预约单支付完成时,推送给助理的消息,出现异常:"+e.getMessage());
-//			e.printStackTrace();
-//		}
-		
-		//todo 支付成功给用户短信.
-		
-		//todo 增加推送给客服人员短信或者其他方式.
-		
-	}
-	
-	/**
-	 * 深度保洁订单支付成功,后续通知功能
-	 * 1. 如果为
-	 */
-	@Override
-	public void orderPaySuccessToDoForDeep(Orders orders) {
-		
-		//如果有优惠劵，则需要将优惠劵变成已使用。
-		Long orderId = orders.getId();
-		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
-		Long userCouponId = orderPrice.getCouponId();
-		if (userCouponId > 0L) {
-			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
-			userCoupon.setIsUsed((short) 1);
-			userCoupon.setUsedTime(TimeStampUtil.getNowSecond());
-			userCoupon.setOrderNo(orders.getOrderNo());
-			userCouponsService.updateByPrimaryKey(userCoupon);
-		}	
-//		//支付完成用户rest_money<60发短信
-//		Users user =userService.selectByUsersId(orders.getUserId());
-//			BigDecimal restMoney = user.getRestMoney();
-//			BigDecimal unit = new BigDecimal(60);
-//		if(restMoney.compareTo(unit)<0){
-//			String[] content = new String[] {""};
-//			HashMap<String, String> sendSmsResult = SmsUtil.SendSms(user.getMobile(),
-//				Constants.NOTICE_USER_REST_MONEY_NOT_ENOUGH, content);
-//		}
-	}
-	
+
+
+	}	
+
 	/*
-	 *  话费充值类 订单，支付成功后的 处理
-	 *  
-	 *  	此处 仅仅  做 发送请求、 判断请求状态
-	 *  
-	 *  	充值是否成功，通过 回调 url 在   OrderServiceRechargeController  afterWXPayRecharge() 处理
+	 * 话费充值类 订单，支付成功后的 处理
+	 * 
+	 * 此处 仅仅 做 发送请求、 判断请求状态
+	 * 
+	 * 充值是否成功，通过 回调 url 在 OrderServiceRechargeController afterWXPayRecharge() 处理
 	 */
 	@Override
 	public void orderPaySuccessToDoForPhone(Orders order) {
-		
-		
+
 		System.out.println("======WXEND  apix Start========");
-		
+
 		/*
-		 * 待充值手机号, 
-				在  OrderServiceRechargeController 中 设置为  service_content字段
+		 * 待充值手机号,
+		 * 在 OrderServiceRechargeController 中 设置为 service_content字段
 		 */
-		
+
 		String phone = order.getServiceContent();
-		
+
 		String orderNo = order.getOrderNo();
-		
+
 		OrderPrices orderPrice = orderPricesService.selectByOrderNo(orderNo);
-		
+
 		/*
 		 * 充值金额，即总金额
-		 * 		
 		 */
 		BigDecimal orderMoney = orderPrice.getOrderMoney();
-		
-		
+
 		/*
-		 *  解析 响应报文
-		 *      充值接口 报文
-		 *    	
+		 * 解析 响应报文
+		 * 充值接口 报文
 		 */
-		
-		//发起 充值
+
+		// 发起 充值
 		String paySubmitResponse = PhoneReChargeUtil.paySubmit(phone, orderMoney.intValue(), orderNo);
-		
+
 		JSONObject jsonObject;
 		try {
 			jsonObject = new JSONObject(paySubmitResponse);
-		
+
 			String code = jsonObject.getString("Code");
 			String message = jsonObject.getString("Msg");
-			if(!code.equals("0") || !message.equals("success")){
-				
+			if (!code.equals("0") || !message.equals("success")) {
+
 				/*
 				 * 请求失败，打印错误信息
 				 */
-				System.out.println(" !!====!!======recharge fail=====!!=====!!:"+ message);
-				
+				System.out.println(" !!====!!======recharge fail=====!!=====!!:" + message);
+
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}	
-	
+	}
+
 }

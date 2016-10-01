@@ -298,7 +298,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			 *   临时决定调换成  20Km , 3小时
 			 */
 			
-			List<BaiduPoiVo> voList = MapPoiUtil.getMinDest(destList, Constants.maxDistance);
+			List<BaiduPoiVo> voList = MapPoiUtil.getMinDest(destList, Constants.MAX_DISTANCE);
 			
 			for (int i =0; i < cloudOrgList.size(); i++) {
 				item = cloudOrgList.get(i);

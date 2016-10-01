@@ -113,6 +113,7 @@ public class OrderController extends BaseController {
 	 * 
 	 * @return
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/disStaffByExpOrderNo", method = RequestMethod.POST)
 	public String disStaffForExpOrder(Long userId, Long id) {
 
@@ -138,6 +139,7 @@ public class OrderController extends BaseController {
 	 * 
 	 * @param 订单用户Id, 订单Id, 订单（有过派工） 对应 的阿姨 Id
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/updateStaffByOrderNo", method = RequestMethod.POST)
 	public String updateStaff(Long userId, Long id, Long staffId) {
 
@@ -185,7 +187,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 运营人员 为订单 添加 备注
 	 */
-
+	@AuthPassport
 	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.GET)
 	public String toBussinessRemarkForm(Model model,
 			@RequestParam("orderId") Long orderId) {
@@ -200,7 +202,7 @@ public class OrderController extends BaseController {
 	/**
 	 * 运营人员 为订单 添加 备注
 	 */
-
+	@AuthPassport
 	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.POST)
 	public String submitBussinessRemarkForm(
 			@ModelAttribute("orderModel") Orders orderForm,
@@ -236,6 +238,7 @@ public class OrderController extends BaseController {
 	 * @param orderId
 	 * 
 	 * */
+	@AuthPassport
 	@RequestMapping(value = "/cancelOrder/{id}", method = RequestMethod.GET)
 	public String cancelOrder(Model model, @PathVariable("id") Long orderId) {
 
@@ -260,8 +263,9 @@ public class OrderController extends BaseController {
 		}
 		return null;
 	}
-
-	@RequestMapping(value = "/oaOrderHourAdd", method = RequestMethod.GET)
+	
+	@AuthPassport
+	@RequestMapping(value = "/order-hour-add", method = RequestMethod.GET)
 	public String oaOrderHourAdd(Model model) {
 		// 订单的来源
 		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
@@ -318,8 +322,9 @@ public class OrderController extends BaseController {
 
 		return order;
 	}
-
-	@RequestMapping(value = "/orderAmAdd", method = RequestMethod.GET)
+	
+	@AuthPassport
+	@RequestMapping(value = "/order-exp-add", method = RequestMethod.GET)
 	public String orderAmAdd(Model model) {
 
 		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();

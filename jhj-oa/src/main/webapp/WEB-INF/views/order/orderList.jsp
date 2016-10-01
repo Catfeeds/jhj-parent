@@ -115,8 +115,8 @@
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
 												<button type="reset" class="btn btn-primary">重置</button>
-												<a href="oaOrderHourAdd" class="btn btn-primary">基本保洁</a>
-												<a href="orderAmAdd" class="btn btn-primary">深度服务</a>
+												<a href="order-hour-add" class="btn btn-primary">金牌保洁</a>
+												<a href="order-exp-add" class="btn btn-primary">深度养护</a>
 											</td>					
 										</tr>
 									</table>

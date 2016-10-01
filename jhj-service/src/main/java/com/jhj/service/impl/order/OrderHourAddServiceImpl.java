@@ -270,7 +270,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		Orgs item = null;
 		try {
 			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
-			List<BaiduPoiVo> baiduPoiVos = MapPoiUtil.getMinDest(destList, Constants.maxDistance);
+			List<BaiduPoiVo> baiduPoiVos = MapPoiUtil.getMinDest(destList, Constants.MAX_DISTANCE);
 			BaiduPoiVo baiduPoiVo = null;
 			
 			if (!baiduPoiVos.isEmpty()) {

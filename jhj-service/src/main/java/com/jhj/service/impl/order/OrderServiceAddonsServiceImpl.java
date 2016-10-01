@@ -76,6 +76,11 @@ public class OrderServiceAddonsServiceImpl implements OrderServiceAddonsService 
 		orderServiceAddons.setAddTime(TimeStampUtil.getNowSecond());
 		return orderServiceAddons;
 	}
+	
+	@Override
+	public List<OrderServiceAddons> selectByOrderId(Long orderId) {
+		return orderSerAddMapper.selectByOrderId(orderId);
+	}
 
 	@Override
 	public List<OrderServiceAddons> selectByOrderNo(String orderNo) {
@@ -108,6 +113,7 @@ public class OrderServiceAddonsServiceImpl implements OrderServiceAddonsService 
 			vo.setPrice(item.getPrice());
 			vo.setItemNum(item.getDefaultNum());
 			vo.setServiceAddonName(item.getName());
+			vo.setServiceHour(item.getServiceHour());
 			vo.setOrderId(0L);
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			for (OrderServiceAddons d : list) {

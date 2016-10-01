@@ -46,6 +46,7 @@
 								<form:form class="form-horizontal" method="POST" name="form">
 									<input id="from-user-id" name="userId" type="hidden"/>
 									<input name="orderType" type="hidden" />
+									<input type="hidden" name="orderFrom" value="2">
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
@@ -84,18 +85,7 @@
 												<input class="form-control" type="number" name="orderPay" value="${serviceType.price }">
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label"><font
-												color="red">*</font>下单方式</label>
-											<div class="col-md-5">
-												<select name="orderFrom" id="from-src" class="form-control">
-													<option value="">--请选择下单方式--</option>
-													<option value="0">app</option>
-													<option value="1">微网站</option>
-													<option value="2" selected="selected">管理后台</option>
-												</select>
-											</div>
-										</div>
+										
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>

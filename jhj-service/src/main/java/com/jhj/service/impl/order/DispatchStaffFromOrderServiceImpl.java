@@ -493,7 +493,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList);
 			List<BaiduPoiVo> baiduPoiVos = new ArrayList<BaiduPoiVo>();
 			
-			baiduPoiVos = MapPoiUtil.getMinDest(destList, Constants.maxDistance);
+			baiduPoiVos = MapPoiUtil.getMinDest(destList, Constants.MAX_DISTANCE);
 			
 			BaiduPoiVo baiduPoiVo = null;
 			if (!baiduPoiVos.isEmpty()) {

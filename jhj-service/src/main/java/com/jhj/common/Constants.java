@@ -383,7 +383,10 @@ public class Constants {
 	 public static String MESSAGE_ORDER_CANCLE="108638";
 	 
 	 //派工最远匹配距离
-	 public static int maxDistance = 20000;
+	 public static int MAX_DISTANCE = 20000;
+	 
+	 //派工服务前2小时占位
+	 public static Long SERVICE_PRE_TIME = (long) (2 * 3600);
 	
 	
 }
