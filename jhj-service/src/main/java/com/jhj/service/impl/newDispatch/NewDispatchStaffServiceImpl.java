@@ -515,6 +515,8 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		newVo.setDistanceText("");
 		newVo.setDurationValue(0);
 		newVo.setDurationText("");
+		newVo.setOrgDistanceText("");
+		newVo.setOrgDistanceValue(0);
 		newVo.setTodayOrderNum(0);
 		
 		newVo.setStaffOrgName("");
