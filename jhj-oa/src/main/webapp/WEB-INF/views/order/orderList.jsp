@@ -115,13 +115,13 @@
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
 												<button type="reset" class="btn btn-primary">重置</button>
+												<a href="oaOrderHourAdd" class="btn btn-primary">基本保洁</a>
+												<a href="orderAmAdd" class="btn btn-primary">深度服务</a>
 											</td>					
 										</tr>
 									</table>
 								</form:form>
 							</header>
-							<a href="oaOrderHourAdd">基本保洁</a>
-							<a href="orderAmAdd">深度服务</a>
 							
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 
