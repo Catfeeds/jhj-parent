@@ -34,6 +34,8 @@ public class PartnerServiceType {
     private Short isAuto;
     
     private Short isMulti;
+    
+    private double serviceHour;
 
     public Long getServiceTypeId() {
         return serviceTypeId;
@@ -162,4 +164,13 @@ public class PartnerServiceType {
 	public void setIsMulti(Short isMulti) {
 		this.isMulti = isMulti;
 	}
+
+	public double getServiceHour() {
+		return serviceHour;
+	}
+
+	public void setServiceHour(double serviceHour) {
+		this.serviceHour = serviceHour;
+	}
+	
 }

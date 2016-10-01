@@ -18,11 +18,12 @@
 		<result column="service_content" property="serviceContent" jdbcType="VARCHAR" />
 		<result column="is_auto" property="isAuto" jdbcType="NUMERIC" />
 		<result column="is_multi" property="isMulti" jdbcType="NUMERIC" />
+		<result column="service_hour" property="serviceHour" jdbcType="NUMERIC" />
 		
 	</resultMap>
 	<sql id="Base_Column_List">
 		service_type_id, name, parent_id, unit, default_num, price, remarks, view_type, no,
-		service_img_url, enable, service_property, service_times, service_content, is_auto, is_multi
+		service_img_url, enable, service_property, service_times, service_content, is_auto, is_multi,service_hour
 	</sql>
 
 
@@ -117,13 +118,13 @@
 		unit, default_num, price,
 		remarks, view_type, no,
 		service_img_url, enable, service_property,
-		service_times, service_content, is_auto, is_multi)
+		service_times, service_content, is_auto, is_multi,serice_hour)
 		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC},
 		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL},
 		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC},
 		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
 		#{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR}, 
-		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC})
+		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC}),#{serviceHour,jdbcType=NUMERIC}
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType">
 	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
@@ -180,6 +181,9 @@
 			<if test="isMulti != null">
 				is_multi,
 			</if>
+			<if test="serviceHour!=null">
+				service_hour
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="serviceTypeId != null">
@@ -230,6 +234,9 @@
 			
 			<if test="isMulti != null">
 				#{isMulti,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceHour!=null">
+				#{serviceHour,jdbcType=NUMERIC}
 			</if>
 		</trim>
 	</insert>
@@ -282,6 +289,9 @@
 			<if test="isMulti != null">
 				is_multi = #{isMulti,jdbcType=NUMERIC},
 			</if>
+			<if test="serviceHour!=null">
+				service_hour = #{serviceHour,jdbcType=NUMERIC}
+			</if>
 		</set>
 		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
 	</update>
@@ -302,6 +312,7 @@
 		service_content = #{serviceContent,jdbcType=VARCHAR},
 		is_auto = #{isAuto,jdbcType=NUMERIC},
 		is_multi = #{isMulti,jdbcType=NUMERIC},
+		service_hour = #{serviceHour,jdbcType=NUMERIC}
 		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
 	</update>
 </mapper>

@@ -62,7 +62,15 @@
                               </div>
                            </div>
                            
-<div class="form-group">
+                            <div class="form-group required">
+                              <label  class="col-md-2 control-label">服务时长*</label>
+                              <div class="col-md-5">
+                                 <form:input path="serviceHour" class="form-control" placeholder="服务时长"/>
+                                 <form:errors path="serviceHour" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+						   <div class="form-group">
                               <label  class="col-md-2 control-label">自动派工</label>
                               <div class="col-md-5">
                               	 <form:radiobutton path="isAuto" value="1" label="是" />
