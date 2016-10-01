@@ -74,44 +74,44 @@ public class OrderStatServiceImpl implements OrderStatService {
 
 			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
 			Orders orders = orderService.selectByOrderNo(orderNo);
-
-			Long updateTime = (Long) map.get("update_time");
-			String serviceEnd = map.get("service_end").toString();
-			if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
-				if (orders.getOrderStatus() >= 7) {
-					Long servicePlanEnd = orders.getServiceDate() + orders.getServiceHour() * 3600;
-					if (updateTime < servicePlanEnd) {
-						// %Y-%m-%d %H:%i:%s
-						serviceEnd = TimeStampUtil.timeStampToDateStr(updateTime * 1000);
+			if(orders!=null){
+				Long updateTime = (Long) map.get("update_time");
+				String serviceEnd = map.get("service_end").toString();
+				if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+					if (orders.getOrderStatus() >= 7) {
+						Long servicePlanEnd = orders.getServiceDate() + orders.getServiceHour() * 3600;
+						if (updateTime < servicePlanEnd) {
+							// %Y-%m-%d %H:%i:%s
+							serviceEnd = TimeStampUtil.timeStampToDateStr(updateTime * 1000);
+						}
 					}
 				}
-			}
-
-			UserAddrs userAddrs = userAddrsSerivce.selectByPrimaryKey(orders.getAddrId());
-			if (userAddrs != null) {
-				String detailAddrs = userAddrs.getName() + userAddrs.getAddr();
-				map1.put("id", map.get("id"));
-				map1.put("start", map.get("serviceTime"));
-				map1.put("end", map.get("service_end"));
-				map1.put("title", orgStaffs.getName() + "有1个派工," + "  服务地址：" + detailAddrs);
-				map1.put("color", "blue");
-
-				Short orderType = orders.getOrderType();
-
-				// 钟点工订单--钟点工订单列表
-				if (orderType == Constants.ORDER_TYPE_0) {
-					// map1.put("url","/jhj-oa/order/cal-list?name='agendaDay'&serviceDate="+serviceDate+"&staffId="+orgStaffId);
-
-					map1.put("url", "/jhj-oa/order/order-hour-list?orderNo=" + orderNo);
+				
+				UserAddrs userAddrs = userAddrsSerivce.selectByPrimaryKey(orders.getAddrId());
+				if (userAddrs != null) {
+					String detailAddrs = userAddrs.getName() + userAddrs.getAddr();
+					map1.put("id", map.get("id"));
+					map1.put("start", map.get("serviceTime"));
+					map1.put("end", map.get("service_end"));
+					map1.put("title", orgStaffs.getName() + "有1个派工," + "  服务地址：" + detailAddrs);
+					map1.put("color", "blue");
+					
+					Short orderType = orders.getOrderType();
+					
+					// 钟点工订单--钟点工订单列表
+					if (orderType == Constants.ORDER_TYPE_0) {
+						// map1.put("url","/jhj-oa/order/cal-list?name='agendaDay'&serviceDate="+serviceDate+"&staffId="+orgStaffId);
+						
+						map1.put("url", "/jhj-oa/order/order-hour-list?orderNo=" + orderNo);
+					}
+					
+					// 助理订单--助理订单列表
+					if (orderType == Constants.ORDER_TYPE_2) {
+						map1.put("url", "/jhj-oa/order/order-am-list?orderNo=" + orderNo);
+					}
 				}
-
-				// 助理订单--助理订单列表
-				if (orderType == Constants.ORDER_TYPE_2) {
-					map1.put("url", "/jhj-oa/order/order-am-list?orderNo=" + orderNo);
-				}
+				listMap.add(map1);
 			}
-
-			listMap.add(map1);
 		}
 		return listMap;
 	}

@@ -122,7 +122,7 @@
 													class="btn btn-primary btn-xs" title="修改">
 													<i class="icon-pencil"></i>
 												</button>
-												<button onClick="btn_update('order/order-scheduling?org_staff_id=${orgStaff.staffId}')" class="btn btn-info">排班</button>
+												<button onClick="btn_update('orderCanlendar/order-scheduling?org_staff_id=${orgStaff.staffId}')" class="btn btn-info">排班</button>
 												</button>
 											</td>
 										</tr>
