@@ -125,14 +125,6 @@
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
 												<button type="reset" class="btn btn-primary">重置</button>
-												
-												<c:if test="${searchModel.orderType == 0 }">
-													<a href="order-hour-add" class="btn btn-primary">金牌保洁下单</a>
-												</c:if>
-												
-												<c:if test="${searchModel.orderType == 1 }">
-													<a href="order-exp-add" class="btn btn-primary">深度养护下单</a>
-												</c:if>
 											</td>					
 										</tr>
 									</table>
