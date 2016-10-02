@@ -62,11 +62,18 @@ update `orders` set order_type = 1 WHERE service_type in (SELECT service_type_id
 
 ALTER TABLE `order_prices` CHANGE `pay_type` `pay_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '付款方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位） 6 = 现金支付 7 = 第三方支付';
 
+delete from `admin_role_authority` where `authority_id` = 55;
+
+delete from `admin_role_authority` where `authority_id` = 71;
+
+delete from `admin_role_authority` where `authority_id` = 56;
+
+delete from `admin_role_authority` where `authority_id` = 43;
+
+delete from `admin_role_authority` where `authority_id` = 46;
 
 TRUNCATE TABLE `cooperative_business`;
---
--- 转存表中的数据 `cooperative_business`
---
+
 
 INSERT INTO `cooperative_business` (`id`, `business_name`, `app_name`, `business_login_name`, `business_pass_word`, `enable`, `role_id`, `add_time`, `update_time`) VALUES
 (101, '淘宝', 'taobao', 'taobao', '0c0038c82832082318e245a9b9704cc3', 1, 8, 1475303355, 1475303355),
@@ -155,3 +162,5 @@ INSERT INTO `dict_service_addons` (`service_addon_id`, `service_type`, `service_
 (27, 53, 4, '房屋大扫除', '', '', '15.00', '10.00', '', '元/平米', 60, 1474887636, 1475312126, 1),
 (28, 54, 2, '擦玻璃', '', '', '14.00', '12.00', '', '元/平米', 10, 1474887714, 1475312151, 1),
 (29, 56, 3.5, '新居开荒', '', '', '10.00', '7.00', '', '元/平米', 60, 1474887830, 1475312164, 1);
+
+

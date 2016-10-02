@@ -124,6 +124,8 @@ getAddrByMobile();
  * 提交订单
  */
 function saveFrom() {
+	$('#submitForm"').attr('disabled',"true");
+
 	var from = {};
 	from.user_id = $("#from-user-id").text();
 	from.mobile = $("#from-mobile").val();
@@ -152,6 +154,7 @@ function saveFrom() {
 				}
 				if (data.status == 999) {
 					alert(data.msg);
+					$('#submitForm').removeAttr("disabled");
 				}
 			}
 		});

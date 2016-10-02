@@ -120,6 +120,7 @@ function getAddrByMobile() {
 getAddrByMobile();
 
 function saveFrom() {
+	$('#submitForm"').attr('disabled',"true");
 	var from = {};
 	from.userId = $("#from-user-id").text();
 	from.mobile = $("#from-mobile").val();
@@ -146,6 +147,7 @@ function saveFrom() {
 				}
 				if (data.status == 999) {
 					alert(data.msg);
+					$('#submitForm').removeAttr("disabled");
 				}
 			}
 		});

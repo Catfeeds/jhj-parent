@@ -53,6 +53,7 @@ import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.PushUtil;
 import com.meijia.utils.RegexUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduMapUtil;
@@ -921,13 +922,13 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		}
 		//2.0为员工发送短信
 //		//2.1)派工成功,为服务人员发送短信
-//		OrgStaffs orgStaffs = orgStaffsMapper.selectByPrimaryKey(staffId);
-//		Orders orders = ordersService.selectByPrimaryKey(orderId);
-//		String beginTimeStr = TimeStampUtil.timeStampToDateStr(orders.getServiceDate() * 1000, "MM月-dd日HH:mm");
-//		String endTimeStr = TimeStampUtil.timeStampToDateStr( (orders.getServiceDate() + orders.getServiceHour() * 3600) * 1000, "HH:mm");
-//		String timeStr = beginTimeStr + "-" + endTimeStr;
-//		String[] contentForUser = new String[] { timeStr };
-//		SmsUtil.SendSms(orgStaffs.getMobile(),  "64746", contentForUser);
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
+		Orders orders = ordersService.selectByPrimaryKey(orderId);
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(orders.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (orders.getServiceDate() + orders.getServiceHour() * 3600) * 1000, "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
+		String[] contentForUser = new String[] { timeStr };
+		SmsUtil.SendSms(orgStaffs.getMobile(),  "64746", contentForUser);
 		
 	}
 	
