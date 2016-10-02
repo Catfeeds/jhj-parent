@@ -111,6 +111,16 @@
 										</tr>
 										
 										<tr>
+											<td>订单来源：</td>
+											<td>
+												<form:select path="orderOpFrom" class="form-control">
+													<form:option value="">--请选择订单来源--</form:option>
+													<form:option value="1">来电订单</form:option>
+													<c:forEach items="${businessList }" var="business">
+														<form:option value="${business.id}">${business.businessName }</form:option>
+													</c:forEach>
+												</form:select>
+											</td>
 											<td colspan="6">
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>

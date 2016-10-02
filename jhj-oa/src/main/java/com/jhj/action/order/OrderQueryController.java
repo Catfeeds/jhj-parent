@@ -55,6 +55,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
@@ -169,6 +170,10 @@ public class OrderQueryController extends BaseController {
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr))
 			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
+		CooperativeBusinessSearchVo businessSearchVo=new CooperativeBusinessSearchVo();
+		businessSearchVo.setEnable((short)1);
+		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);
+		model.addAttribute("businessList", businessList);
 		
 		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
@@ -270,6 +275,11 @@ public class OrderQueryController extends BaseController {
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr))
 			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
+		
+		CooperativeBusinessSearchVo businessSearchVo=new CooperativeBusinessSearchVo();
+		businessSearchVo.setEnable((short)1);
+		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);
+		model.addAttribute("businessList", businessList);
 
 		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
