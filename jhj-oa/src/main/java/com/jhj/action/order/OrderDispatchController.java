@@ -116,8 +116,11 @@ public class OrderDispatchController extends BaseController {
 	 * 钟点工-- 提交修改结果
 	 */
 	@RequestMapping(value = "submit_manu_base_order.json", method = RequestMethod.POST)
-	public AppResultData<Object> submitManuBaseOrder(Model model, @RequestParam("orderId") Long orderId, @RequestParam("selectStaffId") Long selectStaffId,
-			@RequestParam("newServiceDate") String newServiceDate, @RequestParam("distanceValue") int distanceValue) {
+	public AppResultData<Object> submitManuBaseOrder(Model model, 
+			@RequestParam("orderId") Long orderId, 
+			@RequestParam("selectStaffId") Long selectStaffId,
+			@RequestParam("newServiceDate") String newServiceDate, 
+			@RequestParam("distanceValue") int distanceValue) {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 

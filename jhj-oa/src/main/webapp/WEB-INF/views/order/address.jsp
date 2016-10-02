@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="com.jhj.oa.common.UrlHelper"%>
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: inline-block; width: auto;">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -22,7 +22,7 @@
 						<div id="searchResultPanel" style="border: 1px solid #C0C0C0; width: 150px; height: auto; display: none;"></div>
 						<br />
 						<br />
-						<div style="margin-left: 30px; width: 520px; height: 340px; border: 1px solid gray" id="containers"></div>
+						<div style="margin-left: 30px; width: 420px; height: 240px; border: 1px solid gray" id="containers"></div>
 					</div>
 					<div class="form-group">
 						<label for="message-text" class="col-md-2 control-label">门牌号：</label>

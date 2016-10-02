@@ -124,7 +124,7 @@ getAddrByMobile();
  * 提交订单
  */
 function saveFrom() {
-	$('#submitForm"').attr('disabled',"true");
+	$('#submitForm').attr('disabled',"true");
 
 	var from = {};
 	from.user_id = $("#from-user-id").text();

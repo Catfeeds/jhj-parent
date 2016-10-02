@@ -120,7 +120,7 @@ function getAddrByMobile() {
 getAddrByMobile();
 
 function saveFrom() {
-	$('#submitForm"').attr('disabled',"true");
+	$('#submitForm').attr('disabled',"true");
 	var from = {};
 	from.userId = $("#from-user-id").text();
 	from.mobile = $("#from-mobile").val();

@@ -160,9 +160,9 @@
 							</label>
 							<div class="col-md-5">
 								<form:radiobutton path="disWay" value="0" />
-								匹配员工
+								智能推荐
 								<form:radiobutton path="disWay" value="1" />
-								门店派工
+								指定派工
 							</div>
 						</div>
 						<div class="form-group" id="disWayOne">
