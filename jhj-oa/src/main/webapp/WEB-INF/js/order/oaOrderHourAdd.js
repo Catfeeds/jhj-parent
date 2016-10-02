@@ -197,12 +197,13 @@ function regUser(mobile) {
 
 // 为新增用户添加注册地址
 function address() {
-	if ($("#from-mobile").val() != '' || $("#from-mobile").val() != undefined) {
-		$("#from-add-addr").show();
-		$('#exampleModal').on('show.bs.modal');
-	} else {
+	var mobile=$("#from-mobile").val();
+	if (mobile == "" || mobile == undefined) {
 		alert("请先输入手机号码！");
+		return;
 	}
+	$("#from-add-addr").show();
+//	$('#exampleModal').on('show.bs.modal');
 	
 }
 
