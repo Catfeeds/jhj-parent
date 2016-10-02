@@ -77,6 +77,13 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label class="col-md-2 control-label">订单来源</label>
+							<div class="col-md-5">
+								<form:input path="orderOpFromName" class="form-control" readonly="true" />
+								<form:errors path="orderOpFromName" class="field-has-error"></form:errors>
+							</div>
+						</div>
+						<div class="form-group">
 							<label class="col-md-2 control-label">支付方式</label>
 							<div class="col-md-5">
 								<form:input path="payTypeName" class="form-control" maxLength="32" readonly="true" />

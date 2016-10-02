@@ -398,8 +398,15 @@ public class OaOrderServiceImpl implements OaOrderService {
 					oaOrderListVo.setApplyStatus("否");
 				}
 			}
-			
-			
+		}
+		Long orderOpFrom = orders.getOrderOpFrom();
+		if(orderOpFrom!=null){
+			if(orderOpFrom==1){
+				oaOrderListVo.setOrderOpFromName("来电订单");
+			}else{
+				CooperativeBusiness cooperativeBusiness  = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+				oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+			}
 		}
 				
 		return oaOrderListVo;
