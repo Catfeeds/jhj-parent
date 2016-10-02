@@ -135,7 +135,7 @@
 												<select id="f-paywawy" name="payway" class="form-control">
 													<option value="">--请选择支付方式--</option>
 													<option value="6">现金支付</option>
-													<option value="7">第三方支付</option>
+													<option value="7">平台已支付</option>
 												</select>
 											</div>
 										</div>

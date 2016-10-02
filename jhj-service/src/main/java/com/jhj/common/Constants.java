@@ -122,7 +122,7 @@ public class Constants {
 	//2015-10-30 16:44:26 新增支付方式  ：针对 助理预约单的  现金支付
 	public static Short PAY_TYPE_6 = 6;
 	
-	//第三方支付.
+	//平台已支付.
 	public static Short PAY_TYPE_7 = 7;
 	
 	

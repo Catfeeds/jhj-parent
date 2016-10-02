@@ -274,7 +274,7 @@ public class OneCareUtil {
 				payTypeName = "现金支付";
 				break;
 			case 7:
-				payTypeName = "第三方支付";
+				payTypeName = "平台已支付";
 				break;
 			default:
 				payTypeName = "";
