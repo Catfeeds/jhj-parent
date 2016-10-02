@@ -14,6 +14,8 @@ public class OrderServiceAddonViewVo extends OrderServiceAddons {
 	
 	private String serviceAddonName;
 	
+	private int defaultNum;
+	
 	private Double serviceHour;
 
 	public String getServiceAddonName() {
@@ -30,6 +32,14 @@ public class OrderServiceAddonViewVo extends OrderServiceAddons {
 
 	public void setServiceHour(Double serviceHour) {
 		this.serviceHour = serviceHour;
+	}
+
+	public int getDefaultNum() {
+		return defaultNum;
+	}
+
+	public void setDefaultNum(int defaultNum) {
+		this.defaultNum = defaultNum;
 	}
 		
 }

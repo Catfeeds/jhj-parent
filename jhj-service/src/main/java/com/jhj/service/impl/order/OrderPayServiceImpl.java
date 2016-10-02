@@ -211,8 +211,19 @@ public class OrderPayServiceImpl implements OrderPayService {
 			for (OrderServiceAddonViewVo vo : orderAddonVos) {
 				Double serviceHourAddon = vo.getServiceHour();
 				int itemNum = vo.getItemNum();
-				serviceHour+= serviceHourAddon * itemNum;
+				int defaultNum = vo.getDefaultNum();
+				
+				if (defaultNum > 0) {
+					serviceHour+= (serviceHourAddon / defaultNum) * itemNum;
+				} else {
+					serviceHour+= serviceHourAddon * itemNum;
+				}
+				
 			}
+			
+			BigDecimal bg = new BigDecimal(serviceHour);
+	        double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			serviceHour = f1;
 		}
 
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符

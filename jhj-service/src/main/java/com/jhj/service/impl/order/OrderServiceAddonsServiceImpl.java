@@ -99,28 +99,38 @@ public class OrderServiceAddonsServiceImpl implements OrderServiceAddonsService 
 		
 		List<OrderServiceAddonViewVo> result = new ArrayList<OrderServiceAddonViewVo>();
 		
-		ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+		if (list.isEmpty()) return result;
 		
+		List<Long> serviceAddonIds = new ArrayList<Long>();
+		
+		for (OrderServiceAddons item : list) {
+			if (!serviceAddonIds.contains(item.getServiceAddonId())) serviceAddonIds.add(item.getServiceAddonId());
+		}
+		
+		ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+		searchVo1.setServiceAddonIds(serviceAddonIds);
 		List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
 		
-		DictServiceAddons item = null;
+		OrderServiceAddons item = null;
 		
-		for (int i =0; i < dictServiceAddons.size(); i++) {
+		for (int i =0; i < list.size(); i++) {
 			
-			item = dictServiceAddons.get(i);
-			if (!item.getServiceType().equals(2L) ) continue;
+			item = list.get(i);
 			OrderServiceAddonViewVo vo = new OrderServiceAddonViewVo();
-			vo.setPrice(item.getPrice());
-			vo.setItemNum(item.getDefaultNum());
-			vo.setServiceAddonName(item.getName());
-			vo.setServiceHour(item.getServiceHour());
-			vo.setOrderId(0L);
+			
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
-			for (OrderServiceAddons d : list) {
-				if (item.getServiceAddonId().equals(d.getServiceAddonId())) {
-					vo.setItemNum(d.getItemNum());
-					vo.setOrderId(d.getOrderId());
-					vo.setOrderNo(d.getOrderNo());
+			
+			vo.setPrice(item.getPrice());
+			vo.setOrderId(0L);
+			
+			for (DictServiceAddons d : dictServiceAddons) {
+				if (vo.getServiceAddonId().equals(d.getServiceAddonId())) {
+					
+					vo.setServiceAddonName(d.getName());
+					
+					vo.setDefaultNum(d.getDefaultNum());
+					
+					vo.setServiceHour(d.getServiceHour());
 				}
 			}
 			result.add(vo);

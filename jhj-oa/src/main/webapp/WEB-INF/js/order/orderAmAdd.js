@@ -118,6 +118,8 @@ function getAddrByMobile() {
 	}
 }
 
+getAddrByMobile();
+
 /*
  * 提交订单
  */
@@ -141,8 +143,10 @@ function saveFrom() {
 			data : from,
 			dataType : "json",
 			success : function(data) {
-				var orderNo = data.data.orderNo;
-				var userId = data.data.userId;
+				console.log(data);
+				var orderNo = data.data.order_no;
+				var userId = data.data.user_id;
+				
 				if (data.status == 0) {
 					savePay(orderPayType, orderNo, userId);
 				}
@@ -202,7 +206,7 @@ function address(){
 	var mobile=$("#from-mobile").val();
 	if (mobile == "" || mobile == undefined) {
 		alert("请先输入手机号码！");
-		return;
+		return false;
 	}
 	$("#from-add-addr").show();
 }
@@ -235,6 +239,11 @@ function saveAddress() {
 
 function serviceTypeChange() {
 	var serviceType = $("select[name='serviceType']").val();
+	
+	if (serviceType == "" || serviceType == undefined) {
+		return false;
+	}
+	
 	$.ajax({
 		type : "get",
 		url : "/jhj-app/app/dictServiceAddons/get_service_type.json",
@@ -264,6 +273,8 @@ function serviceTypeChange() {
 		}
 	});
 }
+
+serviceTypeChange();
 
 function changePrice() {
 	var num = $("input[name='defaultNum']");
