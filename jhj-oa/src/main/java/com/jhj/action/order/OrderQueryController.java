@@ -135,6 +135,8 @@ public class OrderQueryController extends BaseController {
 		if (searchVo == null)
 			searchVo = new OrderSearchVo();
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+		
+		Short orderType = Constants.ORDER_TYPE_0;
 
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
 
@@ -172,6 +174,7 @@ public class OrderQueryController extends BaseController {
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("searchModel", searchVo);
 		model.addAttribute("listUrl", "order-hour-list");
+
 
 		return "order/orderList";
 	}
@@ -233,8 +236,10 @@ public class OrderQueryController extends BaseController {
 		if (searchVo == null)
 			searchVo = new OrderSearchVo();
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+		
+		Short orderType = Constants.ORDER_TYPE_1;
 
-		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_1, sessionParentId);
+		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, orderType, sessionParentId);
 
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
 
