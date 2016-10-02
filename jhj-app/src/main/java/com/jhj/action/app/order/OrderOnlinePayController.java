@@ -130,14 +130,6 @@ public class OrderOnlinePayController extends BaseController {
 		
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(order.getId());
 		
-		//更新订单状态.  对于 不是  order_type = 6, 即不是 话费充值类  的 订单做修改
-		if(!order.getOrderType().equals(Constants.ORDER_TYPE_6)){
-			
-			
-			
-			
-		}
-		
 		//订单支付成功后		
 		if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
 			

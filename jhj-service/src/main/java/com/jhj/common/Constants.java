@@ -223,7 +223,7 @@ public class Constants {
 	public static short ORDER_AM_STATUS_7=7;//完成服务
 	public static short ORDER_AM_STATUS_9=9;//已关闭
 	//深度保洁
-	public static short ORDERD_DEP_STATUS_0=0;//已取消
+	public static short ORDER_DEP_STATUS_0=0;//已取消
 	public static short ORDER_DEP_STATUS_1=1;//未支付
 	public static short ORDER_DEP_STATUS_2=2;//已支付
 	public static short ORDER_DEP_STATUS_3=3;//已派工
