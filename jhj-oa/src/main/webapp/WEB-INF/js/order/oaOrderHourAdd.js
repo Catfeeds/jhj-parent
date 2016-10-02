@@ -129,7 +129,7 @@ function saveFrom() {
 	var serviceDate = $("#from-servicedate").val();
 	from.serviceDate = moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 	from.serviceHour = $("input[name='serviceHour']").val();
-	form.orderOpFrom = $("#orderOpFrom").val();
+	from.orderOpFrom=$("select[name='orderOpFrom']").val();;
 	from.remarks = $("#ft-eara").val();
 	var order_pay_type = $("#f-paywawy").val();
 	if ($(".form-horizontal").valid()) {

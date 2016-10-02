@@ -90,10 +90,10 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>
 											<div class="col-md-5">
-												<select name="orderOpFrom" id="orderOpFrom" class="form-control">
+												<select name="orderOpFrom" class="form-control">
 													<option value="">--请选择订单来源--</option>
 													<option value="1">来电订单</option>
-													<c:forEach items="${cooperativeBusiness }" var="src" varStatus="in">
+													<c:forEach items="${cooperativeBusiness }" var="src">
 														<option value="${src.id }">${src.businessName }</option>
 													</c:forEach>
 												</select>
