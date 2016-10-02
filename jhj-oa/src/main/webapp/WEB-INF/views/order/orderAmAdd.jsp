@@ -46,6 +46,7 @@
 								<form:form class="form-horizontal" method="POST" name="form">
 									<input id="from-user-id" name="userId" type="hidden"/>
 									<input name="orderType" type="hidden" value="1"/>
+									<input type="hidden" name="orderFrom" id="orderForm" value="2">
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
@@ -106,18 +107,7 @@
 												<input class="form-control" type="number" id="service-price" name="price" value="0" readonly="readonly"/>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label"><font
-												color="red">*</font>下单方式</label>
-											<div class="col-md-5">
-												<select name="orderFrom" class="form-control">
-													<option value="">--请选择下单方式--</option>
-													<option value="0">app</option>
-													<option value="1">微网站</option>
-													<option value="2" selected="selected">管理后台</option>
-												</select>
-											</div>
-										</div>
+										
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>
@@ -156,13 +146,7 @@
 													class="form-control"></textarea>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">运营人员备注:</label>
-											<div class="col-md-5">
-												<textarea id="ft-confirm" name="remarksBussinessConfirm" rows="5" cols="50"
-													class="form-control"></textarea>
-											</div>
-										</div>
+										
 										<div class="form-actions fluid">
 											<div class="col-md-offset-3 col-md-3">
 												<button type="button" class="btn btn-success"

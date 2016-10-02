@@ -208,7 +208,8 @@ public class OrderPayController extends BaseController {
 				order.setOrderStatus(Constants.ORDER_AM_STATUS_3);//已支付
 			}
 			
-			if(order.getOrderType() == Constants.ORDER_TYPE_0){
+			if(order.getOrderType() == Constants.ORDER_TYPE_0 ||
+			   order.getOrderType() == Constants.ORDER_TYPE_1){
 				
 				order.setOrderStatus(Constants.ORDER_HOUR_STATUS_2);//已支付
 			}

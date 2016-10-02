@@ -157,6 +157,17 @@ public class OrderOnlinePayController extends BaseController {
 		}
 		
 		if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+			
+			order.setOrderStatus(Constants.ORDER_HOUR_STATUS_2);
+			order.setUpdateTime(updateTime);
+			ordersService.updateByPrimaryKeySelective(order);
+			//插入订单日志
+			OrderLog orderLog = orderLogService.initOrderLog(order);
+			orderLogService.insert(orderLog);
+			//记录用户消费明细
+			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);
+			
+			
 			orderPayService.orderPaySuccessToDoForDeep(order);
 		}		
 
