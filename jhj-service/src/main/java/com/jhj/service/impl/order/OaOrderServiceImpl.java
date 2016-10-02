@@ -10,13 +10,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.PageHelper;
 import com.jhj.common.Constants;
-import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
@@ -27,6 +26,7 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
@@ -40,10 +40,7 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
-import com.jhj.vo.order.OaOrderSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrderSearchVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
@@ -99,6 +96,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 	
 	@Autowired
 	private OrgStaffsService staffService;
+	
+	@Autowired
+	private CooperateBusinessService cooperateBusinessService;
 	
 	@Override
 	public OaOrderListNewVo completeVo(Orders orders) {
@@ -489,8 +489,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setOrderPay(orderPrices.getOrderPay());
 			
 			// 支付方式
-			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
-			oaOrderListVo.setPayTypeName(payTypeName);
+			if(orders.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_2){
+				String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
+				oaOrderListVo.setPayTypeName(payTypeName);
+			}else{
+				oaOrderListVo.setPayTypeName("-");
+			}
 			
 			oaOrderListVo.setPayType(orderPrices.getPayType());
 		}
@@ -621,6 +625,16 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListNewVo.setOrderTypeName("");
 		}
 		
+		//订单来源
+		Long orderOpFrom = orders.getOrderOpFrom();
+		if(orderOpFrom!=null){
+			if(orderOpFrom==1){
+				oaOrderListNewVo.setOrderOpFromName("来电订单");
+			}else{
+				CooperativeBusiness cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+				oaOrderListNewVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+			}
+		}
 		
 		return oaOrderListNewVo;
 	}

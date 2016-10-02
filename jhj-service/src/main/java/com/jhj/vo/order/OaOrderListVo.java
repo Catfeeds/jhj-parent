@@ -97,6 +97,8 @@ public class OaOrderListVo extends Orders {
 	private String applyStatus;
 
 	private String applyTimeStr;
+	
+	private String orderOpFromName;
 
 	public String getServiceDateStartStr() {
 		return serviceDateStartStr;
@@ -529,6 +531,14 @@ public class OaOrderListVo extends Orders {
 
 	public void setApplyTimeStr(String applyTimeStr) {
 		this.applyTimeStr = applyTimeStr;
+	}
+
+	public String getOrderOpFromName() {
+		return orderOpFromName;
+	}
+
+	public void setOrderOpFromName(String orderOpFromName) {
+		this.orderOpFromName = orderOpFromName;
 	}
 
 }

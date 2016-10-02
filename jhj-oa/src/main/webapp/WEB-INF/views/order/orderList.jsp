@@ -143,6 +143,7 @@
 										<th>用户手机号</th>
 										<th>服务地址</th>
 										<th>是否接单</th>
+										<th>订单来源</th>
 										<th>订单状态</th>
 										<th>支付方式</th>
 										<th>支付金额</th>
@@ -164,6 +165,7 @@
 												<td>${ item.mobile }</td>
 												<td>${ item.orderAddress }</td>
 												<td>${ item.applyStatus }</td>
+												<td>${item.orderOpFromName }</td>
 												<td><orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" orderType="${item.orderType }" /></td>
 												<td>${ item.payTypeName }</td>
 												<td>${ item.orderPay }</td>
