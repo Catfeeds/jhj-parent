@@ -43,6 +43,7 @@ import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.serviceCharge.PhoneReChargeUtil;
 
@@ -165,6 +166,10 @@ public class OrderPayServiceImpl implements OrderPayService {
 		if (doOrderDispatch.equals(true)) {
 			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
+			
+			//发送短信
+			String[] smsContent = new String[] { timeStr };
+			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
 		}
 
 		
@@ -261,6 +266,10 @@ public class OrderPayServiceImpl implements OrderPayService {
 		if (doOrderDispatch.equals(true)) {
 			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
+			
+			//发送短信
+			String[] smsContent = new String[] { timeStr };
+			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
 		}
 		
 		return true;

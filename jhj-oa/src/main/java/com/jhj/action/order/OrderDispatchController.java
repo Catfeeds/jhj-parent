@@ -131,27 +131,21 @@ public class OrderDispatchController extends BaseController {
 		Short orderStatus = order.getOrderStatus();
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
+			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("只有已支付或已派工的订单能进行派工,返回列表页");
 			return resultData;
 		}
 
 		if (selectStaffId == 0) {
-			/*
-			 * 如果 未选择任何 员工。
-			 * 1>有可用派工。但是未进行换人操作
-			 * 2> 无可用派工。未进行换人操作
-			 * 
-			 * 都直接返回列表页即可。
-			 */
-
+			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("没有选择派工人员,返回列表页");
-
 			return resultData;
 		}
 
 		OrgStaffs staffs = staffService.selectByPrimaryKey(selectStaffId);
 
 		if (staffs == null) {
+			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("无效的派工人员,返回列表页");
 			return resultData;
 		}
@@ -165,32 +159,23 @@ public class OrderDispatchController extends BaseController {
 		searchVo.setOrderNo(order.getOrderNo());
 		searchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+		
+		boolean isChangeDispatch = false;
 		if (disList.size() > 0) {
 			oldDispatchs = disList.get(0);
-			oldDispatchs.setDispatchStatus((short) 0);
-			orderDispatchsService.updateByPrimaryKey(oldDispatchs);
+			isChangeDispatch = true;
 			oldStaffMobile = oldDispatchs.getStaffMobile();
 		}
+		
+		Double serviceHour = (double) order.getServiceHour();
+		// 进行派工
+		Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceHour, selectStaffId, isChangeDispatch);
 
-		OrderDispatchs dispatchs = orderDispatchsService.initOrderDisp();
-
-		dispatchs.setUserId(order.getUserId());
-		dispatchs.setMobile(order.getMobile());
-		dispatchs.setOrderId(orderId);
-		dispatchs.setOrderNo(order.getOrderNo());
-		dispatchs.setServiceHours(order.getServiceHour());
-		dispatchs.setRemarks(order.getRemarks());
-		dispatchs.setServiceDate(serviceDateTime);
-		dispatchs.setServiceDatePre(serviceDateTime - 3600);
-		dispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
-
-		dispatchs.setOrderId(orderId);
-		dispatchs.setOrgId(staffs.getOrgId());
-		dispatchs.setStaffId(selectStaffId);
-		dispatchs.setStaffName(staffs.getName());
-		dispatchs.setStaffMobile(staffs.getMobile());
-		dispatchs.setUserAddrDistance(distanceValue);
-		orderDispatchsService.insert(dispatchs);
+		if (doOrderDispatch == false) {
+			resultData.setStatus(Constants.ERROR_999);
+			resultData.setMsg("派工失败");
+			return resultData;
+		}
 
 		// 更新订单表
 		order.setServiceDate(serviceDateTime);
@@ -203,23 +188,6 @@ public class OrderDispatchController extends BaseController {
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
 		String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
-
-		/*
-		 * 2016年4月14日10:39:36
-		 * 
-		 * 服务时间 变更 发送短信 通知
-		 * 
-		 * 您预定的{1}服务已经变更为{2}，感谢您的理解，给您带来的不便敬请谅解。
-		 * 
-		 * oldServiceDate : 未 update 之前的 服务时间，多次派工时，只能取得上次的 服务时间
-		 */
-
-		// 订单更换工作人员不需要给用户发送短信提醒
-		// String[] changTimeMessage = new String[]
-		// {"服务时间为:"+oldServiceDate,beginTimeStr};
-		//
-		// SmsUtil.SendSms(userMobile, Constants.MESSAGE_ORDER_DATE_CHANGE,
-		// changTimeMessage);
 
 		/*
 		 * 派工 短信通知

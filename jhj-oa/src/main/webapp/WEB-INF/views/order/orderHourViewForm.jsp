@@ -54,6 +54,15 @@
 							</div>
 						</div>
 						
+						<div class="form-group">
+							<label class="col-md-2 control-label">服务开始时间</label>
+							<div class="col-md-5">
+								<input type="text" readonly="true" value="${oaOrderListVoModel.serviceDateStr }"/>
+							</div>
+						</div>
+						
+						
+						
 						
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单状态</label>
