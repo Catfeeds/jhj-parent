@@ -33,7 +33,7 @@ public interface OrderDispatchsService {
     
     List<OrderDispatchs> selectBySearchVo(OrderDispatchSearchVo searchVo);
 
-	int totalStaffTodayOrders(Long staffId);
+	Long totalStaffTodayOrders(Long staffId);
 
 	List<OrderDispatchs> selectByMatchTime(OrderDispatchSearchVo searchVo);
 

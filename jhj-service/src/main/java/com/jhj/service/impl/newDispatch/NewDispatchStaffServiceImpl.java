@@ -384,7 +384,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				Long staffId = item.getUserId();
 				
 				// 该 服务人员 当天 的 派单 数量
-				int numTodayOrder = orderDispatchsService.totalStaffTodayOrders(staffId);
+				Long numTodayOrder = orderDispatchsService.totalStaffTodayOrders(staffId);
 				
 				//派工页面 服务人员 相关 信息 VO
 				OrgStaffsNewVo staffsNewVo = initStaffsNew();
@@ -394,7 +394,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				BeanUtilsExp.copyPropertiesIgnoreNull(staffs, staffsNewVo);
 				
 				staffsNewVo.setStaffId(item.getUserId());
-				staffsNewVo.setTodayOrderNum(numTodayOrder);
+				staffsNewVo.setTodayOrderNum(numTodayOrder.intValue());
 				
 				//服务人员所在 云店 id
 				Long orgId = staffs.getOrgId();

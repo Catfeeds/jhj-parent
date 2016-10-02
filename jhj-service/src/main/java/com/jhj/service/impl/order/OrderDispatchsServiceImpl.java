@@ -171,7 +171,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 
 	@Override
-	public int totalStaffTodayOrders(Long staffId) {
+	public Long totalStaffTodayOrders(Long staffId) {
 		return orderDispatchsMapper.totalStaffTodayOrders(staffId);
 	}
 

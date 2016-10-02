@@ -309,6 +309,8 @@ public class NewOrgStaffController extends AdminController {
 				staffSkill.setId(0L);
 				staffSkill.setStaffId(orgStaffs.getStaffId());
 				staffSkill.setServiceTypeId(Long.valueOf(skillArray[i]));
+				staffSkill.setOrgId(orgStaffs.getOrgId());
+				staffSkill.setParentId(orgStaffs.getParentOrgId());
 				staffSkill.setAddTime(TimeStampUtil.getNowSecond());
 				
 				skillService.insert(staffSkill);

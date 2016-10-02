@@ -29,7 +29,7 @@ public interface OrderDispatchsMapper {
 	
 	List<Map<String, Object>> totalByYearAndMonth(Map<String, Object> conditions);
 	
-	int totalStaffTodayOrders(Long staffId);
+	Long totalStaffTodayOrders(Long staffId);
 	
 	List<HashMap> totalByUserIds(OrderSearchVo searchVo);
 
