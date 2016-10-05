@@ -85,11 +85,11 @@
 		</if>
 
 		<if test="staffMobile !=null ">
-			and staff_mobile =#{staffMobile,jdbcType=VARCHAR}
+			and staff_mobile like concat("%",#{staffMobile,jdbcType=VARCHAR},"%")
 		</if>
 
 		<if test="staffName !=null ">
-			and staff_name =#{staffName,jdbcType=VARCHAR}
+			and staff_name like concat("%",#{staffName,jdbcType=VARCHAR},"%")
 		</if>
 
 		<if test="userId !=null">

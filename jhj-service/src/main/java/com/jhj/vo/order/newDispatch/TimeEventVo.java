@@ -33,5 +33,5 @@ public class TimeEventVo {
 	public void setEventList(List<EventVo> eventList) {
 		this.eventList = eventList;
 	}
-	
+
 }
