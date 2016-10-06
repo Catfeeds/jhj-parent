@@ -201,7 +201,7 @@ public class OrderController extends BaseController {
 		
 		//如果为钟点工，则必须过来服务时间才能点击完成服务.
 		if (orders.getOrderType().equals(Constants.ORDER_TYPE_0)) {
-			Long ServiceEndTime = orders.getServiceDate() + orders.getServiceHour() * 3600;
+			Long ServiceEndTime = (long) (orders.getServiceDate() + orders.getServiceHour() * 3600);
 			
 			Long nowSecond = TimeStampUtil.getNowSecond();
 			

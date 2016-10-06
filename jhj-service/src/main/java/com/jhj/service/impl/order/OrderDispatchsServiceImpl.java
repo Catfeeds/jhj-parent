@@ -40,6 +40,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.OrgDispatchPoiVo;
 import com.jhj.vo.dispatch.StaffDispatchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderDispatchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.org.LeaveSearchVo;
@@ -179,6 +180,32 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	@Override
 	public List<HashMap> totalByStaff(OrderDispatchSearchVo searchVo) {
 		return orderDispatchsMapper.totalByStaff(searchVo);
+	}
+	
+	@Override
+	public OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item) {
+		OrderDispatchVo vo = new OrderDispatchVo();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+		
+		//是否接单状态;
+		Short isApply = vo.getIsApply();
+		if (isApply.equals((short)1)) {
+			vo.setApplyStatus("是");
+			vo.setApplyTimeStr(TimeStampUtil.timeStampToDateStr(vo.getApplyTime() * 1000));
+		} else {
+			Long now = TimeStampUtil.getNowSecond();
+			Long dispatchTime = vo.getAddTime();
+			Long lastTime = now - dispatchTime;
+			if ( lastTime > 60 * 30) {
+				vo.setApplyStatus("超");
+			} else {
+				vo.setApplyStatus("否");
+			}
+			vo.setApplyTimeStr("");
+		}
+		
+		return vo;
 	}
 
 	/**
@@ -911,38 +938,17 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 
 	@Override
-	public boolean doOrderDispatch(Orders order, Double serviceHour, Long staffId, Boolean isChangeDispatch) {
+	public boolean doOrderDispatch(Orders order, Double serviceHour, Long staffId) {
 		
 		Long orderId = order.getId();
 		String orderNo = order.getOrderNo();
 		Long userId = order.getUserId();
 		
 		Users u = userService.selectByPrimaryKey(userId);
-		// 先判断该订单是否已经派过工，如果已经派工成功，则不需要再次派工.
-		// 如果为换人派工，则需要将原有派工取消后，再重新派工.
-		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-		searchVo1.setOrderId(orderId);
-		searchVo1.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = this.selectBySearchVo(searchVo1);
-
-		OrderDispatchs orderDispatch = null;
-		if (!orderDispatchs.isEmpty()) {
-			orderDispatch = orderDispatchs.get(0);
-		}
-
-		if (orderDispatch != null && !isChangeDispatch) {
-			return true;
-		}
-
-		if (orderDispatch != null && isChangeDispatch) {
-			orderDispatch.setDispatchStatus((short) 0);
-			orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
-			this.updateByPrimaryKeySelective(orderDispatch);
-		}
 		
 		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 		
-		orderDispatch = this.initOrderDisp(); //派工状态默认有效  1
+		OrderDispatchs orderDispatch = this.initOrderDisp(); //派工状态默认有效  1
 		
 		orderDispatch.setUserId(userId);
 		orderDispatch.setOrgId(staff.getOrgId());

@@ -92,7 +92,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 
 			// xx月 xx 日 xx:xx~ xx:xx
 			String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-			String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+			String endTimeStr = TimeStampUtil.timeStampToDateStr((long)(order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
 			String timeStr = beginTimeStr + "-" + endTimeStr;
 
 			// 家政师 xx 　在开始前２小时之内换人???

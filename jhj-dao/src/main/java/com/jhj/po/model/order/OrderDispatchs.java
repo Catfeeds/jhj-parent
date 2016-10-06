@@ -15,7 +15,7 @@ public class OrderDispatchs {
 
     private Long serviceDate;
 
-    private Short serviceHours;
+    private double serviceHours;
     
     private Long orgId;
     
@@ -109,11 +109,11 @@ public class OrderDispatchs {
         this.serviceDate = serviceDate;
     }
 
-    public Short getServiceHours() {
+    public double getServiceHours() {
         return serviceHours;
     }
 
-    public void setServiceHours(Short serviceHours) {
+    public void setServiceHours(double serviceHours) {
         this.serviceHours = serviceHours;
     }
 

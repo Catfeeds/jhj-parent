@@ -79,7 +79,7 @@ public class OrderStatServiceImpl implements OrderStatService {
 				String serviceEnd = map.get("service_end").toString();
 				if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
 					if (orders.getOrderStatus() >= 7) {
-						Long servicePlanEnd = orders.getServiceDate() + orders.getServiceHour() * 3600;
+						Long servicePlanEnd = (long) (orders.getServiceDate() + orders.getServiceHour() * 3600);
 						if (updateTime < servicePlanEnd) {
 							// %Y-%m-%d %H:%i:%s
 							serviceEnd = TimeStampUtil.timeStampToDateStr(updateTime * 1000);

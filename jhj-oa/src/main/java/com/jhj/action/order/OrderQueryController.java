@@ -39,6 +39,7 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
@@ -51,6 +52,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
@@ -60,6 +62,7 @@ import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -112,6 +115,9 @@ public class OrderQueryController extends BaseController {
 
 	@Autowired
 	private PoiExportExcelService poiExcelService;
+	
+	@Autowired
+	private OrderServiceAddonsService orderServiceAddonsService;
 
 	/**
 	 * 钟点工-----订单列表---orderType=0
@@ -292,20 +298,41 @@ public class OrderQueryController extends BaseController {
 	/**
 	 * 深度保洁---订单详情
 	 * 
-	 * 2016年4月20日15:39:44 该方法 已经没有用处。。jhj2.1 没有深度保洁订单了
 	 * 
 	 * @param orderNo
 	 * @param disStatus
 	 * 
-	 *            2016年4月20日15:39:00 该参数已无 实际用处。但为了兼顾 老数据，暂时保留
 	 * @param model
 	 * @return
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/order-exp-view", method = RequestMethod.GET)
-	public String orderExpDetail(String orderNo, Short disStatus, Model model) {
+	public String orderExpDetail(HttpServletRequest request, String orderNo, Short disStatus, Model model) {
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderExpVoDetail(orderNo, disStatus);
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
+		
+		// 得到 当前登录 的 店长所在 门店id，
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		if (sessionOrgId > 0L) {
+
+			/*
+			 * 派工调整时，选择 门店
+			 */
+			model.addAttribute("loginOrgId", sessionOrgId);
+		}
+		
+		//服务附加信息
+		List<OrderServiceAddonViewVo> orderAddonVos = new ArrayList<OrderServiceAddonViewVo>();
+		Long orderId = oaOrderListVo.getId();
+		List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+		
+		if (!orderAddons.isEmpty()) {
+			orderAddonVos = orderServiceAddonsService.changeToOrderServiceAddons(orderAddons);
+		}
+		model.addAttribute("orderAddonVos", orderAddonVos);
+		
+		
 		return "order/orderExpViewForm";		
 	}
 

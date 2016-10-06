@@ -42,6 +42,7 @@ import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.staff.StaffSearchVo;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -140,7 +141,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 			return false;
 
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId, isChangeDispatch);
+		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId);
 
 		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 
@@ -155,7 +156,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		orderLogService.insert(orderLog);
 
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 
 		// 1) 用户收到派工通知---发送短信
@@ -165,14 +166,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 2)派工成功，为服务人员发送推送消息---推送消息
 		
 		//todo, 测试暂时去掉
-		if (doOrderDispatch.equals(true)) {
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
-			
-			//发送短信
-			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
-		}
+//		if (doOrderDispatch.equals(true)) {
+//			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+//					Constants.ALERT_STAFF_MSG);
+//			
+//			//发送短信
+//			String[] smsContent = new String[] { timeStr };
+//			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+//		}
 
 		
 		return true;
@@ -228,9 +229,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 				
 			}
 			
-			BigDecimal bg = new BigDecimal(serviceHour);
-	        double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-			serviceHour = f1;
+			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 1);
 		}
 
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
@@ -242,7 +241,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 			return false;
 
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId, false);
+		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId);
 
 		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 
@@ -257,7 +256,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		orderLogService.insert(orderLog);
 
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 
 		// 1) 用户收到派工通知---发送短信
@@ -267,14 +266,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 2)派工成功，为服务人员发送推送消息---推送消息
 		
 		//todo 测试暂时去掉
-		if (doOrderDispatch.equals(true)) {
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
-			
-			//发送短信
-			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
-		}
+//		if (doOrderDispatch.equals(true)) {
+//			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+//					Constants.ALERT_STAFF_MSG);
+//			
+//			//发送短信
+//			String[] smsContent = new String[] { timeStr };
+//			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+//		}
 		
 		return true;
 	}

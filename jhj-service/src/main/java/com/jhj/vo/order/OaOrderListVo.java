@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 
 /**
@@ -92,6 +93,12 @@ public class OaOrderListVo extends Orders {
 
 	// 2016年5月13日17:35:13
 	private Long parentServiceTypeId; // 对于 助理类--深度养护--需要有 开始时间
+	
+	private String serviceTypeName;
+	
+	private	Short isAuto;
+	
+	private Short isMulti;
 
 	// 是否接单状态;
 	private String applyStatus;
@@ -99,6 +106,8 @@ public class OaOrderListVo extends Orders {
 	private String applyTimeStr;
 	
 	private String orderOpFromName;
+	
+	private List<OrderDispatchVo> orderDispatchs;
 
 	public String getServiceDateStartStr() {
 		return serviceDateStartStr;
@@ -372,149 +381,28 @@ public class OaOrderListVo extends Orders {
 		this.orderPay = orderPay;
 	}
 
-	// public String getStaffName() {
-	// return staffName;
-	// }
-	// public void setStaffName(String staffName) {
-	// this.staffName = staffName;
-	// }
-	// public String getStaffMobile() {
-	// return staffMobile;
-	// }
-	// public void setStaffMobile(String staffMobile) {
-	// this.staffMobile = staffMobile;
-	// }
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cityName == null) ? 0 : cityName.hashCode());
-		result = prime * result + ((couponName == null) ? 0 : couponName.hashCode());
-		result = prime * result + ((couponValue == null) ? 0 : couponValue.hashCode());
-		result = prime * result + ((disStatus == null) ? 0 : disStatus.hashCode());
-		result = prime * result + ((disStatusName == null) ? 0 : disStatusName.hashCode());
-		result = prime * result + ((orderAddress == null) ? 0 : orderAddress.hashCode());
-		result = prime * result + ((orderDate == null) ? 0 : orderDate.hashCode());
-		result = prime * result + ((orderMoney == null) ? 0 : orderMoney.hashCode());
-		result = prime * result + ((orderPay == null) ? 0 : orderPay.hashCode());
-		result = prime * result + ((orderStatusName == null) ? 0 : orderStatusName.hashCode());
-		result = prime * result + ((orgName == null) ? 0 : orgName.hashCode());
-		result = prime * result + ((payType == null) ? 0 : payType.hashCode());
-		result = prime * result + ((payTypeName == null) ? 0 : payTypeName.hashCode());
-		result = prime * result + ((staMap == null) ? 0 : staMap.hashCode());
-		result = prime * result + ((staffId == null) ? 0 : staffId.hashCode());
-		result = prime * result + ((staffList == null) ? 0 : staffList.hashCode());
-		result = prime * result + ((staffMobile == null) ? 0 : staffMobile.hashCode());
-		result = prime * result + ((staffName == null) ? 0 : staffName.hashCode());
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		return result;
+	public String getServiceTypeName() {
+		return serviceTypeName;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OaOrderListVo other = (OaOrderListVo) obj;
-		if (cityName == null) {
-			if (other.cityName != null)
-				return false;
-		} else if (!cityName.equals(other.cityName))
-			return false;
-		if (couponName == null) {
-			if (other.couponName != null)
-				return false;
-		} else if (!couponName.equals(other.couponName))
-			return false;
-		if (couponValue == null) {
-			if (other.couponValue != null)
-				return false;
-		} else if (!couponValue.equals(other.couponValue))
-			return false;
-		if (disStatus == null) {
-			if (other.disStatus != null)
-				return false;
-		} else if (!disStatus.equals(other.disStatus))
-			return false;
-		if (disStatusName == null) {
-			if (other.disStatusName != null)
-				return false;
-		} else if (!disStatusName.equals(other.disStatusName))
-			return false;
-		if (orderAddress == null) {
-			if (other.orderAddress != null)
-				return false;
-		} else if (!orderAddress.equals(other.orderAddress))
-			return false;
-		if (orderDate == null) {
-			if (other.orderDate != null)
-				return false;
-		} else if (!orderDate.equals(other.orderDate))
-			return false;
-		if (orderMoney == null) {
-			if (other.orderMoney != null)
-				return false;
-		} else if (!orderMoney.equals(other.orderMoney))
-			return false;
-		if (orderPay == null) {
-			if (other.orderPay != null)
-				return false;
-		} else if (!orderPay.equals(other.orderPay))
-			return false;
-		if (orderStatusName == null) {
-			if (other.orderStatusName != null)
-				return false;
-		} else if (!orderStatusName.equals(other.orderStatusName))
-			return false;
-		if (orgName == null) {
-			if (other.orgName != null)
-				return false;
-		} else if (!orgName.equals(other.orgName))
-			return false;
-		if (payType == null) {
-			if (other.payType != null)
-				return false;
-		} else if (!payType.equals(other.payType))
-			return false;
-		if (payTypeName == null) {
-			if (other.payTypeName != null)
-				return false;
-		} else if (!payTypeName.equals(other.payTypeName))
-			return false;
-		if (staMap == null) {
-			if (other.staMap != null)
-				return false;
-		} else if (!staMap.equals(other.staMap))
-			return false;
-		if (staffId == null) {
-			if (other.staffId != null)
-				return false;
-		} else if (!staffId.equals(other.staffId))
-			return false;
-		if (staffList == null) {
-			if (other.staffList != null)
-				return false;
-		} else if (!staffList.equals(other.staffList))
-			return false;
-		if (staffMobile == null) {
-			if (other.staffMobile != null)
-				return false;
-		} else if (!staffMobile.equals(other.staffMobile))
-			return false;
-		if (staffName == null) {
-			if (other.staffName != null)
-				return false;
-		} else if (!staffName.equals(other.staffName))
-			return false;
-		if (userName == null) {
-			if (other.userName != null)
-				return false;
-		} else if (!userName.equals(other.userName))
-			return false;
-		return true;
+	public void setServiceTypeName(String serviceTypeName) {
+		this.serviceTypeName = serviceTypeName;
+	}
+
+	public Short getIsAuto() {
+		return isAuto;
+	}
+
+	public void setIsAuto(Short isAuto) {
+		this.isAuto = isAuto;
+	}
+
+	public Short getIsMulti() {
+		return isMulti;
+	}
+
+	public void setIsMulti(Short isMulti) {
+		this.isMulti = isMulti;
 	}
 
 	public String getApplyStatus() {
@@ -541,4 +429,11 @@ public class OaOrderListVo extends Orders {
 		this.orderOpFromName = orderOpFromName;
 	}
 
+	public List<OrderDispatchVo> getOrderDispatchs() {
+		return orderDispatchs;
+	}
+
+	public void setOrderDispatchs(List<OrderDispatchVo> orderDispatchs) {
+		this.orderDispatchs = orderDispatchs;
+	}
 }

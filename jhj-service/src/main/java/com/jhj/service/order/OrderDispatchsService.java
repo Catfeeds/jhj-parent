@@ -7,6 +7,7 @@ import java.util.Map;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderDispatchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 
 /**
@@ -51,6 +52,8 @@ public interface OrderDispatchsService {
 
 	OrgStaffsNewVo initStaffsNew();
 
-	boolean doOrderDispatch(Orders order, Double serviceHour, Long staffId, Boolean isChangeDispatch);
+	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
+
+	boolean doOrderDispatch(Orders order, Double serviceHour, Long staffId);
    	
 }

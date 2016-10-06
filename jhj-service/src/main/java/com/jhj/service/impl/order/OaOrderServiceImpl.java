@@ -41,6 +41,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderDispatchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
@@ -99,6 +100,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 	
 	@Autowired
 	private CooperateBusinessService cooperateBusinessService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerServiceTypeService;
 	
 	@Override
 	public OaOrderListNewVo completeVo(Orders orders) {
@@ -316,6 +320,18 @@ public class OaOrderServiceImpl implements OaOrderService {
 		
 		OaOrderListVo oaOrderListVo = completeVo(orders);
 		
+		//服务品类名称
+		oaOrderListVo.setServiceTypeName("");
+		oaOrderListVo.setIsAuto((short) 1);
+		oaOrderListVo.setIsMulti((short) 0);
+		Long serviceTypeId = orders.getServiceType();
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		if (serviceType != null) {
+			oaOrderListVo.setServiceTypeName(serviceType.getName());
+			oaOrderListVo.setIsAuto(serviceType.getIsAuto());
+			oaOrderListVo.setIsMulti(serviceType.getIsMulti());
+		}
+		
 		oaOrderListVo.setApplyStatus("-");
 		oaOrderListVo.setApplyTimeStr("");
 		Long addTime = orders.getAddTime();
@@ -421,20 +437,37 @@ public class OaOrderServiceImpl implements OaOrderService {
 		Orders orders = orderService.selectByOrderNo(orderNo);
 
 		OaOrderListVo oaOrderListVo = completeVo(orders);
+		
+		//服务品类名称
+		oaOrderListVo.setServiceTypeName("");
+		oaOrderListVo.setIsAuto((short) 1);
+		oaOrderListVo.setIsMulti((short) 0);
+		Long serviceTypeId = orders.getServiceType();
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		if (serviceType != null) {
+			oaOrderListVo.setServiceTypeName(serviceType.getName());
+			oaOrderListVo.setIsAuto(serviceType.getIsAuto());
+			oaOrderListVo.setIsMulti(serviceType.getIsMulti());
+		}
+		
 
 		Long addTime = orders.getAddTime();
 
 		String date = DateUtil.getDefaultDate(addTime * 1000);
 		// 下单时间
 		oaOrderListVo.setOrderDate(date);
-
+		
+		//服务时间
+		Long serviceDate = orders.getServiceDate();
+		String date1 = DateUtil.getDefaultDate(serviceDate * 1000);
+		
+		oaOrderListVo.setServiceDateStr(date1);
+		
 		// 订单状态名称
-		String orderStausName = OneCareUtil.getJhjOrderStausName(orders.getOrderStatus());
-
+		String orderStausName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(),orders.getOrderStatus());
 		oaOrderListVo.setOrderStatusName(orderStausName);
 
 		// 优惠券
-
 		OrderPrices orderPrices = orderPriceService.selectByOrderIds(orderNo);
 
 		if (orderPrices != null) {
@@ -459,21 +492,35 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (users != null) {
 			oaOrderListVo.setUserName(users.getName());
 		}
+		
+		Long orderOpFrom = orders.getOrderOpFrom();
+		if(orderOpFrom!=null){
+			if(orderOpFrom==1){
+				oaOrderListVo.setOrderOpFromName("来电订单");
+			}else{
+				CooperativeBusiness cooperativeBusiness  = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+				oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+			}
+		}
 
-		/*
-		 * 可能 会有 多次换人，多条 无效记录 的情况，需要分别展示
-		 */
+
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(orderNo);
 		searchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
 
-		// 有派工记录 的订单，则展示 当前 阿姨
-
 		for (OrderDispatchs orDis : orderDisList) {
 			oaOrderListVo.setStaffName(orDis.getStaffName());
 			oaOrderListVo.setStaffId(orDis.getStaffId());
 		}
+		
+		List<OrderDispatchVo> orderDispatchVos = new ArrayList<OrderDispatchVo>();
+		for (OrderDispatchs item : orderDisList) {
+			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
+			orderDispatchVos.add(vo);
+		}
+		oaOrderListVo.setOrderDispatchs(orderDispatchVos);
+		
 
 		return oaOrderListVo;
 	}

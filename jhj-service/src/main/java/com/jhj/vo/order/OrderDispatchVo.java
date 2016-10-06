@@ -9,7 +9,7 @@ import com.jhj.po.model.order.OrderDispatchs;
  * @Description: 
  *		运营平台--订单管理模块--下单 列表页 VO
  */
-public class OaOrderDisVo extends OrderDispatchs{
+public class OrderDispatchVo extends OrderDispatchs{
 
 	private  String userName;	//用户名
 	
@@ -21,9 +21,14 @@ public class OaOrderDisVo extends OrderDispatchs{
 	
 	private String amMobile;	//助理手机号
 
-	private Short orderType;	// 订单类型，决定 在派工列表点击进入 不同 的订单详情页
+	private Short orderType;	//订单类型，决定 在派工列表点击进入 不同 的订单详情页
 	
 	private Short orderStatus;  //订单状态
+	
+	// 是否接单状态;
+	private String applyStatus;
+
+	private String applyTimeStr;
 	
 	
 	
@@ -111,6 +116,22 @@ public class OaOrderDisVo extends OrderDispatchs{
 	 */
 	public void setAmMobile(String amMobile) {
 		this.amMobile = amMobile;
+	}
+
+	public String getApplyStatus() {
+		return applyStatus;
+	}
+
+	public void setApplyStatus(String applyStatus) {
+		this.applyStatus = applyStatus;
+	}
+
+	public String getApplyTimeStr() {
+		return applyTimeStr;
+	}
+
+	public void setApplyTimeStr(String applyTimeStr) {
+		this.applyTimeStr = applyTimeStr;
 	}
 	
 }

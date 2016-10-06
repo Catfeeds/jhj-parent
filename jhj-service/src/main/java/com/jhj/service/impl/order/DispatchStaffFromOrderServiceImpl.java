@@ -716,7 +716,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orderLogService.insert(orderLog);
 		
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
 	}
@@ -753,7 +753,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orderLogService.insert(orderLog);
 		
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
 		if(orderDispatchs.getDispatchStatus()==1){
@@ -812,7 +812,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orderLogService.insert(orderLog);
 		
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
 		if(orderDispatchs.getDispatchStatus()==1){
@@ -894,7 +894,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    tranParams.put("service_time", serviceTime);
 		    
 		    //服务时长 
-		    String serviceHour = order.getServiceHour().toString() + "小时";
+		    String serviceHour = order.getServiceHour() + "小时";
 		    tranParams.put("service_hour", serviceHour);
 		    
 		    //服务项目

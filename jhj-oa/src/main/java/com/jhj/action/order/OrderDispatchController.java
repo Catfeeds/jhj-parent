@@ -1,5 +1,6 @@
 package com.jhj.action.order;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +15,14 @@ import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
+import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
@@ -27,9 +30,13 @@ import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.staff.StaffSearchVo;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.SmsUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -61,7 +68,7 @@ public class OrderDispatchController extends BaseController {
 	private OrdersService orderSevice;
 
 	@Autowired
-	private OrgStaffsService staffService;
+	private OrgStaffsService orgStaffsService;
 
 	@Autowired
 	private UserPushBindService bindService;
@@ -74,6 +81,9 @@ public class OrderDispatchController extends BaseController {
 
 	@Autowired
 	private PartnerServiceTypeService partnerService;
+	
+	@Autowired
+	private OrderServiceAddonsService orderServiceAddonsService;
 
 	/**
 	 * 
@@ -115,7 +125,7 @@ public class OrderDispatchController extends BaseController {
 	/*
 	 * 钟点工-- 提交修改结果
 	 */
-	@RequestMapping(value = "submit_manu_base_order.json", method = RequestMethod.POST)
+	@RequestMapping(value = "save_order_hour.json", method = RequestMethod.POST)
 	public AppResultData<Object> submitManuBaseOrder(Model model, 
 			@RequestParam("orderId") Long orderId, 
 			@RequestParam("selectStaffId") Long selectStaffId,
@@ -142,7 +152,7 @@ public class OrderDispatchController extends BaseController {
 			return resultData;
 		}
 
-		OrgStaffs staffs = staffService.selectByPrimaryKey(selectStaffId);
+		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(selectStaffId);
 
 		if (staffs == null) {
 			resultData.setStatus(Constants.ERROR_999);
@@ -160,16 +170,19 @@ public class OrderDispatchController extends BaseController {
 		searchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
 		
-		boolean isChangeDispatch = false;
 		if (disList.size() > 0) {
 			oldDispatchs = disList.get(0);
-			isChangeDispatch = true;
+			if (!oldDispatchs.getStaffId().equals(selectStaffId)) {
+				oldDispatchs.setDispatchStatus((short) 0);
+				oldDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
+				orderDispatchsService.updateByPrimaryKey(oldDispatchs);
+			}
 			oldStaffMobile = oldDispatchs.getStaffMobile();
 		}
 		
 		Double serviceHour = (double) order.getServiceHour();
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceHour, selectStaffId, isChangeDispatch);
+		Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceHour, selectStaffId);
 
 		if (doOrderDispatch == false) {
 			resultData.setStatus(Constants.ERROR_999);
@@ -186,7 +199,7 @@ public class OrderDispatchController extends BaseController {
 
 		// 发送通知
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 
 		/*
@@ -205,6 +218,154 @@ public class OrderDispatchController extends BaseController {
 		SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[] { beginTimeStr,
 				partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
 
+		return resultData;
+	}
+	
+	/*
+	 * 深度服务-- 提交修改结果
+	 */
+	@RequestMapping(value = "save_order_exp.json", method = RequestMethod.POST)
+	public AppResultData<Object> saveExpOrder(Model model, 
+			@RequestParam("orderId") Long orderId, 
+			@RequestParam("selectStaffIds") String selectStaffIds,
+			@RequestParam("newServiceDate") String newServiceDate) {
+
+		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
+
+		if (newServiceDate.length() == 16)
+			newServiceDate += ":00";
+
+		Orders order = orderSevice.selectByPrimaryKey(orderId);
+		Short orderStatus = order.getOrderStatus();
+		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
+		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
+			resultData.setStatus(Constants.ERROR_999);
+			resultData.setMsg("只有已支付或已派工的订单能进行派工,返回列表页");
+			return resultData;
+		}
+
+		if (StringUtil.isEmpty(selectStaffIds)) {
+			resultData.setStatus(Constants.ERROR_999);
+			resultData.setMsg("没有选择派工人员,返回列表页");
+			return resultData;
+		}
+		
+		String[] staffIdsAry = StringUtil.convertStrToArray(selectStaffIds);
+		//本次派工人员，可为多个.
+		List<Long> staffIds = new ArrayList<Long>();
+		//本地派工人员与已经派工过的人员比较，只保留新的派工人员.
+		List<Long> newDispathStaffIds = new ArrayList<Long>();
+		
+		for (int i = 0; i < staffIdsAry.length; i++) {
+			String tmpStaffIdStr = staffIdsAry[i];
+			if (StringUtil.isEmpty(tmpStaffIdStr)) continue;
+			Long tmpStaffId = Long.valueOf(tmpStaffIdStr);
+			staffIds.add(tmpStaffId);
+			newDispathStaffIds.add(tmpStaffId);
+		}
+		
+		List<String> oldStaffMobiles = new ArrayList<String>();
+		OrderDispatchs oldDispatchs = null;
+
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(order.getOrderNo());
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+		
+		if (!disList.isEmpty()) {
+			for (OrderDispatchs d : disList) {
+				if (!staffIds.contains(d.getStaffId())) {
+					d.setDispatchStatus((short) 0);
+					d.setUpdateTime(TimeStampUtil.getNowSecond());
+					oldStaffMobiles.add(d.getStaffMobile());
+				} else {
+					newDispathStaffIds.remove(d.getStaffId());
+				}
+			}
+			oldDispatchs = disList.get(0);
+		}
+		
+		//计算派工时间
+		Double serviceHour = (double) order.getServiceHour();
+		
+		List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+		
+		if (!orderAddons.isEmpty()) {
+			serviceHour = (double) 0;
+			List<OrderServiceAddonViewVo> orderAddonVos = orderServiceAddonsService.changeToOrderServiceAddons(orderAddons);
+			for (OrderServiceAddonViewVo vo : orderAddonVos) {
+				Double serviceHourAddon = vo.getServiceHour();
+				int itemNum = vo.getItemNum();
+				int defaultNum = vo.getDefaultNum();
+				
+				if (defaultNum > 0) {
+					serviceHour+= (serviceHourAddon / defaultNum) * itemNum;
+				} else {
+					serviceHour+= serviceHourAddon * itemNum;
+				}
+				
+			}
+			
+			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 1);
+		}
+		
+		// 进行派工，兼容一人和多人
+		for (Long staffId : newDispathStaffIds) {
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceHour, staffId);
+		}
+		
+		//如果为多人派工，需要对服务时间进行平均. 考虑到调整派工，人数变化的情况，所以要整体的更新.
+		//平均值频度为30分钟，比如 2.1 小时则为 2.5小时，  2.6小时则为3小时.
+		if (staffIds.size() > 1) {
+			int totalStaffs = staffIds.size();
+			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, totalStaffs);
+
+			disList = orderDispatchsService.selectBySearchVo(searchVo);
+			
+			for (OrderDispatchs d : disList) {
+				d.setServiceHours(serviceHour);
+				d.setUpdateTime(TimeStampUtil.getNowSecond());
+				orderDispatchsService.updateByPrimaryKey(d);
+			}
+		}
+
+		// 更新订单表
+		Long serviceDateTime = TimeStampUtil.getMillisOfDayFull(newServiceDate) / 1000;
+		order.setServiceDate(serviceDateTime);
+		order.setUpdateTime(TimeStampUtil.getNowSecond());
+		// 更新为 已派工
+		order.setServiceHour(serviceHour);
+		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
+		orderSevice.updateByPrimaryKeySelective(order);
+
+		// 发送通知
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
+
+		/*
+		 * 派工 短信通知
+		 */
+		// 用户收到派工通知---发送短信
+		String[] smsContent = new String[] { timeStr };
+
+		// 2)派工成功，为服务人员发送推送消息---推送消息
+		StaffSearchVo staffSearchVo = new StaffSearchVo();
+		staffSearchVo.setStaffIds(staffIds);
+		List<OrgStaffs> staffs = orgStaffsService.selectBySearchVo(staffSearchVo);
+		
+		for (OrgStaffs item : staffs) {
+			dispatchStaffFromOrderService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+					Constants.ALERT_STAFF_MSG);
+	
+			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
+		}
+
+		// 给原来派工人员发送短信提醒，派工订单被取消
+		for (String oldStaffMobile : oldStaffMobiles) {
+			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[] { beginTimeStr,
+					partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
+		}
 		return resultData;
 	}
 
@@ -247,7 +408,7 @@ public class OrderDispatchController extends BaseController {
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setDispatchStatus((short) 1);
 			searchVo1.setStartServiceTime(orders.getServiceDate());
-			searchVo1.setStartServiceHourTime(orders.getServiceDate() + orders.getServiceHour() * 3600);
+			searchVo1.setStartServiceHourTime((long) (orders.getServiceDate() + orders.getServiceHour() * 3600));
 			
 			for (OrgStaffsNewVo orgStaffsNewVo : list) {
 
@@ -338,7 +499,7 @@ public class OrderDispatchController extends BaseController {
 		dispatchs.setPickDistance(distance);
 		dispatchs.setUserAddrDistance(distance);
 
-		OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
+		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
 
 		dispatchs.setOrgId(staffs.getOrgId());
 		dispatchs.setStaffId(staffId);
@@ -364,7 +525,7 @@ public class OrderDispatchController extends BaseController {
 			/*
 			 * 更新助理订单 门店 为 派工人员 所在的 云店
 			 */
-			OrgStaffs orgStaffs = staffService.selectByPrimaryKey(staffId);
+			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
 
 			order.setOrgId(orgStaffs.getOrgId());
 
@@ -378,7 +539,7 @@ public class OrderDispatchController extends BaseController {
 		}
 
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 
 		// 1) 用户收到派工通知---发送短信

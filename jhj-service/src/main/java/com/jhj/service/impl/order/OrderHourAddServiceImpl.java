@@ -141,7 +141,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		
 		
 		Long serviceDate = order.getServiceDate();
-		Short serviceHour = order.getServiceHour();
+		double serviceHour = order.getServiceHour();
 		
 			
 		//根据服务地址经纬度获得符合的门店
@@ -179,7 +179,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		}		
 		
 		//结束时间 = 服务开始秒值+ 服务时长秒值
-		Long serviceDateEnd = serviceDate + serviceHour * 3600 ;
+		Long serviceDateEnd = (long) (serviceDate + serviceHour * 3600) ;
 		
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrgId(orgId);

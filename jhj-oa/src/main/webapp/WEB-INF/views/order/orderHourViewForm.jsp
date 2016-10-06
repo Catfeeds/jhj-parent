@@ -135,7 +135,7 @@
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						
 						<div class="form-group" id="nowStaff">
-							<label class="col-md-2 control-label">当前阿姨</label>
+							<label class="col-md-2 control-label">服务人员</label>
 							<div class="col-md-5">
 								<form:input path="staffName" class="form-control" maxLength="32" readonly="true" />
 								<form:errors path="staffName" class="field-has-error"></form:errors>

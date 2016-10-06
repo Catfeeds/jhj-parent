@@ -189,7 +189,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				searchVo1.setOrgId(orgId);
 				searchVo1.setDispatchStatus((short) 1);
 				searchVo1.setStartServiceTime(serviceDate-3600*2);
-				searchVo1.setEndServiceTime(serviceDate+order.getServiceHour()*3600);
+				searchVo1.setEndServiceTime((long) (serviceDate+order.getServiceHour()*3600));
 				List<OrderDispatchs> disList = orderDispatchsService.selectByMatchTime(searchVo1);
 				
 				for (OrderDispatchs orderDispatchs : disList) {
@@ -227,9 +227,9 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		
 		LeaveSearchVo searchVo = new LeaveSearchVo();
 		
-		Short serviceHour = order.getServiceHour();
+		double serviceHour = order.getServiceHour();
 		
-		Long orderServiceDateEnd = serviceDate + serviceHour*3600;
+		Long orderServiceDateEnd = (long) (serviceDate + serviceHour*3600);
 		
 		//订单服务开始时间
 		searchVo.setServiceStartTime(serviceDate);
@@ -591,11 +591,11 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			
  			LeaveSearchVo searchVo = new LeaveSearchVo();
  			
- 			Short serviceHour = order.getServiceHour();
+ 			double serviceHour = order.getServiceHour();
  			
  			Long serviceDate = order.getServiceDate();
  			
- 			Long orderServiceDateEnd = serviceDate + serviceHour*3600;
+ 			Long orderServiceDateEnd = (long) (serviceDate + serviceHour*3600);
  			
  			//订单服务开始时间
  			searchVo.setServiceStartTime(serviceDate);

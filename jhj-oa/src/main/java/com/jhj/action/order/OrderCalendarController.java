@@ -234,7 +234,7 @@ public class OrderCalendarController extends BaseController {
 							
 							Orders orders = orderService.selectByOrderNo(orderNo);
 							
-							Short serviceHour = orders.getServiceHour();
+							double serviceHour = orders.getServiceHour();
 							
 							Long serviceType = orders.getServiceType();
 							
@@ -242,7 +242,7 @@ public class OrderCalendarController extends BaseController {
 							String startHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate, "HH:mm");
 							
 							// 订单服务时间的 结束时间点
-							String endHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate + serviceHour * 3600 * 1000, "HH:mm");
+							String endHourMinStr = TimeStampUtil.timeStampToDateStr((long) (serviceDate + serviceHour * 3600 * 1000), "HH:mm");
 							
 							eventVo.setEventName("");
 							PartnerServiceType type = partService.selectByPrimaryKey(serviceType);

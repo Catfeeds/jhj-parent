@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderDispatchs;
-import com.jhj.vo.order.OaOrderDisVo;
+import com.jhj.vo.order.OrderDispatchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 
 /**
@@ -18,9 +18,9 @@ public interface OaOrderDisService {
 
 	PageInfo selectOrderDisByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize);
 
-	OaOrderDisVo compleVo(OrderDispatchs dispatchs);
+	OrderDispatchVo compleVo(OrderDispatchs dispatchs);
 
-	OaOrderDisVo initVo();
+	OrderDispatchVo initVo();
 
-	List<OaOrderDisVo> getDisEveryDay(String day);
+	List<OrderDispatchVo> getDisEveryDay(String day);
 }
