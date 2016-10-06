@@ -94,8 +94,11 @@ public class OrderExpCleanController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "post_exp_clean_order.json", method = RequestMethod.POST)
-	public AppResultData<Object> PostExpCleanOrder(@RequestParam("user_id") Long userId, @RequestParam("service_type") Long serviceType,
-			@RequestParam("service_date") String serviceDate, @RequestParam("addr_id") Long addrId,
+	public AppResultData<Object> PostExpCleanOrder(
+			@RequestParam("user_id") Long userId, 
+			@RequestParam("service_type") Long serviceType,
+			@RequestParam("service_date") String serviceDate, 
+			@RequestParam("addr_id") Long addrId,
 			@RequestParam("service_addons_datas") String serviceAddonsDatas,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom) throws Exception {
@@ -188,9 +191,11 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam("service_type") Long serviceType, 
 			@RequestParam("service_date") String serviceDate, 
 			@RequestParam("addr_id") Long addrId,
+			@RequestParam("serviceHour") Short serviceHour,
 			@RequestParam("service_addons_datas") String serviceAddonsDatas,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom,
+			@RequestParam(value = "order_pay", required = false, defaultValue = "0") BigDecimal orderPay,
 			@RequestParam(value = "order_op_from", required = false) Long orderOpFrom)
 			throws Exception {
 
@@ -223,6 +228,7 @@ public class OrderExpCleanController extends BaseController {
 		order.setOrderType(Constants.ORDER_TYPE_1);
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDateTable);
+		order.setServiceHour(serviceHour);
 		order.setAddrId(addrId);
 		order.setOrderFrom(orderFrom);
 		order.setOrderOpFrom(orderOpFrom);
@@ -237,6 +243,12 @@ public class OrderExpCleanController extends BaseController {
 		 * 2.设置订单总金额。插入 order_prices表
 		 */
 		OrderPrices orderPrices = orderExpCleanService.getOrderPriceOfOrderExpClean(serviceType, serviceAddonsDatas);
+		
+		if (orderFrom.equals((short)2) && orderPay.compareTo(new BigDecimal(0)) == 1) {
+			orderPrices.setOrderMoney(orderPay);
+			orderPrices.setOrderPay(orderPay);
+		}
+		
 		orderPrices.setUserId(userId);
 		orderPrices.setMobile(u.getMobile());
 		orderPrices.setOrderNo(orderNo);

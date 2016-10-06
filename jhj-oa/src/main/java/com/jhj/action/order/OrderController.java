@@ -267,6 +267,7 @@ public class OrderController extends BaseController {
 	@AuthPassport
 	@RequestMapping(value = "/order-hour-add", method = RequestMethod.GET)
 	public String oaOrderHourAdd(Model model) {
+		
 		// 订单的来源
 		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
 		vo.setEnable((short) 1);
@@ -278,51 +279,9 @@ public class OrderController extends BaseController {
 			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
 		}
 		model.addAttribute("serviceType", serviceType);
-		return "order/oaOrderHourAdd";
+		return "order/orderHourAdd";
 	}
 
-	@AuthPassport
-	@RequestMapping(value = "/save_order_hour", method = RequestMethod.POST)
-	@ResponseBody
-	public Orders saveOrderHour(Model model, Orders order,
-			@RequestParam("payway") short payway,
-			@RequestParam("orderPay") double orderPay) {
-
-		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
-		order.setOrderNo(orderNo);
-		order.setOrderStatus(Constants.ORDER_STATUS_4);
-		// order.setOrderType(Constants.ORDER_TYPE_0);
-		order.setAddTime(TimeStampUtil.getNowSecond());
-		order.setUpdateTime(TimeStampUtil.getNowSecond());
-		order.setServiceContent("基础保洁");
-		order.setRemarksConfirm("");
-
-		orderService.insertSelective(order);
-
-		// 设置订单总金额。插入 order_prices表
-		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(order
-				.getServiceType());
-
-		orderPrices.setUserId(order.getUserId());
-		orderPrices.setOrderId(order.getId());
-		orderPrices.setMobile(order.getMobile());
-		orderPrices.setOrderNo(orderNo);
-		orderPrices.setPayType(payway);
-		BigDecimal d = new BigDecimal(orderPay);
-		orderPrices.setOrderPay(d);
-
-		orderPriceService.insert(orderPrices);
-
-		/*
-		 * 2.插入订单日志表 order_log
-		 */
-		OrderLog orderLog = orderLogService.initOrderLog(order);
-
-		orderLogService.insert(orderLog);
-
-		return order;
-	}
-	
 	@AuthPassport
 	@RequestMapping(value = "/order-exp-add", method = RequestMethod.GET)
 	public String orderAmAdd(Model model) {
@@ -339,7 +298,7 @@ public class OrderController extends BaseController {
 				.selectByParentId(26L);
 		model.addAttribute("serviceType", serviceTypeList);
 
-		return "order/orderAmAdd";
+		return "order/orderExpAdd";
 	}
 
 }

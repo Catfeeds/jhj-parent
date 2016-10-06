@@ -163,14 +163,16 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// SmsUtil.SendSms(u.getMobile(), "29152", contentForUser);
 
 		// 2)派工成功，为服务人员发送推送消息---推送消息
-		if (doOrderDispatch.equals(true)) {
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
-			
-			//发送短信
-			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
-		}
+		
+		//todo, 测试暂时去掉
+//		if (doOrderDispatch.equals(true)) {
+//			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+//					Constants.ALERT_STAFF_MSG);
+//			
+//			//发送短信
+//			String[] smsContent = new String[] { timeStr };
+//			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+//		}
 
 		
 		return true;
@@ -263,14 +265,16 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// SmsUtil.SendSms(u.getMobile(), "29152", contentForUser);
 
 		// 2)派工成功，为服务人员发送推送消息---推送消息
-		if (doOrderDispatch.equals(true)) {
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
-			
-			//发送短信
-			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
-		}
+		
+		//todo 测试暂时去掉
+//		if (doOrderDispatch.equals(true)) {
+//			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+//					Constants.ALERT_STAFF_MSG);
+//			
+//			//发送短信
+//			String[] smsContent = new String[] { timeStr };
+//			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+//		}
 		
 		return true;
 	}

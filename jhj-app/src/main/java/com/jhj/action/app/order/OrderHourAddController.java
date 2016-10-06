@@ -1,6 +1,7 @@
 package com.jhj.action.app.order;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -104,6 +105,7 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam(value = "serviceAddons", required = false, defaultValue = "") String serviceAddons,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom,
+			@RequestParam(value = "orderPay", required = false, defaultValue = "0") BigDecimal orderPay,
 			@RequestParam(value = "orderOpFrom", required = false, defaultValue = "0") Long orderOpFrom) throws Exception{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -219,6 +221,12 @@ public class OrderHourAddController extends BaseController {
 		//设置订单总金额。插入 order_prices表
 		
 		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(serviceType);
+		
+		if (orderFrom.equals((short)2) && orderPay.compareTo(new BigDecimal(0)) == 1) {
+
+			orderPrices.setOrderMoney(orderPay);
+			orderPrices.setOrderPay(orderPay);
+		}
 		
 		orderPrices.setUserId(userId);
 		orderPrices.setOrderId(order.getId());

@@ -39,27 +39,28 @@
 					<div class="col-lg-12">
 						<section class="panel">
 							<header class="panel-heading">
-								<h4>基础保洁订单</h4>
+								<h4>深度服务订单</h4>
 							</header>
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<div class="panel-body">
-								<form:form class="form-horizontal" method="POST" name="form">
-									<input id="from-user-id" name="userId" type="hidden"/>
-									<input name="orderType" type="hidden" />
-									<input type="hidden" name="orderFrom" id="orderForm" value="2">
+								<form:form class="form-horizontal" method="POST" name="form" id="orderExpForm">
+									<input type="hidden" id="userId" name="userId"/>
+									<input type="hidden" id="userId" name="orderType" value="1"/>
+									<input type="hidden" id="orderFrom" name="orderFrom" value="2">
+									<input type="hidden" id="serviceAddonDatas" name="serviceAddonDatas" value=""/>
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>用户手机号</label>
 											<div class="col-md-5">
-												<input name="mobile" id="from-mobile" class="form-control" onblur="getAddrByMobile()" />
+												<input id="mobile" name="mobile"  class="form-control" onblur="getAddrByMobile()" />
 											</div>
 										</div>
 										<div class="form-group required">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务地址</label>
 											<div class="col-md-5">
-												<select name="addrId" class="form-control" id="from-addr" >
+												<select id="addrId" name="addrId" class="form-control"  >
 													<option value="">--请选择服务地址--</option>
 												</select>
 											</div>
@@ -74,15 +75,38 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务类型</label>
 											<div class="col-md-5">
-												<input type="hidden" name="serviceType" class="form-control" value="${serviceType.serviceTypeId }" />
-												<input class="form-control" value="${serviceType.name }" readonly="readonly">
+												<select id="serviceType" name="serviceType" class="form-control" onchange="serviceTypeChange()">
+													<option value="">--请选择服务类型--</option>
+													<c:forEach items="${serviceType }" var="service">
+														<option value="${service.serviceTypeId }">${service.name }</option>
+													</c:forEach>
+												</select>
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
-												color="red">*</font>价格</label>
+												color="red">*</font>服务子项</label>
 											<div class="col-md-5">
-												<input class="form-control" type="number" name="orderPay" value="${serviceType.price }">
+												<table id="serviceAddonTable" border='1' class="table table-bordered">
+													<thead>
+														<tr>
+															<td>类别</td>
+															<td>折扣价</td>
+															
+															<td>时长参考</td>
+															<td>数量</td>
+														</tr>
+													</thead>
+													<tbody id="service-content"></tbody>
+												</table>
+											</div>
+											
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label"><font
+												color="red">*</font>总价格</label>
+											<div class="col-md-5">
+												<input class="form-control" type="number" id="orderPay" name="orderPay" value="0"/>
 											</div>
 										</div>
 										
@@ -90,7 +114,7 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>
 											<div class="col-md-5">
-												<select name="orderOpFrom" class="form-control">
+												<select id="orderOpFrom" name="orderOpFrom" class="form-control">
 													<option value="">--请选择订单来源--</option>
 													<option value="1">来电订单</option>
 													<c:forEach items="${cooperativeBusiness }" var="src">
@@ -103,21 +127,22 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>服务时间</label>
 											<div class="col-md-5">
-												<input name="serviceDate" id="from-servicedate" class="form-control form_datetime" readonly="readonly"/>
+												<input id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly"/>
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-2 control-label"><font
-												color="red">*</font>服务时长</label>
+											<label class="col-md-2 control-label">
+												<font color="red">*</font>服务时长
+											</label>
 											<div class="col-md-5">
-												<input name="serviceHour" class="form-control" value="3" readonly="readonly"/>
+												<input type="text" id="serviceHour" name="serviceHour" class="form-control" value="" />
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>支付方式</label>
 											<div class="col-md-5">
-												<select id="f-paywawy" name="payway" class="form-control">
+												<select id="orderPayType" name="orderPayType" class="form-control">
 													<option value="">--请选择支付方式--</option>
 													<option value="6">现金支付</option>
 													<option value="7">平台已支付</option>
@@ -127,7 +152,7 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">用户备注:</label>
 											<div class="col-md-5">
-												<textarea id="ft-eara" name="remarks" rows="5" cols="50"
+												<textarea id="remarks" name="remarks" rows="5" cols="50"
 													class="form-control"></textarea>
 											</div>
 										</div>
@@ -160,8 +185,8 @@
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>" type="text/javascript"></script>
-	<script type="text/javascript" src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
-	<script type="text/javascript" src="<c:url value='/js/order/oaOrderHourAdd.js'/>"></script>
-	
+	<script type="text/javascript" src="<c:url value='/js/validate-methods.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/orderExpAdd.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
 </body>
 </html>

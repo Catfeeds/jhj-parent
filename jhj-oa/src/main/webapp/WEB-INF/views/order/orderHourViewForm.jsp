@@ -57,7 +57,14 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">服务开始时间</label>
 							<div class="col-md-5">
-								<input type="text" readonly="true" value="${oaOrderListVoModel.serviceDateStr }"/>
+								<input type="text" readonly="true" value="${oaOrderListVoModel.serviceDateStr }" class="form-control"/>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label">服务时长</label>
+							<div class="col-md-5">
+								<form:input path="serviceHour" class="form-control" maxLength="32" readonly="true" />
 							</div>
 						</div>
 						
