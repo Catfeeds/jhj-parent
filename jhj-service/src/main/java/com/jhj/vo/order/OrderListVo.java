@@ -49,7 +49,7 @@ public class OrderListVo {
 	
 	private String pickAddrLng;
 	
-	private Short serviceHour;
+	private double serviceHour;
 	
 	private String remarks;
 	
@@ -228,11 +228,11 @@ public class OrderListVo {
 		this.orderStatusStr = orderStatusStr;
 	}
 
-	public Short getServiceHour() {
+	public double getServiceHour() {
 		return serviceHour;
 	}
 
-	public void setServiceHour(Short serviceHour) {
+	public void setServiceHour(double serviceHour) {
 		this.serviceHour = serviceHour;
 	}
 

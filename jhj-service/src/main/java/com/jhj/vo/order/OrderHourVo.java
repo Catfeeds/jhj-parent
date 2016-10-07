@@ -18,7 +18,7 @@ public class OrderHourVo {
 	private BigDecimal orderMoney; 		//总计金额
 	
 	private Long serviceDate;			//服务开始时间
-	private Short serviceHour;			//服务时长。。二者 确定结束时间
+	private double serviceHour;			//服务时长。。二者 确定结束时间
 	
 	
 	private String serviceAddr;		//服务地址
@@ -51,10 +51,10 @@ public class OrderHourVo {
 	public void setServiceDate(Long serviceDate) {
 		this.serviceDate = serviceDate;
 	}
-	public Short getServiceHour() {
+	public double getServiceHour() {
 		return serviceHour;
 	}
-	public void setServiceHour(Short serviceHour) {
+	public void setServiceHour(double serviceHour) {
 		this.serviceHour = serviceHour;
 	}
 	public String getServiceAddr() {
