@@ -15,7 +15,9 @@ public class OrderDispatchVo extends OrderDispatchs{
 	
 	private String addrName;	//服务地址
 	
-	private String orgName;		//门店名称
+	private String parentOrgName; //门店名称
+	
+	private String orgName;		//云店名称
 	
 	private String amName;		//助理名称
 	
@@ -132,6 +134,14 @@ public class OrderDispatchVo extends OrderDispatchs{
 
 	public void setApplyTimeStr(String applyTimeStr) {
 		this.applyTimeStr = applyTimeStr;
+	}
+
+	public String getParentOrgName() {
+		return parentOrgName;
+	}
+
+	public void setParentOrgName(String parentOrgName) {
+		this.parentOrgName = parentOrgName;
 	}
 	
 }

@@ -6,6 +6,7 @@
 <%@ taglib prefix="payTypeNameTag" uri="/WEB-INF/tags/payTypeName.tld"%>
 <%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="cloudOrgSelect" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
+<%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
 <html>
 <head>
 <!--common css for all pages-->
@@ -180,29 +181,35 @@
 					<section class="panel"> <header class="panel-info"> <h4>派工信息</h4> </header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						
-						 <c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
-							<div class="form-group" id="nowStaff">
-								<label class="col-md-2 control-label">服务人员</label>
-								<div class="col-md-5">
-									<input type="text" name="staffName" value="${item.staffName }" class="form-control" maxLength="32" readonly="true" />
-								</div>
-							</div>
-							<c:if test="${ oaOrderListVoModel.orderStatus >= 3 && oaOrderListVoModel.orderStatus <= 8}">
-								<div class="form-group">
-									<label class="col-md-2 control-label">是否接单</label>
-									<div class="col-md-5">
-										<input type="text" name="applyStatus" value="${item.applyStatus }" class="form-control" maxLength="32" readonly="true" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-md-2 control-label">接单时间</label>
-									<div class="col-md-5">
-										<input type="text" name="applyTimeStr" value="${item.applyTimeStr }" class="form-control" maxLength="32" readonly="true" />
-									</div>
-								</div>
-							</c:if>
+						<div class="col-sm-12">
+							<table class="table table-striped table-advance table-hover" >
+								<thead>
+									<tr>
+										<th>门店</th>
+										<th>云店</th>
+										<th>服务人员</th>
+										<th>手机号</th>
+										<th>派工时间</th>
+										<th>是否接单</th>
+										<th>接单时间</th>
+									</tr>
+								</thead>
+								<tbody >
+									 <c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
+										<tr>
+											<td>${item.parentOrgName }</td>
+											<td>${item.orgName }</td>
+											<td>${item.staffName }</td>
+											<td>${item.staffMobile }</td>
+											<td><timestampTag:timestamp patten="MM-dd HH:mm" t="${item.addTime * 1000}" /></td>
+											<td>${item.applyStatus }</td>
+											<td>${item.applyTimeStr }</td>
+										</tr>
+									 </c:forEach>
+								</tbody>
+							</table>
+						</div>
 						
-						</c:forEach>
 						
 					</section>
 					<section class="panel"> <header class="panel-info"> <h4>派工调整</h4> </header>

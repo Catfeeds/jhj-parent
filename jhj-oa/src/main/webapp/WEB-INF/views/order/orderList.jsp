@@ -142,6 +142,7 @@
 										<th>下单时间</th>
 										<th>订单类型</th>
 										<th>服务日期</th>
+										<th>服务时长</th>
 										<th>用户手机号</th>
 										<th>服务地址</th>
 										<th>是否接单</th>
@@ -164,6 +165,7 @@
 												<td><timestampTag:timestamp patten="MM-dd" t="${item.addTime * 1000}" /></td>
 												<td>${item.orderTypeName }</td>
 												<td><timestampTag:timestamp patten="MM-dd HH:mm" t="${item.serviceDate * 1000}" /></td>
+												<td>${ item.serviceHour }</td>
 												<td>${ item.mobile }</td>
 												<td>${ item.orderAddress }</td>
 												<td>${ item.applyStatus }</td>

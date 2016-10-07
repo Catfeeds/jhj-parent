@@ -45,6 +45,7 @@ import com.jhj.vo.order.OrderDispatchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -141,42 +142,82 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (orgs != null) {
 			oaOrderListVo.setOrgName(orgs.getOrgName());
 		}
-		/*
-		 * 通过 订单 Id，在 order_dispaths 中 找出 是否 有派工记录
-		 */
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderId(orders.getId());
-		List<OrderDispatchs> disTwo = orderDispatchsService.selectBySearchVo(searchVo);
-
-		// map 存放 <派工状态， 当前派工状态对应的 阿姨 >
-		// IdentityHashMap<Short, String> statuNameMap = new
-		// IdentityHashMap<Short, String>();
 
 		Map<String, String> statuNameMap = new Hashtable<String, String>();
-		if (disTwo.size() > 0) {
-
-			for (int j = 0; j < disTwo.size(); j++) {
-				OrderDispatchs od = disTwo.get(j);
-				statuNameMap.put(od.getDispatchStatus() + "," + j, od.getStaffName());
-				Short isApply = od.getIsApply();
-				if(isApply==1){
+		
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrderNo(orderNo);
+		searchVo1.setDispatchStatus((short) 1);
+		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo1);
+		
+		List<OrderDispatchVo> orderDispatchs = new ArrayList<OrderDispatchVo>();
+		String staffName = "";
+		String staffMobile = "";
+		String orgName = "";
+		String cloudName = "";
+		//如果有派工记录
+		for (OrderDispatchs item : list) {
+			
+			String tmpStaffName = item.getStaffName();
+			if (staffName.indexOf(tmpStaffName + ",") < 0) staffName+= tmpStaffName + ",";
+			
+			String tmpStaffMobile = item.getStaffMobile();
+			if (staffMobile.indexOf(tmpStaffMobile + ",") < 0) staffMobile+= tmpStaffMobile + ",";
+			
+			
+			Long tmpStaffId = item.getStaffId();
+			
+			OrgStaffs staffs = staffService.selectByPrimaryKey(tmpStaffId);
+			
+			Orgs cloudOrg = orgService.selectByPrimaryKey(staffs.getOrgId());
+			if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
+			
+			Orgs parentOrg = orgService.selectByPrimaryKey(staffs.getParentOrgId());
+			if (orgName.indexOf(parentOrg.getOrgName() + ",") < 0) orgName+= parentOrg.getOrgName() + ",";
+		
+			//是否接单状态;
+			Short isApply = item.getIsApply();
+			if (isApply.equals((short)1)) {
+				oaOrderListVo.setApplyStatus("是");
+			} else {
+				Long now = TimeStampUtil.getNowSecond();
+				Long dispatchTime = item.getAddTime();
+				Long lastTime = now - dispatchTime;
+				if ( lastTime > 60 * 30) {
+					oaOrderListVo.setApplyStatus("超");
+				} else {
 					oaOrderListVo.setApplyStatus("否");
-				}else {
-					Long now = TimeStampUtil.getNowSecond();
-					Long dispatchTime = od.getAddTime();
-					Long lastTime = now - dispatchTime;
-					if ( lastTime > 60 * 30) {
-						oaOrderListVo.setApplyStatus("超");
-					} else {
-						oaOrderListVo.setApplyStatus("否");
-					}
 				}
 			}
-
-		} else {
-			// 暂未派工,订单状态 < 4
-			statuNameMap.put(3 + ",0", "无");
+			
+			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
+			vo.setOrgName(cloudOrg.getOrgName());
+			vo.setParentOrgName(parentOrg.getOrgName());
+			
+			orderDispatchs.add(vo);
 		}
+		
+		if (!StringUtil.isEmpty(staffName) && staffName.substring(staffName.length()-1).equals(",")) {
+			staffName = staffName.substring(0, staffName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(staffMobile) && staffMobile.substring(staffMobile.length()-1).equals(",")) {
+			staffMobile = staffMobile.substring(0, staffMobile.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(orgName) && orgName.substring(orgName.length()-1).equals(",")) {
+			orgName = orgName.substring(0, orgName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(cloudName) && cloudName.substring(cloudName.length()-1).equals(",")) {
+			cloudName = cloudName.substring(0, cloudName.length()-1);
+		}
+		
+		oaOrderListVo.setStaffName(staffName);
+		oaOrderListVo.setStaffMobile(staffMobile);
+		oaOrderListVo.setCloudOrgName(cloudName);
+		oaOrderListVo.setOrgName(orgName);	
+		oaOrderListVo.setOrderDispatchs(orderDispatchs);
 
 		OaOrderListNewVo oaOrderListNewVo = new OaOrderListNewVo();
 
@@ -504,24 +545,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}
 
 
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderNo(orderNo);
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
-
-		for (OrderDispatchs orDis : orderDisList) {
-			oaOrderListVo.setStaffName(orDis.getStaffName());
-			oaOrderListVo.setStaffId(orDis.getStaffId());
-		}
-		
-		List<OrderDispatchVo> orderDispatchVos = new ArrayList<OrderDispatchVo>();
-		for (OrderDispatchs item : orderDisList) {
-			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
-			orderDispatchVos.add(vo);
-		}
-		oaOrderListVo.setOrderDispatchs(orderDispatchVos);
-		
-
 		return oaOrderListVo;
 	}
 	
@@ -608,50 +631,48 @@ public class OaOrderServiceImpl implements OaOrderService {
 		 *  
 		 *   云店名称、派工人员姓名(如果已派工)、 订单具体类型
 		 */
+		
+
+		oaOrderListNewVo.setApplyStatus("-");
+		
+		
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrderNo(orderNo);
 		searchVo1.setDispatchStatus((short) 1);
 		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo1);
 		
+		List<OrderDispatchVo> orderDispatchs = new ArrayList<OrderDispatchVo>();
+		String staffName = "";
+		String staffMobile = "";
+		String orgName = "";
+		String cloudName = "";
 		//如果有派工记录
-		if(list.size() >0){
+		for (OrderDispatchs item : list) {
 			
-			OrderDispatchs dispatchs = list.get(0);
-			//派工人员姓名
-			oaOrderListNewVo.setStaffName(dispatchs.getStaffName());
+			String tmpStaffName = item.getStaffName();
+			if (staffName.indexOf(tmpStaffName + ",") < 0) staffName+= tmpStaffName + ",";
 			
-			Long staffId = dispatchs.getStaffId();
+			String tmpStaffMobile = item.getStaffMobile();
+			if (staffMobile.indexOf(tmpStaffMobile + ",") < 0) staffMobile+= tmpStaffMobile + ",";
 			
-			OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
 			
-			if(staffs != null){
-				
-				Orgs orgs2 = orgService.selectByPrimaryKey(staffs.getOrgId());
-				
-				if(orgs2 != null){
-					
-					//云店名称
-					oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
-					
-					Long parentId = orgs2.getParentId();
-					
-					//处理历史数据，  直接记录的是员工的  门店，而不是 jhj2.1的 云店
-					if(parentId != 0L){
-						//门店名称
-						Orgs orgs3 = orgService.selectByPrimaryKey(parentId);
-						oaOrderListNewVo.setOrgName(orgs3.getOrgName());
-					}
-				}
-				
-			}
+			Long tmpStaffId = item.getStaffId();
 			
+			OrgStaffs staffs = staffService.selectByPrimaryKey(tmpStaffId);
+			
+			Orgs cloudOrg = orgService.selectByPrimaryKey(staffs.getOrgId());
+			if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
+			
+			Orgs parentOrg = orgService.selectByPrimaryKey(staffs.getParentOrgId());
+			if (orgName.indexOf(parentOrg.getOrgName() + ",") < 0) orgName+= parentOrg.getOrgName() + ",";
+		
 			//是否接单状态;
-			Short isApply = dispatchs.getIsApply();
+			Short isApply = item.getIsApply();
 			if (isApply.equals((short)1)) {
 				oaOrderListNewVo.setApplyStatus("是");
 			} else {
 				Long now = TimeStampUtil.getNowSecond();
-				Long dispatchTime = dispatchs.getAddTime();
+				Long dispatchTime = item.getAddTime();
 				Long lastTime = now - dispatchTime;
 				if ( lastTime > 60 * 30) {
 					oaOrderListNewVo.setApplyStatus("超");
@@ -660,14 +681,34 @@ public class OaOrderServiceImpl implements OaOrderService {
 				}
 			}
 			
-		}else{
-			oaOrderListNewVo.setStaffName("暂无");
+			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
+			vo.setOrgName(cloudOrg.getOrgName());
+			vo.setParentOrgName(parentOrg.getOrgName());
 			
-			oaOrderListNewVo.setCloudOrgName("");
-			oaOrderListNewVo.setOrgName("");
-			oaOrderListNewVo.setApplyStatus("-");
+			orderDispatchs.add(vo);
 		}
 		
+		if (!StringUtil.isEmpty(staffName) && staffName.substring(staffName.length()-1).equals(",")) {
+			staffName = staffName.substring(0, staffName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(staffMobile) && staffMobile.substring(staffMobile.length()-1).equals(",")) {
+			staffMobile = staffMobile.substring(0, staffMobile.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(orgName) && orgName.substring(orgName.length()-1).equals(",")) {
+			orgName = orgName.substring(0, orgName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(cloudName) && cloudName.substring(cloudName.length()-1).equals(",")) {
+			cloudName = cloudName.substring(0, cloudName.length()-1);
+		}
+		
+		oaOrderListNewVo.setStaffName(staffName);
+		oaOrderListNewVo.setStaffMobile(staffMobile);
+		oaOrderListNewVo.setCloudOrgName(cloudName);
+		oaOrderListNewVo.setOrgName(orgName);		
+		oaOrderListNewVo.setOrderDispatchs(orderDispatchs);
 		
 		
 		Long serviceType = orders.getServiceType();
