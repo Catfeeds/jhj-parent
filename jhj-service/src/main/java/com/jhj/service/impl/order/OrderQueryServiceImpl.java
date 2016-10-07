@@ -454,6 +454,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setOrderId(item.getId());
 		vo.setStaffId(staffId);
 		vo.setMobile(users.getMobile());
+		vo.setServiceHour(String.valueOf(item.getServiceHour()));
 		// 服务日期
 		Long addTime = item.getServiceDate() * 1000;
 		vo.setServiceDate(TimeStampUtil.timeStampToDateStr(addTime, "MM-dd HH:mm"));
@@ -640,7 +641,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		OrderListVo vo = this.getOrderListVo(item, staffId);
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(vo, result);
-
+		
 		// 计算订单的收入比例
 		result.setOrderRatio("");
 		String settingType = "";
