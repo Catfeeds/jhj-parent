@@ -206,11 +206,11 @@ public class OrderController extends BaseController {
 		
 		Long nowSecond = TimeStampUtil.getNowSecond();
 		
-//		if (nowSecond < ServiceEndTime) {
-//			result.setStatus(Constants.ERROR_999);
-//			result.setMsg("未到服务完成时间点.不能提前完成服务");
-//			return result;
-//		}
+		if (nowSecond < ServiceEndTime) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("未到服务完成时间点.不能提前完成服务");
+			return result;
+		}
 
 
 		// 改变服务状态为已完成

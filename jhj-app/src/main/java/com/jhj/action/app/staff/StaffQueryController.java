@@ -107,11 +107,12 @@ public class StaffQueryController extends BaseController {
 			vo.setAuthStatus(orgStaffAuth.getAutStatus());
 		}
 		
-		String startTime = DateUtil.getfirstDayOfMonth();
+
 //		String endTime = DateUtil.getLastDayOfMonth() + "23:59:59";
-		
+		int year = DateUtil.getYear();
+		int month = DateUtil.getMonth();
 		OrderQuerySearchVo searchVo = new OrderQuerySearchVo();
-		searchVo.setStartTime(TimeStampUtil.getMillisOfDay(startTime)/1000);
+		searchVo.setStartTime(TimeStampUtil.getBeginOfMonth(year, month));
 		searchVo.setEndTime(TimeStampUtil.getNow());
 		searchVo.setStaffId(staffId);
 		
@@ -121,7 +122,7 @@ public class StaffQueryController extends BaseController {
 		//当月收入
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setStaffId(staffId);
-		orderSearchVo.setStartTime(TimeStampUtil.getMillisOfDay(startTime)/1000);
+		orderSearchVo.setStartTime(TimeStampUtil.getBeginOfMonth(year, month));
 		orderSearchVo.setEndTime(TimeStampUtil.getNow());
 		BigDecimal totalIncoming = orderStatService.getTotalOrderIncomeMoney(orderSearchVo);
 		vo.setTotalIncoming(totalIncoming);

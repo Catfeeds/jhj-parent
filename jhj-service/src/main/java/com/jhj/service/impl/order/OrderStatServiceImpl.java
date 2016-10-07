@@ -173,6 +173,7 @@ public class OrderStatServiceImpl implements OrderStatService {
 		vo.setOrderStatus(Constants.ORDER_HOUR_STATUS_7);
 		BigDecimal hourMoney = ordersMapper.getTotalOrderIncomeHourMoney(vo);
 		// 深度保洁1订单总金额
+		vo.setOrderType(Constants.ORDER_TYPE_1);
 		BigDecimal cleanMoney = this.getTotalOrderIncomeCleanMoney(vo);
 		
 
