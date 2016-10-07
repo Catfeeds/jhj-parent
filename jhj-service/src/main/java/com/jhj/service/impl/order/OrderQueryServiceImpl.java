@@ -450,6 +450,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		Users users = usersService.selectByPrimaryKey(item.getUserId());
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
 		BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+		
 		vo.setServiceTypeId(item.getServiceType());
 		vo.setOrderId(item.getId());
 		vo.setStaffId(staffId);
@@ -469,6 +470,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		if (item.getServiceType() > 0L) {
 			PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(item.getServiceType());
 			vo.setServiceTypeName(serviceType.getName());
+			vo.setServiceContent(serviceType.getName());
 		}
 		vo.setOrderTypeName("");
 		// 订单类型
