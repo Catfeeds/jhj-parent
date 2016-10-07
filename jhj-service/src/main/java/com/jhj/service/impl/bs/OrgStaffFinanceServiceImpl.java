@@ -154,6 +154,12 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			// 钟点功能收入比例 hour-ratio
 			settingType = "hour-ratio";
 		}
+		
+		if (orders.getOrderType() == 1) {
+			// 钟点功能收入比例 hour-ratio
+			settingType = "deep-ratio";
+		}
+		
 		if (orders.getOrderType() == 2) {
 			// 助理服务收入比例 am-ratio
 			settingType = "am-ratio";

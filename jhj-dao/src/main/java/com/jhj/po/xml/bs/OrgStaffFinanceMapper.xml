@@ -81,7 +81,7 @@
 			SELECT LAST_INSERT_ID() AS id
 		</selectKey>
 		insert into org_staff_finance (id, staff_id, mobile,
-		total_incoming, total_cash,total_dept, rest_money, is_black
+		total_incoming, total_cash,total_dept, rest_money, is_black,
 		add_time, update_time)
 		values
 		(#{id,jdbcType=NUMERIC},
