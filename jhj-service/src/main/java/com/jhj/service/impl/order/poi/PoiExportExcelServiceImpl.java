@@ -8,7 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.jhj.service.order.poi.PoiExportExcelService;
-import com.jhj.vo.order.OaOrderListNewVo;
+import com.jhj.vo.order.OaOrderListVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -23,14 +23,14 @@ import com.meijia.utils.TimeStampUtil;
 public class PoiExportExcelServiceImpl implements PoiExportExcelService {
 
 	@Override
-	public List<Map<String, Object>> createExcelRecord(List<OaOrderListNewVo> voList) {
+	public List<Map<String, Object>> createExcelRecord(List<OaOrderListVo> voList) {
 
 		List<Map<String, Object>> listmap = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sheetName", "sheet1");
 		listmap.add(map);
 
-		OaOrderListNewVo vo = null;
+		OaOrderListVo vo = null;
 
 		for (int j = 0; j < voList.size(); j++) {
 

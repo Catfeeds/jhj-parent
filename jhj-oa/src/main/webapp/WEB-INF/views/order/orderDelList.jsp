@@ -97,7 +97,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                               </thead>
                               <tbody>
                               <c:forEach items="${oaOrderListVoModel.list}" var="item">
-                              	<c:forEach items="${item.statusNameMap }" var="sta">
+                              
                               	
                               <tr>	
 							            
@@ -157,7 +157,6 @@ import="com.jhj.oa.common.UrlHelper"%>
                                   	   
 							       		</td> --%>
                               </tr>
-                              	</c:forEach>
                               </c:forEach>
                               </tbody>
                           </table>

@@ -38,7 +38,6 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
@@ -106,7 +105,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 	private PartnerServiceTypeService partnerServiceTypeService;
 	
 	@Override
-	public OaOrderListNewVo completeVo(Orders orders) {
+	public OaOrderListVo completeVo(Orders orders) {
 		OaOrderListVo oaOrderListVo = initVO();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(orders, oaOrderListVo);
@@ -219,13 +218,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		oaOrderListVo.setOrgName(orgName);	
 		oaOrderListVo.setOrderDispatchs(orderDispatchs);
 
-		OaOrderListNewVo oaOrderListNewVo = new OaOrderListNewVo();
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(oaOrderListVo, oaOrderListNewVo);
-
-		oaOrderListNewVo.setStatusNameMap(statuNameMap);
-
-		return oaOrderListNewVo;
+		return oaOrderListVo;
 	}
 
 	/*
@@ -549,7 +542,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 	}
 	
 	@Override
-	public OaOrderListNewVo completeNewVo(Orders orders) {
+	public OaOrderListVo completeNewVo(Orders orders) {
 		OaOrderListVo oaOrderListVo = initVO();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(orders, oaOrderListVo);
@@ -615,16 +608,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setDisStatusName("暂未派工");
 			oaOrderListVo.setStaffName("无");
 		}
-		Map<String, String> statuNameMap = new Hashtable<String, String>();
-
-		statuNameMap.put(orders.getOrderStatus() + ",", "");
-
-		OaOrderListNewVo oaOrderListNewVo = new OaOrderListNewVo();
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(oaOrderListVo, oaOrderListNewVo);
-
-		oaOrderListNewVo.setStatusNameMap(statuNameMap);
-		
 		
 		/*
 		 *  2016年3月29日17:43:59   细节修改。添加字段
@@ -633,7 +616,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		 */
 		
 
-		oaOrderListNewVo.setApplyStatus("-");
+		oaOrderListVo.setApplyStatus("-");
 		
 		
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
@@ -669,15 +652,15 @@ public class OaOrderServiceImpl implements OaOrderService {
 			//是否接单状态;
 			Short isApply = item.getIsApply();
 			if (isApply.equals((short)1)) {
-				oaOrderListNewVo.setApplyStatus("是");
+				oaOrderListVo.setApplyStatus("是");
 			} else {
 				Long now = TimeStampUtil.getNowSecond();
 				Long dispatchTime = item.getAddTime();
 				Long lastTime = now - dispatchTime;
 				if ( lastTime > 60 * 30) {
-					oaOrderListNewVo.setApplyStatus("超");
+					oaOrderListVo.setApplyStatus("超");
 				} else {
-					oaOrderListNewVo.setApplyStatus("否");
+					oaOrderListVo.setApplyStatus("否");
 				}
 			}
 			
@@ -704,34 +687,34 @@ public class OaOrderServiceImpl implements OaOrderService {
 			cloudName = cloudName.substring(0, cloudName.length()-1);
 		}
 		
-		oaOrderListNewVo.setStaffName(staffName);
-		oaOrderListNewVo.setStaffMobile(staffMobile);
-		oaOrderListNewVo.setCloudOrgName(cloudName);
-		oaOrderListNewVo.setOrgName(orgName);		
-		oaOrderListNewVo.setOrderDispatchs(orderDispatchs);
+		oaOrderListVo.setStaffName(staffName);
+		oaOrderListVo.setStaffMobile(staffMobile);
+		oaOrderListVo.setCloudOrgName(cloudName);
+		oaOrderListVo.setOrgName(orgName);		
+		oaOrderListVo.setOrderDispatchs(orderDispatchs);
 		
 		
 		Long serviceType = orders.getServiceType();
 		PartnerServiceType type = partnerService.selectByPrimaryKey(serviceType);
 		//订单类型 具体名称 （具体到服务类型）, 如 钟点工-->金牌保洁初体验、金牌保洁深度体验。。。
 		if(type !=null){
-			oaOrderListNewVo.setOrderTypeName(type.getName());
+			oaOrderListVo.setOrderTypeName(type.getName());
 		}else{
-			oaOrderListNewVo.setOrderTypeName("");
+			oaOrderListVo.setOrderTypeName("");
 		}
 		
 		//订单来源
 		Long orderOpFrom = orders.getOrderOpFrom();
 		if(orderOpFrom!=null){
 			if(orderOpFrom==1){
-				oaOrderListNewVo.setOrderOpFromName("来电订单");
+				oaOrderListVo.setOrderOpFromName("来电订单");
 			}else{
 				CooperativeBusiness cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
-				oaOrderListNewVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
 			}
 		}
 		
-		return oaOrderListNewVo;
+		return oaOrderListVo;
 	}
 
 	@Override

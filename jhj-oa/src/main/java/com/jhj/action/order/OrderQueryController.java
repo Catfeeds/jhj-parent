@@ -58,7 +58,6 @@ import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
-import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -153,7 +152,7 @@ public class OrderQueryController extends BaseController {
 		Orders orders = null;
 		for (int i = 0; i < orderList.size(); i++) {
 			orders = orderList.get(i);
-			OaOrderListNewVo completeVo = oaOrderService.completeNewVo(orders);
+			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			orderList.set(i, completeVo);
 		}
 
@@ -258,7 +257,7 @@ public class OrderQueryController extends BaseController {
 		Orders orders = null;
 		for (int i = 0; i < orderList.size(); i++) {
 			orders = orderList.get(i);
-			OaOrderListNewVo completeVo = oaOrderService.completeNewVo(orders);
+			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			orderList.set(i, completeVo);
 		}
 
@@ -353,7 +352,7 @@ public class OrderQueryController extends BaseController {
 		/*
 		 * 2. 转换导出字段为 页面的 vo字段
 		 */
-		List<OaOrderListNewVo> voList = new ArrayList<OaOrderListNewVo>();
+		List<OaOrderListVo> voList = new ArrayList<OaOrderListVo>();
 
 		for (Orders orders : orderList) {
 			voList.add(oaOrderService.completeNewVo(orders));

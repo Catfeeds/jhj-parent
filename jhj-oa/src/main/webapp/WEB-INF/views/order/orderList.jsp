@@ -155,7 +155,6 @@
 								</thead>
 								<tbody>
 									<c:forEach items="${oaOrderListVoModel.list}" var="item">
-										<c:forEach items="${item.statusNameMap }" var="sta">
 											<tr>
 												<input type="hidden" id="itemPayType" value="${item.payType }">
 												<input type="hidden" id="itemOrderStatus" value="${item.orderStatus }">
@@ -187,7 +186,6 @@
 													</c:if>
 												</td>
 											</tr>
-										</c:forEach>
 									</c:forEach>
 								</tbody>
 							</table>

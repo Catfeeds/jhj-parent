@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.order.Orders;
-import com.jhj.vo.order.OaOrderListNewVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OaOrderSearchVo;
 
@@ -17,7 +16,7 @@ import com.jhj.vo.order.OaOrderSearchVo;
  */
 public interface OaOrderService {
 		
-	OaOrderListNewVo completeVo(Orders orders);
+	OaOrderListVo completeVo(Orders orders);
 
 	OaOrderListVo initVO();
 	
@@ -29,6 +28,6 @@ public interface OaOrderService {
 	
 	Map<String, String> getUserAddrMap(Long userId);
 
-	OaOrderListNewVo completeNewVo(Orders orders);
+	OaOrderListVo completeNewVo(Orders orders);
 	
 }
