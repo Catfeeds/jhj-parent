@@ -426,13 +426,16 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	}
 
 	@Override
-	public OrderListVo getOrderListVo(Orders item) {
+	public OrderListVo getOrderListVo(Orders item, Long staffId) {
 
 		OrderListVo vo = new OrderListVo();
 
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(item.getOrderNo());
 		searchVo.setDispatchStatus((short) 1);
+		
+		if (staffId > 0L) searchVo.setStaffId(staffId);
+		
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
 
 		OrderDispatchs orderDispatch = null;
@@ -442,8 +445,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 		if (orderDispatch == null)
 			return vo;
-
-		Long staffId = orderDispatch.getStaffId();
 
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(item.getId());
 		Users users = usersService.selectByPrimaryKey(item.getUserId());
@@ -491,15 +492,40 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setOrderIncoming(new BigDecimal(0));
 		vo.setOrderMoney(new BigDecimal(0));
 		if (orderPrice != null) {
-			vo.setOrderMoney(orderPrice.getOrderMoney());
+			BigDecimal orderMoney = orderPrice.getOrderMoney();
+			vo.setOrderMoney(orderMoney);
 			// 总金额C * 85% = 结果.
 			if (vo.getOrderType() == 0) {
-				// 助理收入比例 hour-ratio
+				// 基础服务收入比例 hour-ratio
 				String settingType = "hour-ratio" + settingLevel;
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-					BigDecimal orderIncoming = orderPrice.getOrderMoney().multiply(settingValue);
+					BigDecimal orderIncoming = orderMoney.multiply(settingValue);
+					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
+					vo.setOrderIncoming(orderIncoming);
+				}
+			}
+			
+			if (vo.getOrderType() == 1) {
+				// 深度养护收入比例 deep-ratio
+				String settingType = "deep-ratio" + settingLevel;
+				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
+				if (jhjSetting != null) {
+					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
+					
+					//如果多人派工，则需要做平均值
+					searchVo = new OrderDispatchSearchVo();
+					searchVo.setOrderNo(item.getOrderNo());
+					searchVo.setDispatchStatus((short) 1);
+										
+					orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+					
+					int totalStaffs = orderDispatchs.size();
+					
+					BigDecimal orderMoneyAvg = MathBigDecimalUtil.div(orderMoney, new BigDecimal(totalStaffs));
+					
+					BigDecimal orderIncoming = orderMoneyAvg.multiply(settingValue);
 					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 					vo.setOrderIncoming(orderIncoming);
 				}
@@ -608,10 +634,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	}
 
 	@Override
-	public OrderDetailVo getOrderDetailVo(Orders item) {
+	public OrderDetailVo getOrderDetailVo(Orders item, Long staffId) {
 
 		OrderDetailVo result = new OrderDetailVo();
-		OrderListVo vo = this.getOrderListVo(item);
+		OrderListVo vo = this.getOrderListVo(item, staffId);
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(vo, result);
 
@@ -621,6 +647,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		if (vo.getOrderType() == 0) {
 			// 钟点功能收入比例 hour-ratio
 			settingType = "hour-ratio";
+		}
+		if (vo.getOrderType() == 1) {
+			// 钟点功能收入比例 hour-ratio
+			settingType = "deep-ratio";
 		}
 		if (vo.getOrderType() == 2) {
 			// 配送服务收入比例 am-ratio
@@ -644,7 +674,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			result.setTelStaff(jhjSetting.getSettingValue());
 		}
 
-		Long staffId = vo.getStaffId();
 		Long orgId = 0L;
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
 

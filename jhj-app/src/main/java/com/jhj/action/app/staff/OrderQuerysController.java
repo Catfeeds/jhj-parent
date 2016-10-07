@@ -15,15 +15,18 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDetailVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -43,6 +46,9 @@ public class OrderQuerysController extends BaseController {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
+	
+	@Autowired
+	private OrderServiceAddonsService orderServiceAddonsService;
 	
 
 	/**
@@ -71,17 +77,17 @@ public class OrderQuerysController extends BaseController {
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setStaffId(staffId);
 		
-		List<Short> statusList = new ArrayList<Short>();
+		List<Short> orderStatusList = new ArrayList<Short>();
 		if (orderFrom.equals((short)0)) {
-			statusList.add(Constants.ORDER_HOUR_STATUS_3);
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
 		}
 		
 		if (orderFrom.equals((short)1)) {
-			statusList.add(Constants.ORDER_HOUR_STATUS_5);
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
 		}
 		
 		if (orderFrom.equals((short)2)) {
-			statusList.add(Constants.ORDER_HOUR_STATUS_7);
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
 			
 			int year = DateUtil.getYear();
 			int month = DateUtil.getMonth();
@@ -89,7 +95,7 @@ public class OrderQuerysController extends BaseController {
 			searchVo.setEndServiceTime(TimeStampUtil.getEndOfMonth(year, month));
 		}
 		
-		
+		searchVo.setOrderStatusList(orderStatusList);
 
 		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
@@ -97,12 +103,13 @@ public class OrderQuerysController extends BaseController {
 		for (Orders item : orderList) {
 			
 			OrderListVo vo = new OrderListVo(); 
-			vo = orderQueryService.getOrderListVo(item);
+			vo = orderQueryService.getOrderListVo(item, staffId);
 			
 			//如果是未接单，则设置服务地址为 ******
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setOrderNo(vo.getOrderNo());
 			searchVo1.setDispatchStatus((short) 1);
+			searchVo1.setStaffId(staffId);
 			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
 
 			OrderDispatchs orderDispatch = null;
@@ -148,7 +155,22 @@ public class OrderQuerysController extends BaseController {
 			return result;
 		}
 		
-		OrderDetailVo vo = orderQueryService.getOrderDetailVo(order);
+		OrderDetailVo vo = orderQueryService.getOrderDetailVo(order, staffId);
+		
+		//如果有服务子项，则需要增加服务子项
+		List<OrderServiceAddonViewVo> serviceAddons = new ArrayList<OrderServiceAddonViewVo>();
+		
+		if (vo.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+			
+			List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+			
+			if (!orderAddons.isEmpty()) {
+				serviceAddons = orderServiceAddonsService.changeToOrderServiceAddons(orderAddons);
+				
+			}
+		}
+		vo.setServiceAddons(serviceAddons);
+		
 		
 		result.setData(vo);
 		

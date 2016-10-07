@@ -21,8 +21,6 @@ public interface OrderQueryService {
 	
 	PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
 	
-	OrderListVo getOrderListVo(Orders item);
-	
 	OrderViewVo getOrderView(Orders order);
 	
 	String getOrderStatusName(Short status);
@@ -31,8 +29,10 @@ public interface OrderQueryService {
 
 	UserListVo getUserList(Orders order);
 
-	OrderDetailVo getOrderDetailVo(Orders item);
-
 	OrderSearchVo getOrderSearchVo(HttpServletRequest request, OrderSearchVo searchVo, Short orderType, Long sessionParentId);
+
+	OrderListVo getOrderListVo(Orders item, Long staffId);
+
+	OrderDetailVo getOrderDetailVo(Orders item, Long staffId);
 	
 }

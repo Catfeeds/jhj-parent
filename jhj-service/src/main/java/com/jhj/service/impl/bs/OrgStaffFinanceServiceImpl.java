@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffFinanceMapper;
 import com.jhj.po.model.bs.OrgStaffBlack;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
@@ -21,10 +23,12 @@ import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.utils.OrderUtils;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -60,6 +64,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 	@Autowired
 	private OrdersService ordersService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -161,11 +168,24 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 		BigDecimal orderIncoming = new BigDecimal(0);
 		BigDecimal orderMoney = orderPrices.getOrderMoney();
-
+		
+		//如果为深度养护，需要判断是否为多人派工，订单金额需要平均
+		if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setOrderId(orders.getId());
+			searchVo1.setDispatchStatus((short) 1);
+			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
+			
+			if (orderDispatchs.size() > 1) {
+				orderMoney = MathBigDecimalUtil.div(orderMoney, new BigDecimal(orderDispatchs.size()));
+			}
+		}
+		
+		
 		JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 		if (jhjSetting != null) {
 			BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-			orderIncoming = orderPrices.getOrderMoney().multiply(settingValue);
+			orderIncoming = orderMoney.multiply(settingValue);
 			orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 		}
 

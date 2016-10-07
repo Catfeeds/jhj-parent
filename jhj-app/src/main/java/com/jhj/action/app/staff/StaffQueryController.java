@@ -31,6 +31,7 @@ import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderStatService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceAppVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.OrgStaffsVo;
@@ -118,7 +119,11 @@ public class StaffQueryController extends BaseController {
 		Long totalOrder = orderStatService.getTotalOrderCountByMouth(searchVo);
 		vo.setTotalOrder(totalOrder);
 		//当月收入
-		BigDecimal totalIncoming = orderStatService.getTotalOrderIncomeMoney(searchVo);
+		OrderSearchVo orderSearchVo = new OrderSearchVo();
+		orderSearchVo.setStaffId(staffId);
+		orderSearchVo.setStartTime(TimeStampUtil.getMillisOfDay(startTime)/1000);
+		orderSearchVo.setEndTime(TimeStampUtil.getNow());
+		BigDecimal totalIncoming = orderStatService.getTotalOrderIncomeMoney(orderSearchVo);
 		vo.setTotalIncoming(totalIncoming);
 		
 		//获取技能信息

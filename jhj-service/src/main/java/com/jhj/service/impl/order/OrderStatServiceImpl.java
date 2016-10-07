@@ -16,17 +16,23 @@ import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderPricesService;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.vo.chart.CoopUserOrderVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -41,6 +47,12 @@ public class OrderStatServiceImpl implements OrderStatService {
 	
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
+	
+	@Autowired
+	private OrderPricesService orderPriceService;
 
 	@Autowired
 	private UserAddrsService userAddrsSerivce;
@@ -138,7 +150,7 @@ public class OrderStatServiceImpl implements OrderStatService {
 
 	// . 根据开始时间，接收时间，staff_id ，得出订单总金额
 	@Override
-	public BigDecimal getTotalOrderMoney(OrderQuerySearchVo vo) {
+	public BigDecimal getTotalOrderMoney(OrderSearchVo vo) {
 
 		BigDecimal orderMoney = ordersMapper.getTotalOrderMoney(vo);
 
@@ -153,17 +165,16 @@ public class OrderStatServiceImpl implements OrderStatService {
 	
 	// . 根据开始时间，接收时间，staff_id ，得出订单总收入金额
 	@Override
-	public BigDecimal getTotalOrderIncomeMoney(OrderQuerySearchVo vo) {
+	public BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo) {
 
 		// BigDecimal money = orderService.getTotalOrderIncomeMoney(vo);
 		// 钟点工订单0订单总金额
+		vo.setOrderType(Constants.ORDER_TYPE_0);
+		vo.setOrderStatus(Constants.ORDER_HOUR_STATUS_7);
 		BigDecimal hourMoney = ordersMapper.getTotalOrderIncomeHourMoney(vo);
 		// 深度保洁1订单总金额
-		BigDecimal cleanMoney = ordersMapper.getTotalOrderIncomeCleanMoney(vo);
-		// 助理订单2订单总金额
-		BigDecimal staffMoney = ordersMapper.getTotalOrderIncomeStaffMoney(vo);
-		// 配送订单3订单总金额
-		BigDecimal disMoney = ordersMapper.getTotalOrderIncomeRunMoney(vo);
+		BigDecimal cleanMoney = this.getTotalOrderIncomeCleanMoney(vo);
+		
 
 		Long staffId = vo.getStaffId();
 
@@ -174,22 +185,16 @@ public class OrderStatServiceImpl implements OrderStatService {
 
 		String hoursettingType = "hour-ratio" + settingLevel;
 		String cleansettingType = "deep-ratio" + settingLevel;
-		String amsettingType = "am-ratio" + settingLevel;
-		String dissettingType = "dis-ratio" + settingLevel;
+
 
 		JhjSetting hour = settingService.selectBySettingType(hoursettingType);
 		JhjSetting clean = settingService.selectBySettingType(cleansettingType);
-		JhjSetting am = settingService.selectBySettingType(amsettingType);
-		JhjSetting dis = settingService.selectBySettingType(dissettingType);
+
 
 		// 钟点工提成
 		BigDecimal hourRate = new BigDecimal(hour.getSettingValue());
 		// 深度保洁提成
 		BigDecimal cleanRate = new BigDecimal(clean.getSettingValue());
-		// 助理提成
-		BigDecimal amRate = new BigDecimal(am.getSettingValue());
-		// 配送订单提成
-		BigDecimal disRate = new BigDecimal(dis.getSettingValue());
 
 		if (hourMoney == null) {
 			hourMoney = new BigDecimal(0);
@@ -197,22 +202,14 @@ public class OrderStatServiceImpl implements OrderStatService {
 		if (cleanMoney == null) {
 			cleanMoney = new BigDecimal(0);
 		}
-		if (staffMoney == null) {
-			staffMoney = new BigDecimal(0);
-		}
-		if (disMoney == null) {
-			disMoney = new BigDecimal(0);
-		}
+
 		// 钟点工收入
 		BigDecimal hourIncomingMoney = hourMoney.multiply(hourRate);
 		// 深度保洁收入
 		BigDecimal cleanIncomingMoney = cleanMoney.multiply(cleanRate);
-		// 助理收入
-		BigDecimal amIncomingMoney = staffMoney.multiply(amRate);
-		// 配送订单收入
-		BigDecimal disIncomingMoney = disMoney.multiply(disRate);
+
 		// 订单总收入
-		BigDecimal totalIncomingMoney = hourIncomingMoney.add(cleanIncomingMoney).add(amIncomingMoney).add(disIncomingMoney);
+		BigDecimal totalIncomingMoney = hourIncomingMoney.add(cleanIncomingMoney);
 
 		if (totalIncomingMoney == null) {
 			BigDecimal b = new BigDecimal(0);
@@ -225,7 +222,7 @@ public class OrderStatServiceImpl implements OrderStatService {
 	
 	// . 根据开始时间，接收时间，staff_id ，得出订单总数:
 	@Override
-	public Long getTotalOrderCount(OrderQuerySearchVo vo) {
+	public Long getTotalOrderCount(OrderSearchVo vo) {
 
 		return ordersMapper.getTotalOrderCount(vo);
 	}
@@ -235,6 +232,42 @@ public class OrderStatServiceImpl implements OrderStatService {
 	public Long getTotalOrderCountByMouth(OrderQuerySearchVo searchVo) {
 
 		return ordersMapper.getTotalOrderCountByMouth(searchVo);
+	}
+	
+	//计算深度养护查询条件内的订单总金额，因为涉及到多人派工，所以需要进行每单处理
+	@Override
+	public BigDecimal getTotalOrderIncomeCleanMoney(OrderSearchVo searchVo) {
+		BigDecimal totalOrderMoney = new BigDecimal(0);
+		
+		//找出所有的订单
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
+		if (list.isEmpty()) return totalOrderMoney;
+		
+		List<Long> orderIds = new ArrayList<Long>();
+		for(Orders order : list) {
+			if (!orderIds.contains(order.getId())) orderIds.add(order.getId());
+		}
+		
+		List<OrderPrices> orderPrices = orderPriceService.selectByOrderIds(orderIds);
+		
+		if (orderPrices.isEmpty()) return totalOrderMoney;
+		
+		for (OrderPrices op : orderPrices) {
+			
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setOrderId(op.getOrderId());
+			searchVo1.setDispatchStatus((short) 1);
+			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
+			
+			if (orderDispatchs.size() == 1) {
+				totalOrderMoney = MathBigDecimalUtil.add(totalOrderMoney, op.getOrderMoney());
+			} else {
+				BigDecimal orderMoneyAvg = MathBigDecimalUtil.div(op.getOrderMoney(), new BigDecimal(orderDispatchs.size()));
+				totalOrderMoney = MathBigDecimalUtil.add(totalOrderMoney, orderMoneyAvg);
+			}
+		}
+		
+		return totalOrderMoney;
 	}
 
 

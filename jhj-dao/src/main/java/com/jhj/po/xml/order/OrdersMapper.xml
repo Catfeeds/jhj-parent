@@ -46,19 +46,59 @@
 
 	<!-- 运营平台，提醒订单 列表 -->
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
-		<include refid="bySearchVo" />
-	</select>
-
-	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
-		<include refid="bySearchVo" />
-	</select>
-
-	<sql id="bySearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from orders
-		where 1=1
+		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
 
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from orders
+		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
+	
+	<!-- 根据开始时间，接收时间，staff_id ，得出订单总数: -->
+	<select id="getTotalOrderCount" resultType="java.lang.Long" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select count(*) 
+		from orders
+		<include refid="bySearchVo" />
+	</select>
+	
+		<!-- 根据开始时间，接收时间，staff_id ，得出订单总金额 -->
+	<select id="getTotalOrderMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_money) from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
+	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_money)from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+	</select>
+	
+	<!-- 钟点工订单0订单总金额 -->
+	<select id="getTotalOrderIncomeHourMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
+		select sum(order_money) from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
+	<sql id="bySearchVo">
+		
+		where 1=1
 		<if test="amId != null">
 			and am_id = #{amId,jdbcType=NUMERIC}
 		</if>
@@ -72,7 +112,7 @@
 		</if>
 		
 		<if test="staffId != null">
-			and id in (select order_id from order_dispatchs where staff_id = #{staffId,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where staff_id = #{staffId,jdbcType=NUMERIC}  and dispatch_status = 1)
 		</if>
 		
 		<if test="orderId != null">
@@ -176,8 +216,10 @@
 			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE) )
 		</if>
 
-		order by add_time desc
+		
 	</sql>
+	
+
 
 
 	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">
@@ -237,86 +279,6 @@
 		order by user_id desc
 	</select>
 
-	<!-- 根据开始时间，接收时间，staff_id ，得出订单总金额 -->
-	<select id="getTotalOrderMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money) from order_prices where order_id in
-		(
-		select id from orders
-		where id in (select order_id from order_dispatchs where
-		staff_id
-		=#{staffId,jdbcType=NUMERIC}
-		and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and service_date >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and service_date <= ${endTime} ]]>
-		</if>
-		)
-
-		)
-
-	</select>
-	<!-- 根据开始时间，接收时间，staff_id ，得出订单总收入金额 -->
-
-	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money)from order_prices where order_id in
-		(
-		select id from orders
-		where id in (select order_id from order_dispatchs where staff_id
-		=#{staffId,jdbcType=NUMERIC}
-		<if test="startTime != null">
-				<![CDATA[	and service_date >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and service_date <= ${endTime} ]]>
-		</if>
-		)
-		and order_type in (2, 3)
-		and order_status = 7
-		)
-
-	</select>
-	<!-- 钟点工订单0订单总金额 -->
-	<select id="getTotalOrderIncomeHourMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money)from order_prices where order_id in
-		(
-		select id from orders
-		where order_no in (select order_no from order_dispatchs where
-		staff_id
-		=#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and update_time >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and update_time <= ${endTime} ]]>
-		</if>
-		)
-		and order_type = 0
-		and order_status = 7
-		)
-
-	</select>
-	<!-- 深度保洁1订单总金额 -->
-	<select id="getTotalOrderIncomeCleanMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money)from order_prices where order_id in
-		(
-		select id from orders
-		where order_no in (select order_no from order_dispatchs where
-		staff_id
-		=#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and update_time >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and update_time <= ${endTime} ]]>
-		</if>
-		)
-		and order_type = 1
-		and order_status = 7
-		)
-
-	</select>
 	<!-- 助理订单2订单总金额 -->
 	<select id="getTotalOrderIncomeStaffMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
 		select sum(order_money)from order_prices where order_id in
@@ -357,21 +319,7 @@
 		)
 
 	</select>
-	<!-- 根据开始时间，接收时间，staff_id ，得出订单总数: -->
-	<select id="getTotalOrderCount" resultType="java.lang.Long" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select count(*) from orders where order_no in
-		(
-		select order_no from order_dispatchs where
-		staff_id =#{staffId,jdbcType=NUMERIC}
-		and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and add_time >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and add_time <= ${endTime} ]]>
-		</if>
-		)
-	</select>
+	
 
 	<!-- 当月订单总数order_status7,8: -->
 	<select id="getTotalOrderCountByMouth" resultType="java.lang.Long" parameterType="com.jhj.vo.order.OrderQuerySearchVo">

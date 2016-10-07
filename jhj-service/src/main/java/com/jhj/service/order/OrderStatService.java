@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.jhj.vo.chart.CoopUserOrderVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 
 public interface OrderStatService {
 	
@@ -20,13 +21,15 @@ public interface OrderStatService {
 
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
 
-	BigDecimal getTotalOrderMoney(OrderQuerySearchVo vo);
-
-	BigDecimal getTotalOrderIncomeMoney(OrderQuerySearchVo vo);
-
-	Long getTotalOrderCount(OrderQuerySearchVo vo);
-
 	Long getTotalOrderCountByMouth(OrderQuerySearchVo searchVo);
+
+	Long getTotalOrderCount(OrderSearchVo vo);
+
+	BigDecimal getTotalOrderMoney(OrderSearchVo vo);
+
+	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
+
+	BigDecimal getTotalOrderIncomeCleanMoney(OrderSearchVo searchVo);
 
 
 }

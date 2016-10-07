@@ -93,7 +93,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		record.setUserId(0L);
 		record.setMobile("");
 		record.setOrderId(0L);
-		record.setOrderNo("12345");
+		record.setOrderNo("");
 		record.setPayType((short)Constants.PAY_TYPE_0);
  
 		record.setCouponId(0L); //优惠券字段，0 = 不使用    >0 使用

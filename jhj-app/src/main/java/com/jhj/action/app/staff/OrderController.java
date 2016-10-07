@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +41,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrderBeginVo;
 import com.jhj.vo.staff.StaffOrderVo;
 import com.meijia.utils.TimeStampUtil;
@@ -117,34 +119,35 @@ public class OrderController extends BaseController {
 		vo.setTotalIncoming(new BigDecimal(0L));
 		//开工标志 0=收工 1=开工(如果表中记录为空，则默认为收工状态)
 		vo.setIsWork((short)1);
-
-		
-		OrderQuerySearchVo searchVo = new OrderQuerySearchVo();
-		searchVo.setStaffId(staffId);
-		searchVo.setOrderStatus((short) 7);
-		
-		Long startTime = TimeStampUtil.getBeginOfToday();
-		Long endTime = TimeStampUtil.getEndOfToday();
-			
-		searchVo.setStartTime(startTime);
-		searchVo.setEndTime(endTime);
-		
-	
-		
-		
-		vo.setStaffId(staffId);
 		
 		// 工作小时数
 		vo.setTotalOnline((long) 0);
 		
+		Long startTime = TimeStampUtil.getBeginOfToday();
+		Long endTime = TimeStampUtil.getEndOfToday();
+				
 		// 订单总数
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setStaffId(staffId);
+		searchVo.setStartTime(startTime);
+		searchVo.setEndTime(endTime);
 		Long totalOrder = orderStatService.getTotalOrderCount(searchVo);
 		vo.setTotalOrder(totalOrder);
 		
 		// 订单总金额
+		searchVo = new OrderSearchVo();
+		searchVo.setStaffId(staffId);
+		searchVo.setStartServiceTime(startTime);
+		searchVo.setEndServiceTime(endTime);
 		BigDecimal totalOrderMoney = orderStatService.getTotalOrderMoney(searchVo);
 		vo.setTotalOrderMoney(totalOrderMoney);
+		
 		// 订单收入总金额
+		searchVo = new OrderSearchVo();
+		searchVo.setStaffId(staffId);
+		searchVo.setStartServiceTime(startTime);
+		searchVo.setEndServiceTime(endTime);
+		
 		BigDecimal totalOrderIncoming = orderStatService.getTotalOrderIncomeMoney(searchVo);
 		vo.setTotalIncoming(totalOrderIncoming);
 		
@@ -198,19 +201,17 @@ public class OrderController extends BaseController {
 		if (orders == null) {
 			return result;
 		}
+
+		Long ServiceEndTime = (long) (orders.getServiceDate() + orders.getServiceHour() * 3600);
 		
-		//如果为钟点工，则必须过来服务时间才能点击完成服务.
-		if (orders.getOrderType().equals(Constants.ORDER_TYPE_0)) {
-			Long ServiceEndTime = (long) (orders.getServiceDate() + orders.getServiceHour() * 3600);
-			
-			Long nowSecond = TimeStampUtil.getNowSecond();
-			
-			if (nowSecond < ServiceEndTime) {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg("未到服务完成时间点.不能提前完成服务");
-				return result;
-			}
+		Long nowSecond = TimeStampUtil.getNowSecond();
+		
+		if (nowSecond < ServiceEndTime) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("未到服务完成时间点.不能提前完成服务");
+			return result;
 		}
+
 
 		// 改变服务状态为已完成
 		orders.setOrderStatus((short) 7);
@@ -224,6 +225,7 @@ public class OrderController extends BaseController {
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(orderNo);
 		searchVo.setDispatchStatus((short) 1);
+		searchVo.setStaffId(staffId);
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
 
 		OrderDispatchs orderDispatch = null;

@@ -144,19 +144,18 @@ public interface OrdersMapper {
   	 
   	 List<ChartMapVo> phoneRechargeByQuarter(ChartSearchVo chartSearchVo);
 
-	BigDecimal getTotalOrderMoney(OrderQuerySearchVo vo);
+	BigDecimal getTotalOrderMoney(OrderSearchVo vo);
 
-	BigDecimal getTotalOrderIncomeMoney(OrderQuerySearchVo vo);
+	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
 
-	Long getTotalOrderCount(OrderQuerySearchVo vo);
+	Long getTotalOrderCount(OrderSearchVo vo);
 
 	Long getTotalOrderCountByMouth(OrderQuerySearchVo searchVo);
 
 	
 	//钟点工订单0订单总金额
-	BigDecimal getTotalOrderIncomeHourMoney(OrderQuerySearchVo vo);
-	//深度保洁1订单总金额
-	BigDecimal getTotalOrderIncomeCleanMoney(OrderQuerySearchVo vo);
+	BigDecimal getTotalOrderIncomeHourMoney(OrderSearchVo vo);
+
 	//助理订单2订单总金额
 	BigDecimal getTotalOrderIncomeStaffMoney(OrderQuerySearchVo vo);
 	//配送订单3订单总金额
