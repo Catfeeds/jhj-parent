@@ -277,7 +277,9 @@ public class OrderDispatchController extends BaseController {
 				if (!staffIds.contains(d.getStaffId())) {
 					d.setDispatchStatus((short) 0);
 					d.setUpdateTime(TimeStampUtil.getNowSecond());
+					orderDispatchsService.updateByPrimaryKey(d);
 					oldStaffMobiles.add(d.getStaffMobile());
+					
 				} else {
 					newDispathStaffIds.remove(d.getStaffId());
 				}

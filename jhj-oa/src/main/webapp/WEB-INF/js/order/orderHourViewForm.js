@@ -70,7 +70,7 @@ $("#submitForm").on('click', function() {
 	
 	$.ajax({
 		type : 'post',
-		url : '/jhj-oa/new_dispatch/submit_manu_base_order.json',
+		url : '/jhj-oa/new_dispatch/save_order_hour.json',
 		data : {
 			"selectStaffId" : selectStaffId,
 			"orderId" : orderId,
