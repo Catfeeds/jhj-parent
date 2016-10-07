@@ -24,6 +24,7 @@ import com.jhj.vo.order.OrderDetailVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -68,10 +69,71 @@ public class OrderQuerysController extends BaseController {
 			return result;
 		}
 		OrderSearchVo searchVo = new OrderSearchVo();
-		searchVo.setAmId(staffId);
-		searchVo.setOrderFrom(orderForm);
+		searchVo.setStaffId(staffId);
+//		searchVo.setOrderFrom(orderForm);
 //		searchVo.setServiceDateStart(DateUtil.curStartDate(0));
 //		searchVo.setServiceDateEnd(DateUtil.curLastDate(0));
+		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
+		//PageInfo list = orderDispatchsService.selectByListVoPage();
+		List<Orders> orderList = list.getList();
+		for (Orders item : orderList) {
+			
+			OrderListVo vo = new OrderListVo(); 
+			vo = orderQueryService.getOrderListVo(item);
+			
+			//如果是未接单，则设置服务地址为 ******
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setOrderNo(vo.getOrderNo());
+			searchVo1.setDispatchStatus((short) 1);
+			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
+
+			OrderDispatchs orderDispatch = null;
+			if (!orderDispatchs.isEmpty()) {
+				orderDispatch = orderDispatchs.get(0);
+			}
+
+			if (orderDispatch != null) {
+				Short isApply = orderDispatch.getIsApply();
+				if (isApply.equals((short)0)) {
+					vo.setServiceAddrDistance("**米");
+					vo.setServiceAddr("******");
+				}
+			}
+			
+			
+			
+			orderListVo.add(vo);
+		}
+		result.setData(orderListVo);
+		
+		return result;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "get_month_list", method = RequestMethod.GET)
+	public AppResultData<Object> getMonthList(
+			@RequestParam("user_id") Long staffId,
+			@RequestParam("order_from") Short orderForm,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		
+		List<OrderListVo> orderListVo = new ArrayList<OrderListVo>();
+		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
+		
+		if (orgStaffs == null) {
+			return result;
+		}
+		
+		int year = DateUtil.getYear();
+		int month = DateUtil.getMonth();
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setAmId(staffId);
+		searchVo.setOrderFrom(orderForm);
+		searchVo.setStartServiceTime(TimeStampUtil.getBeginOfMonth(year, month));
+		searchVo.setEndServiceTime(TimeStampUtil.getEndOfMonth(year, month));
 		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
 		List<Orders> orderList = list.getList();
@@ -137,6 +199,7 @@ public class OrderQuerysController extends BaseController {
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrderNo(order.getOrderNo());
 		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStaffId(staffId);
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
 
 		OrderDispatchs orderDispatch = null;
