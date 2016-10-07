@@ -72,7 +72,7 @@
 		</if>
 		
 		<if test="staffId != null">
-			and id in (select order_id from order_dispatchs where staff_id = #{staffId,jdbcType=NUMERIC}
+			and id in (select order_id from order_dispatchs where staff_id = #{staffId,jdbcType=NUMERIC})
 		</if>
 		
 		<if test="orderId != null">

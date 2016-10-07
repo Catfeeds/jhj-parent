@@ -48,7 +48,7 @@ public class OrderQuerysController extends BaseController {
 	/**
 	 * 订单列表接口
 	 * @param staffId
-	 * @param orderForm
+	 * @param orderForm  0 = 待服务 1 = 服务中  2 = 本月已完成订单.
 	 * @param page
 	 * @return
 	 */
@@ -56,7 +56,7 @@ public class OrderQuerysController extends BaseController {
 	@RequestMapping(value = "get_list", method = RequestMethod.GET)
 	public AppResultData<Object> list(
 			@RequestParam("user_id") Long staffId,
-			@RequestParam("order_from") Short orderForm,
+			@RequestParam("order_from") Short orderFrom,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		
 		List<OrderListVo> orderListVo = new ArrayList<OrderListVo>();
@@ -70,9 +70,27 @@ public class OrderQuerysController extends BaseController {
 		}
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setStaffId(staffId);
-//		searchVo.setOrderFrom(orderForm);
-//		searchVo.setServiceDateStart(DateUtil.curStartDate(0));
-//		searchVo.setServiceDateEnd(DateUtil.curLastDate(0));
+		
+		List<Short> statusList = new ArrayList<Short>();
+		if (orderFrom.equals((short)0)) {
+			statusList.add(Constants.ORDER_HOUR_STATUS_3);
+		}
+		
+		if (orderFrom.equals((short)1)) {
+			statusList.add(Constants.ORDER_HOUR_STATUS_5);
+		}
+		
+		if (orderFrom.equals((short)2)) {
+			statusList.add(Constants.ORDER_HOUR_STATUS_7);
+			
+			int year = DateUtil.getYear();
+			int month = DateUtil.getMonth();
+			searchVo.setStartServiceTime(TimeStampUtil.getBeginOfMonth(year, month));
+			searchVo.setEndServiceTime(TimeStampUtil.getEndOfMonth(year, month));
+		}
+		
+		
+
 		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
 		List<Orders> orderList = list.getList();
@@ -109,68 +127,7 @@ public class OrderQuerysController extends BaseController {
 		return result;
 
 	}
-	
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "get_month_list", method = RequestMethod.GET)
-	public AppResultData<Object> getMonthList(
-			@RequestParam("user_id") Long staffId,
-			@RequestParam("order_from") Short orderForm,
-			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		
-		List<OrderListVo> orderListVo = new ArrayList<OrderListVo>();
-		
-		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
-		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
-		
-		if (orgStaffs == null) {
-			return result;
-		}
-		
-		int year = DateUtil.getYear();
-		int month = DateUtil.getMonth();
-		OrderSearchVo searchVo = new OrderSearchVo();
-		searchVo.setAmId(staffId);
-		searchVo.setOrderFrom(orderForm);
-		searchVo.setStartServiceTime(TimeStampUtil.getBeginOfMonth(year, month));
-		searchVo.setEndServiceTime(TimeStampUtil.getEndOfMonth(year, month));
-		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
-		//PageInfo list = orderDispatchsService.selectByListVoPage();
-		List<Orders> orderList = list.getList();
-		for (Orders item : orderList) {
-			
-			OrderListVo vo = new OrderListVo(); 
-			vo = orderQueryService.getOrderListVo(item);
-			
-			//如果是未接单，则设置服务地址为 ******
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setOrderNo(vo.getOrderNo());
-			searchVo1.setDispatchStatus((short) 1);
-			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
-
-			OrderDispatchs orderDispatch = null;
-			if (!orderDispatchs.isEmpty()) {
-				orderDispatch = orderDispatchs.get(0);
-			}
-
-			if (orderDispatch != null) {
-				Short isApply = orderDispatch.getIsApply();
-				if (isApply.equals((short)0)) {
-					vo.setServiceAddrDistance("**米");
-					vo.setServiceAddr("******");
-				}
-			}
-			
-			
-			
-			orderListVo.add(vo);
-		}
-		result.setData(orderListVo);
-		
-		return result;
-
-	}
-	
 	// 19.订单详情接口
 	/**
 	 * mobile:手机号 order_id订单ID
