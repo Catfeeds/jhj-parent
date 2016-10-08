@@ -633,7 +633,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				if (vo.getStaffId().equals(item)) {
 					vo.setDispathStaFlag(0);
 					vo.setDispathStaStr("不可派工");
-					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_NOT_SKILL);
+					if(vo.getReason()!=null){
+						vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_NOT_SKILL);
+					}else{
+						vo.setReason(ConstantMsg.NOT_DISPATCH_NOT_SKILL);
+					}
+					
 				}
 			}
 		}
@@ -662,7 +667,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				if (vo.getStaffId().equals(item)) {
 					vo.setDispathStaFlag(0);
 					vo.setDispathStaStr("不可派工");
-					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_SERVICE_DATE_CONFLIT);
+					if(vo.getReason()!=null){
+						vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_SERVICE_DATE_CONFLIT);
+					}else{
+						vo.setReason(ConstantMsg.NOT_DISPATCH_SERVICE_DATE_CONFLIT);
+					}
 				}
 			}
 		}
@@ -678,7 +687,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				if (vo.getStaffId().equals(os.getStaffId())) {
 					vo.setDispathStaFlag(0);
 					vo.setDispathStaStr("不可派工");
-					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_BLACK_LIST);
+					if(vo.getReason()!=null){
+						vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_BLACK_LIST);
+					}else{
+						vo.setReason(ConstantMsg.NOT_DISPATCH_BLACK_LIST);
+					}
 				}
 			}
 		}
@@ -702,7 +715,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				if (vo.getStaffId().equals(os.getStaffId())) {
 					vo.setDispathStaFlag(0);
 					vo.setDispathStaStr("不可派工");
-					vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_LEAVE);
+					if(vo.getReason()!=null){
+						vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_LEAVE);
+					}else{
+						vo.setReason(ConstantMsg.NOT_DISPATCH_LEAVE);
+					}
 				}
 			}
 		}
