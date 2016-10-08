@@ -177,6 +177,18 @@ public class OrderController extends BaseController {
 		if (orders == null) {
 			return result;
 		}
+		
+		//服务开始前一个小时，才能开始服务
+		Long serviceStartTime = orders.getServiceDate();
+		
+		Long nowSecond = TimeStampUtil.getNowSecond();
+		
+		if (nowSecond < (serviceStartTime - 3600) ) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("未到服务开始时间.不能提前开始服务");
+			return result;
+		}
+		
 		orders.setOrderStatus((short) 5);
 		ordersService.updateByPrimaryKeySelective(orders);
 
