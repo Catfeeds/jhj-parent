@@ -118,7 +118,7 @@ public class ConstantMsg {
 	//不能派工原因说明
 	public static String NOT_DISPATCH_OVER_MAX_DISTANCE = "距离超出";
 	
-	public static String NOT_DISPATCH_NOT_SKILL = "没有相应的技能";
+	public static String NOT_DISPATCH_NOT_SKILL = "技能不符";
 	
 	public static String NOT_DISPATCH_SERVICE_DATE_CONFLIT = "服务时间已有派工";
 	
