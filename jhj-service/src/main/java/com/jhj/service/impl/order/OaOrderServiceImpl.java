@@ -455,7 +455,10 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderOpFromName("来电订单");
 			}else{
 				CooperativeBusiness cooperativeBusiness  = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
-				oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				
+				if (cooperativeBusiness != null) {
+					oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				}
 			}
 		}
 				
@@ -710,7 +713,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderOpFromName("来电订单");
 			}else{
 				CooperativeBusiness cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
-				oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				if (cooperativeBusiness != null) {
+					oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				}
 			}
 		}
 		

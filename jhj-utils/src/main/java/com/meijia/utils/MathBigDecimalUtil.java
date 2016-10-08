@@ -138,10 +138,13 @@ public class MathBigDecimalUtil {
         int decimal = (int) f1;
 		double fractional = f1 - decimal;
 
-		if (fractional > 0 && fractional <= 0.5)  r = decimal + 0.5;
-		if (fractional > 0.5) r = decimal + 1;
+		if (fractional > 0 && fractional <= 0.5) {
+			f = decimal + 0.5;
+		} else if (fractional > 0.5) {
+			f = decimal + 1;
+		}
 		
-		return r;
+		return f;
     }
     
     
@@ -156,8 +159,8 @@ public class MathBigDecimalUtil {
 //		System.out.println("pay乘以100 = " + p3.toString());
 		
 //		decideIsMoneyNum(new BigDecimal(00002.1));
-		double serviceHour  = 9.0;
-		serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 2);
+		double serviceHour  = 8.0;
+		serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 3);
 					
 		System.out.println(serviceHour);
 
