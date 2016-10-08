@@ -74,7 +74,12 @@
 							<div class="col-md-5">
 								
 								<select name="orgId" id="orgId" class="form-control">
+									<c:if test="${newStaffFormVoModel.orgId==0 }">
 										<option value="0">全部</option>
+									</c:if>
+									<c:if test="${newStaffFormVoModel.orgId!=0 }">
+										<option value="${org.orgId }" selected="selected">${org.orgName}</option>
+									</c:if>
 								</select>
 								<%-- <cloudOrgSelectTag:select 
 										logInParentOrgId="${loginOrgId}"

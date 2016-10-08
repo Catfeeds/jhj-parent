@@ -209,6 +209,9 @@ public class NewOrgStaffController extends AdminController {
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
+		if(formVo.getOrgId()!=0){
+			model.addAttribute("org", orgService.selectByPrimaryKey(formVo.getOrgId()));
+		}
 
 		model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
 
