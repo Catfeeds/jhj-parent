@@ -33,7 +33,7 @@
 								<p>家政保洁服务</p>
 							</div>
 							<div class="mincircle mincircle1">
-								<a href="html/order-jinpai.html">
+								<a href="order-jinpai.html" onclick="orderLink('order/fiveservice/jinpaibaojie.html', 23)">
 									<div class="mincircle-one">
 										<p>金牌保洁</p>
 										<p>首单立减30元</p>
@@ -159,18 +159,18 @@
 			            <span class="tabbar-label">首页</span>
 			        </a>
 			        
-			        <a href="#" id="toolbar-am" onclick="toolBarHref('user/user-am-list.html', 'toolbar-icon-order');"  class="no-animation link" style="color:#000;">
+			        <a href="#" id="toolbar-am" onclick="toolBarHref('user/user-am-list.html', 'toolbar-am');"  class="no-animation link" style="color:#000;">
 			            <i class="icon toolbar-icon-order"></i>
 			            <span class="tabbar-label">订单</span>
 			        </a>
 			        			        
-			        <a href="#" id="toolbar-huodong" onclick="toolBarHref('huodong-list.html', 'toolbar-icon-zhuli')" class="no-animation link" style="color:#000;">
+			        <a href="#" id="toolbar-huodong" onclick="toolBarHref('huodong-list.html', 'toolbar-huodong')" class="no-animation link" style="color:#000;">
 			            <i class="icon toolbar-icon-zhuli"></i>
 			            <span class="tabbar-label">充值</span>
 			        </a>
 			        
-			        <a href="#" id="toolbar-youzan" onclick="toolBarHref('youzan.html', 'toolbar-icon-tixing')" class="no-animation link" style="color:#000;">
-						<i class="icon toolbar-icon-tixing"></i>
+			        <a href="#" id="toolbar-youzan" onclick="toolBarHref('youzan.html', 'toolbar-youzan')" class="no-animation link" style="color:#000;">
+						<i class="icon toolbar-icon-my"></i>
 						<span class="tabbar-label">我的</span>
 					</a>
 		    	</div>
@@ -198,12 +198,7 @@
 	<!-- 时间选择js-->
 	<script type="text/javascript" src="js/service-date-select.js"></script>
 	<script type="text/javascript" src="js/cook-date-select.js"></script>
-	
-	
-	<!-- 历史订单录入相关js -->	
-	<!-- <script type="text/javascript" src="js/history-service-date-select.js"></script> -->
-	
-		
+			
  	<!-- 用户地址列表显示-->
 	<script type="text/javascript" src="js/user/mine.js"></script>  
 	<script type="text/javascript" src="js/user/mine-addr-list.js"></script>  
@@ -214,15 +209,9 @@
 	<script type="text/javascript" src="js/user/more.js"></script>  
 	<!--我的信息  -->
 	<script type="text/javascript" src="js/user/user-wancheng.js"></script>  
-	<!-- 社区活动 -->
-	<script type="text/javascript" src="js/user/huodong-detail.js"></script>  
-	<script type="text/javascript" src="js/user/huodong-list.js"></script>  
 	
 	<!-- 用户添加地址 -->
 	<script type="text/javascript"  src="js/user/mine-add-addrs.js"></script>  
-	<!-- 用户，查看 助理页签 -->
-	<script type="text/javascript" src="js/user/user-am-list.js"></script>
-	<script type="text/javascript" src="js/user/user-am-detail.js"></script>
 	
 	<!-- 钟点工提交订单页面 js -->	
 	<script type="text/javascript" src="js/order/order-form-zhongdiangong.js"></script>
@@ -236,15 +225,7 @@
 
 	<!-- 钟点工-订单详情 -->
 	<script type="text/javascript" src="js/order/order-view-0.js"></script>
-	<!-- 助理-跑腿订单 -->
-	<script type="text/javascript" src="js/order/order-view-2.js"></script>
-	<!-- 订单详情 -->
-	<script type="text/javascript" src="js/order/user-am-result.js"></script>
-	<!-- 用户预约订单 -->
-	<script type="text/javascript" src="js/order/order-am.js"></script>
 
-	<script type="text/javascript" src="js/order/order-am-faqiyuyue.js"></script>
-	
 	<script type="text/javascript" src="js/order/order-pay-success.js"></script>
 
 	<!-- 用户兑换优惠券 -->
@@ -253,34 +234,13 @@
 	<script type="text/javascript"  src="js/user/mine-charge-list.js"></script>  
 	<script type="text/javascript"  src="js/user/mine-charge-way.js"></script>  
 	<script type="text/javascript"  src="js/user/mine-charge-pay-success.js"></script> 
-	<!--用户助理时间 baidu.echarts-->
-
 
 	<!-- 深度保洁附加服务选择 -->
 	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojiezl.js"></script>  
 	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojie-yuyue.js"></script>  
 	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojie-result.js"></script>  
 	<script type="text/javascript"  src="js/order/shendubaojie/order-view-1.js"></script>  
-	
-	<!-- 用户订单评价 -->
-	<script type="text/javascript"  src="js/order/order-rate.js"></script>
-	
-	<!-- 订单评价详情 -->
-    <script type="text/javascript" src="js/order/order-get-rate.js"></script>
-    
-    
-    <!--新增类型： 首页，提醒业务 -->
-	<script type="text/javascript" src="js/remind-date-select.js"></script>
-	<script type="text/javascript" src="js/order/remind/order-remind-tixing.js"></script>
-    <script type="text/javascript" src="js/order/remind/order-remind-list.js"></script>
-    <script type="text/javascript" src="js/order/remind/order-remind-detail.js"></script>
-    <script type="text/javascript" src="js/order/remind/order-remind-tixing-success.js"></script>
-    
-    <!-- 话费充值页面  -->
-    
-    <script type="text/javascript" src="js/user/serviceCharge/order-service-charge.js"></script>
-    <script type="text/javascript" src="js/user/serviceCharge/order-service-charge-success.js"></script>
-    
+	       
     <!-- 历史订单录入 -->
     <script type="text/javascript" src="js/order/history/historyUser.js"></script>
     <script type="text/javascript" src="js/order/history/historyZhongdiangong.js"></script>
