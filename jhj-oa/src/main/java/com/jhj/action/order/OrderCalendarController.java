@@ -247,7 +247,13 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setEventName("");
 							PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 							if (type != null) {
-								eventVo.setEventName(type.getName().substring(0, 4));
+								String typeName = type.getName();
+								if(typeName.length()>4){
+									eventVo.setEventName(typeName.substring(0, 4));
+								}else{
+									eventVo.setEventName(typeName);
+								}
+								
 							}
 							eventVo.setDateDuration(startHourMinStr + "~" + endHourMinStr);
 							eventVo.setServiceTime(serviceDate);
