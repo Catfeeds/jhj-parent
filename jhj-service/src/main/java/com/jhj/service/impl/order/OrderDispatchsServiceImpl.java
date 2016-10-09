@@ -252,8 +252,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			if (staffIds.isEmpty())
 				continue;
 
-			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前2小时 - 服务结束时间
-			Long startServiceTime = serviceDate - 3600 * 2;
+			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
+			Long startServiceTime = serviceDate - 59 * 60;
 			Long endServiceTime = (long) (serviceDate + serviceHour * 3600);
 
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
@@ -415,7 +415,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				continue;
 
 			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前2小时 - 服务结束时间
-			Long startServiceTime = serviceDate - 3600 * 2;
+			Long startServiceTime = serviceDate - 59 * 60;
 			Long endServiceTime = (long) (serviceDate + serviceHour * 3600);
 
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
@@ -644,7 +644,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前2小时 - 服务结束时间
-		Long startServiceTime = serviceDate - 3600 * 2;
+		Long startServiceTime = serviceDate - 59 * 60;
 		Long endServiceTime = (long) (serviceDate + serviceHour * 3600);
 
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
