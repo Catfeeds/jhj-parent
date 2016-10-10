@@ -15,11 +15,9 @@ myApp.onPageInit('order-hour-form', function(page) {
 	
 	if (addrId != undefined || addrId != "") $$("#addrId").val(addrId);
 	if (addrName != undefined || addrName != "") {
-		$$("#addrName").val(addrName);
+		$$("#orderHourAddrName").html(addrName);
 	}
 	
-	console.log("addrDDDD = " + $$("#addrId").val());
-	console.log("addrNameddddd = " + $$("#addrName").val());
 	/*
 	 * 提交订单
 	 */
@@ -84,7 +82,6 @@ myApp.onPageInit('order-hour-form', function(page) {
 		// 保存已选择的 服务时间
 		sessionStorage.setItem('serviceDate', $$("#serviceDate").val());
 	});
-	
 });
 
 // 表单校验

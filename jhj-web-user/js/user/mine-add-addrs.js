@@ -38,9 +38,9 @@ myApp.onPageBeforeInit('mine-add-addrs', function(page) {
 		}
 
 		
-		getAm();
+		//getAm();
 		
-		localStorage['am_mobile'] = result.data.amMobile;
+		//localStorage['am_mobile'] = result.data.amMobile;
 
 		
 		mainView.router.loadPage(returnUrl);

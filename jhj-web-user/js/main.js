@@ -72,11 +72,6 @@ var ajaxError = function(data, textStatus, jqXHR) {
 	myApp.alert('网络繁忙,请稍后再试.');
 };
 
-// 网上商城弹出框
-/*
- * $$(".index-shangcheng").click(function(){
- * mainView.router.loadPage("http://kdt.im/OZjLSAKoJ"); //alert("敬请期待"); })
- */
 function toolBarHref(url, toolbarName) {
 	// 首页
 	var toolBarIndex = $$('#toolbar-index');
