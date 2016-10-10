@@ -29,66 +29,22 @@ var myApp = new Framework7({
 	},
 	preroute : function(view, options) {
 
-		/*
-		 * if(!isLogin() && options.url!='login.html'){ // console.log('must
-		 * login'); view.router.loadPage('login.html'); return false; }
-		 */
-		// 反向判断不好使！！！
-		if (!isLogin() && options.url == 'order/order-form-zhongdiangong.html') {
+		if (!isLogin() && options.url == 'order/order-hour-form.html') {
 			view.router.loadPage('login.html');
 			return false;
 		} else if (!isLogin() && options.url == 'order/order-list-shendubaojiezl.html') {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=3') {
-			view.router.loadPage('login.html');
-			return false;
 		} else if (!isLogin() && options.url == 'user/mine.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'user/user-am-detail.html') {
 			view.router.loadPage('login.html');
 			return false;
 		} else if (!isLogin() && options.url == 'order/order-hour-now-list.html') {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=4') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=5') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=6') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=7') {
-			view.router.loadPage('login.html');
-			return false;
 		} else if (!isLogin() && options.url == 'user/charge/mine-charge-list.html') {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'huodong-detail.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'huodong-list.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/remind/order-remind-tixing.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am.html') {
-			view.router.loadPage('login.html');
-			return false;
 		} else if (!isLogin() && options.url == 'user/serviceCharge/order-service-charge.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'xianshi-huodong.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=10') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=11') {
 			view.router.loadPage('login.html');
 			return false;
 		}
