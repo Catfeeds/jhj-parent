@@ -2,8 +2,11 @@ package com.jhj.action.order;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -192,30 +195,33 @@ public class OrderCalendarController extends BaseController {
 				
 				boolean falg=false;
 				// 加入请假事件
-				for (OrgStaffLeave staffLeave : leaveList) {
+				if(leaveList!=null && leaveList.size()>0){
+					for (OrgStaffLeave staffLeave : leaveList) {
 
-					Long leaveStaffId = staffLeave.getStaffId();
-					String leaveDate = DateUtil.formatDate(staffLeave.getLeaveDate());
+						Long leaveStaffId = staffLeave.getStaffId();
+						String leaveDate = DateUtil.formatDate(staffLeave.getLeaveDate());
 
-					if (leaveStaffId == staffId && leaveDate.equals(weekDate)) {
+						if (leaveStaffId == staffId && leaveDate.equals(weekDate)) {
 
-						EventVo eventVo = new EventVo();
+							EventVo eventVo = new EventVo();
 
-						// 请假开始时间点
-						Short start = staffLeave.getStart();
-						// 请假结束时间点
-						Short end = staffLeave.getEnd();
+							// 请假开始时间点
+							Short start = staffLeave.getStart();
+							// 请假结束时间点
+							Short end = staffLeave.getEnd();
 
-						eventVo.setDateDuration(start + "点~" + end + "点");
-						eventVo.setEventName("请假");
-						eventVo.setServiceTime(TimeStampUtil.getMillisOfDayFull(leaveDate));
-						eventList.add(eventVo);
-						falg=true;
-						if(startTimeStr.equals(leaveDate)){
-							leaveStaffSize++;
+							eventVo.setDateDuration(start + "点~" + end + "点");
+							eventVo.setEventName("请假");
+							eventVo.setServiceTime(TimeStampUtil.getMillisOfDay(leaveDate));
+							eventList.add(eventVo);
+							falg=true;
+							if(startTimeStr.equals(leaveDate)){
+								leaveStaffSize++;
+							}
 						}
 					}
 				}
+				
 				// 加入 排班事件
 				if(!falg){
 					for (OrderDispatchs staffDisVo : disList) {
@@ -258,6 +264,7 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setDateDuration(startHourMinStr + "~" + endHourMinStr);
 							eventVo.setServiceTime(serviceDate);
 							eventVo.setOrderNo(orderNo);
+							eventVo.setOrderType(orders.getOrderType());
 							eventList.add(eventVo);
 							falg=true;
 							
@@ -270,13 +277,6 @@ public class OrderCalendarController extends BaseController {
 						}
 					}
 				}
-//				if(!falg){
-//					EventVo eventVo = new EventVo();
-////					eventVo.setDateDuration(weekDate);
-////					eventVo.setEventName("暂无派工");
-////					eventVo.setServiceTime(TimeStampUtil.getMillisOfDayFull(weekDate+" 12:00:00"));
-//					eventList.add(eventVo);
-//				}
 
 				timeEventVo.setEventList(eventList);
 				timeEventList.add(timeEventVo);

@@ -24,6 +24,8 @@ public class EventVo {
 	private Long serviceTime;
 	
 	private String orderNo;
+	
+	private Short orderType;
 
 	public String getDateDuration() {
 		return dateDuration;
@@ -57,4 +59,13 @@ public class EventVo {
 		this.orderNo = orderNo;
 	}
 
+	public Short getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Short orderType) {
+		this.orderType = orderType;
+	}
+
+	
 }

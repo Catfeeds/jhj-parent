@@ -1,0 +1,19 @@
+
+<div data-page="mine-coupons-list" class="page">
+    <div id="indexPageContentDiv" class="page-content">
+    {{#each data}}
+        <div class="beijing-index">
+            <div class="youhuiquan">
+                <div class="youhuiquan-num">￥{{value}}</div>
+                <div class="youhuiquan-tiaojian">
+                      	消费满{{max_value}}元可用
+                </div>
+                <div class="all-button6" id="mine-coupons-use">立即使用</div>
+                <div class="youhuiquan-youxiaoqi">
+                    {{to_date_str}}
+                </div>
+            </div>
+        </div>
+    {{/each}}
+    </div>
+</div>

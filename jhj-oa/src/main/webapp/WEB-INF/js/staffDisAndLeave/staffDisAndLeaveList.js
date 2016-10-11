@@ -24,14 +24,18 @@ $(document).ready(function(){
 						var s=moment(serviceDate).format('YYYY-MM-DD')+" 12:00:00";
 						var date = moment(s,'YYYY-MM-DD HH:mm:ss').unix();
 						var orderNo=eventVoV.orderNo;
+						var orderType=eventVoV.orderType;
 						if((serviceDate/1000)<date){
 							var eventStrAM = "";
 							eventStrAM +="<font color='red'>上午</font>"+ eventVoV.dateDuration +" "+ eventVoV.eventName+"<br/>";
 							if(orderNo==null){
 								am=eventStrAM;
 							}
-							if(orderNo!=null){
+							if(orderNo!=null && orderType==0){
 								am+="<a href='../order/order-hour-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
+							}
+							if(orderNo!=null && orderType==1){
+								am+="<a href='../order/order-exp-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
 							}
 						}else{
 							var eventStrPM="";
@@ -39,8 +43,11 @@ $(document).ready(function(){
 							if(orderNo==null){
 								pm=eventStrPM;
 							}
-							if(orderNo!=null){
+							if(orderNo!=null && orderType==0){
 								pm +="<a href='../order/order-hour-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
+							}
+							if(orderNo!=null && orderType==1){
+								pm +="<a href='../order/order-exp-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
 							}
 						}
 					});
