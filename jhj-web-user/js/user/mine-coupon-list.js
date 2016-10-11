@@ -1,4 +1,4 @@
-myApp.onPageInit('mine-coupon-list-page', function (page) {
+myApp.onPageInit('mine-coupons-list', function (page) {
 		
 	var userId = localStorage.getItem("user_id");
 	if (userId == undefined || userId == '' || userId == 0) {
@@ -7,7 +7,7 @@ myApp.onPageInit('mine-coupon-list-page', function (page) {
 	localStorage['u_order_money_param'] = page.query.order_money;
 	localStorage['u_order_type_param'] = page.query.order_type;
 	//处理订单调整到当前页面选择优惠劵的
-	$$(document).on('click', '#selectCouponLink', function (e) {
+	$$(document).on('click', '#mine-coupons-use', function (e) {
 
 		e.stopImmediatePropagation(); //防止重复点击
 
@@ -87,14 +87,14 @@ myApp.onPageInit('mine-coupon-list-page', function (page) {
 	
 	
 	
-     $$("#user-coupon-exchange-button").on("click",function(){
-    	 exchangeUserCoupon(userId);
- 	});
+//     $$("#user-coupon-exchange-button").on("click",function(){
+//    	 exchangeUserCoupon(userId);
+// 	});
 });
 
-//列表显示用户兑换码
-myApp.template7Data['page:mine-coupon-list-page'] = function(){
-  var result;
+//列获取优惠券列表
+myApp.template7Data['page:mine-coupons-list'] = function(){
+  var result="";
   var userId = localStorage.getItem("user_id");
   $$.ajax({
           type : "GET",
@@ -108,36 +108,39 @@ myApp.template7Data['page:mine-coupon-list-page'] = function(){
   })
   return result;
 }
-var onExchangeSuccess = function(data, textStatus, jqXHR){
-	myApp.hideIndicator();
-   	var result = JSON.parse(data.response);
-	if (result.status == "999") {
-		myApp.alert(result.msg);
-		return;
-	}
-	  var userAddr = result.data;
-	  mainView.router.loadPage("user/coupon/mine-coupon-list.html?user_id="+1);
-	}
-//兑换优惠券function
-function exchangeUserCoupon(userId){
-	
-	var cardPasswd = $$("#cardPasswdItem").val();
-	if(cardPasswd =='' || cardPasswd.length <0){
-		myApp.alert("兑换码不能为空");
-		return;
-	}
-    $$.ajax({
-        type:"POST",
-        url:siteAPIPath+"user/post_coupon.json",
-        data:{"user_id":userId,
-        	  "card_passwd":cardPasswd
-        	  },
-        dataType:"json",
-        cache:false,
-        statusCode: {
-         	200: onExchangeSuccess,
- 	    	400: ajaxError,
- 	    	500: ajaxError
- 	    },
-    });
-}
+
+
+
+//var onExchangeSuccess = function(data, textStatus, jqXHR){
+//	myApp.hideIndicator();
+//   	var result = JSON.parse(data.response);
+//	if (result.status == "999") {
+//		myApp.alert(result.msg);
+//		return;
+//	}
+//	  var userAddr = result.data;
+//	  mainView.router.loadPage("user/coupon/mine-coupon-list.html?user_id="+1);
+//	}
+////兑换优惠券function
+//function exchangeUserCoupon(userId){
+//	
+//	var cardPasswd = $$("#cardPasswdItem").val();
+//	if(cardPasswd =='' || cardPasswd.length <0){
+//		myApp.alert("兑换码不能为空");
+//		return;
+//	}
+//    $$.ajax({
+//        type:"POST",
+//        url:siteAPIPath+"user/post_coupon.json",
+//        data:{"user_id":userId,
+//        	  "card_passwd":cardPasswd
+//        	  },
+//        dataType:"json",
+//        cache:false,
+//        statusCode: {
+//         	200: onExchangeSuccess,
+// 	    	400: ajaxError,
+// 	    	500: ajaxError
+// 	    },
+//    });
+//}

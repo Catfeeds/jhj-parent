@@ -32,7 +32,7 @@ myApp.onPageInit('order-pay-rili-kongjian',function(page){
             if(today>getMonthNum){
                 today=1;
             }
-            contentDay+="<li class='rilikongjian3-1'>"+today+"</li>";
+            contentDay+="<li>"+today+"</li>";
             if(moment(year+"-"+month+"-"+today).format("YYYY-MM-D")==cmp_day){
                 sign=true;
             }

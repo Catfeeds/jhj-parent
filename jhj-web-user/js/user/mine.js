@@ -3,64 +3,58 @@ myApp.onPageBeforeInit('mine', function (page) {
 	if (userId == undefined || userId == '' || userId == 0) {
 		return;
 	}
-//	getUserInfos(userId);
 	
-	$$("#mine-order-lists").on("click",function(){
-		mainView.router.loadPage("order/order-cal.html?user_id="+userId);
+	//优惠券
+	$$("#mine-coupons").on("click",function(){
+		mainView.router.loadPage("user/user-coupons.html?user_id="+userId);
+	});
+
+	//关于我们
+	$$("#mine-about-us").on("click",function(){
+		mainView.router.loadPage("user/aboutus.html");
 	});
 	
-	$$("#mine-addr-list").on("click",function(){
+	//常见问题
+	$$("#mine-issue").on("click",function(){
+		mainView.router.loadPage("user/faq.html");
+	});
+	
+	//地址管理
+	$$("#mine-addr-manager").on("click",function(){
 		mainView.router.loadPage("user/mine-addr-list.html?user_id="+userId);
 	});
 	
-	$$("#mine-coupon-lists").on("click",function(){
-		mainView.router.loadPage("user/coupon/mine-coupon-list.html?user_id="+userId);
+	//用户协议
+	$$("#mine-agreement").on("click",function(){
+		mainView.router.loadPage("user/agreement.html");
 	});
-	$$("#mine-charge-list").on("click",function(){
-		mainView.router.loadPage("user/charge/mine-charge-list.html?user_id="+userId);
-	});
-	$$("#mine-feedback-info").on("click",function(){
-		mainView.router.loadPage("user/mine-feedback-info.html?user_id="+userId);
-	});
-	$$("#mine-more").on("click",function(){
-		mainView.router.loadPage("user/more.html");
-	});
-	$$("#mine-info").on("click",function(){
-		mainView.router.loadPage("user/user-wancheng.html");
-	});
-
+	
 	// 点击 余额 --消费明细
-   $$("#restMoneyDiv").on('click',function(){
-	   mainView.router.loadPage("user/mine-rest-money-detail.html");
-   });
-	
-	
-	
-	$$('.user-logout').on('click', function() {
-		  localStorage.removeItem("mobile");
-		  localStorage.removeItem('user_id');
-		  localStorage.removeItem('im_username');
-		  localStorage.removeItem('im_password');
-		  
-		 /*
-		  *  此处是 用户退出登录操作, 斟酌之后, 结合 require-data.js的改动
-		  *  
-		  *  用户还在微网站内！！ 决定保留 这两个 “用户无关性” 数据 	
-		  */
+//	$$("#restMoneyDiv").on('click',function(){
+//		mainView.router.loadPage("user/mine-rest-money-detail.html");
+//	});
+
+	//退出登录
+	$$('#user-logout').on('click', function() {
+		localStorage.removeItem("mobile");
+		localStorage.removeItem('user_id');
+		localStorage.removeItem('im_username');
+		localStorage.removeItem('im_password');
+
 //		  localStorage.removeItem('service_type_addons_list');
 //		  localStorage.removeItem('service_type_list');
-		  
-		  localStorage.removeItem("am_id");
-		  localStorage.removeItem("am_mobile");
-		  mainView.router.loadPage("index.html");
+
+		localStorage.removeItem("am_id");
+		localStorage.removeItem("am_mobile");
+		mainView.router.loadPage("index.html");
 	});
-	
+
 });
 
-//列表显示
-myApp.template7Data['page:mine'] = function() {
-	var result;
-	var userId = localStorage.getItem("user_id");;
+//列表显示，获取用户的信息
+myApp.template7Data['page:mine']=function(){
+	var result="";
+	var userId = localStorage.getItem("user_id");
 	if (userId == undefined || userId == '' || userId == 0) {
 		return;
 	}
@@ -72,11 +66,10 @@ myApp.template7Data['page:mine'] = function() {
 		cache : true,
 		async : false,
 		success : function(data) {
-			// console.log(data);
 			result = data.data;
 		}
 	})
-
 	return result;
 }
+
 
