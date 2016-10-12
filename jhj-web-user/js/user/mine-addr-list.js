@@ -121,13 +121,8 @@ function goBackToOrder(addrId, addrName){
 		
 		if (historyPage == undefined) continue;
 		
-		if (historyPage.indexOf("order-hour-form") >= 0 ||
-			historyPage.indexOf("order-list-shendubaojie-yuyue") >= 0 ||
-			
-			//2015-11-6 15:17:49    返回 历史订单 添加页面
-			historyPage.indexOf("history/history-zhongdiangong") >=0 ||	
-			
-			historyPage.indexOf("history/history-am") >=0 
+		if (historyPage.indexOf("order-hour-confirm") >= 0 ||
+			historyPage.indexOf("order-hour-choose") >= 0 
 			) {
 			returnPage = historyPage;
 			break;

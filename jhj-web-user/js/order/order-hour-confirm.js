@@ -1,4 +1,4 @@
-myApp.onPageInit('order-hour-form', function(page) {
+myApp.onPageInit('order-hour-confirm', function(page) {
 			
 	var userId = localStorage['user_id'];
 	$$("#userId").val(userId);
@@ -17,6 +17,16 @@ myApp.onPageInit('order-hour-form', function(page) {
 	if (addrName != undefined || addrName != "") {
 		$$("#orderHourAddrName").html(addrName);
 	}
+	
+	//设置服务时间.
+	if (sessionStorage.getItem('serviceDate') != null) {
+		$$("#serviceDate").val(sessionStorage.getItem('serviceDate'));
+	}
+	
+	if (sessionStorage.getItem('serviceDateStr') != null) {
+		$$("#serviceDateStr").html(sessionStorage.getItem('serviceDateStr'));
+	}
+	
 	
 	/*
 	 * 提交订单

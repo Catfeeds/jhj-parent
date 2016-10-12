@@ -1,4 +1,9 @@
-myApp.onPageInit('order-pay-rili-kongjian',function(page){
+myApp.onPageInit('order-lib-cal',function(page) {
+	
+	var nextUrl = page.query.next_url;
+	
+	console.log("nextUrl = " + nextUrl);
+	
     var serviceTime="";
     var _day=""
     var _dayTime=""
@@ -289,9 +294,14 @@ myApp.onPageInit('order-pay-rili-kongjian',function(page){
         if(_day==""){
             _day=moment().format("D");
         }
-        serviceTime=year+"-"+month+"-"+_day+" "+_dayTime;
+        serviceTime=year+"-"+month+"-"+_day+" "+_dayTime + ":00";
+        sessionStorage.setItem('serviceDate', serviceTime);
+        sessionStorage.setItem('serviceDateStr', serviceTime);
+        
+        
+        console.log("serviceTime = " + serviceTime)
         if(_dayTime!=""){
-            mainView.router.loadPage('html/order-pay-rili.html?service_time='+serviceTime);
+        	mainView.router.loadPage(nextUrl);
         }else{
             alert("请选择服务时间");
             return;

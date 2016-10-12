@@ -1,14 +1,15 @@
 <div class="pages">
-	<div data-page="order-hour-form" class="page">
+	<div data-page="order-hour-confirm" class="page">
 		<div id="indexPageContentDiv" class="page-content">
 			<form id="orderHour-Form" class="store-data">
 				<input type="hidden" id="userId" name="userId" value="">
-				<input type="hidden" name="serviceType" id="serviceType" value="23">
-				<input type="hidden" name="orderFrom" value="1">
-				<input type="hidden" name="serviceContent" value="">
-				<input type="hidden" name="serviceHour" value="3">
+				<input type="hidden" id="serviceType" name="serviceType"  value="23">
+				<input type="hidden" id="orderFrom name="orderFrom" value="1">
+				<input type="hidden" id="serviceContent" name="serviceContent" value="">
+				<input type="hidden" id="serviceHour" name="serviceHour" value="3">
 				<input type="hidden" id="serviceAddons" name="serviceAddons" value="">
 				<input type="hidden" id="addrId" name="addrId" value="">
+				<input type="hidden" id="serviceDate" name="serviceDate" value="">
 				<div class="beijing-index">
 					<div class="order-xiadan">
 						<ul class="xiadan">
@@ -31,7 +32,7 @@
 						</ul>
 						<ul class="xiadan">
 							<li>服务时间：</li>
-							<li>2016年9月26日（周三）14:00</li>
+							<li id="serviceDateStr"></li>
 						</ul>
 						<ul class="xiadan">
 							<li>费用明细：</li>
