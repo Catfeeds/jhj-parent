@@ -1,6 +1,8 @@
 package com.jhj.action.app.user;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,7 +24,10 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserCouponVo;
+import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.Week;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -71,7 +76,7 @@ public class UserCouponsController extends BaseController {
 			
 			List<UserCouponVo> listUserCouponVo = userCouponsService.changeToUserCouponVos(list);
 			//过滤优惠券是否失效
-			for (Iterator iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
+			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
 				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
 				if (userCouponVo.getIsUsed().equals((short)1) ||
 					userCouponVo.getToDate().before(DateUtil.getNowOfDate())) {
@@ -140,6 +145,56 @@ public class UserCouponsController extends BaseController {
 			
 			result.setData(userCouponVo);
 			
+			return result;
+		}
+		
+		@RequestMapping(value = "get_validate_coupons",method = RequestMethod.GET)
+		public AppResultData<List<UserCouponVo>> getValidateCoupons(
+				@RequestParam("user_id") Long userId,
+				@RequestParam("order_type") String orderType,
+				@RequestParam("service_date") Long serviceDate,
+				@RequestParam("order_money") Float orderMoney){
+
+			AppResultData<List<UserCouponVo>> result = new AppResultData<List<UserCouponVo>>(
+					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,new ArrayList<UserCouponVo>());
+			Users u = userService.selectByPrimaryKey(userId);
+
+			// 判断是否为注册用户，非注册用户返回 999
+			if (u == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
+				return result;
+			}
+
+			UserCoupons userCoupons = new UserCoupons();
+			userCoupons.setIsUsed((short)0);
+			userCoupons.setUserId(userId);
+			userCoupons.setServiceType(orderType);
+			List<UserCoupons> list = userCouponsService.selectByUserCoupons(userCoupons);
+			List<UserCouponVo> listNew = new ArrayList<UserCouponVo>();
+
+			if(list.isEmpty()) return result;
+
+			List<UserCouponVo> listUserCouponVo = userCouponsService.changeToUserCouponVos(list);
+			
+			Date date = TimeStampUtil.timeStampToDate(serviceDate);
+			int weekNumber = DateUtil.getWeek(date).getNumber();
+			BigDecimal moeney=new BigDecimal(orderMoney);
+			boolean falg=false;
+			if(weekNumber==Week.MONDAY.getNumber() ||weekNumber==Week.TUESDAY.getNumber() || weekNumber==Week.WEDNESDAY.getNumber()){
+				falg=true;
+			}
+			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
+				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
+				if(userCouponVo.getCouponsTypeId().equals("2") && !falg){
+					listNew.add(userCouponVo);
+				}
+				if(moeney.compareTo(userCouponVo.getMaxValue())==-1){
+					listNew.add(userCouponVo);
+				}
+			}
+			listUserCouponVo.removeAll(listNew);
+			result.setData(listUserCouponVo);
 			return result;
 		}
 

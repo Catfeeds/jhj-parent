@@ -377,4 +377,9 @@ public class UserCouponsServiceImpl implements UserCouponsService {
     	uc.setAddTime(TimeStampUtil.getNow() / 1000);
     	return uc;
     }
+
+	@Override
+	public List<UserCoupons> selectByUserCoupons(UserCoupons userCoupons) {
+		return userCouponsMapper.selectByUserCoupons(userCoupons);
+	}
 }
