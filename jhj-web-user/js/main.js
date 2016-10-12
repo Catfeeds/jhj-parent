@@ -73,14 +73,6 @@ var ajaxError = function(data, textStatus, jqXHR) {
 };
 
 function toolBarHref(url, toolbarName) {
-	// 首页
-	var toolBarIndex = $$('#toolbar-index');
-	// 订单
-	var toolBarOrder = $$('#toolbar-order');
-	// 充值
-	var toolBarCharge = $$('#toolbar-charge');
-	// 我的
-	var toolBarMine = $$('#toolbar-mine');
 	
 	var toolBars = ['toolbar-index', 'toolbar-order', 'toolbar-charge', 'toolbar-mine'];
 	

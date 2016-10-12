@@ -4,44 +4,27 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 	if (userId == undefined || userId == '' || userId == 0) {
 		return;
 	}
-	localStorage['u_order_money_param'] = page.query.order_money;
-	localStorage['u_order_type_param'] = page.query.order_type;
+
+	var backUrl = page.query.back_url;
+
 	//处理订单调整到当前页面选择优惠劵的
 	$$(document).on('click', '#mine-coupons-use', function (e) {
 
 		e.stopImmediatePropagation(); //防止重复点击
 
-		var returnPage = ""
-		for (var i =1; i < 5; i++) {
-			var historyPage = mainView.history[mainView.history.length-i];
-			console.log(historyPage);
-			if (historyPage == undefined) continue;
-			
-			if (historyPage.indexOf("order-hour-confirm") >= 0 || 
-				historyPage.indexOf("order-view-1") >= 0 ||
-				historyPage.indexOf("order-view-2") >= 0 ||
-				historyPage.indexOf("order-form-zhongdiangong-pay") >= 0 ||
-				historyPage.indexOf("order-service-charge") >= 0) {
-				
-				returnPage = historyPage;
-				
-				break;
-			}
-		}
-		
-		if (returnPage == "") return;
+		if (backUrl == "") return;
 		
 		//		page.query ,有时不好用
-		var orderTypeParam = localStorage['u_order_type_param'];
-
-		var orderMoney = localStorage['u_order_money_param'];
+		var orderType = sessionStorage.getItem('order_type');
+		var orderMoney = sessionStorage.getItem('order_money');
 		//做优惠劵的判断.
-		var serviceType = $$(this).find("input[name=service_type]").val();
+		var couponOrderType =  $$(this).find("input[name=order_type]").val();
 		var maxValue = $$(this).find("input[name=max_value]").val();
 		var userCouponId = $$(this).find("#user_coupon_id").val();
-		var userCouponName = $$(this).find("#introduction").html();
+		
 		var userCouponValue = $$(this).find("#user_coupon_value").val();
 		var useCondition=$$(this).find("#coupons_type_id").val();
+		var userCouponName = "￥" + userCouponValue;
 		
 		var service_date = localStorage.getItem("service_date");
 		var _week=moment(service_date).format('d');
@@ -52,7 +35,8 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			}
 		}
 		//判断当前选择优惠劵是否适用
-		if (serviceType.indexOf(orderTypeParam) < 0) {
+		
+		if (couponOrderType.indexOf(orderType) < 0) {
 			myApp.alert("当前优惠劵不适用!");
 			return false;
 		}
@@ -69,7 +53,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 		sessionStorage.setItem("user_coupon_name", userCouponName);
 		sessionStorage.setItem("user_coupon_value", userCouponValue);
     	
-    	mainView.router.loadPage(returnPage);		
+    	mainView.router.loadPage(backUrl);		
 		
 	});
 });

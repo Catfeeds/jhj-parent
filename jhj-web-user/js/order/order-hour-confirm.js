@@ -1,7 +1,11 @@
 myApp.onPageInit('order-hour-confirm', function(page) {
 	
+	var orderType = $$("#orderType").val();
+	sessionStorage.setItem("order_type", orderType);
+	
 	//获取服务类别基本信息
 	var serviceTypeId = $$("#serviceType").val();
+	sessionStorage.setItem("service_type_id", serviceTypeId);
 	$$.ajax({
 	      type : "GET",
 	      url: siteAPIPath+"dict/get_service_type.json?service_type_id="+serviceTypeId,
@@ -19,6 +23,12 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	    	$$("#serviceHourStr").html(serviceType.service_hour + "小时");
 	    	$$("#priceStr").html(serviceType.price);
 	    	$$("#orderMoneyStr").html(serviceType.price + "元");
+	    	
+	    	$$("#serviceContent").val(serviceType.name);
+	    	$$("#orderMoney").val(serviceType.price);
+	    	
+	    	sessionStorage.setItem("order_money", serviceType.price);
+	    	sessionStorage.setItem("order_pay", serviceType.price);
 	      }
 	})
 	
@@ -42,56 +52,79 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	}
 	
 	//设置服务时间.
-	if (sessionStorage.getItem('serviceDate') != null) {
-		$$("#serviceDate").val(sessionStorage.getItem('serviceDate'));
+	if (sessionStorage.getItem('service_date') != null) {
+		$$("#serviceDate").val(sessionStorage.getItem('service_date'));
 	}
 	
-	if (sessionStorage.getItem('serviceDateStr') != null) {
-		$$("#serviceDateStr").html(sessionStorage.getItem('serviceDateStr'));
+	if (sessionStorage.getItem('service_date_str') != null) {
+		$$("#serviceDateStr").html(sessionStorage.getItem('service_date_str'));
+	}
+	
+	//设置优惠劵
+	if (sessionStorage.getItem('user_coupon_name') != null) {
+		$$("#userCouponName").html(sessionStorage.getItem('user_coupon_name'));
+	}
+	
+	if (sessionStorage.getItem('user_coupon_id') != null) {
+		$$("#userCouponId").val(sessionStorage.getItem('user_coupon_id'));
+	}
+	
+	if (sessionStorage.getItem('user_coupon_value') != null) {
+		var userCouponValue = sessionStorage.getItem('user_coupon_value');
+		$$("#userCouponValue").val(userCouponValue);
+		console.log("userCouponValue = " + $$("#userCouponValue").val())
+		var orderPayStr = $$("#orderMoney").val() - userCouponValue;
+		if (orderPayStr < 0) orderPayStr = 0;
+		sessionStorage.setItem("order_pay", orderPayStr);
+		$$("#orderPayStr").html(orderPayStr + "元");
 	}
 	
 	
+		
 	/*
 	 * 提交订单
 	 */
-	$$("#submitOrder").click(function() {
+	$$("#orderHourSubmit").click(function() {
+		
 		
 		// 表单校验不通过，不能提交
 		if (formValidation() == false) {
 			return false;
 		}
-		
-		// 文档要求： post请求，必须是 formData类型
-		var formData = myApp.formToJSON('#orderHour-Form');
-		
-		// 处理 日期。。传给后台 string 类型 的 秒值，时间戳
-		formData.serviceDate = moment(formData.serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
-		
+
+		var params = {};
+		params.userId = $$("#userId").val();
+		params.serviceType = $$("#serviceType").val();
+		params.serviceContent = $$("#serviceContent").val();
+		params.serviceDate = $$("#serviceDate").val();
+		params.addrId = $$("#addrId").val();
+		params.serviceHour = $$("#serviceHour").val();
+		params.remarks = $$("#remarks").val();
+		params.orderFrom = $$("#orderFrom").val();
+		console.log(params);
+
 		$$.ajax({
 			type : "post",
 			url : siteAPIPath + "order/post_hour.json",
-			data : formData,
+			data : params,
 			success : function(data, status, xhr) {
 				
 				var result = JSON.parse(data);
 				
 				if (result.status == "999") {
 					myApp.alert(result.msg);
-					
 					return;
 				}
-				
-				localStorage.setItem('user_id', userId);
-				
-				localStorage.setItem('order_no', result.data.order_no);
-				
-				localStorage.setItem('order_id', result.data.id);
-				
+
+				sessionStorage.setItem('order_no', result.data.order_no);
+				sessionStorage.setItem('order_id', result.data.id);
 				/*
 				 * 提交 校验通过后，，清空当前页面回显的数据
 				 */
-
-				sessionStorage.removeItem("serviceDate");
+				sessionStorage.removeItem("service_date");
+				sessionStorage.removeItem("service_dateStr");
+				sessionStorage.removeItem("addr_id");
+				sessionStorage.removeItem("addr_name");
 				
 				myApp.formDeleteData("orderHour-Form");
 				
@@ -99,7 +132,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 				 * 此处 逻辑： 如果 响应 成功 。 不管 是否 成功分配阿姨，都跳转到 支付 页面。 在 进行 支付
 				 * 操作的时候，再给出提示，是否有可以服务的阿姨
 				 */
-				var successUrl = "order/order-form-zhongdiangong-pay.html";
+				var successUrl = "order/order-pay.html";
 				
 				mainView.router.loadPage(successUrl);
 				
@@ -109,40 +142,22 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 			}
 		});
 	});
-	
-	// 点击 服务地址 按钮时，将 页面 变化过的值，保存在本地
-	$$("#addrSelect").on('click', function() {
-		// 保存已选择的 服务时间
-		sessionStorage.setItem('serviceDate', $$("#serviceDate").val());
-	});
 });
 
 // 表单校验
 function formValidation() {
 	var formDatas = myApp.formToJSON('#orderHour-Form');
 	
-	// 当前选择 的 日期
-	var dateSelect = formDatas.serviceDate;
-	// 当前 选择的 日期 中 的 '整点小时' 数，如：08,10,19...
-	var hourSelect = moment(dateSelect).format('HH');
-	
-	// 选择日期的 年月日
-	var daySelect = moment(dateSelect).format('YYYYMMDD');
-	
-	// 现实日期的 年月日
-	var realDate = moment().format("YYYYMMDD");
-	
-	// 当前整点小时数
-	var nowHour = moment().hour();
-	
-	// 选择的时间 小于 当前时间
-	if (Number(hourSelect) <= nowHour && daySelect == realDate) {
+	//校验服务时间是否正确
+	var serviceDate = formDatas.serviceDate;
+	var now = moment().unix();
+	if (serviceDate == "" || serviceDate == 0 || serviceDate <= now) {
 		myApp.alert("现在时间：" + moment().format("YYYY-MM-DD HH:MM ") + "\r\n" + "请选择合适的服务时间");
 		return false;
 	}
 	
+	//校验服务地址是否为空
 	var addrId = $$("#addrId").val;
-	
 	if (addrId == 0 || addrId == "") {
 		alert("请选择服务地址");
 		return false;

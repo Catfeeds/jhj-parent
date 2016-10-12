@@ -296,9 +296,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
         }
         serviceTime=year+"-"+month+"-"+_day+" "+_dayTime + ":00";
 		var ser_date=year+"-"+month+"-"+_day;
-		sessionStorage.setItem('serviceDate', moment(serviceTime).unix());
-		sessionStorage.setItem('serviceDateStr',ser_date+"("+ weekDay[moment(ser_date).format("d")]+")"+_dayTime + ":00");
-        
+		sessionStorage.setItem('service_date', moment(serviceTime).unix());
+		sessionStorage.setItem('service_date_str',ser_date+"("+ weekDay[moment(ser_date).format("d")]+")"+_dayTime);
         
         console.log("serviceTime = " + serviceTime)
         if(_dayTime!=""){

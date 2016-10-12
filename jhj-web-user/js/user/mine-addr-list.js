@@ -129,7 +129,7 @@ function goBackToOrder(addrId, addrName){
 		}
 
 	}
-	
+	console.log("returnPage = " + returnPage);
 	if (returnPage == "") return;
 	
 	

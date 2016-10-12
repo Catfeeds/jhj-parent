@@ -1,22 +1,26 @@
 <div class="pages">
 	<div data-page="order-hour-confirm" class="page">
 		<div id="indexPageContentDiv" class="page-content">
-			<form id="orderHour-Form" class="store-data">
-				<input type="hidden" id="userId" name="userId" value="">
+			<form id="orderHour-Form" >
+				<input type="hidden" id="userId" name="userId" value="0">
+				<input type="hidden" id="orderType" name="orderType" value="0">
 				<input type="hidden" id="serviceType" name="serviceType" value="28">
 				<input type="hidden" id="orderFrom" name="orderFrom" value="1">
 				<input type="hidden" id="serviceContent" name="serviceContent" value="">
 				<input type="hidden" id="serviceHour" name="serviceHour" value="3">
 				<input type="hidden" id="serviceAddons" name="serviceAddons" value="">
 				<input type="hidden" id="addrId" name="addrId" value="">
-				<input type="hidden" id="serviceDate" name="serviceDate" value="">
+				<input type="hidden" id="serviceDate" name="serviceDate" value="0">
+				<input type="hidden" id="orderMoney" name="orderMoney" value="0">
+				<input type="hidden" id="userCouponId" name="userCouponId" value="0">
+				<input type="hidden" id="userCouponValue" name="userCouponValue" value="0">
 				<div class="beijing-index">
 					<div class="order-xiadan">
 						<ul class="xiadan">
 							<li>服务类型：</li>
 							<li id="serviceTypeName">日常保洁</li>
 						</ul>
-						<a href="user/mine-addr-list.html" class="item-link" id="addrSelect">
+						<a href="user/mine-addr-list.html" class="special-color7" id="addrSelect">
 							<ul class="xiadan">
 								<li>服务地址：</li>
 								<li id="orderHourAddrName">请选择服务地址.</li>
@@ -47,13 +51,13 @@
 							<li>订单金额</li>
 							<li id="orderMoneyStr">149元</li>
 						</ul>
-						<a href="user/user-coupons.html" class="item-link" id="addrSelect">
+						<a href="user/user-coupons.html?back_url=order/order-hour-confirm.html"  class="special-color7" >
 							<ul class="xiadan1">
 								<li>
 									<img src="img/xiadan/youhuiquan.png" alt="">
 								</li>
 								<li>优惠券</li>
-								<li>一张可用</li>
+								<li id="userCouponName"></li>
 							</ul>
 						</a>
 						<ul class="xiadan1" style="border: 0;">
@@ -68,10 +72,10 @@
 					</div>
 					<div class="order-xiadan">
 						<ul class="xiadan2">
-							<li class="special-color3">129元</li>
+							<li class="special-color3" id="orderPayStr">149元</li>
 						</ul>
 						<ul class="xiadan3">
-							<a href="order-pay.html">
+							<a href="#" id="orderHourSubmit">
 								<li>确认下单</li>
 							</a>
 						</ul>
