@@ -295,8 +295,9 @@ myApp.onPageInit('order-lib-cal',function(page) {
             _day=moment().format("D");
         }
         serviceTime=year+"-"+month+"-"+_day+" "+_dayTime + ":00";
-        sessionStorage.setItem('serviceDate', serviceTime);
-        sessionStorage.setItem('serviceDateStr', serviceTime);
+		var ser_date=year+"-"+month+"-"+_day;
+		sessionStorage.setItem('serviceDate', moment(serviceTime).unix());
+		sessionStorage.setItem('serviceDateStr',ser_date+"("+ weekDay[moment(ser_date).format("d")]+")"+_dayTime + ":00");
         
         
         console.log("serviceTime = " + serviceTime)
