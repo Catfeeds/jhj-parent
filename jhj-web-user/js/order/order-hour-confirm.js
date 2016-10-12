@@ -30,7 +30,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	    	sessionStorage.setItem("order_money", serviceType.price);
 	    	sessionStorage.setItem("order_pay", serviceType.price);
 	      }
-	})
+	});
 	
 	
 	var userId = localStorage['user_id'];
@@ -61,26 +61,50 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	}
 	
 	//设置优惠劵
-	if (sessionStorage.getItem('user_coupon_name') != null) {
-		$$("#userCouponName").html(sessionStorage.getItem('user_coupon_name'));
-	}
-	
 	if (sessionStorage.getItem('user_coupon_id') != null) {
 		$$("#userCouponId").val(sessionStorage.getItem('user_coupon_id'));
-	}
-	
-	if (sessionStorage.getItem('user_coupon_value') != null) {
-		var userCouponValue = sessionStorage.getItem('user_coupon_value');
-		$$("#userCouponValue").val(userCouponValue);
-		console.log("userCouponValue = " + $$("#userCouponValue").val())
-		var orderPayStr = $$("#orderMoney").val() - userCouponValue;
-		if (orderPayStr < 0) orderPayStr = 0;
-		sessionStorage.setItem("order_pay", orderPayStr);
-		$$("#orderPayStr").html(orderPayStr + "元");
-	}
-	
-	
 		
+		if (sessionStorage.getItem('user_coupon_name') != null) {
+			$$("#userCouponName").html(sessionStorage.getItem('user_coupon_name'));
+		}
+
+		if (sessionStorage.getItem('user_coupon_value') != null) {
+			var userCouponValue = sessionStorage.getItem('user_coupon_value');
+			$$("#userCouponValue").val(userCouponValue);
+			console.log("userCouponValue = " + $$("#userCouponValue").val())
+			var orderPayStr = $$("#orderMoney").val() - userCouponValue;
+			if (orderPayStr < 0) orderPayStr = 0;
+			sessionStorage.setItem("order_pay", orderPayStr);
+			$$("#orderPayStr").html(orderPayStr + "元");
+		}
+	} else {
+		//读取用户可用的优惠劵
+		var params = {};
+		params.user_id = $$("#userId").val();
+		params.order_type = $$("#orderType").val();
+		params.service_date = $$("#serviceDate").val();
+		params.order_money = $$("#orderMoney").val();
+		
+		$$.ajax({
+		      type : "GET",
+		      url: siteAPIPath+"user/get_validate_coupons.json",
+		      dataType: "json",
+		      cache : true,
+		      data : params,
+		      async : true,
+		      success: function(data) {
+		    	  var couponList = data.data;
+		    	  var nums = 0;
+		    	  if (couponList == undefined || couponList == "") {
+		    		  nums = 0;
+		    	  } else {
+		    		  nums = couponList.length;
+		    	  }
+		    	  $$("#userCouponName").html(nums + "张可用")
+		      }
+		});
+	}
+
 	/*
 	 * 提交订单
 	 */

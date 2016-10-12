@@ -17,6 +17,10 @@ myApp.onPageInit('order-pay', function(page) {
 	$$("#userCouponValue").val(userCouponValue);
 	$$("#userCouponValueStr").html(userCouponValue + "元");
 	
+	//赋值之后，把优惠劵的信息清空.
+	sessionStorage.removeItem("user_coupon_id");
+	sessionStorage.removeItem("user_coupon_value");
+	sessionStorage.removeItem("user_coupon_name");
 	
 	$$.ajax({
 		type : "GET",
