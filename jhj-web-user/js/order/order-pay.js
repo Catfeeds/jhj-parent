@@ -6,6 +6,10 @@ myApp.onPageInit('order-pay', function(page) {
 	var orderPay = sessionStorage.getItem('order_pay');
 	var userCouponId = sessionStorage.getItem('user_coupon_id');
 	var userCouponValue = sessionStorage.getItem('user_coupon_value');
+	if (userCouponValue == undefined || userCouponValue == "" || userCouponValue == null) {
+		userCouponValue = 0;
+	}
+	
 	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
