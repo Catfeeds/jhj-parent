@@ -75,129 +75,25 @@ var ajaxError = function(data, textStatus, jqXHR) {
 function toolBarHref(url, toolbarName) {
 	// 首页
 	var toolBarIndex = $$('#toolbar-index');
-	// 助理
-	var toolBarAm = $$('#toolbar-am');
-	// 活动
-	var toolBarHuodong = $$('#toolbar-huodong');
-	// 商城
-	var toolBarYouzan = $$('#toolbar-youzan');
+	// 订单
+	var toolBarOrder = $$('#toolbar-order');
+	// 充值
+	var toolBarCharge = $$('#toolbar-charge');
 	// 我的
 	var toolBarMine = $$('#toolbar-mine');
-
-	if (toolbarName == 'toolbar-index') {
-		toolBarIndex.addClass("active");
-		toolBarIndex.css("color", "#FB571E");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-	}
-
-	if (toolbarName == 'toolbar-am') {
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.addClass("active");
-		toolBarAm.css("color", "#FB571E");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-
-		if (localStorage.getItem('user_id') == null) {
-			mainView.router.loadPage("login.html");
-			return;
+	
+	var toolBars = ['toolbar-index', 'toolbar-order', 'toolbar-charge', 'toolbar-mine'];
+	
+	$$.each(toolBars,function(n,value) {  
+		console.log("value = " + value + "=== toolbarName=" + toolbarName);
+		if (value == toolbarName) {
+			$$('#' + value).addClass("active");
+			$$('#' + value).css("color", "#FB571E");
+		} else {
+			$$('#' + value).removeClass("active");
+			$$('#' + value).css("color", "#000");
 		}
-
-		// if (localStorage.getItem('am_id') == 'null' ||
-		// localStorage.getItem('am_mobile') == 'null') {
-		//			
-		// myApp.alert('您还没有添加地址，点击确定前往添加地址立刻获得家庭助理', "", function () {
-		// mainView.router.loadPage("user/mine-add-addr.html?addr_id=0&return_url=user/user-am-detail.html");
-		// });
-		// return;
-		// }
-
-	}
-
-	if (toolbarName == 'toolbar-huodong') {
-
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.addClass("active");
-		toolBarHuodong.css("color", "#FB571E");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-
-		if (localStorage.getItem('user_id') == null) {
-			mainView.router.loadPage("login.html");
-			return;
-		}
-
-	}
-
-	if (toolbarName == 'toolbar-youzan') {
-
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.addClass("active");
-		toolBarYouzan.css("color", "#FB571E");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-
-	}
-
-	if (toolbarName == 'toolbar-mine') {
-
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.addClass("active");
-		toolBarMine.css("color", "#FB571E");
-
-		if (localStorage.getItem('user_id') == null) {
-			mainView.router.loadPage("login.html");
-			return;
-		}
-	}
+	});
 
 	mainView.router.loadPage(url);
 }
