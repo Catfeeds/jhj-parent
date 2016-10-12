@@ -2295,7 +2295,7 @@ i.toolbar-icon-tixing {
 .order-pay-success1 li{
   width:97%;
   text-align: left;
-  padding-left: 10px;
+  padding-left: 3%;
   line-height: 40px;
   border-bottom: 1px solid #E3E5E5;
   font-size: 14px;
@@ -2877,6 +2877,33 @@ i.toolbar-icon-tixing {
 .addr-dizhi li input{
   width:100%;
   border:0;
+}
+
+
+
+
+/*日历新增*/
+.chose-time{
+  width:97%;
+  height:50px;
+  padding-left: 3%;
+  background: #fff
+}
+.chose-time li{
+  float: left;
+  line-height: 50px;
+}
+.chose-time li img{
+  width:30px;
+  margin-top: 10px;
+  float: right;
+  margin-right:5%;
+}
+.chose-time li:nth-child(1){
+  width:80%;
+}
+.chose-time li:nth-child(2){
+  width:15%;
 }
 
 
