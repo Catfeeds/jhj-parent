@@ -311,7 +311,7 @@ function serviceTypeChange() {
 	
 	$.ajax({
 		type : "get",
-		url : "/jhj-app/app/dictServiceAddons/get_service_type.json",
+		url : "/jhj-app/app/dict/get_service_type_addons.json",
 		data : {
 			"service_type_id" : serviceType
 		},

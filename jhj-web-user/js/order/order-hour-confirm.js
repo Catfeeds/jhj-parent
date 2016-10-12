@@ -1,5 +1,28 @@
 myApp.onPageInit('order-hour-confirm', function(page) {
-			
+	
+	//获取服务类别基本信息
+	var serviceTypeId = $$("#serviceType").val();
+	$$.ajax({
+	      type : "GET",
+	      url: siteAPIPath+"dict/get_service_type.json?service_type_id="+serviceTypeId,
+	      dataType: "json",
+	      cache : true,
+	      async : false,
+	      success: function(data) {
+	    	var serviceType = data.data;
+	    	console.log(serviceType);
+	    	if (serviceType == undefined || serviceType == "") {
+	    		return false;
+	    	}
+	    	console.log(serviceType.name);
+	    	$$("#serviceTypeName").html(serviceType.name);
+	    	$$("#serviceHourStr").html(serviceType.service_hour + "小时");
+	    	$$("#priceStr").html(serviceType.price);
+	    	$$("#orderMoneyStr").html(serviceType.price + "元");
+	      }
+	})
+	
+	
 	var userId = localStorage['user_id'];
 	$$("#userId").val(userId);
 	

@@ -3,8 +3,8 @@
 		<div id="indexPageContentDiv" class="page-content">
 			<form id="orderHour-Form" class="store-data">
 				<input type="hidden" id="userId" name="userId" value="">
-				<input type="hidden" id="serviceType" name="serviceType"  value="23">
-				<input type="hidden" id="orderFrom name="orderFrom" value="1">
+				<input type="hidden" id="serviceType" name="serviceType" value="28">
+				<input type="hidden" id="orderFrom" name="orderFrom" value="1">
 				<input type="hidden" id="serviceContent" name="serviceContent" value="">
 				<input type="hidden" id="serviceHour" name="serviceHour" value="3">
 				<input type="hidden" id="serviceAddons" name="serviceAddons" value="">
@@ -14,7 +14,7 @@
 					<div class="order-xiadan">
 						<ul class="xiadan">
 							<li>服务类型：</li>
-							<li>日常保洁</li>
+							<li id="serviceTypeName">日常保洁</li>
 						</ul>
 						<a href="user/mine-addr-list.html" class="item-link" id="addrSelect">
 							<ul class="xiadan">
@@ -28,7 +28,7 @@
 						</ul>
 						<ul class="xiadan">
 							<li>服务时长：</li>
-							<li>3小时</li>
+							<li id="serviceHourStr">3小时</li>
 						</ul>
 						<ul class="xiadan">
 							<li>服务时间：</li>
@@ -36,7 +36,7 @@
 						</ul>
 						<ul class="xiadan">
 							<li>费用明细：</li>
-							<li>149</li>
+							<li id="priceStr">149</li>
 						</ul>
 					</div>
 					<div class="order-xiadan">
@@ -45,22 +45,24 @@
 								<img src="img/xiadan/dingdanjine.png" alt="">
 							</li>
 							<li>订单金额</li>
-							<li>149元</li>
+							<li id="orderMoneyStr">149元</li>
 						</ul>
-						<ul class="xiadan1">
-							<li>
-								<img src="img/xiadan/youhuiquan.png" alt="">
-							</li>
-							<li>优惠券</li>
-							<li>一张可用</li>
-						</ul>
+						<a href="user/user-coupons.html" class="item-link" id="addrSelect">
+							<ul class="xiadan1">
+								<li>
+									<img src="img/xiadan/youhuiquan.png" alt="">
+								</li>
+								<li>优惠券</li>
+								<li>一张可用</li>
+							</ul>
+						</a>
 						<ul class="xiadan1" style="border: 0;">
 							<li>
 								<img src="img/xiadan/liuyan.png" alt="">
 							</li>
 							<li>留言</li>
 							<li>
-								<textarea name="" id="" class="tarea" placeholder="嘱咐服务员一句话"></textarea>
+								<textarea name="remarks" id="remarks" class="tarea" placeholder="嘱咐服务员一句话"></textarea>
 							</li>
 						</ul>
 					</div>
