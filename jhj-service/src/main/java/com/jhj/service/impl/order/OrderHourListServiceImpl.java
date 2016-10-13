@@ -186,12 +186,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 				orderHourListVo.setServiceTypeName(OneCareUtil.getJhjOrderTypeName(orderType));
 			}
 
-			// 订单状态
-			Short orderStatus = orders.getOrderStatus();
-
-			// 2016年2月20日15:55:30 已更新为 二期 新定义的订单类型
-			orderHourListVo.setOrderStatusName(OneCareUtil.getJhjOrderStausNameFromOrderType(orderType, orderStatus));
-
+			
 			// 地址
 			UserAddrs userAddrs = userAddrService.selectByPrimaryKey(orders.getAddrId());
 
@@ -202,6 +197,18 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			
 			//服务日期，格式为 yyy-MM-dd(周几) hh:mm
 			Long serviceDateTime = orders.getServiceDate();
+			
+			Short orderStatus = orders.getOrderStatus();
+			Long now = TimeStampUtil.getNowSecond();
+			if (serviceDateTime < now && orderStatus == 1) {
+				orderStatus = Constants.ORDER_HOUR_STATUS_0;
+				orderHourListVo.setOrderStatus(Constants.ORDER_HOUR_STATUS_0);
+			}
+			
+			// 订单状态
+			orderHourListVo.setOrderStatusName(OneCareUtil.getJhjOrderStausNameFromOrderType(orderType, orderStatus));
+			
+			
 			String serviceDatePart1 = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "yyyy-MM-dd");
 			String serviceDatePart2 = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "HH:mm");
 			Date serviceDate = TimeStampUtil.timeStampToDate(serviceDateTime * 1000);

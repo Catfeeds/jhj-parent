@@ -39,6 +39,10 @@ public class OrderHourViewVo extends Orders{
 	
 	private String orderTypeName; //  订单类型名称
 	
+	private String serviceTypeName; // 服务品类名称
+	
+	private String serviceDateStr;
+	
 	private String name;
 	
 	private String sex;
@@ -130,6 +134,22 @@ public class OrderHourViewVo extends Orders{
 
 	public void setCouponName(String couponName) {
 		this.couponName = couponName;
+	}
+
+	public String getServiceTypeName() {
+		return serviceTypeName;
+	}
+
+	public void setServiceTypeName(String serviceTypeName) {
+		this.serviceTypeName = serviceTypeName;
+	}
+
+	public String getServiceDateStr() {
+		return serviceDateStr;
+	}
+
+	public void setServiceDateStr(String serviceDateStr) {
+		this.serviceDateStr = serviceDateStr;
 	}
 
 	
