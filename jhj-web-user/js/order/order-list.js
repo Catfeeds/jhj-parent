@@ -23,6 +23,22 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			htmlPart = htmlPart.replace(new RegExp('{serviceDateStr}', "gm"), order.service_date_str);
 			htmlPart = htmlPart.replace(new RegExp('{addrName}', "gm"), order.address);
 			htmlPart = htmlPart.replace(new RegExp('{orderPayStr}', "gm"), order.order_pay + "元");
+			
+			var orderStatus = order.order_status;
+			//如果未支付，则显示去支付按钮.
+			var doOrderPayStyle = 'none';
+			if (orderStatus == 1) {
+				doOrderPayStyle = 'block';
+			}
+			htmlPart = htmlPart.replace(new RegExp('{doOrderPayStyle}', "gm"), doOrderPayStyle);
+			
+			//必须为已支付的订单，未完成服务的订单可以补差价
+			var priceExtendStyle = 'none';
+			if (orderStatus > 1 && orderStatus <= 5) {
+				priceExtendStyle = 'block';
+			}
+			htmlPart = htmlPart.replace(new RegExp('{priceExtendStyle}', "gm"), priceExtendStyle);
+			
 			html+= htmlPart;
 		}
 		// 当前订单
@@ -73,9 +89,21 @@ myApp.onPageBeforeInit('order-list', function(page) {
 		loadOrderList(userId, cpage);
 	});
 	
+	
+	
 	loadOrderList(userId, page);
 });
 
+function orderView(orderType, orderNo) {
+	var url = "";
+	if (orderType == 0) url = "order/order-view-0.html";
+	if (orderType == 1) url = "order/order-view-1.html";
+	
+	sessionStorage.setItem("order_type", orderType);
+	sessionStorage.setItem("order_no", orderNo);
+	
+	mainView.router.loadPage(url);
+}
 
 
 
