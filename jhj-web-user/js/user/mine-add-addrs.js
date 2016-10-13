@@ -106,7 +106,7 @@ function baiduAutoCompleteSuccess(data, textStatus, jqXHR) {
 			resultHtml += htmlPart;
 		}
 	});
-	$$('#addr-auto-list ul').append(resultHtml);
+	$$("#addr-auto-list ul").html(resultHtml);
 
 }
 

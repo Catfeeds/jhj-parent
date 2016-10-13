@@ -1,79 +1,43 @@
+<div class="pages navbar-through toolbar-through">
+    <div data-page="mine-add-addrs" class="page">
+        <div id="indexPageContentDiv" class="page-content">
+            <div class="beijing-index">
+                <form id="addr-form">
+                    <input type="hidden" id="user_id" name="user_id" value="0"/>
+                    <input type="hidden" id="is_default" name="is_default" value="0"/>
+                    <input type="hidden" id="addr_id" name="addr_id" value="0"/>
+                    <input type="hidden" id="longitude" name="longitude" value=""/>
+                    <input type="hidden" id="latitude" name="latitude" value=""/>
+                    <input type="hidden" id="city" name="city" value=""/>
+                    <input type="hidden" id="uid" name="uid" value=""/>
+                    <ul class="addr-dizhi">
+                        <li><input type="text" id="name" name="name" placeholder="请输入小区名字" oninput="getBaiduAutoComplete()"></li>
+                        <li><input type="text" id="addr" name="addr" placeholder="请输入详细的门牌号"></li>
+                    </ul>
+                    <div id="mine-addr-save" class="all-button9">确认</div>
+                </form>
+            </div>
+            <div id="content-wrap" id="autocomplete-result-list">
+                <div id="addr-auto-list" class="list-block media-list">
+                    <ul style="margin-top: -120px;">
 
-<!-- We don't need full layout here, because this page will be parsed with Ajax-->
-<!-- Top Navbar-->
+                    </ul>
+                </div>
+            </div>
+            <div id="autocomplete-list-part-li" style="display:none">
+                <a href="#" onclick="selectAddr($$(this))">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">{item_name}</div>
+                            <input type="hidden" name="item_lat" value="{item_lat}"/>
+                            <input type="hidden" name="item_lng" value="{item_lng}"/>
+                            <input type="hidden" name="item_city" value="{item_city}"/>
+                            <input type="hidden" name="item_uid" value="{item_uid}"/>
+                        </div>
+                    </li>
+                </a>
+            </div>
+        </div>
 
-<div class="pages">
-	<!-- Page, data-page contains page name-->
-	<div data-page="mine-add-addrs" class="page" style="background:#FDEEEE;">
-
-		<!-- Search bar overlay -->
-		<div class="searchbar-overlay"></div>
-
-		<!-- Scrollable page content-->
-		<div class="page-content"  style="padding-bottom:138px;">
-			<form class="searchbar-jhj" id="addr-form" style="">
-				<input type="hidden" id="user_id" name="user_id" value="0"/>
-				<input type="hidden" id="is_default" name="is_default" value="0"/>
-				<input type="hidden" id="addr_id" name="addr_id" value="0"/>
-				<input type="hidden" id="longitude" name="longitude" value=""/>
-				<input type="hidden" id="latitude" name="latitude" value=""/>
-				<input type="hidden" id="city" name="city" value=""/>
-				<input type="hidden" id="uid" name="uid" value=""/>
-				
-				<ul>
-					<li>
-						<div class="searchbar-input-jhj" style="border-bottom:1px solid #B5B5B5;">
-							<!-- oninput -> execute our getcity() function to search and fill list-items -->
-							<input id="name" name="name" oninput="getBaiduAutoComplete()" maxlength="64"
-									placeholder="第一步	   请输入小区名" type="search-jhj" style="background:#fffce8;">
-
-						</div>
-
-					</li>
-
-				</ul>
-
-				<ul>
-					<li>
-						<div class="searchbar-input-jhj">
-						
-							<!-- oninput -> execute our getcity() function to search and fill list-items -->
-							<input id="addr" name="addr" placeholder="第二步 	  详细门牌号，如3号楼1单元202" type="search-jhj" style="background:#fffce8;">
-							
-						</div>
-					</li>
-
-				</ul>
-				
-				<a href="#"  id="mine-addr-save" class="button active mine-add-addr-link my-submit" style="background:#5EA6EE;border:1px solid #5EA6EE;">确认</a>
-				
-			</form>
-
-			<!-- Div for Result -->
-			<div id="content-wrap" id="autocomplete-result-list" >
-				<div id="addr-auto-list" class="list-block media-list" >
-					<ul style=" margin-top: -120px;">
-
-					</ul>
-				</div>			
-			</div>
-
-			<div id="autocomplete-list-part-li" style="display:none">
-				<a href="#" onclick="selectAddr($$(this))">
-				<li class="item-content">
-					
-						
-					<div class="item-inner">
-						<div class="item-title">{item_name}</div>
-						<input type="hidden" name="item_lat" value="{item_lat}"/>
-						<input type="hidden" name="item_lng" value="{item_lng}"/>
-						<input type="hidden" name="item_city" value="{item_city}"/>
-						<input type="hidden" name="item_uid" value="{item_uid}"/>
-					</div>
-				</li>
-				</a>
-			</div>
-
-		</div>
-	</div>
+    </div>
 </div>

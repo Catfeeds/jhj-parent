@@ -10,7 +10,6 @@ myApp.template7Data['page:mine-addr-list'] = function(){
       cache : true,
       async : false,
       success: function(data){
-    	  
     	  if (localStorage['default_addr_id'] == null) {
     		  $$.each(data, function(i,item) {
     			  if (item.is_default == 1) {
@@ -19,13 +18,9 @@ myApp.template7Data['page:mine-addr-list'] = function(){
     				  return false;
     			  }
     		  })
-    		  
-    		  
     	  }
     	  console.log("default_addr_id = " + localStorage['default_addr_id']);
     	  console.log("default_addr_name = " + localStorage['default_addr_name']);
-    	  
-    	  
           result = data;
       }
   })
@@ -33,76 +28,59 @@ myApp.template7Data['page:mine-addr-list'] = function(){
   return result;
 }
 
-myApp.onPageInit('mine-addr-list', function (page) {
-	
-	var userId = localStorage['user_id'];
 
-    $$(".mine-add-addr-link").on("click",function(){
+//地址添加
+myApp.onPageInit('mine-addr-list', function (page) {
+	var userId = localStorage['user_id'];
+    $$(".all-button9").on("click",function(){
  		mainView.router.loadPage("user/mine-add-addr.html?addr_id=0");
  	});
-    
 });
 
+
 function clickToSetDefault(obj,addrId){
-	
 	//当前被点击的地址
-	var addrNameClick= $$(obj).find("#addrName").text();
+	var addrNameClick= $$(obj).find("#mine-add-addr-link").text();
 	//当前被点击的地址  id
-	var addrIdClick = $$(obj).find("#addr_id").val();
-	
+	var addrIdClick =  $$(obj).find("#addr_id").val();
 	if(addrNameClick.indexOf("默认")>0){
-		
 		localStorage.setItem("default_addr_name",addrNameClick.replace("[默认]", "").trim());
 		localStorage.setItem("default_addr_id",addrIdClick);
-		
 		goBackToOrder(localStorage['default_addr_id'], localStorage['default_addr_name']);
-		
 		return false;
 	}
 	
-	
 	var userId = localStorage['user_id'];
-
 	var paramData = {};
 	paramData.user_id = userId;
 	paramData.addr_id = addrId;
 	
 	myApp.confirm('设置为默认地址?',
 			function(){
-		
 				$$.ajax({
 					type : "POST",
 					url : siteAPIPath + "user/post_set_addr_default.json",
 			        data:{"user_id":userId, "addr_id":addrId},
 			        async:false,
 					success : function() {
-						
 						//设置当前的为默认的地址.
-						$$(".swipeout").each(function(key, index) {
-			
-							var addrIdObj = $$(this).find('input[type=hidden]');
-			
-							var addrNameObj = $$(this).find('.item-title');
-							
+						$$(".addr-dizhi").each(function(key, index) {
+							var addrIdObj = $$(this).find("#addr_id").val();
+							var addrNameObj = $$(this).find("#mine-add-addr-link");
 							var addrNameHtml = addrNameObj.html();
-							if (addrId == addrIdObj.val()) {
+							if (addrId == addrIdObj) {
 								if (addrNameHtml.indexOf("默认") < 0) {
-									
 									localStorage['default_addr_id'] = addrId;
 									localStorage['default_addr_name'] = addrNameHtml.trim();
 									addrNameObj.html("[默认] " + addrNameHtml);
-									
 								} 
 							} else {
 								addrNameObj.html(addrNameHtml.replace("[默认]", ""));
 							}
 							myApp.swipeoutClose($$(this));
 						});
-						
 						goBackToOrder(localStorage['default_addr_id'], localStorage['default_addr_name']);
-						
 					}
-			        
 				});	
 		 },
 		 //  点击 "取消/返回",不设置默认地址,但是 把该点击地址 作为 选中项，传回上一页
@@ -121,17 +99,20 @@ function goBackToOrder(addrId, addrName){
 		
 		if (historyPage == undefined) continue;
 		
-		if (historyPage.indexOf("order-hour-confirm") >= 0 ||
-			historyPage.indexOf("order-hour-choose") >= 0 
+		if (historyPage.indexOf("order-hour-form") >= 0 ||
+			historyPage.indexOf("order-list-shendubaojie-yuyue") >= 0 ||
+			
+			//2015-11-6 15:17:49    返回 历史订单 添加页面
+			historyPage.indexOf("history/history-zhongdiangong") >=0 ||	
+			
+			historyPage.indexOf("history/history-am") >=0 
 			) {
 			returnPage = historyPage;
 			break;
 		}
-
 	}
-	console.log("returnPage = " + returnPage);
-	if (returnPage == "") return;
 	
+	if (returnPage == "") return;
 	
 	sessionStorage.setItem('addr_id', addrId);
 	sessionStorage.setItem('addr_name', addrName);
