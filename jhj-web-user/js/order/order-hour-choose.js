@@ -2,6 +2,9 @@ myApp.onPageInit('order-hour-choose', function(page) {
 	
 	removeSessionData();
 	
+	var serviceTypeId = page.query.service_type_id;
+	sessionStorage.setItem("service_type_id", serviceTypeId);
+	
 	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
 	var addrId = "";
 	var addrName = ""

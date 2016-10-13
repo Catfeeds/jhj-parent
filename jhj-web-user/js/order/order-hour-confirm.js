@@ -4,8 +4,8 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	sessionStorage.setItem("order_type", orderType);
 	
 	//获取服务类别基本信息
-	var serviceTypeId = $$("#serviceType").val();
-	sessionStorage.setItem("service_type_id", serviceTypeId);
+	var serviceTypeId = sessionStorage.getItem("service_type_id");
+	$("#serviceTypeId").val(serviceTypeId);
 	$$.ajax({
 	      type : "GET",
 	      url: siteAPIPath+"dict/get_service_type.json?service_type_id="+serviceTypeId,

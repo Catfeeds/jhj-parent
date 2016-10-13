@@ -32,13 +32,10 @@ var myApp = new Framework7({
 		if (!isLogin() && options.url == 'order/order-hour-form.html') {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'order/order-list-shendubaojiezl.html') {
+		} else if (!isLogin() && options.url == 'order/order-list.html') {
 			view.router.loadPage('login.html');
 			return false;
 		} else if (!isLogin() && options.url == 'user/mine.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-hour-now-list.html') {
 			view.router.loadPage('login.html');
 			return false;
 		} else if (!isLogin() && options.url == 'user/charge/mine-charge-list.html') {

@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderHourListService;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.meijia.utils.DateUtil;
@@ -40,10 +42,16 @@ public class OrderHourListController extends BaseController {
 	
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
+	
 	@Autowired
 	private OrderHourListService orderHourListService;
+	
 	@Autowired
 	private UserAddrsService userAddrService;
+	
 	@Autowired
 	private ServiceTypeService dictServiceTypeSerivice;
 	
@@ -110,6 +118,7 @@ public class OrderHourListController extends BaseController {
 	/*
 	 * 当前订单
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "user_order_list", method = RequestMethod.GET)
 	public AppResultData<Object> userOrderList(
 			@RequestParam("user_id") Long userId, 
@@ -137,9 +146,10 @@ public class OrderHourListController extends BaseController {
 		}
 		
 		
-		List<Orders> orderHourList = orderHourListService.selectByUserListPage(orderSearchVo, page,  Constants.PAGE_MAX_NUMBER);
+		PageInfo pageInfo = orderQueryService.selectByListPage(orderSearchVo, page,  Constants.PAGE_MAX_NUMBER);
 		
-		List<OrderHourListVo> voList = orderHourListService.transOrderHourListVo(orderHourList);
+		List<Orders> list = pageInfo.getList();
+		List<OrderHourListVo> voList = orderHourListService.transOrderHourListVo(list);
 		
 		result.setData(voList);
 		return result;

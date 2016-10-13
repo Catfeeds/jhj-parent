@@ -46,7 +46,6 @@
         <param-value>
             classpath:spring.xml;
 			classpath:spring-mybatis.xml;
-			classpath:spring-quartz.xml
         </param-value>
     </context-param>
     <listener>
