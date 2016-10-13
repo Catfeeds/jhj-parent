@@ -2860,10 +2860,12 @@ i.toolbar-icon-tixing {
 
 
 /*添加地址*/
-.addr-dizhi{
+.addr-dizhi-big{
   width:100%;
   margin-top: 15px;
-  padding-bottom: 60px;
+}
+.addr-dizhi{
+  width:100%;
 }
 .addr-dizhi li{
   padding-left: 5%;
