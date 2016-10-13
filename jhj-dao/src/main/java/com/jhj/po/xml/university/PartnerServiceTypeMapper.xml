@@ -118,7 +118,7 @@
 		unit, default_num, price,
 		remarks, view_type, no,
 		service_img_url, enable, service_property,
-		service_times, service_content, is_auto, is_multi,serice_hour)
+		service_times, service_content, is_auto, is_multi,service_hour)
 		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC},
 		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL},
 		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC},
