@@ -2909,7 +2909,11 @@ i.toolbar-icon-tixing {
   width:15%;
   height:50px;
 }
-
+/* 百度地图地址提示 */
+.baidu-map{
+	width:100%;
+	background:#fff;
+}
 
 
 

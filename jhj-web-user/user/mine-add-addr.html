@@ -10,20 +10,25 @@
                     <input type="hidden" id="latitude" name="latitude" value=""/>
                     <input type="hidden" id="city" name="city" value=""/>
                     <input type="hidden" id="uid" name="uid" value=""/>
-                    <ul class="addr-dizhi">
-                        <li><input type="text" id="name" name="name" placeholder="请输入小区名字" oninput="getBaiduAutoComplete()"></li>
-                        <li><input type="text" id="addr" name="addr" placeholder="请输入详细的门牌号"></li>
-                    </ul>
+                    <div class="addr-dizhi-big">
+	                    <ul class="addr-dizhi">
+	                        <li><input type="text" id="name" name="name" placeholder="请输入小区名字" oninput="getBaiduAutoComplete()"></li>
+	                        <li><input type="text" id="addr" name="addr" placeholder="请输入详细的门牌号"></li>
+	                    </ul>
+                    </div>
                     <div id="mine-addr-save" class="all-button9">确认</div>
                 </form>
             </div>
-            <div>
+            
+            <!-- 显示百度地图中查询的地址 -->
+            <div class="baidu-map">
                 <div id="addr-auto-list">
                     <ul>
 
                     </ul>
                 </div>
             </div>
+            
             <div id="autocomplete-list-part-li" style="display:none">
                 <a href="#" onclick="selectAddr($$(this))">
                     <li class="item-content">

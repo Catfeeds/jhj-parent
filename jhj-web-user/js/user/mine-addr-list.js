@@ -40,9 +40,9 @@ myApp.onPageInit('mine-addr-list', function (page) {
 
 function clickToSetDefault(obj,addrId){
 	//当前被点击的地址
-	var addrNameClick= $$(obj).find("#mine-add-addr-link").text();
+	var addrNameClick= $$(obj).find("ul #mine-add-addr-link").text();
 	//当前被点击的地址  id
-	var addrIdClick =  $$(obj).find("#addr_id").val();
+	var addrIdClick =  $$(obj).find("ul #addr_id").val();
 	if(addrNameClick.indexOf("默认")>0){
 		localStorage.setItem("default_addr_name",addrNameClick.replace("[默认]", "").trim());
 		localStorage.setItem("default_addr_id",addrIdClick);
