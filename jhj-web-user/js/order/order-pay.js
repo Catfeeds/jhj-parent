@@ -1,6 +1,7 @@
 myApp.onPageInit('order-pay', function(page) {
 	
 	var userId = localStorage['user_id'];
+	var serviceTypeId = sessionStorage.getItem('service_type_id');
 	var orderNo = sessionStorage.getItem('order_no');
 	var orderId = sessionStorage.getItem('order_id');
 	var orderPay = sessionStorage.getItem('order_pay');
@@ -57,7 +58,7 @@ myApp.onPageInit('order-pay', function(page) {
 
 		orderPayType = result.data.pay_type;
 		orderType = result.data.order_type;
-		
+		serviceTypeId = result.data.service_type;
 		console.log("orderPayType = " + orderPayType);
 		
 		//如果为余额支付或者 现金支付，则直接跳到完成页面
@@ -66,7 +67,7 @@ myApp.onPageInit('order-pay', function(page) {
 			sessionStorage.removeItem("user_coupon_id");
 			sessionStorage.removeItem("user_coupon_value");
 			sessionStorage.removeItem("user_coupon_name");
-			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
+			mainView.router.loadPage("order/order-pay-success.html?service_type_id="+serviceTypeId);
 		}
 		
 		
@@ -77,6 +78,7 @@ myApp.onPageInit('order-pay', function(page) {
 			alipayUrl +="?orderNo="+orderNo;
 			alipayUrl +="&orderPay="+orderPay;
 			alipayUrl +="&orderType="+orderType;
+			alipayUrl +="&serviceTypeId="+serviceTypeId;
 			location.href = alipayUrl;
 		}
 		
@@ -89,6 +91,7 @@ myApp.onPageInit('order-pay', function(page) {
 			 wxPayUrl +="&userCouponId="+userCouponId;
 			 wxPayUrl +="&orderType=0";
 			 wxPayUrl +="&payOrderType=0";
+			 wxPayUrl +="&serviceTypeId="+serviceTypeId;
 			 location.href = wxPayUrl;
 		}
 	};

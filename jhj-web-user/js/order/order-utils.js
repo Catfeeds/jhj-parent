@@ -2,7 +2,10 @@
  * 清除临时会话数据
  */
 function removeSessionData() {
-
+	
+	//服务类别临时会话数据
+	sessionStorage.removeItem("service_type_id");
+	
 	//时间临时会话数据
 	sessionStorage.removeItem("service_date");
 	sessionStorage.removeItem("service_date_str");

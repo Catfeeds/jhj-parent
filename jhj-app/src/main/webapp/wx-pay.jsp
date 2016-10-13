@@ -272,7 +272,7 @@ a {
 	                                "paySign" : "<%= request.getParameter("paySign") %>" //微信签名
 	                                },function(res){
 									
-	                                var wxAppUrl = "http://www.jia-he-jia.com/u/#!/";
+	                                var wxAppUrl = basePath + "/u/#!/";
 	                                var payOrderType = <%=request.getParameter("payOrderType")%>;
 	                                var orderType = <%=request.getParameter("orderType")%>;
 	                                var orderNo = <%=request.getParameter("out_trade_no")%>;
@@ -309,21 +309,9 @@ a {
 										
 	                                	var fromUrl = "";
 	                                	if (payOrderType == 0) {
-	                                	
-		                                	if (orderType == 0) {
-		                                		fromUrl = wxAppUrl + "order/order-view-0.html";
-		                                	} 
-		                                	
-		                                	if (orderType == 1) {
-		                                		fromUrl = wxAppUrl + "order/order-view-1.html";
-		                                	}
-		                                	
-		                                	if (orderType == 2) {
-		                                		fromUrl = wxAppUrl + "order/order-view-2.html";                                		
-		                                	}
-														                                
-		                                	//TODO 取消或者失败。跳转到首页
+	                                		fromUrl = wxAppUrl + "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
+	                                		fromUrl+= "&order_type="+orderType;
 	                                	}
 	                                	
 	                                	if (payOrderType == 1) {
@@ -338,20 +326,9 @@ a {
 	                                }else{
 	                                	var fromUrl = "";
 	                                	if (payOrderType == 0) {
-	                                	
-		                                	if (orderType == 0) {
-		                                		fromUrl = wxAppUrl + "order/order-view-0.html";
-		                                	}
-		                                	
-		                                	if (orderType == 1) {
-		                                		fromUrl = wxAppUrl + "order/order-view-1.html";
-		                                	}
-		                                	
-		                                	if (orderType == 2) {
-		                                		fromUrl = wxAppUrl + "order/order-view-2.html";                                		
-		                                	}
-		                                	
+	                                		fromUrl = wxAppUrl + "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
+	                                		fromUrl+= "&order_type="+orderType;
 	                                	}
 	                                	
 	                                	if (payOrderType == 1) {
