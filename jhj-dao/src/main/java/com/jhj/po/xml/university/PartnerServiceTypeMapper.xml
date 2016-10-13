@@ -124,7 +124,7 @@
 		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC},
 		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
 		#{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR}, 
-		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC}),#{serviceHour,jdbcType=NUMERIC}
+		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC},#{serviceHour,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType">
 	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
