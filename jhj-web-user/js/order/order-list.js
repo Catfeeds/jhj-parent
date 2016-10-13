@@ -2,9 +2,8 @@ myApp.onPageBeforeInit('order-list', function(page) {
 
 	var loading = false;// 加载flag
 	var page = $$("#page").val();
-	function loadOrderList(userId, page, cal) {
+	function loadOrderList(userId, page) {
 		console.log("page = " + page);
-		curClickDay = cal;
 		var postdata = {};
 		
 		var apiUrl = "order/user_order_list.json";
@@ -17,38 +16,26 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			var result = JSON.parse(data.response);
 			var orders = result.data;
 
-			var html = $$('#order-hour-list').html();
+			var htmlTemplate = $$('#order-list-part').html();
 
-			var resultHtmlNow = ''; // 当前订单
+			var html = ''; // 当前订单
 
 			for (var i = 0; i < orders.length; i++) {
 				var order = orders[i];
-
-				var htmlPart = html;
-				
-				htmlPart = htmlPart.replace(new RegExp('{order_type}', "gm"), order.order_type);
-				htmlPart = htmlPart.replace(new RegExp('{order_no}', "gm"), order.order_no);
-				htmlPart = htmlPart.replace(new RegExp('{order_hour_type_name}', "gm"),
-						order.order_hour_type_name);
-				htmlPart = htmlPart.replace(new RegExp('{order_hour_status_name}', "gm"),
-						order.order_hour_status_name);
-				if (order.order_type == 2) {
-					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "预约时间: "+moment.unix(
-							order.add_time).format("YYYY-MM-DD HH:mm"));
-				} else {
-					htmlPart = htmlPart.replace(new RegExp('{service_date}', "gm"), "服务时间: "+moment.unix(
-							order.service_date).format("YYYY-MM-DD HH:mm"));
-				}
-
-				htmlPart = htmlPart.replace(new RegExp('{address}', "gm"), order.address);
-
-				resultHtmlNow += htmlPart;
+				var htmlPart = htmlTemplate;
+				htmlPart = htmlPart.replace(new RegExp('{orderType}', "gm"), order.order_type);
+				htmlPart = htmlPart.replace(new RegExp('{orderNo}', "gm"), order.order_no);
+				htmlPart = htmlPart.replace(new RegExp('{serivceTypeName}', "gm"), order.order_hour_type_name);
+				htmlPart = htmlPart.replace(new RegExp('{orderStatusStr}', "gm"), order.order_hour_status_name);
+				htmlPart = htmlPart.replace(new RegExp('{addrName}', "gm"), order.address);
+				htmlPart = htmlPart.replace(new RegExp('{orderPayStr}', "gm"), order.address);
+				html+= htmlPart;
 			}
 			// 当前订单
 			if (page == 1) {
-				$$("#card-hour-now-list ul").html(resultHtmlNow);
+				$$("#order-list-div").html(resultHtmlNow);
 			} else {
-				$$("#card-hour-now-list ul").append(resultHtmlNow);
+				$$("#order-list-div").append(resultHtmlNow);
 			}
 
 			loading = false;
@@ -80,7 +67,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 	// 注册'infinite'事件处理函数
 	$$('#order-list-more').on('click', function() {
 		var cpage = ++page;
-		loadOrderList(userId, cpage, curClickDay);
+		loadOrderList(userId, cpage);
 	});
 	
 });

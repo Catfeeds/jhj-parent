@@ -2,61 +2,41 @@
 <div class="pages navbar-through toolbar-through">
 	<div data-page="order-list" class="page">
 		<div id="indexPageContentDiv" class="page-content">
-			<div class="beijing-index">
-				<div class="dingdan-mokuai">
-					<p>订单明细</p>
-					<div class="order-dingdan">
-						<ul class="dingdan">
-							<li>订购项目：</li>
-							<li>金牌保洁</li>
-						</ul>
-						<ul class="dingdan">
-							<li>订单状态：</li>
-							<li>已完成</li>
-						</ul>
-						<ul class="dingdan">
-							<li>服务时间：</li>
-							<li>2016-9-22&nbsp;星期五&nbsp;9:00</li>
-						</ul>
-						<ul class="dingdan">
-							<li>上门地址：</li>
-							<li>北京市海淀区汉荣家园2号楼</li>
-						</ul>
-						<ul class="dingdan">
-							<li>订单金额：</li>
-							<li>129元</li>
-						</ul>
-						<div class="all-button3">补交差价</div>
-						<div class="all-button4">联系客服</div>
-					</div>
-				</div>
+			<div class="beijing-index" id="order-list-div">
+				
+				<div class="all-button5" id="order-list-more">加载更多</div>
 			</div>
+			<input type="hidden" id="page" name="page" value="1"/>
 		</div>
 	</div>
 </div>
 <div id="order-list-part" style="display: none">
-	<div class="order-dingdan">
-		<ul class="dingdan">
-			<li>订购项目：</li>
-			<li>{serviceTypename}</li>
-		</ul>
-		<ul class="dingdan">
-			<li>订单状态：</li>
-			<li>{orderStatusStr}</li>
-		</ul>
-		<ul class="dingdan">
-			<li>服务时间：</li>
-			<li>{serviceDateStr}</li>
-		</ul>
-		<ul class="dingdan">
-			<li>上门地址：</li>
-			<li>{addrName}</li>
-		</ul>
-		<ul class="dingdan">
-			<li>订单金额：</li>
-			<li>{orderPayStr}</li>
-		</ul>
-		<div class="all-button3">补交差价</div>
-		<div class="all-button4">联系客服</div>
+	<div class="dingdan-mokuai">
+		<p>订单明细</p>
+		<a href="#" onclick="orderView({orderType}, '{orderNo}',)" class="special-color7">
+		<div class="order-dingdan">
+			<ul class="dingdan">
+				<li>订购项目：</li>
+				<li>{serviceTypeName}</li>
+			</ul>
+			<ul class="dingdan">
+				<li>订单状态：</li>
+				<li>{orderStatusStr}</li>
+			</ul>
+			<ul class="dingdan">
+				<li>服务时间：</li>
+				<li>{serviceDateStr}</li>
+			</ul>
+			<ul class="dingdan">
+				<li>上门地址：</li>
+				<li>{addrName}</li>
+			</ul>
+			<ul class="dingdan">
+				<li>订单金额：</li>
+				<li>{orderPayStr}</li>
+			</ul>
+			<div class="all-button3" style="dispaly:{priceExtendStyle}">补交差价</div>
+			<div class="all-button4">联系客服</div>
+		</div>
 	</div>
 </div>
