@@ -1,9 +1,6 @@
 myApp.onPageInit('order-hour-choose', function(page) {
 	
-	//初始化，如果有会话保存数据，则去掉
-	sessionStorage.removeItem("user_coupon_id");
-	sessionStorage.removeItem("user_coupon_value");
-	sessionStorage.removeItem("user_coupon_name");
+	removeSessionData();
 	
 	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
 	var addrId = "";

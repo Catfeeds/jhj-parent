@@ -20,12 +20,7 @@ myApp.onPageInit('order-pay', function(page) {
 	$$("#userCouponId").val(userCouponId);
 	$$("#userCouponValue").val(userCouponValue);
 	$$("#userCouponValueStr").html(userCouponValue + "元");
-	
-	//赋值之后，把优惠劵的信息清空.
-	sessionStorage.removeItem("user_coupon_id");
-	sessionStorage.removeItem("user_coupon_value");
-	sessionStorage.removeItem("user_coupon_name");
-	
+		
 	$$.ajax({
 		type : "GET",
 		url : siteAPIPath + "user/get_userinfo.json?user_id="+userId,
@@ -67,6 +62,10 @@ myApp.onPageInit('order-pay', function(page) {
 		
 		//如果为余额支付或者 现金支付，则直接跳到完成页面
 		if (orderPayType == 0 || orderPayType == 6) {
+			//支付成功之后，把优惠劵的信息清空.
+			sessionStorage.removeItem("user_coupon_id");
+			sessionStorage.removeItem("user_coupon_value");
+			sessionStorage.removeItem("user_coupon_name");
 			mainView.router.loadPage("order/order-pay-success.html?order_no="+orderNo+"&order_type=0");
 		}
 		

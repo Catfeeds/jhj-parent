@@ -1,4 +1,30 @@
 /**
+ * 清除临时会话数据
+ */
+function removeSessionData() {
+	
+	//时间临时会话数据
+	sessionStorage.removeItem("service_date");
+	sessionStorage.removeItem("service_date_str");
+	
+	//地址临时会话数据
+	sessionStorage.removeItem("addr_id");
+	sessionStorage.removeItem("addr_name");
+	
+	//订单临时会话数据
+	sessionStorage.removeItem("order_no");
+	sessionStorage.removeItem("order_id");
+	sessionStorage.removeItem("order_pay");
+	sessionStorage.removeItem("order_money");
+	
+	//优惠劵临时会话数据
+	sessionStorage.removeItem("user_coupon_id");
+	sessionStorage.removeItem("user_coupon_value");
+	sessionStorage.removeItem("user_coupon_name");
+}
+
+
+/**
  * 推荐服务
  * 
  * */

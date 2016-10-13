@@ -339,8 +339,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 				vo.setDispathStaFlag(1);
 				for (HashMap totalItem : totalStaffs) {
+					
+					if (totalItem.get("staff_id") == null) continue;
+					if (totalItem.get("total") == null) continue;
 					Long staffId = (Long) totalItem.get("staff_id");
-					int total = (int) totalItem.get("total");
+					int total = Integer.valueOf(totalItem.get("total").toString());
 
 					if (staffId.equals(vo.getStaffId())) {
 						vo.setTodayOrderNum(total);
@@ -517,6 +520,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			for (HashMap totalItem : totalStaffs) {
+				if (totalItem.get("staff_id") == null) continue;
+				if (totalItem.get("total") == null) continue;
 				Long staffId = (Long) totalItem.get("staff_id");
 				int total = Integer.valueOf(totalItem.get("total").toString());
 
@@ -754,6 +759,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 			// 员工服务日期的订单数
 			for (HashMap totalItem : totalStaffs) {
+				if (totalItem.get("staff_id") == null) continue;
+				if (totalItem.get("total") == null) continue;
 				Long staffId = (Long) totalItem.get("staff_id");
 				int total = Integer.valueOf(totalItem.get("total").toString());
 
