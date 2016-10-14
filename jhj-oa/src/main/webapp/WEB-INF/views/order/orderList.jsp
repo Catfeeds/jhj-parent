@@ -41,8 +41,8 @@
 						<section class="panel">
 							<header class="panel-heading">
 								<h4>数据搜索</h4>
-								<form:form modelAttribute="searchModel" onsubmit="return checkEndTime()" class="form-inline"
-									action="order-hour-list" method="GET" id="oaSearchForm">
+									<form:form modelAttribute="searchModel" onsubmit="return checkEndTime()" class="form-inline"
+									 method="GET" id="oaSearchForm">
 									<form:hidden path="orderType"/>
 									<table class="table">
 										<tr>
@@ -122,7 +122,7 @@
 												</form:select>
 											</td>
 											<td colspan="6">
-												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary">搜索</button>
+												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
 												<button type="reset" class="btn btn-primary">重置</button>
 											</td>					

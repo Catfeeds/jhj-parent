@@ -344,8 +344,8 @@ public class OrderQueryController extends BaseController {
 		if (searchVo == null)
 			searchVo = new OrderSearchVo();
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
-
-		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
+		
+		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, searchVo.getOrderType(), sessionParentId);
 
 		List<Orders> orderList = orderQueryService.selectBySearchVo(searchVo);
 

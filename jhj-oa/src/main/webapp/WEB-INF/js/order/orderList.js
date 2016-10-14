@@ -50,7 +50,7 @@ $("tbody").find("tr").each(function(k, v) {
 
 
 $("#btnSearch").on("click",function() {
-	$("#oaSearchForm").attr("action","order-hour-list");
+	$("#oaSearchForm").attr("action",$("#btnSearch").val());
 	$("#oaSearchForm").submit();
 });
 
