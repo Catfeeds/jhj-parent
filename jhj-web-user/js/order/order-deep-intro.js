@@ -51,23 +51,3 @@ myApp.onPageBeforeInit('order-deep-intro', function(page) {
 
 });
 
-//myApp.template7Data["page:order-deep-intro"] = function () {
-//	var result="";
-////	var serviceTypeId ="50";
-//	var serviceTypeId = sessionStorage.getItem("service_type_id");
-//
-//	if(serviceTypeId==undefined || serviceTypeId=="" || serviceTypeId==null) return ;
-//
-//	//获取服务子类信息
-//	$$.ajax({
-//		type:"get",
-//		url:siteAPIPath+"dict/get_service_type_addons.json?service_type_id="+serviceTypeId,
-//		dataType:"json",
-//		cache : true,
-//		async : false,
-//		success:function(data){
-//			result=data;
-//		}
-//	});
-//	return result;
-//}
