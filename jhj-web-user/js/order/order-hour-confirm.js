@@ -5,7 +5,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	
 	//获取服务类别基本信息
 	var serviceTypeId = sessionStorage.getItem("service_type_id");
-	$("#serviceTypeId").val(serviceTypeId);
+	$$("#serviceType").val(serviceTypeId);
 	$$.ajax({
 	      type : "GET",
 	      url: siteAPIPath+"dict/get_service_type.json?service_type_id="+serviceTypeId,
@@ -70,12 +70,15 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 
 		if (sessionStorage.getItem('user_coupon_value') != null) {
 			var userCouponValue = sessionStorage.getItem('user_coupon_value');
+			if(userCouponValue==undefined || userCouponValue=="" ||userCouponValue==null){
+				userCouponValue=0;
+			}
 			$$("#userCouponValue").val(userCouponValue);
 			console.log("userCouponValue = " + $$("#userCouponValue").val())
 			var orderPayStr = $$("#orderMoney").val() - userCouponValue;
 			if (orderPayStr < 0) orderPayStr = 0;
 			sessionStorage.setItem("order_pay", orderPayStr);
-			$$("#orderPayStr").html(orderPayStr + "元");
+//			$$("#orderPayStr").html(orderPayStr + "元");
 		}
 	} else {
 		//读取用户可用的优惠劵
@@ -104,7 +107,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		      }
 		});
 	}
-
+	$$("#orderPayStr").html(sessionStorage.getItem("order_pay") + "元");
 	/*
 	 * 提交订单
 	 */

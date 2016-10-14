@@ -7,7 +7,7 @@
 				
 				<div class="youhuiquan-num">￥{{value}}</div>
 				<div class="youhuiquan-tiaojian">消费满{{max_value}}元可用</div>
-				<div class="all-button6" id="mine-coupons-use">
+				<div class="all-button6 special-color4" id="mine-coupons-use">
 				<input type="hidden" name="user_coupon_id" id="user_coupon_id" value="{{id}}" />
 				<input type="hidden" name="order_type" id="order_type" value="{{service_type}}" />
 				<input type="hidden" name="max_value" id="max_value" value="{{max_value}}" />
@@ -15,7 +15,8 @@
 				<input type="hidden" name="coupons_type_id" id="coupons_type_id" value="{{coupons_type_id}}" />
 				立即使用
 				</div>
-				<div class="youhuiquan-youxiaoqi">{{to_date_str}}</div>
+				<div class="youhuiquan-youxiaoqi">有效日期：{{to_date_str}}</div>
+				<div class="youhuiquan-youxiaoqi1">使用说明：{{coupons_type_desc}}</div>
 			</div>
 		</div>
 		{{/each}}
