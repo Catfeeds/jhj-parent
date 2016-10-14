@@ -15,10 +15,14 @@ function removeSessionData() {
 	sessionStorage.removeItem("addr_name");
 
 	//订单临时会话数据
+	sessionStorage.removeItem("order_type");
 	sessionStorage.removeItem("order_no");
 	sessionStorage.removeItem("order_id");
 	sessionStorage.removeItem("order_pay");
 	sessionStorage.removeItem("order_money");
+	sessionStorage.removeItem("service_addons");
+	sessionStorage.removeItem("service_addons_json");
+	sessionStorage.removeItem("total_service_hour");
 
 	//优惠劵临时会话数据
 	sessionStorage.removeItem("user_coupon_id");

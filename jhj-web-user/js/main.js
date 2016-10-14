@@ -29,7 +29,10 @@ var myApp = new Framework7({
 	},
 	preroute : function(view, options) {
 
-		if (!isLogin() && options.url == 'order/order-hour-form.html') {
+		if (!isLogin() && options.url == 'order/order-hour-choose.html') {
+			view.router.loadPage('login.html');
+			return false;
+		} else if (!isLogin() && options.url == 'order/order-deep-choose.html') {
 			view.router.loadPage('login.html');
 			return false;
 		} else if (!isLogin() && options.url == 'order/order-list.html') {

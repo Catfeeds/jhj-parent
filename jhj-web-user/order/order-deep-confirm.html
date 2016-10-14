@@ -1,9 +1,9 @@
 <div class="pages">
-	<div data-page="order-hour-confirm" class="page">
+	<div data-page="order-deep-confirm" class="page">
 		<div id="indexPageContentDiv" class="page-content">
 			<form id="orderHour-Form" >
 				<input type="hidden" id="userId" name="userId" value="0">
-				<input type="hidden" id="orderType" name="orderType" value="0">
+				<input type="hidden" id="orderType" name="orderType" value="1">
 				<input type="hidden" id="serviceType" name="serviceType" value="28">
 				<input type="hidden" id="orderFrom" name="orderFrom" value="1">
 				<input type="hidden" id="serviceContent" name="serviceContent" value="">
@@ -20,12 +20,12 @@
 							<li>服务类型：</li>
 							<li id="serviceTypeName">日常保洁</li>
 						</ul>
-						
-						<ul class="xiadan">
-							<li>服务地址：</li>
-							<li id="orderHourAddrName">请选择服务地址.</li>
-						</ul>
-	
+						<a href="user/mine-addr-list.html" class="special-color7" id="addrSelect">
+							<ul class="xiadan">
+								<li>服务地址：</li>
+								<li id="orderHourAddrName">请选择服务地址.</li>
+							</ul>
+						</a>
 						<ul class="xiadan">
 							<li>服务人员数量：</li>
 							<li id="isMultiStr">1位服务人员</li>
@@ -72,7 +72,7 @@
 					</div>
 					<div class="order-xiadan">
 						<ul class="xiadan2">
-							<li class="special-color3" id="orderPayStr"></li>
+							<li class="special-color3" id="orderPayStr">149元</li>
 						</ul>
 						<ul class="xiadan3">
 							<a href="#" id="orderHourSubmit">

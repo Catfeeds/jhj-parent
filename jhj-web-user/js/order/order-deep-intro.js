@@ -48,6 +48,12 @@ myApp.onPageBeforeInit('order-deep-intro', function(page) {
 	});
 
 	$$("#serviceAddons").append(result);
+	
+	$$("#order-deep-click").on("click", function() {
+		var url = "order/order-deep-choose.html?service_type_id="+serviceTypeId;
+		mainView.router.loadPage(url);
+	});
+	
 
 });
 
