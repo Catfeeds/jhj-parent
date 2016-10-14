@@ -52,7 +52,9 @@ public class PoiExportExcelServiceImpl implements PoiExportExcelService {
 			
 			mapValue.put("orderStatusName", orderStatusName);
 			mapValue.put("payTypeName", vo.getPayTypeName());
-			mapValue.put("orderMoney", vo.getOrderMoney());
+			mapValue.put("applyStatus", vo.getApplyStatus());
+			mapValue.put("orderOpFromName", vo.getOrderOpFromName());
+//			mapValue.put("orderMoney", vo.getOrderMoney());
 			mapValue.put("orderPay", vo.getOrderPay());
 
 			listmap.add(mapValue);

@@ -38,6 +38,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
@@ -706,18 +707,13 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setOrderTypeName("");
 		}
 		
-		//订单来源
+		Short orderFrom = orders.getOrderFrom();
 		Long orderOpFrom = orders.getOrderOpFrom();
+		CooperativeBusiness cooperativeBusiness=null;
 		if(orderOpFrom!=null){
-			if(orderOpFrom==1){
-				oaOrderListVo.setOrderOpFromName("来电订单");
-			}else{
-				CooperativeBusiness cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
-				if (cooperativeBusiness != null) {
-					oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
-				}
-			}
+			cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
 		}
+		oaOrderListVo = OrderUtils.isOrderSrc(orderFrom,orderOpFrom,oaOrderListVo,cooperativeBusiness);
 		
 		return oaOrderListVo;
 	}

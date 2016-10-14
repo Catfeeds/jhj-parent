@@ -3,6 +3,8 @@ package com.jhj.utils;
 import java.text.ParseException;
 
 import com.jhj.common.Constants;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.vo.order.OaOrderListVo;
 
 public class OrderUtils {
 	// 获得订单类型名称
@@ -250,6 +252,41 @@ public class OrderUtils {
 		}
 
 		return paytypeName;
+	}
+	
+	//订单来源
+	public static OaOrderListVo isOrderSrc(short orderFrom,Long orderOpFrom,OaOrderListVo vo,CooperativeBusiness cooperativeBusiness){
+		if(orderFrom==0){
+			vo.setOrderOpFromName("app");
+		}
+		if(orderFrom==1){
+			vo.setOrderOpFromName("微网站");
+		}
+		if(orderFrom==2 && orderOpFrom!=null){
+			if(orderOpFrom==1){
+				vo.setOrderOpFromName("来电订单");
+			}else{
+				if (cooperativeBusiness != null) {
+					vo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				}else{
+					vo.setOrderOpFromName("");
+				}
+			}
+		}
+		
+		
+		
+//		if(orderOpFrom!=null){
+//			if(orderOpFrom==1){
+//				oaOrderListVo.setOrderOpFromName("来电订单");
+//			}else{
+//				CooperativeBusiness cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+//				if (cooperativeBusiness != null) {
+//					oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+//				}
+//			}
+//		}
+		return vo;
 	}
 	
 	public static void main(String[] args) throws ParseException {

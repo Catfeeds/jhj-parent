@@ -365,10 +365,10 @@ public class OrderQueryController extends BaseController {
 		 */
 		List<Map<String, Object>> list = poiExcelService.createExcelRecord(voList);
 
-		String columnNames[] = { "门店名称", "云店名称", "服务人员", "下单时间", "订单类型", "服务日期", "用户手机号", "服务地址", "订单状态", "支付方式", "总金额", "支付金额" };// 列名
+		String columnNames[] = { "门店", "云店", "服务人员", "下单时间", "订单类型", "服务日期", "用户手机号", "服务地址", "是否接单","订单来源","订单状态", "支付方式","支付金额" };// 列名
 
-		String keys[] = { "orgName", "cloudOrgName", "staffName", "addTime", "orderTypeName", "serviceDate", "mobile", "orderAddress", "orderStatusName",
-				"payTypeName", "orderMoney", "orderPay" };// map中的key
+		String keys[] = { "orgName", "cloudOrgName", "staffName", "addTime", "orderTypeName", "serviceDate", "mobile", "orderAddress","applyStatus","orderOpFromName","orderStatusName",
+				"payTypeName","orderPay" };// map中的key
 
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
