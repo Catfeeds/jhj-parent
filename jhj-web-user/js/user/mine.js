@@ -41,11 +41,13 @@ myApp.onPageBeforeInit('mine', function (page) {
 		localStorage.removeItem('im_username');
 		localStorage.removeItem('im_password');
 
-//		  localStorage.removeItem('service_type_addons_list');
-//		  localStorage.removeItem('service_type_list');
-
 		localStorage.removeItem("am_id");
 		localStorage.removeItem("am_mobile");
+		
+		localStorage.removeItem("default_addr_id");
+		localStorage.removeItem("default_addr_name");
+		
+		removeSessionData();
 		mainView.router.loadPage("index.html");
 	});
 

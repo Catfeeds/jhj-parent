@@ -3,7 +3,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
+String basePath = request.getScheme()+"://"+request.getServerName()+"/";
 
 String orderId = request.getParameter("orderId");
 String userCouponId = request.getParameter("userCouponId");
