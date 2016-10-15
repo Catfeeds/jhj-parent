@@ -75,78 +75,79 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 			Long staffId = leave.getStaffId();
 			
 			OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
-			
-			//服务人员信息
-			leaveVo.setStaffName(staffs.getName());
-			leaveVo.setStaffMobile(staffs.getMobile());
-			
-			// 请假日期
-			Date leaveDate = leave.getLeaveDate();
-			
-			Short start = leave.getStart();
-			Short end = leave.getEnd();
-			
-			String leaveDateStr = DateUtil.format(leaveDate, "yyyy-MM-dd");
-			
-			//假期时间 展示
-			leaveVo.setLeaveDateStr(leaveDateStr +" "+start+"点~"+end+"点");
-			
-			
-			String startStr = leaveDateStr + " "+start + ":00:00";
-			String endStr = leaveDateStr +" "+end + ":00:00";
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
-			long startLong = 0L;
-			long endLong = 0L;
-			
-			try {
-				Date startDate = sdf.parse(startStr);
-				Date endDate = sdf.parse(endStr);
-				startLong = startDate.getTime()/1000;
-				endLong = endDate.getTime()/1000;
-			} catch (ParseException e) {
-				e.printStackTrace();
+			if(staffs!=null){
+				//服务人员信息
+				leaveVo.setStaffName(staffs.getName());
+				leaveVo.setStaffMobile(staffs.getMobile());
+				// 请假日期
+				Date leaveDate = leave.getLeaveDate();
+				
+				Short start = leave.getStart();
+				Short end = leave.getEnd();
+				
+				String leaveDateStr = DateUtil.format(leaveDate, "yyyy-MM-dd");
+				
+				//假期时间 展示
+				leaveVo.setLeaveDateStr(leaveDateStr +" "+start+"点~"+end+"点");
+				
+				
+				String startStr = leaveDateStr + " "+start + ":00:00";
+				String endStr = leaveDateStr +" "+end + ":00:00";
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				long startLong = 0L;
+				long endLong = 0L;
+				
+				try {
+					Date startDate = sdf.parse(startStr);
+					Date endDate = sdf.parse(endStr);
+					startLong = startDate.getTime()/1000;
+					endLong = endDate.getTime()/1000;
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				
+				//跟当前时间比较
+				Long nowSecond = TimeStampUtil.getNowSecond();
+				
+				// 当前状态：  假期未开始、假期中、假期结束
+				if(nowSecond < startLong){
+					leaveVo.setLeaveStatus((short)0);
+				}else if(nowSecond > startLong && nowSecond < endLong){
+					leaveVo.setLeaveStatus((short)1);
+				}else{
+					leaveVo.setLeaveStatus((short)2);
+				}
+				
+				Long adminId = leave.getAdminId();
+				
+				OrgStaffs orgStaffs = staffService.selectByPrimaryKey(adminId);
+				if(orgStaffs!=null){
+					//批复人
+					leaveVo.setExcuteStaffName(orgStaffs.getName());
+				}
+				
+				//请假时间段
+				if(start == 8 && end == 12){
+					leaveVo.setLeaveDuration((short)0);
+				}
+				
+				if(start == 8 && end == 21){
+					leaveVo.setLeaveDuration((short)1);
+				}
+				
+				if(start == 12 && end == 21){
+					leaveVo.setLeaveDuration((short)2);
+				}
+				
+				Long orgId = leave.getOrgId();
+				
+				Orgs orgs = orgService.selectByPrimaryKey(orgId);
+				
+				leaveVo.setCloudOrgName(orgs.getOrgName());
 			}
-			
-			
-			//跟当前时间比较
-			Long nowSecond = TimeStampUtil.getNowSecond();
-			
-			// 当前状态：  假期未开始、假期中、假期结束
-			if(nowSecond < startLong){
-				leaveVo.setLeaveStatus((short)0);
-			}else if(nowSecond > startLong && nowSecond < endLong){
-				leaveVo.setLeaveStatus((short)1);
-			}else{
-				leaveVo.setLeaveStatus((short)2);
-			}
-			
-			Long adminId = leave.getAdminId();
-			
-			OrgStaffs orgStaffs = staffService.selectByPrimaryKey(adminId);
-			
-			//批复人
-			leaveVo.setExcuteStaffName(orgStaffs.getName());
-			
-			//请假时间段
-			if(start == 8 && end == 12){
-				leaveVo.setLeaveDuration((short)0);
-			}
-			
-			if(start == 8 && end == 21){
-				leaveVo.setLeaveDuration((short)1);
-			}
-			
-			if(start == 12 && end == 21){
-				leaveVo.setLeaveDuration((short)2);
-			}
-			
-			Long orgId = leave.getOrgId();
-			
-			Orgs orgs = orgService.selectByPrimaryKey(orgId);
-			
-			leaveVo.setCloudOrgName(orgs.getOrgName());
 			
 		}
 		
