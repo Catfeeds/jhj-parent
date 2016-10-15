@@ -59,6 +59,4 @@ System.out.println("wx-pay-pre.jsp ==" + wxAccessUrl);
 </script>
 </head>
 <body>
-
-</body>
 </html>
