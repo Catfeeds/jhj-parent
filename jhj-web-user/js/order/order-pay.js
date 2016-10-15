@@ -62,7 +62,7 @@ myApp.onPageInit('order-pay', function(page) {
 		console.log("orderPayType = " + orderPayType);
 		
 		//如果为余额支付或者 现金支付，则直接跳到完成页面
-		if (orderPayType == 0 || orderPayType == 6) {
+		if (orderPayType == 0) {
 			//支付成功之后，把优惠劵的信息清空.
 			sessionStorage.removeItem("user_coupon_id");
 			sessionStorage.removeItem("user_coupon_value");
@@ -128,6 +128,7 @@ myApp.onPageInit('order-pay', function(page) {
 function changePayType(imgPayType, orderPayType) {
 	
 	$$("#orderPayType").val(orderPayType);
+	console.log($$("#orderPayType").val());
 	var imgPayTypes = ['img-restpay', 'img-wxpay', 'img-alipay'];
 	
 	$$.each(imgPayTypes,function(n,value) {  

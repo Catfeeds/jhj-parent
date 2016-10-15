@@ -271,6 +271,9 @@ public class Constants {
 	//图片服务器 地址
 	public static String IMG_SERVER_HOST = "http://img.jia-he-jia.com:8080";
 	
+	//支付配置
+	public static String PAY_CALLBACK_SERVICE_HOST = "http://www.jia-he-jia.com";
+	
 	
 	//2016年3月7日16:06:01  门店 和 小组 的标识
 	public static short ORG_OR_GROUP_0 = 0;	//门店

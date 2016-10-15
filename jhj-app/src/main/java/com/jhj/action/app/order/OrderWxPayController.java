@@ -147,7 +147,7 @@ public class OrderWxPayController extends BaseController {
 		
 		
 		//测试
-//		wxPay = "1";
+		wxPay = "1";
 		
 		// 临时订单号
 		String tradeno = System.currentTimeMillis() + "" + (int) (Math.random() * 1000000);
@@ -256,7 +256,7 @@ public class OrderWxPayController extends BaseController {
 			jumpParam.put("userId", userId.toString());
 			//下面为支付成功后的参数
 				
-			String jumpUrl = "http://www.jia-he-jia.com/jhj-app/wx-pay.jsp?showwxpaytitle=1";
+			String jumpUrl = Constants.PAY_CALLBACK_SERVICE_HOST + "/jhj-app/wx-pay.jsp?showwxpaytitle=1";
 			jumpUrl += "&appId=" + WxUtil.appId;
 			jumpUrl += "&package=" + prepayId;
 			jumpUrl += "&timeStamp=" + timeStamp;
