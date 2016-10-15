@@ -38,8 +38,15 @@
         //付款金额，必填
         String total_fee = new String(request.getParameter("orderPay").getBytes("ISO-8859-1"),"UTF-8");
 		
+        //订单类型
+        String orderType = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
+		
+        //服务品类
+        String serviceTypeId = new String(request.getParameter("serviceTypeId").getBytes("ISO-8859-1"),"UTF-8");
+		
+        
         //收银台页面上，商品展示的超链接，必填
-        String show_url = "http://www.jia-he-jia.com/u/#!/order/order-pay-success.html?order_no="+out_trade_no;
+        String show_url = "http://www.jia-he-jia.com/u/#!/order/order-pay-success.html?order_no="+out_trade_no+"&orderType="+orderType+"&serviceTypeId="+serviceTypeId;
 		
         //商品描述，可空， 传递order_type
         String body = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
