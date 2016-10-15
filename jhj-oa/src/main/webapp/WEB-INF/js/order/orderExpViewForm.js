@@ -212,6 +212,9 @@ $("#orgId").on('change', function() {
 
 function loadStaffs() {
 	
+	var orderStatus = $("#orderStatus").val();
+	if (orderStatus == 1) return false;
+	
 	// 当前选中的 云店id
 	var parentId = $("#parentId").val();
 	
@@ -260,6 +263,15 @@ $("input[name='disWay']").on("change", function() {
 // 页面加载时， 回显 已选中的 派工结果
 var selectStaff = function() {
 	
+	var orderStatus = $("#orderStatus").val();
+	if (orderStatus == 1) {
+		$("#dispatchSection").css("display", "none");
+		$("#doDispatchSection").css("display", "none");
+		
+		return false;
+	}
+	
+	
 	var staffId = $("#staffId").val();
 	$("input[name='select-staff']").each(function(k, v) {
 		
@@ -282,17 +294,15 @@ var selectStaff = function() {
 		if (serviceDateStr.length == 16) serviceDateStr+=":00";
 		
 		var newServiceDate = moment(serviceDateStr).unix();
-		
-//		newServiceDate = newServiceDate / 1000 - 8 * 3600;
-		
-
-		
+				
 		loadStaffsByServiceDate(newServiceDate);
 	}
 	
 	if (disWay == 1) {
 		$("#parentId").trigger("change");
 	}
+	
+	
 	
 }
 

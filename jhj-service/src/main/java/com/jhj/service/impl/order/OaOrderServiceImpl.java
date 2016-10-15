@@ -450,8 +450,10 @@ public class OaOrderServiceImpl implements OaOrderService {
 				}
 			}
 		}
+		
+		oaOrderListVo.setOrderOpFromName("");
 		Long orderOpFrom = orders.getOrderOpFrom();
-		if(orderOpFrom!=null){
+		if(orderOpFrom !=null && !orderOpFrom.equals(0L)){
 			if(orderOpFrom==1){
 				oaOrderListVo.setOrderOpFromName("来电订单");
 			}else{
@@ -531,14 +533,28 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setUserName(users.getName());
 		}
 		
+		oaOrderListVo.setOrderOpFromName("");
 		Long orderOpFrom = orders.getOrderOpFrom();
-		if(orderOpFrom!=null){
+		if(orderOpFrom !=null && !orderOpFrom.equals(0L)){
 			if(orderOpFrom==1){
 				oaOrderListVo.setOrderOpFromName("来电订单");
 			}else{
 				CooperativeBusiness cooperativeBusiness  = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
 				oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
 			}
+		}
+		
+		// 助理预约单，存在 ，没有价格 的 一个过程
+		if (orderPrices != null) {
+			// 支付方式
+			if(orders.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_2){
+				String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
+				oaOrderListVo.setPayTypeName(payTypeName);
+			}else{
+				oaOrderListVo.setPayTypeName("-");
+			}
+			
+			oaOrderListVo.setPayType(orderPrices.getPayType());
 		}
 
 

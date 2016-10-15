@@ -1,5 +1,7 @@
 myApp.onPageBeforeInit('order-list', function(page) {
 	
+	removeSessionData();
+	
 	var userId = localStorage['user_id'];
 	var loading = false;// 加载flag
 	var page = $$("#page").val();
@@ -17,12 +19,22 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			var order = orders[i];
 			var htmlPart = htmlTemplate;
 			htmlPart = htmlPart.replace(new RegExp('{orderType}', "gm"), order.order_type);
+			htmlPart = htmlPart.replace(new RegExp('{orderId}', "gm"), order.id);
 			htmlPart = htmlPart.replace(new RegExp('{orderNo}', "gm"), order.order_no);
+			htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), order.service_type);
+			htmlPart = htmlPart.replace(new RegExp('{orderPay}', "gm"), order.order_pay);
+			
 			htmlPart = htmlPart.replace(new RegExp('{serviceTypeName}', "gm"), order.service_type_name);
 			htmlPart = htmlPart.replace(new RegExp('{orderStatusStr}', "gm"), order.order_status_name);
 			htmlPart = htmlPart.replace(new RegExp('{serviceDateStr}', "gm"), order.service_date_str);
 			htmlPart = htmlPart.replace(new RegExp('{addrName}', "gm"), order.address);
 			htmlPart = htmlPart.replace(new RegExp('{orderPayStr}', "gm"), order.order_pay + "元");
+			
+			console.log("order.coupon_id = " + order.coupon_id);
+			
+			htmlPart = htmlPart.replace(new RegExp('{userCouponId}', "gm"), order.coupon_id);
+			htmlPart = htmlPart.replace(new RegExp('{userCouponValue}', "gm"), order.coupon_value);
+			htmlPart = htmlPart.replace(new RegExp('{orderStatus}', "gm"), order.order_status);
 			
 			var orderStatus = order.order_status;
 			//如果未支付，则显示去支付按钮.
@@ -96,6 +108,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 
 function orderView(orderType, orderNo) {
 	var url = "";
+
 	if (orderType == 0) url = "order/order-view-0.html";
 	if (orderType == 1) url = "order/order-view-1.html";
 	
@@ -103,6 +116,30 @@ function orderView(orderType, orderNo) {
 	sessionStorage.setItem("order_no", orderNo);
 	
 	mainView.router.loadPage(url);
+}
+
+function doOrderPay(obj) {
+	
+	var orderStatus = obj.find('input[name=orderStatus]').val();
+	
+	if (orderStatus != 1) return false;
+	
+	var serviceTypeId = obj.find('input[name=serviceTypeId]').val();
+	var orderId = obj.find('input[name=orderId]').val();
+	var orderNo = obj.find('input[name=orderNo]').val();
+	var orderPay = obj.find('input[name=orderPay]').val();
+	var userCouponId = obj.find('input[name=userCouponId]').val();
+	var userCouponValue = obj.find('input[name=userCouponValue]').val();
+	
+	sessionStorage.setItem("service_type_id", serviceTypeId);
+	sessionStorage.setItem("order_id", orderId);
+	sessionStorage.setItem("order_no", orderNo);
+	sessionStorage.setItem("order_pay", orderPay);
+	sessionStorage.setItem("user_coupon_id", userCouponId);
+	sessionStorage.setItem("user_coupon_value", userCouponValue);
+	
+	mainView.router.loadPage("order/order-pay.html");
+	
 }
 
 

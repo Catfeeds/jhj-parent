@@ -178,7 +178,7 @@
 							</div>
 						</div>
 					</section>
-					<section class="panel"> <header class="panel-info"> <h4>派工信息</h4> </header>
+					<section class="panel" id ="dispatchSection"> <header class="panel-info"> <h4>派工信息</h4> </header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						
 						<div class="col-sm-12">
@@ -212,7 +212,7 @@
 						
 						
 					</section>
-					<section class="panel"> <header class="panel-info"> <h4>派工调整</h4> </header>
+					<section class="panel" id ="doDispatchSection"> <header class="panel-info"> <h4>派工调整</h4> </header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							
 						<div class="form-group required">

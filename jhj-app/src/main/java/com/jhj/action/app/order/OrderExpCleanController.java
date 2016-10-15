@@ -98,6 +98,7 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam("user_id") Long userId, 
 			@RequestParam("service_type") Long serviceType,
 			@RequestParam("service_date") String serviceDate, 
+			@RequestParam("service_hour") double serviceHour,
 			@RequestParam("addr_id") Long addrId,
 			@RequestParam("service_addons_datas") String serviceAddonsDatas,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
@@ -142,6 +143,7 @@ public class OrderExpCleanController extends BaseController {
 		order.setAddrId(addrId);
 		order.setOrderFrom(orderFrom);
 		order.setOrderNo(orderNo);
+		order.setServiceHour(serviceHour);
 		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(amId);
 		order.setOrgId(orgStaffs.getOrgId());
 		if (!StringUtil.isEmpty(remarks)) {
@@ -191,7 +193,7 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam("service_type") Long serviceType, 
 			@RequestParam("service_date") String serviceDate, 
 			@RequestParam("addr_id") Long addrId,
-			@RequestParam("serviceHour") Short serviceHour,
+			@RequestParam("serviceHour") double serviceHour,
 			@RequestParam("service_addons_datas") String serviceAddonsDatas,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom,

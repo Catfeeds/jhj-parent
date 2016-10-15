@@ -3,7 +3,7 @@
 	<div data-page="order-list" class="page">
 		<div id="indexPageContentDiv" class="page-content">
 			<div class="beijing-index" id="order-list-div">
-				<div class="all-button5" id="order-list-more" style="display:none">加载更多</div>
+				<div class="all-button5" id="order-list-more" style="display: none">加载更多</div>
 			</div>
 			<input type="hidden" id="page" name="page" value="1" />
 		</div>
@@ -32,11 +32,22 @@
 							<li>订单金额：</li>
 							<li>{orderPayStr}</li>
 						</ul>
-						<div class="all-button10" style="display: {doOrderPayStyle}" onclick="doOrderPay({orderType}, '{orderNo}')">去支付</div>
-						<div class="all-button3" style="display: {priceExtendStyle}">补交差价</div>
-						<div class="all-button4">联系客服</div>
-					</div>
+				</a>
+				<div class="all-button10" style="display: {doOrderPayStyle}" onclick="doOrderPay($$(this))">
+					<input type="hidden" id="orderStatus" name="orderStatus" value="{orderStatus}" />
+					<input type="hidden" id="serviceTypeId" name="serviceTypeId" value="{serviceType}" />
+					<input type="hidden" id="orderType" name="orderType" value="{orderType}" />
+					<input type="hidden" id="orderNo" name="orderNo" value="{orderNo}" />
+					<input type="hidden" id="orderId" name="orderId" value="{orderId}" />
+					<input type="hidden" id="orderPay" name="orderPay" value="{orderPay}" />
+					<input type="hidden" id="userCouponId" name="userCouponId" value="{userCouponId}" />
+					<input type="hidden" id="userCouponValue" name="userCouponValue" value="{userCouponValue}" />
+					去支付
+				</div>
+				<div class="all-button3" style="display: {priceExtendStyle}">补交差价</div>
+				<div class="all-button4">联系客服</div>
 			</div>
 		</div>
 	</div>
+</div>
 </div>

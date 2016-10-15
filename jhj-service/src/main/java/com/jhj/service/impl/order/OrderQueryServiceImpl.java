@@ -139,9 +139,14 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 		// 服务类型名称
 		vo.setServiceTypeName("");
+		vo.setIsMulti((short) 0);
 		if (vo.getServiceType() > 0L) {
-			String serviceTypeName = dictService.getServiceTypeName(vo.getServiceType());
-			vo.setServiceTypeName(serviceTypeName);
+			PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(vo.getServiceType());
+			
+			if (serviceType != null) {
+				vo.setServiceTypeName(serviceType.getName());
+				vo.setIsMulti(serviceType.getIsMulti());
+			}
 		}
 
 		// 用户称呼

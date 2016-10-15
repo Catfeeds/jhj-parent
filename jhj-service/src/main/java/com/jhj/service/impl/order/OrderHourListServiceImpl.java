@@ -16,12 +16,14 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.UserCoupons;
 import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.service.users.UserCouponsService;
 import com.jhj.vo.order.OrderHourListVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -56,6 +58,9 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private UserCouponsService userCouponsService;
 
 	/*
 	 * 统计有订单的日期
@@ -207,8 +212,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			
 			// 订单状态
 			orderHourListVo.setOrderStatusName(OneCareUtil.getJhjOrderStausNameFromOrderType(orderType, orderStatus));
-			
-			
+
 			String serviceDatePart1 = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "yyyy-MM-dd");
 			String serviceDatePart2 = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "HH:mm");
 			Date serviceDate = TimeStampUtil.timeStampToDate(serviceDateTime * 1000);
@@ -220,6 +224,12 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			OrderPrices orderPrice = orderPriceService.selectByOrderId(orders.getId());
 			if (orderPrice != null) {
 				orderHourListVo.setOrderPay(orderPrice.getOrderPay());
+				orderHourListVo.setCouponId(orderPrice.getCouponId());
+				orderHourListVo.setCouponValue(new BigDecimal(0));
+				if (orderPrice.getCouponId() > 0L) {
+					UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(orderPrice.getCouponId());
+					if (userCoupon != null) orderHourListVo.setCouponValue(userCoupon.getValue());
+				}
 			}
 			
 			voList.add(orderHourListVo);

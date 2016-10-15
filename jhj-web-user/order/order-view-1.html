@@ -1,197 +1,70 @@
-<!-- We don't need full layout here, because this page will be parsed with Ajax-->
-<!-- Top Navbar-->
-
-<div class="pages"style="background:0">
-	<!-- Page, data-page contains page name-->
-	<div data-page="order-list-shendubaojie-tijiao" class="page"style="background-color:#FDEEEE!important;overflow:auto;">
-		<!-- Scrollable page content-->
-		<div class="page-content"style="margin:0;height:900px;">
-			<div class="ddxq-neirong">
-				<img src="img/icons/shendubaojie-2x.png" alt="" style="width:60px;">
-				<span id="service_type_name">{{service_type_name}}</span>
-				<input type="hidden" id="order_status_span" value="{{order_status}}">
-				<p id="order_status_name">{{order_status_name}}</p>
-			</div>
-			<div class="ddxq-neirong1">
-				<ul class="ddxq-lc" id="u1">
-					<li "{{#js_compare "this.order_status >= 1 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-					<li>提交</li>
-					<li "{{#js_compare "this.order_status >= 1 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-				</ul>
-				<ul class="ddxq-lc" id="u2">
-					<li "{{#js_compare "this.order_status >= 2 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-					<li>确认</li>
-					<li "{{#js_compare "this.order_status >= 2 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-				</ul>
-				<ul class="ddxq-lc" id="u3">
-					<li "{{#js_compare "this.order_status >= 2 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-					<li>支付</li>
-					<li "{{#js_compare "this.order_status >= 2 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-				</ul>
-				<ul class="ddxq-lc" id="u4">
-					<li "{{#js_compare "this.order_status >= 5 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-					<li>服务</li>
-					<li "{{#js_compare "this.order_status >= 5 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-				</ul>
-				<ul class="ddxq-lc" id="u5">
-					<li "{{#js_compare "this.order_status >= 7 && this.order_status < 9"}} style="background-color:#EF7C00;" {{/js_compare}}></li>
-					<li>完成</li>
-				</ul>
-			</div>
-			<form id="order-detail" class="list-block">
-				<input type="hidden" id="order_type" name="order_type" value="{{order_type}}"/>
-				<input type="hidden" id="order_id" name="order_id" value="{{id}}"/>
-				<input type="hidden" id="order_no" name="order_no" value="{{order_no}}"/>
-				<input type="hidden" id="order_money" name="order_money" value="{{order_money}}"/>
-				<ul class="ddxq-xx"style="background:#fffce8">
-				    <li>
-				      <div class="item-content">
-				        <div class="item-inner">
-				          <div class="item-title label">服务时间:</div>
-				          <div class="item-xx-label" style="padding:0 0 0 13px;">
-				            	<span >{{service_date_str}}</span>
-				          </div>
-				        </div>
-				      </div>
-				    </li>
-				    <li>
-				      <div class="item-content">
-				        <div class="item-inner">
-				          <div class="item-title label">服务地址:</div>
-				          <div class="item-xx-label"style="width:65%;">
-				          		<span >{{service_addr}}</span>
-				          </div>
-				        </div>
-				      </div>
-				    </li>
-				    <li>
-				      <div class="item-content">
-				        <div class="item-inner">
-				          <div class="item-title label">服务项目:</div>
-				          <div class="item-xx-label"style="width:65%;">
-				       		<span>
-				       		{{#each list}}
-							{{#js_compare "this.order_id > 0 && this.item_num > 0"}}
-								{{service_addon_name}} 
-							{{/js_compare}}
-							{{/each}}
-				       		</span>
-				          </div>
-				        </div>
-				      </div>
-				    </li>
-				    <li>
-				      <div class="item-content">
-				        <div class="item-inner">
-				          <div class="item-title label">订单金额:</div>
-				          <div class="item-xx-label">
-				            <span id="deep_order_money-span">￥{{order_money}}</span>
-				          </div>
-				        </div>
-				      </div>
-				    </li>
-				     <li id="user_coupon_view1_li">
-				      <div class="item-content">
-				        <div class="item-inner">
-				          	  <div class="item-title label">优&nbsp;&nbsp;惠&nbsp;&nbsp;券:</div>
-					          <div class="item-xx-label">
-									<span >为您节省了{{coupon_value}}元</span>
-							  </div>
-				        </div>
-				      </div>
-				    </li>	
-				    			    				    
-				    <li id="order_pay_view1_li">
-				      <div class="item-content">
-				        <div class="item-inner">
-				         	 <div class="item-title label">支付金额:</div>
-				          	 <div class="item-xx-label">
-									<span >￥{{order_pay}}</span>
-							 </div>
-				        </div>
-				      </div>
-				    </li>
-				    <li>
-				      <div class="item-content">
-				        <div class="item-inner">
-				          <div class="item-title label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</div>
-				          <div class="item-xx-label">
-				            <span id="deep_order_remarks">{{remarks}}</span>
-				          </div>
-				        </div>
-				      </div>
-				    </li>
-				</ul>
-			</form>
-				{{#js_compare "this.order_status ===3 "}}
-				<div class="list-block pay-type-choose" >
-					<ul style="background:#fffce8;">
+<div class="pages">
+	<div data-page="order-view-1" class="page">
+		<div id="indexPageContentDiv" class="page-content">
+			<div class="beijing-index">
+				<div class="order-xiadan">
+					<ul class="xiadan">
+						<li>服务类型：</li>
+						<li id="serviceTypeName">{{service_type_name}}</li>
+					</ul>
+					<ul class="xiadan">
+						<li>服务地址：</li>
+						<li>{{service_addr}}</li>
+					</ul>
+					<ul class="xiadan">
+						<li>服务人员数量：</li>
 						<li>
-							<a href="#" id="selectCoupon" class="item-link">
-								<div class="item-content" style="background:#fffce8;">
-									<div class="item-inner">
-										<div class="item-title label">优&nbsp;&nbsp;惠&nbsp;&nbsp;券:</div>
-										<div class="item-xx-label" id="user_coupon_name" style="padding:0 0 0 10px;">请选择</div>
-										<input type="hidden" name="user_coupon_id" id="user_coupon_id" value="0"/>
-									</div>
-								</div>
-							</a>
-						</li>
-
-						<li>
-							<div class="item-content" style="background:#fffce8;">
-								<div class="item-inner">
-									<div class="item-title label">支付金额:</div>
-									<div class="item-xx-label">
-										<p id="real-order-money-label-exp-clean">￥{{order_money}}</p>
-									</div>
-								</div>
-							</div>
-						</li>				
-						<!-- Single chekbox item -->
-						<li><label class="label-checkbox item-content" name="myPayTypeSelects"> 
-								<div class="item-media"><img src="img/icons/zhanghuyue.png"style="margin-left:10px;width:25px;"></div>
-								<div class="item-inner">
-									<div class="item-title"style="margin-left:-10px;">账号余额(￥{{rest_money}})</div>
-									 <input type="hidden"  value="0"/>
-									 <img  src="img/icons/duigou-green.png" id="order_pay_type" name="order_pay_types" value="0"/> 
-								</div>
-							</label>
-						</li>
-						<!-- Another chekbox item -->
-						<li><label class="label-checkbox item-content" name="myPayTypeSelects"> 
-								
-								<div class="item-media"><img src="img/icons/weixin.png"style="width:45px;"></div>
-								<div class="item-inner">
-									<div class="item-title"style="margin-left:-15px;">微信支付</div>
-									 <input type="hidden"  value="2"/>
-									 <img  src="img/icons/duigou-grey.png" id="order_pay_type" name="order_pay_types"/> 
-								</div>
-							</label>
+						{{#js_compare "this.is_multi === 0 "}}
+							1位服务人员
+						{{/js_compare}}
+						{{#js_compare "this.is_multi === 1 "}}
+							两位以上服务人员
+						{{/js_compare}}
 						</li>
 					</ul>
-					<a href="#" class="button active shendu-submit">支付</a>
+					<ul class="xiadan">
+						<li>服务时长：</li>
+						<li>{{service_hour}}小时</li>
+					</ul>
+					<ul class="xiadan">
+						<li>服务时间：</li>
+						<li>{{service_date_str}}</li>
+					</ul>
+					<ul class="xiadan">
+						<li>费用明细：</li>
+						<li>{{order_pay}}</li>
+					</ul>
+					<ul class="xiadan">
+						<li>订单状态：</li>
+						<li>{{order_status_name}}</li>
+					</ul>
 				</div>
-				{{/js_compare}}
-       		 {{/js_compare}}
-			{{#js_compare "this.order_status ===6 "}}
-			<div class="exp-clean-pingjia kehuzl-beizhu " >
-              <a href="#" id="exp-clean-order-pingjia" class="button active my-submit" >评价订单</a>
-        	</div>	
-        	{{/js_compare}}
-        	
-        	{{#js_compare "this.order_status ===7 "}}
-          	<div class="exp-clean-view-pingjia kehuzl-beizhu ">
-              <a href="#" id="exp-clean-pingjiaxiangqing" class="button active my-submit" >查看评价</a>
-        	</div>
-        	{{/js_compare}}
-    <!--     
-        {{#js_compare "this.order_status === 3 || this.order_status === 4"}}
-          <div class="cancle_exp_clean_order kehuzl-beizhu " >
-      		  <a href="#" class="button active my-submit"  id="cancle_exp_clean_order_button">取消订单</a>
-        </div>
-        {{/js_compare}} -->
-        
+				<div class="order-xiadan">
+					<ul class="xiadan1">
+						<li>
+							<img src="img/xiadan/dingdanjine.png" alt="">
+						</li>
+						<li>订单金额</li>
+						<li id="orderMoneyStr">{{order_pay}}元</li>
+					</ul>
+					<ul class="xiadan1">
+						<li>
+							<img src="img/xiadan/youhuiquan.png" alt="">
+						</li>
+						<li>优惠券</li>
+						<li>{{coupon_name}}</li>
+					</ul>
+					
+					<ul class="xiadan1" style="border: 0;">
+						<li>
+							<img src="img/xiadan/liuyan.png" alt="">
+						</li>
+						<li>留言</li>
+						<li>
+							<textarea name="remarks" id="remarks" class="tarea" ><{{remarks}}/textarea>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>

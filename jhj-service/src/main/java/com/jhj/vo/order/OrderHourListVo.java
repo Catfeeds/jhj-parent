@@ -33,6 +33,10 @@ public class OrderHourListVo extends Orders {
 	private String serviceDateStr;
 	
 	private BigDecimal orderPay;
+	
+	private Long couponId;
+	
+	private BigDecimal couponValue;
 
 	public String getAddress() {
 		return address;
@@ -72,5 +76,21 @@ public class OrderHourListVo extends Orders {
 
 	public void setOrderPay(BigDecimal orderPay) {
 		this.orderPay = orderPay;
+	}
+
+	public Long getCouponId() {
+		return couponId;
+	}
+
+	public void setCouponId(Long couponId) {
+		this.couponId = couponId;
+	}
+
+	public BigDecimal getCouponValue() {
+		return couponValue;
+	}
+
+	public void setCouponValue(BigDecimal couponValue) {
+		this.couponValue = couponValue;
 	}
 }

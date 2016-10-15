@@ -124,19 +124,21 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		}
 
 		var params = {};
-		params.userId = $$("#userId").val();
-		params.serviceType = $$("#serviceType").val();
-		params.serviceContent = $$("#serviceContent").val();
-		params.serviceDate = $$("#serviceDate").val();
-		params.addrId = $$("#addrId").val();
-		params.serviceHour = $$("#serviceHour").val();
+		params.user_id = $$("#userId").val();
+		params.mobile =  localStorage['user_mobile'];
+		params.service_type = $$("#serviceType").val();
+		params.service_date = $$("#serviceDate").val();
+		params.serviceHour = sessionStorage.getItem("total_service_hour");
+		params.addr_id = $$("#addrId").val();
+		params.service_addons_datas = sessionStorage.getItem("service_addons_json");
 		params.remarks = $$("#remarks").val();
-		params.orderFrom = $$("#orderFrom").val();
+		params.order_from = $$("#orderFrom").val();
+		
 		console.log(params);
 
 		$$.ajax({
 			type : "post",
-			url : siteAPIPath + "order/post_hour.json",
+			url : siteAPIPath + "order/post_exp.json",
 			data : params,
 			success : function(data, status, xhr) {
 				
