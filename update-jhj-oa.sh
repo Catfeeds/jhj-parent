@@ -1,4 +1,5 @@
 cd /data/src/jhj-parent/
+git reset --hard HEAD
 git pull
 mvn clean package
 /data/tomcat/bin/shutdown.sh
