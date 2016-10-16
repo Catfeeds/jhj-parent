@@ -1,6 +1,6 @@
 myApp.onPageBeforeInit('order-deep-choose', function(page) {
 	
-	removeSessionData();
+	
 	var serviceTypeId = page.query.service_type_id;
 	sessionStorage.setItem("service_type_id", serviceTypeId);
 	
@@ -21,8 +21,10 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				html = "<ul class='order-rili'>";
 				html+= "<li>" + name + "</li>"
 				html+= '<li><span onclick="onDeepAddItemNum($$(this).parent())">+</span>';
-								
-				html+= '<input name="itemNum" value="'+item.default_num+'" onkeyup="inputNum($$(this))"  onafterpaste="inputNum($$(this))"  maxLength="3" autocomplete="off">';
+				
+				var n = setItemNum(item.service_addon_id, item.default_num);
+				console.log("n = " + n);
+				html+= '<input name="itemNum" value="'+n+'" onkeyup="inputNum($$(this))"  onafterpaste="inputNum($$(this))"  maxLength="3" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonName" value="'+name+'" autocomplete="off">';
 				
 				html+= '<input type="hidden" name="defaultNum" value="'+item.default_num+'" autocomplete="off">';
@@ -88,6 +90,8 @@ function onDeepAddItemNum(obj) {
 		v = parseInt(v) + 1;
 	}
 	itemNumObj.val(v);
+	
+	setDeepTotal();
 }
 
 //减号处理
@@ -110,6 +114,39 @@ function onDeepSubItemNum(obj) {
 	}
 	
 	itemNumObj.val(v);
+	
+	setDeepTotal();
+}
+
+function setItemNum(serviceAddonId, defaultNum) {
+	console.log("setItemNum");
+	var itemNum = defaultNum;
+	var serviceAddonsJson = sessionStorage.getItem("service_addons_json");
+	
+//	console.log("order_money = " + sessionStorage.getItem("order_money"));
+//	console.log("total_service_hour = " + sessionStorage.getItem("total_service_hour"));
+//	console.log("service_addons = " + sessionStorage.getItem("service_addons"));
+//	console.log("service_addons_json = " + sessionStorage.getItem("service_addons_json"));
+//	
+	console.log("serviceAddonsJson = " + serviceAddonsJson);
+	if (serviceAddonsJson == undefined || serviceAddonsJson == "") {
+		return itemNum;
+	}
+	
+	var serviceAddons = JSON.parse(serviceAddonsJson);
+	$$.each(serviceAddons, function(i, item) {
+		var itemServiceAddonId = item.serviceAddonId;
+		var tmpItemNum = item.itemNum;
+		
+		if (itemServiceAddonId == serviceAddonId) {
+//			console.log("itemServiceAddonId = " + itemServiceAddonId + "====serviceAddonId = " + serviceAddonId);
+//			console.log("itemNum = " + itemNum)
+			itemNum = tmpItemNum;
+			return false;
+		}
+	});
+	
+	return itemNum;
 }
 
 //计算价格总和
@@ -192,10 +229,5 @@ function setDeepTotal() {
 	sessionStorage.setItem("total_service_hour", totalServiceHour);
 	sessionStorage.setItem("service_addons", JSON.stringify(serviceAddons));
 	sessionStorage.setItem("service_addons_json", JSON.stringify(serviceAddonsJson));
-	
-	console.log("order_money = " + sessionStorage.getItem("order_money"));
-	console.log("total_service_hour = " + sessionStorage.getItem("total_service_hour"));
-	console.log("service_addons = " + sessionStorage.getItem("service_addons"));
-	console.log("service_addons_json = " + sessionStorage.getItem("service_addons_json"));
-		
+			
 }

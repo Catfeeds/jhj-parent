@@ -1,5 +1,7 @@
 myApp.onPageBeforeInit('order-deep-intro', function(page) {
-
+	
+	removeSessionData();
+	
 	var serviceTypeId = page.query.service_type_id;
 
 	sessionStorage.setItem("service_type_id",serviceTypeId);
