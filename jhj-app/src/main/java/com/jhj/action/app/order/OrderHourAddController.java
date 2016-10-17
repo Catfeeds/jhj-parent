@@ -203,7 +203,7 @@ public class OrderHourAddController extends BaseController {
 					if (item.getServiceAddonId().equals(serviceAddonId)) {
 						record.setItemNum(item.getDefaultNum());
 						record.setItemUnit(item.getItemUnit());
-						record.setPrice(item.getPrice());
+						record.setPrice(item.getDisPrice());
 					}
 					serviceName += item.getName() +" ";
 				}

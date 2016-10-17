@@ -128,7 +128,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				//为附加服务赋值
 				orderServiceAddons.setItemNum(itemNum);
 				orderServiceAddons.setItemUnit(dictServiceAddons.getItemUnit());
-				orderServiceAddons.setPrice(dictServiceAddons.getPrice());
+				orderServiceAddons.setPrice(dictServiceAddons.getDisPrice());
 				orderServiceAddons.setServiceAddonId(serviceAddonId);
 				
 				list.add(orderServiceAddons);
