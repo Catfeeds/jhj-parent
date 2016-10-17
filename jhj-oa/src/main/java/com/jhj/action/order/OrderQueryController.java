@@ -131,7 +131,7 @@ public class OrderQueryController extends BaseController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@AuthPassport
 	@RequestMapping(value = "/order-hour-list", method = RequestMethod.GET)
-	public String getOrderHourList(Model model, HttpServletRequest request, OrderSearchVo searchVo) throws ParseException, UnsupportedEncodingException {
+	public String getOrderHourList(Model model, HttpServletRequest request, OrderSearchVo searchVo) {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ConstantOa.DEFAULT_PAGE_SIZE;
@@ -142,10 +142,6 @@ public class OrderQueryController extends BaseController {
 			searchVo = new OrderSearchVo();
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 
-		String addrName=searchVo.getAddrName();
-		if(addrName!=null && addrName!=""){
-			searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1") , "utf-8"));
-		}
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
 
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);

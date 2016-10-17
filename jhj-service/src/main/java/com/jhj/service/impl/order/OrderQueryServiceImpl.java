@@ -1,5 +1,6 @@
 package com.jhj.service.impl.order;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,6 @@ import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderDetailVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
-import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.UserListVo;
@@ -705,9 +705,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	 * 2. 时间
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@Override
-	public OrderSearchVo getOrderSearchVo(HttpServletRequest request, OrderSearchVo searchVo, Short orderType, Long sessionParentId) {
+	public OrderSearchVo getOrderSearchVo(HttpServletRequest request, OrderSearchVo searchVo, Short orderType, Long sessionParentId){
 		
 		// 查询条件的组合，需要做一些逻辑判断
 		// 1. 如果为运营人员，则可以看所有的门店和所有状态
@@ -783,6 +784,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				orderStatusList.add(Constants.ORDER_HOUR_STATUS_9);
 
 				searchVo.setOrderStatusList(orderStatusList);
+			}
+		}
+		
+		String addrName=searchVo.getAddrName();
+		if(addrName!=null && addrName!=""){
+			try {
+				searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1") , "utf-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
 			}
 		}
 
