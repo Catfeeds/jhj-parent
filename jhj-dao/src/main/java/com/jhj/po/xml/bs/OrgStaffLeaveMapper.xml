@@ -53,13 +53,13 @@
 
 		<if test="leaveStartTime != null ">
 		    <![CDATA[ 
-		    	and (UNIX_TIMESTAMP(leave_date) + start*3600) >= #{leaveStartTime,jdbcType=NUMERIC}
+		    	and UNIX_TIMESTAMP(leave_date_end) >= #{leaveStartTime,jdbcType=NUMERIC}
 		    ]]>
 		</if>
 
 		<if test="leaveEndTime != null ">
 		    <![CDATA[ 
-		    	and (UNIX_TIMESTAMP(leave_date) + end*3600) < #{leaveEndTime,jdbcType=NUMERIC}
+		    	and UNIX_TIMESTAMP(leave_date) <= #{leaveEndTime,jdbcType=NUMERIC}
 		    ]]>
 		</if>
 

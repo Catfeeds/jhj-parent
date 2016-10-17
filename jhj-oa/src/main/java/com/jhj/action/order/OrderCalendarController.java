@@ -2,11 +2,8 @@ package com.jhj.action.order;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -199,20 +196,22 @@ public class OrderCalendarController extends BaseController {
 					for (OrgStaffLeave staffLeave : leaveList) {
 
 						Long leaveStaffId = staffLeave.getStaffId();
-						String leaveDate = DateUtil.formatDate(staffLeave.getLeaveDate());
-
-						if (leaveStaffId == staffId && leaveDate.equals(weekDate)) {
+//						String leaveDate = DateUtil.formatDate(staffLeave.getLeaveDate());
+						Long leaveDate = staffLeave.getLeaveDate().getTime();
+						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
+						Long weekDateToday=TimeStampUtil.getMillisOfDay(weekDate);
+						if (leaveStaffId == staffId && (leaveDate<=weekDateToday && leaveDateEnd >=weekDateToday)) {
 
 							EventVo eventVo = new EventVo();
 
-							// 请假开始时间点
-							Short start = staffLeave.getStart();
-							// 请假结束时间点
-							Short end = staffLeave.getEnd();
+//							// 请假开始时间点
+//							Short start = staffLeave.getStart();
+//							// 请假结束时间点
+//							Short end = staffLeave.getEnd();
 
-							eventVo.setDateDuration(start + "点~" + end + "点");
-							eventVo.setEventName("请假");
-							eventVo.setServiceTime(TimeStampUtil.getMillisOfDay(leaveDate));
+							eventVo.setDateDuration(weekDate);
+							eventVo.setEventName("请假中");
+							eventVo.setServiceTime(leaveDate);
 							eventList.add(eventVo);
 							falg=true;
 							if(startTimeStr.equals(leaveDate)){

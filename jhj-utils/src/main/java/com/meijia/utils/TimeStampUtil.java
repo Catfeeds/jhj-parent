@@ -64,6 +64,16 @@ public class TimeStampUtil {
 	}
 
 	/**
+	 * 返回日期字符串的毫秒数
+	 * @param date
+	 * @return
+	 */
+	public static long getMillisOfDayFull(String strDate) {
+		Date date = DateUtil.parseFull(strDate);
+		return getMillisOfDate(date);
+	}
+
+	/**
 	 * 返回日期对象的毫秒数
 	 * @param date
 	 * @return
