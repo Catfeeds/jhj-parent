@@ -82,19 +82,19 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 				// 请假日期
 				Date leaveDate = leave.getLeaveDate();
 				
-				Short start = leave.getStart();
-				Short end = leave.getEnd();
+//				Short start = leave.getStart();
+//				Short end = leave.getEnd();
 				
-				String leaveDateStr = DateUtil.format(leaveDate, "yyyy-MM-dd");
+				String startStr = DateUtil.format(leaveDate, "yyyy-MM-dd"); //+ " "+start + ":00:00";
 				
 				//假期时间 展示
-				leaveVo.setLeaveDateStr(leaveDateStr +" "+start+"点~"+end+"点");
+				leaveVo.setLeaveDateStr(startStr);// +" "+start+"点~"+end+"点");
 				
 				
-				String startStr = leaveDateStr + " "+start + ":00:00";
-				String endStr = leaveDateStr +" "+end + ":00:00";
+				String endStr =  DateUtil.format(leave.getLeaveDateEnd(), "yyyy-MM-dd");   ///+" "+end + ":00:00";
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				leaveVo.setLeaveDateStr(endStr);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				
 				long startLong = 0L;
 				long endLong = 0L;
@@ -113,14 +113,14 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 				Long nowSecond = TimeStampUtil.getNowSecond();
 				
 				// 当前状态：  假期未开始、假期中、假期结束
-				if(nowSecond < startLong){
-					leaveVo.setLeaveStatus((short)0);
-				}else if(nowSecond > startLong && nowSecond < endLong){
-					leaveVo.setLeaveStatus((short)1);
-				}else{
-					leaveVo.setLeaveStatus((short)2);
-				}
-				
+//				if(nowSecond < startLong){
+//					leaveVo.setLeaveStatus((short)0);
+//				}else if(nowSecond > startLong && nowSecond < endLong){
+//					leaveVo.setLeaveStatus((short)1);
+//				}else{
+//					leaveVo.setLeaveStatus((short)2);
+//				}
+//				
 				Long adminId = leave.getAdminId();
 				
 				OrgStaffs orgStaffs = staffService.selectByPrimaryKey(adminId);
@@ -130,17 +130,17 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 				}
 				
 				//请假时间段
-				if(start == 8 && end == 12){
-					leaveVo.setLeaveDuration((short)0);
-				}
-				
-				if(start == 8 && end == 21){
-					leaveVo.setLeaveDuration((short)1);
-				}
-				
-				if(start == 12 && end == 21){
-					leaveVo.setLeaveDuration((short)2);
-				}
+//				if(start == 8 && end == 12){
+//					leaveVo.setLeaveDuration((short)0);
+//				}
+//				
+//				if(start == 8 && end == 21){
+//					leaveVo.setLeaveDuration((short)1);
+//				}
+//				
+//				if(start == 12 && end == 21){
+//					leaveVo.setLeaveDuration((short)2);
+//				}
 				
 				Long orgId = leave.getOrgId();
 				
@@ -173,6 +173,9 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 	    staffLeave.setRemarks("");
 	    staffLeave.setAdminId(0L);
 	    staffLeave.setAddTime(TimeStampUtil.getNowSecond());
+	    staffLeave.setLeaveDateEnd(date);
+	    staffLeave.setTotalDays(0);
+	    staffLeave.setLeaveStatus("1");
 		
 		return staffLeave;
 	}
@@ -186,7 +189,7 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 		
 		staffVo.setStaffName("");
 		staffVo.setStaffMobile("");
-		staffVo.setLeaveStatus((short)0);	// 请假状态的标识
+//		staffVo.setLeaveStatus((short)0);	// 请假状态的标识
 		staffVo.setExcuteStaffName("");
 		
 		staffVo.setLeaveDuration((short)0);	// 0= 8~12点  1=8~21点  2=12~21点

@@ -34,6 +34,7 @@ import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -135,29 +136,36 @@ public class OrgStaffLeaveController extends BaseController {
 		BeanUtilsExp.copyPropertiesIgnoreNull(leaveVo, leave);
 
 		String leaveDate = request.getParameter("leaveDate");
+		String leaveDateEnd = request.getParameter("leaveDateEnd");
 
 		// 请假日期
 		leave.setLeaveDate(DateUtil.parse(leaveDate));
+		leave.setLeaveDateEnd(DateUtil.parse(leaveDateEnd));
+		long dublDate = TimeStampUtil.compareTimeStr(leave.getLeaveDate().getTime(),leave.getLeaveDateEnd().getTime());
+		int dayNum = (int)dublDate/(1000 * 60 * 60 * 24)+1;
+		leave.setTotalDays(dayNum);
+//		leave.setLeaveStatus();
+//		Short leaveStatus = leaveVo.getLeaveStatus();
 
-		Short leaveDuration = leaveVo.getLeaveDuration();
+//		Short leaveDuration = leaveVo.getLeaveDuration();
+//
+//		// 默认选择 8~12点
+//		short start = 8;
+//		short end = 12;
+//
+//		if (leaveDuration == (short) 1) {
+//			// 选择的是 8~21点
+//			end = 21;
+//		}
+//
+//		if (leaveDuration == (short) 2) {
+//			// 选择的是 12~21点
+//			start = 12;
+//			end = 21;
+//		}
 
-		// 默认选择 8~12点
-		short start = 8;
-		short end = 12;
-
-		if (leaveDuration == (short) 1) {
-			// 选择的是 8~21点
-			end = 21;
-		}
-
-		if (leaveDuration == (short) 2) {
-			// 选择的是 12~21点
-			start = 12;
-			end = 21;
-		}
-
-		leave.setStart(start);
-		leave.setEnd(end);
+//		leave.setStart(start);
+//		leave.setEnd(end);
 
 		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
 

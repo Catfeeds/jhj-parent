@@ -13,12 +13,18 @@ $('#leaveForm').validate({
 		},
 		leaveDate:{
 			required: true,
+		},
+		leaveDateEnd:{
+			required: true,
 		}
 	},
 
 	messages: {
 		leaveDate: {
-			required: "请输入假期时间",
+			required: "请输入假期开始时间",
+		},
+		leaveDateEnd: {
+			required: "请输入假期结束时间",
 		}
 	},
 
@@ -61,11 +67,11 @@ $.validator.addMethod("staffId",function(value,elements){
 
 
 
-$('.input-group.date').datepicker({
+$('.form-control.form_datetime').datepicker({
 	format : "yyyy-mm-dd",
 	language : "zh-CN",
 	autoclose : true,
-	startView : 1,
+	startView : 0,
 	todayBtn:true,
 	startDate:new Date()
 });

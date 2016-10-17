@@ -82,17 +82,17 @@
 								</c:if> <c:if test="${item.leaveStatus == 2 }">
 											假期已结束
 										</c:if></td>
-							<td><c:choose>
+							<td><%-- <c:choose>
 									<c:when test="${item.leaveStatus == 1 }">
 												 假期中不能修改												
 											</c:when>
-									<c:otherwise>
+									<c:otherwise> --%>
 										<button id="btn_update" onClick="btn_update('newbs/leave_form?id=${item.id}')" class="btn btn-primary btn-xs"
 											title="修改">
 											<i class="icon-pencil"></i>
 										</button>
-									</c:otherwise>
-								</c:choose></td>
+									<%-- </c:otherwise> --%>
+								<%-- </c:choose> --%></td>
 						</tr>
 					</c:forEach>
 				</tbody>

@@ -12,9 +12,12 @@
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="admin_id" property="adminId" jdbcType="NUMERIC" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="leave_date_end" property="leaveDateEnd" jdbcType="DATE" />
+		<result column="total_days" property="totalDays" jdbcType="NUMERIC" />
+		<result column="leave_status" property="leaveStatus" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, org_id, parent_id, staff_id, leave_date, start, end, remarks, admin_id, add_time
+		id, org_id, parent_id, staff_id, leave_date, start, end, remarks, admin_id, add_time,leave_date_end,total_days,leave_status
 	</sql>
 
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.org.LeaveSearchVo">
@@ -99,13 +102,14 @@
 		insert into org_staff_leave (id, org_id, parent_id,
 		staff_id, leave_date, start,
 		end, remarks, admin_id,
-		add_time)
+		add_time,leave_date_end,total_days,leave_status)
 		values
 		(#{id,jdbcType=NUMERIC}, #{orgId,jdbcType=NUMERIC}, #{parentId,jdbcType=NUMERIC},
 		#{staffId,jdbcType=NUMERIC}, #{leaveDate,jdbcType=DATE},
 		#{start,jdbcType=NUMERIC},
 		#{end,jdbcType=NUMERIC}, #{remarks,jdbcType=VARCHAR}, #{adminId,jdbcType=NUMERIC},
-		#{addTime,jdbcType=NUMERIC})
+		#{addTime,jdbcType=NUMERIC},#{leaveDateEnd,jdbcType=DATE},#{totalDays,jdbcType=NUMERIC},
+		#{leaveStatus,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffLeave">
 		insert into org_staff_leave
@@ -140,6 +144,15 @@
 			<if test="addTime != null">
 				add_time,
 			</if>
+			<if test="leaveDateEnd != null">
+				leave_date_end,
+			</if>
+			<if test="totalDays != null">
+				total_days,
+			</if>
+			<if test="leaveStatus!=null">
+				leave_status,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -171,6 +184,15 @@
 			</if>
 			<if test="addTime != null">
 				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="leaveDateEnd != null">
+				#{leaveDateEnd,jdbcType=DATE},
+			</if>
+			<if test="totalDays != null">
+				#{totalDays,jdbcType=NUMERIC},
+			</if>
+			<if test="leaveStatus!=null">
+				#{leaveStatus,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -204,6 +226,15 @@
 			<if test="addTime != null">
 				add_time = #{addTime,jdbcType=NUMERIC},
 			</if>
+			<if test="leaveDateEnd != null">
+				leave_date_end = #{leaveDateEnd,jdbcType=DATE},
+			</if>
+			<if test="totalDays != null">
+				total_days = #{totalDays,jdbcType=NUMERIC},
+			</if>
+			<if test="leaveStatus!=null">
+				leave_status = #{leaveStatus,jdbcType=VARCHAR}
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -219,6 +250,9 @@
 		#{remarks,jdbcType=VARCHAR},
 		admin_id = #{adminId,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC}
-		where id = #{id,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC},
+		leave_date_end = #{leaveDateEnd,jdbcType=DATE},
+		total_days = #{totalDays,jdbcType=NUMERIC}
+		leave_status = #{leaveStatus,jdbcType=VARCHAR},
 	</update>
 </mapper>

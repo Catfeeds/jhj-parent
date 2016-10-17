@@ -13,7 +13,7 @@ public class LeaveStaffVo extends OrgStaffLeave {
 	
 	private String staffName;			//请假人的 姓名
 	private String staffMobile;
-	private Short leaveStatus; 			//当前的请假状态
+//	private Short leaveStatus; 			//当前的请假状态
 	private String excuteStaffName;		//请假批复人 名称
 	
 	private Short leaveDuration;	//假期 时间段 标识  0= 8~12  1=8~21  2=12~21
@@ -22,6 +22,7 @@ public class LeaveStaffVo extends OrgStaffLeave {
 	
 	private String  leaveDateStr;	//假期 时间展示
 	
+	private String  leaveDateEndStr;
 	
 	public String getLeaveDateStr() {
 		return leaveDateStr;
@@ -53,16 +54,23 @@ public class LeaveStaffVo extends OrgStaffLeave {
 	public void setStaffMobile(String staffMobile) {
 		this.staffMobile = staffMobile;
 	}
-	public Short getLeaveStatus() {
-		return leaveStatus;
-	}
-	public void setLeaveStatus(Short leaveStatus) {
-		this.leaveStatus = leaveStatus;
-	}
+//	public Short getLeaveStatus() {
+//		return leaveStatus;
+//	}
+//	public void setLeaveStatus(Short leaveStatus) {
+//		this.leaveStatus = leaveStatus;
+//	}
 	public String getExcuteStaffName() {
 		return excuteStaffName;
 	}
 	public void setExcuteStaffName(String excuteStaffName) {
 		this.excuteStaffName = excuteStaffName;
 	}
+	public String getLeaveDateEndStr() {
+		return leaveDateEndStr;
+	}
+	public void setLeaveDateEndStr(String leaveDateEndStr) {
+		this.leaveDateEndStr = leaveDateEndStr;
+	}
+	
 }

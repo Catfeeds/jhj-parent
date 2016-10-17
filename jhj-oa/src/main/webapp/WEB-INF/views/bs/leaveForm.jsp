@@ -79,44 +79,61 @@
 									</div>
 									
 									<div class="form-group required">
-										<label class="col-md-2 control-label">请假日期*</label>
+										<label class="col-md-2 control-label">请假开始日期*</label>
 										<div class="col-md-5">
 											<div class="input-group date">
-												
-												
-												<fmt:formatDate var='formattedDate' value='${leaveModel.leaveDate}' type='both'
+												<fmt:formatDate var='leaveDate' value='${leaveModel.leaveDate}' type='both'
 													pattern="yyyy-MM-dd" />
 												<input type="text"  name="leaveDate"
-													value="${formattedDate}" readonly class="form-control form_datetime"><span
+													value="${leaveDate}" readonly class="form-control form_datetime"><span
 													class="input-group-addon"><i
 													class="glyphicon glyphicon-th"></i></span>
 											</div>
 										</div>	
 									</div>
-									
 									<div class="form-group required">
+										<label class="col-md-2 control-label">请假结束日期*</label>
+										<div class="col-md-5">
+											<div class="input-group date">
+												<fmt:formatDate var='leaveDateEnd' value='${leaveModel.leaveDateEnd}' type='both'
+													pattern="yyyy-MM-dd" />
+												<input type="text"  name="leaveDateEnd"
+													value="${leaveDateEnd}" readonly class="form-control form_datetime"><span
+													class="input-group-addon"><i
+													class="glyphicon glyphicon-th"></i></span>
+											</div>
+										</div>	
+									</div>
+									<div class="form-group required">
+										<label class="col-md-2 control-label">请假状态*</label>
+										<div class="col-md-5">
+											<div class="input-group date">
+												<input type="radio" name="leaveStatus" value="1" <c:if test='${leaveModel.leaveStatus==1 }'>checked</c:if> />请假中
+												<input type="radio" name="leaveStatus" value="2" <c:if test='${leaveModel.leaveStatus==2 }'>checked</c:if>/>请假结束
+											</div>
+										</div>	
+									</div>
+									
+							<%-- 		<div class="form-group required">
 										<label class="col-md-2 control-label">选择时间段</label>
 										<div class="col-md-5">
 											<leaveDuraSelectTag:select selectId="${leaveModel.leaveDuration }"/>
 										</div>
-									</div>
+									</div> --%>
 									
 									<div class="form-group required">
 										<label class="col-md-2 control-label">备注</label>
 										<div class="col-md-5">
-											<form:textarea path="remarks" cols="50" rows="8" placeholder="不超过200字" maxlength="200"/>
+											<form:textarea path="remarks" cols="57" rows="5" placeholder="不超过200字" maxlength="200"/>
 										</div>
 									</div>
 									
-									
-									<c:if test="${leaveModel.leaveStatus != 1 }">
-										<div class="form-actions fluid">
-											<div class="col-md-offset-6 col-md-6" style="margin-left:315px">
-												<button type="submit"
-													class="btn btn-success">保存</button>
-											</div>
+									<div class="form-actions fluid">
+										<div class="col-md-offset-6 col-md-6" style="margin-left:315px">
+											<button type="submit"
+												class="btn btn-success">保存</button>
 										</div>
-									</c:if>
+									</div>
 								</div>	
 							</form:form>
                           </div>
