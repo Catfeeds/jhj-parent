@@ -748,11 +748,11 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 下单结束时间
 		String endTimeStr = request.getParameter("endTimeStr");
 		if (!StringUtil.isEmpty(endTimeStr)) {
-			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDay(startTimeStr) / 1000);
+			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDay(endTimeStr) / 1000);
 		}
 
 		// 服务开始时间
-		String serviceStartTime = request.getParameter("serviceStartTime");
+		String serviceStartTime = request.getParameter("serviceStartTimeStr");
 		if (!StringUtil.isEmpty(serviceStartTime)) {
 			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDay(serviceStartTime) / 1000);
 		}

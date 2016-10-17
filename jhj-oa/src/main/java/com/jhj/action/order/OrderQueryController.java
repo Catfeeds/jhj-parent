@@ -141,9 +141,11 @@ public class OrderQueryController extends BaseController {
 		if (searchVo == null)
 			searchVo = new OrderSearchVo();
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
-		
-		Short orderType = Constants.ORDER_TYPE_0;
 
+		String addrName=searchVo.getAddrName();
+		if(addrName!=null && addrName!=""){
+			searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1") , "utf-8"));
+		}
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
 
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
@@ -167,9 +169,9 @@ public class OrderQueryController extends BaseController {
 		if (!StringUtil.isEmpty(endTimeStr))
 			model.addAttribute("endTimeStr", endTimeStr);
 		// 服务开始时间
-		String serviceStartTime = request.getParameter("serviceStartTime");
+		String serviceStartTime = request.getParameter("serviceStartTimeStr");
 		if (!StringUtil.isEmpty(serviceStartTime))
-			model.addAttribute("serviceStartTime", serviceStartTime);
+			model.addAttribute("serviceStartTimeStr", serviceStartTime);
 
 		// 服务结束时间
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");

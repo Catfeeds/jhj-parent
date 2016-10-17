@@ -43,7 +43,7 @@ function orderRecomment(serviceTypeId){
 
 	//金牌保洁
 	var jinpai=[
-		{"name":"家务包月","url":"","serviceTypeId":""},
+		{"name":"家务包月","url":"","serviceTypeId":"61"},
 		{"name":"油烟机清洗","url":"","serviceTypeId":"36"},
 		{"name":"擦玻璃","url":"","serviceTypeId":"54"},
 		{"name":"洗衣机清洗","url":"","serviceTypeId":"60"}
@@ -115,7 +115,7 @@ function orderRecomment(serviceTypeId){
 
 	//新居开荒
 	var xinju=[
-		{"name":"家务包月","url":"","serviceTypeId":""},
+		{"name":"家务包月","url":"","serviceTypeId":"61"},
 		{"name":"地板保养打蜡","url":"","serviceTypeId":"52"},
 		{"name":"洗衣机清洗","url":"","serviceTypeId":"60"},
 		{"name":"金牌保洁","url":"","serviceTypeId":"28"}
@@ -126,7 +126,7 @@ function orderRecomment(serviceTypeId){
 		{"name":"冰箱清洗","url":"","serviceTypeId":"50"},
 		{"name":"洗衣机清洗","url":"","serviceTypeId":"60"},
 		{"name":"金牌保洁","url":"","serviceTypeId":"28"},
-		{"name":"家务包月","url":"","serviceTypeId":""}
+		{"name":"家务包月","url":"","serviceTypeId":"61"}
 	];
 
 	//家务包月
@@ -139,24 +139,24 @@ function orderRecomment(serviceTypeId){
 
 	//孕家洁
 	var yunjiajie=[
-		{"name":"月子房","url":"","serviceTypeId":""},
-		{"name":"家务包月","url":"","serviceTypeId":""},
+		{"name":"月子房","url":"","serviceTypeId":"62"},
+		{"name":"家务包月","url":"","serviceTypeId":"61"},
 		{"name":"油烟机清洗","url":"","serviceTypeId":"36"},
-		{"name":"洁宝宝","url":"","serviceTypeId":""}
+		{"name":"洁宝宝","url":"","serviceTypeId":"64"}
 	];
 
 	//月子房
 	var yuezifang=[
-		{"name":"洁宝宝","url":"","serviceTypeId":""},
-		{"name":"家务包月","url":"","serviceTypeId":""},
+		{"name":"洁宝宝","url":"","serviceTypeId":"64"},
+		{"name":"家务包月","url":"","serviceTypeId":"61"},
 		{"name":"油烟机清洗","url":"","serviceTypeId":"36"},
 		{"name":"洗衣机清洗","url":"","serviceTypeId":"60"}
 	];
 
 	//安居宝
 	var anjubao=[
-		{"name":"洁宝宝","url":"","serviceTypeId":""},
-		{"name":"家务包月","url":"","serviceTypeId":""},
+		{"name":"洁宝宝","url":"","serviceTypeId":"64"},
+		{"name":"家务包月","url":"","serviceTypeId":"61"},
 		{"name":"油烟机清洗","url":"","serviceTypeId":"36"},
 		{"name":"厨卫深度清洁杀菌","url":"","serviceTypeId":"35"}
 	];
@@ -173,11 +173,11 @@ function orderRecomment(serviceTypeId){
 		{"serviceTypeId":"60","list":xiyiji},
 		{"serviceTypeId":"56","list":xinju},
 		{"serviceTypeId":"36","list":youyanji},
-		{"serviceTypeId":"","list":jiawu},
-		{"serviceTypeId":"","list":yunjiajie},
-		{"serviceTypeId":"","list":yuezifang},
-		{"serviceTypeId":"","list":anjubao}
-		{"serviceTypeId":"29","list":jinpai},
+		{"serviceTypeId":"61","list":jiawu},
+		{"serviceTypeId":"63","list":yunjiajie},
+		{"serviceTypeId":"62","list":yuezifang},
+		{"serviceTypeId":"65","list":anjubao},
+		{"serviceTypeId":"29","list":jinpai}
 	]
 
 	for(var i=0;i<recoArr.length;i++){
