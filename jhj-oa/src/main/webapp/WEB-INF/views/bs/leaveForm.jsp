@@ -114,12 +114,12 @@
 										</div>	
 									</div>
 									
-							<%-- 		<div class="form-group required">
+									<div class="form-group required">
 										<label class="col-md-2 control-label">选择时间段</label>
 										<div class="col-md-5">
 											<leaveDuraSelectTag:select selectId="${leaveModel.leaveDuration }"/>
 										</div>
-									</div> --%>
+									</div>
 									
 									<div class="form-group required">
 										<label class="col-md-2 control-label">备注</label>

@@ -147,25 +147,25 @@ public class OrgStaffLeaveController extends BaseController {
 //		leave.setLeaveStatus();
 //		Short leaveStatus = leaveVo.getLeaveStatus();
 
-//		Short leaveDuration = leaveVo.getLeaveDuration();
-//
-//		// 默认选择 8~12点
-//		short start = 8;
-//		short end = 12;
-//
-//		if (leaveDuration == (short) 1) {
-//			// 选择的是 8~21点
-//			end = 21;
-//		}
-//
-//		if (leaveDuration == (short) 2) {
-//			// 选择的是 12~21点
-//			start = 12;
-//			end = 21;
-//		}
+		Short leaveDuration = leaveVo.getLeaveDuration();
 
-//		leave.setStart(start);
-//		leave.setEnd(end);
+		// 默认选择 8~12点
+		short start = 8;
+		short end = 12;
+
+		if (leaveDuration == (short) 1) {
+			// 选择的是 8~21点
+			end = 21;
+		}
+
+		if (leaveDuration == (short) 2) {
+//			 选择的是 12~21点
+			start = 12;
+			end = 21;
+		}
+
+		leave.setStart(start);
+		leave.setEnd(end);
 
 		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
 

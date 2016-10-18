@@ -90,24 +90,24 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 				//假期时间 展示
 				leaveVo.setLeaveDateStr(startStr);// +" "+start+"点~"+end+"点");
 				
-				
-				String endStr =  DateUtil.format(leave.getLeaveDateEnd(), "yyyy-MM-dd");   ///+" "+end + ":00:00";
-				
-				leaveVo.setLeaveDateStr(endStr);
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				
-				long startLong = 0L;
+				Date leaveDateEnd = leave.getLeaveDateEnd();
+				String endStr=null;
 				long endLong = 0L;
-				
-				try {
-					Date startDate = sdf.parse(startStr);
-					Date endDate = sdf.parse(endStr);
-					startLong = startDate.getTime()/1000;
-					endLong = endDate.getTime()/1000;
-				} catch (ParseException e) {
-					e.printStackTrace();
+				long startLong = 0L;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				if(leaveDateEnd!=null){
+					endStr =  DateUtil.format(leaveDateEnd, "yyyy-MM-dd");   ///+" "+end + ":00:00";
+					leaveVo.setLeaveDateStr(endStr);
+					try {
+						Date endDate = sdf.parse(endStr);
+						endLong = endDate.getTime()/1000;
+						Date startDate = sdf.parse(startStr);
+						startLong = startDate.getTime()/1000;
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-				
 				
 				//跟当前时间比较
 				Long nowSecond = TimeStampUtil.getNowSecond();
