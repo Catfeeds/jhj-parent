@@ -22,7 +22,7 @@ public class TestOrgStaffCashController extends JUnitActionBase{
     public void testCachPost() throws Exception {
 
 		String url = "/app/staff/post_cash.json";
-		String params = "?user_id=23&&cash_money=800&&account=45225";
+		String params = "?user_id=2&&cash_money=2000&&account=45225";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);

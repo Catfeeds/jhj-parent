@@ -18,7 +18,7 @@ public class TestStaffQueryController extends JUnitActionBase{
     public void testGetInfo() throws Exception {
 
 		String url = "/app/staff/get_info.json";
-		String params = "?user_id=1";
+		String params = "?user_id=2";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);
@@ -36,7 +36,7 @@ public class TestStaffQueryController extends JUnitActionBase{
     public void getTotalDept() throws Exception {
 
 		String url = "/app/staff/get_total_dept.json";
-		String params = "?staff_id=23";
+		String params = "?staff_id=2";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);

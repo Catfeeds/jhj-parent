@@ -113,7 +113,7 @@ public class StaffQueryController extends BaseController {
 		int month = DateUtil.getMonth();
 		OrderQuerySearchVo searchVo = new OrderQuerySearchVo();
 		searchVo.setStartTime(TimeStampUtil.getBeginOfMonth(year, month));
-		searchVo.setEndTime(TimeStampUtil.getNow());
+		searchVo.setEndTime(TimeStampUtil.getNowSecond());
 		searchVo.setStaffId(staffId);
 		
 		//当月订单总数
@@ -122,8 +122,8 @@ public class StaffQueryController extends BaseController {
 		//当月收入
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setStaffId(staffId);
-		orderSearchVo.setStartTime(TimeStampUtil.getBeginOfMonth(year, month));
-		orderSearchVo.setEndTime(TimeStampUtil.getNow());
+		orderSearchVo.setStartServiceTime(TimeStampUtil.getBeginOfMonth(year, month));
+		orderSearchVo.setEndServiceTime(TimeStampUtil.getNowSecond());
 		BigDecimal totalIncoming = orderStatService.getTotalOrderIncomeMoney(orderSearchVo);
 		vo.setTotalIncoming(totalIncoming);
 		

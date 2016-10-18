@@ -21,7 +21,7 @@ public class TestOrderController extends JUnitActionBase{
     public void testTotalToday() throws Exception {
 
 		String url = "/app/staff/order/total_today.json";
-		String params = "?user_id=29";
+		String params = "?user_id=2";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 	  
 		 ResultActions resultActions = this.mockMvc.perform(getRequest);
@@ -37,8 +37,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_done.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "1");
-	    postRequest = postRequest.param("order_id", "8");
+	    postRequest = postRequest.param("staff_id", "2");
+	    postRequest = postRequest.param("order_id", "76");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));

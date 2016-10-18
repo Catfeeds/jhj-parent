@@ -335,12 +335,12 @@
 		staff_id =#{staffId,jdbcType=NUMERIC}
 		and dispatch_status = 1
 		<if test="startTime != null">
-				<![CDATA[	and add_time >= ${startTime} ]]>
+				<![CDATA[	and service_date >= ${startTime} ]]>
 		</if>
 		<if test="endTime != null">
-				<![CDATA[	and add_time <= ${endTime} ]]>
+				<![CDATA[	and service_date <= ${endTime} ]]>
 		</if>
-		) and order_status in (0,7,8,9)
+		) and order_status in (7,8,9)
 	</select>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
