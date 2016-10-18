@@ -62,6 +62,9 @@ public class OrderSearchVo {
 	private String addrName;
 	
 	private Short isApply;
+	
+	//排序字段
+	private String orderByProperty;
 
 	public String getMobile() {
 		return mobile;
@@ -294,4 +297,13 @@ public class OrderSearchVo {
 	public void setIsApply(Short isApply) {
 		this.isApply = isApply;
 	}
+
+	public String getOrderByProperty() {
+		return orderByProperty;
+	}
+
+	public void setOrderByProperty(String orderByProperty) {
+		this.orderByProperty = orderByProperty;
+	}
+	
 }

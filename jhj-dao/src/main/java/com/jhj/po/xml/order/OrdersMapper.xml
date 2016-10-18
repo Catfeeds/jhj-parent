@@ -58,7 +58,13 @@
 		<include refid="Base_Column_List" />
 		from orders
 		<include refid="bySearchVo" />
-		order by service_date desc
+		order by 
+		<if test="orderByProperty!=null">
+			${orderByProperty} asc
+		</if>
+		<if test="orderByProperty==null or orderByProperty==''">
+			add_time desc
+		</if>
 	</select>
 	
 	<!-- 根据开始时间，接收时间，staff_id ，得出订单总数: -->

@@ -96,7 +96,7 @@ public class OrderQuerysController extends BaseController {
 		}
 		
 		searchVo.setOrderStatusList(orderStatusList);
-
+		searchVo.setOrderByProperty("service_date");
 		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
 		List<Orders> orderList = list.getList();

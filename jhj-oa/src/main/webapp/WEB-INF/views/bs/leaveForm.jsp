@@ -3,8 +3,8 @@
 
 <%@ include file="../shared/taglib.jsp"%>
 <%@ include file="../shared/importCss.jsp"%>
-
-<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld" %>
+<%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
+<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="leaveDuraSelectTag" uri="/WEB-INF/tags/LeaveDuartionSelect.tld" %>
 
 <html>
@@ -60,9 +60,19 @@
 									</div>
 									
 									<div class="form-group required">
+										<label class="col-md-2 control-label">选择门店*</label>
+										<div class="col-md-5">
+											<orgSelectTag:select selectId="${leaveModel.parentId }" sessionOrgId="${loginOrgId }"/>
+										</div>
+									</div>
+									
+									<div class="form-group required">
 										<label class="col-md-2 control-label">选择云店*</label>
 										<div class="col-md-5">
-											<cloudOrgSelectTag:select selectId="${leaveModel.orgId }" logInParentOrgId="${logInParentOrgId }"/>
+											<%-- <cloudOrgSelectTag:select selectId="${leaveModel.orgId }" logInParentOrgId="${logInParentOrgId }"/> --%>
+											<select name="orgId" id="orgId" class="form-control">
+												<option value="0">全部</option>
+											</select>
 										</div>
 									</div>
 											
@@ -109,18 +119,19 @@
 										<div class="col-md-5">
 											<div class="input-group date">
 												<input type="radio" name="leaveStatus" value="1" <c:if test='${leaveModel.leaveStatus==1 }'>checked</c:if> />请假中
-												<input type="radio" name="leaveStatus" value="2" <c:if test='${leaveModel.leaveStatus==2 }'>checked</c:if>/>请假结束
+												<input type="radio" name="leaveStatus" value="2" <c:if test='${leaveModel.leaveStatus==2 }'>checked</c:if>/>请假取消
 											</div>
 										</div>	
 									</div>
 									
-									<div class="form-group required">
+									<%-- <div class="form-group required">
 										<label class="col-md-2 control-label">选择时间段</label>
 										<div class="col-md-5">
 											<leaveDuraSelectTag:select selectId="${leaveModel.leaveDuration }"/>
 										</div>
-									</div>
+									</div> --%>
 									
+									<input type="hidden" name="leaveDuration" value="1"/>
 									<div class="form-group required">
 										<label class="col-md-2 control-label">备注</label>
 										<div class="col-md-5">
@@ -156,6 +167,7 @@
 	
 	<script	type="text/javascript"  src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
 	<script type="text/javascript"	src="<c:url value='/js/jquery.chained.remote.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<!-- 选择云店，动态选择服务人员，联动 -->
 	<script type="text/javascript"  src="<c:url value='/js/jhj/cloudSelect-staff.js'/>"	></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/bs/leaveForm.js'/>"></script>

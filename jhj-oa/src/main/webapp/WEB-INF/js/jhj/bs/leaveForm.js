@@ -3,6 +3,10 @@ $('#leaveForm').validate({
 	errorClass: 'help-block', // default input error message class
 	focusInvalid: false, // do not focus the last invalid input
 	rules: {
+		parentId:{
+			required: true,
+			parentId:"parentId"
+		},
 		orgId: {
 			required: true,
 			orgId:"orgId"
@@ -20,6 +24,9 @@ $('#leaveForm').validate({
 	},
 
 	messages: {
+		parentId:{
+			required: "请选择门店",
+		},
 		leaveDate: {
 			required: "请输入假期开始时间",
 		},

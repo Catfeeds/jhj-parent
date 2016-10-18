@@ -152,7 +152,7 @@ function orderRecomment(serviceTypeId){
 		{"name":"油烟机清洗","url":"","serviceTypeId":"36"},
 		{"name":"洗衣机清洗","url":"","serviceTypeId":"60"}
 	];
-
+	
 	//安居宝
 	var anjubao=[
 		{"name":"洁宝宝","url":"","serviceTypeId":"64"},
@@ -161,6 +161,14 @@ function orderRecomment(serviceTypeId){
 		{"name":"厨卫深度清洁杀菌","url":"","serviceTypeId":"35"}
 	];
 
+	//洁宝宝
+	var jiebaobao=[
+		{"name":"月子房","url":"","serviceTypeId":"62"},
+		{"name":"家务包月","url":"","serviceTypeId":"61"},
+		{"name":"油烟机清洗","url":"","serviceTypeId":"36"},
+		{"name":"洗衣机清洗","url":"","serviceTypeId":"60"}
+	];
+	
 	recoArr=[
 		{"serviceTypeId":"28","list":jinpai},
 		{"serviceTypeId":"50","list":bingxiang},
@@ -177,7 +185,8 @@ function orderRecomment(serviceTypeId){
 		{"serviceTypeId":"63","list":yunjiajie},
 		{"serviceTypeId":"62","list":yuezifang},
 		{"serviceTypeId":"65","list":anjubao},
-		{"serviceTypeId":"29","list":jinpai}
+		{"serviceTypeId":"29","list":jinpai},
+		{"serviceTypeId":"64","list":jiebaobao}
 	]
 
 	for(var i=0;i<recoArr.length;i++){
