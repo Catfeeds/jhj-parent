@@ -68,6 +68,14 @@ ALTER TABLE `orders` CHANGE `service_hour` `service_hour` DOUBLE  NOT NULL DEFAU
 
 ALTER TABLE `order_dispatchs` CHANGE `service_hours` `service_hours` DOUBLE NOT NULL DEFAULT '0' COMMENT '服务小时';
 
+ALTER TABLE `org_staff_detail_pay` CHANGE `remarks` `remarks` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '备注 ： 服务费 、配送费、补贴、利息';
+
+ALTER TABLE `org_staff_detail_dept` CHANGE `remarks` `remarks` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '备注 ： 服务费 、配送费、补贴、利息';
+
+ALTER TABLE org_staff_leave ADD `leave_date_end` date NOT NULL COMMENT '请假结束时间';
+ALTER TABLE org_staff_leave ADD `total_days` smallint(4) unsigned NOT NULL COMMENT '请假天数';
+ALTER table org_staff_leave ADD `leave_status` char(4) NOT NULL DEFAULT '1' COMMENT '请假状态：1：请假中，2：请假结束';
+
 
 
 TRUNCATE TABLE `cooperative_business`;
