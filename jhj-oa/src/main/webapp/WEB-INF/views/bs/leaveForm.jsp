@@ -1,16 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
+<!DOCTYPE html>
 <%@ include file="../shared/taglib.jsp"%>
 <%@ include file="../shared/importCss.jsp"%>
 <%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
 <%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="leaveDuraSelectTag" uri="/WEB-INF/tags/LeaveDuartionSelect.tld" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
   <head>
 	
-	<!--common css for all pages-->
+	<!-- common css for all pages-->
 	<%@ include file="../shared/importCss.jsp"%>
 	
 	<link rel="stylesheet" href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>"
@@ -71,7 +71,12 @@
 										<div class="col-md-5">
 											<%-- <cloudOrgSelectTag:select selectId="${leaveModel.orgId }" logInParentOrgId="${logInParentOrgId }"/> --%>
 											<select name="orgId" id="orgId" class="form-control">
-												<option value="0">全部</option>
+												<c:if test="${leaveModel.cloudOrgName!=null }">
+													<option value="${leaveModel.orgId}">${leaveModel.cloudOrgName }</option>
+												</c:if>
+												<c:if test="${leaveModel.cloudOrgName==null }">
+													<option value="0">全部</option>
+												</c:if>
 											</select>
 										</div>
 									</div>
