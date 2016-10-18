@@ -1887,6 +1887,10 @@ i.toolbar-icon-tixing {
   width:100%;
   height:40px;
 }
+.index-title20{
+  width:50%;
+  float:left;
+}
 .index-title-1{
   width:5px;
   height:22px;
@@ -1895,6 +1899,23 @@ i.toolbar-icon-tixing {
   margin-left:10px;
   background: #F2BA4B;
 }
+.index-title-3{
+  width:5px;
+  height:22px;
+  float:left;
+  margin-top: 9px;
+  margin-left:10px;
+  background: #59F34B;
+}
+.index-title-4{
+  width:5px;
+  height:22px;
+  float:left;
+  margin-top: 9px;
+  margin-left:10px;
+  background: #4B7EF3;
+}
+
 .index-title p{
   line-height: 40px;
   margin:0;
@@ -1905,6 +1926,17 @@ i.toolbar-icon-tixing {
   width:100%;
   height:40px;
   clear:both;
+}
+.index-title2{
+  background: linear-gradient(to right, #E2FBFF , #EFFDFE);
+  width:100%;
+  height:40px;
+  clear:both;
+}
+.index-title2 p{
+  line-height: 40px;
+  margin:0;
+  margin-left: 20px;
 }
 .index-title-2{
   width:5px;
@@ -2620,7 +2652,6 @@ i.toolbar-icon-tixing {
   margin-top: 10px;
   width:100%;
   background: #fff;
-  padding-bottom: 30px;
 }
 .dingdan-mokuai p{
   margin:0;
