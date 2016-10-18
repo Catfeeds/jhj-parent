@@ -58,7 +58,7 @@
 		<include refid="Base_Column_List" />
 		from orders
 		<include refid="bySearchVo" />
-		order by add_time desc
+		order by service_date desc
 	</select>
 	
 	<!-- 根据开始时间，接收时间，staff_id ，得出订单总数: -->
