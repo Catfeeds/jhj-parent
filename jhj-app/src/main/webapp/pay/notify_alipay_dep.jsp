@@ -74,7 +74,7 @@
 
 //	if(AlipayNotify.verify(notify_params)) {//验证成功
 		String url = "http://localhost/jhj-app/app/staff/pay/pay_dept_success.json";
-		AppSubmit.appAliay(url, params);
+		com.meijia.utils.AppSubmit.appAliay(url, params);
 		out.println("success");	//请不要修改或删除
 //	} else {//验证失败
 //		out.println("fail");
