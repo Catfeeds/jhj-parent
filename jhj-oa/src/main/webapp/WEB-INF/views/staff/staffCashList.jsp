@@ -142,7 +142,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                       
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="contentModel"/>
-	        				<c:param name="urlAddress" value="/staff/staffCash-list"/>
+	        				<c:param name="urlAddress" value="/staff/cash-list"/>
 	       			  </c:import>
                   </div>
               </div>

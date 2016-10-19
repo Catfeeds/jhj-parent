@@ -20,7 +20,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				if (name == "金牌保洁") return false;
 				html = "<ul class='order-rili'>";
 				html+= "<li>" + name + "</li>"
-				html+= '<li><span onclick="onDeepAddItemNum($$(this).parent())">+</span>';
+				html+= '<li><span onclick="onDeepSubItemNum($$(this).parent())">-</span>';
 				
 				var n = setItemNum(item.service_addon_id, item.default_num);
 				console.log("n = " + n);
@@ -33,7 +33,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				html+= '<input type="hidden" name="serviceAddonItemUnit" value="'+item.item_unit+'" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonDisPrice" value="'+item.dis_price+'" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonId" value="'+item.service_addon_id+'" autocomplete="off">';
-				html+= '<span onclick="onDeepSubItemNum($$(this).parent())">－</span></li>';
+				html+= '<span onclick="onDeepAddItemNum($$(this).parent())">+</span></li>';
 				html+= "</ul>";
 					
 				$$("#order-deep-content").append(html);

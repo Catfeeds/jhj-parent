@@ -134,7 +134,7 @@ public class OrderCalendarController extends BaseController {
 		
 		String endTimeStr = request.getParameter("endTimeStr");
 		if (StringUtil.isEmpty(endTimeStr)) {
-			endTimeStr =  DateUtil.sevenDayAfterToday();
+			endTimeStr =  DateUtil.sevenDayAfterToday(DateUtil.parse(startTimeStr));
 		}
 		
 		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr + " 23:59:59") / 1000;

@@ -616,12 +616,16 @@ public class DateUtil {
 		return df.format(cal.getTime());
 	}
 
-	public static String sevenDayAfterToday() {
+	public static String sevenDayAfterToday(Date date) {
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-		cal.setTime(new Date());
+		if(date != null){
+			cal.setTime(date);
+		}else{
+			cal.setTime(new Date());
+		}
 
 		cal.add(Calendar.DATE, +6);
 
