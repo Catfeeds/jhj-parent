@@ -84,8 +84,25 @@
 
 	</select>
 	
+	<select id="getTotalOrderMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_pay) from order_price_ext where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
 	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select sum(order_money)from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+	</select>
+	
+	<select id="getTotalOrderIncomeMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_pay)from order_price_ext where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />
@@ -95,6 +112,16 @@
 	<!-- 钟点工订单0订单总金额 -->
 	<select id="getTotalOrderIncomeHourMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
 		select sum(order_money) from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
+	<!-- 钟点工订单0订单总金额 -->
+	<select id="getTotalOrderIncomeHourMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
+		select sum(order_money) from order_price_ext where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />

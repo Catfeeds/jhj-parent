@@ -158,6 +158,15 @@ public class OrderStatServiceImpl implements OrderStatService {
 			BigDecimal a = new BigDecimal(0);
 			return a;
 		}
+		
+		BigDecimal orderMoneyExt = ordersMapper.getTotalOrderMoneyExt(vo);
+		
+		if (orderMoneyExt == null) {
+			orderMoneyExt = new BigDecimal(0);
+		}
+		
+		orderMoney = MathBigDecimalUtil.add(orderMoney, orderMoneyExt);
+		
 		orderMoney = MathBigDecimalUtil.round(orderMoney, 2);
 		return orderMoney;
 
@@ -172,6 +181,14 @@ public class OrderStatServiceImpl implements OrderStatService {
 		vo.setOrderType(Constants.ORDER_TYPE_0);
 		vo.setOrderStatus(Constants.ORDER_HOUR_STATUS_7);
 		BigDecimal hourMoney = ordersMapper.getTotalOrderIncomeHourMoney(vo);
+		
+		BigDecimal hourMoneyExt = ordersMapper.getTotalOrderIncomeHourMoneyExt(vo);
+		
+		if (hourMoneyExt == null) {
+			hourMoneyExt = new BigDecimal(0);
+		}
+		hourMoney = MathBigDecimalUtil.add(hourMoney, hourMoneyExt);
+		
 		// 深度保洁1订单总金额
 		vo.setOrderType(Constants.ORDER_TYPE_1);
 		BigDecimal cleanMoney = this.getTotalOrderIncomeCleanMoney(vo);
@@ -255,15 +272,17 @@ public class OrderStatServiceImpl implements OrderStatService {
 		
 		for (OrderPrices op : orderPrices) {
 			
+			BigDecimal orderMoney = orderPriceService.getOrderMoney(op);
+			
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setOrderId(op.getOrderId());
 			searchVo1.setDispatchStatus((short) 1);
 			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
 			
 			if (orderDispatchs.size() == 1) {
-				totalOrderMoney = MathBigDecimalUtil.add(totalOrderMoney, op.getOrderMoney());
+				totalOrderMoney = MathBigDecimalUtil.add(totalOrderMoney, orderMoney);
 			} else {
-				BigDecimal orderMoneyAvg = MathBigDecimalUtil.div(op.getOrderMoney(), new BigDecimal(orderDispatchs.size()));
+				BigDecimal orderMoneyAvg = MathBigDecimalUtil.div(orderMoney, new BigDecimal(orderDispatchs.size()));
 				totalOrderMoney = MathBigDecimalUtil.add(totalOrderMoney, orderMoneyAvg);
 			}
 		}

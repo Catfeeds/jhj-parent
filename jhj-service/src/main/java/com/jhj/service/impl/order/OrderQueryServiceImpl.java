@@ -503,7 +503,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setOrderIncoming(new BigDecimal(0));
 		vo.setOrderMoney(new BigDecimal(0));
 		if (orderPrice != null) {
-			BigDecimal orderMoney = orderPrice.getOrderMoney();
+			BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrice);
 			vo.setOrderMoney(orderMoney);
 			// 总金额C * 85% = 结果.
 			if (vo.getOrderType() == 0) {
@@ -548,7 +548,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-					BigDecimal orderIncoming = orderPrice.getOrderMoney().multiply(settingValue);
+					BigDecimal orderIncoming = orderMoney.multiply(settingValue);
 					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 					vo.setOrderIncoming(orderIncoming);
 				}
@@ -559,7 +559,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-					BigDecimal orderIncoming = orderPrice.getOrderMoney().multiply(settingValue);
+					BigDecimal orderIncoming = orderMoney.multiply(settingValue);
 					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 					vo.setOrderIncoming(orderIncoming);
 				}

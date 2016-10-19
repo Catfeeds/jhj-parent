@@ -173,7 +173,8 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		settingType += settingLevel;
 
 		BigDecimal orderIncoming = new BigDecimal(0);
-		BigDecimal orderMoney = orderPrices.getOrderMoney();
+		BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrices);
+		BigDecimal orderPay = orderPricesService.getOrderPay(orderPrices);
 		
 		//如果为深度养护，需要判断是否为多人派工，订单金额需要平均
 		if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
@@ -184,6 +185,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			
 			if (orderDispatchs.size() > 1) {
 				orderMoney = MathBigDecimalUtil.div(orderMoney, new BigDecimal(orderDispatchs.size()));
+				orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
 			}
 		}
 		
@@ -255,14 +257,14 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				orgStaffDetailDept.setOrderId(orderId);
 				orgStaffDetailDept.setOrderNo(orders.getOrderNo());
 				orgStaffDetailDept.setOrderMoney(orderMoney);
-				orgStaffDetailDept.setOrderDept(orderMoney);
+				orgStaffDetailDept.setOrderDept(orderPay);
 				orgStaffDetailDept.setOrderStatusStr(OrderUtils.getOrderStatusName(orders.getOrderType(), orders.getOrderStatus()));
 				orgStaffDetailDept.setRemarks(orders.getRemarks());
 				orgStaffDetailDeptService.insert(orgStaffDetailDept);
 
 				// 更新欠款总表
 				BigDecimal totalDept = orgStaffFinance.getTotalDept();
-				totalDept = totalDept.add(orderMoney);
+				totalDept = totalDept.add(orderPay);
 				orgStaffFinance.setTotalDept(totalDept);
 				orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 				this.updateByPrimaryKeySelective(orgStaffFinance);
