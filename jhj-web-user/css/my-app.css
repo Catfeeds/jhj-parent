@@ -3735,6 +3735,16 @@ i.toolbar-icon-tixing {
   line-height: 30px;
   color:#fff;
 }
+.all-button11{
+  width:60px;
+  height: 60px;
+  border-radius: 50%;
+  background:#c0c0c0;
+  text-align: center;
+  line-height: 60px;
+  color:#fff;
+  margin:30px auto;
+}
 .beijingse{
 	color:#FEB954;
 }
