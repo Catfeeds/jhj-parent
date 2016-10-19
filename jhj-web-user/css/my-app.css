@@ -2698,6 +2698,11 @@ i.toolbar-icon-tixing {
 }
 .order-dingdan-chajia1 li{
   float: left;
+  height:40px;
+}
+.order-dingdan-chajia1 li input{
+  border:0;
+  width:100%;
 }
 /*我的页面*/
 .order-my p{
