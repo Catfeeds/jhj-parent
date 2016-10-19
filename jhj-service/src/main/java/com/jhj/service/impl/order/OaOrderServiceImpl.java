@@ -117,10 +117,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 
 		// 助理预约单，存在 ，没有价格 的 一个过程
 		if (orderPrices != null) {
+			BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
+			BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
 			// 订单总金额
-			oaOrderListVo.setOrderMoney(orderPrices.getOrderMoney());
+			oaOrderListVo.setOrderMoney(orderMoney);
 			// 订单实际支付金额
-			oaOrderListVo.setOrderPay(orderPrices.getOrderPay());
+			oaOrderListVo.setOrderPay(orderPay);
 			// 支付方式
 			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
 			oaOrderListVo.setPayType(orderPrices.getPayType());
@@ -574,9 +576,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 助理预约单，存在 ，没有价格 的 一个过程
 		if (orderPrices != null) {
 			// 订单总金额
-			oaOrderListVo.setOrderMoney(orderPrices.getOrderMoney());
+			BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
+			oaOrderListVo.setOrderMoney(orderMoney);
 			// 订单实际支付金额
-			oaOrderListVo.setOrderPay(orderPrices.getOrderPay());
+			BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
+			oaOrderListVo.setOrderPay(orderPay);
 			
 			// 支付方式
 			if(orders.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_2){
