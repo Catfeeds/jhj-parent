@@ -1,5 +1,7 @@
 package com.jhj.vo.staff;
 
+import com.jhj.po.model.bs.OrgStaffCash;
+
 /**
  *
  * @author :hulj
@@ -7,18 +9,39 @@ package com.jhj.vo.staff;
  * @Description: 
  *		运营平台--订单管理VO
  */
-public class OrgStaffCashSearchVo {
+public class OrgStaffCashSearchVo  extends OrgStaffCash{
 	
 
-	private Short orderStatus;  //订单状态
+	private String addTimeStr;
+
+	private String updateTimeStr;
+	
+	//员工名称
+	private String staffName;
 
 
-	public Short getOrderStatus() {
-		return orderStatus;
+	public String getAddTimeStr() {
+		return addTimeStr;
 	}
 
-	public void setOrderStatus(Short orderStatus) {
-		this.orderStatus = orderStatus;
+	public void setAddTimeStr(String addTimeStr) {
+		this.addTimeStr = addTimeStr;
+	}
+
+	public String getUpdateTimeStr() {
+		return updateTimeStr;
+	}
+
+	public void setUpdateTimeStr(String updateTimeStr) {
+		this.updateTimeStr = updateTimeStr;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
 	}
 
 	

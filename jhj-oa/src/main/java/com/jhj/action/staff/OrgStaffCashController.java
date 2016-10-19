@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
@@ -74,16 +73,21 @@ public class OrgStaffCashController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		//分页
-		PageHelper.startPage(pageNo, pageSize);
+//		PageHelper.startPage(pageNo, pageSize);
 		
 		if(searchVo == null){
 			searchVo  = new OrgStaffCashSearchVo();
 		}
 		
-        List<OrgStaffCash> orgStaffCashList = orgStaffCashService.selectVoByListPage(searchVo,pageNo,pageSize);
-		
-		PageInfo result = new PageInfo(orgStaffCashList);	
-		
+		PageInfo result = orgStaffCashService.selectVoByListPage(searchVo,pageNo,pageSize);
+        List<OrgStaffCash> staffCashlist = result.getList();
+        OrgStaffCash orgStaffCash=null;
+        for(int i=0;i<staffCashlist.size();i++){
+        	orgStaffCash = staffCashlist.get(i);
+        	OrgStaffCashSearchVo vo = orgStaffCashService.transVo(orgStaffCash);
+        	staffCashlist.set(i,vo);
+        }
+        result = new PageInfo(staffCashlist);
 		model.addAttribute("contentModel", result);
 		
 		return "staff/staffCashList";

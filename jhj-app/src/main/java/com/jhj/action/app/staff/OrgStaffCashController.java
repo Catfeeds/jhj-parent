@@ -21,13 +21,13 @@ import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.staff.OrgStaffCashVo;
-import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.staff.OrgStaffCashSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
+import com.meijia.utils.vo.AppResultData;
 
 @Controller
 @RequestMapping(value = "/app/staff")
@@ -108,9 +108,9 @@ public class OrgStaffCashController extends BaseController {
 		
 		List<OrgStaffCash> orgStaffCashList = orgStaffCashService.selectByStaffId(userId);
 
-		List<OrgStaffCashVo> userImgVos = new ArrayList<OrgStaffCashVo>();
+		List<OrgStaffCashSearchVo> userImgVos = new ArrayList<OrgStaffCashSearchVo>();
 		for (int i = 0; i < orgStaffCashList.size(); i++) {
-			OrgStaffCashVo vo = new OrgStaffCashVo();
+			OrgStaffCashSearchVo vo = new OrgStaffCashSearchVo();
 			OrgStaffCash item = orgStaffCashList.get(i);
            BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			

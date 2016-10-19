@@ -83,7 +83,8 @@ import="com.jhj.oa.common.UrlHelper"%>
                           <table class="table table-striped table-advance table-hover" id="table2excel">
                               <thead>
                               <tr>	  
-                                	  <th >订单号 </th>
+                                	  <th>订单号 </th>
+                                	  <th>员工名称</th>
 		                              <th >手机号</th>
 		                              <th >申请提现金额</th>
 		                              <th >订单状态</th>
@@ -100,6 +101,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <tr>	
 							            
                                   	    <td>${ item.orderNo }</td>
+                                  	    <td>${item.staffName }</td>
                                   	    <td>${ item.mobile }</td>
                                   	    <td>${ item.orderMoney }</td>
                                   	     <td>
