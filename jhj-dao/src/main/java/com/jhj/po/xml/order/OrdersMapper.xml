@@ -121,7 +121,7 @@
 	
 	<!-- 钟点工订单0订单总金额 -->
 	<select id="getTotalOrderIncomeHourMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money) from order_price_ext where order_id in
+		select sum(order_pay) from order_price_ext where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />
