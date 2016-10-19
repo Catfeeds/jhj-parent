@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jhj.common.Constants;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.Orders;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.meijia.utils.HttpClientUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.wx.utils.MD5Util;
 import com.meijia.wx.utils.ServletUtil;
@@ -35,6 +39,9 @@ public class WXPay extends HttpServlet {
 
 	@Autowired
 	private OrderPricesService orderPricesService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 	
 	private String successUrl = "wx-pay-pre.jsp";
 
@@ -66,7 +73,7 @@ public class WXPay extends HttpServlet {
 		
 		String orderNo = "";
 		Long userId = 0L;
-		// 订单类型 0 = 订单支付 1= 充值卡充值  2=手机话费充值
+		// 订单类型 0 = 订单支付 1= 充值卡充值  2=手机话费充值 7 = 订单补差价
 		String payOrderType = request.getParameter("pay_order_type");
 		
 		if (payOrderType == null) payOrderType = "0";
@@ -120,9 +127,33 @@ public class WXPay extends HttpServlet {
 			wxPay = orderPayNow.toString();
 		}
 		
+		// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+		if(payOrderType.equals(Constants.PAY_ORDER_TYPE_3)) {
+			OrderPriceExt orderPriceExt = orderPriceExtService.selectByOrderNoExt(orderNo);
+			
+			// 订单找不到的情况.
+			if (orderPriceExt == null || orderPriceExt.getId().equals(0)) {
+				request.setAttribute("tips", "无效的订单");
+				ServletUtil.forward(request, response, errorUrl);
+			}
+			
+			// 订单已经支付过，不需要重复支付
+			if (orderPriceExt.getOrderStatus() == 2) {
+				request.setAttribute("tips", "订单已经支付过，请不要重复支付!");
+				ServletUtil.forward(request, response, tipsUrl);
+			}
+			
+			// 实际支付金额
+			
+			BigDecimal p1 = new BigDecimal(100);
+			BigDecimal p2 = MathBigDecimalUtil.mul(orderPriceExt.getOrderPay(), p1);
+			BigDecimal orderPayNow = MathBigDecimalUtil.round(p2, 0);
+			wxPay = orderPayNow.toString();
+		}
+		
 		
 		//测试
-		wxPay = "1";
+//		wxPay = "1";
 
 		// 临时订单号
 		String tradeno = System.currentTimeMillis() + "" + (int) (Math.random() * 1000000);

@@ -2,6 +2,7 @@ package com.jhj.service.order;
 
 import java.util.List;
 
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.order.OrgStaffsNewVo;
 
@@ -15,6 +16,8 @@ public interface OrderPayService {
 	
 	//手机话费充值， 微信支付成功后的 处理
 	void orderPaySuccessToDoForPhone(Orders orders);
+
+	void orderPaySuccessToDoOrderPayExt(Orders orders, OrderPriceExt orderPriceExt);
 	
 	
 }

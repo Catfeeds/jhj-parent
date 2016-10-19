@@ -23,11 +23,15 @@ function removeSessionData() {
 	sessionStorage.removeItem("service_addons");
 	sessionStorage.removeItem("service_addons_json");
 	sessionStorage.removeItem("total_service_hour");
+	sessionStorage.removeItem("pay_order_type");
 
 	//优惠劵临时会话数据
 	sessionStorage.removeItem("user_coupon_id");
 	sessionStorage.removeItem("user_coupon_value");
 	sessionStorage.removeItem("user_coupon_name");
+	
+	//服务人员信息
+	sessionStorage.removeItem("staff_names");
 }
 
 

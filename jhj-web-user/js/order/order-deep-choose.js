@@ -24,7 +24,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				
 				var n = setItemNum(item.service_addon_id, item.default_num);
 				console.log("n = " + n);
-				html+= '<input name="itemNum" value="'+n+'" onkeyup="inputNum($$(this))"  onafterpaste="inputNum($$(this))"  maxLength="3" autocomplete="off">';
+				html+= '<input name="itemNum" value="'+n+'" onkeyup="onItemNumKeyUp($$(this).parent())"  onafterpaste="onItemNumKeyUp($$(this).parent())"  maxLength="3" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonName" value="'+name+'" autocomplete="off">';
 				
 				html+= '<input type="hidden" name="defaultNum" value="'+item.default_num+'" autocomplete="off">';
@@ -59,7 +59,12 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 	
 	 $$("#chooseServiceTime").on("click",function() {
 		 
-		 setDeepTotal();
+		 var validateMsg = setDeepTotal();
+		 console.log("validateMsg = " + validateMsg);
+		 if (validateMsg != undefined && validateMsg != "") {
+			 myApp.alert(validateMsg);
+			 return false;
+		 }
 		 
 		 var orderMoney = sessionStorage.getItem("order_money");
 		 
@@ -78,6 +83,17 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 	
 });
 
+
+function onItemNumKeyUp(obj) {
+	console.log("onItemNumKeyUp");
+	var itemNumObj = obj.find('input[name=itemNum]'); 
+	
+	var tmptxt=itemNumObj.val();
+	tmptxt = tmptxt.replace(/\D|^0/g,'');
+	itemNumObj.val(tmptxt);
+	
+	setDeepTotal();
+}
 
 //加号处理
 function onDeepAddItemNum(obj) {
@@ -107,9 +123,10 @@ function onDeepSubItemNum(obj) {
 	}
 	
 	//如果数量小于起步数，则只能等于起步数量
+	 var serviceAddonName = obj.find('input[name=serviceAddonName]').val();
 	var defaultNum = obj.find('input[name=defaultNum]').val(); 
 	if (defaultNum > 0 && v < defaultNum) {
-		myApp.alert("最低数量为"+ defaultNum);
+		myApp.alert(serviceAddonName + "最低数量为"+ defaultNum);
 		v = defaultNum;
 	}
 	
@@ -158,24 +175,36 @@ function setDeepTotal() {
 	var serviceAddonIdObj;
 	var serviceAddonsJson = [];
 	var serviceAddons = [];
+	
+	var validateMsg = "";
+	
 	$$("input[name = itemNum]").each(function(key, index) {
 		 
 		 itemNum = $$(this).val();
 		 
+		 if (itemNum == undefined || itemNum == "") {
+			 itemNum = 0;
+		 } 
+		 
 		 serviceAddonIdObj = $$(this).parent().find('input[name=serviceAddonId]');
 		 serviceAddonId = serviceAddonIdObj.val();
+		 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
+		 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
+		 console.log("setDeepTotal defaultNum = " + defaultNum);
+		 console.log("setDeepTotal itemNum = " + itemNum);
+		 if (Number(defaultNum) > 0 && Number(itemNum) < Number(defaultNum) ) {
+			 validateMsg = serviceAddonName + "最低数量为" + defaultNum;
+			 return validateMsg;
+		 }
 		 
-		 console.log("serviceAddonId = " + serviceAddonId);
-		 if (itemNum == undefined || 
-			 itemNum == "" || 
-			 itemNum == 0 || 
+		 if (itemNum == 0 || 
 			 serviceAddonId == undefined || 
 			 serviceAddonId == 0) {
 			 return false;
 		 }
 		 
 		 var serviceAddonServiceHour = $$(this).parent().find('input[name=serviceAddonServiceHour]').val();
-		 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
+		 
 		 var disPrice = $$(this).parent().find('input[name=serviceAddonDisPrice]').val();
 		
 		 
@@ -193,7 +222,7 @@ function setDeepTotal() {
 		 
 		 totalServiceHour+= serviceHour;
 		 
-		 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
+		 
 		 var serviceAddonItemUnit = $$(this).parent().find('input[name=serviceAddonItemUnit]').val();
 		 
 		 console.log("serviceAddonName = " + serviceAddonName);
@@ -223,11 +252,15 @@ function setDeepTotal() {
 		 serviceAddonsJson.push(serviceAddonJson); 
 	});
 	
+	console.log("setDeepTotal validateMsg= " + validateMsg);
+	if (validateMsg != "") return validateMsg;
+	
 	totalServiceHour = totalServiceHour.toFixed(0);
 	sessionStorage.setItem("order_money", orderMoney);
 	sessionStorage.setItem("order_pay", orderMoney);
 	sessionStorage.setItem("total_service_hour", totalServiceHour);
 	sessionStorage.setItem("service_addons", JSON.stringify(serviceAddons));
 	sessionStorage.setItem("service_addons_json", JSON.stringify(serviceAddonsJson));
-			
+	
+	return validateMsg;
 }

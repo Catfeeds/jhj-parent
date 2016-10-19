@@ -125,9 +125,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setPayType((short) 0);
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(vo.getId());
 		if (orderPrice != null) {
+			
+			BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrice);
+			BigDecimal orderPay = orderPricesService.getOrderPay(orderPrice);
 			vo.setPayType(orderPrice.getPayType());
-			vo.setOrderMoney(orderPrice.getOrderMoney());
-			vo.setOrderPay(orderPrice.getOrderPay());
+			vo.setOrderMoney(orderMoney);
+			vo.setOrderPay(orderPay);
 		}
 
 		// 城市名称

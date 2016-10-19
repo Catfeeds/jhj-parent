@@ -33,5 +33,9 @@ public interface OrderPricesService {
 	OrderPrices selectByOrderNo(String orderNo);
 
 	BigDecimal getPayByOrder(Long orderId, Long userCouponId);
+
+	BigDecimal getOrderPay(OrderPrices orderPrice);
+
+	BigDecimal getOrderMoney(OrderPrices orderPrice);
 	
 }

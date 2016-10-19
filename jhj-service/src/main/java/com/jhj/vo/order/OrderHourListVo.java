@@ -37,6 +37,8 @@ public class OrderHourListVo extends Orders {
 	private Long couponId;
 	
 	private BigDecimal couponValue;
+	
+	private String staffNames;
 
 	public String getAddress() {
 		return address;
@@ -92,5 +94,13 @@ public class OrderHourListVo extends Orders {
 
 	public void setCouponValue(BigDecimal couponValue) {
 		this.couponValue = couponValue;
+	}
+
+	public String getStaffNames() {
+		return staffNames;
+	}
+
+	public void setStaffNames(String staffNames) {
+		this.staffNames = staffNames;
 	}
 }

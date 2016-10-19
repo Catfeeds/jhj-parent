@@ -456,7 +456,7 @@ public class UserController extends BaseController {
 		userDetailPay.setUserId(user.getId());
 		userDetailPay.setMobile(user.getMobile());
 
-		userDetailPay.setOrderType(Constants.ORDER_TYPE_4);
+		userDetailPay.setOrderType(Constants.PAY_ORDER_TYPE_1);
 		/*
 		 * 运营平台的 会员充值， 是由 财务操作。
 		 * 

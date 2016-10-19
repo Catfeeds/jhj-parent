@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderCards;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
@@ -44,4 +45,6 @@ public interface UserDetailPayService {
 	UserDetailPay initUserDetailPay();
 	
 	List<UserDetailPay> selectBySearchVo(UserDetailSearchVo searchVo);
+
+	UserDetailPay addUserDetailPayForOrderPayExt(Users user, Orders order, OrderPriceExt orderPriceExt, String tradeStatus, String tradeNo, String payAccount);
 }

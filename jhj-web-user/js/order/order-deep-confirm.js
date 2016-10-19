@@ -1,5 +1,8 @@
 myApp.onPageInit('order-deep-confirm', function(page) {
 	
+	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+	sessionStorage.setItem("pay_order_type", 0);
+	
 	var orderType = sessionStorage.getItem("order_type")
 	$$("#orderType").val(orderType);
 	

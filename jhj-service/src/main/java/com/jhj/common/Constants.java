@@ -144,17 +144,19 @@ public class Constants {
 	public static Short ORDER_TYPE_2 = 2; //助理订单
 	public static Short ORDER_TYPE_3 = 3; //配送服务订单
 	public static Short ORDER_TYPE_4 = 4; //充值卡订单
+	
 	//新增订单类型： 提醒类 订单
 	public static Short ORDER_TYPE_5 = 5;//提醒类 订单，不收费
 	//2015年10月13日16:58:48 新增订单 类型 ：  话费、水电煤缴费类订单
 	public static Short ORDER_TYPE_6 = 6;
-	
-	
+		
 	//消费类型
 	public static Short PAY_ORDER_TYPE_0 = 0;  //订单支付
-	public static Short PAY_ORDER_TYPE_1 = 1; //购买充值卡
+	public static Short PAY_ORDER_TYPE_1 = 1;  //购买充值卡
 	
-	public static Short PAY_ORDER_TYPE_2 = 2;	//手机话费类充值
+	public static Short PAY_ORDER_TYPE_2 = 2;  //手机话费类充值
+	
+	public static Short PAY_ORDER_TYPE_3 = 3;  //订单差价
 	
 	
 

@@ -308,7 +308,7 @@ a {
 	                                } else if(res.err_msg=="get_brand_wcpay_request:cancel") {
 										
 	                                	var fromUrl = "";
-	                                	if (payOrderType == 0) {
+	                                	if (payOrderType == 0 || payOrderType == 7) {
 	                                		fromUrl = wxAppUrl + "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
 	                                		fromUrl+= "&order_type="+orderType;
@@ -325,7 +325,7 @@ a {
 	                                	window.location.href = wxAppUrl + fromUrl;
 	                                }else{
 	                                	var fromUrl = "";
-	                                	if (payOrderType == 0) {
+	                                	if (payOrderType == 0 || payOrderType == 7) {
 	                                		fromUrl = wxAppUrl + "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
 	                                		fromUrl+= "&order_type="+orderType;

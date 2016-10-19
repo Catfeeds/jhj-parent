@@ -78,6 +78,7 @@ public class OrderOnlinePayController extends BaseController {
 			@RequestParam(value = "mobile", defaultValue = "0")	String mobile,
 			@RequestParam("order_no") String orderNo,
 			@RequestParam("pay_type") Short payType,
+			@RequestParam(value = "pay_order_type", required = false, defaultValue="0") int payOrderType,
 			@RequestParam("notify_id") String notifyId,
 			@RequestParam("notify_time") String notifyTime,
 			@RequestParam("trade_no") String tradeNo,
@@ -98,9 +99,18 @@ public class OrderOnlinePayController extends BaseController {
 			result.setMsg(ConstantMsg.ORDER_PAY_WAIT_MSG);
 			return result;
 		}
-
-		Orders order = ordersService.selectByOrderNo(orderNo);
-
+		
+		// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+		Orders order = null;
+		if (payOrderType == 0 ) {
+			order = ordersService.selectByOrderNo(orderNo);
+		} else if (payOrderType == 7) {
+			
+		}
+		
+		
+		
+		
 		if (order == null) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.ORDER_NO_NOT_EXIST_MG);
