@@ -297,6 +297,24 @@ public class OrderController extends BaseController {
 		List<PartnerServiceType> serviceTypeList = serviceType
 				.selectByParentId(26L);
 		model.addAttribute("serviceType", serviceTypeList);
+		return "order/orderExpAdd";
+	}
+
+	@AuthPassport
+	@RequestMapping(value = "/order-baby-add", method = RequestMethod.GET)
+	public String orderBabyAdd(Model model) {
+
+		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
+		vo.setEnable((short) 1);
+		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
+				.selectCooperativeBusinessVo(vo);
+		if (CooperativeBusinessList != null) {
+			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
+		}
+
+		List<PartnerServiceType> serviceTypeList = serviceType
+				.selectByParentId(57L);
+		model.addAttribute("serviceType", serviceTypeList);
 
 		return "order/orderExpAdd";
 	}

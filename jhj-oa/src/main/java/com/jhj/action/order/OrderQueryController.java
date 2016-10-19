@@ -9,6 +9,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -292,6 +295,74 @@ public class OrderQueryController extends BaseController {
 		return "order/orderList";
 	}	
 
+	/**
+	 * 母婴到家页面显示
+	 * */
+	@AuthPassport
+	@RequestMapping(value = "/order-exp-baby-list", method = RequestMethod.GET)
+	public String getOrderBabyList(Model model, HttpServletRequest request, OrderSearchVo searchVo) throws ParseException, UnsupportedEncodingException {
+
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ConstantOa.DEFAULT_PAGE_SIZE;
+		// 分页
+
+		// 查询条件： 设置为钟点工的订单
+		if (searchVo == null)
+			searchVo = new OrderSearchVo();
+		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+		
+		Short orderType = Constants.ORDER_TYPE_1;
+		List<Short> serviceTypes=new ArrayList<Short>();
+		serviceTypes.add((short)57);
+		serviceTypes.add((short)62);
+		serviceTypes.add((short)63);
+		serviceTypes.add((short)64);
+		serviceTypes.add((short)65);
+		searchVo.setServiceTypes(serviceTypes);
+		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, orderType, sessionParentId);
+
+		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
+
+		List<Orders> orderList = result.getList();
+		Orders orders = null;
+		for (int i = 0; i < orderList.size(); i++) {
+			orders = orderList.get(i);
+			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
+			orderList.set(i, completeVo);
+		}
+
+		result = new PageInfo(orderList);
+
+		String startTimeStr = request.getParameter("startTimeStr");
+		if (!StringUtil.isEmpty(startTimeStr))
+			model.addAttribute("startTimeStr", startTimeStr);
+
+		// 下单结束时间
+		String endTimeStr = request.getParameter("endTimeStr");
+		if (!StringUtil.isEmpty(endTimeStr))
+			model.addAttribute("endTimeStr", endTimeStr);
+		// 服务开始时间
+		String serviceStartTime = request.getParameter("serviceStartTime");
+		if (!StringUtil.isEmpty(serviceStartTime))
+			model.addAttribute("serviceStartTime", serviceStartTime);
+
+		// 服务结束时间
+		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
+		if (!StringUtil.isEmpty(serviceEndTimeStr))
+			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
+		
+		CooperativeBusinessSearchVo businessSearchVo=new CooperativeBusinessSearchVo();
+		businessSearchVo.setEnable((short)1);
+		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);
+		model.addAttribute("businessList", businessList);
+
+		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
+		model.addAttribute("oaOrderListVoModel", result);
+		model.addAttribute("searchModel", searchVo);
+		model.addAttribute("listUrl", "order-exp-baby-list");
+
+		return "order/orderList";
+	}	
 	/**
 	 * 深度保洁---订单详情
 	 * 
