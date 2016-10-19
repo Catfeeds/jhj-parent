@@ -14,6 +14,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
@@ -364,6 +365,11 @@ public class OrderPayServiceImpl implements OrderPayService {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void orderPaySuccessToDoOrderPayExt(Orders orders, OrderPriceExt orderPriceExt) {
+		
 	}
 
 }

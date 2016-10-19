@@ -2,9 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
 
-    <!-- <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" />  --> 
-	<classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" /> 
-    <!--  <classPathEntry location="D:/workspace/jar/mysql-connector-java-5.1.33.jar" /> -->
+    <classPathEntry location="/workspace/work/java/libs/mysql-connector-java-5.1.33.jar" />
 	<!-- 数据库链接URL、用户名、密码 -->
 	<context id="jdbc-test">
 
@@ -92,6 +90,28 @@
 			<columnOverride  column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
 
 		</table> 
+
+		<!-- 订单价格差价表 -->
+		<table schema="jhj3.0" tableName="order_price_ext"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+
+			<columnOverride  column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+
+		</table> 
+
 		<!-- 派工表  -->
 		<table schema="jhj" tableName="order_dispatchs"
 			enableInsert="true"

@@ -15,6 +15,7 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.order.OrderLog;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -27,6 +28,7 @@ import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
@@ -34,9 +36,12 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.order.OrderPriceExtVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -86,6 +91,10 @@ public class OrderPayController extends BaseController {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
+	
 	// 17.订单支付前接口
 	/**
 	 * @param mobile true string 手机号 
@@ -277,5 +286,111 @@ public class OrderPayController extends BaseController {
 		
 		return result;
 	}
+	
+	// 17.订单支付前接口
+		/**
+		 * @param mobile true string 手机号 
+		 * @param order_id true int 订单id 
+		 * @param order_no true string 订单号
+		 * @param pay_type true int 支付方式： 付款方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位） 6 = 现金支付 7 = 平台已支付
+		 * @param pay_order_type int  订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+		 * @return  OrderViewVo
+		 */
+		@RequestMapping(value = "post_pay_ext", method = RequestMethod.POST)
+		public AppResultData<Object> postPayExt(
+				@RequestParam("user_id") Long userId, 
+				@RequestParam("order_no") String orderNo, 
+				@RequestParam("order_pay_ext") BigDecimal orderPayExt, 
+				@RequestParam("order_pay_type") Short orderPayType
+				) {
+
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+			Users u = userService.selectByPrimaryKey(userId);
+
+			// 判断是否为注册用户，非注册用户返回 999
+			if (u == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
+				return result;
+			}		
+			
+			Orders order = ordersService.selectByOrderNo(orderNo);
+			if (order == null){
+				return result;
+			}
+			
+			Long orderId = order.getId();
+			
+			if(order.getOrderStatus() <= Constants.ORDER_HOUR_STATUS_1 || order.getOrderStatus() > Constants.ORDER_HOUR_STATUS_5){
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("订单当前状态不能进行补差价");
+				return result;
+			}
+			
+			
+			
+			if (orderPayExt.compareTo(new BigDecimal(0)) == 0) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("金额不能为0");
+				return result;
+			}
+			
+			if (orderPayType.equals(Constants.PAY_TYPE_0)) {
+				//1.先判断用户余额是否够支付
+				if(u.getRestMoney().compareTo(orderPayExt) < 0) {
+					result.setStatus(Constants.ERROR_999);
+					result.setMsg(ConstantMsg.ERROR_999_MSG_5);
+					return result;
+				}
+			}
+			
+			OrderPriceExt orderPriceExt = orderPriceExtService.initOrderPriceExt();
+			orderPriceExt.setUserId(order.getUserId());
+			orderPriceExt.setMobile(order.getMobile());
+			orderPriceExt.setOrderId(order.getId());
+			orderPriceExt.setOrderNo(order.getOrderNo());
+			
+			//生成唯一的补差价订单号
+			String orderNoExt = String.valueOf(OrderNoUtil.genOrderNo());
+			orderPriceExt.setOrderNoExt(orderNoExt);
+			orderPriceExt.setOrderPay(orderPayExt);
+			orderPriceExt.setPayType(orderPayType);
+			
+			orderPriceExtService.insert(orderPriceExt);
+
+			//如果是余额支付或者需支付金额为0 
+			if (orderPayType.equals(Constants.PAY_TYPE_0)) {
+				
+				//1. 用户余额扣除
+				u.setRestMoney(u.getRestMoney().subtract(orderPayExt));
+				u.setUpdateTime(TimeStampUtil.getNowSecond());
+				userService.updateByPrimaryKeySelective(u);
+				
+				//2记录用户消费明细
+				userDetailPayService.addUserDetailPayForOrderPayExt(u, order, orderPriceExt, "", "", "");
+				
+				//更新订单差价为已支付
+				orderPriceExt.setOrderStatus(2);
+				orderPriceExtService.updateByPrimaryKey(orderPriceExt);
+				
+				//更新通知服务人员.
+				orderPayService.orderPaySuccessToDoOrderPayExt(order, orderPriceExt);
+			}
+			
+			OrderPriceExtVo vo = new OrderPriceExtVo();
+			BeanUtilsExp.copyPropertiesIgnoreNull(order, vo);
+			vo.setId(orderPriceExt.getId());
+			vo.setOrderNoExt(orderPriceExt.getOrderNoExt());
+			vo.setPayType(orderPriceExt.getPayType());
+			vo.setOrderPayStatus(orderPriceExt.getOrderStatus());
+			vo.setOrderPay(orderPriceExt.getOrderPay());
+			vo.setRemarks(orderPriceExt.getRemarks());
+			
+			result.setData(vo);
+			
+			
+			return result;
+		}
 
 }

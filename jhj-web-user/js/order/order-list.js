@@ -36,7 +36,10 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			htmlPart = htmlPart.replace(new RegExp('{userCouponValue}', "gm"), order.coupon_value);
 			htmlPart = htmlPart.replace(new RegExp('{orderStatus}', "gm"), order.order_status);
 			
+			htmlPart = htmlPart.replace(new RegExp('{staffNames}', "gm"), order.staff_names);
+			
 			var orderStatus = order.order_status;
+			console.log("orderStatus = " + orderStatus);
 			//如果未支付，则显示去支付按钮.
 			var doOrderPayStyle = 'none';
 			if (orderStatus == 1) {
@@ -46,7 +49,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			
 			//必须为已支付的订单，未完成服务的订单可以补差价
 			var priceExtendStyle = 'none';
-			if (orderStatus > 1 && orderStatus <= 5) {
+			if (orderStatus >= 3 && orderStatus < 7) {
 				priceExtendStyle = 'block';
 			}
 			htmlPart = htmlPart.replace(new RegExp('{priceExtendStyle}', "gm"), priceExtendStyle);
@@ -62,12 +65,14 @@ myApp.onPageBeforeInit('order-list', function(page) {
 
 		loading = false;
 		
-		page = page + 1;
 		$$("#page").val(page);
 		console.log("page = " + page);
 		console.log("len = " + orders.length);
 		if (orders.length >= 10) {
+			console.log("order-list-more block");
 			$$('#order-list-more').css("display", "block");
+		} else {
+			$$('#order-list-more').css("display", "none");
 		}
 	};
 	
@@ -138,7 +143,33 @@ function doOrderPay(obj) {
 	sessionStorage.setItem("user_coupon_id", userCouponId);
 	sessionStorage.setItem("user_coupon_value", userCouponValue);
 	
+	// 订单类型 0 = 钟点工 1 = 深度保洁 2 = 助理订单 6= 话费充值类订单 7 = 订单补差价
+	sessionStorage.setItem("pay_order_type", 0);
+	
 	mainView.router.loadPage("order/order-pay.html");
+	
+}
+
+function doOrderPayExt(obj) {
+	
+	var orderStatus = obj.find('input[name=orderStatus]').val();
+	
+	if (orderStatus >= 3 && orderStatus < 7) {
+	
+		var serviceTypeId = obj.find('input[name=serviceTypeId]').val();
+		var orderId = obj.find('input[name=orderId]').val();
+		var orderNo = obj.find('input[name=orderNo]').val();
+		var orderPay = obj.find('input[name=orderPay]').val();
+		var staffNames = obj.find('input[name=staffNames]').val();
+		
+		sessionStorage.setItem("service_type_id", serviceTypeId);
+		sessionStorage.setItem("order_id", orderId);
+		sessionStorage.setItem("order_no", orderNo);
+		sessionStorage.setItem("order_pay", orderPay);
+		sessionStorage.setItem("staff_names", staffNames);
+
+		mainView.router.loadPage("order/order-pay-ext.html");
+	}
 	
 }
 

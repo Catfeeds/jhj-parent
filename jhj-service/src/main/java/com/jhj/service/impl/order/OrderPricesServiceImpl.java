@@ -9,15 +9,18 @@ import org.springframework.stereotype.Service;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.dict.ServiceTypeService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserCouponsService;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -44,6 +47,8 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 	@Autowired
 	private DictCouponsService dictCouponsService;		
     
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
     @Override
 	public int deleteByPrimaryKey(Long id) {
 		return orderPricesMapper.deleteByPrimaryKey(id);
@@ -175,5 +180,61 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		orderPayNow = MathBigDecimalUtil.round(p2, 0);
 
 		return orderPayNow;
+	}
+	
+	/**
+	 * 获取订单实际价格，需要计算是否有订单的补差价.
+	 * @param orderPrice
+	 * @return
+	 */
+	@Override
+	public BigDecimal getOrderMoney(OrderPrices orderPrice) {
+		BigDecimal orderMoney = new BigDecimal(0);
+		
+		orderMoney = orderPrice.getOrderMoney();
+		
+		Long orderId = orderPrice.getOrderId();
+		
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setOrderId(orderId);
+		searchVo.setOrderStatus((short) 2);
+		List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(searchVo);
+		
+		if (list.isEmpty()) return orderMoney;
+		
+		for (OrderPriceExt item : list) {
+			BigDecimal orderPayExt = item.getOrderPay();
+			orderMoney = MathBigDecimalUtil.add(orderMoney, orderPayExt);
+		}
+		
+		return orderMoney;
+	}
+	
+	/**
+	 * 获取订单实际价格，需要计算是否有订单的补差价.
+	 * @param orderPrice
+	 * @return
+	 */
+	@Override
+	public BigDecimal getOrderPay(OrderPrices orderPrice) {
+		BigDecimal orderPay = new BigDecimal(0);
+		
+		orderPay = orderPrice.getOrderPay();
+		
+		Long orderId = orderPrice.getOrderId();
+		
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setOrderId(orderId);
+		searchVo.setOrderStatus((short) 2);
+		List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(searchVo);
+		
+		if (list.isEmpty()) return orderPay;
+		
+		for (OrderPriceExt item : list) {
+			BigDecimal orderPayExt = item.getOrderPay();
+			orderPay = MathBigDecimalUtil.add(orderPay, orderPayExt);
+		}
+		
+		return orderPay;
 	}
 }

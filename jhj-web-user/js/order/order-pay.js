@@ -11,6 +11,9 @@ myApp.onPageInit('order-pay', function(page) {
 		userCouponValue = 0;
 	}
 	
+	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+	var payOrderType = sessionStorage.getItem("pay_order_type");
+	
 	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
@@ -59,6 +62,16 @@ myApp.onPageInit('order-pay', function(page) {
 		orderPayType = result.data.pay_type;
 		orderType = result.data.order_type;
 		serviceTypeId = result.data.service_type;
+		
+		//补差价需要单独处理订单ID 和 订单编号
+		if (payOrderType == 3) {
+			orderNo = result.data.order_no_ext;
+			orderId = result.data.id;
+			
+			sessionStorage.setItem('order_id', orderId);
+			sessionStorage.setItem('order_no', orderNo);
+		}
+		
 		console.log("orderPayType = " + orderPayType);
 		
 		//如果为余额支付或者 现金支付，则直接跳到完成页面
@@ -79,6 +92,7 @@ myApp.onPageInit('order-pay', function(page) {
 			alipayUrl +="&orderPay="+orderPay;
 			alipayUrl +="&orderType="+orderType;
 			alipayUrl +="&serviceTypeId="+serviceTypeId;
+			alipayUrl +="&payOrderType="+payOrderType;
 			location.href = alipayUrl;
 		}
 		
@@ -90,15 +104,14 @@ myApp.onPageInit('order-pay', function(page) {
 			 wxPayUrl +="?orderId="+orderId;
 			 wxPayUrl +="&userCouponId="+userCouponId;
 			 wxPayUrl +="&orderType=0";
-			 wxPayUrl +="&payOrderType=0";
+			 wxPayUrl +="&payOrderType="+payOrderType;
 			 wxPayUrl +="&serviceTypeId="+serviceTypeId;
 			 location.href = wxPayUrl;
 		}
 	};
 	
-	//点击支付的处理
-	$$("#orderPaySubmit").click(function(){
-		$$("#orderPaySubmit").attr("disabled", true);
+	
+	function doOrderPay() {
 		var params = {};
 		params.user_id = userId;
 		params.order_no = orderNo;
@@ -119,8 +132,42 @@ myApp.onPageInit('order-pay', function(page) {
 	 	    	400: ajaxError,
 	 	    	500: ajaxError
 	 	    }
-		});		
-		 
+		});
+	}
+	
+	function doOrderPayExt() {
+		var params = {};
+		params.user_id = userId;
+		params.order_no = orderNo;
+		params.order_pay_ext = orderPay;
+		params.order_pay_type = $$("#orderPayType").val();
+		
+		console.log(params);
+
+		$$.ajax({
+			type: "post",
+			 url: siteAPIPath + "order/post_pay_ext.json",
+			data: params,
+			statusCode: {
+	         	200: postOrderPaySuccess,
+	 	    	400: ajaxError,
+	 	    	500: ajaxError
+	 	    }
+		});
+	}
+	
+	//点击支付的处理
+	$$("#orderPaySubmit").click(function(){
+		$$("#orderPaySubmit").attr("disabled", true);
+		
+		if (payOrderType == 0) {
+			doOrderPay();
+		}
+		
+		//补差价订单
+		if (payOrderType == 3) {
+			doOrderPayExt();
+		}
 	});
 	
 });

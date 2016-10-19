@@ -5,11 +5,11 @@ myApp.onPageInit('order-pay-success', function(page) {
 	var orderType = page.query.order_type;
 	
 	var serviceTypeId = page.query.service_type_id;
-		
+	
 	if (sessionStorage.getItem('service_type_id') != "") {
 		serviceTypeId = sessionStorage.getItem('service_type_id');
 	}
-	console.log("serviceTypeId = " + serviceTypeId);
+
 	var recoList = orderRecomment(serviceTypeId);
 	
 	console.log(recoList);

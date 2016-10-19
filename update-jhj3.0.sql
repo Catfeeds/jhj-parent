@@ -76,6 +76,52 @@ ALTER TABLE org_staff_leave ADD `leave_date_end` date NOT NULL COMMENT '请假�
 ALTER TABLE org_staff_leave ADD `total_days` smallint(4) unsigned NOT NULL COMMENT '请假天数';
 ALTER table org_staff_leave ADD `leave_status` char(4) NOT NULL DEFAULT '1' COMMENT '请假状态：1：请假中，2：请假结束';
 
+ALTER TABLE `user_detail_pay` CHANGE `order_type` `order_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0 = 订单支付 1 = 购买充值卡 2 = 手机话费类充值 3 = 订单补差价';
+
+update `user_detail_pay` set order_type = 0 WHERE order_type = 1;
+
+update `user_detail_pay` set order_type = 0 WHERE order_type = 2;
+
+update `user_detail_pay` set order_type = 1 WHERE order_type = 4;
+
+
+CREATE TABLE `order_price_ext` (
+  `id` int(11) UNSIGNED NOT NULL COMMENT '主键',
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `mobile` char(11) NOT NULL COMMENT '用户手机号',
+  `order_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '订单id',
+  `order_no` varchar(32) NOT NULL COMMENT '订单号',
+  `order_no_ext` varchar(64) NOT NULL COMMENT '补差价订单编号',
+  `pay_type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '付款方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位） 6 = 现金支付 7 = 第三方支付',
+  `order_pay` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '订单实际支付金额',
+  `order_status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0 = 已取消 1 = 支付中 2 = 完成支付 9 = 已关闭',
+  `remarks` varchar(255) NOT NULL COMMENT '备注',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间戳',
+  `update_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新时间戳'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单金额补差价表';
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `order_price_ext`
+--
+ALTER TABLE `order_price_ext`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `mobile` (`mobile`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `order_price_ext`
+--
+ALTER TABLE `order_price_ext`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
+	
 
 
 TRUNCATE TABLE `cooperative_business`;
@@ -91,7 +137,10 @@ INSERT INTO `cooperative_business` (`id`, `business_name`, `app_name`, `business
 (107, '美团', '', 'meituan', '4c36e840330d8420d16720cebfefe478', 1, 8, 1475303595, 1475303595),
 (108, '葡萄生活', '', 'putaoshenghuo', '089f531e9f595ea0a3c1172f3a7bb88e', 1, 8, 1475303620, 1475303620),
 (109, '居然之家', '', 'juranzhijia', 'eff2d25efe382fc5c4bbeddd913994d2', 1, 8, 1475303646, 1475303646),
-(110, '百度', '', 'baidu', '818f104aa052408669bc76c4df5bc618', 1, 8, 1475303661, 1475303661);
+(110, '百度', '', 'baidu', '818f104aa052408669bc76c4df5bc618', 1, 8, 1475303661, 1475303661),
+(111, '朝阳门店', 'chaoyang', 'chaoyang', 'changyang', 1, 8, 1475303355, 1475303355),
+(112, '海淀门店', 'haidian', 'haidian', 'haidian', 1, 8, 1475303355, 1475303355),
+(113, '包月定制', 'baoyue', 'baoyue', 'baoyue', 1, 8, 1475303355, 1475303355);
 
 
 
@@ -194,3 +243,4 @@ INSERT INTO `dict_service_addons` (`service_addon_id`, `service_type`, `service_
 (43, 64, 2, '洁宝宝', '', '', '399.00', '299.00', '', '元/次', 0, 1476514405, 1476514405, 1),
 (44, 65, 3, '设计方案', '', '', '299.00', '220.00', '', '元/次', 0, 1476515423, 1476515423, 1),
 (45, 65, 3, '施工费', '', '', '199.00', '150.00', '', '元/次', 0, 1476515423, 1476515423, 1);
+

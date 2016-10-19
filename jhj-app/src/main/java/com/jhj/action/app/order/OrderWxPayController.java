@@ -18,9 +18,11 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.Constants;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.order.OrderCardsService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.meijia.utils.HttpClientUtil;
@@ -46,41 +48,40 @@ public class OrderWxPayController extends BaseController {
 
 	@Autowired
 	private OrderPricesService orderPricesService;
-	
+
 	private String tradeName = "叮当到家家庭服务";
-	
+
 	@Autowired
 	private OrderCardsService orderCardsService;
+
+	@Autowired
+	private CardTypeService cardTypeService;
 	
 	@Autowired
-	private CardTypeService cardTypeService;		
-	
-	
+	private OrderPriceExtService orderPriceExtService;
+
 	@RequestMapping(value = "wxpay", method = RequestMethod.GET)
-	public void jsPay(HttpServletRequest request, 
-					  HttpServletResponse response,
-					  // 微信认证code
-					  @RequestParam(value = "code", required = false, defaultValue = "") String code,
-					  
-					  // 商务订单号
-					  @RequestParam("orderId") Long orderId,
-					  
-					  // 优惠劵ID
-					  @RequestParam(value = "userCouponId", required = false, defaultValue = "0") Long userCouponId,
-					  
-					  // 订单支付类型 0 = 订单支付 1= 充值卡充值  2= 手机话费充值
-					  @RequestParam("payOrderType") Short payOrderType,
-					  
-					  // 订单类型 0 = 钟点工 1 = 深度保洁 2 = 助理订单  6= 话费充值类订单
-					  @RequestParam("orderType") Short orderType
-			)  throws Exception {
-		
+	public void jsPay(HttpServletRequest request, HttpServletResponse response,
+	// 微信认证code
+			@RequestParam(value = "code", required = false, defaultValue = "") String code,
+
+			// 商务订单号
+			@RequestParam("orderId") Long orderId,
+
+			// 优惠劵ID
+			@RequestParam(value = "userCouponId", required = false, defaultValue = "0") Long userCouponId,
+
+			// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+			@RequestParam("payOrderType") Short payOrderType,
+
+			// 订单类型 0 = 钟点工 1 = 深度保洁 2 = 助理订单 6= 话费充值类订单 7 = 订单补差价
+			@RequestParam("orderType") Short orderType) throws Exception {
+
 		System.out.println("=====WX pay Start======");
 		System.out.println("code = " + code);
 		String orderNo = "";
 		Long userId = 0L;
-		
-		
+
 		String wxPay = "0";
 		// 处理订单支付的情况
 		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_0)) {
@@ -88,20 +89,20 @@ public class OrderWxPayController extends BaseController {
 			Orders orders = orderService.selectByPrimaryKey(orderId);
 			// 订单找不到的情况.
 			if (orders == null || orders.getId().equals(0)) {
-//				request.setAttribute("tips", "无效的订单");
-//				ServletUtil.forward(request, response, errorUrl);
+				// request.setAttribute("tips", "无效的订单");
+				// ServletUtil.forward(request, response, errorUrl);
 			}
 			userId = orders.getUserId();
 
 			orderNo = orders.getOrderNo();
 			userId = orders.getUserId();
 
-			BigDecimal orderPayNow  = orderPricesService.getPayByOrder(orderId, userCouponId);
+			BigDecimal orderPayNow = orderPricesService.getPayByOrder(orderId, userCouponId);
 			wxPay = orderPayNow.toString();
 			tradeName = "叮当到家家庭服务";
 		}
-		
-		//处理充值卡充值的情况
+
+		// 处理充值卡充值的情况
 		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_1)) {
 			OrderCards orderCard = orderCardsService.selectByPrimaryKey(orderId);
 			Long cardType = orderCard.getCardType();
@@ -118,37 +119,54 @@ public class OrderWxPayController extends BaseController {
 			tradeName = "叮当到家家庭服务";
 		}
 
-		//TODO 手机话费类充值的 情况 == 类似于 订单 支付的情况
-		if(payOrderType.equals(Constants.PAY_ORDER_TYPE_2)){
-			
+		// TODO 手机话费类充值的 情况 == 类似于 订单 支付的情况
+		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_2)) {
+
 			// 先做必要的验证
 			Orders orders = orderService.selectByPrimaryKey(orderId);
 			// 订单找不到的情况.
 			if (orders == null || orders.getId().equals(0)) {
-//							request.setAttribute("tips", "无效的订单");
-//							ServletUtil.forward(request, response, errorUrl);
+				// request.setAttribute("tips", "无效的订单");
+				// ServletUtil.forward(request, response, errorUrl);
 			}
 			userId = orders.getUserId();
 
 			orderNo = orders.getOrderNo();
-//			userId = orders.getUserId();
+			// userId = orders.getUserId();
 
-			BigDecimal orderPayNow  = orderPricesService.getPayByOrder(orderId, userCouponId);
+			BigDecimal orderPayNow = orderPricesService.getPayByOrder(orderId, userCouponId);
+			wxPay = orderPayNow.toString();
+
+			System.out.println("充值实际支付金额是:" + wxPay);
+
+			tradeName = "叮当到家家庭服务";
+
+		}
+
+		// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_3)) {
+			OrderPriceExt orderPriceExt = orderPriceExtService.selectByPrimaryKey(orderId);
+
+			// 订单找不到的情况.
+			if (orderPriceExt == null || orderPriceExt.getId().equals(0)) {
+
+			}
+			
+			userId = orderPriceExt.getUserId();
+			orderNo = orderPriceExt.getOrderNoExt();
+			// 实际支付金额
+
+			BigDecimal p1 = new BigDecimal(100);
+			BigDecimal p2 = MathBigDecimalUtil.mul(orderPriceExt.getOrderPay(), p1);
+			BigDecimal orderPayNow = MathBigDecimalUtil.round(p2, 0);
 			wxPay = orderPayNow.toString();
 			
-			
-			System.out.println("充值实际支付金额是:"+wxPay);
-			
 			tradeName = "叮当到家家庭服务";
-			
 		}
-		
-		
-		
-		
-		//测试
-		wxPay = "1";
-		
+
+		// 测试
+		// wxPay = "1";
+
 		// 临时订单号
 		String tradeno = System.currentTimeMillis() + "" + (int) (Math.random() * 1000000);
 		String timeStamp = TimeStampUtil.getNow().toString();
@@ -163,18 +181,17 @@ public class OrderWxPayController extends BaseController {
 		String accessToken = refresh.get("access_token").toString();
 
 		if (openid == null || openid.equals("")) {
-//			request.setAttribute("tips", "微信验证失败,请重新支付!");
-//			ServletUtil.forward(request, response, tipsUrl);
+			// request.setAttribute("tips", "微信验证失败,请重新支付!");
+			// ServletUtil.forward(request, response, tipsUrl);
 		}
 
 		if (!WxUtil.checkAccessToken(accessToken, openid)) {
-//			request.setAttribute("tips", "微信验证失败,请重新支付!");
-//			ServletUtil.forward(request, response, tipsUrl);
+			// request.setAttribute("tips", "微信验证失败,请重新支付!");
+			// ServletUtil.forward(request, response, tipsUrl);
 		}
-			
-		
+
 		String appId = WxUtil.appId;
-		//TODO 手机话费
+		// TODO 手机话费
 		String notifyUrl = WxUtil.getNotifyUrl(Short.valueOf(payOrderType));
 
 		// 签名参数
@@ -195,7 +212,8 @@ public class OrderWxPayController extends BaseController {
 		for (String string : s) {
 			sign += string + "&";
 		}
-//		sign = MD5Util.MD5Encode(sign + "key=" + WxUtil.wxKey, "GBK").toUpperCase();
+		// sign = MD5Util.MD5Encode(sign + "key=" + WxUtil.wxKey,
+		// "GBK").toUpperCase();
 		sign = MD5Util.MD5Encode(sign + "key=" + WxUtil.wxKey, "utf-8").toUpperCase();
 		String xml = "";
 		xml += "<xml>";
@@ -206,19 +224,18 @@ public class OrderWxPayController extends BaseController {
 		xml += "<body>" + tradeName + "</body>";
 		xml += "<out_trade_no>" + orderNo + "</out_trade_no>";
 		xml += "<total_fee>" + wxPay + "</total_fee>";
-		xml += "<spbill_create_ip>" + request.getRemoteAddr()+ "</spbill_create_ip>";
-		xml += "<notify_url>" + notifyUrl+ "</notify_url>";
+		xml += "<spbill_create_ip>" + request.getRemoteAddr() + "</spbill_create_ip>";
+		xml += "<notify_url>" + notifyUrl + "</notify_url>";
 		xml += "<trade_type>JSAPI</trade_type>";
 		xml += "<openid>" + openid + "</openid>";
 		xml += "<attach><![CDATA[" + userId.toString() + "]]></attach>";
 		xml += "</xml>";
-		
-		
+
 		String result = HttpClientUtil.post_xml(WxUtil.payUrl, xml);
-		
-		if (result.indexOf("该订单已支付") >=0) {
-//			request.setAttribute("tips", "订单已经支付过!");
-//			ServletUtil.forward(request, response, tipsUrl);			
+
+		if (result.indexOf("该订单已支付") >= 0) {
+			// request.setAttribute("tips", "订单已经支付过!");
+			// ServletUtil.forward(request, response, tipsUrl);
 		}
 
 		String prepayId = "";
@@ -240,11 +257,11 @@ public class OrderWxPayController extends BaseController {
 			for (String string : b) {
 				paySign += string + "&";
 			}
-			paySign = MD5Util.MD5Encode(paySign + "key=" + WxUtil.wxKey,"UTF-8").toUpperCase();
-//			paySign = MD5Util.MD5Encode(f, "utf-8").toUpperCase();
-			
+			paySign = MD5Util.MD5Encode(paySign + "key=" + WxUtil.wxKey, "UTF-8").toUpperCase();
+			// paySign = MD5Util.MD5Encode(f, "utf-8").toUpperCase();
+
 			Map<String, String> jumpParam = new HashMap<String, String>();
-			
+
 			jumpParam.put("appId", WxUtil.appId);
 			jumpParam.put("package", prepayId);
 			jumpParam.put("timeStamp", timeStamp);
@@ -254,27 +271,27 @@ public class OrderWxPayController extends BaseController {
 			jumpParam.put("paySign", paySign);
 			jumpParam.put("signType", "MD5");
 			jumpParam.put("userId", userId.toString());
-			//下面为支付成功后的参数
-				
+			// 下面为支付成功后的参数
+
 			String jumpUrl = Constants.PAY_CALLBACK_SERVICE_HOST + "/jhj-app/wx-pay.jsp?showwxpaytitle=1";
 			jumpUrl += "&appId=" + WxUtil.appId;
 			jumpUrl += "&package=" + prepayId;
 			jumpUrl += "&timeStamp=" + timeStamp;
 			jumpUrl += "&nonceStr=" + nonceStr1;
-			jumpUrl += "&tradeno=" + tradeno ;
+			jumpUrl += "&tradeno=" + tradeno;
 			jumpUrl += "&out_trade_no=" + orderNo;
 			jumpUrl += "&paySign=" + paySign;
 			jumpUrl += "&signType=MD5";
 			jumpUrl += "&paySign=" + paySign;
 			jumpUrl += "&userId=" + userId;
-			jumpUrl += "&orderType="+orderType;
-			jumpUrl += "&payOrderType="+payOrderType;
-			jumpUrl += "&orderId="+orderId;
+			jumpUrl += "&orderType=" + orderType;
+			jumpUrl += "&payOrderType=" + payOrderType;
+			jumpUrl += "&orderId=" + orderId;
 			ServletUtil.jump(request, response, jumpUrl);
 		} catch (Exception e) {
 			e.printStackTrace();
-//			request.setAttribute("tips", "微信验证失败,请重新支付!");
-//			ServletUtil.forward(request, response, errorUrl);
+			// request.setAttribute("tips", "微信验证失败,请重新支付!");
+			// ServletUtil.forward(request, response, errorUrl);
 		}
 	}
 }

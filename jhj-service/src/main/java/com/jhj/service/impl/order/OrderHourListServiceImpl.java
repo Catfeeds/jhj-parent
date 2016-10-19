@@ -12,23 +12,27 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrdersMapper;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.service.dict.ServiceTypeService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.Week;
 
@@ -61,6 +65,9 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 	
 	@Autowired
 	private UserCouponsService userCouponsService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
 
 	/*
 	 * 统计有订单的日期
@@ -223,13 +230,35 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			
 			OrderPrices orderPrice = orderPriceService.selectByOrderId(orders.getId());
 			if (orderPrice != null) {
-				orderHourListVo.setOrderPay(orderPrice.getOrderPay());
+				BigDecimal orderPay = orderPriceService.getOrderPay(orderPrice);
+				orderHourListVo.setOrderPay(orderPay);
 				orderHourListVo.setCouponId(orderPrice.getCouponId());
 				orderHourListVo.setCouponValue(new BigDecimal(0));
 				if (orderPrice.getCouponId() > 0L) {
 					UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(orderPrice.getCouponId());
 					if (userCoupon != null) orderHourListVo.setCouponValue(userCoupon.getValue());
 				}
+			}
+			
+			//订单派工信息
+			orderHourListVo.setStaffNames("");
+			
+			if (orderHourListVo.getOrderStatus() >= 3) {
+				OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+				searchVo.setOrderId(orderHourListVo.getId());
+				searchVo.setDispatchStatus((short) 1);
+				List<OrderDispatchs> list = orderDispatchService.selectBySearchVo(searchVo);
+				
+				
+				String staffNames = "";
+				for (OrderDispatchs item : list) {
+					staffNames+=item.getStaffName() + ",";
+				}
+				
+				if (!StringUtil.isEmpty(staffNames)) {
+					staffNames = staffNames.substring(0, staffNames.length() -1 );
+				}
+				orderHourListVo.setStaffNames(staffNames);
 			}
 			
 			voList.add(orderHourListVo);

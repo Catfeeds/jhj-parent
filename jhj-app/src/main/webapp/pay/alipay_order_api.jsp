@@ -44,12 +44,15 @@
         //服务品类
         String serviceTypeId = new String(request.getParameter("serviceTypeId").getBytes("ISO-8859-1"),"UTF-8");
 		
+     	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+        String payOrderType = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
+		
         
         //收银台页面上，商品展示的超链接，必填
-        String show_url = "http://www.jia-he-jia.com/u/#!/order/order-pay-success.html?order_no="+out_trade_no+"&orderType="+orderType+"&serviceTypeId="+serviceTypeId;
+        String show_url = "http://www.jia-he-jia.com/u/#!/order/order-pay-success.html?service_type_id="+serviceTypeId;
 		
-        //商品描述，可空， 传递order_type
-        String body = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
+        //商品描述，可空， 传递payOrderType
+        String body = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
 		
 		
 		
