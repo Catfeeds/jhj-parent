@@ -3536,7 +3536,42 @@ i.toolbar-icon-tixing {
 
 
 
-
+.laonian-1{
+  width:100%;
+}
+.laonian-1 li{
+  width:95%;
+  padding-left: 5%;
+  font-size: 14px;
+}
+/*余额交易明细*/
+.jiaoyimingxi{
+  width:100%;
+  height:100px;
+  background: #fff;
+  margin-top: 10px;
+}
+.jiaoyimingxi li{
+  width:80%;
+  padding-left: 20%;
+  height:50px;
+  line-height: 50px;
+  color:#666;
+}
+.jiaoyimingxi li p{
+  margin:0;
+  width:50%;
+  float: left;
+}
+.jiaoyimingxi li p:nth-child(1){
+  width:40%;
+}
+.jiaoyimingxi li p:nth-child(2){
+  width:60%;
+}
+.jiaoyimingxi li p span{
+  color:#4BCFC4;
+}
 
 
 
@@ -3608,6 +3643,17 @@ i.toolbar-icon-tixing {
 
 .all-img5{
    width:100%;padding:0;margin-top: -7px;
+}
+.all-img6{
+  width:95%;
+  margin-left: 2.5%;
+  margin-top: 15px;
+}
+.all-img7{
+  width:14%;
+  margin-left: 1%;
+  margin-top: 30px;
+  float: left;
 }
 /*textarea标签设定*/
 .tarea{
@@ -3744,6 +3790,16 @@ i.toolbar-icon-tixing {
   line-height: 60px;
   color:#fff;
   margin:30px auto;
+}
+.all-button12{
+  width:70%;
+  height: 40px;
+  background:#73BEE9;
+  text-align: center;
+  line-height: 40px;
+  color:#fff;
+  margin:30px auto;
+  margin-left: 15%;
 }
 .beijingse{
 	color:#FEB954;
