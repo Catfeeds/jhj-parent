@@ -1,5 +1,5 @@
 myApp.onPageInit('order-pay', function(page) {
-	
+		
 	var userId = localStorage['user_id'];
 	var serviceTypeId = sessionStorage.getItem('service_type_id');
 	var orderNo = sessionStorage.getItem('order_no');
@@ -46,9 +46,17 @@ myApp.onPageInit('order-pay', function(page) {
 	if (isWx) {
 		$$("#select-wxpay").css("display", "block");
 		$$("#select-alipay").css("display", "none");
+		$$('#img-restpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay1.png");
+		$$("#orderPayType").val(2);
 	} else  {
 		$$("#select-wxpay").css("display", "none");
 		$$("#select-alipay").css("display", "block");
+		$$('#img-restpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay1.png");
+		$$("#orderPayType").val(1);
 	}
 	
 	var postOrderPaySuccess =function(data, textStatus, jqXHR) {
@@ -175,7 +183,7 @@ myApp.onPageInit('order-pay', function(page) {
 function changePayType(imgPayType, orderPayType) {
 	
 	$$("#orderPayType").val(orderPayType);
-	console.log($$("#orderPayType").val());
+	console.log($$("orderPayType ==" + "#orderPayType").val());
 	var imgPayTypes = ['img-restpay', 'img-wxpay', 'img-alipay'];
 	
 	$$.each(imgPayTypes,function(n,value) {  
