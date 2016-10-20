@@ -367,6 +367,7 @@ public class OrderPayController extends BaseController {
 				
 				//更新订单差价为已支付
 				orderPriceExt.setOrderStatus(2);
+				orderPriceExt.setUpdateTime(TimeStampUtil.getNowSecond());
 				orderPriceExtService.updateByPrimaryKey(orderPriceExt);
 				
 				//更新通知服务人员.

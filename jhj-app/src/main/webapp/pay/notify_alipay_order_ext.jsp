@@ -27,7 +27,7 @@
 	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
 	String payOrderType = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
 	
-	if (com.meijia.utils.StringUtil.isEmpty(payOrderType)) payOrderType = 0;
+	if (com.meijia.utils.StringUtil.isEmpty(payOrderType)) payOrderType = 3;
 	
 	params.put("pay_order_type", payOrderType);
 
@@ -41,7 +41,7 @@
 
 	//商户订单号
 	String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
-	params.put("order_no", out_trade_no);
+	params.put("order_no_ext", out_trade_no);
 
 	//买家账号
 	String buyer_email = new String(request.getParameter("buyer_email").getBytes("ISO-8859-1"),"UTF-8");
@@ -63,7 +63,7 @@
 	//params.put("notify_params", notify_params.toString());
 
 //	if(AlipayNotify.verify(notify_params)) {//验证成功
-		String url = "http://localhost/jhj-app/app/order/online_pay_notify.json";
+		String url = "http://localhost/jhj-app/app/order/online_pay_notify_ext.json";
 		com.meijia.utils.AppSubmit.appAliay(url, params);
 		out.println("success");	//请不要修改或删除
 //	} else {//验证失败

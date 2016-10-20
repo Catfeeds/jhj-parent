@@ -17,7 +17,7 @@ public interface OrderPayService {
 	//手机话费充值， 微信支付成功后的 处理
 	void orderPaySuccessToDoForPhone(Orders orders);
 
-	void orderPaySuccessToDoOrderPayExt(Orders orders, OrderPriceExt orderPriceExt);
+	Boolean orderPaySuccessToDoOrderPayExt(Orders orders, OrderPriceExt orderPriceExt);
 	
 	
 }

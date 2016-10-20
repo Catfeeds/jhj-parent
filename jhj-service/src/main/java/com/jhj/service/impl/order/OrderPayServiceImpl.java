@@ -368,8 +368,37 @@ public class OrderPayServiceImpl implements OrderPayService {
 	}
 	
 	@Override
-	public void orderPaySuccessToDoOrderPayExt(Orders orders, OrderPriceExt orderPriceExt) {
+	public Boolean orderPaySuccessToDoOrderPayExt(Orders orders, OrderPriceExt orderPriceExt) {
 		
+		//【叮当到家】你好,你收到了用户{1}的订单类型{2}服务支付的补差价款{3}元,请知晓。
+		Users u = userService.selectByPrimaryKey(orders.getUserId());
+		String mobile = u.getMobile();
+		
+		String serviceTypeName = "";
+		Long serviceTypeId = orders.getServiceType();
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		if (serviceType != null) serviceTypeName = serviceType.getName();
+		
+		String orderPayStr = MathBigDecimalUtil.round2(orderPriceExt.getOrderPay());
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderId(orders.getId());
+		searchVo.setDispatchStatus((short) 1);
+		
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo);
+		
+		if (orderDispatchs.isEmpty()) return false;
+		
+		String staffMobile = "";
+		
+		OrderDispatchs orderDispatch = orderDispatchs.get(0);
+		staffMobile = orderDispatch.getStaffMobile();
+		
+		//发送短信
+		String[] smsContent = new String[] { mobile, serviceTypeName, orderPayStr };
+		SmsUtil.SendSms(staffMobile, "125079", smsContent);
+		
+		return true;
 	}
 
 }
