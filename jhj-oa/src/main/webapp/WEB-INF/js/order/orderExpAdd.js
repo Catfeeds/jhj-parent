@@ -287,6 +287,12 @@ function saveAddress() {
 	form.phone = $("#mobile").data("mobile");
 	form.longitude = $("#poiLongitude").val();
 	form.latitude = $("#poiLatitude").val();
+	
+	if (lng == undefined || lng == "" || lat == undefined || lat == "") {
+		alert("请在服务地址下拉中选择!");
+		return false;
+	}
+	
 	form.name = $("#suggestId").val();
 	form.addr = $("#recipient-addr").val();
 	form.addr_id = 0;
