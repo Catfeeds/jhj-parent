@@ -119,30 +119,6 @@ public class OrderWxPayController extends BaseController {
 			tradeName = "叮当到家家庭服务";
 		}
 
-		// TODO 手机话费类充值的 情况 == 类似于 订单 支付的情况
-		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_2)) {
-
-			// 先做必要的验证
-			Orders orders = orderService.selectByPrimaryKey(orderId);
-			// 订单找不到的情况.
-			if (orders == null || orders.getId().equals(0)) {
-				// request.setAttribute("tips", "无效的订单");
-				// ServletUtil.forward(request, response, errorUrl);
-			}
-			userId = orders.getUserId();
-
-			orderNo = orders.getOrderNo();
-			// userId = orders.getUserId();
-
-			BigDecimal orderPayNow = orderPricesService.getPayByOrder(orderId, userCouponId);
-			wxPay = orderPayNow.toString();
-
-			System.out.println("充值实际支付金额是:" + wxPay);
-
-			tradeName = "叮当到家家庭服务";
-
-		}
-
 		// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
 		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_3)) {
 			OrderPriceExt orderPriceExt = orderPriceExtService.selectByPrimaryKey(orderId);

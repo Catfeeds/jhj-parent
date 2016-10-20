@@ -203,20 +203,7 @@ public class OrderPayController extends BaseController {
 				u.setUpdateTime(updateTime);
 				userService.updateByPrimaryKeySelective(u);
 			}
-			
-			/**
-			 * 2016年3月24日19:11:16  
-			 * 		
-			 * 		修改已支付 状态时。。  
-			 * 
-			 * 	jhj2.1	钟点工(基础保洁类) 修改为 2、  助理单修改为 3
-			 */
-			
-			if(order.getOrderType() == Constants.ORDER_TYPE_2){
-				
-				order.setOrderStatus(Constants.ORDER_AM_STATUS_3);//已支付
-			}
-			
+						
 			if(order.getOrderType() == Constants.ORDER_TYPE_0 ||
 			   order.getOrderType() == Constants.ORDER_TYPE_1){
 				
@@ -322,14 +309,22 @@ public class OrderPayController extends BaseController {
 			
 			Long orderId = order.getId();
 			
+			
+			
 			if(order.getOrderStatus() <= Constants.ORDER_HOUR_STATUS_1 || order.getOrderStatus() > Constants.ORDER_HOUR_STATUS_5){
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg("订单当前状态不能进行补差价");
 				return result;
 			}
 			
+			OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
 			
-			
+			if (orderPrice != null && orderPrice.getPayType().equals(Constants.PAY_TYPE_6)) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("现金支付不能补差价.");
+				return result;
+			}
+
 			if (orderPayExt.compareTo(new BigDecimal(0)) == 0) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg("金额不能为0");

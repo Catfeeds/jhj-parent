@@ -47,9 +47,11 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			}
 			htmlPart = htmlPart.replace(new RegExp('{doOrderPayStyle}', "gm"), doOrderPayStyle);
 			
-			//必须为已支付的订单，未完成服务的订单可以补差价
+			//1.必须为已支付的订单，未完成服务的订单可以补差价
+			//2.现金支付不能有补差价功能.
+			var payType = order.pay_type;
 			var priceExtendStyle = 'none';
-			if (orderStatus >= 3 && orderStatus < 7) {
+			if (orderStatus >= 3 && orderStatus < 7 && payType != 6) {
 				priceExtendStyle = 'block';
 			}
 			htmlPart = htmlPart.replace(new RegExp('{priceExtendStyle}', "gm"), priceExtendStyle);

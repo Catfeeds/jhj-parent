@@ -39,6 +39,8 @@ public class OrderHourListVo extends Orders {
 	private BigDecimal couponValue;
 	
 	private String staffNames;
+	
+	private Short payType;
 
 	public String getAddress() {
 		return address;
@@ -102,5 +104,13 @@ public class OrderHourListVo extends Orders {
 
 	public void setStaffNames(String staffNames) {
 		this.staffNames = staffNames;
+	}
+
+	public Short getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Short payType) {
+		this.payType = payType;
 	}
 }

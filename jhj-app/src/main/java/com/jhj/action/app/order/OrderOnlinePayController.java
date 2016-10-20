@@ -12,12 +12,14 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.order.OrderLog;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
@@ -38,6 +40,9 @@ public class OrderOnlinePayController extends BaseController {
 
 	@Autowired
 	private OrderPricesService orderPricesService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 
 	@Autowired
 	private OrderPayService orderPayService;
@@ -78,7 +83,7 @@ public class OrderOnlinePayController extends BaseController {
 			@RequestParam(value = "mobile", defaultValue = "0")	String mobile,
 			@RequestParam("order_no") String orderNo,
 			@RequestParam("pay_type") Short payType,
-			@RequestParam(value = "pay_order_type", required = false, defaultValue="0") int payOrderType,
+			@RequestParam(value = "pay_order_type", required = false, defaultValue = "0") int payOrderType,
 			@RequestParam("notify_id") String notifyId,
 			@RequestParam("notify_time") String notifyTime,
 			@RequestParam("trade_no") String tradeNo,
@@ -105,10 +110,17 @@ public class OrderOnlinePayController extends BaseController {
 		if (payOrderType == 0 ) {
 			order = ordersService.selectByOrderNo(orderNo);
 		} else if (payOrderType == 7) {
-			
+			OrderPriceExt orderPriceExt = orderPriceExtService.selectByOrderNoExt(orderNo);
+			if (orderPriceExt != null) {
+				order = ordersService.selectByPrimaryKey(orderPriceExt.getOrderId());
+			}
 		}
 		
-		
+		if (order == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ORDER_PAY_NOT_SUCCESS_MSG);
+			return result;
+		}
 		
 		
 		if (order == null) {
@@ -153,8 +165,6 @@ public class OrderOnlinePayController extends BaseController {
 			//记录用户消费明细
 			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);
 			
-			
-			
 			orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), new ArrayList<OrgStaffsNewVo>(), false);
 		}
 		
@@ -172,56 +182,8 @@ public class OrderOnlinePayController extends BaseController {
 			
 			orderPayService.orderPaySuccessToDoForDeep(order);
 		}		
-
-		if (order.getOrderType().equals(Constants.ORDER_TYPE_2)) {
-			
-			//2016年4月29日11:13:04  助理订单，已支付状态为 3
-			order.setOrderStatus(Constants.ORDER_AM_STATUS_3);
-			order.setUpdateTime(updateTime);
-			ordersService.updateByPrimaryKeySelective(order);
-			//插入订单日志
-			OrderLog orderLog = orderLogService.initOrderLog(order);
-			orderLogService.insert(orderLog);
-			//记录用户消费明细
-			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);
-			
-			/*
-			 * 2016年4月29日11:18:33  不再做处理。由后台 手动派工
-			 */
-//			orderPayService.orderPaySuccessToDoForAm(order);
-		}		
 		
-		if(order.getOrderType().equals(Constants.ORDER_TYPE_6)) {
-			/*
-			 * 话费充值接口  微信支付成功后，调用真正的 充值服务
-			 */
-			order.setUpdateTime(TimeStampUtil.getNowSecond());
-			//作为 微信支付成功的 标志
-			order.setRemarks("10001");
-			
-			ordersService.updateByPrimaryKeySelective(order);
-			
-			/*
-			 * 如果有优惠劵，则需要将优惠劵变成已使用。
-			 * 
-			 * 	优惠券 无论充值成功失败。都应该设置为已使用
-			 */
-			OrderPrices orderPrices = orderPricesService.selectByOrderNo(orderNo);
-			Long userCouponId = orderPrices.getCouponId();
-			if (userCouponId > 0L) {
-				UserCoupons userCoupon = userCouponService.selectByPrimaryKey(userCouponId);
-				userCoupon.setIsUsed((short) 1);
-				userCoupon.setUsedTime(TimeStampUtil.getNowSecond());
-				userCoupon.setOrderNo(order.getOrderNo());
-				userCouponService.updateByPrimaryKey(userCoupon);
-			}
-			
-			
-			orderPayService.orderPaySuccessToDoForPhone(order);
-			
-			
-			
-		}
+
 		
 		return result;
 

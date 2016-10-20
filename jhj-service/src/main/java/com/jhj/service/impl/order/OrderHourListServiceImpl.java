@@ -232,6 +232,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			if (orderPrice != null) {
 				BigDecimal orderPay = orderPriceService.getOrderPay(orderPrice);
 				orderHourListVo.setOrderPay(orderPay);
+				orderHourListVo.setPayType(orderPrice.getPayType());
 				orderHourListVo.setCouponId(orderPrice.getCouponId());
 				orderHourListVo.setCouponValue(new BigDecimal(0));
 				if (orderPrice.getCouponId() > 0L) {
