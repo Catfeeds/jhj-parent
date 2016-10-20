@@ -47,7 +47,6 @@ public class OrgSelectTag extends SimpleTagSupport {
 			
 			if (sessionOrgId > 0L) {
 				searchVo.setOrgId(sessionOrgId);
-				hasAll = "0";
 			}
 			searchVo.setOrgStatus((short) 1);
         	List<Orgs> orgList = orgService.selectBySearchVo(searchVo);
