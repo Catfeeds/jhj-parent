@@ -94,7 +94,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		var params = {};
 		params.user_id = $$("#userId").val();
 		params.order_type = $$("#orderType").val();
-		params.service_date = $$("#serviceDate").val();
+		params.service_date = sessionStorage.getItem('service_date');
 		params.order_money = $$("#orderMoney").val();
 		
 		console.log(params);
