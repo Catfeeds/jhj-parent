@@ -161,21 +161,6 @@ myApp.onPageInit('login', function (page) {
     	   	  //登录成功后记录用户有关信息
     	   	  localStorage['user_mobile'] = result.data.mobile;
     	   	  localStorage['user_id']= result.data.id;
-    	   	  localStorage['im_username'] = result.data.im_user_name;
-    	   	  localStorage['im_password'] = result.data.im_password;
-    	   	 
-    	   	  
-    	   	  var logInAmId = result.data.am_id;
-    	   	  
-	    	  var logInAmMobile = result.data.am_mobile;
-    	   	  
-	    	  // 这里 不管是 null 还是 ‘null’ 都能进入循环！不影响后边判断
-	    	  if(logInAmId != "" || logInAmId != null){
-	    		  localStorage['am_id'] = logInAmId;
-	    	  }
-	    	  if(logInAmMobile !="" || logInAmMobile != null){
-	    		  localStorage['am_mobile'] = logInAmMobile;
-	    	  }
 	    	  
 	    	  //如果有默认地址则设置为默认地址
 	    	  var userAddr = result.data.default_user_addr;
