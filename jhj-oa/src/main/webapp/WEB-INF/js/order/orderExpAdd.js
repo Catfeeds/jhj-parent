@@ -210,9 +210,10 @@ function saveFrom() {
 				console.log(data);
 				var orderNo = data.data.order_no;
 				var userId = data.data.user_id;
+				var service_type=data.data.service_type;
 				
 				if (data.status == 0) {
-					savePay(orderPayType, orderNo, userId);
+					savePay(orderPayType, orderNo, userId,service_type);
 				}
 				if (data.status == 999) {
 					alert(data.msg);
@@ -224,7 +225,7 @@ function saveFrom() {
 }
 
 //订单的支付方式
-function savePay(orderPayType, orderNo, userId) {
+function savePay(orderPayType, orderNo, userId,service_type) {
 	var data = {};
 	data.order_pay_type = orderPayType;
 	data.order_no = orderNo;
@@ -237,7 +238,11 @@ function savePay(orderPayType, orderNo, userId) {
 			dataType : "json",
 			success : function(data) {
 				alert("订单添加成功！");
-				location.href="order-exp-list";
+				if(service_type==62 || service_type==63 ||service_type==64 || service_type==65){
+					location.href="order-exp-baby-list";
+				}else{
+					location.href="order-exp-list";
+				}
 			}
 		});
 	}
