@@ -45,7 +45,7 @@
 		<if test="serviceTypeIds !=null and serviceTypeIds.size() > 0 ">
 			and service_type_id in
 			<foreach item="item" index="index" collection="serviceTypeIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		

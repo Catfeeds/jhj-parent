@@ -34,7 +34,7 @@
 		<if test="staffIds !=null and staffIds.size() > 0 ">
 			and staff_id in
 			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
@@ -45,7 +45,7 @@
 		<if test="serviceTypeIds !=null and serviceTypeIds.size() > 0 ">
 			and service_type_id in
 			<foreach item="item" index="index" collection="serviceTypeId" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 	</select>

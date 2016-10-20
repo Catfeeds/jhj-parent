@@ -43,7 +43,7 @@
 		WHERE
 		service_type_id IN
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 		GROUP BY parent_id
 	</select>

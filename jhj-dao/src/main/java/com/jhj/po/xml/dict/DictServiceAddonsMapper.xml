@@ -51,7 +51,7 @@
 		<if test="serviceAddonIds != null">
 			and service_addon_id in
 			<foreach item="item" index="index" collection="serviceAddonIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
@@ -62,7 +62,7 @@
 		<if test="serviceTypes != null">
 			and service_type in
 			<foreach item="item" index="index" collection="serviceTypes" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		

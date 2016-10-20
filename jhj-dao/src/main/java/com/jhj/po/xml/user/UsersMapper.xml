@@ -57,14 +57,14 @@
 		<if test="userIds != null">
 			and id in
 			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
 		<if test="notUserIds != null">
 			and id not in
 			<foreach item="item" index="index" collection="notUserIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
@@ -83,7 +83,7 @@
 		<if test="addFroms != null">
 			and add_from in
 			<foreach item="item" index="index" collection="addFroms" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
@@ -111,7 +111,7 @@
 			<if test="searchOrgList != null">
 				orders.`org_id` in
 				<foreach item="item" index="index" collection="searchOrgList" open="(" separator="," close=")">
-					#{item}
+					${item}
 				</foreach>
 			</if>
 		</where>
@@ -144,7 +144,7 @@
 		from users
 		where id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 		order by add_time asc
 	</select>
@@ -172,7 +172,7 @@
 		<if test="status != null">
 			and order_status in
 			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		GROUP BY series ORDER BY series ASC
@@ -188,7 +188,7 @@
 		<if test="status != null">
 			and order_status in
 			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		GROUP BY series ORDER BY series ASC
@@ -206,7 +206,7 @@
 		<if test="status != null">
 			and order_status in
 			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		GROUP BY series ORDER BY series ASC
@@ -217,7 +217,7 @@
 		from users
 		where id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 		group by id
 		order by id desc

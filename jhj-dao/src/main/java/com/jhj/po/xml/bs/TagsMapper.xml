@@ -33,7 +33,7 @@
 		<if test="tagIds != null ">
 			and tag_id in
 			<foreach item="item" index="index" collection="tagIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		

@@ -80,7 +80,7 @@
 		<if test="staffIds != null">
 			and staff_id in
 			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 
@@ -107,7 +107,7 @@
 		<if test="orderIds != null">
 			and order_id in
 			<foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 
@@ -130,14 +130,14 @@
 		<if test="orgIds != null">
 			and org_id in
 			<foreach item="item" index="index" collection="orgIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 
 		<if test="parentIds != null">
 			and parent_id in
 			<foreach item="item" index="index" collection="parentIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 

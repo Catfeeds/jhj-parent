@@ -30,7 +30,7 @@
 	    where
 	 	order_no in 
 	 	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
-	　　　　#{item}  
+	　　　　${item}
 	　　</foreach> 
  
  </select>
@@ -67,7 +67,7 @@
 		from order_prices
 		where order_id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 
 		order by add_time asc

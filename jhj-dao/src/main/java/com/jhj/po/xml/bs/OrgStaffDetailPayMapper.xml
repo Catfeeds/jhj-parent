@@ -43,7 +43,7 @@
 		   	 and staff_id in (
 			   	 		select staff_id from org_staffs where org_id in 
 					   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
-			      			${item}  
+			      			${item}
 			   			</foreach>
 		   	 )
 		</if>

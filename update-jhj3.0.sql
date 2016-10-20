@@ -244,3 +244,7 @@ INSERT INTO `dict_service_addons` (`service_addon_id`, `service_type`, `service_
 (44, 65, 3, '设计方案', '', '', '299.00', '220.00', '', '元/次', 0, 1476515423, 1476515423, 1),
 (45, 65, 3, '施工费', '', '', '199.00', '150.00', '', '元/次', 0, 1476515423, 1476515423, 1);
 
+
+TRUNCATE org_staff_skill;
+insert into org_staff_skill
+select 0 as id, staff_id, 28 as service_type_id, 1476959783 as add_time, org_id, parent_org_id from org_staffs
