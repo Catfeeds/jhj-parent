@@ -161,7 +161,7 @@ public class OrderPayController extends BaseController {
 		
 		long updateTime = TimeStampUtil.getNowSecond();
 
-		orderPrice.setOrderMoney(orderPrice.getOrderMoney());
+		orderPrice.setOrderMoney(orderPay);
 		
 		
 		if (orderPayType.equals(Constants.PAY_TYPE_0)) {

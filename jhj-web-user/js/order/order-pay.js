@@ -183,7 +183,6 @@ myApp.onPageInit('order-pay', function(page) {
 function changePayType(imgPayType, orderPayType) {
 	
 	$$("#orderPayType").val(orderPayType);
-	console.log($$("orderPayType ==" + "#orderPayType").val());
 	var imgPayTypes = ['img-restpay', 'img-wxpay', 'img-alipay'];
 	
 	$$.each(imgPayTypes,function(n,value) {  
