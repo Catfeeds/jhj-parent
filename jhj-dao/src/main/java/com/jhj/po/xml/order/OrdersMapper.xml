@@ -234,15 +234,15 @@
 		</if>
 
 		<if test="parentId !=null">
-			and id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC} and dispatch_status = 1)
 		</if>
 
 		<if test="orgId !=null and orgId != 0">
-			and id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC} and dispatch_status = 1)
 		</if>
 
 		<if test="isApply !=null">
-			and id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC} and dispatch_status = 1)
 		</if>
 
 		<if test="addrName !=null and addrName !=''">
