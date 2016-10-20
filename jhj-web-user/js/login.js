@@ -159,12 +159,14 @@ myApp.onPageInit('login', function (page) {
     	   	
     	   	if (result.status == "0") {
     	   	  //登录成功后记录用户有关信息
-    	   	  localStorage['user_mobile'] = result.data.mobile;
-    	   	  localStorage['user_id']= result.data.id;
-	    	  
+
+    	   	  localStorage.setItem("user_mobile",result.data.mobile);
+    	   	  
+    	   	  localStorage.setItem("user_id",result.data.id)
+    	   	  	    	  
 	    	  //如果有默认地址则设置为默认地址
 	    	  var userAddr = result.data.default_user_addr;
-	    	  console.log(userAddr);
+
 	    	  if (userAddr != undefined) {
 	    		  if (userAddr.is_default == 1) {
 	    			  
