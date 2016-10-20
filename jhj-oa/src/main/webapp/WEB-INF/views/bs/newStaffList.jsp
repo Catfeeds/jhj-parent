@@ -28,11 +28,11 @@
 						<section class="panel">
 							<header class="panel-info">
 								<h4>数据搜索</h4>
-								<form:form class="form-inline" modelAttribute="staffSearchVoModel" action="new_staff_list" method="post">
+								<form:form class="form-inline" modelAttribute="staffSearchVoModel" action="new_staff_list" method="get">
 								<table class="table">
 									<tr>
 										<td>选择门店:</td>
-										<td><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
+										<td><orgSelectTag:select selectId="${staffSearchVoModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
 										<td>选择云店:</td>
 										<td>
 											<select name="orgId" id="orgId" class="form-control">
