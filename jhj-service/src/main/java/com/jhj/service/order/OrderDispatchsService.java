@@ -44,8 +44,6 @@ public interface OrderDispatchsService {
 	
 	Long autoDispatch(Long orderId, Long serviceDate, Double serviceHour);
 
-	List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour);
-
 	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
 
 	List<OrgStaffsNewVo> manualDispatchByOrg(Long orderId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
@@ -55,5 +53,7 @@ public interface OrderDispatchsService {
 	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
 
 	boolean doOrderDispatch(Orders order, Double serviceHour, Long staffId);
+
+	List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour, Long sessionOrgId);
    	
 }

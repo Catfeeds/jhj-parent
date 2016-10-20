@@ -379,7 +379,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * 3. 包含员工的距离.
 	 */
 	@Override
-	public List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour) {
+	public List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour, Long sessionOrgId) {
 
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
 
@@ -402,7 +402,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		for (int i = 0; i < orgList.size(); i++) {
 			OrgDispatchPoiVo org = orgList.get(i);
 			Long orgId = org.getOrgId();
-
+			if (sessionOrgId > 0L) {
+				if (!org.getParentId().equals(sessionOrgId)) continue;
+			}
 			// ----1. 找出所有的符合此技能的员工 |
 			OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
 			searchVo.setOrgId(orgId);

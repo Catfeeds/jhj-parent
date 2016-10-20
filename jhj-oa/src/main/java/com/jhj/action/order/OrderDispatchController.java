@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AuthHelper;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderServiceAddons;
@@ -99,7 +102,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_staff_by_change_service_date.json", method = RequestMethod.GET)
-	public List<OrgStaffsNewVo> loadProperStaffListForBase(Model model, @RequestParam("orderId") Long orderId,
+	public List<OrgStaffsNewVo> loadProperStaffListForBase(HttpServletRequest request, Model model, @RequestParam("orderId") Long orderId,
 			@RequestParam("newServiceDate") Long newServiceDate) {
 
 		Orders orders = orderSevice.selectByPrimaryKey(orderId);
@@ -115,7 +118,10 @@ public class OrderDispatchController extends BaseController {
 		
 		Long serviceDate = orders.getServiceDate();
 		double serviceHour = (double)orders.getServiceHour();
-		list = orderDispatchsService.manualDispatch(orderId, serviceDate, serviceHour);
+		
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+		
+		list = orderDispatchsService.manualDispatch(orderId, serviceDate, serviceHour, sessionOrgId);
 		
 //		list = newDisService.getAbleStaffList(orderId, newServiceDate);
 			
