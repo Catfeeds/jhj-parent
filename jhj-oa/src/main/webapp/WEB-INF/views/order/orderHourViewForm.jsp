@@ -196,7 +196,7 @@
 						<div class="form-group required" id="div-org-id">
 							<label class="col-md-2 control-label">选择门店:</label>
 							<div class="col-md-5">
-								<orgSelectTag:select />
+								<orgSelectTag:select sessionOrgId="${loginOrgId }"/>
 							</div>
 						</div>
 						<div class="form-group" id="div-cloud-id">
