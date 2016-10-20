@@ -182,6 +182,10 @@ public class OrderStatServiceImpl implements OrderStatService {
 		vo.setOrderStatus(Constants.ORDER_HOUR_STATUS_7);
 		BigDecimal hourMoney = ordersMapper.getTotalOrderIncomeHourMoney(vo);
 		
+		if (hourMoney == null) {
+			hourMoney = new BigDecimal(0);
+		}
+		
 		BigDecimal hourMoneyExt = ordersMapper.getTotalOrderIncomeHourMoneyExt(vo);
 		
 		if (hourMoneyExt == null) {
