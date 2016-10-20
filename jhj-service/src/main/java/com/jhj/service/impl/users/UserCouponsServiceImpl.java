@@ -172,7 +172,7 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 			record = list.get(i);
 			UserCouponVo vo = new UserCouponVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(record, vo);
-
+			vo.setCouponsTypeId("");
 			for (Gifts gift : gifts) {
 				if (gift.getGiftId().equals(vo.getGiftId())) {
 					vo.setGiftName(gift.getName());

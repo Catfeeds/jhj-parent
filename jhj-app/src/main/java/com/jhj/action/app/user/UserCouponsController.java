@@ -26,6 +26,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserCouponVo;
 import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.Week;
 import com.meijia.utils.vo.AppResultData;
@@ -186,6 +187,9 @@ public class UserCouponsController extends BaseController {
 			}
 			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
 				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
+				
+				if (StringUtil.isEmpty(userCouponVo.getCouponsTypeId())) continue;
+				
 				if(userCouponVo.getCouponsTypeId().equals("2") && !falg){
 					listNew.add(userCouponVo);
 				}

@@ -25,11 +25,7 @@
 	//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表
 
 	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
-	String payOrderType = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
-	
-	if (com.meijia.utils.StringUtil.isEmpty(payOrderType)) payOrderType = 0;
-	
-	params.put("pay_order_type", payOrderType);
+	params.put("pay_order_type", "0");
 
 	//通知ID
 	String notify_id = new String(request.getParameter("notify_id").getBytes("ISO-8859-1"),"UTF-8");

@@ -97,6 +97,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		params.service_date = $$("#serviceDate").val();
 		params.order_money = $$("#orderMoney").val();
 		
+		console.log(params);
 		$$.ajax({
 		      type : "GET",
 		      url: siteAPIPath+"user/get_validate_coupons.json",

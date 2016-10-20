@@ -19,7 +19,8 @@
 		
         //付款金额，必填
         String total_fee = new String(request.getParameter("orderPay").getBytes("ISO-8859-1"),"UTF-8");
-		
+		total_fee = "0.01";
+        System.out.println("total_fee = " + total_fee);
         //订单类型
         String orderType = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
 		
@@ -32,10 +33,10 @@
         String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
         
         //收银台页面上，商品展示的超链接，必填
-        String show_url = host + "/u/#!/order/order-pay-success.html?service_type_id="+serviceTypeId;
+        String show_url = host + "/u/#!/order/order-pay.html";
 		
         //商品描述，可空， 传递payOrderType
-        String payOrderType = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
+        
         String body = payOrderType;
         
         String notifyUrl = host + "/jhj-app/pay/notify_alipay_order.jsp";
@@ -44,7 +45,7 @@
         	notifyUrl = host + "/jhj-app/pay/notify_alipay_order_ext.jsp";
         }
 
-        String returnUrl = host + "/jhj-app/pay/alipay_return_url.jsp";
+        String returnUrl = host + "/u/#!/order/order-pay-success.html?service_type_id="+serviceTypeId;
 		
 		//////////////////////////////////////////////////////////////////////////////////
 		
@@ -56,7 +57,7 @@
         sParaTemp.put("_input_charset", AlipayConfig.input_charset);
 		sParaTemp.put("payment_type", AlipayConfig.payment_type);
 		sParaTemp.put("notify_url", notifyUrl);
-		sParaTemp.put("return_url", AlipayConfig.returnUrl);
+		sParaTemp.put("return_url", returnUrl);
 		sParaTemp.put("out_trade_no", out_trade_no);
 		sParaTemp.put("subject", subject);
 		sParaTemp.put("total_fee", total_fee);
