@@ -165,6 +165,9 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 		//订单完成服务时间10个小时之后
 		Long now = TimeStampUtil.getNowSecond();
 		searchVo.setEndServiceHourTime(now);
+		
+		//避免老数据，所以从 2016-10-21 00：00：00开始  = 1476979200
+		searchVo.setStartServiceTime(1476979200L);
 
 		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
