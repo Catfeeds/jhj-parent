@@ -81,6 +81,8 @@ public class OrderWxPayController extends BaseController {
 		System.out.println("code = " + code);
 		String orderNo = "";
 		Long userId = 0L;
+		
+		if (userCouponId == null) userCouponId = 0L;
 
 		String wxPay = "0";
 		// 处理订单支付的情况
