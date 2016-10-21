@@ -221,7 +221,7 @@ public class StaffPayController extends BaseController {
 		if (orgStaffFinance == null) {
 			return result;
 		}
-		
+		BigDecimal totalDept = orgStaffFinance.getTotalDept();
 		//更新服务人财务表
 		orgStaffFinance.setTotalDept(new BigDecimal(0));
 		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
@@ -234,8 +234,8 @@ public class StaffPayController extends BaseController {
 		orgStaffDetailPay.setOrderType((short) 4);
 		orgStaffDetailPay.setOrderId(orgstaffPayDept.getOrderId());
 		orgStaffDetailPay.setOrderNo(orderNo);
-		orgStaffDetailPay.setOrderMoney(orgStaffFinance.getTotalDept());
-		orgStaffDetailPay.setOrderPay(orgStaffFinance.getTotalDept());
+		orgStaffDetailPay.setOrderMoney(totalDept);
+		orgStaffDetailPay.setOrderPay(totalDept);
 		orgStaffDetailPay.setOrderStatusStr("完成支付");
 		orgStaffDetailPayService.insert(orgStaffDetailPay);
 		// 操作服务人员财务表 org_staff_finance， 将总欠款减去 此次支付成功的金额.

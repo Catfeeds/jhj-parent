@@ -155,15 +155,30 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 	public void updateAfterService() {
 
 		OrderSearchVo searchVo = new OrderSearchVo();
-		searchVo.setOrderStatus(Constants.ORDER_STATUS_5);
-
+		
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add(Constants.ORDER_STATUS_3);
+		orderStatusList.add(Constants.ORDER_STATUS_5);
+		
+		searchVo.setOrderStatusList(orderStatusList);
+		
+		//订单完成服务时间10个小时之后
 		Long now = TimeStampUtil.getNowSecond();
-
 		searchVo.setEndServiceHourTime(now);
 
 		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		for (Orders orders : list) {
+			
+			Long serviceDate = orders.getServiceDate();
+			double serviceHour = orders.getServiceHour();
+			
+			Long endServiceDate = serviceDate + (long)serviceHour * 3600;
+			
+			Long afterTenHourServiceDate = endServiceDate + 10 * 3600;
+			System.out.println("end = " + afterTenHourServiceDate.toString() + "--- now = " + now.toString());
+			if (afterTenHourServiceDate > now) continue;
+			
 			orders.setOrderStatus(Constants.ORDER_STATUS_7);
 			orders.setUpdateTime(TimeStampUtil.getNowSecond());
 			orderService.updateByPrimaryKeySelective(orders);
