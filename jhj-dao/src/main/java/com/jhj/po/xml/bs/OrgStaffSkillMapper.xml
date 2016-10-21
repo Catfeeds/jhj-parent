@@ -20,7 +20,7 @@
 		staff_id = #{staffId,jdbcType=NUMERIC}
 	</delete>
 
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.StaffSearchVo">
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffSkillSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from org_staff_skill
@@ -28,6 +28,13 @@
 
 		<if test="staffId !=null">
 			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="staffIds !=null and staffIds.size() > 0 ">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
 		</if>
 		
 		<if test="orgId !=null and orgId != 0">

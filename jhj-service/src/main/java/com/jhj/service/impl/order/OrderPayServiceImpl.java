@@ -172,8 +172,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 					Constants.ALERT_STAFF_MSG);
 			
 			//发送短信
-			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+//			String[] smsContent = new String[] { timeStr };
+//			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
 		}
 
 		

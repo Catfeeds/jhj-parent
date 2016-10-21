@@ -240,7 +240,7 @@ public class OrderPayController extends BaseController {
 				 *    您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
 				 */
 				
-				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
+//				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
 				
 				
 				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);

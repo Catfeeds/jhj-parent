@@ -234,14 +234,28 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		for (int i = 0; i < orgList.size(); i++) {
 			OrgDispatchPoiVo org = orgList.get(i);
 			Long orgId = org.getOrgId();
+			
+			//先找出云店下所有的员工
+			StaffSearchVo staffSearchVo = new StaffSearchVo();
+			staffSearchVo.setOrgId(orgId);
+			staffSearchVo.setStatus(1);
+			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
+			
+			if (staffList.isEmpty()) continue;
+			
+			List<Long> staffIdAlls = new ArrayList<Long>();
+			for (OrgStaffs s : staffList) {
+				if (!staffIdAlls.contains(s.getStaffId())) staffIdAlls.add(s.getStaffId());
+			}
 
 			// ----1. 找出所有的符合此技能的员工 |
 			staffIds = new ArrayList<Long>();
 			OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
 			searchVo.setOrgId(orgId);
+			searchVo.setStaffIds(staffIdAlls);
 			searchVo.setServiceTypeId(serviceTypeId);
 			List<OrgStaffSkill> skillList = orgStaffSkillService.selectBySearchVo(searchVo);
-
+			
 			if (!skillList.isEmpty()) {
 				for (OrgStaffSkill s : skillList) {
 					if (!staffIds.contains(s.getStaffId()))
@@ -405,9 +419,26 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			if (sessionOrgId > 0L) {
 				if (!org.getParentId().equals(sessionOrgId)) continue;
 			}
+			
+			//先找出云店下所有的员工
+			StaffSearchVo staffSearchVo = new StaffSearchVo();
+			staffSearchVo.setOrgId(orgId);
+			staffSearchVo.setStatus(1);
+			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
+			
+			if (staffList.isEmpty()) continue;
+			
+			List<Long> staffIdAlls = new ArrayList<Long>();
+			for (OrgStaffs s : staffList) {
+				if (!staffIdAlls.contains(s.getStaffId())) staffIdAlls.add(s.getStaffId());
+			}
+			
+			
+			
 			// ----1. 找出所有的符合此技能的员工 |
 			OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
 			searchVo.setOrgId(orgId);
+			searchVo.setStaffIds(staffIdAlls);
 			searchVo.setServiceTypeId(serviceTypeId);
 			List<OrgStaffSkill> skillList = orgStaffSkillService.selectBySearchVo(searchVo);
 
