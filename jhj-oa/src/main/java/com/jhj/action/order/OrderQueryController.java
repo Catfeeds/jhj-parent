@@ -249,15 +249,21 @@ public class OrderQueryController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		
 		Short orderType = Constants.ORDER_TYPE_1;
-
+		
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, orderType, sessionParentId);
-
+		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(26L);
+		List<Long> list=new ArrayList<Long>();
+		for(PartnerServiceType t:serviceTypeList){
+			list.add(t.getServiceTypeId());
+		}
+		searchVo.setServiceTypes(list);
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
 
 		List<Orders> orderList = result.getList();
 		Orders orders = null;
 		for (int i = 0; i < orderList.size(); i++) {
 			orders = orderList.get(i);
+			Long serviceType2 = orders.getServiceType();
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			orderList.set(i, completeVo);
 		}
@@ -312,13 +318,12 @@ public class OrderQueryController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		
 		Short orderType = Constants.ORDER_TYPE_1;
-		List<Short> serviceTypes=new ArrayList<Short>();
-		serviceTypes.add((short)57);
-		serviceTypes.add((short)62);
-		serviceTypes.add((short)63);
-		serviceTypes.add((short)64);
-		serviceTypes.add((short)65);
-		searchVo.setServiceTypes(serviceTypes);
+		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(57L);
+		List<Long> list=new ArrayList<Long>();
+		for(PartnerServiceType t:serviceTypeList){
+			list.add(t.getServiceTypeId());
+		}
+		searchVo.setServiceTypes(list);
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, orderType, sessionParentId);
 
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);

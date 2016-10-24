@@ -22,7 +22,7 @@ public class OrderSearchVo {
 
 	private Short serviceType;
 	
-	private List<Short> serviceTypes;
+	private List<Long> serviceTypes;
 	
 	private Short orderFrom;
 	
@@ -226,11 +226,11 @@ public class OrderSearchVo {
 		this.serviceType = serviceType;
 	}
 
-	public List<Short> getServiceTypes() {
+	public List<Long> getServiceTypes() {
 		return serviceTypes;
 	}
 
-	public void setServiceTypes(List<Short> serviceTypes) {
+	public void setServiceTypes(List<Long> serviceTypes) {
 		this.serviceTypes = serviceTypes;
 	}
 
