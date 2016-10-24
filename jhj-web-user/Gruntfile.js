@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 			},
 			
 			jslib : {
-				src : [ 'js/lib/moment-with-locales.min.js'],
+				src : [ 'js/lib/moment.min.js'],
 				dest : 'js/u-lib.min.js',
 			},
 			
