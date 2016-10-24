@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 			
 			jslib : {
 				src : [ 'js/lib/moment-with-locales.min.js'],
-				dest : 'js/u-lib.js',
+				dest : 'js/u-lib-min.js',
 			},
 			
 			jsmain : {					
@@ -49,12 +49,12 @@ module.exports = function(grunt) {
 		        }
 		     },
 		     
-			lib : {
-
-				files : {
-					'js/u-lib.min.js' : [ 'js/u-lib.js' ]
-				}
-			},
+//			lib : {
+//
+//				files : {
+//					'js/u-lib.min.js' : [ 'js/u-lib.js' ]
+//				}
+//			},
 			
 			main : {
 
