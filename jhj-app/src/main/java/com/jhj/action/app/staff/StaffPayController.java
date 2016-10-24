@@ -238,9 +238,7 @@ public class StaffPayController extends BaseController {
 		orgStaffDetailPay.setOrderPay(totalDept);
 		orgStaffDetailPay.setOrderStatusStr("完成支付");
 		orgStaffDetailPayService.insert(orgStaffDetailPay);
-		// 操作服务人员财务表 org_staff_finance， 将总欠款减去 此次支付成功的金额.
-		orgStaffFinance.setTotalDept(orgStaffFinance.getTotalDept().subtract(orgStaffDetailPay.getOrderMoney()));
-		orgStaffFinanceService.updateByPrimaryKeySelective(orgStaffFinance);
+
 		// 如果总欠款，低于设定的1000元，则去检查 org_staff_black , 找出是否有记录，并且black_type = 0
 		// 的情况，如果有记录，则将他删除掉.
 
