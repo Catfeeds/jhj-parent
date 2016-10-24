@@ -314,7 +314,9 @@ myApp.onPageInit('order-lib-cal',function(page) {
         if(dayTime!=""){
         	console.log("serviceTime = " + st)
         	sessionStorage.setItem('service_date_str',getServiceDate()+"("+ weekDay[moment(getServiceDate()).format("d")]+")"+dayTime);
-        	sessionStorage.setItem('service_date', moment(st).unix());
+        	
+        	var serviceDate = new Date(st).getTime();
+        	sessionStorage.setItem('service_date', serviceDate / 1000);
             mainView.router.loadPage(nextUrl);
         }else{
             return;
