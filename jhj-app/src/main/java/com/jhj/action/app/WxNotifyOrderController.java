@@ -154,7 +154,7 @@ public class WxNotifyOrderController extends BaseController {
 			//商户订单号
 			String out_trade_no = new String(map.get("out_trade_no").toString().getBytes("ISO-8859-1"),"UTF-8");
 	
-			params.put("order_no", out_trade_no);
+			params.put("order_no_ext", out_trade_no);
 	
 			//买家账号
 			String open_id  = new String(map.get("openid").toString().getBytes("ISO-8859-1"),"UTF-8");

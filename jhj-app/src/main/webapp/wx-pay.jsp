@@ -282,7 +282,7 @@ a {
 	                                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
 	                                	
 	                                	// 微信支付成功后,跳转到对应的 成功页面
-	                                	if (payOrderType == 0) {
+	                                	if (payOrderType == 0 || payOrderType == 3) {
 	                                		
 		                                	successUrl = wxAppUrl + "order/order-pay-success.html";
 		                                	successUrl+= "?order_no="+orderNo;
@@ -308,7 +308,6 @@ a {
 	                                } else if(res.err_msg=="get_brand_wcpay_request:cancel") {
 										
 	                                	var fromUrl = "";
-	                                	alert("payOrderType = " + payOrderType);
 	                                	if (payOrderType == 0 || payOrderType == 3) {
 	                                		fromUrl = "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
@@ -322,7 +321,6 @@ a {
 	                                	if(payOrderType == 2){
 	                                		fromUrl = "user/serviceCharge/order-service-charge.html";
 	                                	}
-	                                	alert(fromUrl);
 	                                	window.location.href = wxAppUrl + fromUrl;
 	                                }else{
 	                                	var fromUrl = "";
