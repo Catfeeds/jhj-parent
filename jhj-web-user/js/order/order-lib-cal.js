@@ -319,8 +319,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
         	
 //        	var serviceDateStr = moment(st).format("YYYY-MM-DD HH:mm:ss");
         	
-        	myApp.alert(serviceDateStr);
-        	var serviceDate = moment(serviceDateStr).unix();
+//        	myApp.alert(serviceDateStr);
+        	var serviceDate = moment(st).unix();
         	myApp.alert(serviceDate);
         	sessionStorage.setItem('service_date', serviceDate);
             mainView.router.loadPage(nextUrl);
