@@ -7,12 +7,12 @@ myApp.onPageInit('order-lib-cal',function(page) {
     console.log("nextUrl = " + nextUrl);
 
     //获取当前日期
-    var date=moment().format("YYYY-MM-D");
+    var date=moment().format("YYYY-MM-DD");
     var nowDate=date;
     
     var weekDay=['周日','周一','周二','周三','周四','周五','周六'];
     var tempWeek=['周日','周一','周二','周三','周四','周五','周六'];
-    var time=['8:00','8:30','9:00','9:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
+    var time=['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
         '14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
     var nowHour=moment().hour();
     var count=0;
@@ -38,7 +38,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var contentDay="";
         var contentWeek="";
         if(cal==undefined || cal == null || cal =="") return ;
-        var cmp=moment(getServiceDate()).add(count, 'days').format("YYYY-MM-D");
+        var cmp=moment(getServiceDate()).add(count, 'days').format("YYYY-MM-DD");
         for(var i=0;i<7;i++){
             var d = moment(cal).add(i,'days');
             var week=d.format('d');
@@ -70,7 +70,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             $$("#all-butto2").removeClass("all-button2").addClass("all-button11");
             $$(this).addClass("beijingse");
             tomm();
-            if(moment(getServiceDate()+" "+nowHour).format("YYYY-MM-D HH")==moment().format("YYYY-MM-D HH")){
+            if(moment(getServiceDate()+" "+nowHour).format("YYYY-MM-DD HH")==moment().format("YYYY-MM-DD HH")){
             	if(nowHour>=17){
             		$$("#rilikongjian3-day li").removeClass("beijingse");
             		$$(selectDay).addClass("beijingse");
@@ -105,7 +105,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     $$("#rilikongjian1-left").click(function(){
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
         $$("#all-butto2").removeClass("all-button2").addClass("all-button11");
-        var cmp=moment(getServiceDate()).add(count, 'days').format("YYYY-MM-D");
+        var cmp=moment(getServiceDate()).add(count, 'days').format("YYYY-MM-DD");
         if(cmp<=date) return ;
         count--;
         getPreDay(count);
@@ -222,7 +222,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
      * */
     function tomm(){
         var nyr=getServiceDate();
-        if(nyr==moment().format("YYYY-MM-D")){
+        if(nyr==moment().format("YYYY-MM-DD")){
         	var lis = $$("#rilikongjian3-dateTime").find("li");
             if(nowHour>=16 && nowHour<=19){
                 var d=parseInt(moment().format("D"))+1
@@ -302,7 +302,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
                 }
             }
         }
-        if(nyr>moment().format("YYYY-MM-D")){
+        if(nyr>moment().format("YYYY-MM-DD")){
             $$("#rilikongjian3-dateTime").find("li").removeClass("hour-beijingse");
         }
     }
@@ -315,7 +315,10 @@ myApp.onPageInit('order-lib-cal',function(page) {
         	console.log("serviceTime = " + st)
         	sessionStorage.setItem('service_date_str',getServiceDate()+"("+ weekDay[moment(getServiceDate()).format("d")]+")"+dayTime);
         	myApp.alert(st);
-        	var serviceDateStr = moment(st).format("YYYY-MM-DD HH:mm:ss");
+ 
+        	
+//        	var serviceDateStr = moment(st).format("YYYY-MM-DD HH:mm:ss");
+        	
         	myApp.alert(serviceDateStr);
         	var serviceDate = moment(serviceDateStr).unix();
         	myApp.alert(serviceDate);
