@@ -315,8 +315,11 @@ myApp.onPageInit('order-lib-cal',function(page) {
         	console.log("serviceTime = " + st)
         	sessionStorage.setItem('service_date_str',getServiceDate()+"("+ weekDay[moment(getServiceDate()).format("d")]+")"+dayTime);
         	myApp.alert(st);
-        	var serviceDate = new Date(st).getTime();
-        	sessionStorage.setItem('service_date', serviceDate / 1000);
+        	var serviceDateStr = moment(st).format("YYYY-MM-DD HH:mm:ss");
+        	myApp.alert(serviceDateStr);
+        	var serviceDate = moment(serviceDateStr).unix();
+        	myApp.alert(serviceDate);
+        	sessionStorage.setItem('service_date', serviceDate);
             mainView.router.loadPage(nextUrl);
         }else{
             return;
