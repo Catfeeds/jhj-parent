@@ -272,7 +272,7 @@ a {
 	                                "paySign" : "<%= request.getParameter("paySign") %>" //微信签名
 	                                },function(res){
 									
-	                                var wxAppUrl = basePath + "/u/#!/";
+	                                var wxAppUrl = "http://www.jia-he-jia.com/u/#!/";
 	                                var payOrderType = <%=request.getParameter("payOrderType")%>;
 	                                var orderType = <%=request.getParameter("orderType")%>;
 	                                var orderNo = <%=request.getParameter("out_trade_no")%>;
@@ -308,8 +308,9 @@ a {
 	                                } else if(res.err_msg=="get_brand_wcpay_request:cancel") {
 										
 	                                	var fromUrl = "";
-	                                	if (payOrderType == 0 || payOrderType == 7) {
-	                                		fromUrl = wxAppUrl + "order/order-pay.html";
+	                                	alert("payOrderType = " + payOrderType);
+	                                	if (payOrderType == 0 || payOrderType == 3) {
+	                                		fromUrl = "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
 	                                		fromUrl+= "&order_type="+orderType;
 	                                	}
@@ -321,11 +322,11 @@ a {
 	                                	if(payOrderType == 2){
 	                                		fromUrl = "user/serviceCharge/order-service-charge.html";
 	                                	}
-	                                	
+	                                	alert(fromUrl);
 	                                	window.location.href = wxAppUrl + fromUrl;
 	                                }else{
 	                                	var fromUrl = "";
-	                                	if (payOrderType == 0 || payOrderType == 7) {
+	                                	if (payOrderType == 0 || payOrderType == 3) {
 	                                		fromUrl = wxAppUrl + "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
 	                                		fromUrl+= "&order_type="+orderType;

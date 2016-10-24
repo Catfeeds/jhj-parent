@@ -185,9 +185,9 @@ public class StaffQueryController extends BaseController {
 		searchVo.setOrderStatus((short) 2);
 		BigDecimal totalCashedMoney = orgStaffCashService.getTotalCashMoney(searchVo);
 		
-		//剩余提现金额 = 总收入 - 欠款总金额 - 已提现金额
+		//剩余提现金额 = 总收入 - 提现中的金额 - 已提现金额
 		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(totalCashIngMoney).subtract(totalCashedMoney);
-				
+		
 		vo.setTotalCash(money);
 		vo.setTotalDept(orgStaffFinance.getTotalDept());
 		

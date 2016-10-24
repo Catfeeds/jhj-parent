@@ -76,8 +76,8 @@ myApp.onPageInit('order-pay', function(page) {
 			orderNo = result.data.order_no_ext;
 			orderId = result.data.id;
 			
-			sessionStorage.setItem('order_id', orderId);
-			sessionStorage.setItem('order_no', orderNo);
+			sessionStorage.setItem('order_id_ext', orderId);
+			sessionStorage.setItem('order_no_ext', orderNo);
 		}
 		
 		console.log("orderPayType = " + orderPayType);

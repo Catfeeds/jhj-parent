@@ -134,7 +134,11 @@ public class OrgStaffDetailPayController extends BaseController {
 			oaVo.setOrderTypeName(vo.getOrderTypeName());
 			oaVo.setOrderPay(new BigDecimal(vo.getOrderPay()));
 			OrderPrices orderPrices = orderPriceService.selectByOrderNo(orgStaffDetailPay.getOrderNo());
-			oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPrices.getPayType()));
+			
+			oaVo.setPayTypeName("");
+			if (orderPrices != null && orderPrices.getPayType() != null) {
+				oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPrices.getPayType()));
+			}
 			orgStaffdetailPayList.set(i, oaVo);
 			// orgStaffPayVoList.add(oaVo);
 		}
