@@ -32,6 +32,7 @@ import com.jhj.service.order.OrderStatService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.staff.OrgStaffCashSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceAppVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.OrgStaffsVo;
@@ -169,11 +170,23 @@ public class StaffQueryController extends BaseController {
 		}
 		
 		
-		//BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(orgStaffFinance.getTotalCash());
-		//总提现金额
-		BigDecimal totalCashMoney = orgStaffCashService.getTotalCashMoney(staffId);
+		
+		//总提现中的金额
+		OrgStaffCashSearchVo searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(staffId);
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 0);
+		orderStatusList.add((short) 1);
+		BigDecimal totalCashIngMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
+		//已经提现的金额
+		searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(staffId);
+		searchVo.setOrderStatus((short) 2);
+		BigDecimal totalCashedMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
 		//剩余提现金额 = 总收入 - 欠款总金额 - 已提现金额
-		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(orgStaffFinance.getTotalCash()).subtract(totalCashMoney);
+		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(totalCashIngMoney).subtract(totalCashedMoney);
 				
 		vo.setTotalCash(money);
 		vo.setTotalDept(orgStaffFinance.getTotalDept());

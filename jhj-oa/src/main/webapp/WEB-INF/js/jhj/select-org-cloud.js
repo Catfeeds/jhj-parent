@@ -39,3 +39,5 @@ $("#parentId").on('change', function(){
 		}
 	});
 });
+
+$("#parentId").trigger("change");

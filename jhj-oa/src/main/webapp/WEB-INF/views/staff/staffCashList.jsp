@@ -139,7 +139,8 @@ import="com.jhj.oa.common.UrlHelper"%>
 
                           
                       </section>
-                      
+                      <!--common script for all pages-->
+   					  <%@ include file="../shared/importJs.jsp"%>
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="contentModel"/>
 	        				<c:param name="urlAddress" value="/staff/cash-list"/>
@@ -157,8 +158,7 @@ import="com.jhj.oa.common.UrlHelper"%>
   </section>
 
     <!-- js placed at the end of the document so the pages load faster -->
-    <!--common script for all pages-->
-    <%@ include file="../shared/importJs.jsp"%>
+    
 
     <%-- <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
     <!--script for this page-->	

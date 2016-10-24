@@ -81,7 +81,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <tr>	  
                              		  <th >服务人员姓名</th>
                                 	  <th >服务人员手机号 </th>
-                                	  <th >订单号</th>
+                                	 
 		                              <th >订单类型</th>
 		                              <th >订单金额</th>
 		                              <th >订单收入</th>
@@ -95,7 +95,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <tr>	
 							            <td>${ item.name }</td>
                                   	    <td>${ item.mobile }</td>
-                                  	    <td>${ item.orderNo }</td>
+                                  	    
 							            <td>${ item.orderTypeName }</td>
 							            <td>${ item.orderMoney }</td>
 							            <td>${ item.orderPay }</td>

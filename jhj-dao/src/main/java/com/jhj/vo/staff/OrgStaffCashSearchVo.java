@@ -1,5 +1,7 @@
 package com.jhj.vo.staff;
 
+import java.util.List;
+
 import com.jhj.po.model.bs.OrgStaffCash;
 
 /**
@@ -9,32 +11,19 @@ import com.jhj.po.model.bs.OrgStaffCash;
  * @Description: 
  *		运营平台--订单管理VO
  */
-public class OrgStaffCashSearchVo  extends OrgStaffCash{
+public class OrgStaffCashSearchVo {
 	
+    private Long staffId;
 
-	private String addTimeStr;
+    private String mobile;
+    
+    private Short orderStatus;
+    
+    private List<Short> orderStatusList;
 
-	private String updateTimeStr;
-	
 	//员工名称
 	private String staffName;
 
-
-	public String getAddTimeStr() {
-		return addTimeStr;
-	}
-
-	public void setAddTimeStr(String addTimeStr) {
-		this.addTimeStr = addTimeStr;
-	}
-
-	public String getUpdateTimeStr() {
-		return updateTimeStr;
-	}
-
-	public void setUpdateTimeStr(String updateTimeStr) {
-		this.updateTimeStr = updateTimeStr;
-	}
 
 	public String getStaffName() {
 		return staffName;
@@ -42,6 +31,38 @@ public class OrgStaffCashSearchVo  extends OrgStaffCash{
 
 	public void setStaffName(String staffName) {
 		this.staffName = staffName;
+	}
+
+	public Long getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public Short getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(Short orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public List<Short> getOrderStatusList() {
+		return orderStatusList;
+	}
+
+	public void setOrderStatusList(List<Short> orderStatusList) {
+		this.orderStatusList = orderStatusList;
 	}
 
 	

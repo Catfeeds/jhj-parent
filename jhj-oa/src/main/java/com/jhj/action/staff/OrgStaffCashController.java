@@ -30,6 +30,7 @@ import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.vo.staff.OrgStaffCashSearchVo;
+import com.jhj.vo.staff.OrgStaffCashVo;
 import com.jhj.vo.user.UserPushBindSearchVo;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -79,12 +80,12 @@ public class OrgStaffCashController extends BaseController {
 			searchVo  = new OrgStaffCashSearchVo();
 		}
 		
-		PageInfo result = orgStaffCashService.selectVoByListPage(searchVo,pageNo,pageSize);
+		PageInfo result = orgStaffCashService.selectByListPage(searchVo,pageNo,pageSize);
         List<OrgStaffCash> staffCashlist = result.getList();
         OrgStaffCash orgStaffCash=null;
         for(int i=0;i<staffCashlist.size();i++){
         	orgStaffCash = staffCashlist.get(i);
-        	OrgStaffCashSearchVo vo = orgStaffCashService.transVo(orgStaffCash);
+        	OrgStaffCashVo vo = orgStaffCashService.transVo(orgStaffCash);
         	staffCashlist.set(i,vo);
         }
         result = new PageInfo(staffCashlist);
@@ -129,6 +130,7 @@ public class OrgStaffCashController extends BaseController {
 		Long staffId = orgStaffCash.getStaffId();
 		OrgStaffs orgstaff = orgStaffsService.selectByPrimaryKey(staffId);
 		
+		//提现已打款，则需要在财务表操作
 		if (orgStaffCash.getOrderStatus().equals((short)3)) {
 			//写入员工的用户明细，
 			// 操作服务人员财务明细表 org_staff_detail_pay，插入一条 order_type = 5 提现 的记录
@@ -152,35 +154,6 @@ public class OrgStaffCashController extends BaseController {
 			orgStaffFinance.setTotalCash(orgStaffFinance.getTotalCash().add(orgStaffCash.getOrderMoney()));
 			orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 			orgStaffFinanceService.updateByPrimaryKey(orgStaffFinance);
-			
-			//给员工发送通知信息
-			//发送推送消息，告知欠款支付成功
-			UserPushBind userPushBind = null;
-			UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
-			searchVo.setUserId(staffId);
-			List<UserPushBind> list = bindService.selectBySearchVo(searchVo);
-			if (!list.isEmpty()) userPushBind = list.get(0);
-			
-			if (userPushBind != null) {
-				String clientId = userPushBind.getClientId();
-				//透传消息 参数 map
-				HashMap<String, String> paramsMap = new HashMap<String, String>();
-				
-				paramsMap.put("cid", clientId);
-				
-				HashMap<String, String> transMap = new HashMap<String, String>();
-				
-				transMap.put("is_show", "true");
-				transMap.put("action", "msg");
-				transMap.put("remind_title", "申请提现成功");
-				transMap.put("remind_content", "您好，您申请的提现金额" + orderMoneyStr + "已打款,请查收.");
-				
-				String jsonParams = GsonUtil.GsonString(transMap);
-				
-				paramsMap.put("transmissionContent", jsonParams);
-				
-				PushUtil.AndroidPushToSingle(paramsMap);
-			}
 			
 			//发送短信
 			String addTimeStr = TimeStampUtil.timeStampToDateStr(orgStaffCash.getAddTime() * 1000, "yyyy-MM-dd HH:mm");

@@ -1,5 +1,6 @@
 package com.jhj.action.staff;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +95,13 @@ public class OrgStaffPayDeptController extends BaseController {
 
 			OrgStaffFinance orgStaffFinance = orgStaffFinanceList.get(i);
 			BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffFinance, vo);
+			
+			BigDecimal totalIncoming = orgStaffFinance.getTotalIncoming();
+			BigDecimal totalCash = orgStaffFinance.getTotalCash();
+			BigDecimal totalDept = orgStaffFinance.getTotalDept();
+			BigDecimal totalRest = totalIncoming.subtract(totalCash).subtract(totalDept);
+			vo.setRestMoney(totalRest);
+			
 
 			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffFinance.getStaffId());
 			vo.setName(orgStaffs.getName());

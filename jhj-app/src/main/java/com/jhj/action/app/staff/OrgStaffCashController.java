@@ -22,6 +22,7 @@ import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.staff.OrgStaffCashSearchVo;
+import com.jhj.vo.staff.OrgStaffCashVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -62,10 +63,23 @@ public class OrgStaffCashController extends BaseController {
 					ConstantMsg.TOTALDEPT_NO_NULL, "");
 			return result;
 		}
-		//总提现金额
-		BigDecimal totalCashMoney = orgStaffCashService.getTotalCashMoney(userId);
+		
+		//总提现中的金额
+		OrgStaffCashSearchVo searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(userId);
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 0);
+		orderStatusList.add((short) 1);
+		BigDecimal totalCashIngMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
+		//已经提现的金额
+		searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(userId);
+		searchVo.setOrderStatus((short) 2);
+		BigDecimal totalCashedMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
 		//总收入-总欠款-总提现金额的钱数来比较
-		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(orgStaffFinance.getTotalCash()).subtract(totalCashMoney);
+		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(totalCashIngMoney).subtract(totalCashedMoney);
 		
 		if (cashMoney.compareTo(money)==1) {
 			
@@ -108,9 +122,9 @@ public class OrgStaffCashController extends BaseController {
 		
 		List<OrgStaffCash> orgStaffCashList = orgStaffCashService.selectByStaffId(userId);
 
-		List<OrgStaffCashSearchVo> userImgVos = new ArrayList<OrgStaffCashSearchVo>();
+		List<OrgStaffCashVo> userImgVos = new ArrayList<OrgStaffCashVo>();
 		for (int i = 0; i < orgStaffCashList.size(); i++) {
-			OrgStaffCashSearchVo vo = new OrgStaffCashSearchVo();
+			OrgStaffCashVo vo = new OrgStaffCashVo();
 			OrgStaffCash item = orgStaffCashList.get(i);
            BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			
