@@ -3,7 +3,7 @@
  */
 function inputNum(obj) {
 	var tmptxt=obj.val();
-	tmptxt = tmptxt.replace(/\D|^0/g,'');
+	tmptxt = tmptxt.replace(/[^\d\.]/g,'');
 	obj.val(tmptxt);
 }
 

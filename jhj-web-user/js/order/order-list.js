@@ -169,7 +169,9 @@ function doOrderPayExt(obj) {
 		sessionStorage.setItem("order_no", orderNo);
 		sessionStorage.setItem("order_pay", orderPay);
 		sessionStorage.setItem("staff_names", staffNames);
-
+		
+		console.log("staffNames = " + sessionStorage.getItem("staff_names"));
+		
 		mainView.router.loadPage("order/order-pay-ext.html");
 	}
 	

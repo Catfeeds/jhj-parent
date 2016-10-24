@@ -1,11 +1,7 @@
 myApp.onPageBeforeInit('order-pay-ext', function(page) {
 	
 	var userId = localStorage['user_id'];
-	
-	var staffNames = sessionStorage.getItem("staff_names");
-	
-	$$("#staffNames").html(staffNames);
-	
+
 	// 点击支付的处理
 	$$("#orderPriceExtSumbit").click(function(){
 		
@@ -22,4 +18,14 @@ myApp.onPageBeforeInit('order-pay-ext', function(page) {
 		mainView.router.loadPage("order/order-pay.html");
 	});
 });
+
+
+//列表显示，获取用户的信息
+myApp.template7Data['page:order-pay-ext']=function(){
+	var result = {};
+	var staffNames = sessionStorage.getItem("staff_names");
+	result.staffNames = staffNames;
+	return result;
+}
+
 
