@@ -85,6 +85,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 		                              <th >订单类型</th>
 		                              <th >订单金额</th>
 		                              <th >订单收入</th>
+		                              <th>支付方式</th>
 		                              <th >订单状态</th>
 		                              <th >备注</th>
 		                              <th >添加时间</th>
@@ -95,10 +96,10 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <tr>	
 							            <td>${ item.name }</td>
                                   	    <td>${ item.mobile }</td>
-                                  	    
 							            <td>${ item.orderTypeName }</td>
 							            <td>${ item.orderMoney }</td>
 							            <td>${ item.orderPay }</td>
+							            <td>${item.payTypeName }</td>
 							            <td>${ item.orderStatusStr }</td>
 							            <td>${ item.remarks }</td>
 							            <td>

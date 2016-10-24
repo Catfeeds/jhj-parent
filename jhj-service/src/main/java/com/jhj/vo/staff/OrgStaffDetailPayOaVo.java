@@ -18,6 +18,9 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	//下单用户手机号，有为空的情况，比如还款订单和提现，不需要用户手机号
 	//private String mobile;
 //	private String addTimeStr;
+	
+	private String payTypeName;
+	
 	public String getOrderTypeName() {
 		return orderTypeName;
 	}
@@ -34,4 +37,12 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 		this.name = name;
 	}
 
+	public String getPayTypeName() {
+		return payTypeName;
+	}
+
+	public void setPayTypeName(String payTypeName) {
+		this.payTypeName = payTypeName;
+	}
+	
 }

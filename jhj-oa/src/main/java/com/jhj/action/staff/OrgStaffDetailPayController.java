@@ -24,15 +24,18 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 
 @Controller
@@ -46,6 +49,9 @@ public class OrgStaffDetailPayController extends BaseController {
 	
 	@Autowired
 	private OrgsService orgService;
+	
+	@Autowired
+	private OrderPricesService orderPriceService;
 
 	/**
 	 * 服务人员财务明细
@@ -127,7 +133,8 @@ public class OrgStaffDetailPayController extends BaseController {
 			oaVo.setName(orgStaffs.getName());
 			oaVo.setOrderTypeName(vo.getOrderTypeName());
 			oaVo.setOrderPay(new BigDecimal(vo.getOrderPay()));
-
+			OrderPrices orderPrices = orderPriceService.selectByOrderNo(orgStaffDetailPay.getOrderNo());
+			oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPrices.getPayType()));
 			orgStaffdetailPayList.set(i, oaVo);
 			// orgStaffPayVoList.add(oaVo);
 		}

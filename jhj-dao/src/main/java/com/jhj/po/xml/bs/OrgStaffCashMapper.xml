@@ -66,7 +66,7 @@
 		</if>
 		
 	    <if test="staffName !=null">
-			and staff_id in (select staff_id from org_staff where  staff_name like CONCAT('%','${staffName}','%') )
+			and staff_id in (select staff_id from org_staffs where name like CONCAT('%','${staffName}','%') )
 		</if>
 		
 	    <if test="orderStatus !=null">

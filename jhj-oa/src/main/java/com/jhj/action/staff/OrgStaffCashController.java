@@ -90,6 +90,7 @@ public class OrgStaffCashController extends BaseController {
         }
         result = new PageInfo(staffCashlist);
 		model.addAttribute("contentModel", result);
+		model.addAttribute("oaOrderSearchVoModel",searchVo);
 		
 		return "staff/staffCashList";
 	}
