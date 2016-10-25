@@ -37,7 +37,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                   <div class="col-lg-12">
                       <section class="panel">
                       	  
-                      	  <form:form modelAttribute="oaOrderSearchVoModel" action="cash-list" method="GET">
+                      	  <form:form modelAttribute="oaOrderSearchVoModel" action="cash-list" method="POST">
 	                         <header class="panel-heading">
 	                         	<h4>数据搜索</h4>
 	                         		<div>

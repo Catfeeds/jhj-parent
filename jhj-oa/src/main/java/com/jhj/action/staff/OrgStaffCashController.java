@@ -66,7 +66,7 @@ public class OrgStaffCashController extends BaseController {
 	
 	//提现列表
 	@AuthPassport
-	@RequestMapping(value = "/cash-list", method = RequestMethod.GET)
+	@RequestMapping(value = "/cash-list", method = {RequestMethod.GET,RequestMethod.POST})
 	public String getOrderList(Model model, HttpServletRequest request, OrgStaffCashSearchVo searchVo){
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
