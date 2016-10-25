@@ -37,8 +37,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_done.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "2");
-	    postRequest = postRequest.param("order_id", "76");
+	    postRequest = postRequest.param("staff_id", "47");
+	    postRequest = postRequest.param("order_id", "5527");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));

@@ -234,25 +234,26 @@ public class OrderController extends BaseController {
 		String orderNo = orders.getOrderNo();
 		//更新orderdispatchs的更新时间
 		
+		
+		//如果多人，则直接循环，把多人的金额都加上
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(orderNo);
 		searchVo.setDispatchStatus((short) 1);
-		searchVo.setStaffId(staffId);
-		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
 
-		OrderDispatchs orderDispatch = null;
-		if (!orderDispatchs.isEmpty()) {
-			orderDispatch = orderDispatchs.get(0);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		
+		
+		for (OrderDispatchs item : orderDispatchs) {
+			
+			orgStaffs = orgStaffsService.selectByPrimaryKey(item.getStaffId());
+			if (orgStaffs == null) continue;
+			
+			item.setUpdateTime(TimeStampUtil.getNowSecond());
+			orderDispatchsService.updateByPrimaryKeySelective(item);
+			
+			//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
+			orgStaffFinanceService.orderDone(orders, orderPrices, orgStaffs);
 		}
-		
-		if (orderDispatch != null) {
-			orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
-			orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
-		}
-		
-		//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
-		orgStaffFinanceService.orderDone(orders, orderPrices, orgStaffs);
-		
 		
 		//完成服务给用户发送短信
 //        ordersService.userOrderPostDoneSuccessTodo(orders);
