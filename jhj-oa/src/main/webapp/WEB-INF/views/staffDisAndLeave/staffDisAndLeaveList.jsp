@@ -19,8 +19,8 @@ import="com.jhj.oa.common.UrlHelper"%>
 		.result-content{
 			border-bottom:1px solid #ccc
 		}
-		td div{height:30px;}
-		td span{height:30px;display:block;}
+		td div{min-height:30px;}
+		td span{min-height:30px;display:block;}
 	</style>
   </head>
 

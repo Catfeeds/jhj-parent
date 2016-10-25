@@ -1,5 +1,6 @@
 package com.jhj.action.staff;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class OrgStaffCashController extends BaseController {
 	
 	//提现列表
 	@AuthPassport
-	@RequestMapping(value = "/cash-list", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/cash-list", method = RequestMethod.GET)
 	public String getOrderList(Model model, HttpServletRequest request, OrgStaffCashSearchVo searchVo){
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request,
@@ -80,6 +81,14 @@ public class OrgStaffCashController extends BaseController {
 			searchVo  = new OrgStaffCashSearchVo();
 		}
 		
+		String staffName = searchVo.getStaffName();
+		if(staffName!=null){
+			try {
+				searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 		PageInfo result = orgStaffCashService.selectByListPage(searchVo,pageNo,pageSize);
         List<OrgStaffCash> staffCashlist = result.getList();
         OrgStaffCash orgStaffCash=null;
