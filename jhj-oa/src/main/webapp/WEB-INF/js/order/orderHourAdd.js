@@ -180,7 +180,7 @@ function saveFrom() {
 	params.userId = $("#userId").text();
 	params.mobile = $("#mobile").val();
 	params.addrId = $("#addrId").val();
-	params.serviceType = $("input[name='serviceType']").val();
+	params.serviceType = $("#serviceType").val();
 	params.orderPay = $("#orderPay").val();
 	params.orderFrom = $("#orderForm").val();
 	var serviceDate = $("#serviceDate").val();
@@ -305,4 +305,13 @@ function saveAddress() {
 			getAddrByMobile(addrId);
 		}
 	});
+}
+function chagePrice(){
+	var id=$("select[name='serviceType'] option:selected").val();
+	if(id==28){
+		$("#orderPay").val($("#hour-price").val());
+	}else if(id==29){
+		$("#orderPay").val($("#cook-price").val());
+	}
+	
 }

@@ -42,6 +42,7 @@ import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
@@ -275,13 +276,19 @@ public class OrderController extends BaseController {
 				.selectCooperativeBusinessVo(vo);
 
 		PartnerServiceType serviceType = partService.selectByPrimaryKey(28L);
+		PartnerServiceType serviceType1 = partService.selectByPrimaryKey(29L);
+		Map<String,Object> serviceTypeList=new HashMap<String,Object>();
+		serviceTypeList.put("hour",serviceType);
+		serviceTypeList.put("cook",serviceType1);
+		
 		if (CooperativeBusinessList != null) {
 			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
 		}
-		model.addAttribute("serviceType", serviceType);
+		model.addAllAttributes(serviceTypeList);
 		return "order/orderHourAdd";
 	}
 
+	
 	@AuthPassport
 	@RequestMapping(value = "/order-exp-add", method = RequestMethod.GET)
 	public String orderAmAdd(Model model) {
