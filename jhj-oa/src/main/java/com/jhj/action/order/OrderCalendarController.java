@@ -216,7 +216,7 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setServiceTime(leaveDate);
 							eventList.add(eventVo);
 							falg=true;
-							if(startTimeStr.equals(leaveDate)){
+							if(startTimeStr.equals(weekDate)){
 								leaveStaffSize++;
 							}
 						}
