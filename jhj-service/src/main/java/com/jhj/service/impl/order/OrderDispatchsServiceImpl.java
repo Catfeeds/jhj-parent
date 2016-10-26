@@ -3,6 +3,7 @@ package com.jhj.service.impl.order;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -309,12 +310,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			LeaveSearchVo searchVo3 = new LeaveSearchVo();
 
 			searchVo3.setOrgId(orgId);
-			Long orderServiceDateEnd = (long) (serviceDate + serviceHour * 3600);
 
-			// 订单服务开始时间
-			searchVo3.setLeaveStartTime(serviceDate);
-			// 订单服务结束时间
-			searchVo3.setLeaveEndTime(orderServiceDateEnd);
+			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+			Date leaveDate = DateUtil.parse(serviceDateStr);
+			searchVo3.setLeaveDate(leaveDate);
 
 			// 服务时间内 ，同时也在 假期内的 员工
 			List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
@@ -496,12 +495,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		// ---4. 在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 
-		Long orderServiceDateEnd = (long) (serviceDate + serviceHour * 3600);
-		// 订单服务开始时间
-		leaveSearchVo.setLeaveStartTime(serviceDate);
-		// 订单服务结束时间
-		leaveSearchVo.setLeaveEndTime(orderServiceDateEnd);
-
+		
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		leaveSearchVo.setLeaveDate(leaveDate);
+		
 		// 服务时间内 ，同时也在 假期内的 员工
 		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);
 
@@ -747,11 +745,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		if (orgId > 0L)
 			searchVo3.setOrgId(orgId);
 
-		Long orderServiceDateEnd = (long) (serviceDate + serviceHour * 3600);
-		// 订单服务开始时间
-		searchVo3.setLeaveStartTime(serviceDate);
-		// 订单服务结束时间
-		searchVo3.setLeaveEndTime(orderServiceDateEnd);
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		searchVo3.setLeaveDate(leaveDate);
+		
+		
 		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
 
 		for (OrgStaffsNewVo vo : list) {

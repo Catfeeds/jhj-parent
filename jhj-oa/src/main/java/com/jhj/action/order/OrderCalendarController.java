@@ -3,6 +3,7 @@ package com.jhj.action.order;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -154,10 +155,11 @@ public class OrderCalendarController extends BaseController {
 			leaveSearchVo.setParentId(parentId);
 		}
 		
-		Long leaveStartTime = DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr));
-		Long leaveEndTime = DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(endTimeStr));
-		leaveSearchVo.setLeaveStartTime(leaveStartTime);
-		leaveSearchVo.setLeaveEndTime(leaveEndTime);
+		Date startDate = DateUtil.parse(startTimeStr);
+		Date endDate = DateUtil.parse(endTimeStr);
+		
+		leaveSearchVo.setRangeStartDate(startDate);
+		leaveSearchVo.setRangeEndDate(endDate);
 
 		// 请假列表
 		List<OrgStaffLeave> leaveList = leaveService.selectBySearchVo(leaveSearchVo);

@@ -51,38 +51,23 @@
 			and staff_id in (select staff_id from org_staffs where mobile = #{mobile,jdbcType=VARCHAR})
 		</if>
 
-		<if test="leaveStartTime != null ">
+		<if test="leaveDate != null ">
 		    <![CDATA[ 
-		    	and UNIX_TIMESTAMP(leave_date_end) >= #{leaveStartTime,jdbcType=NUMERIC}
+		    	and #{leaveDate,jdbcType=DATE} between leave_date and leave_date_end
 		    ]]>
 		</if>
-
-		<if test="leaveEndTime != null ">
-		    <![CDATA[ 
-		    	and UNIX_TIMESTAMP(leave_date) <= #{leaveEndTime,jdbcType=NUMERIC}
-		    ]]>
-		</if>
-
-		<if test="serviceStartTime != null and serviceEndTime !=null ">
+		
+		<if test="rangeStartDate != null and rangeEndDate !=null ">
 		<![CDATA[
-				and
-				(
-					(UNIX_TIMESTAMP(leave_date) + start*3600) > #{serviceStartTime}
-					 and
-					(UNIX_TIMESTAMP(leave_date) + start*3600) < #{serviceEndTime}
-				)	
-				or
-				(
-					(UNIX_TIMESTAMP(leave_date) + end*3600) > #{serviceStartTime}
-					 and
-					(UNIX_TIMESTAMP(leave_date) + end*3600) < #{serviceEndTime}
-				)
+			and
+			(
+				#{rangeStartDate,jdbcType=DATE} between leave_date and leave_date_end
+				OR
+				#{rangeEndDate,jdbcType=DATE} between leave_date and leave_date_end
+			)	
 		]]>
 		</if>
 
-		<if test="leaveDate != null ">
-			and leave_date = #{leaveDate,jdbcType=DATE}
-		</if>
 
 		order by add_time desc
 	</sql>
