@@ -76,7 +76,6 @@ public class OrgStaffLeaveController extends BaseController {
 			searchVo.setLeaveDate(leaveDate);
 		}
 		
-		searchVo.setLeaveStatus("1");
 		PageInfo pageList = leaveService.selectByListPage(searchVo, pageNo, pageSize);
 		List<OrgStaffLeave> list = pageList.getList();
 
