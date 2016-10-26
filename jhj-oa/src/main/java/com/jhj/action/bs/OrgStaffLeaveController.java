@@ -76,6 +76,7 @@ public class OrgStaffLeaveController extends BaseController {
 			searchVo.setLeaveDate(leaveDate);
 		}
 		
+		searchVo.setLeaveStatus("1");
 		PageInfo pageList = leaveService.selectByListPage(searchVo, pageNo, pageSize);
 		List<OrgStaffLeave> list = pageList.getList();
 
@@ -129,24 +130,13 @@ public class OrgStaffLeaveController extends BaseController {
 
 		OrgStaffLeave leave = leaveService.initLeave();
 
-		if (id > 0L) {
-			leave = leaveService.selectByPrimaryKey(id);
-		}
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(leaveVo, leave);
-
 		String leaveDate = request.getParameter("leaveDate");
 		String leaveDateEnd = request.getParameter("leaveDateEnd");
-
-		// 请假日期
 		leave.setLeaveDate(DateUtil.parse(leaveDate));
 		leave.setLeaveDateEnd(DateUtil.parse(leaveDateEnd));
 		long dublDate = TimeStampUtil.compareTimeStr(leave.getLeaveDate().getTime(),leave.getLeaveDateEnd().getTime());
 		int dayNum = (int)dublDate/(1000 * 60 * 60 * 24)+1;
 		leave.setTotalDays(dayNum);
-//		leave.setLeaveStatus();
-//		Short leaveStatus = leaveVo.getLeaveStatus();
-
 		Short leaveDuration = leaveVo.getLeaveDuration();
 
 		// 默认选择 8~12点
@@ -166,6 +156,14 @@ public class OrgStaffLeaveController extends BaseController {
 
 		leave.setStart(start);
 		leave.setEnd(end);
+		
+		if (id > 0L) {
+			leave = leaveService.selectByPrimaryKey(id);
+			leaveVo.setOrgId(leave.getOrgId());
+			leaveVo.setParentId(leave.getParentId());
+		}
+
+		BeanUtilsExp.copyPropertiesIgnoreNull(leaveVo, leave);
 
 		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
 
