@@ -3,6 +3,7 @@ package com.jhj.service.impl.newDispatch;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
 
@@ -226,15 +229,12 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		 */
 		
 		LeaveSearchVo searchVo = new LeaveSearchVo();
+
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		searchVo.setLeaveDate(leaveDate);
 		
-		double serviceHour = order.getServiceHour();
-		
-		Long orderServiceDateEnd = (long) (serviceDate + serviceHour*3600);
-		
-		//订单服务开始时间
-		searchVo.setServiceStartTime(serviceDate);
-		//订单服务结束时间
-		searchVo.setServiceEndTime(orderServiceDateEnd);
+		searchVo.setLeaveStatus("1");
 		
 		// 服务时间内  ，同时也在  假期内的 员工
 		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo);
@@ -591,16 +591,14 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			
  			LeaveSearchVo searchVo = new LeaveSearchVo();
  			
- 			double serviceHour = order.getServiceHour();
- 			
  			Long serviceDate = order.getServiceDate();
  			
- 			Long orderServiceDateEnd = (long) (serviceDate + serviceHour*3600);
+ 			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+ 			Date leaveDate = DateUtil.parse(serviceDateStr);
+ 			searchVo.setLeaveDate(leaveDate);
  			
- 			//订单服务开始时间
- 			searchVo.setServiceStartTime(serviceDate);
- 			//订单服务结束时间
- 			searchVo.setServiceEndTime(orderServiceDateEnd);
+ 			searchVo.setLeaveStatus("1");
+ 			
  			
  			// 服务时间内  ，同时也在  假期内的 员工
  			List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo);
