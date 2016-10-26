@@ -67,6 +67,10 @@
 			)	
 		]]>
 		</if>
+		
+		<if test="leaveStatus != null and staffId !=0 ">
+			and leave_status = #{leaveStatus,jdbcType=VARCHAR}
+		</if>
 
 
 		order by add_time desc

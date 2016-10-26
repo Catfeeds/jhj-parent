@@ -314,6 +314,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 			Date leaveDate = DateUtil.parse(serviceDateStr);
 			searchVo3.setLeaveDate(leaveDate);
+			searchVo3.setLeaveStatus("1");
 
 			// 服务时间内 ，同时也在 假期内的 员工
 			List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
@@ -499,6 +500,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 		Date leaveDate = DateUtil.parse(serviceDateStr);
 		leaveSearchVo.setLeaveDate(leaveDate);
+		
+		leaveSearchVo.setLeaveStatus("1");
 		
 		// 服务时间内 ，同时也在 假期内的 员工
 		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);
@@ -748,7 +751,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 		Date leaveDate = DateUtil.parse(serviceDateStr);
 		searchVo3.setLeaveDate(leaveDate);
-		
+		searchVo3.setLeaveStatus("1");
 		
 		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
 

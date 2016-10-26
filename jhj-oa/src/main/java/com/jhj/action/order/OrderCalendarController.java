@@ -160,6 +160,7 @@ public class OrderCalendarController extends BaseController {
 		
 		leaveSearchVo.setRangeStartDate(startDate);
 		leaveSearchVo.setRangeEndDate(endDate);
+		leaveSearchVo.setLeaveStatus("1");
 
 		// 请假列表
 		List<OrgStaffLeave> leaveList = leaveService.selectBySearchVo(leaveSearchVo);

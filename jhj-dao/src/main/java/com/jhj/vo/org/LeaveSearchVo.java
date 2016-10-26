@@ -26,6 +26,9 @@ public class LeaveSearchVo {
 	private Date rangeStartDate;
 	
 	private Date rangeEndDate;
+	
+	//请假状态  1= 请假中  2= 请假取消
+    private String leaveStatus;
 
 	
 	public Long getOrgId() {
@@ -90,6 +93,14 @@ public class LeaveSearchVo {
 
 	public void setRangeEndDate(Date rangeEndDate) {
 		this.rangeEndDate = rangeEndDate;
+	}
+
+	public String getLeaveStatus() {
+		return leaveStatus;
+	}
+
+	public void setLeaveStatus(String leaveStatus) {
+		this.leaveStatus = leaveStatus;
 	}
 
 
