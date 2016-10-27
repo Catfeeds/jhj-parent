@@ -92,7 +92,7 @@ $('#recharge-coupon-form').validate({
 						success:function(data){
 							if(data.success==200)
 								alert("优惠券添加成功！！");
-//							    $("#form2-div").css("display","block");
+							   location.href = "recharge-coupon-list";
 						}
 					});
 				}
@@ -115,6 +115,7 @@ $("#from2-btn").click(function(){
 				if(data.success==200){
 					$("input[name='sendCouponsCondtion']").attr("checked", false);
 					alert("发送优惠券成功！");
+					location.href = "recharge-coupon-list";
 				}
 			}
 		});

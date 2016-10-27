@@ -125,7 +125,7 @@
 											<td colspan="6">
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
-												<button type="reset" class="btn btn-primary">重置</button>
+												<button type="button" class="btn btn-primary" onclick="cleanForm()">清空</button>
 											</td>					
 										</tr>
 									</table>

@@ -68,6 +68,10 @@ function btnDetail(orderNo, orderType, disStatus) {
 	}
 }
 
+//清空查询条件
+function cleanForm(){
+	$("form :input").not(":button, :submit, :reset, :hidden, :checkbox").val("").remove("selected");
+}
 
 
 

@@ -131,9 +131,6 @@
 							<div class="col-md-1">
 								<button class="btn btn-success" type="reset">重置</button>
 							</div>
-							<div class="col-md-4">
-								<a href="recharge-coupon-list" class="btn btn-success">返回</a>
-							</div>
 						</div>
 					</div>
 					<!-- </fieldset> -->
