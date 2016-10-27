@@ -83,6 +83,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         noSelectHour();
         if(cmp==date){
         	$$("#rilikongjian3-day").find(":first-child").addClass("beijingse");
+        	tomm();
         }
     }
     getDay(date);
