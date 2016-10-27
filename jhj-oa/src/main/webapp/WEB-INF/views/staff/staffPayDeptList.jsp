@@ -55,6 +55,7 @@
 						<th>总收入</th>
 						<th>总欠款</th>
 						<th>总提现</th>
+						<th>可提现</th>
 						<th>剩余金额</th>
 						<th>添加时间</th>
 						<th>更新时间</th>
@@ -71,6 +72,7 @@
 							<td>${ item.totalIncoming }</td>
 							<td>${ item.totalDept }</td>
 							<td>${ item.totalCash }</td>
+							<td>${ item.totalCashValid }</td>
 						    <td>${ item.restMoney }</td>
 							<td><timestampTag:timestamp patten="yyyy-MM-dd"
 									t="${item.addTime * 1000}" /></td>

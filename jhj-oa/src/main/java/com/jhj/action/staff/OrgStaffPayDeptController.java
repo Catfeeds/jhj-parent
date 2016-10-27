@@ -100,7 +100,9 @@ public class OrgStaffPayDeptController extends BaseController {
 			BigDecimal totalCash = orgStaffFinance.getTotalCash();
 			BigDecimal totalDept = orgStaffFinance.getTotalDept();
 			BigDecimal totalRest = totalIncoming.subtract(totalCash).subtract(totalDept);
+			BigDecimal totalCashValid = totalIncoming.subtract(totalCash);
 			vo.setRestMoney(totalRest);
+			vo.setTotalCashValid(totalCashValid);
 			
 
 			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffFinance.getStaffId());
