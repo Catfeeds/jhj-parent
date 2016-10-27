@@ -26,7 +26,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 		var useCondition=$$(this).find("#coupons_type_id").val();
 		var userCouponName = "￥" + userCouponValue;
 		
-		var serviceDate = sessionStorage.getItem("service_date");
+		var serviceDate = sessionStorage.getItem("service_date")*1000;
 		var week=moment(serviceDate).format('d');
 		if(useCondition==2){
 			if(week>3 || week<0){
