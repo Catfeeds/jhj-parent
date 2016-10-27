@@ -268,7 +268,7 @@
 						</div> 
 						
 						
-						<div class="form-group required">
+						<div class="form-group required" style="display:none;">
 								<label class="col-md-2 control-label">技能标签</label>
 								<div class="col-md-5" id="allTag" >
 									<c:forEach items="${newStaffFormVoModel.tagList }" var="tag">
