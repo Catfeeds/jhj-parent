@@ -77,7 +77,6 @@ function toolBarHref(url, toolbarName) {
 	var toolBars = ['toolbar-index', 'toolbar-order', 'toolbar-charge', 'toolbar-mine'];
 	
 	$$.each(toolBars,function(n,value) {  
-		console.log("value = " + value + "=== toolbarName=" + toolbarName);
 		if (value == toolbarName) {
 			$$('#' + value).addClass("active");
 			$$('#' + value).css("color", "#FB571E");

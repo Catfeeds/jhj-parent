@@ -34,9 +34,10 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 	});
 	
 	var orderMoney = sessionStorage.getItem("order_money");
-	$$("#priceStr").html(sessionStorage.getItem("order_money"));
-	$$("#orderMoneyStr").html(sessionStorage.getItem("order_money") + "元");
-	$$("#orderMoney").val(serviceType.price);
+	console.log("orderMoney =" + orderMoney);
+	$$("#priceStr").html(orderMoney);
+	$$("#orderMoneyStr").html(orderMoney+ "元");
+	$$("#orderMoney").val(orderMoney);
 	
 	$$("#serviceHourStr").html(sessionStorage.getItem("total_service_hour") + "小时");
 	
@@ -82,7 +83,8 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 			}
 			$$("#userCouponValue").val(userCouponValue);
 			console.log("userCouponValue = " + $$("#userCouponValue").val())
-			var orderPayStr = $$("#orderMoney").val() - userCouponValue;
+			console.log("orderMoney =" + orderMoney);
+			var orderPayStr = orderMoney - userCouponValue;
 			if (orderPayStr < 0) orderPayStr = 0;
 			sessionStorage.setItem("order_pay", orderPayStr);
 		}
