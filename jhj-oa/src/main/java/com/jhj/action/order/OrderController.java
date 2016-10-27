@@ -234,8 +234,9 @@ public class OrderController extends BaseController {
 	}
 
 	/**
-	 * 取消订单
-	 * 
+	 * 取消订单,订单状态为已支付和完成服务之间（不包括）
+	 * 取消订单后，余额支付的，则退回，并记录消费明细
+	 * 在线支付、现金支付和平台已支付的则不需要操作
 	 * @param orderId
 	 * 
 	 * */

@@ -2,6 +2,7 @@ package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -503,7 +504,7 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	/**
-	 * 后台取消现金支付订单
+	 * 后台取消订单
 	 * 
 	 * @param Long
 	 *            orderId 订单ID
@@ -518,32 +519,58 @@ public class OrdersServiceImpl implements OrdersService {
 		Short orderStatus = order.getOrderStatus();
 		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orderNo);
 		Short payType = orderPrices.getPayType();
-		if (payType == Constants.PAY_TYPE_6) {
-			if (orderStatus == Constants.ORDER_STATUS_0 || orderStatus < 5) {
-				order.setOrderStatus(Constants.ORDER_STATUS_0);
-				ordersMapper.updateByPrimaryKeySelective(order);
-
-				OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-				searchVo.setOrderNo(orderNo);
-				searchVo.setDispatchStatus((short) 1);
-				List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
-
-				OrderDispatchs orderDispatch = null;
-				if (!orderDispatchs.isEmpty()) {
-					orderDispatch = orderDispatchs.get(0);
+		if(orderStatus>=Constants.ORDER_HOUR_STATUS_2 && orderStatus<Constants.ORDER_HOUR_STATUS_7){
+			if (payType == Constants.PAY_TYPE_1|| payType == Constants.PAY_TYPE_2 ||payType == Constants.PAY_TYPE_3 || payType == Constants.PAY_TYPE_6 ||payType == Constants.PAY_TYPE_7) {
+				commonCancleOrder(order,orderNo);
+			}else if(payType==Constants.PAY_TYPE_0){
+				commonCancleOrder(order,orderNo);
+				Long userId = order.getUserId();
+				Users user = usersMapper.selectByPrimaryKey(userId);
+				BigDecimal orderPay = orderPrices.getOrderPay();
+				BigDecimal restMoney = user.getRestMoney();
+				BigDecimal mon = restMoney.add(orderPay);
+				user.setRestMoney(mon);
+				usersMapper.updateByPrimaryKeySelective(user);
+				
+				Long couponId = orderPrices.getCouponId();
+				if(couponId>0){
+					UserCoupons userCoupons = userCouponMapper.selectByPrimaryKey(couponId);
+					userCoupons.setIsUsed((short)0);
+					userCoupons.setUsedTime(TimeStampUtil.getNowSecond());
+					userCoupons.setOrderNo(null);
+					userCouponMapper.updateByPrimaryKeySelective(userCoupons);
 				}
-
-				if (orderDispatch != null) {
-					orderDispatch.setDispatchStatus(Constants.ORDER_DIS_DISABLE);
-					orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
-				}
-				OrderLog orderLog = orderLogService.initOrderLog(order);
-				orderLogService.insert(orderLog);
 			}
-		} else {
-			return -2;
 		}
 
 		return 0;
+	}
+	
+	public void commonCancleOrder(Orders order,String orderNo){
+		//更新订单状态
+		order.setOrderStatus(Constants.ORDER_STATUS_0);
+		order.setUpdateTime(TimeStampUtil.getNowSecond());
+		ordersMapper.updateByPrimaryKeySelective(order);
+
+		//取消派工
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		if (!orderDispatchs.isEmpty()) {
+			OrderDispatchs orderDispatch = null;
+			Iterator<OrderDispatchs> iterator = orderDispatchs.iterator();
+			while (iterator.hasNext()) {
+				orderDispatch=iterator.next();
+				orderDispatch.setDispatchStatus(Constants.ORDER_DIS_DISABLE);
+				orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
+				orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
+				
+			}
+		}
+		
+		//添加订单日志
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLogService.insert(orderLog);
 	}
 }
