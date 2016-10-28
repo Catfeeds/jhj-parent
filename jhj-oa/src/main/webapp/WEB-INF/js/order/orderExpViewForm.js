@@ -179,7 +179,27 @@ $('.form_datetime').datetimepicker().on('changeDate', function(ev) {
 	// 东八区 减去 8小时
 	var newServiceDate = date / 1000 - 8 * 3600;
 	
+//	$("input[name='disWay']").each(function(){
+//		var v = $(this).val();
+//		console.log("v =" + v);
+//		if (v == 0) {
+//			console.log("check == true");
+//			$(this).attr("checked", "checked");
+//		}
+//		if (v == 1) {
+//			console.log("check == false");
+//			$(this).removeAttr("checked");
+//		}
+//		
+//		
+//	});
+	
+
+	console.log("newServiceDate = " + newServiceDate);
+	
 	loadStaffsByServiceDate(newServiceDate);
+	$("input[name='disWay']").eq(0).attr("checked",true);
+	$("input[name='disWay']").eq(1).attr("checked",false);
 	
 });
 
@@ -226,6 +246,14 @@ function loadStaffs() {
 		return false;
 	}
 	
+	
+	//获取当前选择的订单时间
+	var serviceDateStr = $("#serviceDateStr").val() + ":00";
+	var serviceDate = moment(serviceDateStr).unix();
+	
+	console.log("serviceDate ==" + serviceDate);
+
+	
 	var orgId = $("#orgId").val();
 	
 	$.ajax({
@@ -234,7 +262,8 @@ function loadStaffs() {
 		data : {
 			"orderId" : orderId,
 			"parentId" : parentId,
-			"orgId" : orgId
+			"orgId" : orgId,
+			"newServiceDate" : serviceDate
 		},
 		dataType : "json",
 		success : loadStaffDynamic

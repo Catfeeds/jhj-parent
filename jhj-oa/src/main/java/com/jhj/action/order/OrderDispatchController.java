@@ -117,6 +117,9 @@ public class OrderDispatchController extends BaseController {
 		}
 		
 		Long serviceDate = orders.getServiceDate();
+		
+		if (newServiceDate != null) serviceDate = newServiceDate;
+		
 		double serviceHour = (double)orders.getServiceHour();
 		
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
@@ -574,7 +577,9 @@ public class OrderDispatchController extends BaseController {
 	@RequestMapping(value = "load_staff_by_change_cloud_org.json", method = RequestMethod.GET)
 	public List<OrgStaffsNewVo> loadProperStaffListForBaseByCloudOrg(Model model, 
 			@RequestParam("orderId") Long orderId, @RequestParam("parentId") Long parentId,
-			@RequestParam("orgId") Long orgId) {
+			@RequestParam("orgId") Long orgId,
+			@RequestParam("newServiceDate") Long newServiceDate
+			) {
 
 		Orders orders = orderSevice.selectByPrimaryKey(orderId);
 
@@ -587,6 +592,9 @@ public class OrderDispatchController extends BaseController {
 			return list;
 		}
 		Long serviceDate = orders.getServiceDate();
+		
+		if (newServiceDate != null) serviceDate = newServiceDate;
+		
 		double serviceHour = (double)orders.getServiceHour();
 		list = orderDispatchsService.manualDispatchByOrg(orderId, serviceDate, serviceHour, parentId, orgId);
 //		list = newDisService.getAbleStaffListByCloudOrg(orderId, parentId, orgId);

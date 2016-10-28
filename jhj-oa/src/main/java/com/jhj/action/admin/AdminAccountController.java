@@ -1,6 +1,7 @@
 package com.jhj.action.admin;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,8 +98,11 @@ public class AdminAccountController extends AdminController {
 			BindingResult result) throws ValidatException,
 			NoSuchAlgorithmException {  
 		Long ids = Long.valueOf(request.getParameter("id"));	 // 主键id
-		
-		Long orgId = Long.valueOf(request.getParameter("parentId")); //选择的 门店 id
+		Long orgId=0L;
+		String val = request.getParameter("parentId");
+		if(!val.isEmpty() || val.length()>0){
+			orgId= Long.valueOf(request.getParameter("parentId")); //选择的 门店 id
+		}
 		
 		Long roleId = Long.valueOf(request.getParameter("roleId"));//选择的角色
 		
