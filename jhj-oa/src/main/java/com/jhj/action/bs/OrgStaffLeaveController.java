@@ -118,7 +118,7 @@ public class OrgStaffLeaveController extends BaseController {
 
 		// 如果是修改,则下拉列表为 回显的 门店
 		model.addAttribute("leaveModel", leaveStaffVo);
-
+		
 		return "bs/leaveForm";
 	}
 	
@@ -128,7 +128,15 @@ public class OrgStaffLeaveController extends BaseController {
 			@RequestParam("id") Long id) {
 
 		OrgStaffLeave leave = leaveService.initLeave();
+		
+		if (id > 0L) {
+			leave = leaveService.selectByPrimaryKey(id);
+			leaveVo.setOrgId(leave.getOrgId());
+			leaveVo.setParentId(leave.getParentId());
+		}
 
+		BeanUtilsExp.copyPropertiesIgnoreNull(leaveVo, leave);
+		
 		String leaveDate = request.getParameter("leaveDate");
 		String leaveDateEnd = request.getParameter("leaveDateEnd");
 		leave.setLeaveDate(DateUtil.parse(leaveDate));
@@ -136,6 +144,11 @@ public class OrgStaffLeaveController extends BaseController {
 		long dublDate = TimeStampUtil.compareTimeStr(leave.getLeaveDate().getTime(),leave.getLeaveDateEnd().getTime());
 		int dayNum = (int)dublDate/(1000 * 60 * 60 * 24)+1;
 		leave.setTotalDays(dayNum);
+
+		// 请假日期
+//		leave.setLeaveStatus();
+//		Short leaveStatus = leaveVo.getLeaveStatus();
+
 		Short leaveDuration = leaveVo.getLeaveDuration();
 
 		// 默认选择 8~12点
@@ -155,14 +168,6 @@ public class OrgStaffLeaveController extends BaseController {
 
 		leave.setStart(start);
 		leave.setEnd(end);
-		
-		if (id > 0L) {
-			leave = leaveService.selectByPrimaryKey(id);
-			leaveVo.setOrgId(leave.getOrgId());
-			leaveVo.setParentId(leave.getParentId());
-		}
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(leaveVo, leave);
 
 		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
 

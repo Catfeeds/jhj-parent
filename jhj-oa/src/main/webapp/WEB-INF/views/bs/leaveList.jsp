@@ -26,7 +26,7 @@
 				<table class="table">
 					<tr>
 						<td>选择门店:</td>
-						<td><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }" /></td>
+						<td><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
 						<td>选择云店:</td>
 						<td><select name="orgId" id="orgId" class="form-control">
 								<option value="0">全部</option>
@@ -63,6 +63,7 @@
 						<th>服务人员手机号</th>
 						<th>请假申请时间</th>
 						<th>假期时间</th>
+						<th>请假天数</th>
 						<th>员工状态</th>
 						<th>操作</th>
 					</tr>
@@ -73,26 +74,22 @@
 							<td>${ item.cloudOrgName }</td>
 							<td>${ item.staffName }</td>
 							<td>${ item.staffMobile}</td>
-							<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}" /></td>
 							<td>${item.leaveDateStr }</td>
-							<td><c:if test="${item.leaveStatus == 0 }">
-									<font color="green">假期未开始</font>
-								</c:if> <c:if test="${item.leaveStatus == 1 }">
+							<td>${item.leaveDateEndStr }</td>
+							<td>${item.totalDays}</td>
+							<td><c:if test="${item.leaveStatus == 1 }">
 									<font color="red">假期中</font>
-								</c:if> <c:if test="${item.leaveStatus == 2 }">
-											假期已结束
-										</c:if></td>
-							<td><%-- <c:choose>
-									<c:when test="${item.leaveStatus == 1 }">
-												 假期中不能修改												
-											</c:when>
-									<c:otherwise> --%>
-										<button id="btn_update" onClick="btn_update('newbs/leave_form?id=${item.id}')" class="btn btn-primary btn-xs"
-											title="修改">
-											<i class="icon-pencil"></i>
-										</button>
-									<%-- </c:otherwise> --%>
-								<%-- </c:choose> --%></td>
+								</c:if> 
+								<c:if test="${item.leaveStatus == 2 }">
+											假期取消
+								</c:if>
+							</td>
+							<td>
+								<button id="btn_update" onClick="btn_update('newbs/leave_form?id=${item.id}')" class="btn btn-primary btn-xs"
+									title="修改">
+									<i class="icon-pencil"></i>
+								</button>
+							</td>
 						</tr>
 					</c:forEach>
 				</tbody>

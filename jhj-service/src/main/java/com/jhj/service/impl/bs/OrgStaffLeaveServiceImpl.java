@@ -97,29 +97,25 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				if(leaveDateEnd!=null){
 					endStr =  DateUtil.format(leaveDateEnd, "yyyy-MM-dd");   ///+" "+end + ":00:00";
-					leaveVo.setLeaveDateStr(endStr);
+					leaveVo.setLeaveDateEndStr(endStr);
 					try {
 						Date endDate = sdf.parse(endStr);
 						endLong = endDate.getTime()/1000;
 						Date startDate = sdf.parse(startStr);
 						startLong = startDate.getTime()/1000;
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 				
 				//跟当前时间比较
-				Long nowSecond = TimeStampUtil.getNowSecond();
+//				Long nowSecond = TimeStampUtil.getNowSecond();
 				
-				// 当前状态：  假期未开始、假期中、假期结束
-//				if(nowSecond < startLong){
-//					leaveVo.setLeaveStatus((short)0);
-//				}else if(nowSecond > startLong && nowSecond < endLong){
-//					leaveVo.setLeaveStatus((short)1);
-//				}else{
-//					leaveVo.setLeaveStatus((short)2);
-//				}
+				if(leaveVo.getLeaveStatus().equals("1") && DateUtil.compare(leaveVo.getLeaveDateEndStr(),DateUtil.getNow("yyyy-MM-dd"))){
+					leaveVo.setLeaveStatus("2");
+					leave.setLeaveStatus("2");
+					leaveMapper.updateByPrimaryKeySelective(leave);
+				}
 //				
 				Long adminId = leave.getAdminId();
 				
@@ -150,7 +146,6 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 			}
 			
 		}
-		
 		return leaveVo;
 	}
 	

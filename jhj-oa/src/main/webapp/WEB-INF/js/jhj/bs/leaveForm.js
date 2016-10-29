@@ -83,3 +83,11 @@ $('.form-control.form_datetime').datepicker({
 	startDate:new Date()
 });
 
+function fn(){
+	var id = $("#id").val();
+	if(id >0){
+		$("select[name='parentId']").attr("disabled",true);
+		$("#orgId").attr("disabled",true);
+	}
+}
+fn();
