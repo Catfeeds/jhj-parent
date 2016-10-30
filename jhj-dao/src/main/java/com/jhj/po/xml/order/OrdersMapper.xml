@@ -60,7 +60,7 @@
 		<include refid="bySearchVo" />
 		order by 
 		<if test="orderByProperty!=null">
-			${orderByProperty} asc
+			${orderByProperty}
 		</if>
 		<if test="orderByProperty==null or orderByProperty==''">
 			add_time desc

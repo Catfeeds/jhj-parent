@@ -146,7 +146,7 @@ public class OrderQueryController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
-
+		searchVo.setOrderByProperty("service_date desc");
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
 
 		List<Orders> orderList = result.getList();
@@ -257,6 +257,7 @@ public class OrderQueryController extends BaseController {
 			list.add(t.getServiceTypeId());
 		}
 		searchVo.setServiceTypes(list);
+		searchVo.setOrderByProperty("service_date desc");
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
 
 		List<Orders> orderList = result.getList();
@@ -325,7 +326,7 @@ public class OrderQueryController extends BaseController {
 		}
 		searchVo.setServiceTypes(list);
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, orderType, sessionParentId);
-
+		searchVo.setOrderByProperty("service_date desc");
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
 
 		List<Orders> orderList = result.getList();
