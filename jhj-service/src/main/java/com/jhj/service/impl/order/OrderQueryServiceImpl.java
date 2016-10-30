@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
@@ -798,7 +799,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				e.printStackTrace();
 			}
 		}
-
+		if(searchVo.getOrderOpFrom()!=null && searchVo.getOrderOpFrom()==(short)11){
+			searchVo.setOrderFrom((short)1);
+			searchVo.setOrderOpFrom(null);
+		}
 		return searchVo;
 	}
 }
