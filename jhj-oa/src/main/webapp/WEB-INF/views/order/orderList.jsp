@@ -41,7 +41,7 @@
 						<section class="panel">
 							<header class="panel-heading">
 								<h4>数据搜索</h4>
-									<form:form modelAttribute="searchModel" class="form-inline"
+									<form:form modelAttribute="searchModel" onsubmit="return checkEndTime()" class="form-inline"
 									 method="GET" id="oaSearchForm">
 									<form:hidden path="orderType"/>
 									<table class="table">

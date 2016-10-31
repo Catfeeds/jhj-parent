@@ -152,7 +152,7 @@ public class NewOrgStaffController extends AdminController {
 	/*
 	 *  跳转form页
 	 */
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "new_staff_form", method = RequestMethod.GET)
 	public String toOrgStaffAsForm(Model model,HttpServletRequest request,
 			@RequestParam("orgStaffId") Long orgStaffId) {
