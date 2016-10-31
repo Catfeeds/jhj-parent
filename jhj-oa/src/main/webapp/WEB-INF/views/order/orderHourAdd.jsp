@@ -121,7 +121,7 @@
 												<font color="red">*</font>服务时长
 											</label>
 											<div class="col-md-5">
-												<input type="text" id="serviceHour" name="serviceHour" class="form-control" value="3" />
+												<input type="text" id="serviceHour" name="serviceHour" class="form-control" value="2" />
 											</div>
 										</div>
 										<div class="form-group">

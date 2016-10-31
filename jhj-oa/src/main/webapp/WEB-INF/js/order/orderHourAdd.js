@@ -34,7 +34,7 @@ var formVal = $('#orderHourForm').validate({
 		serviceHour : {
 			required : true,
 			digits : true,
-			min : 3,
+			min : 2,
 			
 		},
 		
