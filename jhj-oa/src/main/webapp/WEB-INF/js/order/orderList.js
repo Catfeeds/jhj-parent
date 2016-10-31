@@ -4,15 +4,15 @@ $('.form_datetime').datepicker({
 	language : "zh-CN",
 	autoclose : true,
 	startView : 0,
-	todayBtn : true,
+	todayBtn : true
 });
 
-$('.form-datetime').datepicker({
-	format: "yyyy-mm-dd",
+$('.form-datetime').datetimepicker({
+	format: "yyyy-mm-dd hh:ii",
 	language: "zh-CN",
 	autoclose: true,
-	todayBtn:true
-//	minuteStep: 30,
+	todayBtn:true,
+	minuteStep: 30
 });
 
 

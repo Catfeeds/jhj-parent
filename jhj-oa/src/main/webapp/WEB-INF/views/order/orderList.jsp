@@ -98,13 +98,13 @@
 										<tr>
 											<td>下单时间：</td>
 											<td><input id="startTimeStr" name="startTimeStr" value="${startTimeStr }" class="form-control form_datetime"
-													style="width: 170px; margin-bottom: 0" readonly="true" /> <%-- <span>至</span> <input id="endTimeStr"
-													name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> --%></td>
+													style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> <input id="endTimeStr"
+													name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> </td>
 											<td>服务日期：</td>
 											<td colspan="2"><input id="serviceStartTimeStr" name="serviceStartTimeStr" value="${serviceStartTimeStr }"
-													class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <%-- <span>至</span>
+													class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span>
 												<input id="serviceEndTimeStr" name="serviceEndTimeStr" value="${serviceEndTimeStr }" class="form-control form-datetime"
-													style="width: 170px; margin-bottom: 0" readonly="true" /> --%></td>
+													style="width: 170px; margin-bottom: 0" readonly="true" /></td>
 											<td></td>
 											<td></td>
 											

@@ -748,24 +748,24 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr)) {
 			searchVo.setStartAddTime(TimeStampUtil.getMillisOfDayFull(startTimeStr+" 00:00:00") / 1000);
-			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDayFull(startTimeStr+" 23:59:59") / 1000);
 		}
 
 		// 下单结束时间
-//		String endTimeStr = request.getParameter("endTimeStr");
-//		if (!StringUtil.isEmpty(endTimeStr)) {
-//		}
+		String endTimeStr = request.getParameter("endTimeStr");
+		if (!StringUtil.isEmpty(endTimeStr)) {
+			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDayFull(endTimeStr+" 23:59:59") / 1000);
+		}
 
 		// 服务开始时间
 		String serviceStartTime = request.getParameter("serviceStartTimeStr");
 		if (!StringUtil.isEmpty(serviceStartTime)) {
-			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDayFull(serviceStartTime+" 00:00:00") / 1000);
-			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceStartTime+" 23:59:59") / 1000);
+			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDayFull(serviceStartTime+":00") / 1000);
 		}
 		// 服务结束时间
-//		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
-//		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
-//		}
+		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
+		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
+			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":00") / 1000);
+		}
 		// 处理查询时间条件--------------------------------结束
 
 		// 处理查询状态条件--------------------------------开始
