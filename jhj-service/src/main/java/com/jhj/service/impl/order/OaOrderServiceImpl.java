@@ -667,11 +667,20 @@ public class OaOrderServiceImpl implements OaOrderService {
 			
 			OrgStaffs staffs = staffService.selectByPrimaryKey(tmpStaffId);
 			
+			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
 			Orgs cloudOrg = orgService.selectByPrimaryKey(staffs.getOrgId());
-			if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
+			if(cloudOrg!=null){
+				if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
+				vo.setOrgName(cloudOrg.getOrgName());
+			}
 			
 			Orgs parentOrg = orgService.selectByPrimaryKey(staffs.getParentOrgId());
-			if (orgName.indexOf(parentOrg.getOrgName() + ",") < 0) orgName+= parentOrg.getOrgName() + ",";
+			if(parentOrg!=null){
+				if (orgName.indexOf(parentOrg.getOrgName() + ",") < 0) orgName+= parentOrg.getOrgName() + ",";
+				vo.setParentOrgName(parentOrg.getOrgName());
+			}
+			
+			orderDispatchs.add(vo);
 		
 			//是否接单状态;
 			Short isApply = item.getIsApply();
@@ -688,11 +697,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 				}
 			}
 			
-			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
-			vo.setOrgName(cloudOrg.getOrgName());
-			vo.setParentOrgName(parentOrg.getOrgName());
 			
-			orderDispatchs.add(vo);
 		}
 		
 		if (!StringUtil.isEmpty(staffName) && staffName.substring(staffName.length()-1).equals(",")) {

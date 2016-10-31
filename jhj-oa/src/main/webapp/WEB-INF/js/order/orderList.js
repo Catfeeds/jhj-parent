@@ -7,28 +7,28 @@ $('.form_datetime').datepicker({
 	todayBtn : true,
 });
 
-$('.form-datetime').datetimepicker({
-	format: "yyyy-mm-dd hh:ii",
+$('.form-datetime').datepicker({
+	format: "yyyy-mm-dd",
 	language: "zh-CN",
 	autoclose: true,
-	todayBtn:true,
-	minuteStep: 30,
+	todayBtn:true
+//	minuteStep: 30,
 });
 
 
-function checkEndTime() {
-	var startTime = $("#startTimeStr").val();
-	var start = new Date(startTime.replace("-", "/").replace("-", "/"));
-	var endTime = $("#endTimeStr").val();
-	var end = new Date(endTime.replace("-", "/").replace("-", "/"));
-	if (end < start) {
-
-		alert('结束日期必须大于开始时间');
-		return false;
-	}
+//function checkEndTime() {
+//	var startTime = $("#startTimeStr").val();
+//	var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+//	var endTime = $("#endTimeStr").val();
+//	var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+//	if (end < start) {
+//
+//		alert('结束日期必须大于开始时间');
+//		return false;
+//	}
 	
-	return true;
-}
+//	return true;
+//}
 
 //新增 钟点工订单的   线下支付方式， 红色显示
 $("tbody").find("tr").each(function(k, v) {
