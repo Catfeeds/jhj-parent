@@ -222,7 +222,7 @@ public class NewOrgStaffController extends AdminController {
 	/*
 	 * 提交表单
 	 */
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "new_staff_form", method = RequestMethod.POST)
 	public String doOrgStaffAsForm(HttpServletRequest request, Model model,
 			@ModelAttribute("newStaffFormVoModel") NewStaffFormVo formVo,
