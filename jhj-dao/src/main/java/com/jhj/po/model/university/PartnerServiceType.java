@@ -14,6 +14,8 @@ public class PartnerServiceType {
     private Short defaultNum;
 
     private BigDecimal price;
+    
+    private BigDecimal mprice;
 
     private String remarks;
 
@@ -171,6 +173,14 @@ public class PartnerServiceType {
 
 	public void setServiceHour(double serviceHour) {
 		this.serviceHour = serviceHour;
+	}
+
+	public BigDecimal getMprice() {
+		return mprice;
+	}
+
+	public void setMprice(BigDecimal mprice) {
+		this.mprice = mprice;
 	}
 	
 }

@@ -8,6 +8,7 @@
 		<result column="unit" property="unit" jdbcType="VARCHAR" />
 		<result column="default_num" property="defaultNum" jdbcType="NUMERIC" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="mprice" property="mprice" jdbcType="DECIMAL" />
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="view_type" property="viewType" jdbcType="NUMERIC" />
 		<result column="no" property="no" jdbcType="NUMERIC" />
@@ -22,7 +23,7 @@
 		
 	</resultMap>
 	<sql id="Base_Column_List">
-		service_type_id, name, parent_id, unit, default_num, price, remarks, view_type, no,
+		service_type_id, name, parent_id, unit, default_num, price, mprice, remarks, view_type, no,
 		service_img_url, enable, service_property, service_times, service_content, is_auto, is_multi,service_hour
 	</sql>
 
@@ -115,12 +116,13 @@
 			SELECT LAST_INSERT_ID() AS service_type_id
 		</selectKey>
 		insert into partner_service_type (service_type_id, name, parent_id,
-		unit, default_num, price,
+		unit, default_num, price, mprice, 
 		remarks, view_type, no,
 		service_img_url, enable, service_property,
 		service_times, service_content, is_auto, is_multi,service_hour)
 		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC},
-		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, #{price,jdbcType=DECIMAL},
+		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, 
+		#{price,jdbcType=DECIMAL}, #{mprice,jdbcType=DECIMAL},
 		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC},
 		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
 		#{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR}, 
@@ -149,6 +151,9 @@
 			</if>
 			<if test="price != null">
 				price,
+			</if>
+			<if test="mprice != null">
+				mprice,
 			</if>
 			<if test="remarks != null">
 				remarks,
@@ -204,6 +209,9 @@
 			<if test="price != null">
 				#{price,jdbcType=DECIMAL},
 			</if>
+			<if test="mprice != null">
+				#{mprice,jdbcType=DECIMAL},
+			</if>
 			<if test="remarks != null">
 				#{remarks,jdbcType=VARCHAR},
 			</if>
@@ -258,6 +266,9 @@
 			<if test="price != null">
 				price = #{price,jdbcType=DECIMAL},
 			</if>
+			<if test="mprice != null">
+				mprice = #{mprice,jdbcType=DECIMAL},
+			</if>
 			<if test="remarks != null">
 				remarks = #{remarks,jdbcType=VARCHAR},
 			</if>
@@ -302,6 +313,7 @@
 		unit = #{unit,jdbcType=VARCHAR},
 		default_num = #{defaultNum,jdbcType=NUMERIC},
 		price = #{price,jdbcType=DECIMAL},
+		mprice = #{mprice,jdbcType=DECIMAL},
 		remarks = #{remarks,jdbcType=VARCHAR},
 		view_type = #{viewType,jdbcType=NUMERIC},
 		no = #{no,jdbcType=NUMERIC},

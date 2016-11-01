@@ -55,10 +55,18 @@
                            
                            
                            <div class="form-group required">
-                              <label  class="col-md-2 control-label">单价*</label>
+                              <label  class="col-md-2 control-label">非会员价*</label>
                               <div class="col-md-5">
                                  <form:input path="price" class="form-control" placeholder="单价"/>
                                  <form:errors path="price" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">会员价*</label>
+                              <div class="col-md-5">
+                                 <form:input path="mprice" class="form-control" placeholder="单价"/>
+                                 <form:errors path="mprice" class="field-has-error"/>
                               </div>
                            </div>
                            
