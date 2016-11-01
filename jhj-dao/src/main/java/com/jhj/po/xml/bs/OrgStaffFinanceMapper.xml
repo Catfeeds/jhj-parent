@@ -62,6 +62,14 @@
 			</foreach>
 			)
 		</if>
+		
+		<if test="parentId!=null">
+			and staff_id in (select staff_id from org_staffs where parent_org_id = #{parentId})
+		</if>
+		
+		<if test="orgId!=null and orgId!=0">
+			and staff_id in (select staff_id from org_staffs where org_id = #{orgId})
+		</if>
 
 		<if test="isBlack !=null">
 			and is_black = #{isBlack,jdbcType=NUMERIC}

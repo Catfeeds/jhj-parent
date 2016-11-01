@@ -6,6 +6,7 @@
 
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
+<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld" %>
 <html>
 <head>
@@ -33,15 +34,26 @@
 				<h4>服务人员总欠款表</h4>
 				
 				<form:form class="form-inline" modelAttribute="orgStaffDetailPaySearchVoModel" action="staffPayDept-list" method="GET">
-                         <div class="form-group">	
-							选择云店: <form:select path="orgId">
-										<form:option value="">请选择云店</form:option>
-										<form:options items="${orgList}" itemValue="orgId" itemLabel="orgName" />
-									</form:select>
-							手机号码：<form:input path="mobile"/>
-						</div>
-						<button type="submit" class="btn btn-primary" >搜索</button>						
-                 </form:form> 
+                    
+                    <td>选择门店:</td>
+						<td><orgSelectTag:select selectId="${orgStaffDetailPaySearchVoModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
+						<td>选择云店:</td>
+						<td>
+						<select name="orgId" id="orgId" class="form-control">
+							<option value="0">全部</option>
+						</select>
+					</td>
+                    
+                    
+                    <%-- <div class="form-group">	
+						选择云店: <form:select path="orgId">
+									<form:option value="">请选择云店</form:option>
+									<form:options items="${orgList}" itemValue="orgId" itemLabel="orgName" />
+								</form:select>
+					</div> --%>
+						手机号码：<form:input path="mobile"/>
+					<button type="submit" class="btn btn-primary" >搜索</button>						
+                </form:form> 
 			</header>
 			
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
@@ -107,6 +119,7 @@
 	<!--script for this page-->
 	<script type="text/javascript"
 		src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 
 </body>
 </html>

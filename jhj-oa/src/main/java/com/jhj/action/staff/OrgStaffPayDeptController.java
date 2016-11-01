@@ -54,38 +54,23 @@ public class OrgStaffPayDeptController extends BaseController {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		// 分页
-		PageHelper.startPage(pageNo, pageSize);
 
 		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+		if (sessionOrgId > 0L){
+			searchVo.setParentId(sessionOrgId);
+			
+		}
 
-		// 处理查询条件云店--------------------------------开始
-		// 1) 如果有查询条件云店org_id，则以查询条件的云店为准
-		// 2) 如果没有查询条件，则判断是否为店长，并且只能看店长所在门店下的所有云店.
+		String parentIdParam = request.getParameter("parentId");
+		if(parentIdParam!=null && parentIdParam!="" && Long.valueOf(parentIdParam)>0){
+			searchVo.setParentId(Long.valueOf(parentIdParam));
+		}
+		
 		String paramOrgId = request.getParameter("orgId");
-		List<Long> cloudIdList = new ArrayList<Long>();
-		if (!StringUtil.isEmpty(paramOrgId) && !paramOrgId.equals("0")) {
-			cloudIdList.add(Long.valueOf(paramOrgId));
-		} else {
-
-			if (sessionOrgId > 0L) {
-				OrgSearchVo searchVo1 = new OrgSearchVo();
-				searchVo1.setParentId(sessionOrgId);
-				searchVo1.setOrgStatus((short) 1);
-
-				List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
-
-				for (Orgs orgs : cloudList) {
-					cloudIdList.add(orgs.getOrgId());
-				}
-			}
-		}
-
-		if (!cloudIdList.isEmpty()) {
-			searchVo.setSearchCloudOrgIdList(cloudIdList);
-		}
-		// 处理查询条件云店--------------------------------结束
+		if (!StringUtil.isEmpty(paramOrgId) && Long.valueOf(paramOrgId)>0L) {
+			searchVo.setOrgId(Long.valueOf(paramOrgId));
+		} 
 		PageInfo result = orgStaffFinanceService.selectByListPage(searchVo, pageNo, pageSize);
 		List<OrgStaffFinance> orgStaffFinanceList = result.getList();
 
@@ -104,7 +89,6 @@ public class OrgStaffPayDeptController extends BaseController {
 			vo.setRestMoney(totalRest);
 			vo.setTotalCashValid(totalCashValid);
 			
-
 			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffFinance.getStaffId());
 			vo.setName(orgStaffs.getName());
 
