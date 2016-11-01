@@ -73,6 +73,28 @@ function cleanForm(){
 	$("form :input").not(":button, :submit, :reset, :hidden, :checkbox").val("").remove("selected");
 }
 
-
+function orderByTime(){
+	var fromdata = $("#oaSearchForm").serialize();
+	if($("button[name='orderByProperty']").val()==""){
+		fromdata+="&orderByProperty=service_date desc";
+	}
+	
+	$.ajax({
+		type:"get",
+		url:$("#btnSearch").val(),
+		data:fromdata,
+		success:function(data){
+			var s=$("button[name='orderByProperty']").val();
+			if(s==""){
+				$("button[name='orderByProperty']").val("service_date");
+				$("button[name='orderByProperty']").text("下单时间排序");
+			}else{
+				$("button[name='orderByProperty']").val("");
+				$("button[name='orderByProperty']").text("服务时间排序");
+			}
+		}
+	});
+	
+}
 
 

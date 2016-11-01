@@ -128,6 +128,11 @@
 												<button type="button" class="btn btn-primary" onclick="cleanForm()">清空</button>
 											</td>					
 										</tr>
+										<tr>
+											<td>
+												<button type="button" name="orderByProperty" class="btn btn-primary" onclick="orderByTime()">服务时间排序</button>
+											</td>
+										</tr>
 									</table>
 								</form:form>
 							</header>

@@ -146,7 +146,7 @@ public class OrderQueryController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
-//		searchVo.setOrderByProperty("service_date desc");
+		searchVo.setOrderByProperty(searchVo.getOrderByProperty());
 		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
 
 		List<Orders> orderList = result.getList();
