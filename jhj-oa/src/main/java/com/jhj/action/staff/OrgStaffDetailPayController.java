@@ -25,10 +25,12 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
@@ -53,6 +55,9 @@ public class OrgStaffDetailPayController extends BaseController {
 	
 	@Autowired
 	private OrderPricesService orderPriceService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 
 	/**
 	 * 服务人员财务明细
@@ -144,6 +149,15 @@ public class OrgStaffDetailPayController extends BaseController {
 			if (orderPrices != null && orderPrices.getPayType() != null) {
 				oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPrices.getPayType()));
 			}
+			
+			if (oaVo.getOrderType().equals((short)9)) {
+				OrderPriceExt orderPriceExt = orderPriceExtService.selectByOrderNoExt(oaVo.getOrderNo());
+				
+				if (orderPriceExt != null) {
+					oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPriceExt.getPayType()));
+				}
+			}
+			
 			orgStaffdetailPayList.set(i, oaVo);
 			// orgStaffPayVoList.add(oaVo);
 		}

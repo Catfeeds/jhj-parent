@@ -469,6 +469,7 @@ public class OrderController extends BaseController {
 	    detailPay.setTradeNo("");
 	    detailPay.setTradeStatus("");
 	    detailPay.setPayType((short)6);
+	    detailPay.setAddTime(TimeStampUtil.getNowSecond());
 	    
 	    userDetailPayService.insert(detailPay);
 		
