@@ -17,10 +17,11 @@
 		<result column="add_from" property="addFrom" jdbcType="NUMERIC" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		<result column="is_vip" property="isVip" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, province_name, mobile, 3rd_type, openid, name, sex, head_img, rest_money, score,
-		user_type, remarks,add_from, add_time, update_time
+		user_type, remarks,add_from, add_time, update_time,is_vip
 	</sql>
 	
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -39,6 +40,7 @@
 	
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
 		<include refid="bySearchVo" />
+		order by add_time desc
 	</select>
 	
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
@@ -87,12 +89,15 @@
 			</foreach>
 		</if>
 		
-		
 		<if test="startTime !=null">
 			<![CDATA[ and add_time >= #{startTime}]]>
 		</if>
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		
+		<if test="isVip!=null">
+			and is_vip = #{isVip,jdbcType=NUMERIC}
 		</if>
 	</sql>
 
@@ -356,7 +361,7 @@
 		3rd_type, openid, name,
 		sex, head_img, rest_money,
 		score, user_type,remarks, add_from,
-		add_time, update_time)
+		add_time, update_time,is_vip)
 		values
 		(#{id,jdbcType=NUMERIC}, #{provinceName,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR},
 		#{thirdType,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR},
@@ -364,7 +369,7 @@
 		#{sex,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{restMoney,jdbcType=NUMERIC},
 		#{score,jdbcType=NUMERIC},
 		#{userType,jdbcType=NUMERIC}, #{remarks,jdbcType=VARCHAR},#{addFrom,jdbcType=NUMERIC},
-		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},#{isVip,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.user.Users">
 		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -418,6 +423,9 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<if test="isVip!=null">
+				is_vip
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -465,6 +473,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="isVip != null">
+				#{isVip,jdbcType=NUMERIC},
 			</if>
 		</trim>
 	</insert>
@@ -514,6 +525,9 @@
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=NUMERIC},
 			</if>
+			<if test="isVip!=null">
+				is_vip = #{isVip,jdbcType=NUMERIC}
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -534,7 +548,8 @@
 		#{remarks,jdbcType=VARCHAR}
 		add_from = #{addFrom,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
-		update_time = #{updateTime,jdbcType=NUMERIC}
+		update_time = #{updateTime,jdbcType=NUMERIC},
+		is_vip = #{isVip,jdbcType=NUMERIC}
 		where id
 		= #{id,jdbcType=NUMERIC}
 	</update>

@@ -32,6 +32,8 @@ public class Users {
     private Long addTime;
 
     private Long updateTime;
+    
+    private int isVip;
 
     public Long getId() {
         return id;
@@ -152,6 +154,14 @@ public class Users {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public int getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(int isVip) {
+		this.isVip = isVip;
 	}
     
 }
