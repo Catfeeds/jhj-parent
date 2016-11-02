@@ -310,8 +310,10 @@ function chagePrice(){
 	var id=$("select[name='serviceType'] option:selected").val();
 	if(id==28){
 		$("#orderPay").val($("#hour-price").val());
+		$("#serviceHour").val(3);
 	}else if(id==29){
 		$("#orderPay").val($("#cook-price").val());
+		$("#serviceHour").val(2);
 	}
 	
 }

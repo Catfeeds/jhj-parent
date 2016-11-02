@@ -2,6 +2,7 @@ package com.jhj.service.impl.bs;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -163,6 +164,11 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	@Override
 	public List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo) {		
 		return orgStaffDetailPayMapper.selectBySearchVo(searchVo);
+	}
+
+	@Override
+	public Map<String, Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo) {
+		return orgStaffDetailPayMapper.selectTotalData(searchVo);
 	}
 
 }

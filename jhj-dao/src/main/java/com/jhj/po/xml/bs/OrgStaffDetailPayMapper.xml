@@ -18,54 +18,8 @@
 		id, staff_id, mobile, order_type, order_id, order_no, order_money, order_pay, order_status_str,
 		remarks, add_time
 	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
-		select
-		<include refid="Base_Column_List" />
-		from org_staff_detail_pay
-		where id = #{id,jdbcType=NUMERIC}
-	</select>
-	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
-
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM org_staff_detail_pay
-		WHERE 1=1
-		
-		<if test="staffId !=null">
-			and staff_id = #{staffId,jdbcType=NUMERIC}
-		</if>
-		
-		<if test="mobile !=null and mobile != ''">
-			and mobile = #{mobile,jdbcType=CHAR}
-		</if>
-				
-		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
-		   	 and staff_id in (
-			   	 		select staff_id from org_staffs where org_id in 
-					   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
-			      			${item}
-			   			</foreach>
-		   	 )
-		</if>
-		
-		<if test="startTime !=null and startTime!='' ">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		
-		<if test="endTime !=null and endTime !='' ">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		
-		order by add_time desc
-
-	</select>
-
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
-
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM org_staff_detail_pay
-		WHERE 1=1
+	
+	<sql id="searchVo">
 		<if test="staffId !=null">
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
@@ -97,7 +51,31 @@
 		<if test="endTime !=null and endTime !='' ">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-		
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from org_staff_detail_pay
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM org_staff_detail_pay
+		WHERE 1=1
+		<include refid="searchVo"/>
+		order by add_time desc
+
+	</select>
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM org_staff_detail_pay
+		WHERE 1=1
+		<include refid="searchVo"/>
 		order by add_time desc
 
 	</select>
@@ -258,4 +236,16 @@
 		add_time = #{addTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
+	
+	<select id="selectTotalData" resultType="java.util.HashMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		SELECT SUM(order_money) as totalMoney,
+		SUM(order_pay) as orderPayMoney,
+		(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='6')) as cashMoney,
+		(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='7')) as platformMoney,
+		(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_type='4') refundMoney	
+		FROM org_staff_detail_pay
+		<where>
+			<include refid="searchVo"/>
+		</where>
+	</select>
 </mapper>

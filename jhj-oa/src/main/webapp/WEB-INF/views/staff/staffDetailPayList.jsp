@@ -34,11 +34,9 @@ import="com.jhj.oa.common.UrlHelper"%>
       <section id="main-content">
           <section class="wrapper">
               <!-- page start-->
-
               <div class="row">
                   <div class="col-lg-12">
                       <section class="panel">
-                      	  
                           <header class="panel-heading">
                           	<h4>数据搜索</h4>
                       	 	<form:form class="form-inline" onsubmit="return checkEndTime()"
@@ -64,11 +62,26 @@ import="com.jhj.oa.common.UrlHelper"%>
 										<form:options items="${orgList}" itemValue="orgId" itemLabel="orgName" />
 									</form:select>
 								 </div>
-								
 								<button type="submit" class="btn btn-primary" >搜索</button>								
                            </form:form>     
                           </header>
                            
+                           <table class="table table-bordered">
+                           	<tr>
+                           		<td>订单总金额</td>
+                           		<td>订单收入</td>
+                           		<td>现金收入</td>
+                           		<td>平台已支付</td>
+                           		<td>还款金额</td>
+                           	</tr>
+                           	<tr>
+                           		<td>${totalMoney }</td>
+                           		<td>${orderPayMoney }</td>
+                           		<td>${cashMoney }</td>
+                           		<td>${platformMoney }</td>
+                           		<td>${refundMoney }</td>
+                           	</tr>
+                           </table>
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
                       	
                           <header class="panel-heading">
@@ -79,40 +92,34 @@ import="com.jhj.oa.common.UrlHelper"%>
                           <table class="table table-striped table-advance table-hover" id="table2excel">
                               <thead>
                               <tr>	  
-                             		  <th >服务人员姓名</th>
-                                	  <th >服务人员手机号 </th>
-                                	 
-		                              <th >订单类型</th>
-		                              <th >订单金额</th>
-		                              <th >订单收入</th>
-		                              <th>支付方式</th>
-		                              <th >订单状态</th>
-		                              <th >备注</th>
-		                              <th >添加时间</th>
+                           		  <th >员工姓名</th>
+                              	  <th >员工手机号 </th>
+	                              <th >订单类型</th>
+	                              <th >订单金额</th>
+	                              <th >订单收入</th>
+	                              <th>支付方式</th>
+	                              <th >订单状态</th>
+	                              <th >添加时间</th>
+	                              <th >备注</th>
                               </tr>
                               </thead>
                               <tbody>
                               <c:forEach items="${contentModel.list}" var="item">
                               <tr>	
-							            <td>${ item.name }</td>
-                                  	    <td>${ item.mobile }</td>
-							            <td>${ item.orderTypeName }</td>
-							            <td>${ item.orderMoney }</td>
-							            <td>${ item.orderPay }</td>
-							            <td>${item.payTypeName }</td>
-							            <td>${ item.orderStatusStr }</td>
-							            <td>${ item.remarks }</td>
-							            <td>
-							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
-							            </td>
+					            <td style="width:6%">${ item.name }</td>
+                                <td style="width:10%">${ item.mobile }</td>
+					            <td style="width:15%">${ item.orderTypeName }</td>
+					            <td style="width:8%">${ item.orderMoney }</td>
+					            <td style="width:8%">${ item.orderPay }</td>
+					            <td style="width:10%">${item.payTypeName }</td>
+					            <td style="width:8%">${ item.orderStatusStr }</td>
+					            <td style="width:10%"><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/></td>
+					            <td style="width:25%">${ item.remarks }</td>
                               </tr>
-                              	</c:forEach>
+                              </c:forEach>
                               </tbody>
                           </table>
-
-                          
                       </section>
-                      
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="contentModel"/>
 	        				<c:param name="urlAddress" value="/staff/staffPay-list"/>

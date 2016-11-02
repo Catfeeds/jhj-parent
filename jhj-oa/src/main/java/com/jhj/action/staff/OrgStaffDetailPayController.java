@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -119,6 +120,10 @@ public class OrgStaffDetailPayController extends BaseController {
 		}
 
 		List<OrgStaffDetailPay> orgStaffdetailPayList = orgStaffDetailPayService.selectVoByListPage(searchVo, pageNo, pageSize);
+		//统计查询
+		Map<String, Double> statisticalData = orgStaffDetailPayService.selectTotalData(searchVo);
+		model.addAllAttributes(statisticalData);
+		
 		List<OrgStaffDetailPayOaVo> orgStaffPayVoList = new ArrayList<OrgStaffDetailPayOaVo>();
 		for (int i = 0; i < orgStaffdetailPayList.size(); i++) {
 			OrgStaffDetailPay orgStaffDetailPay = orgStaffdetailPayList.get(i);

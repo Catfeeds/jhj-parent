@@ -77,8 +77,8 @@
                             		  <th >订单号</th>
 		                              <th >会员手机号</th>
 		                              <th >订单类型</th>
-		                              <th>订单总金额</th>
-		                              <th >订单实际支付</th>
+		                              <th>充值金额</th>
+		                              <th >支付金额</th>
 		                              <th>交易状态</th>
 		                              <th>付款类型</th>
 		                              <th >添加时间</th>
@@ -92,7 +92,6 @@
 							            </td>
 							            <td>${ item.mobile }</td>
 							            <td>
-							            
 							            	<!-- todo 不能显示 充值记录！！ -->
 							            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
 							            </td>

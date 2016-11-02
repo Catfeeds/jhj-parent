@@ -1,6 +1,7 @@
 package com.jhj.service.bs;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
@@ -39,5 +40,7 @@ public interface OrgStaffDetailPayService {
 			OrgStaffDetailPaySearchVo searchVo, int pageNo, int pageSize);
 
 	List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
+	
+	Map<String,Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo);
 
 }

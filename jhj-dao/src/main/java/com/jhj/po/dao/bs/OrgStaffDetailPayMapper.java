@@ -1,6 +1,7 @@
 package com.jhj.po.dao.bs;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
@@ -25,4 +26,6 @@ public interface OrgStaffDetailPayMapper {
 	List<OrgStaffDetailPay> selectVoByListPage(OrgStaffDetailPaySearchVo searchVo);
 
 	List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
+	
+	Map<String,Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo);
 }
