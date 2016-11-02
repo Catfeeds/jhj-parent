@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
@@ -38,5 +39,7 @@ public interface OrgStaffFinanceService {
 	void orderDone(Orders orders, OrderPrices orderPrices, OrgStaffs orgStaffs);
 
 	List<OrgStaffFinance> selectBySearchVo(OrgStaffFinanceSearchVo searchVo);
+
+	void orderOverWork(Orders orders, OrderPriceExt orderPriceExt, OrgStaffs orgStaffs);
 
 }

@@ -76,6 +76,7 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		type.setUnit("");
 		type.setDefaultNum((short)0);
 		type.setPrice(new BigDecimal(0));
+		type.setMprice(new BigDecimal(0));
 		type.setRemarks("");
 		
 		type.setServiceImgUrl("");

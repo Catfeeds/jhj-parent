@@ -16,6 +16,7 @@ import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
@@ -148,27 +149,8 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		Long staffId = orgStaffs.getStaffId();
 		Short level = orgStaffs.getLevel();
 		String settingLevel = "-level-" + level.toString();
-		// 得到订单收入
-		String settingType = "";
-		if (orders.getOrderType() == 0) {
-			// 钟点功能收入比例 hour-ratio
-			settingType = "hour-ratio";
-		}
-		
-		if (orders.getOrderType() == 1) {
-			// 钟点功能收入比例 hour-ratio
-			settingType = "deep-ratio";
-		}
-		
-		if (orders.getOrderType() == 2) {
-			// 助理服务收入比例 am-ratio
-			settingType = "am-ratio";
-		}
-
-		if (orders.getOrderType() == 3) {
-			// 配送服务收入比例 am-ratio
-			settingType = "dis-ratio";
-		}
+		// 得到订单收入比例
+		String settingType = OrderUtils.getOrderSettingType(orders.getOrderType());
 
 		settingType += settingLevel;
 
@@ -292,5 +274,131 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			}
 		}
 	}
+	
+	//订单补时，服务人员的财务信息操作
+	@Override
+	public void orderOverWork(Orders orders, OrderPriceExt orderPriceExt, OrgStaffs orgStaffs) {
+		Long orderId = orders.getId();
+		Long staffId = orgStaffs.getStaffId();
+		Short level = orgStaffs.getLevel();
+		String settingLevel = "-level-" + level.toString();
+		// 得到订单收入比例
+		String settingType = OrderUtils.getOrderSettingType(orders.getOrderType());
+
+		settingType += settingLevel;
+
+		BigDecimal orderIncoming = new BigDecimal(0);
+		BigDecimal orderPay = orderPriceExt.getOrderPay();
+		
+		//如果为深度养护，需要判断是否为多人派工，订单金额需要平均
+		if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setOrderId(orders.getId());
+			searchVo1.setDispatchStatus((short) 1);
+			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
+			
+			if (orderDispatchs.size() > 1) {
+				orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
+			}
+		}
+		
+		
+		JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
+		if (jhjSetting != null) {
+			BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
+			orderIncoming = orderPay.multiply(settingValue);
+			orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
+		}
+
+		// 服务人员财务表
+		OrgStaffFinance orgStaffFinance = this.selectByStaffId(staffId);
+		if (orgStaffFinance == null) {
+			orgStaffFinance = this.initOrgStaffFinance();
+			orgStaffFinance.setStaffId(staffId);
+		}
+		orgStaffFinance.setMobile(orgStaffs.getMobile());
+		// 总收入
+		BigDecimal totalIncoming = orgStaffFinance.getTotalIncoming();
+		// 最终总收入
+		BigDecimal totalIncomingend = totalIncoming.add(orderIncoming);
+		orgStaffFinance.setTotalIncoming(totalIncomingend);
+		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
+
+		if (orgStaffFinance.getId() > 0L) {
+			this.updateByPrimaryKeySelective(orgStaffFinance);
+		} else {
+			this.insert(orgStaffFinance);
+		}
+		
+
+		// 新增服务人员交易明细表 org_staff_detail_pay
+		OrgStaffDetailPay orgStaffDetailPay = orgStaffDetailPayService.initStaffDetailPay();
+		// 新增收入明细表 org_staff_detail_pay
+		orgStaffDetailPay.setStaffId(staffId);
+		orgStaffDetailPay.setMobile(orgStaffs.getMobile());
+		
+		// 9 = 订单补时
+		orgStaffDetailPay.setOrderType((short)9);
+		orgStaffDetailPay.setOrderId(orderId);
+		orgStaffDetailPay.setOrderNo(orderPriceExt.getOrderNoExt());
+		orgStaffDetailPay.setOrderMoney(orderPay);
+		orgStaffDetailPay.setOrderPay(orderIncoming);
+		orgStaffDetailPay.setOrderStatusStr("现金支付");
+		orgStaffDetailPay.setRemarks(orders.getRemarks());
+		orgStaffDetailPayService.insert(orgStaffDetailPay);
+
+		if (orderPriceExt.getPayType().equals((short) 6)) {
+			
+			OrgStaffDetailPaySearchVo paySearchVo = new OrgStaffDetailPaySearchVo();
+			paySearchVo.setStaffId(staffId);
+			paySearchVo.setOrderNo(orderPriceExt.getOrderNoExt());
+			
+			// 判断是否已经存在欠款
+			List<OrgStaffDetailDept> orgStaffDetailDepts = orgStaffDetailDeptService.selectBySearchVo(paySearchVo);
+
+			if (orgStaffDetailDepts.isEmpty()) {
+				OrgStaffDetailDept orgStaffDetailDept = orgStaffDetailDeptService.initOrgStaffDetailDept();
+				// 新增欠款明细表 org_staff_detail_dept
+				orgStaffDetailDept.setStaffId(staffId);
+				orgStaffDetailDept.setMobile(orgStaffs.getMobile());
+				orgStaffDetailDept.setOrderType(orders.getOrderType());
+				orgStaffDetailDept.setOrderId(orderId);
+				orgStaffDetailDept.setOrderNo(orders.getOrderNo());
+				orgStaffDetailDept.setOrderMoney(orderPay);
+				orgStaffDetailDept.setOrderDept(orderIncoming);
+				orgStaffDetailDept.setOrderStatusStr("加时服务");
+				orgStaffDetailDept.setRemarks(orders.getRemarks());
+				orgStaffDetailDeptService.insert(orgStaffDetailDept);
+
+				// 更新欠款总表
+				BigDecimal totalDept = orgStaffFinance.getTotalDept();
+				totalDept = totalDept.add(orderPay);
+				orgStaffFinance.setTotalDept(totalDept);
+				orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
+				this.updateByPrimaryKeySelective(orgStaffFinance);
+
+				BigDecimal maxOrderDept = new BigDecimal(1000);
+				jhjSetting = settingService.selectBySettingType("total-dept-blank");
+				if (jhjSetting != null) {
+					maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
+				}
+
+				if (totalDept.compareTo(maxOrderDept) >= 0) {
+					OrgStaffBlack orgStaffBlack = orgStaffBlackService.initOrgStaffBlack();
+					orgStaffBlack.setStaffId(orgStaffDetailDept.getStaffId());
+					orgStaffBlack.setMobile(orgStaffDetailDept.getMobile());
+					orgStaffBlackService.insertSelective(orgStaffBlack);
+
+					// 设置黑名单标识.
+					orgStaffFinance.setIsBlack((short) 1);
+					orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
+					this.updateByPrimaryKey(orgStaffFinance);
+
+					// 欠款大于1000给服务人员发送加入黑名单的短信通知
+					ordersService.userJoinBlackSuccessTodo(orgStaffs.getMobile());
+				}
+			}
+		}
+	}	
 
 }

@@ -14,6 +14,10 @@ public class OrderPriceExt {
     private String orderNo;
     
     private String orderNoExt;
+    
+    private int orderExtType;
+    
+    private double serviceHour;
 
     private Short payType;
 
@@ -121,5 +125,21 @@ public class OrderPriceExt {
 
 	public void setOrderStatus(int orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+	public int getOrderExtType() {
+		return orderExtType;
+	}
+
+	public void setOrderExtType(int orderExtType) {
+		this.orderExtType = orderExtType;
+	}
+
+	public double getServiceHour() {
+		return serviceHour;
+	}
+
+	public void setServiceHour(double serviceHour) {
+		this.serviceHour = serviceHour;
 	}
 }

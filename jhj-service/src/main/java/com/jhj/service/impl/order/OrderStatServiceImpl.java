@@ -29,6 +29,7 @@ import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.utils.OrderUtils;
 import com.jhj.vo.chart.CoopUserOrderVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
@@ -205,8 +206,8 @@ public class OrderStatServiceImpl implements OrderStatService {
 		Short level = staffs.getLevel();
 		String settingLevel = "-level-" + level.toString();
 
-		String hoursettingType = "hour-ratio" + settingLevel;
-		String cleansettingType = "deep-ratio" + settingLevel;
+		String hoursettingType = OrderUtils.getOrderSettingType(Constants.ORDER_TYPE_0) + settingLevel;
+		String cleansettingType = OrderUtils.getOrderSettingType(Constants.ORDER_TYPE_1) + settingLevel;
 
 
 		JhjSetting hour = settingService.selectBySettingType(hoursettingType);

@@ -498,7 +498,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 		Short level = orgStaffs.getLevel();
 		String settingLevel = "-level-" + level.toString();
-
+		String settingType = OrderUtils.getOrderSettingType(vo.getOrderType());
+		settingType+= settingLevel;
 		// 订单价格信息
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(item.getId());
 		vo.setOrderIncoming(new BigDecimal(0));
@@ -509,7 +510,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			// 总金额C * 85% = 结果.
 			if (vo.getOrderType() == 0) {
 				// 基础服务收入比例 hour-ratio
-				String settingType = "hour-ratio" + settingLevel;
+				
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -521,7 +522,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			
 			if (vo.getOrderType() == 1) {
 				// 深度养护收入比例 deep-ratio
-				String settingType = "deep-ratio" + settingLevel;
+				
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -545,7 +546,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 			if (vo.getOrderType() == 2) {
 				// 助理收入比例 am-ratio
-				String settingType = "am-ratio" + settingLevel;
+				
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -556,7 +557,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 			if (vo.getOrderType() == 3) {
 				// 配送服务收入比例 dispatch-ratio
-				String settingType = "dis-ratio" + settingLevel;
 				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 				if (jhjSetting != null) {
 					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
@@ -655,24 +655,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		
 		// 计算订单的收入比例
 		result.setOrderRatio("");
-		String settingType = "";
-		if (vo.getOrderType() == 0) {
-			// 钟点功能收入比例 hour-ratio
-			settingType = "hour-ratio";
-		}
-		if (vo.getOrderType() == 1) {
-			// 钟点功能收入比例 hour-ratio
-			settingType = "deep-ratio";
-		}
-		if (vo.getOrderType() == 2) {
-			// 配送服务收入比例 am-ratio
-			settingType = "am-ratio";
-		}
 
-		if (vo.getOrderType() == 3) {
-			// 配送服务收入比例 am-ratio
-			settingType = "dis-ratio";
-		}
+		String settingType = OrderUtils.getOrderSettingType(vo.getOrderType());
 
 		JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
 		if (jhjSetting != null) {

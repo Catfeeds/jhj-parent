@@ -61,6 +61,8 @@ public class OrderPriceExtServiceImpl implements OrderPriceExtService {
 		record.setOrderId(0L);
 		record.setOrderNo("");
 		record.setOrderNoExt("");
+		record.setOrderExtType(0);
+		record.setServiceHour(0);
 		record.setPayType((short)Constants.PAY_TYPE_0);
 		BigDecimal defaultValue = new BigDecimal(0);
 		record.setOrderPay(defaultValue);

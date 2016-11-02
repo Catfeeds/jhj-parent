@@ -23,8 +23,10 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
@@ -34,16 +36,19 @@ import com.jhj.service.bs.OrgStaffOnlineService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
+import com.jhj.service.users.UserDetailPayService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrderBeginVo;
 import com.jhj.vo.staff.StaffOrderVo;
+import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -92,6 +97,12 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private OrderStatService orderStatService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+	private UserDetailPayService userDetailPayService;
 
 	/**
 	 * 当日统计数接口
@@ -378,6 +389,91 @@ public class OrderController extends BaseController {
 		// 记录订单日志.
 		OrderLog orderLog = orderLogService.initOrderLog(orders);
 		orderLogService.insert(orderLog);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "post_overwork", method = RequestMethod.POST)
+	public AppResultData<Object> postOverwork(HttpServletRequest request,
+			@RequestParam("staff_id") Long staffId,
+			@RequestParam("order_id") Long orderId,
+			@RequestParam("service_hour") double serviceHour,
+			@RequestParam("order_pay") BigDecimal orderPay
+			) {
+		
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		Orders order = ordersService.selectByPrimaryKey(orderId);
+		if (order == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ORDER_NOT_EXIST_MG);
+
+			return result;
+		}
+		
+		//必须为已开始服务的能加时.
+		Short orderStatus = order.getOrderStatus();
+		
+		if (!orderStatus.equals(Constants.ORDER_HOUR_STATUS_5)) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("开始服务的订单才能加时");
+			return result;
+		}
+		
+		if (serviceHour == 0 || orderPay.equals(new BigDecimal(0))) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("小时数和金额不能为0.");
+			return result;
+		}
+		
+		OrderPriceExt orderPriceExt = orderPriceExtService.initOrderPriceExt();
+		orderPriceExt.setUserId(order.getUserId());
+		orderPriceExt.setMobile(order.getMobile());
+		orderPriceExt.setOrderId(order.getId());
+		orderPriceExt.setOrderNo(order.getOrderNo());
+		
+		//生成唯一的补差价订单号
+		String orderNoExt = String.valueOf(OrderNoUtil.genOrderNo());
+		orderPriceExt.setOrderNoExt(orderNoExt);
+		orderPriceExt.setOrderPay(orderPay);
+		
+		orderPriceExt.setServiceHour(serviceHour);
+		//现金支付
+		orderPriceExt.setPayType(Constants.PAY_TYPE_6);
+		orderPriceExt.setOrderStatus(2);
+		
+		//补时标识
+		orderPriceExt.setOrderExtType(1);
+		
+		orderPriceExtService.insert(orderPriceExt);
+		
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
+		
+		//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
+		orgStaffFinanceService.orderOverWork(order, orderPriceExt, orgStaffs);
+		
+		//更新用户明细表
+		UserDetailPay detailPay = new UserDetailPay();
+		detailPay.setId(0L);
+	    detailPay.setPayAccount("");
+	    detailPay.setUserId(order.getUserId());
+	    detailPay.setMobile(order.getMobile());
+	    
+	    // 9 = 订单补时
+	    detailPay.setOrderType((short)9);
+	    detailPay.setOrderId(order.getId());
+	    detailPay.setOrderNo(orderNoExt);
+	    detailPay.setOrderMoney(orderPay);
+	    detailPay.setOrderPay(orderPay);
+	    detailPay.setTradeNo("");
+	    detailPay.setTradeStatus("");
+	    detailPay.setPayType((short)6);
+	    
+	    userDetailPayService.insert(detailPay);
+		
+		
+		
 		
 		return result;
 	}

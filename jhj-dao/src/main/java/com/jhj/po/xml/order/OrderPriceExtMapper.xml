@@ -8,6 +8,8 @@
 		<result column="order_id" property="orderId" jdbcType="NUMERIC" />
 		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
 		<result column="order_no_ext" property="orderNoExt" jdbcType="VARCHAR" />
+		<result column="order_ext_type" property="orderExtType" jdbcType="NUMERIC" />
+		<result column="service_hour" property="serviceHour" jdbcType="NUMERIC" />
 		<result column="pay_type" property="payType" jdbcType="NUMERIC" />
 		<result column="order_pay" property="orderPay" jdbcType="DECIMAL" />
 		<result column="order_status" property="orderStatus" jdbcType="NUMERIC" />
@@ -16,7 +18,7 @@
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, user_id, mobile, order_id, order_no, order_no_ext, pay_type, order_pay, order_status, remarks, add_time,
+		id, user_id, mobile, order_id, order_no, order_no_ext, order_ext_type, service_hour, pay_type, order_pay, order_status, remarks, add_time,
 		update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -68,7 +70,7 @@
 			SELECT LAST_INSERT_ID() AS id
 		</selectKey>
 		insert into order_price_ext (id, user_id, mobile,
-		order_id, order_no, order_no_ext, pay_type,
+		order_id, order_no, order_no_ext, order_ext_type, service_hour, pay_type,
 		order_pay, order_status,
 		remarks,
 		add_time,
@@ -76,6 +78,7 @@
 		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
 		#{orderId,jdbcType=NUMERIC},
 		#{orderNo,jdbcType=VARCHAR}, #{orderNoExt,jdbcType=VARCHAR},
+		#{orderExtType,jdbcType=NUMERIC}, #{serviceHour,jdbcType=NUMERIC},
 		#{payType,jdbcType=NUMERIC},
 		#{orderPay,jdbcType=DECIMAL}, #{orderStatus,jdbcType=NUMERIC},
 		#{remarks,jdbcType=VARCHAR},
@@ -105,6 +108,12 @@
 			</if>
 			<if test="orderNoExt != null">
 				order_no_ext,
+			</if>
+			<if test="orderExtType != null">
+				order_ext_type,
+			</if>
+			<if test="serviceHour != null">
+				service_hour,
 			</if>
 			<if test="payType != null">
 				pay_type,
@@ -144,6 +153,12 @@
 			<if test="orderNoExt != null">
 				#{orderNoExt,jdbcType=VARCHAR},
 			</if>
+			<if test="orderExtType != null">
+				#{orderExtType,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceHour != null">
+			    #{serviceHour,jdbcType=NUMERIC},
+			</if>
 			<if test="payType != null">
 				#{payType,jdbcType=NUMERIC},
 			</if>
@@ -182,6 +197,12 @@
 			<if test="orderNoExt != null">
 				order_no_ext = #{orderNoExt,jdbcType=VARCHAR},
 			</if>
+			<if test="orderExtType != null">
+				order_ext_type = #{orderExtType,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceHour != null">
+			    service_hour = #{serviceHour,jdbcType=NUMERIC},
+			</if>
 			<if test="payType != null">
 				pay_type = #{payType,jdbcType=NUMERIC},
 			</if>
@@ -211,6 +232,8 @@
 		#{orderId,jdbcType=NUMERIC},
 		order_no = #{orderNo,jdbcType=VARCHAR},
 		order_no_ext = #{orderNoExt,jdbcType=VARCHAR},
+		order_ext_type = #{orderExtType,jdbcType=NUMERIC},
+		service_hour = #{serviceHour,jdbcType=NUMERIC},
 		pay_type = #{payType,jdbcType=NUMERIC},
 		order_pay = #{orderPay,jdbcType=DECIMAL},
 		order_status = #{orderStatus,jdbcType=NUMERIC},
