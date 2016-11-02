@@ -4,4 +4,4 @@ ALTER TABLE `users` ADD `is_vip` TINYINT(1) NOT NULL DEFAULT '0' COMME
 
 ALTER TABLE `partner_service_type` ADD `mprice` DECIMAL(5,2) NOT NULL DEFAULT '0' COMMENT '会员价格' AFTER `price`;
 
-ALTER TABLE `order_cards` ADD `referee` VARCHAR(20) NOT NULL COMMENT '员工编号' ;
+ALTER TABLE `order_cards` ADD `referee` VARCHAR(20) NULL COMMENT '员工编号' ;
