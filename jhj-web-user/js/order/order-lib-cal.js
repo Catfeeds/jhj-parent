@@ -53,7 +53,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             selectDay = $$(this);
             $$("#rilikongjian3-day").find("li").removeClass("beijingse");
             $$("#rilikongjian3-dateTime").find("li").removeClass("hour-beijingse beijingse");
-            $$("#all-butto2").removeClass("all-button2").addClass("all-button11");
+            $$("#all-button2").removeClass("all-button2").addClass("all-button11");
             $$(this).addClass("beijingse");
             tomm();
             if(moment(getServiceDate()+" "+nowHour).format("YYYY-MM-DD HH")<=moment().format("YYYY-MM-DD HH")){
@@ -91,7 +91,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     //日历减1天
     $$("#rilikongjian1-left").click(function(){
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
-        $$("#all-butto2").removeClass("all-button2").addClass("all-button11");
+        $$("#all-button2").removeClass("all-button2").addClass("all-button11");
         var dy=$$(selectDay).parent().find(":first-child").text();
         if(dy==null ||dy==""){
         	dy=moment(getServiceDate()).add(count, 'days').format("DD");
@@ -105,7 +105,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     //日历加1天
     $$("#rilikongjian1-right").click(function(){
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
-        $$("#all-butto2").removeClass("all-button2").addClass("all-button11");
+        $$("#all-button2").removeClass("all-button2").addClass("all-button11");
         count++;
         getNextDay(count);
     });
