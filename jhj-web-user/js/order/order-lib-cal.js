@@ -42,7 +42,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         for(var i=0;i<7;i++){
             var d = moment(cal).add(i,'days');
             var week=d.format('d');
-            contentDay+="<li>"+d.format('D')+"</li>";
+            contentDay+="<li>"+d.format('DD')+"</li>";
             //显示今天明天
             if(cmp==date){
         	  if(i==0){
@@ -149,9 +149,9 @@ myApp.onPageInit('order-lib-cal',function(page) {
     	var serviceDate='';
         var year = $$(".rilikongjian p").text();
         var month = $$("#rilikongjian1-month").text();
-        var day = parseInt($$(selectDay).text());
+        var day = $$(selectDay).text();
         if($$(selectDay).text()==undefined ||$$(selectDay).text()=="" || $$(selectDay).text()==null){
-            day=parseInt(moment().format('D'));
+            day=moment().format('DD');
         }
         var pre_li = $$(selectDay).prevAll("li");
         var after_li = $$(selectDay).nextAll("li");
@@ -159,7 +159,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var flag2=false;
         if(pre_li.length>0 && after_li.length>0){
             for(var i=0;i<pre_li.length;i++){
-                var val = parseInt(pre_li[i].innerHTML);
+                var val = pre_li[i].innerHTML;
                 if(val<day){
                     flag1=true;
                 }else{
@@ -167,7 +167,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
                 }
             }
             for(var j=0;j<after_li.length;j++){
-                var val=parseInt(after_li[j].innerHTML);
+                var val=after_li[j].innerHTML;
                 if(val>day ||val<day){
                     flag2=true;
                 }
@@ -180,8 +180,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
         }
 
         if(pre_li.length==0){
-            var nextVal=parseInt($$(after_li[0]).text());
-            var next5Val=parseInt($$(after_li[5]).text());
+            var nextVal=$$(after_li[0]).text();
+            var next5Val=$$(after_li[5]).text();
             if(nextVal>day || (nextVal<day && next5Val<day)){
                 serviceDate=year+"-"+month+"-"+day;
             }else{
@@ -189,8 +189,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
             }
         }
         if(after_li.length==0){
-            var preVal=parseInt($$(pre_li[0]).text());
-            var pre5Val=parseInt($$(pre_li[5]).text());
+            var preVal=$$(pre_li[0]).text();
+            var pre5Val=$$(pre_li[5]).text();
             if(preVal<day && pre5Val<day){
                 serviceDate=year+"-"+month+"-"+day;
             }else{
@@ -226,13 +226,14 @@ myApp.onPageInit('order-lib-cal',function(page) {
         if(nyr==moment().format("YYYY-MM-DD")){
         	var lis = $$("#rilikongjian3-dateTime").find("li");
             if(nowHour>=16 && nowHour<=19){
-                var d=parseInt(moment().format("D"))+1
+                var d=moment().add(1,"days").format("DD");
                 var lisd = $$("#rilikongjian3-day").find("li");
                 for(var i=0;i<=lisd.length;i++){
                     var val = $$(lisd[i]).text();
                     if(d==val){
                         $$("#rilikongjian3-day li").removeClass("beijingse");
                         $$(lisd[i]).addClass("beijingse");
+                        
                     }
                 }
             }
