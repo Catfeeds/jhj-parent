@@ -19,20 +19,6 @@ myApp.onPageInit('order-lib-cal',function(page) {
     var dayTime="";
     var selectDay="#rilikongjian3-day li[class='beijingse']";
     
-//    //小于当前时间的日期都不可以选择
-//    function dateTimeNoSelect(){
-//        var today=getServiceDate();
-//        var current_time = moment().add(4,"hours");
-//        var li=$$("#rilikongjian3-dateTime").find("li");
-//        for(var i=0;i<time.length;i++){
-//            if(moment(today+" "+time[i]).isBefore(current_time)){
-//                $$(li[i]).addClass("hour-beijingse");
-//                dayTime="";
-//            }
-//        }
-//    }
-//    dateTimeNoSelect();
-    
     //日历天数显示
     function getDay(cal){
         var contentDay="";
@@ -70,8 +56,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
             $$("#all-butto2").removeClass("all-button2").addClass("all-button11");
             $$(this).addClass("beijingse");
             tomm();
-            if(moment(getServiceDate()+" "+nowHour).format("YYYY-MM-DD HH")==moment().format("YYYY-MM-DD HH")){
-            	if(nowHour>=17){
+            if(moment(getServiceDate()+" "+nowHour).format("YYYY-MM-DD HH")<=moment().format("YYYY-MM-DD HH")){
+            	if(nowHour>=16){
             		$$("#rilikongjian3-day li").removeClass("beijingse");
             		$$(selectDay).addClass("beijingse");
             		$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
@@ -106,7 +92,11 @@ myApp.onPageInit('order-lib-cal',function(page) {
     $$("#rilikongjian1-left").click(function(){
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
         $$("#all-butto2").removeClass("all-button2").addClass("all-button11");
-        var cmp=moment(getServiceDate()).add(count, 'days').format("YYYY-MM-DD");
+        var dy=$$(selectDay).parent().find(":first-child").text();
+        if(dy==null ||dy==""){
+        	dy=moment(getServiceDate()).add(count, 'days').format("DD");
+        }
+        var cmp = moment().format("YYYY-MM")+"-"+dy;
         if(cmp<=date) return ;
         count--;
         getPreDay(count);
@@ -225,28 +215,14 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var nyr=getServiceDate();
         if(nyr==moment().format("YYYY-MM-DD")){
         	var lis = $$("#rilikongjian3-dateTime").find("li");
-            if(nowHour>=16 && nowHour<=19){
-                var d=moment().add(1,"days").format("DD");
-                var lisd = $$("#rilikongjian3-day").find("li");
-                for(var i=0;i<=lisd.length;i++){
-                    var val = $$(lisd[i]).text();
-                    if(d==val){
-                        $$("#rilikongjian3-day li").removeClass("beijingse");
-                        $$(lisd[i]).addClass("beijingse");
-                        
-                    }
-                }
-            }
-            if((nowHour>=20 && nowHour<=23) ||(nowHour>=0 && nowHour<=4)){
-                $$(lis[0]).addClass("hour-beijingse");
-                for(var i=0;i<=lis.length;i++){
-                    if(i<2){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
-                $$("#rilikongjian3-day li").removeClass("beijingse");
-                $$("#rilikongjian3-day").find("li:nth-child(2)").addClass("beijingse");
-            }
+            
+        	if(nowHour>=0 && nowHour<=4){
+                 for(var i=0;i<=lis.length;i++){
+                     if(i<2){
+                         $$(lis[i]).addClass("hour-beijingse");
+                     }
+                 }
+             }
             if(nowHour>=4 && nowHour<=6){
                 for(var i=0;i<=lis.length;i++){
                     if(i<4){
@@ -303,10 +279,33 @@ myApp.onPageInit('order-lib-cal',function(page) {
                     }
                 }
             }
+            if(nowHour>=16 && nowHour<=19){
+                var d=moment().add(1,"days").format("DD");
+                var lisd = $$("#rilikongjian3-day").find("li");
+                for(var i=0;i<=lisd.length;i++){
+                    var val = $$(lisd[i]).text();
+                    if(d==val){
+                        $$("#rilikongjian3-day li").removeClass("beijingse");
+                        $$(lisd[i]).addClass("beijingse");
+                        
+                    }
+                }
+            }
+            if(nowHour>=20 && nowHour<=23){
+//                $$(lis[0]).addClass("hour-beijingse");
+        	    for(var i=0;i<=lis.length;i++){
+                   if(i<2){
+                      $$(lis[i]).addClass("hour-beijingse");
+                   }
+                }
+                $$("#rilikongjian3-day li").removeClass("beijingse");
+                $$("#rilikongjian3-day").find("li:nth-child(2)").addClass("beijingse");
+            }
         }
         if(nyr>moment().format("YYYY-MM-DD")){
             $$("#rilikongjian3-dateTime").find("li").removeClass("hour-beijingse");
         }
+        noSelectHour();
     }
     tomm();
 
