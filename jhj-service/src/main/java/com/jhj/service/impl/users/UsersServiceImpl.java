@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.CopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.dict.DictCardType;
+import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.tags.UserRefTags;
 import com.jhj.po.model.user.UserAddrs;
@@ -26,6 +28,7 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.TagsService;
+import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.tags.UserRefTagsService;
@@ -33,12 +36,14 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.TagSearchVo;
+import com.jhj.vo.order.OrderCardsVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.sun.mail.util.BEncoderStream;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -75,6 +80,9 @@ public class UsersServiceImpl implements UsersService {
 
 	@Autowired
 	private DictCouponsService dictCouponService;
+	
+	@Autowired
+	private OrderCardsService orderCardsService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -398,7 +406,7 @@ public class UsersServiceImpl implements UsersService {
 	public Map<Long, String> selectDictCardDataSource() {
 		Map<Long, String> map = new HashMap<Long, String>();
 		List<DictCardType> list = dictCardTypeMapper.selectAll();
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+		for (Iterator<DictCardType> iterator = list.iterator(); iterator.hasNext();) {
 			DictCardType dictCardType = (DictCardType) iterator.next();
 			map.put(dictCardType.getId(), dictCardType.getName());
 		}
@@ -419,10 +427,10 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public PageInfo selectByListPage(UserSearchVo searchVo, int pageNo, int pageSize) {
+	public PageInfo<Users> selectByListPage(UserSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<Users> list = usersMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
+		PageInfo<Users> result = new PageInfo<Users>(list);
 		return result;
 	}
 
@@ -433,13 +441,12 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public Users selectByMobile(String mobile) {
-		// TODO Auto-generated method stub
 		return usersMapper.selectByMobile(mobile);
 	}
 
 	@Override
 	public List<Users> selectUsersByOrderMobile() {
-		// TODO Auto-generated method stub
 		return usersMapper.selectUsersByOrderMobile();
 	}
+	
 }

@@ -1,10 +1,12 @@
 package com.jhj.po.dao.order;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
+import com.jhj.vo.order.OrderCardsVo;
 
 public interface OrderCardsMapper {
     int deleteByPrimaryKey(Long id);
@@ -19,7 +21,7 @@ public interface OrderCardsMapper {
 
     int updateByPrimaryKey(OrderCards record);
 
-	OrderCards selectByOrderCardsNo(String cardOrderNo);
+	OrderCards selectByOrderCardsNo(String cardOrderNo); 
 	
 	List<OrderCards> selectNoPayByUserId(Long userId);
 
@@ -34,4 +36,9 @@ public interface OrderCardsMapper {
 	List<ChartMapVo> saleCardByMonth(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> saleCardByQuarter(ChartSearchVo chartSearchVo);
+	
+	List<OrderCards> selectByVo(OrderCardsVo vo);
+	
+	//统计充值总金额
+	Map<String,Double> countTotal();
 }

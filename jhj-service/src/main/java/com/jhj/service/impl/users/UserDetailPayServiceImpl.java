@@ -1,5 +1,6 @@
 package com.jhj.service.impl.users;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,19 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.user.UserDetailPayMapper;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserDetailPayService;
+import com.jhj.vo.staff.OrgStaffsVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.AppUserDetailPayVo;
 import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -38,6 +44,12 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrderCardsService orderCardsService;
+	
+	@Autowired
+	private OrgStaffsService staffService;
 	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -303,5 +315,27 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Override
 	public List<UserDetailPay> selectBySearchVo(UserDetailSearchVo searchVo) {
 		return userDetailPayMapper.selectByListPages(searchVo);
+	}
+	
+	public UserDetailSearchVo transVo(UserDetailPay userDetailPay){
+		
+		UserDetailSearchVo vo=new UserDetailSearchVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(userDetailPay, vo);
+		String orderNo = userDetailPay.getOrderNo();
+		OrderCards orderCard = orderCardsService.selectByOrderCardsNo(orderNo);
+		if(orderCard!=null){
+			String staffCode = orderCard.getReferee();
+			System.out.println(staffCode);
+			if(staffCode!=null && !staffCode.equals("")){
+				StaffSearchVo staffVo=new StaffSearchVo();
+				staffVo.setStaffCode(staffCode);
+				List<OrgStaffs> staff = staffService.selectBySearchVo(staffVo);
+				vo.setStaffCode(staffCode);
+				vo.setStaffName(staff.get(0).getName());
+			}else{
+				vo.setStaffName("-");
+			}
+		}
+		return vo;
 	}
 }

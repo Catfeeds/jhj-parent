@@ -13,11 +13,12 @@
 		<result column="order_status" property="orderStatus" jdbcType="NUMERIC" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		<result column="referee" property="referee" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, user_id, mobile, card_order_no, card_type, card_money,
 		card_pay, pay_type, order_status,
-		add_time, update_time
+		add_time, update_time,referee
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
@@ -121,7 +122,7 @@
 		card_order_no, card_type,
 		card_money,
 		card_pay, pay_type, order_status,
-		add_time, update_time)
+		add_time, update_time,referee)
 		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
 		#{mobile,jdbcType=CHAR},
 		#{cardOrderNo,jdbcType=VARCHAR},
@@ -129,7 +130,8 @@
 		#{cardPay,jdbcType=DECIMAL}, #{payType,jdbcType=NUMERIC},
 		#{orderStatus,jdbcType=NUMERIC},
 		#{addTime,jdbcType=NUMERIC},
-		#{updateTime,jdbcType=NUMERIC})
+		#{updateTime,jdbcType=NUMERIC},
+		#{referee,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderCards">
 		<selectKey resultType="java.lang.Long" order="AFTER"
@@ -171,6 +173,9 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<if test="referee != null">
+				referee,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -205,6 +210,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="referee != null">
+				#{referee,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -241,6 +249,9 @@
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=NUMERIC},
 			</if>
+			<if test="referee != null">
+				referee = #{referee,jdbcType=VARCHAR}
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -264,6 +275,39 @@
 		#{addTime,jdbcType=NUMERIC},
 		update_time =
 		#{updateTime,jdbcType=NUMERIC}
+		referee = #{referee,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
+	
+	<select id="selectByVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderCardsVo">
+		select <include refid="Base_Column_List"/> from order_cards
+		<where>
+			<include refid="searchVo"/>
+		</where>
+	</select>
+	
+	<sql id="searchVo">
+		<if test="id!=null">
+			and id = #{id,jdbcType=NUMERIC}
+		</if>
+		<if test="userId!=null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		<if test="mobile!=null">
+			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		<if test="orderNo!=null">
+			and card_order_no = #{orderNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cardType!=null">
+			and card_pay = #{cardType,jdbcType=NUMERIC}
+		</if>
+		<if test="addTime!=null">
+			and add_time = #{addTime,jdbcType=NUMERIC}
+		</if>
+	</sql>
+	
+	<select id="countTotal" resultType="java.util.HashMap">
+		SELECT SUM(card_pay) as chargeMoney from order_cards WHERE order_status='1'
+	</select>
 </mapper>

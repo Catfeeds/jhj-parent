@@ -2,8 +2,10 @@ package com.jhj.vo.user;
 
 import java.util.List;
 
+import com.jhj.po.model.user.UserDetailPay;
 
-public class UserDetailSearchVo {
+
+public class UserDetailSearchVo extends UserDetailPay{
 
     private String mobile;
   
@@ -22,7 +24,18 @@ public class UserDetailSearchVo {
 	private Long startTime;	
 	
 	private Long endTime;
-    
+	
+	
+	private String staffCode;
+	
+	//办卡推荐人（员工）
+	private String staffName;
+	
+	private Long chargeMoney;
+	
+	//充值总金额
+	private Long totalMoney;
+	
 	
 	// 在店长对应 云店下过单的 用户
 	private List<Long> userIdList;
@@ -84,17 +97,37 @@ public class UserDetailSearchVo {
 		this.orderNo = orderNo;
 	}
 
-	
+	public String getStaffCode() {
+		return staffCode;
+	}
 
-	
+	public void setStaffCode(String staffCode) {
+		this.staffCode = staffCode;
+	}
 
+	public String getStaffName() {
+		return staffName;
+	}
 
-	
-	
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
 
+	public Long getChargeMoney() {
+		return chargeMoney;
+	}
 
-	
+	public void setChargeMoney(Long chargeMoney) {
+		this.chargeMoney = chargeMoney;
+	}
 
+	public Long getTotalMoney() {
+		return totalMoney;
+	}
+
+	public void setTotalMoney(Long totalMoney) {
+		this.totalMoney = totalMoney;
+	}
 
 
 }

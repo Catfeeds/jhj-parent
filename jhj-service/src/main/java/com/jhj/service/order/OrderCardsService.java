@@ -1,10 +1,12 @@
 package com.jhj.service.order;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.user.Users;
+import com.jhj.vo.order.OrderCardsVo;
 import com.jhj.vo.user.UserCardVo;
 import com.jhj.vo.user.UserChargeVo;
 
@@ -34,4 +36,8 @@ public interface OrderCardsService {
 	boolean sendCoupons(Long userId, Long cardType);
 
 	OrderCards initOrderCards(Users user, UserChargeVo userChargeVo, Short payType);
+	
+	List<OrderCards> selectByVo(OrderCardsVo vo);
+	
+	Map<String,Double> countTotal();
 }

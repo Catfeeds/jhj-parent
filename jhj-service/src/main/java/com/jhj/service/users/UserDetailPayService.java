@@ -47,4 +47,6 @@ public interface UserDetailPayService {
 	List<UserDetailPay> selectBySearchVo(UserDetailSearchVo searchVo);
 
 	UserDetailPay addUserDetailPayForOrderPayExt(Users user, Orders order, OrderPriceExt orderPriceExt, String tradeStatus, String tradeNo, String payAccount);
+	
+	UserDetailSearchVo transVo(UserDetailPay userDetailPay);
 }

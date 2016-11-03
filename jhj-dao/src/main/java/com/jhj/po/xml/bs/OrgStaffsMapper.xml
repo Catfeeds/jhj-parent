@@ -27,6 +27,7 @@
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 		<result column="parent_org_id" property="parentOrgId" jdbcType="NUMERIC" />
 		<result column="level" property="level" jdbcType="NUMERIC" />
+		<result column="staff_code" property="staffCode" jdbcType="VARCHAR"/>
 	</resultMap>
 
 	<resultMap id="UserTrailRealMap" type="com.jhj.po.model.user.UserTrailReal">
@@ -43,7 +44,7 @@
 		staff_id, province_id, city_id, region_id, org_id, staff_type, status, sex, name,
 		mobile, tel, addr, birth, work_year, card_id, nation, edu, astro,
 		blood_type, head_img,
-		intro, add_time, update_time, parent_org_id, level
+		intro, add_time, update_time, parent_org_id, level,staff_code
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -116,6 +117,9 @@
 
 		<if test="status!=null">
 			and status =#{status,jdbcType=NUMERIC}
+		</if>
+		<if test="staffCode!=null">
+			and staff_code = #{staffCode,jdbcType=VARCHAR}
 		</if>
 		order by add_time desc
 	</sql>

@@ -24,6 +24,9 @@ public class OrderCards {
     private Long addTime;
 
     private Long updateTime;
+    
+    //办卡推荐人
+    private String referee;
 
     public Long getId() {
         return id;
@@ -112,4 +115,13 @@ public class OrderCards {
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getReferee() {
+		return referee;
+	}
+
+	public void setReferee(String referee) {
+		this.referee = referee;
+	}
+    
 }

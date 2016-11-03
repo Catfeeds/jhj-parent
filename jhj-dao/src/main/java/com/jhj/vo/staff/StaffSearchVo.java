@@ -32,6 +32,8 @@ public class StaffSearchVo {
 	private Long serviceTypeId;
 	
 	private List<Long> serviceTypeIds;
+	
+	private String staffCode;
 
 	public Integer getStatus() {
 		return status;
@@ -153,6 +155,14 @@ public class StaffSearchVo {
 
 	public void setServiceTypeIds(List<Long> serviceTypeIds) {
 		this.serviceTypeIds = serviceTypeIds;
+	}
+
+	public String getStaffCode() {
+		return staffCode;
+	}
+
+	public void setStaffCode(String staffCode) {
+		this.staffCode = staffCode;
 	}
 	
 

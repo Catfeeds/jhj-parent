@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.GiftCouponVo;
 import com.jhj.vo.bs.GiftVo;
+import com.jhj.vo.order.OrderCardsVo;
 import com.jhj.vo.user.UserCardVo;
 import com.jhj.vo.user.UserChargeVo;
 import com.meijia.utils.DateUtil;
@@ -86,7 +88,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		userPayStatus.setTradeId(tradeNo);
 		userPayStatus.setTradeStatus(tradeStatus);
 		userPayStatus.setUserId(orderCards.getUserId());
-		userPayStatus.setPostParams("");// TODO PostParams
+		userPayStatus.setPostParams("");
 		userPayStatus.setIsSync((short) 0);
 		userPayStatus.setAddTime(TimeStampUtil.getNowSecond());
 		userPayStatusMapper.insert(userPayStatus);
@@ -98,6 +100,9 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
 		users.setRestMoney(lastRestMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
+		if(cardMoney.compareTo(new BigDecimal(1000))>=0){
+			users.setIsVip(1);
+		}
 		usersService.updateByPrimaryKeySelective(users);
 
 		orderCardsMapper.updateByPrimaryKeySelective(orderCards);
@@ -232,6 +237,17 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			e.printStackTrace();
 		}
 		return userCardVo;
+	}
+
+	@Override
+	public List<OrderCards> selectByVo(OrderCardsVo vo) {
+		return orderCardsMapper.selectByVo(vo);
+	}
+
+	
+	//充值总金额
+	public Map<String, Double> countTotal() {
+		return orderCardsMapper.countTotal();
 	}
 	
 	

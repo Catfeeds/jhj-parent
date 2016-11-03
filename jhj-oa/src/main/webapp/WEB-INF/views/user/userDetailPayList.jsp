@@ -68,6 +68,12 @@
                           
                           </header>
                           
+                          <div>
+                          	<label>充值总金额：<c:if test="${chargeMoney!=null }">${chargeMoney }元</c:if>
+                          					  <c:if test="${chargeMoney==null }">0元</c:if>
+                          	</label>
+                          </div>
+                          
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
                           
 
@@ -79,6 +85,7 @@
 		                              <th >订单类型</th>
 		                              <th>充值金额</th>
 		                              <th >支付金额</th>
+		                              <th>推荐人</th>
 		                              <th>交易状态</th>
 		                              <th>付款类型</th>
 		                              <th >添加时间</th>
@@ -87,30 +94,22 @@
                               <tbody>
                               <c:forEach items="${userPayDetailList.list}" var="item">
                               <tr>
-                              			<td>
-											${ item.orderNo }
-							            </td>
-							            <td>${ item.mobile }</td>
-							            <td>
-							            	<!-- todo 不能显示 充值记录！！ -->
-							            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
-							            </td>
-							            <td align="center">
-											￥${ item.orderMoney }
-							            </td>
-							            <td align="center" >
-									    	       ￥ ${ item.orderPay }
-							            </td>
-							            <td>
-												支付成功
-							            </td>
-							            <td>
-
-											<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
-							            </td>
-							            <td>
-							            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>
-							            </td>
+                            	<td>${ item.orderNo }</td>
+					            <td>${ item.mobile }</td>
+					            <td>
+					            	<!-- todo 不能显示 充值记录！！ -->
+					            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
+					            </td>
+					            <td align="center">￥${ item.orderMoney }</td>
+					            <td align="center" >￥ ${ item.orderPay } </td>
+					            <td>${item.staffName }</td>
+					            <td>支付成功</td>
+					            <td>
+									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
+					            </td>
+					            <td>
+					            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>
+					            </td>
                               </tr>
                               </c:forEach>
                               </tbody>

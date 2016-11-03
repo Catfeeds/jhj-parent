@@ -126,8 +126,8 @@ public class UserController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		searchVo.setOrgIds(getCouldId(request));
-
-		PageInfo result = usersService.selectByListPage(searchVo, pageNo, pageSize);
+		searchVo.setIsVip(1);
+		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", searchVo);
 
@@ -149,8 +149,8 @@ public class UserController extends BaseController {
 
 		List<UserCouponsVo> userCouponsVos = new ArrayList<UserCouponsVo>();
 		if (userCouponsList != null) {
-			for (Iterator iterator = userCouponsList.iterator(); iterator.hasNext();) {
-				UserCoupons userCoupons = (UserCoupons) iterator.next();
+			for (Iterator<UserCoupons> iterator = userCouponsList.iterator(); iterator.hasNext();) {
+				UserCoupons userCoupons = iterator.next();
 				UserCouponsVo vo = usersCounpsService.getUsersCounps(userCoupons);
 				userCouponsVos.add(vo);
 			}
@@ -230,8 +230,17 @@ public class UserController extends BaseController {
 		PageHelper.startPage(pageNo, pageSize);
 
 		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
+		
+		for(int i=0;i<list.size();i++){
+			UserDetailPay userDetailPay = list.get(i);
+			UserDetailSearchVo vo = userDetailPayService.transVo(userDetailPay);
+			list.set(i, vo);
+		}
 
-		PageInfo result = new PageInfo(list);
+		PageInfo<UserDetailPay> result = new PageInfo<UserDetailPay>(list);
+		
+		Map<String, Double> countTotal = orderCardsService.countTotal();
+		model.addAllAttributes(countTotal);
 
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);
@@ -253,7 +262,7 @@ public class UserController extends BaseController {
 
 		List<UserSmsToken> lists = userSmsTokenService.selectByListPage(usersSmsTokenVo, pageNo, pageSize);
 
-		PageInfo result = new PageInfo(lists);
+		PageInfo<UserSmsToken> result = new PageInfo<UserSmsToken>(lists);
 		model.addAttribute("usersSmsTokenVo", usersSmsTokenVo);
 		model.addAttribute("userSmsTokenModel", result);
 
@@ -513,7 +522,7 @@ public class UserController extends BaseController {
 			list.set(i, financeVo);
 		}
 
-		PageInfo result = new PageInfo(list);
+		PageInfo<FinanceRecharge> result = new PageInfo<FinanceRecharge>(list);
 
 		model.addAttribute("financeListModel", result);
 
@@ -534,7 +543,7 @@ public class UserController extends BaseController {
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
-		PageInfo result = usersService.selectByListPage(searchVo, pageNo, pageSize);
+		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 
 		return "user/financeUserList";
