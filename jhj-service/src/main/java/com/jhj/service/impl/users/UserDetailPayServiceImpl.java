@@ -1,6 +1,5 @@
 package com.jhj.service.impl.users;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.user.UserDetailPayMapper;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
@@ -20,17 +20,13 @@ import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderCardsService;
-import com.jhj.service.order.OrdersService;
-import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserDetailPayService;
-import com.jhj.vo.staff.OrgStaffsVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.AppUserDetailPayVo;
 import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.jhj.po.model.order.OrderCards;
 
 
 @Service
@@ -39,12 +35,6 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Autowired
 	private UserDetailPayMapper userDetailPayMapper;
 
-	@Autowired
-	private OrdersService orderService;
-	
-	@Autowired
-	private PartnerServiceTypeService partService;
-	
 	@Autowired
 	private OrderCardsService orderCardsService;
 	

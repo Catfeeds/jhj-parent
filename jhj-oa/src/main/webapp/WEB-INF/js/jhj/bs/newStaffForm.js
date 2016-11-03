@@ -24,6 +24,9 @@ $('#newStaff-form').validate({
 			required: true,
 			orgId:"orgId"
 		},
+		staffCode:{
+			required:true,
+		}
 	
 	},
 
@@ -41,6 +44,9 @@ $('#newStaff-form').validate({
 		addr : {
 			required : "请输入员工联系地址"
 		},
+		staffCode:{
+			required:"请输入员工编号",
+		}
 
 	},
 

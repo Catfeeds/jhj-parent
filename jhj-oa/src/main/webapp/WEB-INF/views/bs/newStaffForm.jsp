@@ -81,10 +81,6 @@
 										<option value="${org.orgId }" selected="selected">${org.orgName}</option>
 									</c:if>
 								</select>
-								<%-- <cloudOrgSelectTag:select 
-										logInParentOrgId="${loginOrgId}"
-										selectId="${newStaffFormVoModel.orgId }"/>	 --%>
-							    		
 							</div>
 						</div>
 							
@@ -104,6 +100,14 @@
 								<input type="hidden" id="oldMobile" value="${newStaffFormVoModel.mobile }">
 								<form:input path="mobile" onchange="validMobileNum()" class="form-control" placeholder="手机号" maxLength="32" />
 								<form:errors path="mobile" class="field-has-error"></form:errors>
+								<div id="showResult" style="float:left"></div>
+							</div>
+						</div>
+						<div class="form-group required">
+							<label class="col-md-2 control-label">员工编号*</label>
+							<div class="col-md-5">
+								<form:input path="staffCode" class="form-control" value="${newStaffFormVoModel.staffCode }" placeholder="员工编号" maxLength="32" />
+								<form:errors path="staffCode" class="field-has-error"></form:errors>
 								<div id="showResult" style="float:left"></div>
 							</div>
 						</div>
