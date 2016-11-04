@@ -184,6 +184,17 @@
 		<include refid="Base_Column_List" />
 		from order_dispatchs where 1=1 
 		
+		<if test="staffId !=null ">
+			and staff_id =#{staffId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="staffIds != null">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		
 		<if test="dispatchStatus != null">
 			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
 		</if>

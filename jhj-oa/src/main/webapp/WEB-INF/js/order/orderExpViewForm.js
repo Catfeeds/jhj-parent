@@ -19,6 +19,26 @@ $('#selectedStaffs').tagsinput({
 	  },
 });
 
+$('#selectedStaffs').on('itemRemoved', function(event) {
+	  // event.item: contains the item
+	var staffId = event.item.id;
+	$("input[name='select-staff']").each(function(k, v) {
+		
+		var selectStaffId = $(this).parent().find("#selectStaffId").val();
+		
+		var selectStaffName = $(this).parent().find("#selectStaffName").val();
+		
+		var distanceValue = $(this).parent().find("#distanceValue").val();
+		
+		if (selectStaffId == staffId) {
+			// 如果该行被选中
+			
+			$(this).removeAttr("checked");     
+			
+		}
+	});
+});
+
 // 提交派工修改
 $("#submitForm").on('click', function() {
 	$('#submitForm').attr('disabled',"true");
@@ -54,7 +74,7 @@ $("#submitForm").on('click', function() {
 	// 如果 未选择派工 。直接 返回列表页
 	if (selectStaffIds == undefined || selectStaffIds == "") {
 		
-		alert("没有可用派工,返回列表页");
+		alert("没有选择派工人员.");
 		$('#submitForm').removeAttr("disabled"); 
 		
 		return false;
@@ -70,7 +90,12 @@ $("#submitForm").on('click', function() {
 		},
 		dataType : 'json',
 		success : function(data, status, xhr) {
-			
+			var status = data.status;
+			if (status == "999") {
+				alert(data.msg);
+				$('#submitForm').removeAttr("disabled"); 
+				return false;
+			}
 			alert("保存成功");
 			$('#submitForm').removeAttr("disabled"); 
 			var rootPath = getRootPath();
@@ -112,9 +137,9 @@ var loadStaffDynamic = function(data, status, xhr) {
 		var item = data[i];
 		var selectInput = "";
 		if (isMulti == 0) {
-			selectInput = "<input name='select-staff' type='radio' onclick='doSelectStaff()' value=" + item.staff_id + ">";
+			selectInput = "<input name='select-staff' type='radio' onclick='doSelectStaff("+item.staff_id+")' value=" + item.staff_id + ">";
 		} else {
-			selectInput = "<input name='select-staff' type='checkbox' onclick='doSelectStaff()' value=" + item.staff_id + ">";
+			selectInput = "<input name='select-staff' type='checkbox' onclick='doSelectStaff("+item.staff_id+")' value=" + item.staff_id + ">";
 		}
 		
 		var htmlStr = "<tr>";
@@ -148,9 +173,11 @@ var loadStaffDynamic = function(data, status, xhr) {
 
 
 
-function doSelectStaff() {
+function doSelectStaff(staffId) {
 
-	
+	var selectStaffId = "";
+	var selectStaffName = "";
+	var distanceValue = "";
 	$("input[name='select-staff']").each(function(k, v) {
 		
 		var selectStaffId = $(this).parent().find("#selectStaffId").val();
@@ -159,17 +186,39 @@ function doSelectStaff() {
 		
 		var distanceValue = $(this).parent().find("#distanceValue").val();
 		
-		// 如果该行被选中
-		if (this.checked) {
-			
-			$('#selectedStaffs').tagsinput('add', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
-		} else {
-			$('#selectedStaffs').tagsinput('remove', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+		if (selectStaffId == staffId) {
+			// 如果该行被选中
+			if (this.checked) {
+				addSelectedStaffs(selectStaffId, selectStaffName, distanceValue);
+			} else {
+				$('#selectedStaffs').tagsinput('remove', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+			}
 		}
+		
+		
 	});
 
 	console.log($('#selectedStaffs').val());
 }
+
+function addSelectedStaffs(selectStaffId, selectStaffName, distanceValue) {
+	var selectStaffIds = $("#selectedStaffs").val();
+	
+	if (selectStaffIds.indexOf(selectStaffId) >= 0) return false;
+	
+	$('#selectedStaffs').tagsinput('add', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+}
+
+function remove(selectStaffId, selectStaffName, distanceValue) {
+	var selectStaffIds = $("#selectedStaffs").val();
+	
+	if (selectStaffIds.indexOf(selectStaffId) >= 0) return false;
+	
+	$('#selectedStaffs').tagsinput('add', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+}
+
+
+
 
 // 改变 服务时间时,动态获取派工
 $('.form_datetime').datetimepicker().on('changeDate', function(ev) {
@@ -206,6 +255,9 @@ $('.form_datetime').datetimepicker().on('changeDate', function(ev) {
 function loadStaffsByServiceDate(serviceDate) {
 	// 根据 服务 时间, 动态获取 有无 可用派工
 	var orderId = $("#id").val();
+	var orderStatus = $("#orderStatus").val();
+	
+	if (orderStatus < 2) return false;
 	
 	$.ajax({
 		type : "get",

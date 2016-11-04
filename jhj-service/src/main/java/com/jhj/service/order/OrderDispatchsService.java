@@ -52,8 +52,8 @@ public interface OrderDispatchsService {
 
 	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
 
-	boolean doOrderDispatch(Orders order, Double serviceHour, Long staffId);
-
 	List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour, Long sessionOrgId);
+
+	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
    	
 }

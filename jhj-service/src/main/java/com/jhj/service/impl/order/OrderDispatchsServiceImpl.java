@@ -268,10 +268,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				continue;
 
 			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-			Long startServiceTime = serviceDate - 119 * 60;
+			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
 			
 			// 注意结束时间也要服务结束后 1:59分钟
-			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + 119 * 60);
+			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setOrgId(orgId);
@@ -453,10 +453,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				continue;
 
 			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-			Long startServiceTime = serviceDate - 119 * 60;
+			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
 			
 			// 注意结束时间也要服务结束后 1:59分钟
-			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + 119 * 60);
+			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 			
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setOrgId(orgId);
@@ -687,10 +687,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-		Long startServiceTime = serviceDate - 119 * 60;
+		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
 		
 		// 注意结束时间也要服务结束后 1:59分钟
-		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + 119 * 60);
+		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		if (parentId > 0L)
@@ -1002,7 +1002,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 
 	@Override
-	public boolean doOrderDispatch(Orders order, Double serviceHour, Long staffId) {
+	public boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId) {
 		
 		Long orderId = order.getId();
 		String orderNo = order.getOrderNo();
@@ -1022,8 +1022,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		orderDispatch.setOrderNo(orderNo);
 		
 		// 服务开始时间， serviceDate（服务时间）的前一小时， 当前秒值 -3600s
-		orderDispatch.setServiceDatePre(order.getServiceDate() - Constants.SERVICE_PRE_TIME);  
-		orderDispatch.setServiceDate(order.getServiceDate());
+		orderDispatch.setServiceDatePre(serviceDate - Constants.SERVICE_PRE_TIME);  
+		orderDispatch.setServiceDate(serviceDate);
 		orderDispatch.setServiceHours(order.getServiceHour());
 		
 		//更新服务人员与用户地址距离
