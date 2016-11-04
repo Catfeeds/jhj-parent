@@ -412,7 +412,7 @@ public class OrderDispatchController extends BaseController {
 					d.setUpdateTime(TimeStampUtil.getNowSecond());
 					orderDispatchsService.updateByPrimaryKey(d);
 					
-//					SmsUtil.SendSms(d.getStaffMobile(), "114590", smsContent);
+					SmsUtil.SendSms(d.getStaffMobile(), "114590", smsContent);
 				}
 			}
 			
@@ -503,18 +503,18 @@ public class OrderDispatchController extends BaseController {
 		// 2)派工成功，为服务人员发送推送消息---推送消息
 		
 		
-//		for (OrgStaffs item : staffs) {
-//			dispatchStaffFromOrderService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-//					Constants.ALERT_STAFF_MSG);
-//	
-//			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
-//		}
-//
-//		// 给原来派工人员发送短信提醒，派工订单被取消
-//		for (String oldStaffMobile : oldStaffMobiles) {
-//			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[] { beginTimeStr,
-//					partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
-//		}
+		for (OrgStaffs item : staffs) {
+			dispatchStaffFromOrderService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+					Constants.ALERT_STAFF_MSG);
+	
+			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
+		}
+
+		// 给原来派工人员发送短信提醒，派工订单被取消
+		for (String oldStaffMobile : oldStaffMobiles) {
+			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[] { beginTimeStr,
+					partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
+		}
 		return resultData;
 	}
 
