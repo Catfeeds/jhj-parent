@@ -316,5 +316,15 @@
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderExpViewForm.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
+	
+	<script>
+		<c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
+
+			var selectedStaffId = ${item.staffId};
+			var selectedStaffName = "${item.staffName}";
+			var selectedDistanceValue = ${item.userAddrDistance};
+			addSelectedStaffs(selectedStaffId, selectedStaffName, selectedDistanceValue);
+		</c:forEach>
+	</script>
 </body>
 </html>

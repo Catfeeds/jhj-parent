@@ -142,7 +142,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 			return false;
 
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId);
+		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
 
 		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 
@@ -242,7 +242,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 			return false;
 
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceHour, staffId);
+		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
 
 		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 
