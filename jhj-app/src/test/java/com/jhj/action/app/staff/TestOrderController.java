@@ -31,6 +31,24 @@ public class TestOrderController extends JUnitActionBase{
 
 	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
     }
+	
+	@Test
+    public void orderBegin() throws Exception {
+
+		String url = "/app/staff/order/post_begin.json";
+
+     	MockHttpServletRequestBuilder postRequest = post(url);
+	    postRequest = postRequest.param("staff_id", "1");
+	    postRequest = postRequest.param("order_id", "38");
+	    ResultActions resultActions = mockMvc.perform(postRequest);
+
+	    resultActions.andExpect(content().contentType(this.mediaType));
+	    resultActions.andExpect(status().isOk());
+
+	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
+    }
+	
+	
 	@Test
     public void PostInviteTime() throws Exception {
 
@@ -39,6 +57,24 @@ public class TestOrderController extends JUnitActionBase{
      	MockHttpServletRequestBuilder postRequest = post(url);
 	    postRequest = postRequest.param("staff_id", "47");
 	    postRequest = postRequest.param("order_id", "5527");
+	    ResultActions resultActions = mockMvc.perform(postRequest);
+
+	    resultActions.andExpect(content().contentType(this.mediaType));
+	    resultActions.andExpect(status().isOk());
+
+	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
+    }
+	
+	@Test
+    public void orderOverWork() throws Exception {
+
+		String url = "/app/staff/order/post_overwork.json";
+
+     	MockHttpServletRequestBuilder postRequest = post(url);
+	    postRequest = postRequest.param("staff_id", "1");
+	    postRequest = postRequest.param("order_id", "38");
+	    postRequest = postRequest.param("service_hour", "2");
+	    postRequest = postRequest.param("order_pay", "100");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));

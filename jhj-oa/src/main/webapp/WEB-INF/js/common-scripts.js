@@ -160,7 +160,7 @@ function btn_select(path) {
 
 // 菜单点击展开
 function setSubMenuId(menuId) {
-	console.log("setSubMenuId ==" + menuId)
+//	console.log("setSubMenuId ==" + menuId)
 	$.cookie("menu-sub-id", menuId, {
 		path : "/"
 	});
@@ -168,7 +168,7 @@ function setSubMenuId(menuId) {
 }
 
 function menuHighLight() {
-	console.log("menuHighLight");
+//	console.log("menuHighLight");
 	var menuId = $.cookie('menu-sub-id');
 	
 	if (menuId == undefined) return false;
@@ -178,7 +178,7 @@ function menuHighLight() {
 		$(this).find('li').each(function() {
 			var tmenuId = $(this).attr("id");
 			
-			console.log("tmenuId = " + tmenuId + "=== menuId = " + menuId);
+//			console.log("tmenuId = " + tmenuId + "=== menuId = " + menuId);
 			
 			if (tmenuId == menuId) {
 
