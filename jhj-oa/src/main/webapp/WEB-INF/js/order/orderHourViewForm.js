@@ -79,7 +79,12 @@ $("#submitForm").on('click', function() {
 		},
 		dataType : 'json',
 		success : function(data, status, xhr) {
-			
+			var status = data.status;
+			if (status == "999") {
+				alert(data.msg);
+				$('#submitForm').removeAttr("disabled"); 
+				return false;
+			}
 			alert("保存成功");
 			$('#submitForm').removeAttr("disabled"); 
 			var rootPath = getRootPath();
