@@ -475,6 +475,8 @@ public class OrderDispatchController extends BaseController {
 			disList = orderDispatchsService.selectBySearchVo(searchVo);
 			
 			for (OrderDispatchs d : disList) {
+				d.setServiceDatePre(serviceDateTime - Constants.SERVICE_PRE_TIME);
+				d.setServiceDate(serviceDateTime);
 				d.setServiceHours(serviceHour);
 				d.setUpdateTime(TimeStampUtil.getNowSecond());
 				orderDispatchsService.updateByPrimaryKey(d);
