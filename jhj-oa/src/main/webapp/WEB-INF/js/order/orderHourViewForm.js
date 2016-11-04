@@ -60,10 +60,10 @@ $("#submitForm").on('click', function() {
 	// 如果 未选择派工 。直接 返回列表页
 	if (selectStaffId == 0 && staffId == 0) {
 		
-		alert("没有可用派工,返回列表页");
+		alert("没有选择派工人员.");
 		$('#submitForm').removeAttr("disabled"); 
-		var rootPath = getRootPath();
-		window.location.replace(rootPath + "/order/order-hour-list");
+//		var rootPath = getRootPath();
+//		window.location.replace(rootPath + "/order/order-hour-list");
 		
 		return false;
 	}
@@ -172,6 +172,8 @@ $('.form_datetime').datetimepicker().on('changeDate', function(ev) {
 function loadStaffsByServiceDate(serviceDate) {
 	// 根据 服务 时间, 动态获取 有无 可用派工
 	var orderId = $("#id").val();
+	
+	if (orderStatus < 2) return false;
 	
 	$.ajax({
 		type : "get",
