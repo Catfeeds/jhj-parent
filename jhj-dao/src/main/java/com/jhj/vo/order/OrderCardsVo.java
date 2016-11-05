@@ -30,6 +30,10 @@ public class OrderCardsVo extends OrderCards{
 	private Short userType;
 	
 	private Short addFrom;
+	
+	private String addStartTimeStr;
+	
+	private String addEndTimeStr;
 
 	public Long getAddStartTime() {
 		return addStartTime;
@@ -109,6 +113,22 @@ public class OrderCardsVo extends OrderCards{
 
 	public void setAddFrom(Short addFrom) {
 		this.addFrom = addFrom;
+	}
+
+	public String getAddStartTimeStr() {
+		return addStartTimeStr;
+	}
+
+	public void setAddStartTimeStr(String addStartTimeStr) {
+		this.addStartTimeStr = addStartTimeStr;
+	}
+
+	public String getAddEndTimeStr() {
+		return addEndTimeStr;
+	}
+
+	public void setAddEndTimeStr(String addEndTimeStr) {
+		this.addEndTimeStr = addEndTimeStr;
 	}
 	
 }

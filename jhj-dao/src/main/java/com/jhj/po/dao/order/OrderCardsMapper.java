@@ -25,7 +25,6 @@ public interface OrderCardsMapper {
 	
 	List<OrderCards> selectNoPayByUserId(Long userId);
 
-	
 	/**
 	 * 充值卡销售图表
 	 * @param chartSearchVo
@@ -39,6 +38,8 @@ public interface OrderCardsMapper {
 	
 	List<OrderCards> selectByVo(OrderCardsVo vo);
 	
+	List<OrderCards> selectByListPage(OrderCardsVo vo);
+	
 	//统计充值总金额
-	Map<String,Double> countTotal();
+	Map<String,Double> countTotal(OrderCardsVo orderCardsVo);
 }

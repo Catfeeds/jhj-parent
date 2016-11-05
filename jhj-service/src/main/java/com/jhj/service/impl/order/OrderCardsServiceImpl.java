@@ -10,16 +10,21 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.dict.DictCardTypeMapper;
 import com.jhj.po.dao.order.OrderCardsMapper;
 import com.jhj.po.dao.user.UserPayStatusMapper;
 import com.jhj.po.model.bs.Gifts;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.user.UserCoupons;
+import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.UserPayStatus;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.GiftsService;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
@@ -27,8 +32,12 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.GiftCouponVo;
 import com.jhj.vo.bs.GiftVo;
 import com.jhj.vo.order.OrderCardsVo;
+import com.jhj.vo.staff.OrgStaffsVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserCardVo;
 import com.jhj.vo.user.UserChargeVo;
+import com.jhj.vo.user.UserDetailSearchVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -54,7 +63,10 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 	private DictCardTypeMapper dictCardTypeMapper;
 	
 	@Autowired
-	private GiftsService giftService;	
+	private GiftsService giftService;
+	
+	@Autowired
+	private OrgStaffsService orgStaffService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -246,8 +258,43 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 
 	
 	//充值总金额
-	public Map<String, Double> countTotal() {
-		return orderCardsMapper.countTotal();
+	public Map<String, Double> countTotal(OrderCardsVo orderCardsVo) {
+		return orderCardsMapper.countTotal(orderCardsVo);
+	}
+
+	@Override
+	public PageInfo<OrderCards> selectByListPage(OrderCardsVo vo,int pageNo,int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<OrderCards> orderCardsList = orderCardsMapper.selectByListPage(vo);
+		PageInfo<OrderCards> page =new PageInfo<OrderCards>(orderCardsList);
+		return page;
+	}
+
+	@Override
+	public OrderCardsVo transVo(OrderCards orderCards) {
+		if(orderCards==null) return null;
+		
+		OrderCardsVo orderCoardVo=new OrderCardsVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(orderCards, orderCoardVo);
+		
+		Long userId = orderCards.getUserId();
+		Users user = usersService.selectByPrimaryKey(userId);
+		if(user!=null){
+			orderCoardVo.setUserRestMoney(user.getRestMoney());
+			orderCoardVo.setScore(user.getScore());
+			orderCoardVo.setUserType(user.getUserType());
+			orderCoardVo.setAddFrom(user.getAddFrom());
+		}
+		if(orderCards.getReferee()!=null && !orderCards.getReferee().equals("")){
+			StaffSearchVo staffsVo =new StaffSearchVo();
+			staffsVo.setStaffCode(orderCards.getReferee());
+			List<OrgStaffs> staff = orgStaffService.selectBySearchVo(staffsVo);
+			orderCoardVo.setStaffName(staff.get(0).getName());
+		}else{
+			orderCoardVo.setStaffName("-");
+		}
+		
+		return orderCoardVo;
 	}
 	
 	

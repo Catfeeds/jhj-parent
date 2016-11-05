@@ -44,18 +44,18 @@
 									<form:form modelAttribute="searchModel" onsubmit="return checkEndTime()" class="form-inline"
 									 method="GET" id="oaSearchForm">
 									<form:hidden path="orderType"/>
-									<table class="table">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-condensed" >
 										<tr>
-											<td>选择门店:</td>
-											<td><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
-											<td>选择云店:</td>
-											<td>
+											<td width="10%">选择门店:</td>
+											<td width="23%"><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
+											<td width="10%">选择云店:</td>
+											<td width="23%">
 												<select name="orgId" id="orgId" class="form-control">
 													<option value="0">全部</option>
 												</select>
 											</td>
-											<td>订单状态：</td>
-											<td><c:if test="${loginOrgId == 0 }">
+											<td width="10%">订单状态：</td>
+											<td width="23%"><c:if test="${loginOrgId == 0 }">
 													<form:select path="orderStatus" class="form-control">
 														<option value="">订单状态</option>
 														<form:option value="0">已取消</form:option>
@@ -81,33 +81,43 @@
 										</tr>
 										
 										<tr>
-											<td>手机号：</td>
-											<td><form:input path="mobile" class="form-control" placeholder="请输入手机号" /></td>
-											<td>服务地址：</td>
-											<td><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
+											<td width="10%">手机号：</td>
+											<td width="23%"><form:input path="mobile" class="form-control" placeholder="请输入手机号" /></td>
+											<td width="10%">服务地址：</td>
+											<td width="23%"><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
 											
-											<td>是否接单</td>
-											<td><form:select path="isApply" class="form-control">
+											<td width="10%">是否接单</td>
+											<td width="23%"><form:select path="isApply" class="form-control">
 													<option value="">全部</option>
 													<form:option value="1">是</form:option>
 													<form:option value="0">否</form:option>
-												</form:select></td>
-											
+												</form:select>
+											</td>
 										</tr>
 										
 										<tr>
-											<td>下单时间：</td>
-											<td><input id="startTimeStr" name="startTimeStr" value="${startTimeStr }" class="form-control form_datetime"
-													style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> <input id="endTimeStr"
-													name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> </td>
-											<td>服务日期：</td>
-											<td colspan="2"><input id="serviceStartTimeStr" name="serviceStartTimeStr" value="${serviceStartTimeStr }"
-													class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span>
-												<input id="serviceEndTimeStr" name="serviceEndTimeStr" value="${serviceEndTimeStr }" class="form-control form-datetime"
-													style="width: 170px; margin-bottom: 0" readonly="true" /></td>
-											<td></td>
-											<td></td>
-											
+											<td width="100%" colspan="6" style="padding:0;border:0">
+												<table width="100%" style="border:0" cellspacing="0" cellpadding="0" class="table-bordered table-condensed">
+													<tbody>
+														<tr>
+															<td width="11%">下单时间：</td>
+															<td width="39%">
+																<input id="startTimeStr" name="startTimeStr" value="${startTimeStr }" class="form-control form_datetime"
+																	style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> 
+																<input id="endTimeStr"
+																	name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
+															</td>
+															<td width="11%">服务日期：</td>
+															<td width="39%">
+																<input id="serviceStartTimeStr" name="serviceStartTimeStr" value="${serviceStartTimeStr }"
+																class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span>
+																<input id="serviceEndTimeStr" name="serviceEndTimeStr" value="${serviceEndTimeStr }" class="form-control form-datetime"
+																style="width: 170px; margin-bottom: 0" readonly="true" />
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											 </td>
 										</tr>
 										
 										<tr>
@@ -128,18 +138,13 @@
 												<button type="button" class="btn btn-primary" onclick="cleanForm()">清空</button>
 											</td>					
 										</tr>
-										<tr>
-											<td>
-												<button type="button" name="orderByProperty" class="btn btn-primary" onclick="orderByTime()">服务时间排序</button>
-											</td>
-										</tr>
 									</table>
 								</form:form>
 							</header>
 							
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 
-							<table class="table table-striped table-advance table-hover" id="table2excel">
+							<table class="table table-condensed table-hover table-striped" id="table2excel">
 								<thead>
 									<tr>
 										<th>门店</th>

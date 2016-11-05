@@ -5,7 +5,7 @@ import java.util.List;
 
 public class OrgStaffsVo {
 	
-private Long staffId;
+	private Long staffId;
 	
 	private Short staffType;
 	
@@ -114,8 +114,5 @@ private Long staffId;
 	public void setSkills(List<String> skills) {
 		this.skills = skills;
 	}
-	
-	
-	
 
 }

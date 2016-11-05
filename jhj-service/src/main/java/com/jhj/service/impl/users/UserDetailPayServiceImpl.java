@@ -307,25 +307,4 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		return userDetailPayMapper.selectByListPages(searchVo);
 	}
 	
-	public UserDetailSearchVo transVo(UserDetailPay userDetailPay){
-		
-		UserDetailSearchVo vo=new UserDetailSearchVo();
-		BeanUtilsExp.copyPropertiesIgnoreNull(userDetailPay, vo);
-		String orderNo = userDetailPay.getOrderNo();
-		OrderCards orderCard = orderCardsService.selectByOrderCardsNo(orderNo);
-		if(orderCard!=null){
-			String staffCode = orderCard.getReferee();
-			System.out.println(staffCode);
-			if(staffCode!=null && !staffCode.equals("")){
-				StaffSearchVo staffVo=new StaffSearchVo();
-				staffVo.setStaffCode(staffCode);
-				List<OrgStaffs> staff = staffService.selectBySearchVo(staffVo);
-				vo.setStaffCode(staffCode);
-				vo.setStaffName(staff.get(0).getName());
-			}else{
-				vo.setStaffName("-");
-			}
-		}
-		return vo;
-	}
 }
