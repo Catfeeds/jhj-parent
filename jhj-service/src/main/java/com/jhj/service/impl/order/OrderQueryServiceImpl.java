@@ -789,4 +789,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		}
 		return searchVo;
 	}
+
+	//订单总收入
+	@Override
+	public BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo) {
+		List<Short> orderStatusList=new ArrayList<Short>();
+		orderStatusList.add((short)7);
+		orderStatusList.add((short)8);
+		orderStatusList.add((short)9);
+		vo.setOrderStatusList(orderStatusList);
+		return ordersMapper.getTotalOrderIncomeMoney(vo);
+	}
 }

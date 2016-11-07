@@ -7,12 +7,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,29 +20,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
-import com.jhj.oa.auth.AccountAuth;
-import com.jhj.oa.auth.AccountRole;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
-import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
@@ -62,12 +50,9 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OaOrderListVo;
-import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.StringUtil;
-import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.poi.POIUtils;
 
 /**
@@ -151,14 +136,21 @@ public class OrderQueryController extends BaseController {
 
 		List<Orders> orderList = result.getList();
 		Orders orders = null;
+		BigDecimal pageMoney=new BigDecimal(0);
 		for (int i = 0; i < orderList.size(); i++) {
 			orders = orderList.get(i);
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
+			BigDecimal orderPay = completeVo.getOrderPay();
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+				pageMoney = pageMoney.add(orderPay);
+			}
 			orderList.set(i, completeVo);
 		}
-
+		
 		result = new PageInfo(orderList);
-
+		
+		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))
 			model.addAttribute("startTimeStr", startTimeStr);
@@ -181,6 +173,8 @@ public class OrderQueryController extends BaseController {
 		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);
 		model.addAttribute("businessList", businessList);
 		
+		model.addAttribute("pageMoney", pageMoney);
+		model.addAttribute("totalMoney", totalMoney);
 		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("searchModel", searchVo);
@@ -262,15 +256,20 @@ public class OrderQueryController extends BaseController {
 
 		List<Orders> orderList = result.getList();
 		Orders orders = null;
+		BigDecimal pageMoney=new BigDecimal(0);
 		for (int i = 0; i < orderList.size(); i++) {
 			orders = orderList.get(i);
 			Long serviceType2 = orders.getServiceType();
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
+			BigDecimal orderPay = completeVo.getOrderPay();
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+				pageMoney = pageMoney.add(orderPay);
+			}
 			orderList.set(i, completeVo);
 		}
 
 		result = new PageInfo(orderList);
-
+		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))
 			model.addAttribute("startTimeStr", startTimeStr);
@@ -293,7 +292,9 @@ public class OrderQueryController extends BaseController {
 		businessSearchVo.setEnable((short)1);
 		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);
 		model.addAttribute("businessList", businessList);
-
+		
+		model.addAttribute("pageMoney", pageMoney);
+		model.addAttribute("totalMoney", totalMoney);
 		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("searchModel", searchVo);
@@ -331,14 +332,20 @@ public class OrderQueryController extends BaseController {
 
 		List<Orders> orderList = result.getList();
 		Orders orders = null;
+		BigDecimal pageMoney=new BigDecimal(0);
 		for (int i = 0; i < orderList.size(); i++) {
 			orders = orderList.get(i);
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
+			BigDecimal orderPay = completeVo.getOrderPay();
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+				pageMoney = pageMoney.add(orderPay);
+			}
 			orderList.set(i, completeVo);
 		}
 
 		result = new PageInfo(orderList);
-
+		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))
 			model.addAttribute("startTimeStr", startTimeStr);
@@ -362,6 +369,8 @@ public class OrderQueryController extends BaseController {
 		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);
 		model.addAttribute("businessList", businessList);
 
+		model.addAttribute("pageMoney", pageMoney);
+		model.addAttribute("totalMoney", totalMoney);
 		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
 		model.addAttribute("oaOrderListVoModel", result);
 		model.addAttribute("searchModel", searchVo);

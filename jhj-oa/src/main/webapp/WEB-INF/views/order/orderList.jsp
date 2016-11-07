@@ -201,6 +201,10 @@
 								</tbody>
 							</table>
 						</section>
+						<div>
+							<label>每页总金额：</label><b>${pageMoney }元</b>&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>总金额：</label><b>${totalMoney }元</b>
+						</div>
 						<%@ include file="../shared/importJs.jsp"%>
 						<c:import url="../shared/paging.jsp">
 							<c:param name="pageModelName" value="oaOrderListVoModel" />

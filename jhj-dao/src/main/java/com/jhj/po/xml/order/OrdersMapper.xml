@@ -94,7 +94,7 @@
 	</select>
 	
 	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
-		select sum(order_money)from order_prices where order_id in
+		select sum(order_pay)from order_prices where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />

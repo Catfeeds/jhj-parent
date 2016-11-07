@@ -319,7 +319,7 @@
 	</select>
 	
 	<sql id="searchVo">
-		<if test="mobile!=null">
+		<if test="mobile!=null and mobile!=''">
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
 		<if test="cardType!=null">
