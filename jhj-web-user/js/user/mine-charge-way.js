@@ -69,6 +69,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 		postdata.user_id = userId;
 		postdata.card_type = cardId;
 		postdata.pay_type = 2;
+		postdata.staff_code=$$("#staffCode").val();
 						
 		$$.ajax({
 			type: "post",

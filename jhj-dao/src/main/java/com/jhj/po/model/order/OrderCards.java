@@ -28,9 +28,9 @@ public class OrderCards {
     //办卡推荐人
     private String referee;
     
-    private Integer parentId;
+    private Long parentId;
     
-    private Integer orgId;
+    private Long orgId;
 
     public Long getId() {
         return id;
@@ -128,19 +128,19 @@ public class OrderCards {
 		this.referee = referee;
 	}
 
-	public Integer getParentId() {
+	public Long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(Integer parentId) {
+	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
 
-	public Integer getOrgId() {
+	public Long getOrgId() {
 		return orgId;
 	}
 
-	public void setOrgId(Integer orgId) {
+	public void setOrgId(Long orgId) {
 		this.orgId = orgId;
 	}
     
