@@ -211,6 +211,10 @@ function loadStaffs() {
 		return false;
 	}
 	
+	//获取当前选择的订单时间
+	var serviceDateStr = $("#serviceDateStr").val() + ":00";
+	var serviceDate = moment(serviceDateStr).unix();
+	
 	var orgId = $("#orgId").val();
 	
 	$.ajax({
@@ -219,7 +223,8 @@ function loadStaffs() {
 		data : {
 			"orderId" : orderId,
 			"parentId" : parentId,
-			"orgId" : orgId
+			"orgId" : orgId,
+			"newServiceDate" : serviceDate
 		},
 		dataType : "json",
 		success : loadStaffDynamic
