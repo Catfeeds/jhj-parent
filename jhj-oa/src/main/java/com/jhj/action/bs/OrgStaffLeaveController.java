@@ -122,7 +122,6 @@ public class OrgStaffLeaveController extends BaseController {
 		return "bs/leaveForm";
 	}
 	
-	@AuthPassport
 	@RequestMapping(value = "/leave_form", method = { RequestMethod.POST })
 	public String submitLeaveForm(Model model, HttpServletRequest request, @ModelAttribute("leaveModel") LeaveStaffVo leaveVo, BindingResult result,
 			@RequestParam("id") Long id) {
