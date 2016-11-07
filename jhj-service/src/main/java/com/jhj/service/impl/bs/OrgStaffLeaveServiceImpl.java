@@ -110,10 +110,11 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 				
 				//跟当前时间比较
 //				Long nowSecond = TimeStampUtil.getNowSecond();
-				
-				if(leaveVo.getLeaveStatus().equals("1") && DateUtil.compare(leaveVo.getLeaveDateEndStr(),DateUtil.getNow("yyyy-MM-dd"))){
-					leaveVo.setLeaveStatus("2");
-					leave.setLeaveStatus("2");
+				if(leaveVo.getLeaveStatus().equals("1") && leaveDateEnd!=null ){
+					if(DateUtil.compare(leaveVo.getLeaveDateEndStr(),DateUtil.getNow("yyyy-MM-dd"))){
+						leaveVo.setLeaveStatus("2");
+						leave.setLeaveStatus("2");
+					}
 					leaveMapper.updateByPrimaryKeySelective(leave);
 				}
 //				

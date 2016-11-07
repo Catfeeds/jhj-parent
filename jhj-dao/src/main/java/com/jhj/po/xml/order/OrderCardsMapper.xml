@@ -14,11 +14,13 @@
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 		<result column="referee" property="referee" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="NUMERIC" />
+		<result column="org_id" property="orgId" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, user_id, mobile, card_order_no, card_type, card_money,
 		card_pay, pay_type, order_status,
-		add_time, update_time,referee
+		add_time, update_time,referee,parent_id,org_id
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
@@ -122,7 +124,7 @@
 		card_order_no, card_type,
 		card_money,
 		card_pay, pay_type, order_status,
-		add_time, update_time,referee)
+		add_time, update_time,referee,parent_id,org_id)
 		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
 		#{mobile,jdbcType=CHAR},
 		#{cardOrderNo,jdbcType=VARCHAR},
@@ -131,7 +133,9 @@
 		#{orderStatus,jdbcType=NUMERIC},
 		#{addTime,jdbcType=NUMERIC},
 		#{updateTime,jdbcType=NUMERIC},
-		#{referee,jdbcType=VARCHAR})
+		#{referee,jdbcType=VARCHAR},
+		#{parentId,jdbcType=NUMERIC},
+		#{orgId,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderCards">
 		<selectKey resultType="java.lang.Long" order="AFTER"
@@ -176,6 +180,12 @@
 			<if test="referee != null">
 				referee,
 			</if>
+			<if test="referee != null">
+				parent_id,
+			</if>
+			<if test="referee != null">
+				org_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -213,6 +223,12 @@
 			</if>
 			<if test="referee != null">
 				#{referee,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="orgId != null">
+				#{orgId,jdbcType=NUMERIC},
 			</if>
 		</trim>
 	</insert>
@@ -252,6 +268,12 @@
 			<if test="referee != null">
 				referee = #{referee,jdbcType=VARCHAR}
 			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="orgId != null">
+				org_id = #{orgId,jdbcType=NUMERIC},
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -274,8 +296,10 @@
 		add_time =
 		#{addTime,jdbcType=NUMERIC},
 		update_time =
-		#{updateTime,jdbcType=NUMERIC}
-		referee = #{referee,jdbcType=VARCHAR}
+		#{updateTime,jdbcType=NUMERIC},
+		referee = #{referee,jdbcType=VARCHAR},
+		parent_id = #{parentId,jdbcType=NUMERIC},
+		org_id = #{orgId,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
 	
@@ -286,28 +310,51 @@
 		</where>
 	</select>
 	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderCardsVo">
+		select <include refid="Base_Column_List"/> from order_cards
+		<where>
+			<include refid="searchVo"/>
+		</where>
+		order by add_time desc
+	</select>
+	
 	<sql id="searchVo">
-		<if test="id!=null">
-			and id = #{id,jdbcType=NUMERIC}
-		</if>
-		<if test="userId!=null">
-			and user_id = #{userId,jdbcType=NUMERIC}
-		</if>
-		<if test="mobile!=null">
+		<if test="mobile!=null and mobile!=''">
 			and mobile = #{mobile,jdbcType=CHAR}
-		</if>
-		<if test="orderNo!=null">
-			and card_order_no = #{orderNo,jdbcType=VARCHAR}
 		</if>
 		<if test="cardType!=null">
 			and card_pay = #{cardType,jdbcType=NUMERIC}
 		</if>
-		<if test="addTime!=null">
-			and add_time = #{addTime,jdbcType=NUMERIC}
+		<if test="orderStatus!=null">
+			and order_status = #{orderStatus,jdbcType=NUMERIC}
+		</if>
+		<if test="userIds!=null">
+			and user_id in
+			<foreach collection="userIds" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		<if test="addStartTime!=null">
+			<![CDATA[and add_time >= #{addStartTime,jdbcType=NUMERIC}]]>
+		</if>
+		<if test="addEndTime!=null">
+			<![CDATA[and add_time <= #{addEndTime,jdbcType=NUMERIC}]]>
+		</if>
+		<if test="orderStatus!=null">
+			and order_status = #{orderStatus,jdbcType=NUMERIC}
+		</if>
+		<if test="parentId != null">
+			and parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+		<if test="orgId != null">
+			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
 	</sql>
 	
-	<select id="countTotal" resultType="java.util.HashMap">
-		SELECT SUM(card_pay) as chargeMoney from order_cards WHERE order_status='1'
+	<select id="countTotal" resultType="java.util.HashMap" parameterType="com.jhj.vo.order.OrderCardsVo">
+		SELECT SUM(card_pay) as chargeMoney from order_cards
+		<where>
+			<include refid="searchVo"/>
+		</where>
 	</select>
 </mapper>

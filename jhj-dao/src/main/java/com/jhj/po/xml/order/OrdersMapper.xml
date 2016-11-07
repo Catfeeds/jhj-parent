@@ -94,7 +94,7 @@
 	</select>
 	
 	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
-		select sum(order_money)from order_prices where order_id in
+		select sum(order_pay)from order_prices where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />
@@ -247,6 +247,10 @@
 
 		<if test="addrName !=null and addrName !=''">
 			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE) )
+		</if>
+		
+		<if test="payType!=null and payType!=''">
+			and order_no in (select order_no from order_prices where pay_type = #{payType,jdbcType=NUMERIC})
 		</if>
 
 		

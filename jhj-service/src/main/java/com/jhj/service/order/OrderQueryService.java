@@ -1,5 +1,6 @@
 package com.jhj.service.order;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,5 +33,7 @@ public interface OrderQueryService {
 	OrderListVo getOrderListVo(Orders item, Long staffId);
 
 	OrderDetailVo getOrderDetailVo(Orders item, Long staffId);
+	
+	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
 	
 }

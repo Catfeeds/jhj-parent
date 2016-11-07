@@ -65,6 +65,8 @@ public class OrderSearchVo {
 	
 	//排序字段
 	private String orderByProperty;
+	
+	private Short payType; // 支付方式
 
 	public String getMobile() {
 		return mobile;
@@ -304,6 +306,14 @@ public class OrderSearchVo {
 
 	public void setOrderByProperty(String orderByProperty) {
 		this.orderByProperty = orderByProperty;
+	}
+
+	public Short getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Short payType) {
+		this.payType = payType;
 	}
 	
 }

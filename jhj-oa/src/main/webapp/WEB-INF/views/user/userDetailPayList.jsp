@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@ include file="../shared/taglib.jsp"%>
 
@@ -68,11 +68,11 @@
                           
                           </header>
                           
-                          <div>
-                          	<label>充值总金额：<c:if test="${chargeMoney!=null }">${chargeMoney }元</c:if>
+                          <%-- <div>
+                          	<label>消费总金额：<c:if test="${chargeMoney!=null }">${chargeMoney }元</c:if>
                           					  <c:if test="${chargeMoney==null }">0元</c:if>
                           	</label>
-                          </div>
+                          </div> --%>
                           
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
                           
@@ -85,8 +85,6 @@
 		                              <th >订单类型</th>
 		                              <th>充值金额</th>
 		                              <th >支付金额</th>
-		                              <th>推荐人</th>
-		                              <th>交易状态</th>
 		                              <th>付款类型</th>
 		                              <th >添加时间</th>
                               </tr>
@@ -102,8 +100,6 @@
 					            </td>
 					            <td align="center">￥${ item.orderMoney }</td>
 					            <td align="center" >￥ ${ item.orderPay } </td>
-					            <td>${item.staffName }</td>
-					            <td>支付成功</td>
 					            <td>
 									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
 					            </td>
@@ -114,13 +110,11 @@
                               </c:forEach>
                               </tbody>
                           </table>
-
-                          
                       </section>
                       
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="userPayDetailList"/>
-	        				<c:param name="urlAddress" value="/user/user-pay-detail"/>
+	        				<c:param name="urlAddress" value="/user/${listUrl }"/>
 	       			  </c:import>
                   </div>
               </div>

@@ -3,6 +3,7 @@ package com.jhj.service.order;
 import java.util.List;
 import java.util.Map;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.user.Users;
@@ -39,5 +40,9 @@ public interface OrderCardsService {
 	
 	List<OrderCards> selectByVo(OrderCardsVo vo);
 	
-	Map<String,Double> countTotal();
+	PageInfo selectByListPage(OrderCardsVo vo,int pageNo,int pageSize);
+	
+	OrderCardsVo transVo(OrderCards orderCards);
+	
+	Map<String,Double> countTotal(OrderCardsVo orderCardsVo);
 }
