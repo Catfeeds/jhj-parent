@@ -132,6 +132,17 @@
 													</c:forEach>
 												</form:select>
 											</td>
+											<td>支付方式</td>
+											<td>
+												<form:select path="payType" class="form-control">
+													<form:option value="">--请选择支付方式--</form:option>
+													<form:option value="0">余额支付</form:option>
+													<form:option value="1">支付宝</form:option>
+													<form:option value="2">微信</form:option>
+													<form:option value="6">现金支付</form:option>
+													<form:option value="7">第三方支付</form:option>
+												</form:select>
+											</td>
 											<td colspan="6">
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
