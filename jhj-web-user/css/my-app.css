@@ -3573,6 +3573,262 @@ i.toolbar-icon-tixing {
 
 
 
+/*服务员评价*/
+.waiter{
+  width:100%;
+  height:50px;
+  background: #fff;
+  border-bottom: 1px solid #E1E1E1;
+}
+.waiter p{
+  margin:0;
+  width:30%;
+  padding-left:2%;
+  line-height:50px;
+  float: left;
+}
+.waiter span{
+  line-height: 50px;
+}
+.waiter1{
+  width:100%;
+  height:50px;
+  background: #fff;
+}
+.waiter1 span{
+  line-height: 50px;
+}
+.waiter1 p{
+  margin:0;
+  width:30%;
+  padding-left:2%;
+  line-height:50px;
+  float:left;
+}
+.waiter1-1{
+  background: #FFDD64;
+  color:#fff;
+  margin-left: 10px;
+}
+.waiter1-2{
+  color:#000;
+  margin-left: 10px;
+}
+.waiter1 img{
+  width:30px;
+  height:30px;
+  float:left;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.waiter2{
+  width:100%;
+  background: #fff;
+  height:200px;
+}
+.waiter2-1{
+  width:80%;
+  margin-left: 10%;
+  height:180px;
+  border: 1px solid #D4D4D4;
+}
+.waiter3{
+  width:100%;
+  background: #fff;
+  height:50px;
+}
+.waiter3-1{
+  width:50%;
+  height:40px;
+  border:1px solid #F66767;
+  margin-left: 25%;
+}
+.waiter3-1 img{
+  width:30px;
+  margin-left: 10px;
+  margin-top: 5px;
+  float: left;
+}
+.waiter3-1 p{
+  line-height: 40px;
+  margin: 0;
+  margin-left: 5px;
+}
+.waiter4{
+  width:100%;
+  background: #fff;
+  height:60px;
+}
+.waiter4-1{
+  width:15%;
+  height:50px;
+  border:1px dashed #626262;
+  float: left;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 50px;color: #D1D1D1;
+  margin-left: 4%;
+}
+.waiter5{
+  width:100%;
+  background: #fff;
+  height:40px;
+}
+.waiter6{
+  width:100%;
+  background: #fff;
+  height:100px;
+  margin-top: 15px;
+}
+.waiter6-1{
+  width:100%;
+  height:50px;
+}
+.waiter6-1 img{
+  width:30px;
+  margin-top: 10px;
+  margin-left: 5px;
+  float: left;
+}
+.waiter6-1 span{
+  margin-top: 10px;
+  margin-left: 5px;
+  float: left;
+}
+.waiter6-1 input{
+  margin-left: 5px;
+  border:0;
+  float: left;
+  width:5%;
+  margin-top: 10px;
+}
+.waiter6-1-1{
+  width:40%;
+  height:50px;
+  text-align: left;
+  line-height: 50px;
+  float: left;
+  font-size: 14px;
+  margin-left: 15px;
+}
+.waiter6-1-2{
+  width:40%;
+  height:50px;
+  text-align: left;
+  line-height: 50px;
+}
+.waiter7{
+  width:100%;
+  height:300px;
+  background: #fff;
+}
+.waiter7-1{
+  width:70%;
+  height:35px;
+  background: #fff;
+}
+.waiter7-1 p{
+  margin:0;
+  width:40%;
+  line-height: 35px;
+  margin-left: 10px;
+  float: left;
+  font-size: 14px;
+}
+.waiter7-1 span{
+  line-height: 35px;
+  font-size: 14px;
+  color:#666;
+}
+.waiter7-1 img{
+  width:20px;
+  float: left;
+  margin-left: 3px;
+  margin-top: 7px;
+}
+.waiter7-picture{
+  width:80px;
+  float: right;
+  border:1px solid #F1F1F1;
+  margin-top: -125px;
+  height:100px;
+  margin-right: 15px;
+  overflow: hidden;
+}
+.waiter7-picture img{
+  width:100%;
+  height:100%;
+}
+.waiter8{
+  width:100%;
+  height:230px;
+  background: #fff;
+  margin-top: 15px;
+}
+.waiter8-1{
+  width:100%;
+  padding-left: 10px;
+  height:35px;
+  line-height: 35px;
+  font-size: 14px;
+}
+.waiter8-2{
+  width:90%;
+  height:175px;
+  border:1px solid #D6D6D6;
+  margin-left: 4%;
+}
+.waiter8-2-1{
+  width:100%;
+  height:35px;
+}
+.waiter8-2-1 li{
+  width:33%;
+  height:35px;
+  text-align: center;
+  line-height: 35px;
+  font-size: 14px;
+  float: left;
+}
+.waiter8-2-2{
+  width:100%;
+  height:35px;
+}
+.waiter8-2-2 p{
+  margin:0;
+  line-height: 35px;
+  float: left;
+  width:30%;
+  padding-left: 6px;
+  font-size: 14px;
+}
+.waiter8-2-2 span{
+  font-size: 14px;
+  line-height: 35px;
+}
+.waiter8-2-2 img{
+  width:20px;
+  float: left;
+  margin-left: 3px;
+  margin-top: 7px;
+}
+.waiter9{
+  width:95%;
+  height: 50px;
+  background: #fff;
+  text-align: right;
+  padding-right: 5%;
+  line-height: 50px;
+  color: #FEAA28;
+  margin-top: 15px;
+}
+
+
+
+
+
+
 
 
 
@@ -3797,6 +4053,29 @@ i.toolbar-icon-tixing {
   color:#fff;
   margin:30px auto;
   margin-left: 15%;
+}
+.all-button13{
+  clear: both;
+  margin-left: 35%;
+  width:30%;
+  height:30px;
+  background: #73BEE9;
+  border-radius: 3px;
+  text-align: center;
+  line-height: 30px;
+  color:#fff;
+}
+.all-button14{
+   width:30%;
+  height:30px;
+  text-align: center;
+  color:#fff;
+  line-height: 30px;
+  border-radius: 5px;
+  background: #56B5F4;
+  margin-top:10px;
+  float: right;
+  margin-right: 15px;
 }
 .beijingse{
 	color:#FEB954;
