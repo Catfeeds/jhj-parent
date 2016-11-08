@@ -64,7 +64,7 @@
 	</select>
 
 	<!-- 根据 parentId得到 service -->
-	<select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	<!-- <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from
@@ -73,7 +73,7 @@
 		parent_id = #{parentId,jdbcType=NUMERIC}
 
 		and enable = 1
-	</select>
+	</select> -->
 
 	<select id="selectNoParentService" resultMap="BaseResultMap">
 		select
@@ -85,11 +85,11 @@
 	</select>
 
 	<!-- 下拉选择类别 -->
-	<select id="selectAll" resultMap="BaseResultMap">
+	<!-- <select id="selectAll" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from partner_service_type where enable = 1
-	</select>
+	</select> -->
 
 	<!-- 2015-12-2 16:21:38 运营平台 列表展示 -->
 	<select id="selectByListPage" resultMap="BaseResultMap">
@@ -97,9 +97,6 @@
 		<include refid="Base_Column_List" />
 		from partner_service_type where enable = 1
 	</select>
-
-
-
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
@@ -344,6 +341,9 @@
 		</if>
 		<if test="serviceTypeId!=null and serviceTypeId!=''">
 			and service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+		</if>
+		<if test="enable!=null and enable!=''">
+			and enable = #{enable,jdbcType=NUMERIC}
 		</if>
 	</sql>
 </mapper>

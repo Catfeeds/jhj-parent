@@ -48,6 +48,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -245,7 +246,11 @@ public class OrderQueryController extends BaseController {
 		Short orderType = Constants.ORDER_TYPE_1;
 		
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, orderType, sessionParentId);
-		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(26L);
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(26L);
+		serviceTypeVo.setEnable((short)1);
+		List<PartnerServiceType> serviceTypeList = serviceType.selectByPartnerServiceTypeVo(serviceTypeVo);
+//		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(26L);
 		List<Long> list=new ArrayList<Long>();
 		for(PartnerServiceType t:serviceTypeList){
 			list.add(t.getServiceTypeId());
@@ -320,7 +325,11 @@ public class OrderQueryController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		
 		Short orderType = Constants.ORDER_TYPE_1;
-		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(57L);
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(57L);
+		serviceTypeVo.setEnable((short)1);
+		List<PartnerServiceType> serviceTypeList = serviceType.selectByPartnerServiceTypeVo(serviceTypeVo);
+//		List<PartnerServiceType> serviceTypeList = serviceType.selectByParentId(57L);
 		List<Long> list=new ArrayList<Long>();
 		for(PartnerServiceType t:serviceTypeList){
 			list.add(t.getServiceTypeId());

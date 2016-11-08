@@ -302,8 +302,10 @@ public class OrderController extends BaseController {
 			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
 		}
 
-		List<PartnerServiceType> serviceTypeList = serviceType
-				.selectByParentId(26L);
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(26L);
+		serviceTypeVo.setEnable((short)1);
+		List<PartnerServiceType> serviceTypeList = serviceType.selectByPartnerServiceTypeVo(serviceTypeVo);
 		model.addAttribute("serviceType", serviceTypeList);
 		return "order/orderExpAdd";
 	}
@@ -320,8 +322,10 @@ public class OrderController extends BaseController {
 			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
 		}
 
-		List<PartnerServiceType> serviceTypeList = serviceType
-				.selectByParentId(57L);
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(57L);
+		serviceTypeVo.setEnable((short)1);
+		List<PartnerServiceType> serviceTypeList = serviceType.selectByPartnerServiceTypeVo(serviceTypeVo);
 		model.addAttribute("serviceType", serviceTypeList);
 
 		return "order/orderExpAdd";

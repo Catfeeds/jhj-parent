@@ -150,6 +150,7 @@ public class DictCouponsController extends BaseController {
         PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
         Long[] serviceTypeId={23L,24L,26L,57L};
         serviceTypeVo.setParentServiceTypeId(Arrays.asList(serviceTypeId));
+        serviceTypeVo.setEnable((short)1);
         List<PartnerServiceType> serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo);
         model.addAttribute("serviceTypeList", serviceType);
         
@@ -247,6 +248,7 @@ public class DictCouponsController extends BaseController {
         PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
         Long[] serviceTypeId={23L,24L,26L,57L};
         serviceTypeVo.setParentServiceTypeId(Arrays.asList(serviceTypeId));
+        serviceTypeVo.setEnable((short)1);
         List<PartnerServiceType> serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo);
         model.addAttribute("dictCoupons", dictCoupons);
         model.addAttribute("selectDataSource",couponService.getSelectRangMonthSource());
@@ -384,6 +386,7 @@ public class DictCouponsController extends BaseController {
 //            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
             PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
             serviceTypeVo.setServiceTypeId(Long.parseLong(dictCoupons.getServiceType()));
+            serviceTypeVo.setEnable((short)1);
             PartnerServiceType serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo).get(0);
 //            dictCoupon.setDescription(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
             dictCoupon.setIntroduction(dictCoupons.getValue()+"元"+serviceType.getName()+"券");

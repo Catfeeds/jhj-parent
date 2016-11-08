@@ -12,6 +12,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.PartnerServiceTypeVo;
 
 /**
  *
@@ -43,7 +44,10 @@ public class PartnerServiceTypeSelectTag extends SimpleTagSupport{
     			partService = springContext.getBean(PartnerServiceTypeService.class);
     	        
     			
-    			List<PartnerServiceType> list = partService.selectAll();
+//    			List<PartnerServiceType> list = partService.selectAll();
+    			PartnerServiceTypeVo serviceTypeVo = new PartnerServiceTypeVo();
+    			serviceTypeVo.setEnable((short)1);
+    			List<PartnerServiceType> list = partService.selectByPartnerServiceTypeVo(serviceTypeVo);
     				
             StringBuffer orgSelect = new StringBuffer();
             orgSelect.append("<select id = \"serviceTypeId\" name=\"serviceTypeId\" class=\"form-control\">" );

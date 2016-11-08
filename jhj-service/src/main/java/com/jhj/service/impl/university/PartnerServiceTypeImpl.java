@@ -97,10 +97,10 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		return type;
 	}
 
-	@Override
-	public List<PartnerServiceType> selectAll() {
-		return partMapper.selectAll();
-	}
+//	@Override
+//	public List<PartnerServiceType> selectAll() {
+//		return partMapper.selectAll();
+//	}
 
 	@Override
 	public OaPartnerServiceTypeVo completeVo(PartnerServiceType partner) {
@@ -158,17 +158,21 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		
 		List<NewPartnerServiceVo> listVo = new ArrayList<NewPartnerServiceVo>();
 		//根据parentId=0 查询出所用的父节点
-		List<PartnerServiceType> list = partMapper.selectByParentId(0L);
+		PartnerServiceTypeVo vo=new PartnerServiceTypeVo();
+		vo.setParentId(0L);
+		vo.setEnable((short)1);
+		List<PartnerServiceType> list = partMapper.selectByPartnerServiceTypeVo(vo);
+//		List<PartnerServiceType> list = partMapper.selectByParentId(0L);
 		
 //		List<PartnerServiceType> list = partMapper.selectNoParentService();
 		
 //		List<PartnerServiceType> list = partMapper.selectAllNoChildService();
 		
-		Iterator iterator = list.iterator(); 
+		Iterator<PartnerServiceType> iterator = list.iterator(); 
 		
 		while(iterator.hasNext()) {
 			
-			PartnerServiceType serviceType = (PartnerServiceType) iterator.next();
+			PartnerServiceType serviceType = iterator.next();
 			
 			NewPartnerServiceVo vo2 = transServiceToTree(serviceType.getServiceTypeId());
 			
@@ -194,7 +198,12 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		
 		
 		//查询 该 结点下的所有  子节点,(不包含孙子节点)
-		List<PartnerServiceType> list = partMapper.selectByParentId(id);
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(id);
+		serviceTypeVo.setEnable((short)1);
+//		List<PartnerServiceType> list = partMapper.selectByParentId(id);
+		
+		List<PartnerServiceType> list = partMapper.selectByPartnerServiceTypeVo(serviceTypeVo);
 		
 		for (PartnerServiceType partnerServiceType : list) {
 			
@@ -227,17 +236,21 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		return serviceVo;
 	}
 	
-	@Override
-	public List<PartnerServiceType> selectByParentId(Long id) {
-		return partMapper.selectByParentId(id);
-	}
+//	@Override
+//	public List<PartnerServiceType> selectByParentId(Long id) {
+//		return partMapper.selectByParentId(id);
+//	}
 	
 	@Override
 	public List<Long> selectChildIdByParentId(Long id) {
 		
 		List<Long> list = new ArrayList<Long>();
 		
-		List<PartnerServiceType> list2 = selectByParentId(id);
+//		List<PartnerServiceType> list2 = selectByParentId(id);
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(id);
+		serviceTypeVo.setEnable((short)1);
+		List<PartnerServiceType> list2 = partMapper.selectByPartnerServiceTypeVo(serviceTypeVo);
 		
 		for (PartnerServiceType partnerServiceType : list2) {
 			list.add(partnerServiceType.getServiceTypeId());

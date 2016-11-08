@@ -28,7 +28,7 @@ public interface PartnerServiceTypeService {
     PartnerServiceType  initPartner();
     
     //下拉选择
-    List<PartnerServiceType> selectAll();
+//    List<PartnerServiceType> selectAll();
     
     OaPartnerServiceTypeVo completeVo(PartnerServiceType partner);
     
@@ -55,7 +55,7 @@ public interface PartnerServiceTypeService {
     
     NewPartnerServiceVo initVo();
     
-    List<PartnerServiceType> selectByParentId(Long id);
+//    List<PartnerServiceType> selectByParentId(Long id);
     
     List<Long> selectChildIdByParentId(Long id);
     

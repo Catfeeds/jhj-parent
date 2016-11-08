@@ -52,7 +52,11 @@ public class AppServiceTypeController extends BaseController {
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-		List<PartnerServiceType> list = partService.selectByParentId(serviceTypeId);
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(serviceTypeId);
+		serviceTypeVo.setEnable((short)1);
+		List<PartnerServiceType> list = partService.selectByPartnerServiceTypeVo(serviceTypeVo);
+//		List<PartnerServiceType> list = partService.selectByParentId(serviceTypeId);
 		
 		List<PartnerServiceTypeVo> volist = new ArrayList<PartnerServiceTypeVo>();
 		
