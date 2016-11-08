@@ -2646,6 +2646,63 @@ i.toolbar-icon-tixing {
   margin-left: 5px;
 }
 */
+.shendu-cankaotime{
+  width:100%;
+}
+.shendu-cankaotime1{
+  width:30%;
+  margin-left: 5%;
+  background: #7ABFFA;
+  color:#fff;
+  height:35px;
+  line-height: 35px;
+  margin-top: 15px;
+  text-align: center;
+  border-radius: 5px;
+  float: left;
+  font-size: 14px;
+}
+.shendu-cankaotime2{
+  width:48%;
+  background: #FFDD64;
+  color:#fff;
+  height:35px;
+  line-height: 35px;
+  margin-top: 15px;
+  text-align: center;
+  border-radius: 5px;
+  float: right;
+  margin-right: 2%;
+  font-size: 14px;
+}
+.shendu-cankaotime11{
+  width:30%;
+  margin-left: 5%;
+  color:#7ABFFA;
+  height:35px;
+  line-height: 35px;
+  text-align: left;
+  float: left;
+  font-size: 14px;
+}
+.shendu-cankaotime22{
+  width:48%;
+  color:#FFDD64;
+  height:35px;
+  line-height: 35px;
+  text-align: left;
+  float: right;
+  margin-right: 2%;
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+
 
 /*订单列表*/
 .dingdan-mokuai{
