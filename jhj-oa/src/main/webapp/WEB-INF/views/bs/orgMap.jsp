@@ -28,7 +28,14 @@ body, html {
 	<!--main content start--> <section id="main-content"> <section class="wrapper"> <!-- page start-->
 	<div class="row">
 		<div class="col-lg-12">
-			<section class="panel"> <header class="panel-heading"> 门店管理 </header>
+			<section class="panel"> 
+			  <header class="panel-heading"> 地图分布 
+				<select id ="orgType">
+					<option value="parent">门店</option>
+					<option value="cloud">云店</option>
+				</select>
+			
+			 </header>
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 			<div class="panel-body">
 				<div id="allmap"></div>
