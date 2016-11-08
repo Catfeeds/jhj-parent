@@ -63,16 +63,16 @@
 									style="width:110px; margin-bottom:0" readonly="true" />
 								</div>
 								 
-								<button type="submit" class="btn btn-primary" >搜索</button>
+								<button type="submit" id="submit" class="btn btn-primary" value="${listUrl }">搜索</button>
                            </form:form> 
                           
                           </header>
                           
-                          <%-- <div>
-                          	<label>消费总金额：<c:if test="${chargeMoney!=null }">${chargeMoney }元</c:if>
-                          					  <c:if test="${chargeMoney==null }">0元</c:if>
+                          <div>
+                          	<label>消费总金额：<c:if test="${totalMoeny!=null }">${totalMoeny }元</c:if>
+                          					  <c:if test="${totalMoeny==null }">0元</c:if>
                           	</label>
-                          </div> --%>
+                          </div>
                           
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
                           

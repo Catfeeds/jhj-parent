@@ -236,8 +236,8 @@ public class UserController extends BaseController {
 		
 		PageInfo<UserDetailPay> result = new PageInfo<UserDetailPay>(list);
 		
-//		Map<String, Double> countTotal = orderCardsService.countTotal();
-//		model.addAllAttributes(countTotal);
+		Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
+		model.addAllAttributes(totolMoeny);
 
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);
@@ -316,8 +316,8 @@ public class UserController extends BaseController {
 		
 		PageInfo<UserDetailPay> result = new PageInfo<UserDetailPay>(list);
 		
-//		Map<String, Double> countTotal = orderCardsService.countTotal();
-//		model.addAllAttributes(countTotal);
+		Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
+		model.addAllAttributes(totolMoeny);
 
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);

@@ -29,11 +29,14 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
+import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.users.UserDetailPayService;
 import com.jhj.vo.chart.CoopUserOrderVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -78,7 +81,10 @@ public class OrdersServiceImpl implements OrdersService {
 
 	@Autowired
 	private PartnerServiceTypeMapper partServiceTypeMapper;
-
+	
+	@Autowired
+	private UserDetailPayService userDetailPayService;
+	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return ordersMapper.deleteByPrimaryKey(id);
@@ -519,6 +525,8 @@ public class OrdersServiceImpl implements OrdersService {
 		Short orderStatus = order.getOrderStatus();
 		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orderNo);
 		Short payType = orderPrices.getPayType();
+		BigDecimal orderPay = orderPrices.getOrderPay();
+		BigDecimal orderMoney = orderPrices.getOrderMoney();
 		if(orderStatus>=Constants.ORDER_HOUR_STATUS_2 && orderStatus<Constants.ORDER_HOUR_STATUS_7){
 			if (payType == Constants.PAY_TYPE_1|| payType == Constants.PAY_TYPE_2 ||payType == Constants.PAY_TYPE_3 || payType == Constants.PAY_TYPE_6 ||payType == Constants.PAY_TYPE_7) {
 				commonCancleOrder(order,orderNo);
@@ -526,7 +534,6 @@ public class OrdersServiceImpl implements OrdersService {
 				commonCancleOrder(order,orderNo);
 				Long userId = order.getUserId();
 				Users user = usersMapper.selectByPrimaryKey(userId);
-				BigDecimal orderPay = orderPrices.getOrderPay();
 				BigDecimal restMoney = user.getRestMoney();
 				BigDecimal mon = restMoney.add(orderPay);
 				user.setRestMoney(mon);
@@ -540,6 +547,19 @@ public class OrdersServiceImpl implements OrdersService {
 					userCoupons.setOrderNo(null);
 					userCouponMapper.updateByPrimaryKeySelective(userCoupons);
 				}
+				
+				//消费明细
+				UserDetailPay userDetailPay =new UserDetailPay();
+				userDetailPay.setUserId(userId);
+				userDetailPay.setMobile(order.getMobile());
+				userDetailPay.setOrderType((short)0);
+				userDetailPay.setOrderId(order.getId());
+				userDetailPay.setOrderNo(orderNo);
+				userDetailPay.setOrderMoney(orderMoney);
+				userDetailPay.setOrderPay(orderPay);
+				userDetailPay.setPayType(payType);
+				userDetailPay.setAddTime(TimeStampUtil.getNowSecond());
+				userDetailPayService.insert(userDetailPay);
 			}
 		}
 

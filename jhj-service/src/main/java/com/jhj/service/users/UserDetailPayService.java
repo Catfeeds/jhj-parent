@@ -1,6 +1,8 @@
 package com.jhj.service.users;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderCards;
@@ -48,4 +50,5 @@ public interface UserDetailPayService {
 
 	UserDetailPay addUserDetailPayForOrderPayExt(Users user, Orders order, OrderPriceExt orderPriceExt, String tradeStatus, String tradeNo, String payAccount);
 	
+	Map<String,BigDecimal> totolMoeny(UserDetailSearchVo userDetailSearchVo);
 }

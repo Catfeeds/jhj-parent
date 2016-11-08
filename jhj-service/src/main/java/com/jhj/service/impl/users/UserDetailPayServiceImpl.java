@@ -3,6 +3,7 @@ package com.jhj.service.impl.users;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -305,6 +306,11 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Override
 	public List<UserDetailPay> selectBySearchVo(UserDetailSearchVo searchVo) {
 		return userDetailPayMapper.selectByListPages(searchVo);
+	}
+
+	@Override
+	public Map<String, BigDecimal> totolMoeny(UserDetailSearchVo userDetailSearchVo) {
+		return userDetailPayMapper.totolMoeny(userDetailSearchVo);
 	}
 	
 }
