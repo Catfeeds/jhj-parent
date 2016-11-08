@@ -3,6 +3,8 @@ package com.jhj.service.impl.users;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -370,8 +372,9 @@ public class UserCouponsServiceImpl implements UserCouponsService {
     	uc.setValue(coupons.getValue());
     	uc.setGiftId(0L);
     	uc.setServiceType(String.valueOf(coupons.getServiceType()));
-    	uc.setFromDate(coupons.getFromDate());
-    	uc.setToDate(coupons.getToDate());
+    	uc.setFromDate(DateUtil.getNowOfDate());
+    	String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), coupons.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+    	uc.setToDate(DateUtil.parse(toDateStr));
     	uc.setIsUsed((short)0);
     	uc.setUsedTime(0L);
     	uc.setAddTime(TimeStampUtil.getNow() / 1000);

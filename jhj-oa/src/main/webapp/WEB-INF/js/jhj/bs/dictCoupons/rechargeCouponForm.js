@@ -13,12 +13,12 @@ $('#recharge-coupon-form').validate({
 					number:true,
 					maxlength:6 
 				},
-				introduction: {
-					required: true
-				},
-				description: {
-					required: true
-				},
+//				introduction: {
+//					required: true
+//				},
+//				description: {
+//					required: true
+//				},
 				rangMonth :{
 					required:true
 				},
@@ -38,12 +38,12 @@ $('#recharge-coupon-form').validate({
 					number:"请输入数字",
 					maxlength:"最多输入5位数字"
 				},
-				introduction: {
-					required: "请输入描述信息"
-				},
-				description: {
-					required: "请输入详细信息"
-				},
+//				introduction: {
+//					required: "请输入描述信息"
+//				},
+//				description: {
+//					required: "请输入详细信息"
+//				},
 				rangMonth:{
 					required:"请选择日期范围"
 				},

@@ -12,6 +12,7 @@ import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.university.PartnerServiceTypeMapper;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.bs.NewPartnerServiceVo;
 import com.jhj.vo.university.OaPartnerServiceTypeVo;
@@ -248,5 +249,11 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 	@Override
 	public List<AmSkillVo> selectSkillNameAndParent(List<Long> childServiceIdList) {
 		return partMapper.selectSkillNameAndParent(childServiceIdList);
+	}
+
+	@Override
+	public List<PartnerServiceType> selectByPartnerServiceTypeVo(
+			PartnerServiceTypeVo vo) {
+		return partMapper.selectByPartnerServiceTypeVo(vo);
 	}
 }

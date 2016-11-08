@@ -109,8 +109,8 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		BigDecimal cardMoney = orderCards.getCardMoney();
 		DictCardType dictCardType = dictCardTypeMapper.selectByPrimaryKey(orderCards.getCardType());
 		BigDecimal restMoney = users.getRestMoney().add(cardMoney);
-		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
-		users.setRestMoney(lastRestMoney);
+//		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
+		users.setRestMoney(restMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
 		if(cardMoney.compareTo(new BigDecimal(1000))>=0){
 			users.setIsVip(1);

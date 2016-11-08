@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.dict.CouponsType;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
@@ -45,8 +47,10 @@ import com.jhj.service.dict.CouponsTypeService;
 import com.jhj.service.dict.DictUtil;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.bs.CouponVo;
 import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -87,6 +91,9 @@ public class DictCouponsController extends BaseController {
 
     @Autowired
     private DictCouponsService dictCouponsService;
+    
+    @Autowired
+    private PartnerServiceTypeService partnerServiceTypeService;
 
     /**
      * 列表显示兑换码的优惠券
@@ -140,6 +147,12 @@ public class DictCouponsController extends BaseController {
         int pageSize = ServletRequestUtils.getIntParameter(request,
                 ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
+        PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+        Long[] serviceTypeId={23L,24L,26L,57L};
+        serviceTypeVo.setParentServiceTypeId(Arrays.asList(serviceTypeId));
+        List<PartnerServiceType> serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo);
+        model.addAttribute("serviceTypeList", serviceType);
+        
         PageInfo result = couponService.searchVoListPage(searchVo, (short) 1,
                 pageNo, pageSize);
 
@@ -209,6 +222,36 @@ public class DictCouponsController extends BaseController {
         model.addAttribute("serviceTypeMap",
                 couponService.getSelectServiceTypeSource());
         return "coupons/rechargeCouponForm";
+    }
+    
+    
+    /**
+     * 维护用户充值后，成为vip用户的优惠券
+     * 
+     * 
+     * */
+    @AuthPassport
+    @RequestMapping(value = "/chargeSendCoupons", method = {RequestMethod.GET})
+    public String chargeSendCoupons(
+            @ModelAttribute("dictCoupons") DictCoupons dictCoupons,
+            Model model, @RequestParam(value = "id", required = false) Long id) {
+
+        if (id == null) {
+            id = 0L;
+            dictCoupons = couponService.initRechargeCoupon();
+            model.addAttribute("isForm", 1);
+        } else {
+            dictCoupons = couponService.selectByPrimaryKey(id);
+        }
+        
+        PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+        Long[] serviceTypeId={23L,24L,26L,57L};
+        serviceTypeVo.setParentServiceTypeId(Arrays.asList(serviceTypeId));
+        List<PartnerServiceType> serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo);
+        model.addAttribute("dictCoupons", dictCoupons);
+        model.addAttribute("selectDataSource",couponService.getSelectRangMonthSource());
+        model.addAttribute("serviceTypeList",serviceType);
+        return "coupons/chargeSendCoupons";
     }
 
     /**
@@ -324,9 +367,9 @@ public class DictCouponsController extends BaseController {
             DictCoupons dictCoupon = couponService.selectByPrimaryKey(flag);
             dictCoupon.setServiceType(dictCoupons.getServiceType());
             dictCoupon.setValue(dictCoupons.getValue());
-            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
-            dictCoupon.setDescription(dictCoupons.getDescription());
-            dictCoupon.setIntroduction(dictCoupons.getIntroduction());
+//            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
+//            dictCoupon.setDescription(dictCoupons.getDescription());
+//            dictCoupon.setIntroduction(dictCoupons.getIntroduction());
             dictCoupon.setRangMonth(dictCoupons.getRangMonth());
             dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
             dictCoupon.setIsValid(dictCoupons.getIsValid());
@@ -338,9 +381,12 @@ public class DictCouponsController extends BaseController {
             dictCoupon.setCardPasswd(RandomUtil.randomCode(8));
             dictCoupon.setServiceType(dictCoupons.getServiceType());
             dictCoupon.setValue(dictCoupons.getValue());
-            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
-            dictCoupon.setDescription(dictCoupons.getDescription());
-            dictCoupon.setIntroduction(dictCoupons.getIntroduction());
+//            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
+            PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+            serviceTypeVo.setServiceTypeId(Long.parseLong(dictCoupons.getServiceType()));
+            PartnerServiceType serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo).get(0);
+//            dictCoupon.setDescription(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
+            dictCoupon.setIntroduction(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
             dictCoupon.setRangMonth(dictCoupons.getRangMonth());
             dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
             dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());

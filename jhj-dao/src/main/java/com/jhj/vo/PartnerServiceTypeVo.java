@@ -1,5 +1,7 @@
 package com.jhj.vo;
 
+import java.util.List;
+
 import com.jhj.po.model.university.PartnerServiceType;
 
 public class PartnerServiceTypeVo extends PartnerServiceType {
@@ -15,6 +17,8 @@ public class PartnerServiceTypeVo extends PartnerServiceType {
 	private String yearPrice;
 	
 	private String yearTimes;
+	
+	private List<Long> parentServiceTypeId;
 	
 
 	public String getPriceAndUnit() {
@@ -64,4 +68,13 @@ public class PartnerServiceTypeVo extends PartnerServiceType {
 	public void setPriceStr(String priceStr) {
 		this.priceStr = priceStr;
 	}
+
+	public List<Long> getParentServiceTypeId() {
+		return parentServiceTypeId;
+	}
+
+	public void setParentServiceTypeId(List<Long> parentServiceTypeId) {
+		this.parentServiceTypeId = parentServiceTypeId;
+	}
+
 }

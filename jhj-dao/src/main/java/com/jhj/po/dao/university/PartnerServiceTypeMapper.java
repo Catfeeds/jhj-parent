@@ -1,7 +1,7 @@
 package com.jhj.po.dao.university;
 
 import java.util.List;
-
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.vo.app.AmSkillVo;
 
@@ -40,4 +40,6 @@ public interface PartnerServiceTypeMapper {
 	     *  助理页面  技能 树，根据  员工的 技能 得到  技能的 上级 及对应的技能 
 	     */
 	    List<AmSkillVo> selectSkillNameAndParent(List<Long> childServiceIdList);
+	    
+	    List<PartnerServiceType> selectByPartnerServiceTypeVo(PartnerServiceTypeVo vo);
 }

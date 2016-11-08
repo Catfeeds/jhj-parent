@@ -169,7 +169,8 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 		Map<String, String> rangeMonth = new HashMap<String, String>();
 		rangeMonth.put("1","一个月");
 		rangeMonth.put("3","三个月");
-		rangeMonth.put("6","半年");
+		rangeMonth.put("5","五个月");
+		rangeMonth.put("6","六个月");
 		return rangeMonth;
 	}
 

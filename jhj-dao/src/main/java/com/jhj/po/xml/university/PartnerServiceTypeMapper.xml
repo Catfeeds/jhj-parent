@@ -327,4 +327,23 @@
 		service_hour = #{serviceHour,jdbcType=NUMERIC}
 		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
 	</update>
+	
+	<select id="selectByPartnerServiceTypeVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.PartnerServiceTypeVo">
+		select <include refid="Base_Column_List"/>
+		from partner_service_type
+		<where>
+			<include refid="searchVo"/>
+		</where>
+	</select>
+	<sql id="searchVo">
+		<if test="parentServiceTypeId!=null and parentServiceTypeId!=''">
+			and parent_id in
+			<foreach collection="parentServiceTypeId" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		<if test="serviceTypeId!=null and serviceTypeId!=''">
+			and service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+		</if>
+	</sql>
 </mapper>
