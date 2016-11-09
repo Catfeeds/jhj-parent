@@ -3749,7 +3749,7 @@ i.toolbar-icon-tixing {
   float: left;
 }
 .waiter6-1 span{
-  margin-top: 10px;
+  margin-top: 12px;
   margin-left: 5px;
   float: left;
 }
@@ -3758,7 +3758,7 @@ i.toolbar-icon-tixing {
   border:0;
   float: left;
   width:5%;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 .waiter6-1-1{
   width:40%;
@@ -3770,10 +3770,12 @@ i.toolbar-icon-tixing {
   margin-left: 15px;
 }
 .waiter6-1-2{
-  width:40%;
+  width:20%;
   height:50px;
   text-align: left;
   line-height: 50px;
+  float: right;
+  font-size: 14px;
 }
 .waiter7{
   width:100%;
