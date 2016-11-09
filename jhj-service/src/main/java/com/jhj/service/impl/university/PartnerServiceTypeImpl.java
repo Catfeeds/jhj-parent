@@ -158,15 +158,10 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		
 		List<NewPartnerServiceVo> listVo = new ArrayList<NewPartnerServiceVo>();
 		//根据parentId=0 查询出所用的父节点
-		PartnerServiceTypeVo vo=new PartnerServiceTypeVo();
-		vo.setParentId(0L);
-		vo.setEnable((short)1);
-		List<PartnerServiceType> list = partMapper.selectByPartnerServiceTypeVo(vo);
-//		List<PartnerServiceType> list = partMapper.selectByParentId(0L);
-		
-//		List<PartnerServiceType> list = partMapper.selectNoParentService();
-		
-//		List<PartnerServiceType> list = partMapper.selectAllNoChildService();
+		PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
+		serviceTypeVo.setParentId(0L);
+		serviceTypeVo.setEnable((short)1);
+		List<PartnerServiceType> list = partMapper.selectByPartnerServiceTypeVo(serviceTypeVo);
 		
 		Iterator<PartnerServiceType> iterator = list.iterator(); 
 		

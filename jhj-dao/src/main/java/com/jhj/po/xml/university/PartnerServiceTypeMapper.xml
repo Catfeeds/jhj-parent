@@ -345,7 +345,7 @@
 		<if test="enable!=null and enable!=''">
 			and enable = #{enable,jdbcType=NUMERIC}
 		</if>
-		<if test="parentId!=null and parentId!=''">
+		<if test="parentId!=null">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
 	</sql>
