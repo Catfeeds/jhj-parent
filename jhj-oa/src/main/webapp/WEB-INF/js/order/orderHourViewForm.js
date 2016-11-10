@@ -296,4 +296,22 @@ var selectStaff = function() {
 	
 }
 
+//取消订单
+$("#cancleOrder").on("click",function(){
+	var id=$("#id").val();
+	if(confirm("请确认取消订单吗？")){
+		$.ajax({
+			type:"GET",
+			url:"cancelOrder/"+id,
+			dataType:"json",
+			success:function(data){
+				if(data.success){
+					location.href="order-hour-list"
+				}
+			}
+		});
+	}
+	
+});
+
 window.onload = selectStaff;

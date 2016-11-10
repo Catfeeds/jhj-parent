@@ -290,7 +290,7 @@
 							<div class="col-md-offset-3 col-md-3">
 								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
 								<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5}">
-									<a href="cancelOrder/${oaOrderListVoModel.id }" class="btn btn-success">取消订单</a>
+									<button id="cancleOrder" class="btn btn-success">取消订单</button>
 								</c:if>
 							</div>
 						</div>

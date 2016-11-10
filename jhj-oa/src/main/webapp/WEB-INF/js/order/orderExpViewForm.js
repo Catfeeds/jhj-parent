@@ -382,9 +382,24 @@ var selectStaff = function() {
 	if (disWay == 1) {
 		$("#parentId").trigger("change");
 	}
-	
-	
-	
 }
+
+//取消订单
+$("#cancleOrder").on("click",function(){
+	var id=$("#id").val();
+	if(confirm("请确认取消订单吗？")){
+		$.ajax({
+			type:"GET",
+			url:"cancelOrder/"+id,
+			dataType:"json",
+			success:function(data){
+				if(data.success){
+					location.href="order-exp-list";
+				}
+			}
+		});
+	}
+	
+});
 
 window.onload = selectStaff;

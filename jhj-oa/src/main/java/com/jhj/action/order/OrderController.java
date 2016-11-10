@@ -1,6 +1,5 @@
 package com.jhj.action.order;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +22,6 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
-import com.jhj.po.model.order.OrderLog;
-import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
@@ -46,8 +43,6 @@ import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
-import com.meijia.utils.OrderNoUtil;
-import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -241,29 +236,20 @@ public class OrderController extends BaseController {
 	 * 
 	 * */
 	@AuthPassport
+	@ResponseBody
 	@RequestMapping(value = "/cancelOrder/{id}", method = RequestMethod.GET)
-	public String cancelOrder(Model model, @PathVariable("id") Long orderId) {
+	public Map<String,Object> cancelOrder(Model model, @PathVariable("id") Long orderId) {
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
 		int status = orderService.cancelByOrder(order);
 		if (status == 0) {
-			map.put("success", "取消订单成功！");
+			map.put("success", true);
 		} else {
-			map.put("fail", "订单取消失败！");
+			map.put("fail", false);
 		}
-		model.addAttribute("map", map);
-		String orderNo = order.getOrderNo();
-		Short orderType = order.getOrderType();
-		if (orderType == Constants.ORDER_TYPE_0) {
-			return "redirect:../order-hour-view?orderNo=" + orderNo
-					+ "&disStatus=" + orderType;
-		}
-		if (orderType == Constants.ORDER_TYPE_1) {
-			return "redirect:../order-exp-view?orderNo=" + orderNo
-					+ "&disStatus=" + orderType;
-		}
-		return null;
+		
+		return map;
 	}
 	
 	@AuthPassport
