@@ -439,28 +439,7 @@ public class OrderDispatchController extends BaseController {
 		
 		//计算派工时间
 		Double serviceHour = (double) order.getServiceHour();
-		
-//		List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
-//		
-//		if (!orderAddons.isEmpty()) {
-//			serviceHour = (double) 0;
-//			List<OrderServiceAddonViewVo> orderAddonVos = orderServiceAddonsService.changeToOrderServiceAddons(orderAddons);
-//			for (OrderServiceAddonViewVo vo : orderAddonVos) {
-//				Double serviceHourAddon = vo.getServiceHour();
-//				int itemNum = vo.getItemNum();
-//				int defaultNum = vo.getDefaultNum();
-//				
-//				if (defaultNum > 0) {
-//					serviceHour+= (serviceHourAddon / defaultNum) * itemNum;
-//				} else {
-//					serviceHour+= serviceHourAddon * itemNum;
-//				}
-//				
-//			}
-//			
-//			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 1);
-//		}
-		
+				
 		// 进行派工，兼容一人和多人
 		for (Long staffId : newDispathStaffIds) {
 			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId);
@@ -484,7 +463,7 @@ public class OrderDispatchController extends BaseController {
 		}
 
 		// 更新订单表
-		
+		order.setStaffNums(staffIds.size());
 		order.setServiceDate(serviceDateTime);
 		order.setUpdateTime(TimeStampUtil.getNowSecond());
 		// 更新为 已派工

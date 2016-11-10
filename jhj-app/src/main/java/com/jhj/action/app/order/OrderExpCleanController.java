@@ -231,6 +231,7 @@ public class OrderExpCleanController extends BaseController {
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDateTable);
 		order.setServiceHour(serviceHour);
+		order.setStaffNums(1);
 		order.setAddrId(addrId);
 		order.setOrderFrom(orderFrom);
 		order.setOrderOpFrom(orderOpFrom);

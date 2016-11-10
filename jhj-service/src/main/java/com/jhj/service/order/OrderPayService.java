@@ -12,12 +12,12 @@ public interface OrderPayService {
 
 	boolean orderPaySuccessToDoForDeep(Orders orders);
 
-	boolean orderPaySuccessToDoForHour(Long userId, Long orderId, List<OrgStaffsNewVo> orgStaffsNewVos, boolean isChangeDispatch);
-	
 	//手机话费充值， 微信支付成功后的 处理
 	void orderPaySuccessToDoForPhone(Orders orders);
 
 	Boolean orderPaySuccessToDoOrderPayExt(Orders orders, OrderPriceExt orderPriceExt);
+
+	boolean orderPaySuccessToDoForHour(Long userId, Long orderId, boolean isChangeDispatch);
 	
 	
 }

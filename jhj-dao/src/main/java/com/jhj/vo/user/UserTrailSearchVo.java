@@ -9,6 +9,10 @@ public class UserTrailSearchVo {
 	private Short userType;
 	
 	private List<Long> userIds;
+	
+	private Long startTime;
+	
+	private Long endTime;
 
 	public Long getUserId() {
 		return userId;
@@ -32,6 +36,22 @@ public class UserTrailSearchVo {
 
 	public void setUserIds(List<Long> userIds) {
 		this.userIds = userIds;
+	}
+
+	public Long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Long startTime) {
+		this.startTime = startTime;
+	}
+
+	public Long getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Long endTime) {
+		this.endTime = endTime;
 	}
 
 }

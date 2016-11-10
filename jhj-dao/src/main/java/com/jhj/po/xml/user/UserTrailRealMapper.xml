@@ -42,6 +42,15 @@
 			</foreach>
 		</if>
 		
+		<if test="startTime !=null">
+			and add_time >= #{startTime,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="endTime !=null">
+			and add_time >= #{endTime,jdbcType=NUMERIC}
+		</if>
+		
+		
 		
 	</select>
 	

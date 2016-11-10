@@ -108,7 +108,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 	 *            是否换人，如果是换人，则需要将原有派工取消，再重新派工.
 	 */
 	@Override
-	public boolean orderPaySuccessToDoForHour(Long userId, Long orderId, List<OrgStaffsNewVo> orgStaffsNewVos, boolean isChangeDispatch) {
+	public boolean orderPaySuccessToDoForHour(Long userId, Long orderId,  boolean isChangeDispatch) {
 
 		Orders order = ordersService.selectByPrimaryKey(orderId);
 		
@@ -136,17 +136,23 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
 		Long serviceDate = order.getServiceDate();
 		Double serviceHour = (double) order.getServiceHour();
-		Long staffId = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour);
+		int staffNums = order.getStaffNums();
+		if (staffNums <= 0) staffNums = 1;
+		List<Long> staffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums);
 
-		if (staffId.equals(0L))
+		if (staffIds.isEmpty())
 			return false;
 
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
-
-		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
-
-		order.setOrgId(staff.getOrgId());
+		OrgStaffs staff = null;
+		for (Long staffId : staffIds) {
+			staff = orgStaffService.selectByPrimaryKey(staffId);
+			Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+		}
+		
+		if (staff != null) {
+			order.setOrgId(staff.getOrgId());
+		}
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);// 更新订单状态---已派工
 		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付
 															// 的助理单，需要用到这个 修改时间
@@ -167,7 +173,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 2)派工成功，为服务人员发送推送消息---推送消息
 		
 
-		if (doOrderDispatch.equals(true)) {
+		for (Long staffId : staffIds) {
+			staff = orgStaffService.selectByPrimaryKey(staffId);
 			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 			
@@ -236,11 +243,12 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
 		Long serviceDate = order.getServiceDate();
 		
-		Long staffId = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour);
+		List<Long> staffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, 1);
 
-		if (staffId.equals(0L))
+		if (staffIds.isEmpty())
 			return false;
-
+		
+		Long staffId = staffIds.get(0);
 		// 进行派工
 		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
 

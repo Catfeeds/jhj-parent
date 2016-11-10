@@ -23,6 +23,7 @@ function removeSessionData() {
 	sessionStorage.removeItem("service_addons");
 	sessionStorage.removeItem("service_addons_json");
 	sessionStorage.removeItem("total_service_hour");
+	sessionStorage.removeItem("total_staff_nums");
 	sessionStorage.removeItem("pay_order_type");
 
 	//优惠劵临时会话数据

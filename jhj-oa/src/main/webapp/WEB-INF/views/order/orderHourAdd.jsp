@@ -77,23 +77,14 @@
 												<%-- <input type="hidden" id="serviceType" name="serviceType" class="form-control"
 													value="${serviceType.serviceTypeId }" />
 												<input class="form-control" value="${serviceType.name }" readonly="readonly"> --%>
-												<select id="serviceType" name="serviceType" class="form-control" onchange="chagePrice()">
+												<select id="serviceType" name="serviceType" class="form-control" onchange="chageServiceType()">
 													<option value="">--请选择服务类型--</option>
 													<option value="${hour.serviceTypeId }">${hour.name  }</option>
 													<option value="${cook.serviceTypeId }">${cook.name  }</option>
 												</select>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>价格
-											</label>
-											<div class="col-md-5">
-												<input type="text" id="orderPay" name="orderPay" class="form-control" value="">
-												<input type="hidden" id="hour-price" value="${hour.price }"/>
-												<input type="hidden" id='cook-price' value="${cook.price }"/>
-											</div>
-										</div>
+										
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>订单来源
@@ -121,7 +112,27 @@
 												<font color="red">*</font>服务时长
 											</label>
 											<div class="col-md-5">
-												<input type="text" id="serviceHour" name="serviceHour" class="form-control" value="2" />
+												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePrice()" onafterpaste="changePrice()" class="form-control" value="3" />
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-md-2 control-label">
+												<font color="red">*</font>服务人员数量
+											</label>
+											<div class="col-md-5">
+												<input type="text" id="staffNums" name="staffNums" onkeyup="changePrice()" onafterpaste="changePrice()"  class="form-control" value="1" />
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-md-2 control-label">
+												<font color="red">*</font>价格
+											</label>
+											<div class="col-md-5">
+												<input type="text" id="orderPay" name="orderPay" class="form-control" value="">
+												<input type="hidden" id="hour-price" value="${hour.price }"/>
+												<input type="hidden" id='cook-price' value="${cook.price }"/>
 											</div>
 										</div>
 										<div class="form-group">

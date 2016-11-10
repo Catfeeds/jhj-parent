@@ -107,6 +107,7 @@ public class OrdersServiceImpl implements OrdersService {
 		record.setServiceContent("");
 		record.setServiceDate(0L);
 		record.setServiceHour((short) 0);
+		record.setStaffNums(0);
 		record.setOrderNo("");
 		record.setOrderRate((short) 0);// 0 = 好 1 = 一般 2 = 差
 		record.setOrderRateContent("");

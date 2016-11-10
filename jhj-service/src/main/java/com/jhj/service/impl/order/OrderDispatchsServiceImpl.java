@@ -211,11 +211,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 	/**
 	 * 订单类自动派工
+	 * @param orderId  订单ID
+	 * @param serviceDate 服务日期
+	 * @param serviceHour 服务时长
+	 * @param staffNums   预约服务人员数 支持多个服务人员.
 	 */
 	@Override
-	public Long autoDispatch(Long orderId, Long serviceDate, Double serviceHour) {
+	public List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums) {
 
-		Long dispatchStaffId = 0L;
+		List<Long> dispatchStaffIds = new ArrayList<Long>();
 
 		Orders order = orderService.selectByPrimaryKey(orderId);
 
@@ -228,9 +232,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<OrgDispatchPoiVo> orgList = getMatchOrgs(addrs.getLatitude(), addrs.getLongitude(), 0L, 0L, true);
 
 		if (orgList.isEmpty())
-			return dispatchStaffId;
+			return dispatchStaffIds;
 
 		List<Long> staffIds = new ArrayList<Long>();
+		List<Long> canDispatchStaffIds = new ArrayList<Long>();
 
 		for (int i = 0; i < orgList.size(); i++) {
 			OrgDispatchPoiVo org = orgList.get(i);
@@ -327,63 +332,71 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 
-			// 如果该云店有满足员工，则直接跳出循环，返回信息.
-			if (!staffIds.isEmpty())
-				break;
+			
+			if (staffIds.isEmpty()) break;
+			
+			// 如果该云店有满足员工，则加入canDispatchStaffIds ,如果canDispatchStaffIds >= staffNums 则直接跳出循环.
+			for (Long sid : staffIds) {
+				canDispatchStaffIds.add(sid);
+			}
+			
+			if (canDispatchStaffIds.size() >= staffNums) break;
 		}
+		
+		if (canDispatchStaffIds.isEmpty()) return dispatchStaffIds;
+		
 
-		if (staffIds.size() == 1) {
-			dispatchStaffId = staffIds.get(0);
-			return dispatchStaffId;
+		if (canDispatchStaffIds.size() == staffNums) {
+			dispatchStaffIds = canDispatchStaffIds;
+			return dispatchStaffIds;
 		}
 
 		// ---5.找出已匹配的员工列表，并统计当天的订单数，优先指派订单数少的员工，如果订单数相同，则随机
-		if (!staffIds.isEmpty()) {
+	
 
-			List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		StaffSearchVo searchVo5 = new StaffSearchVo();
+		searchVo5.setStaffIds(canDispatchStaffIds);
+		searchVo5.setStatus(1);
+		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
 
-			StaffSearchVo searchVo5 = new StaffSearchVo();
-			searchVo5.setStaffIds(staffIds);
-			searchVo5.setStatus(1);
-			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
+		// 员工服务日期当天的订单数
+		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, canDispatchStaffIds);
 
-			// 员工服务日期当天的订单数
-			List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, staffIds);
+		for (OrgStaffs item : staffList) {
+			OrgStaffsNewVo vo = this.initStaffsNew();
+			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+			vo.setDispathStaFlag(1);
+			for (HashMap totalItem : totalStaffs) {
+				
+				if (totalItem.get("staff_id") == null) continue;
+				if (totalItem.get("total") == null) continue;
+				Long staffId = (Long) totalItem.get("staff_id");
+				int total = Integer.valueOf(totalItem.get("total").toString());
 
-			for (OrgStaffs item : staffList) {
-				OrgStaffsNewVo vo = this.initStaffsNew();
-				BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
-				vo.setDispathStaFlag(1);
-				for (HashMap totalItem : totalStaffs) {
-					
-					if (totalItem.get("staff_id") == null) continue;
-					if (totalItem.get("total") == null) continue;
-					Long staffId = (Long) totalItem.get("staff_id");
-					int total = Integer.valueOf(totalItem.get("total").toString());
-
-					if (staffId.equals(vo.getStaffId())) {
-						vo.setTodayOrderNum(total);
-					}
+				if (staffId.equals(vo.getStaffId())) {
+					vo.setTodayOrderNum(total);
 				}
-
-				list.add(vo);
 			}
 
-			// 进行排序，根据距离大小来正序.
-			if (list.size() > 0) {
-				Collections.sort(list, new Comparator<OrgStaffsNewVo>() {
-					@Override
-					public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
-						return Integer.valueOf(s1.getTodayOrderNum()).compareTo(s2.getTodayOrderNum());
-					}
-				});
-
-				dispatchStaffId = list.get(0).getStaffId();
-			}
-
+			list.add(vo);
 		}
 
-		return dispatchStaffId;
+		// 进行排序，根据距离大小来正序.
+		if (list.size() > 0) {
+			Collections.sort(list, new Comparator<OrgStaffsNewVo>() {
+				@Override
+				public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+					return Integer.valueOf(s1.getTodayOrderNum()).compareTo(s2.getTodayOrderNum());
+				}
+			});
+
+			for (int i = 0; i < staffNums; i++) {
+				dispatchStaffIds.add(list.get(i).getStaffId());
+			}
+		}
+
+		return dispatchStaffIds;
 	}
 
 	/**

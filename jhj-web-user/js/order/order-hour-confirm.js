@@ -23,21 +23,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	    	}
 	    	console.log(serviceType.name);
 	    	$$("#serviceTypeName").html(serviceType.name);
-	    	$$("#serviceHourStr").html(serviceType.service_hour + "小时");
-	    	$$("#priceStr").html(serviceType.price);
-	    	$$("#orderMoneyStr").html(serviceType.price + "元");
-	    	
 	    	$$("#serviceContent").val(serviceType.name);
-	    	$$("#orderMoney").val(serviceType.price);
-	    	
-	    	var isMulti = serviceType.is_multi;
-	    	
-	    	if (isMulti == 1) {
-	    		$$("#isMultiStr").html("两人以上服务人员")
-	    	}
-	    	
-	    	sessionStorage.setItem("order_money", serviceType.price);
-	    	sessionStorage.setItem("order_pay", serviceType.price);
 	      }
 	});
 	
@@ -69,6 +55,20 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		$$("#serviceDateStr").html(sessionStorage.getItem('service_date_str'));
 	}
 	
+	//设置服务人数和服务小时数
+	var staffNums = sessionStorage.getItem('total_staff_nums');
+	var serviceHours = sessionStorage.getItem('total_service_hour');
+	var orderHourPay = sessionStorage.getItem('order_pay');
+	var orderHourMoney = sessionStorage.getItem('order_money');
+	$$("#staffNums").val(staffNums);
+	$$("#serviceHour").val(serviceHours);
+	$$("#serviceHourStr").html(serviceHours + "小时");
+	$$("#orderMoney").val(orderHourMoney);
+	$$("#priceStr").html(orderHourMoney);
+	$$("#orderMoneyStr").html(orderHourMoney + "元");
+	
+	$$("#isMultiStr").html(staffNums + "位服务人员")
+	
 	//设置优惠劵
 	if (sessionStorage.getItem('user_coupon_id') != null) {
 		$$("#userCouponId").val(sessionStorage.getItem('user_coupon_id'));
@@ -87,7 +87,6 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 			var orderPayStr = $$("#orderMoney").val() - userCouponValue;
 			if (orderPayStr < 0) orderPayStr = 0;
 			sessionStorage.setItem("order_pay", orderPayStr);
-//			$$("#orderPayStr").html(orderPayStr + "元");
 		}
 	} else {
 		//读取用户可用的优惠劵
@@ -113,11 +112,42 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		    	  } else {
 		    		  nums = couponList.length;
 		    	  }
-		    	  $$("#userCouponName").html(nums + "张可用")
+		    	  
+		    	  //如果有优惠劵，则默认选择最大面值的优惠劵.
+		    	  var userCouponValue = 0;
+	    		  var userCouponId = 0;
+	    		  var userCouponName = "";
+	    		  
+		    	  if (nums > 0) {
+		    		 
+		    		  $$.each(couponList, function(i, item) {
+		    			  if (item.value > userCouponValue) {
+		    				  userCouponValue = item.value;
+		    				  userCouponId = item.id;
+		    				  userCouponName = "￥" + userCouponValue;
+		    			  }
+		    		  });
+		    		  
+		    		  sessionStorage.setItem("user_coupon_id", userCouponId);
+	    			  sessionStorage.setItem("user_coupon_name", userCouponName);
+	    			  sessionStorage.setItem("user_coupon_value", userCouponValue);
+		    	  }
+		    	  
+		    	  var userCouponNameStr = nums + "张可用";
+		    	  if (userCouponId != 0 && userCouponValue != 0) {
+		    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
+					  if (orderPayStr < 0) orderPayStr = 0;
+					  sessionStorage.setItem("order_pay", orderPayStr);
+					  userCouponNameStr = userCouponName;
+		    	  }
+		    	  
+		    	  console.log("order_pay = " + sessionStorage.getItem("order_pay"));
+		    	  $$("#userCouponName").html(userCouponNameStr);
+		    	  $$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
 		      }
 		});
 	}
-	$$("#orderPayStr").html(sessionStorage.getItem("order_pay") + "元");
+	$$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
 	/*
 	 * 提交订单
 	 */
@@ -135,6 +165,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		params.serviceContent = $$("#serviceContent").val();
 		params.serviceDate = $$("#serviceDate").val();
 		params.addrId = $$("#addrId").val();
+		params.staffNums = $$("#staffNums").val();
 		params.serviceHour = $$("#serviceHour").val();
 		params.remarks = $$("#remarks").val();
 		params.orderFrom = $$("#orderFrom").val();

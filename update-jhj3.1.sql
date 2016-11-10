@@ -15,3 +15,8 @@ ALTER TABLE `org_staff_detail_pay` CHANGE `order_type` `order_type` TINYINT(1) N
 
 ALTER TABLE `order_cards` ADD `parent_id` INT(11) NOT NULL COMMENT '门店ID' ;
 ALTER TABLE `order_cards` ADD `org_id` INT(11) NOT NULL COMMENT '云店ID' ;
+
+ALTER TABLE `orders` ADD `staff_nums` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0' COMMENT '派工人数' AFTER `service_hour`;
+
+
+update orders as a, (SELECT order_no, count(*) as c FROM `order_dispatchs` WHERE dispatch_status = 1 group by order_no) as b set a.staff_nums = b.c where a.order_no = b.order_no;

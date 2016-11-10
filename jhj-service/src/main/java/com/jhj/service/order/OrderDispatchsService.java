@@ -42,8 +42,6 @@ public interface OrderDispatchsService {
 
 	List<HashMap> totalByStaff(OrderDispatchSearchVo searchVo);
 	
-	Long autoDispatch(Long orderId, Long serviceDate, Double serviceHour);
-
 	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
 
 	List<OrgStaffsNewVo> manualDispatchByOrg(Long orderId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
@@ -55,5 +53,7 @@ public interface OrderDispatchsService {
 	List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour, Long sessionOrgId);
 
 	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
+
+	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums);
    	
 }

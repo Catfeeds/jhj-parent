@@ -47,6 +47,12 @@
 											<i class="icon-expand-alt"></i>
 											新增
 										</td>
+										
+										<td>
+											<button onClick="btn_add('newbs/staff-map')" class="btn btn-danger" type="button">
+											<i class="icon-expand-alt"></i>
+											地图
+										</td>
 									</button>
 									</tr>
 									<tr>
@@ -55,7 +61,7 @@
 										<td>姓名:</td>
 										<td><form:input path="name" class="form-control" type="text" /></td>	
 										<td>是否可用：</td>
-										<td><form:radiobutton path="status" value="0" />否
+										<td colspan = "2"><form:radiobutton path="status" value="0" />否
 								 			<form:radiobutton path="status" value="1" />是
 								 		</td>	
 									</tr>

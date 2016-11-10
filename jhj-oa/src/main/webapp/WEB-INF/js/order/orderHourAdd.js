@@ -38,6 +38,13 @@ var formVal = $('#orderHourForm').validate({
 			
 		},
 		
+		staffNums : {
+			required : true,
+			digits : true,
+			min : 1,
+			
+		},
+		
 		orderPayType : {
 			required : true,
 		},
@@ -81,6 +88,13 @@ var formVal = $('#orderHourForm').validate({
 			required : "服务时长不能为空",
 			digits : "服务时长必须为数字",
 			min : "服务时长必须超过3小时",
+			
+		},
+		
+		staffNums : {
+			required : "服务人员数量不能为空",
+			digits : "服务人员数量必须为数字",
+			min : "服务人员数量必须大于等于1个人",
 			
 		},
 		
@@ -186,8 +200,8 @@ function saveFrom() {
 	var serviceDate = $("#serviceDate").val();
 	params.serviceDate = moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
 	params.serviceHour = $("input[name='serviceHour']").val();
+	params.staffNums = $("#staffNums").val();
 	params.orderOpFrom = $("select[name='orderOpFrom']").val();
-	;
 	params.remarks = $("#remarks").val();
 	var order_pay_type = $("#orderPayType").val();
 	if ($('#orderHourForm').validate().form()) {
@@ -306,14 +320,48 @@ function saveAddress() {
 		}
 	});
 }
-function chagePrice(){
+function chageServiceType(){
 	var id=$("select[name='serviceType'] option:selected").val();
 	if(id==28){
 		$("#orderPay").val($("#hour-price").val());
 		$("#serviceHour").val(3);
+		$("#staffNums").val(1);
 	}else if(id==29){
 		$("#orderPay").val($("#cook-price").val());
 		$("#serviceHour").val(2);
+		$("#staffNums").val(1);
 	}
+	
+}
+
+function changePrice() {
+	var serviceHours = $("#serviceHour").val();
+	serviceHours = serviceHours.replace(/\D|^0/g,'');
+	var staffNums = $("#staffNums").val();
+	staffNums = staffNums.replace(/\D|^0/g,'');
+	
+	var serviceType=$("select[name='serviceType'] option:selected").val();
+	
+	var orderPay = 0;
+	if (serviceType == 28) {
+		if (staffNums == 1 && serviceHours == 3) {
+			$("#orderPay").val(149);
+		}
+		if (staffNums > 1 || serviceHours > 3) {
+			orderPay = 50 * serviceHours * staffNums;
+			$("#orderPay").val(orderPay);
+		}
+	} 
+	
+	if (serviceType == 28) {
+		if (staffNums == 1 && serviceHours == 2) {
+			$("#orderPay").val(99);
+		}
+		if (staffNums > 1 || serviceHours > 2) {
+			orderPay = 50 * serviceHours * staffNums;
+			$("#orderPay").val(orderPay);
+		}
+	} 
+	
 	
 }

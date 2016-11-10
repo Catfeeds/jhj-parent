@@ -15,6 +15,7 @@
 		<result column="service_content" property="serviceContent" jdbcType="VARCHAR" />
 		<result column="service_date" property="serviceDate" jdbcType="NUMERIC" />
 		<result column="service_hour" property="serviceHour" jdbcType="NUMERIC" />
+		<result column="staff_nums" property="staffNums" jdbcType="NUMERIC" />
 		<result column="order_status" property="orderStatus" jdbcType="NUMERIC" />
 		<result column="order_rate" property="orderRate" jdbcType="NUMERIC" />
 		<result column="order_rate_content" property="orderRateContent" jdbcType="VARCHAR" />
@@ -29,7 +30,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_no, order_type,
-		service_type,service_content, service_date, service_hour, order_status,
+		service_type,service_content, service_date, service_hour, staff_nums, order_status,
 		order_rate,
 		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time
 		,remarks_bussiness_confirm
@@ -442,7 +443,7 @@
 		mobile, city_id, org_id, addr_id,
 		order_no,
 		order_type, service_type,
-		service_content, service_date, service_hour,
+		service_content, service_date, service_hour, staff_nums,
 		order_status, order_rate, order_rate_content,
 		order_from,order_op_from, remarks,remarks_confirm,add_time, update_time,
 		remarks_bussiness_confirm
@@ -455,7 +456,7 @@
 		#{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=NUMERIC},
 		#{serviceType,jdbcType=NUMERIC},
 		#{serviceContent,jdbcType=VARCHAR},
-		#{serviceDate,jdbcType=NUMERIC}, #{serviceHour,jdbcType=NUMERIC},
+		#{serviceDate,jdbcType=NUMERIC}, #{serviceHour,jdbcType=NUMERIC}, #{staffNums,jdbcType=NUMERIC},
 		#{orderStatus,jdbcType=NUMERIC}, #{orderRate,jdbcType=NUMERIC},
 		#{orderRateContent,jdbcType=VARCHAR},
 		#{orderFrom,jdbcType=NUMERIC},
@@ -511,6 +512,9 @@
 			</if>
 			<if test="serviceHour != null">
 				service_hour,
+			</if>
+			<if test="staffNums != null">
+				staff_nums,
 			</if>
 			<if test="orderStatus != null">
 				order_status,
@@ -586,6 +590,9 @@
 			<if test="serviceHour != null">
 				#{serviceHour,jdbcType=NUMERIC},
 			</if>
+			<if test="staffNums != null">
+				#{staffNums,jdbcType=NUMERIC},
+			</if>
 			<if test="orderStatus != null">
 				#{orderStatus,jdbcType=NUMERIC},
 			</if>
@@ -656,6 +663,9 @@
 			</if>
 			<if test="serviceHour != null">
 				service_hour = #{serviceHour,jdbcType=NUMERIC},
+			</if>
+			<if test="staffNums != null">
+				staff_nums = #{staffNums,jdbcType=NUMERIC},
 			</if>
 			<if test="orderStatus != null">
 				order_status = #{orderStatus,jdbcType=NUMERIC},
@@ -740,6 +750,7 @@
 		service_date =
 		#{serviceDate,jdbcType=NUMERIC},
 		service_hour = #{serviceHour,jdbcType=NUMERIC},
+		staff_nums = #{staffNums,jdbcType=NUMERIC},
 		order_status =
 		#{orderStatus,jdbcType=NUMERIC},
 		order_rate =

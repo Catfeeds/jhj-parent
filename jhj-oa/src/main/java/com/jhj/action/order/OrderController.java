@@ -165,16 +165,8 @@ public class OrderController extends BaseController {
 			if (staId == staffId || staId == 0L) {
 				isChange = false;
 			}
-
-			OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(staffId);
-			OrgStaffsNewVo orgStaffsNewVo = new OrgStaffsNewVo();
-			orgStaffsNewVo.setStaffId(staffId);
-			orgStaffs.setStaffId(staffId);
-			List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
-			orgStaffsNewVos.add(orgStaffsNewVo);
-
-			orderPayService.orderPaySuccessToDoForHour(userId, id,
-					orgStaffsNewVos, isChange);
+			
+			orderPayService.orderPaySuccessToDoForHour(userId, id, isChange);
 		}
 
 		return "redirect:/order/order-list";

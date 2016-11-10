@@ -174,7 +174,7 @@ public class OrderPayController extends BaseController {
 		}		
 		
 		//判断当前是否有满足条件阿姨，没有则返回提示信息.
-		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
+//		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
 				
 		orderPrice.setOrderPay(orderPay);
 		orderPrice.setPayType(orderPayType);
@@ -243,7 +243,7 @@ public class OrderPayController extends BaseController {
 				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
 				
 				
-				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
+				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), false);
 			}
 			
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {

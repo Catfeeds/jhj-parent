@@ -26,6 +26,8 @@ public class Orders {
     private Long serviceDate;
 
     private double serviceHour;
+    
+    private int staffNums;
 
     private Short orderStatus;
 
@@ -230,5 +232,13 @@ public class Orders {
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
+
+	public int getStaffNums() {
+		return staffNums;
+	}
+
+	public void setStaffNums(int staffNums) {
+		this.staffNums = staffNums;
+	}
 
 }

@@ -102,6 +102,7 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam("serviceDate") Long serviceDate,
 			@RequestParam("addrId") Long addrId,
 			@RequestParam("serviceHour") Short serviceHour,
+			@RequestParam(value = "staffNums", required = false, defaultValue = "1") int staffNums,
 			@RequestParam(value = "serviceAddons", required = false, defaultValue = "") String serviceAddons,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom,
@@ -162,6 +163,7 @@ public class OrderHourAddController extends BaseController {
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);
 		order.setServiceHour(serviceHour);
+		order.setStaffNums(staffNums);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);//钟点工未支付
 		order.setOrderNo(orderNo);
 		order.setOrderFrom(orderFrom);
@@ -220,7 +222,7 @@ public class OrderHourAddController extends BaseController {
 		
 		//设置订单总金额。插入 order_prices表
 		
-		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(serviceType);
+		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(order, serviceType);
 		
 		if (orderFrom.equals((short)2) && orderPay.compareTo(new BigDecimal(0)) == 1) {
 

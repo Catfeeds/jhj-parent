@@ -148,7 +148,7 @@ public class OrderOnlinePayController extends BaseController {
 			// 记录用户消费明细
 			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);
 
-			orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), new ArrayList<OrgStaffsNewVo>(), false);
+			orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), false);
 		}
 
 		if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {

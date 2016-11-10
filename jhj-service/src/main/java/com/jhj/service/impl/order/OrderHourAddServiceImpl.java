@@ -489,7 +489,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 	 * 
 	 */
 	@Override
-	public OrderPrices getNewOrderPrice(Long serviceType) {
+	public OrderPrices getNewOrderPrice(Orders order, Long serviceType) {
 		
 		OrderPrices prices = orderPricesService.initOrderPrices();
 		
@@ -497,12 +497,15 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		
 		// 单项服务的 价格
 		BigDecimal price = type.getPrice();
+				
+		int staffNums = order.getStaffNums();
+		double serviceHour = order.getServiceHour();
 		
-		/*
-		 *  2016年4月1日14:49:48  
-		 *  
-		 * 	服务 都改为  次/元。。故不用 计算 时长的乘积了
-		 */
+		if (staffNums > 1 || serviceHour > type.getServiceHour()) {
+			double tmpPrice = 50 * serviceHour * staffNums;
+			price = new BigDecimal(tmpPrice);
+		}
+		
 		prices.setOrderMoney(price);
 		prices.setOrderPay(price);
 		
