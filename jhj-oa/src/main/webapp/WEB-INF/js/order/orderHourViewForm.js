@@ -216,7 +216,7 @@ function loadStaffsByServiceDate(serviceDate) {
 }
 
 function doSelectStaff(staffId) {
-
+	console.log("doSelectStaff");
 	var selectStaffId = "";
 	var selectStaffName = "";
 	var distanceValue = "";
@@ -229,6 +229,7 @@ function doSelectStaff(staffId) {
 		var distanceValue = $(this).parent().find("#distanceValue").val();
 		
 		if (selectStaffId == staffId) {
+			console.log("selectStaffName = "  + selectStaffName);
 			// 如果该行被选中
 			if (this.checked) {
 				addSelectedStaffs(selectStaffId, selectStaffName, distanceValue);
@@ -371,9 +372,11 @@ $("#cancleOrder").on("click",function(){
 });
 
 function addSelectedStaffs(selectStaffId, selectStaffName, distanceValue) {
+	console.log("addSelectedStaffs");
 	var selectStaffIds = $("#selectedStaffs").val();
-	
-	if (selectStaffIds.indexOf(selectStaffId) >= 0) return false;
+	selectStaffIds+=",";
+	console.log("selectStaffIds = " + selectStaffIds);
+	if (selectStaffIds.indexOf(selectStaffId+",") >= 0) return false;
 	
 	$('#selectedStaffs').tagsinput('add', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
 }

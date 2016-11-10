@@ -43,28 +43,20 @@ $("tbody").find("tr").each(function(k, v) {
 	} else {
 		var staffNums = $(this).find("#staffNums").val();
 		var staffName = $(this).find("#staffName").val();
+		
 		if (staffNums > 0 ) {
 			if (staffName == "" || staffName == undefined) {
+//				console.log("staffNames = " + staffName);
 				$(this).attr("style", "color:red");
 			} else {
 				
 				var staffAry = staffName.split(",");
 				
 				if (staffAry.length != staffNums) {
+//					console.log("staffNums = " + staffNums + " ----- l =" + staffAry.length);
 					$(this).attr("style", "color:red");
 				}
 			}
-		}
-		
-	}
-	
-	
-	if (payType == 6) {
-		$(this).attr("style", "color:red");
-		// 如果 钟点工订单的 订单 状态 为已支付, 支付方式为 现金支付。。则将 状态 显示 为 上门收款
-		if ($(this).find("#itemOrderStatus").val() == 2) {
-
-			$(this).find("#payTypeStatus").text("上门收款");
 		}
 	}
 
