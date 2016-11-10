@@ -158,18 +158,21 @@
 							<table class="table table-condensed table-hover table-striped" id="table2excel">
 								<thead>
 									<tr>
-										<th>门店</th>
-										<th>云店</th>
-										<th>服务人员</th>
+										<th width="5%">门店</th>
+										<th width="10%">云店</th>
+										<th width="10%">服务人员</th>
+										<th>人数</th>
 										<th>下单时间</th>
 										<th>订单类型</th>
 										<th>服务日期</th>
-										<th>服务时长</th>
-										<th>用户手机号</th>
-										<th>服务地址</th>
+										<th>时长</th>
+										<th>手机号</th>
+										<th width="10%">地址</th>
 										<th>是否接单</th>
 										<th>订单来源</th>
 										<th>订单状态</th>
+										
+										
 										<th>支付方式</th>
 										<th>支付金额</th>
 										<th>操作</th>
@@ -180,9 +183,12 @@
 											<tr>
 												<input type="hidden" id="itemPayType" value="${item.payType }">
 												<input type="hidden" id="itemOrderStatus" value="${item.orderStatus }">
+												<input type="hidden" id="staffNums" value="${item.staffNums }">
+												<input type="hidden" id="staffName" value="${item.staffName }">
 												<td>${ item.orgName }</td>
 												<td>${ item.cloudOrgName }</td>
 												<td>${ item.staffName }</td>
+												<td>${ item.staffNums }</td>
 												<td><timestampTag:timestamp patten="MM-dd" t="${item.addTime * 1000}" /></td>
 												<td>${item.orderTypeName }</td>
 												<td><timestampTag:timestamp patten="MM-dd HH:mm" t="${item.serviceDate * 1000}" /></td>

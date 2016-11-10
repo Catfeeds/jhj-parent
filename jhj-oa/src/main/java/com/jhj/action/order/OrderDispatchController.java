@@ -137,7 +137,7 @@ public class OrderDispatchController extends BaseController {
 	@RequestMapping(value = "save_order_hour.json", method = RequestMethod.POST)
 	public AppResultData<Object> submitManuBaseOrder(Model model, 
 			@RequestParam("orderId") Long orderId, 
-			@RequestParam("selectStaffId") Long selectStaffId,
+			@RequestParam("selectStaffIds") String selectStaffIds,
 			@RequestParam("newServiceDate") String newServiceDate, 
 			@RequestParam("distanceValue") int distanceValue) {
 
@@ -156,14 +156,51 @@ public class OrderDispatchController extends BaseController {
 		}
 		
 		Long serviceDateTime = TimeStampUtil.getMillisOfDayFull(newServiceDate) / 1000;
-		Long oldServcieDateTime = order.getServiceDate();
+		Long oldServiceDateTime = order.getServiceDate();
 		
-		//如果服务时间相同，无更换新的员工，则不做其他处理。
-		if (serviceDateTime.equals(oldServcieDateTime) && selectStaffId == 0 ) {
+		String[] staffIdsAry = StringUtil.convertStrToArray(selectStaffIds);
+		//本次派工人员，可为多个.
+		List<Long> staffIds = new ArrayList<Long>();
+		//本地派工人员与已经派工过的人员比较，只保留新的派工人员.
+		List<Long> newDispathStaffIds = new ArrayList<Long>();
+		
+		//已经派工的人员，遗留的信息
+		List<Long> oldDispatchStaffIds = new ArrayList<Long>();
+		
+		for (int i = 0; i < staffIdsAry.length; i++) {
+			String tmpStaffIdStr = staffIdsAry[i];
+			if (StringUtil.isEmpty(tmpStaffIdStr)) continue;
+			Long tmpStaffId = Long.valueOf(tmpStaffIdStr);
+			staffIds.add(tmpStaffId);
+			newDispathStaffIds.add(tmpStaffId);
+		}
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(order.getOrderNo());
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+		
+		
+		//去掉已有的派工人员，只保留新增的派工人员.
+		if (!disList.isEmpty()) {
+			for (OrderDispatchs d : disList) {
+				if (staffIds.contains(d.getStaffId())) {
+					newDispathStaffIds.remove(d.getStaffId());
+					oldDispatchStaffIds.add(d.getStaffId());
+				}
+			}
+		}
+		
+		//派工时间相同，不更换派工人员的情况，不做任何操作
+		if (oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
 			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("派工人员和服务时间都无变化，不做操作.");
 			return resultData;
 		}
+		
+		StaffSearchVo staffSearchVo = new StaffSearchVo();
+		staffSearchVo.setStaffIds(staffIds);
+		List<OrgStaffs> staffs = orgStaffsService.selectBySearchVo(staffSearchVo);
 		
 		
 		// 发送通知
@@ -175,14 +212,8 @@ public class OrderDispatchController extends BaseController {
 		String[] smsContent = new String[] { timeStr };
 		
 		
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderNo(order.getOrderNo());
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
-		
-		
-		//处理只更换服务时间，不更换服务人员.
-		if (!serviceDateTime.equals(oldServcieDateTime) && selectStaffId == 0) {
+		//处理只更换派工时间，不更换派工人员的情况.
+		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
 			
 			//先检测在新的服务时间，原派工服务人员时间是否有冲突.
 			for (OrderDispatchs op : disList) {
@@ -229,66 +260,49 @@ public class OrderDispatchController extends BaseController {
 			return resultData;
 		}
 		
-
-		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(selectStaffId);
-
-		if (staffs == null) {
-			resultData.setStatus(Constants.ERROR_999);
-			resultData.setMsg("无效的派工人员,返回列表页");
-			return resultData;
-		}
-
-		
 		OrderDispatchs oldDispatchs = null;
-		String oldStaffMobile = "";
-		// 查询 出 某个 order_No 对应的 有效的 派工记录。。如果有，则需要将派工状态设置为0，并新增新的派工信息
-		
-		
-		
-		if (disList.size() > 0) {
-			oldDispatchs = disList.get(0);
-			if (!oldDispatchs.getStaffId().equals(selectStaffId)) {
-				oldDispatchs.setDispatchStatus((short) 0);
-				oldDispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
-				orderDispatchsService.updateByPrimaryKey(oldDispatchs);
+		List<String> oldStaffMobiles = new ArrayList<String>();
+		//将替换的派工人员状态置为 0
+		if (!disList.isEmpty()) {
+			for (OrderDispatchs d : disList) {
+				if (!staffIds.contains(d.getStaffId())) {
+					d.setDispatchStatus((short) 0);
+					d.setUpdateTime(TimeStampUtil.getNowSecond());
+					orderDispatchsService.updateByPrimaryKey(d);
+					oldStaffMobiles.add(d.getStaffMobile());
+				} 
 			}
-			oldStaffMobile = oldDispatchs.getStaffMobile();
+			oldDispatchs = disList.get(0);
 		}
 		
 		Double serviceHour = (double) order.getServiceHour();
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, selectStaffId);
-
-		if (doOrderDispatch == false) {
-			resultData.setStatus(Constants.ERROR_999);
-			resultData.setMsg("派工失败");
-			return resultData;
+		for (Long staffId : newDispathStaffIds) {
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId);
 		}
 
 		// 更新订单表
+		order.setStaffNums(staffIds.size());
 		order.setServiceDate(serviceDateTime);
 		order.setUpdateTime(TimeStampUtil.getNowSecond());
 		// 更新为 已派工
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
 		orderSevice.updateByPrimaryKeySelective(order);
 
-		
-
-		/*
-		 * 派工 短信通知
-		 */
-		
 
 		// 2)派工成功，为服务人员发送推送消息---推送消息
-		dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-				Constants.ALERT_STAFF_MSG);
-
-		SmsUtil.SendSms(staffs.getMobile(), "114590", smsContent);
+		for (OrgStaffs item : staffs) {
+			dispatchStaffFromOrderService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+					Constants.ALERT_STAFF_MSG);
+	
+			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
+		}
 
 		// 给原来派工人员发送短信提醒，派工订单被取消
-		SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[] { beginTimeStr,
-				partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
-
+		for (String oldStaffMobile : oldStaffMobiles) {
+			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[] { beginTimeStr,
+					partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
+		}
 		return resultData;
 	}
 	

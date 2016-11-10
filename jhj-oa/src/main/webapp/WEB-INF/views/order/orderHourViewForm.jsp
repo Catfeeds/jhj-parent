@@ -6,6 +6,7 @@
 <%@ taglib prefix="payTypeNameTag" uri="/WEB-INF/tags/payTypeName.tld"%>
 <%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="cloudOrgSelect" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
+<%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
 <html>
 <head>
 <!--common css for all pages-->
@@ -13,6 +14,7 @@
 <!--css for this page-->
 <link rel="stylesheet" href="<c:url value='/css/fileinput.css'/>" type="text/css" />
 <link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" />
+<link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet"  />
 </head>
 <body>
 	<section id="container"> <!--header start--> <%@ include file="../shared/pageHeader.jsp"%>
@@ -65,6 +67,13 @@
 							<label class="col-md-2 control-label">服务时长</label>
 							<div class="col-md-5">
 								<form:input path="serviceHour" class="form-control" maxLength="32" readonly="true" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label">人数</label>
+							<div class="col-md-5">
+								<form:input path="staffNums" class="form-control" maxLength="32" readonly="true" />
 							</div>
 						</div>
 						
@@ -131,30 +140,38 @@
 							</div>
 						</div>
 					</section>
-					<section class="panel"> <header class="panel-info"> <h4>派工信息</h4> </header>
+					<section class="panel" id ="dispatchSection"> <header class="panel-info"> <h4>派工信息</h4> </header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						
-						<div class="form-group" id="nowStaff">
-							<label class="col-md-2 control-label">服务人员</label>
-							<div class="col-md-5">
-								<form:input path="staffName" class="form-control" maxLength="32" readonly="true" />
-								<form:errors path="staffName" class="field-has-error"></form:errors>
-							</div>
+						<div class="col-sm-12">
+							<table class="table table-striped table-advance table-hover" >
+								<thead>
+									<tr>
+										<th>门店</th>
+										<th>云店</th>
+										<th>服务人员</th>
+										<th>手机号</th>
+										<th>派工时间</th>
+										<th>是否接单</th>
+										<th>接单时间</th>
+									</tr>
+								</thead>
+								<tbody >
+									 <c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
+										<tr>
+											<td>${item.parentOrgName }</td>
+											<td>${item.orgName }</td>
+											<td>${item.staffName }</td>
+											<td>${item.staffMobile }</td>
+											<td><timestampTag:timestamp patten="MM-dd HH:mm" t="${item.addTime * 1000}" /></td>
+											<td>${item.applyStatus }</td>
+											<td>${item.applyTimeStr }</td>
+										</tr>
+									 </c:forEach>
+								</tbody>
+							</table>
 						</div>
-						<c:if test="${ oaOrderListVoModel.orderStatus >= 3 && oaOrderListVoModel.orderStatus <= 8}">
-							<div class="form-group">
-								<label class="col-md-2 control-label">是否接单</label>
-								<div class="col-md-5">
-									<form:input path="applyStatus" class="form-control" maxLength="32" readonly="true" />
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">接单时间</label>
-								<div class="col-md-5">
-									<form:input path="applyTimeStr" class="form-control" maxLength="32" readonly="true" />
-								</div>
-							</div>
-						</c:if>
+						
 						
 					</section>
 					<section class="panel"> <header class="panel-info"> <h4>派工调整</h4> </header>
@@ -209,7 +226,7 @@
 						</div>
 						<div id="staffList" class="col-sm-12">
 							
-							
+							已选择：<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true"  />
 							<table class="table table-striped table-advance table-hover" >
 								<thead>
 									<tr>
@@ -255,9 +272,20 @@
 		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>" type="text/javascript"></script>
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.js'/>" type="text/javascript"></script>
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderHourViewForm.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
+	
+	<script>
+		<c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
+
+			var selectedStaffId = ${item.staffId};
+			var selectedStaffName = "${item.staffName}";
+			var selectedDistanceValue = ${item.userAddrDistance};
+			addSelectedStaffs(selectedStaffId, selectedStaffName, selectedDistanceValue);
+		</c:forEach>
+	</script>
 </body>
 </html>

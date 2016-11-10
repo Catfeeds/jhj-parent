@@ -90,8 +90,20 @@ function setOrderHourTotal() {
 		return false;
 	}
 	
+	if (staffNums > 5) {
+		alert("预约服务人员数量最多可以指定5人.");
+		$$("#staffNums").focus();
+		return false;
+	}
+	
 	if (serviceHours == undefined || serviceHours == "" || serviceHours < 3) {
 		alert("预约服务时间最少为3小时.");
+		$$("#serviceHours").focus();
+		return false;
+	}
+	
+	if (serviceHours > 6) {
+		alert("预约服务时间最多为6小时.");
 		$$("#serviceHours").focus();
 		return false;
 	}

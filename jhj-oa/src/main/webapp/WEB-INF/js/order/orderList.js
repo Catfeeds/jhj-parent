@@ -34,7 +34,31 @@ function checkEndTime() {
 $("tbody").find("tr").each(function(k, v) {
 
 	var payType = $(this).find("#itemPayType").val();
-
+	var orderStatus = $(this).find("#itemOrderStatus").val();
+	
+	if (orderStatus == 0 || orderStatus == 1) return false;
+	
+	if (orderStatus == 2) {
+		$(this).attr("style", "color:red");
+	} else {
+		var staffNums = $(this).find("#staffNums").val();
+		var staffName = $(this).find("#staffName").val();
+		if (staffNums > 0 ) {
+			if (staffName == "" || staffName == undefined) {
+				$(this).attr("style", "color:red");
+			} else {
+				
+				var staffAry = staffName.split(",");
+				
+				if (staffAry.length != staffNums) {
+					$(this).attr("style", "color:red");
+				}
+			}
+		}
+		
+	}
+	
+	
 	if (payType == 6) {
 		$(this).attr("style", "color:red");
 		// 如果 钟点工订单的 订单 状态 为已支付, 支付方式为 现金支付。。则将 状态 显示 为 上门收款
