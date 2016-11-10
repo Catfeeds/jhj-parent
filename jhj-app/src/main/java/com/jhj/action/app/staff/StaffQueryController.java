@@ -2,8 +2,10 @@ package com.jhj.action.app.staff;
 
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,15 +23,18 @@ import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderStatService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffCashSearchVo;
@@ -69,6 +74,9 @@ public class StaffQueryController extends BaseController {
 	
 	@Autowired
 	private OrderStatService orderStatService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchsService;
 	
 	/**
 	 * 我的接口
@@ -196,5 +204,37 @@ public class StaffQueryController extends BaseController {
 	
 	}
 	
-	
+	/**
+	 * 获取员工的派工时间
+	 * @param staffId  员工ID
+	 * 
+	 * @return 
+	 * */
+	@RequestMapping(value = "get_dispatch_dates.json",method = RequestMethod.GET)
+	public AppResultData<Object> getOrderDispatchDates(@RequestParam("staff_id") Long staffId){
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setDispatchStatus((short) 1);
+		searchVo.setStaffId(staffId);
+		searchVo.setStartServiceTime(TimeStampUtil.getNow()/1000);
+		Calendar cal=Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, 7);
+		searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDate(cal.getTime())/1000);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		List<String> list=new ArrayList<String>();
+		if(orderDispatchs!=null && orderDispatchs.size()>0){
+			for(int i=0;i<orderDispatchs.size();i++){
+				OrderDispatchs od = orderDispatchs.get(i);
+				Long serviceDate = od.getServiceDate();
+				String strDate = TimeStampUtil.timeStampToDateStr(serviceDate*1000);
+				list.add(strDate);
+			}
+		}
+		
+		result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, list.toArray());
+		return result;
+	}
 }
