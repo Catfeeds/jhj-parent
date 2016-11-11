@@ -2,26 +2,29 @@ package com.jhj.service.order;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderRates;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 
 public interface OrderRatesService {
 
-	OrderRates selectByOrderId(Long orderId);
+	int deleteByPrimaryKey(Long id);
 
-	int deleteByOrderId(Long orderId);
+	int insertSelective(OrderRates record);
+
+	int insert(OrderRates record);
 
 	int updateByPrimaryKeySelective(OrderRates orderRates);
 
+	int updateByPrimaryKey(OrderRates record);
+
 	OrderRates initOrderRates();
 
-	int insertByOrderRates(OrderRates orderRates);
+	OrderRates selectByPrimaryKey(Long id);
 
-	//OrderRates getOrderRates(String rateDatas);
+	List<OrderRates> selectBySearchVo(OrderDispatchSearchVo searchVo);
 
-	OrderRates getOrderRates(Long orderId, String rateDatas);
-
-	List<OrderRates> setlectListByOrderId(Long orderId);
-
-
+	PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize);
 
 }

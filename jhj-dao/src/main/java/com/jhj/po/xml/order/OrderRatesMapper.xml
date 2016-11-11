@@ -1,169 +1,219 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.order.OrderRatesMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderRates" >
-    <id column="id" property="id" jdbcType="NUMERIC" />
-    <result column="order_id" property="orderId" jdbcType="NUMERIC" />
-    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
-    <result column="am_id" property="amId" jdbcType="NUMERIC" />
-    <result column="user_id" property="userId" jdbcType="NUMERIC" />
-    <result column="mobile" property="mobile" jdbcType="CHAR" />
-    <result column="rate_type" property="rateType" jdbcType="NUMERIC" />
-    <result column="rate_value" property="rateValue" jdbcType="NUMERIC" />
-    <result column="rate_content" property="rateContent" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, order_id, order_no, am_id, user_id, mobile, rate_type, rate_value, rate_content, 
-    add_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from order_rates
-    where id = #{id,jdbcType=NUMERIC}
-  </select>
-  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from order_rates
-    where order_id = #{orderId,jdbcType=NUMERIC}
-  </select>
-  <select id="setlectListByOrderId" resultMap="BaseResultMap">
+<mapper namespace="com.jhj.po.dao.order.OrderRatesMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderRates">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="order_id" property="orderId" jdbcType="NUMERIC" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="rate_arrival" property="rateArrival" jdbcType="NUMERIC" />
+		<result column="rate_attitude" property="rateAttitude" jdbcType="NUMERIC" />
+		<result column="rate_skill" property="rateSkill" jdbcType="NUMERIC" />
+		<result column="rate_content" property="rateContent" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, order_id, order_no, staff_id, user_id, mobile, rate_arrival, rate_attitude, rate_skill,
+		rate_content, add_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from order_rates
-		where order_id = #{orderId,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
 	</select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from order_rates
-    where id = #{id,jdbcType=NUMERIC}
-  </delete>
-  <delete id="deleteByOrderId" parameterType="java.lang.Long" >
-    delete from order_rates
-    where order_id = #{orderId,jdbcType=NUMERIC}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.order.OrderRates" >
-    insert into order_rates (id, order_id, order_no, 
-      am_id, user_id, mobile, 
-      rate_type, rate_value, rate_content, 
-      add_time)
-    values (#{id,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, 
-      #{amId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, 
-      #{rateType,jdbcType=NUMERIC}, #{rateValue,jdbcType=NUMERIC}, #{rateContent,jdbcType=VARCHAR}, 
-      #{addTime,jdbcType=NUMERIC})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderRates" >
-    insert into order_rates
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="orderId != null" >
-        order_id,
-      </if>
-      <if test="orderNo != null" >
-        order_no,
-      </if>
-      <if test="amId != null" >
-        am_id,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="mobile != null" >
-        mobile,
-      </if>
-      <if test="rateType != null" >
-        rate_type,
-      </if>
-      <if test="rateValue != null" >
-        rate_value,
-      </if>
-      <if test="rateContent != null" >
-        rate_content,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=NUMERIC},
-      </if>
-      <if test="orderId != null" >
-        #{orderId,jdbcType=NUMERIC},
-      </if>
-      <if test="orderNo != null" >
-        #{orderNo,jdbcType=VARCHAR},
-      </if>
-      <if test="amId != null" >
-        #{amId,jdbcType=NUMERIC},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=NUMERIC},
-      </if>
-      <if test="mobile != null" >
-        #{mobile,jdbcType=CHAR},
-      </if>
-      <if test="rateType != null" >
-        #{rateType,jdbcType=NUMERIC},
-      </if>
-      <if test="rateValue != null" >
-        #{rateValue,jdbcType=NUMERIC},
-      </if>
-      <if test="rateContent != null" >
-        #{rateContent,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=NUMERIC},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderRates" >
-    update order_rates
-    <set >
-      <if test="orderId != null" >
-        order_id = #{orderId,jdbcType=NUMERIC},
-      </if>
-      <if test="orderNo != null" >
-        order_no = #{orderNo,jdbcType=VARCHAR},
-      </if>
-      <if test="amId != null" >
-        am_id = #{amId,jdbcType=NUMERIC},
-      </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=NUMERIC},
-      </if>
-      <if test="mobile != null" >
-        mobile = #{mobile,jdbcType=CHAR},
-      </if>
-      <if test="rateType != null" >
-        rate_type = #{rateType,jdbcType=NUMERIC},
-      </if>
-      <if test="rateValue != null" >
-        rate_value = #{rateValue,jdbcType=NUMERIC},
-      </if>
-      <if test="rateContent != null" >
-        rate_content = #{rateContent,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=NUMERIC},
-      </if>
-    </set>
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderRates" >
-    update order_rates
-    set order_id = #{orderId,jdbcType=NUMERIC},
-      order_no = #{orderNo,jdbcType=VARCHAR},
-      am_id = #{amId,jdbcType=NUMERIC},
-      user_id = #{userId,jdbcType=NUMERIC},
-      mobile = #{mobile,jdbcType=CHAR},
-      rate_type = #{rateType,jdbcType=NUMERIC},
-      rate_value = #{rateValue,jdbcType=NUMERIC},
-      rate_content = #{rateContent,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=NUMERIC}
-    where id = #{id,jdbcType=NUMERIC}
-  </update>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		<include refid="bySearchVo" />
+	</select>
+
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		<include refid="bySearchVo" />
+	</select>
+	
+	<sql id="bySearchVo">
+	    select
+		<include refid="Base_Column_List" />
+		from order_rates
+		where id = #{id,jdbcType=NUMERIC}
+	    <if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="mobile !=null and mobile !='' ">
+			and mobile like  CONCAT('%',#{mobile},'%')
+		</if>
+		
+		<if test="staffId != null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="staffIds != null">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		
+		<if test="orderId != null">
+			and id = #{orderId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orderIds != null">
+			and order_id in
+			<foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+
+		<if test="orderNo != null">
+			and order_no like CONCAT('%','${orderNo}','%' )
+		</if>
+
+		order by add_time desc
+
+	</sql>
+	
+	
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from order_rates
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.order.OrderRates">
+		insert into order_rates (id, order_id, order_no,
+		staff_id, user_id, mobile,
+		rate_arrival, rate_attitude, rate_skill,
+		rate_content, add_time)
+		values (#{id,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR},
+		#{staffId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
+		#{rateArrival,jdbcType=NUMERIC}, #{rateAttitude,jdbcType=NUMERIC}, #{rateSkill,jdbcType=NUMERIC},
+		#{rateContent,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderRates">
+		insert into order_rates
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="rateArrival != null">
+				rate_arrival,
+			</if>
+			<if test="rateAttitude != null">
+				rate_attitude,
+			</if>
+			<if test="rateSkill != null">
+				rate_skill,
+			</if>
+			<if test="rateContent != null">
+				rate_content,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=CHAR},
+			</if>
+			<if test="rateArrival != null">
+				#{rateArrival,jdbcType=NUMERIC},
+			</if>
+			<if test="rateAttitude != null">
+				#{rateAttitude,jdbcType=NUMERIC},
+			</if>
+			<if test="rateSkill != null">
+				#{rateSkill,jdbcType=NUMERIC},
+			</if>
+			<if test="rateContent != null">
+				#{rateContent,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderRates">
+		update order_rates
+		<set>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="staffId != null">
+				staff_id = #{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=CHAR},
+			</if>
+			<if test="rateArrival != null">
+				rate_arrival = #{rateArrival,jdbcType=NUMERIC},
+			</if>
+			<if test="rateAttitude != null">
+				rate_attitude = #{rateAttitude,jdbcType=NUMERIC},
+			</if>
+			<if test="rateSkill != null">
+				rate_skill = #{rateSkill,jdbcType=NUMERIC},
+			</if>
+			<if test="rateContent != null">
+				rate_content = #{rateContent,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderRates">
+		update order_rates
+		set order_id = #{orderId,jdbcType=NUMERIC},
+		order_no = #{orderNo,jdbcType=VARCHAR},
+		staff_id = #{staffId,jdbcType=NUMERIC},
+		user_id = #{userId,jdbcType=NUMERIC},
+		mobile = #{mobile,jdbcType=CHAR},
+		rate_arrival = #{rateArrival,jdbcType=NUMERIC},
+		rate_attitude = #{rateAttitude,jdbcType=NUMERIC},
+		rate_skill = #{rateSkill,jdbcType=NUMERIC},
+		rate_content = #{rateContent,jdbcType=VARCHAR},
+		add_time = #{addTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
 </mapper>

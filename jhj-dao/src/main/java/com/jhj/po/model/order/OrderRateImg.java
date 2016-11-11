@@ -1,25 +1,17 @@
 package com.jhj.po.model.order;
 
-public class OrderRates {
+public class OrderRateImg {
     private Long id;
 
     private Long orderId;
 
     private String orderNo;
 
-    private Long staffId;
-
     private Long userId;
 
     private String mobile;
 
-    private int rateArrival;
-
-    private int rateAttitude;
-
-    private int rateSkill;
-
-    private String rateContent;
+    private String imgUrl;
 
     private Long addTime;
 
@@ -63,36 +55,12 @@ public class OrderRates {
         this.mobile = mobile == null ? null : mobile.trim();
     }
 
-    public int getRateArrival() {
-        return rateArrival;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setRateArrival(int rateArrival) {
-        this.rateArrival = rateArrival;
-    }
-
-    public int getRateAttitude() {
-        return rateAttitude;
-    }
-
-    public void setRateAttitude(int rateAttitude) {
-        this.rateAttitude = rateAttitude;
-    }
-
-    public int getRateSkill() {
-        return rateSkill;
-    }
-
-    public void setRateSkill(int rateSkill) {
-        this.rateSkill = rateSkill;
-    }
-
-    public String getRateContent() {
-        return rateContent;
-    }
-
-    public void setRateContent(String rateContent) {
-        this.rateContent = rateContent == null ? null : rateContent.trim();
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl == null ? null : imgUrl.trim();
     }
 
     public Long getAddTime() {
@@ -102,12 +70,4 @@ public class OrderRates {
     public void setAddTime(Long addTime) {
         this.addTime = addTime;
     }
-
-	public Long getStaffId() {
-		return staffId;
-	}
-
-	public void setStaffId(Long staffId) {
-		this.staffId = staffId;
-	}
 }

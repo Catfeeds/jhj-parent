@@ -23,7 +23,6 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				html+= '<li><span onclick="onDeepSubItemNum($$(this).parent())">-</span>';
 				
 				var n = setItemNum(item.service_addon_id, item.default_num);
-				console.log("n = " + n);
 				html+= '<input name="itemNum" value="'+n+'" onkeyup="onItemNumKeyUp($$(this).parent())"  onafterpaste="onItemNumKeyUp($$(this).parent())"  maxLength="3" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonName" value="'+name+'" autocomplete="off">';
 				
@@ -60,7 +59,6 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 	 $$("#chooseServiceTime").on("click",function() {
 		 
 		 var validateMsg = setDeepTotal();
-		 console.log("validateMsg = " + validateMsg);
 		 if (validateMsg != undefined && validateMsg != "") {
 			 myApp.alert(validateMsg);
 			 return false;
@@ -85,11 +83,10 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 
 
 function onItemNumKeyUp(obj) {
-	console.log("onItemNumKeyUp");
 	var itemNumObj = obj.find('input[name=itemNum]'); 
 	
 	var tmptxt=itemNumObj.val();
-	tmptxt = tmptxt.replace(/\D|^0/g,'');
+	tmptxt = tmptxt.replace(/\D/g,'');
 	itemNumObj.val(tmptxt);
 	
 	setDeepTotal();
@@ -97,7 +94,6 @@ function onItemNumKeyUp(obj) {
 
 //加号处理
 function onDeepAddItemNum(obj) {
-	console.log("onDeepAddItemNum");
 	var itemNumObj = obj.find('input[name=itemNum]'); 
 	var v = itemNumObj.val();
 	if (v == undefined || !isNum(v)) {
@@ -107,14 +103,18 @@ function onDeepAddItemNum(obj) {
 	}
 	itemNumObj.val(v);
 	
-	setDeepTotal();
+	var validateMsg = setDeepTotal();
+//	console.log("validateMsg == " + validateMsg);
+//	if (validateMsg != undefined && validateMsg != "") {
+//		myApp.alert(validateMsg);
+//		return false;
+//	}
 }
 
 //减号处理
 function onDeepSubItemNum(obj) {
 	console.log("onDeepSubItemNum");
 	var itemNumObj = obj.find('input[name=itemNum]'); 
-	console.log(itemNumObj);
 	var v = itemNumObj.val();
 	if (v == undefined || !isNum(v) || v == 0) {
 		v = 0;
@@ -122,29 +122,67 @@ function onDeepSubItemNum(obj) {
 		v = parseInt(v) - 1;
 	}
 	
-	//如果数量小于起步数，则只能等于起步数量
-	 var serviceAddonName = obj.find('input[name=serviceAddonName]').val();
-	var defaultNum = obj.find('input[name=defaultNum]').val(); 
-	if (defaultNum > 0 && v < defaultNum) {
-		myApp.alert(serviceAddonName + "最低数量为"+ defaultNum);
-		v = defaultNum;
-	}
-	
 	itemNumObj.val(v);
 	
-	setDeepTotal();
+	var validateMsg = setDeepTotal();
+//	console.log("validateMsg == " + validateMsg);
+//	if (validateMsg != undefined && validateMsg != "") {
+//		myApp.alert(validateMsg);
+//		return false;
+//	}
+	
+	
+}
+
+function checkDefaultNum() {
+	//判断如果有起步数量 ，并且有多个，则只要有一个不超过起步数量即可.
+	
+	var hasDefaultNum = false;
+	$$("input[name = itemNum]").each(function(key, index) {
+		itemNum = $$(this).val();
+		 
+		 if (itemNum == undefined || itemNum == "") {
+			 itemNum = 0;
+		 } 
+		 
+		 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
+		 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
+		 if (Number(defaultNum) > 0 && Number(itemNum) >= Number(defaultNum) ) {
+			 hasDefaultNum = true;
+		 }
+		 
+	});
+	
+	var validateMsg = ""
+	console.log("hasDefaultNum =" + hasDefaultNum);
+	if (hasDefaultNum == false) {
+		$$("input[name = itemNum]").each(function(key, index) {
+			itemNum = $$(this).val();
+			 
+			 if (itemNum == undefined || itemNum == "") {
+				 itemNum = 0;
+			 } 
+			 
+			 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
+			 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
+
+			 if (Number(itemNum) > 0 && Number(defaultNum) > 0 && Number(itemNum) < Number(defaultNum) ) {
+				 validateMsg = serviceAddonName + "最低数量为" + defaultNum;
+				 return false;
+				 
+			 }
+			 
+		});
+	}
+	
+	return validateMsg;
 }
 
 function setItemNum(serviceAddonId, defaultNum) {
-	console.log("setItemNum");
+
 	var itemNum = defaultNum;
 	var serviceAddonsJson = sessionStorage.getItem("service_addons_json");
 	
-//	console.log("order_money = " + sessionStorage.getItem("order_money"));
-//	console.log("total_service_hour = " + sessionStorage.getItem("total_service_hour"));
-//	console.log("service_addons = " + sessionStorage.getItem("service_addons"));
-//	console.log("service_addons_json = " + sessionStorage.getItem("service_addons_json"));
-//	
 	console.log("serviceAddonsJson = " + serviceAddonsJson);
 	if (serviceAddonsJson == undefined || serviceAddonsJson == "") {
 		return itemNum;
@@ -156,8 +194,6 @@ function setItemNum(serviceAddonId, defaultNum) {
 		var tmpItemNum = item.itemNum;
 		
 		if (itemServiceAddonId == serviceAddonId) {
-//			console.log("itemServiceAddonId = " + itemServiceAddonId + "====serviceAddonId = " + serviceAddonId);
-//			console.log("itemNum = " + itemNum)
 			itemNum = tmpItemNum;
 			return false;
 		}
@@ -176,8 +212,8 @@ function setDeepTotal() {
 	var serviceAddonsJson = [];
 	var serviceAddons = [];
 	
-	var validateMsg = "";
 	
+
 	$$("input[name = itemNum]").each(function(key, index) {
 		 
 		 itemNum = $$(this).val();
@@ -190,12 +226,7 @@ function setDeepTotal() {
 		 serviceAddonId = serviceAddonIdObj.val();
 		 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
 		 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
-		 console.log("setDeepTotal defaultNum = " + defaultNum);
-		 console.log("setDeepTotal itemNum = " + itemNum);
-		 if (Number(defaultNum) > 0 && Number(itemNum) < Number(defaultNum) ) {
-			 validateMsg = serviceAddonName + "最低数量为" + defaultNum;
-			 return validateMsg;
-		 }
+		
 		 
 		 if (itemNum == 0 || 
 			 serviceAddonId == undefined || 
@@ -225,23 +256,12 @@ function setDeepTotal() {
 		 
 		 var serviceAddonItemUnit = $$(this).parent().find('input[name=serviceAddonItemUnit]').val();
 		 
-		 console.log("serviceAddonName = " + serviceAddonName);
-		 console.log("serviceAddonItemUnit = " + serviceAddonItemUnit);
-		 console.log("serviceAddonServiceHour = " + serviceAddonServiceHour);
-		 console.log("defaultNum = " + defaultNum);
-		 console.log("disPrice = " + disPrice);
-		 console.log("itemNum = " + itemNum);
-		
-		
-		 
-		 
 		 
 		 var serviceAddonItem = {};
 		 serviceAddonItem.serviceAddonName = serviceAddonName;
 		 serviceAddonItem.serviceAddonId = serviceAddonId;
 		 serviceAddonItem.itemNum = itemNum;
 		 serviceAddonItem.itemUnit = serviceAddonItemUnit;
-		 console.log(serviceAddonItem);
 		 serviceAddons.push(serviceAddonItem); 
 		 
 		 var serviceAddonJson = {}
@@ -251,16 +271,18 @@ function setDeepTotal() {
 		 
 		 serviceAddonsJson.push(serviceAddonJson); 
 	});
-	
-	console.log("setDeepTotal validateMsg= " + validateMsg);
-	if (validateMsg != "") return validateMsg;
-	
+		
 	totalServiceHour = totalServiceHour.toFixed(0);
 	sessionStorage.setItem("order_money", orderMoney);
 	sessionStorage.setItem("order_pay", orderMoney);
 	sessionStorage.setItem("total_service_hour", totalServiceHour);
 	sessionStorage.setItem("service_addons", JSON.stringify(serviceAddons));
 	sessionStorage.setItem("service_addons_json", JSON.stringify(serviceAddonsJson));
+	
+	var validateMsg = checkDefaultNum();
+	if (validateMsg != undefined && validateMsg != "") {
+		return validateMsg;
+	}
 	
 	return validateMsg;
 }

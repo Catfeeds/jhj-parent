@@ -126,31 +126,6 @@ public class OrderCrondController extends BaseController {
 	}
 
 	/*
-	 * 5)如果订单已结束超过七天，默认评价，并且为好评.
-	 * 
-	 * a. 找出order表所有状态为ORDER_STATUS_6 ，并且 当前时间 >= sercice_time + hour*3600 + 7 *
-	 * 24 * 3600
-	 * 
-	 * b. 好评 order_rates
-	 */
-	@RequestMapping(value = "over_serven_day", method = RequestMethod.GET)
-	public AppResultData<Object> overServenDay(HttpServletRequest request) {
-
-		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
-
-		System.out.println("Remote Host: " + request.getRemoteHost());
-		String reqHost = request.getRemoteHost();
-
-		// String reqHost = request.getRemoteAddr();
-		// 限定只有localhost能访问
-		if (reqHost.equals("localhost") || reqHost.equals("127.0.0.1")) {
-			orderCrondService.setOrderRateOverServenDay();
-		}
-
-		return result;
-	}
-
-	/*
 	 * 6.助理订单、深度保洁支付后24小时，订单状态自动变为已完成
 	 */
 	@RequestMapping(value = "am_order_one_day", method = RequestMethod.GET)

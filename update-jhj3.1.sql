@@ -20,3 +20,48 @@ ALTER TABLE `orders` ADD `staff_nums` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0' 
 
 
 update orders as a, (SELECT order_no, count(*) as c FROM `order_dispatchs` WHERE dispatch_status = 1 group by order_no) as b set a.staff_nums = b.c where a.order_no = b.order_no;
+
+ALTER TABLE `order_rates` CHANGE `am_id` `staff_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务人员ID';
+
+
+ALTER TABLE `order_rates` CHANGE `rate_type` `rate_arrival` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '到达时间 0 = 准时 1 = 迟到';
+
+
+ALTER TABLE `order_rates` CHANGE `rate_value` `rate_attitude` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务态度 1-5';
+
+
+ALTER TABLE `order_rates` ADD `rate_skill` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务技能 1-5' AFTER `rate_attitude`;
+
+
+ALTER TABLE `order_rates` CHANGE `rate_content` `rate_content` VARCHAR(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评价内容';  
+
+
+CREATE TABLE `order_rate_img` (
+  `id` int(11) UNSIGNED NOT NULL COMMENT '主键',
+  `order_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '订单ID',
+  `order_no` varchar(64) NOT NULL COMMENT '订单号',
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `mobile` char(11) NOT NULL COMMENT '手机号',
+  `img_url` varchar(1024) NOT NULL COMMENT '图片地址',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间戳'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `order_rate_img`
+--
+ALTER TABLE `order_rate_img`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `order_rate_img`
+--
+ALTER TABLE `order_rate_img`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
