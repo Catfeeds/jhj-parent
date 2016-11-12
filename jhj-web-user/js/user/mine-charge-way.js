@@ -94,6 +94,6 @@ myApp.template7Data['page:mine-charge-way'] = function(){
 			result=data.data;
 		}
 	});
-	sessionStorage.removeItem("card_id");
+//	sessionStorage.removeItem("card_id");
 	return result;
 }

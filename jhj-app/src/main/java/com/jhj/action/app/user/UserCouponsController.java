@@ -24,7 +24,6 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserCouponVo;
-import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -152,9 +151,9 @@ public class UserCouponsController extends BaseController {
 		@RequestMapping(value = "get_validate_coupons",method = RequestMethod.GET)
 		public AppResultData<List<UserCouponVo>> getValidateCoupons(
 				@RequestParam("user_id") Long userId,
-				@RequestParam("order_type") String orderType,
-				@RequestParam("service_date") Long serviceDate,
-				@RequestParam("order_money") Float orderMoney){
+				@RequestParam(value="service_date",required=false) Long serviceDate,
+				@RequestParam(value="order_money",required=false) Float orderMoney,
+				@RequestParam("service_type") String serviceTypeId){
 
 			AppResultData<List<UserCouponVo>> result = new AppResultData<List<UserCouponVo>>(
 					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,new ArrayList<UserCouponVo>());
@@ -170,7 +169,7 @@ public class UserCouponsController extends BaseController {
 			UserCoupons userCoupons = new UserCoupons();
 			userCoupons.setIsUsed((short)0);
 			userCoupons.setUserId(userId);
-			userCoupons.setServiceType(orderType);
+			userCoupons.setServiceType(serviceTypeId);
 			List<UserCoupons> list = userCouponsService.selectByUserCoupons(userCoupons);
 			List<UserCouponVo> listNew = new ArrayList<UserCouponVo>();
 
@@ -178,12 +177,17 @@ public class UserCouponsController extends BaseController {
 
 			List<UserCouponVo> listUserCouponVo = userCouponsService.changeToUserCouponVos(list);
 			
-			Date date = TimeStampUtil.timeStampToDate(serviceDate);
-			int weekNumber = DateUtil.getWeek(date).getNumber();
-			BigDecimal moeney=new BigDecimal(orderMoney);
 			boolean falg=false;
-			if(weekNumber==Week.MONDAY.getNumber() ||weekNumber==Week.TUESDAY.getNumber() || weekNumber==Week.WEDNESDAY.getNumber()){
-				falg=true;
+			if(serviceDate!=null){
+				Date date = TimeStampUtil.timeStampToDate(serviceDate);
+				int weekNumber = DateUtil.getWeek(date).getNumber();
+				if(weekNumber==Week.MONDAY.getNumber() ||weekNumber==Week.TUESDAY.getNumber() || weekNumber==Week.WEDNESDAY.getNumber()){
+					falg=true;
+				}
+			}
+			BigDecimal moeney=new BigDecimal(0);
+			if(orderMoney!=null){
+				moeney=new BigDecimal(orderMoney);
 			}
 			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
 				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();

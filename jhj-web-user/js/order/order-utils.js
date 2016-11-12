@@ -33,6 +33,12 @@ function removeSessionData() {
 	
 	//服务人员信息
 	sessionStorage.removeItem("staff_names");
+	
+	//服务人员已有的服务日期
+	sessionStorage.removeItem("serDate");
+	
+	//充值卡ID
+	sessionStorage.removeItem("card_id");
 }
 
 

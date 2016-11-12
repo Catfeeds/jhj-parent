@@ -19,6 +19,7 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.Gifts;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
@@ -26,6 +27,7 @@ import com.jhj.service.bs.GiftsService;
 import com.jhj.service.dict.CouponsTypeService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.user.UserCouponVo;
@@ -56,8 +58,11 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 	@Autowired
 	private OrderPricesService orderPricesService;
 	
+//	@Autowired
+//	private CouponsTypeService couponsTypeService;
+	
 	@Autowired
-	private CouponsTypeService couponsTypeService;
+	private PartnerServiceTypeService partnerServiceTypeService;
 
 	@Override
 	public UserCoupons initUserCoupons() {
@@ -183,7 +188,6 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 			}
 
 			for (DictCoupons dictCoupon : dictCoupons) {
-
 				if (dictCoupon.getId().equals(vo.getCouponId())) {
 					vo.setValue(dictCoupon.getValue());
 					vo.setMaxValue(dictCoupon.getMaxValue());
@@ -192,16 +196,23 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 					vo.setRangFrom(dictCoupon.getRangFrom());
 					vo.setIntroduction(dictCoupon.getIntroduction());
 					vo.setCouponsTypeId(String.valueOf(dictCoupon.getCouponsTypeId()));
-					vo.setCouponsTypeDesc(couponsTypeService.selectByPrimaryKey(dictCoupon.getCouponsTypeId()).getCouponsTypeDesc());
+//					couponsTypeService.selectByPrimaryKey(dictCoupon.getCouponsTypeId()).getCouponsTypeDesc()
+					vo.setCouponsTypeDesc("");
+					String serviceTypeId = dictCoupon.getServiceType();
+					if(serviceTypeId!=null && !serviceTypeId.equals("")){
+						PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(Long.parseLong(serviceTypeId));
+						vo.setServiceTypeName((serviceType!=null)?serviceType.getName():"");
+					}
 					String fromDateStr = DateUtil.formatDate(vo.getFromDate());
 					String toDateStr = DateUtil.formatDate(vo.getToDate());
-
 					vo.setFromDateStr(fromDateStr);
 					vo.setToDateStr(toDateStr);
+					break;
 				}
 			}
 			result.add(vo);
 		}
+		long currentTimeMillis1 = System.currentTimeMillis();
 		return result;
 	}
 

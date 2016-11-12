@@ -46,6 +46,14 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label class="col-md-2 control-label">满减金额</label>
+							<div class="col-md-5">
+								<form:input path="maxValue" class="form-control"
+									placeholder="满减金额" value="${dictCoupons.maxValue}" maxSize="10" />
+								<form:errors path="maxValue" class="field-has-error"></form:errors>
+							</div>
+						</div>
+						<div class="form-group">
 							<label class="col-md-2 control-label">服务类型* </label>
 							<div class="col-md-5">
 								<form:select path="serviceType" cssClass="form-control" items="${serviceTypeList}" itemLabel="name" itemValue="serviceTypeId"/> 

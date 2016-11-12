@@ -213,10 +213,10 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 	@Override
 	public Map<Long, String> getSelectRechargeCouponSource() {
 		Map<Long, String> dictCouponsMap = new HashMap<Long, String>();
-		List<DictCoupons> list = dictCouponsMapper.selectByCouponType((short)1);;
+		List<DictCoupons> list = dictCouponsMapper.selectByCouponType((short)1);
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			DictCoupons dictCoupons = (DictCoupons) iterator.next();
-			dictCouponsMap.put(dictCoupons.getId(),dictCoupons.getIntroduction());
+			dictCouponsMap.put(dictCoupons.getId(),dictCoupons.getIntroduction()+" "+dictCoupons.getRangMonth()+"月");
 		}
 		return dictCouponsMap;
 	}

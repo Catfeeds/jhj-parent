@@ -44,7 +44,7 @@
 		from user_coupons
 		where user_id= #{userId,jdbcType=NUMERIC} and is_used = 0
 		AND UNIX_TIMESTAMP(to_date) > UNIX_TIMESTAMP(NOW())
-		order by value, to_date asc;
+		order by value desc, to_date asc;
 	</select>
 	
 	<select id="selectAllByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">

@@ -7,6 +7,9 @@ myApp.onPageInit('order-lib-cal',function(page) {
     console.log("nextUrl = " + nextUrl);
 
     var staffId=page.query.staff_id;
+    if(staffId==undefined){
+    	staffId=0;
+    }
 //    staffId=45;
 
     //获取当前日期
@@ -315,7 +318,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     tomm();
 
     //查询服务人员的已有派工的服务时间
-    if(staffId!=null ||staffId!=''||staffId!=undefined){
+    if(staffId!=0 && staffId!=null && staffId!=''){
     	$$.ajax({
     		type : "GET",
     		url:siteAPIPath+"/staff/get_dispatch_dates.json?staff_id="+staffId,

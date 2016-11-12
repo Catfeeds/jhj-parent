@@ -92,7 +92,7 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		//读取用户可用的优惠劵
 		var params = {};
 		params.user_id = $$("#userId").val();
-		params.order_type = $$("#orderType").val();
+		params.service_type = $$("#serviceType").val();
 		params.service_date = $$("#serviceDate").val();
 		params.order_money = $$("#orderMoney").val();
 		
@@ -111,7 +111,34 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		    	  } else {
 		    		  nums = couponList.length;
 		    	  }
-		    	  $$("#userCouponName").html(nums + "张可用")
+		    	  var userCouponValue = 0;
+	    		  var userCouponId = 0;
+	    		  var userCouponName = "";
+		    	  if(nums>0){
+		    		  $$.each(couponList,function(i,item){
+		    			  if(item.value>userCouponValue){
+		    				  userCouponValue = item.value;
+		    				  userCouponId = item.id;
+		    				  userCouponName = "￥" + userCouponValue;
+		    			  }
+		    		  });
+		    		  sessionStorage.setItem("user_coupon_id", userCouponId);
+	    			  sessionStorage.setItem("user_coupon_name", userCouponName);
+	    			  sessionStorage.setItem("user_coupon_value", userCouponValue);
+		    	  }
+		    	  var userCouponNameStr = nums + "张可用";
+		    	  if (userCouponId != 0 && userCouponValue != 0) {
+		    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
+					  if (orderPayStr < 0) orderPayStr = 0;
+					  sessionStorage.setItem("order_pay", orderPayStr);
+					  userCouponNameStr = userCouponName;
+		    	  }
+		    	  
+		    	  console.log("order_pay = " + sessionStorage.getItem("order_pay"));
+		    	  $$("#userCouponName").html(userCouponNameStr);
+		    	  $$("#orderPayStr").html(sessionStorage.getItem("order_pay") + "元");
+		    	  
+//		    	  $$("#userCouponName").html(nums + "张可用")
 		      }
 		});
 	}
