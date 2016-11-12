@@ -3922,6 +3922,12 @@ i.toolbar-icon-tixing {
   line-height: 40px;
   font-size: 14px;
 }
+.chongzhi input{
+	border:0;
+	border-bottom:1px solid #dedede;
+	font-size:14px;
+	width:50%;
+}
 .chongzhi1{
   margin-top: 15px;
   background: #fff;

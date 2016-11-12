@@ -5,7 +5,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 //	var cardPay = page.query.card_pay;
 	var orderPayType = 2;
 	localStorage.removeItem("pay_card_id");
-	localStorage.setItem("pay_card_id",cardId);
+//	localStorage.setItem("pay_card_id",cardId);
 	if (userId == undefined || userId == '' || userId == 0) {
 		return;
 	}
@@ -61,8 +61,6 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 
 	//点击支付的处理
 	$$("#chongzhi-submit").click(function(){
-
-
 		var postdata = {};
 		postdata.user_id = userId;
 		postdata.card_type = cardId;
