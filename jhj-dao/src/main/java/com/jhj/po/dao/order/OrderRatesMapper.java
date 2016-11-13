@@ -1,5 +1,6 @@
 package com.jhj.po.dao.order;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.jhj.po.model.order.OrderRates;
@@ -22,4 +23,5 @@ public interface OrderRatesMapper {
     
     List<OrderRates> selectByListPage(OrderDispatchSearchVo searchVo);
     
+    HashMap totalByStaff(OrderDispatchSearchVo searchVo);
 }

@@ -26,17 +26,32 @@
 	</select>
 	
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		 select
+		<include refid="Base_Column_List" />
+		from order_rates
 		<include refid="bySearchVo" />
+		order by add_time desc
 	</select>
 
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		 select
+		<include refid="Base_Column_List" />
+		from order_rates
 		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
+	
+	<select id="totalByStaff" resultType="java.util.HashMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		select count(*) as total_orders,
+		count(CASE WHEN rate_arrival = 0 THEN 1 ELSE null END) as total_arrival_0,
+		count(CASE WHEN rate_arrival = 1 THEN 1 ELSE null END) as total_arrival_1,
+		SUM(rate_attitude) as total_attitude,
+		SUM(rate_skill) as total_skill
+		from order_rates
+		<include refid="bySearchVo" /> 
 	</select>
 	
 	<sql id="bySearchVo">
-	    select
-		<include refid="Base_Column_List" />
-		from order_rates
 		where 1 = 1
 	    <if test="userId != null">
 			and user_id = #{userId,jdbcType=NUMERIC}
@@ -58,7 +73,7 @@
 		</if>
 		
 		<if test="orderId != null">
-			and id = #{orderId,jdbcType=NUMERIC}
+			and order_id = #{orderId,jdbcType=NUMERIC}
 		</if>
 		
 		<if test="orderIds != null">
@@ -72,7 +87,7 @@
 			and order_no like CONCAT('%','${orderNo}','%' )
 		</if>
 
-		order by add_time desc
+		
 
 	</sql>
 	

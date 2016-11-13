@@ -1,5 +1,6 @@
 package com.jhj.service.order;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
@@ -29,5 +30,7 @@ public interface OrderRatesService {
 	PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize);
 
 	List<OrgStaffRateVo> changeToStaffReteVo(List<OrderRates> orderRates);
+
+	HashMap totalByStaff(OrderDispatchSearchVo searchVo);
 
 }

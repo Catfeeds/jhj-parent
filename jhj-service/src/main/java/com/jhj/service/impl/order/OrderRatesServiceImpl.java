@@ -1,6 +1,8 @@
 package com.jhj.service.impl.order;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +96,11 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 	}
 	
 	@Override
+	public HashMap totalByStaff(OrderDispatchSearchVo searchVo) {
+		return orderRatesMapper.totalByStaff(searchVo);
+	}
+	
+	@Override
 	public PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrderRates> list = orderRatesMapper.selectByListPage(searchVo);
@@ -148,6 +155,51 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 			if (level.equals((short)4)) skill = "VIP";
 			vo.setSkill(skill);
 			
+			//统计平均到达率， 平均好评度
+			int totalRateStar = 0;
+			String totalArrival = ""; 
+			
+			
+			OrderDispatchSearchVo odSearchVo = new OrderDispatchSearchVo();
+			odSearchVo.setStaffId(staffId);
+			HashMap<String, Object> totalRates = this.totalByStaff(odSearchVo);
+			if (!totalRates.isEmpty()) {
+				int totalOrders = 0;
+				int totalArrival0 = 0;
+				int totalAttitude = 0;
+				int totalSkill = 0;
+				
+				if (totalRates.get("total_orders") != null)
+					totalOrders = Integer.valueOf(totalRates.get("total_orders").toString());
+				
+				if (totalRates.get("total_arrival_0") != null)
+					totalArrival0 = Integer.valueOf(totalRates.get("total_arrival_0").toString());
+				
+				if (totalRates.get("total_attitude") != null)
+					totalAttitude = Integer.valueOf(totalRates.get("total_attitude").toString());
+				
+				if (totalRates.get("total_skill") != null)
+					totalSkill = Integer.valueOf(totalRates.get("total_skill").toString());
+				
+				if (totalOrders > 0) {
+					
+					//平均到达率
+					NumberFormat numberFormat = NumberFormat.getInstance();  
+					numberFormat.setMaximumFractionDigits(0);  
+					totalArrival = numberFormat.format((float) totalArrival0 / (float) totalOrders * 100) + "%";
+					
+					//客户好评度
+					double avgAttitude = (double)totalAttitude /  (double)totalOrders;
+					double avgSkill =  (double)totalSkill /  (double)totalOrders;
+					double avgStar = (avgAttitude + avgSkill) / (double)2;
+					totalRateStar = (int) Math.round(avgStar);
+				}
+			}
+			
+			vo.setTotalRateStar(totalRateStar);
+			vo.setTotalArrival(totalArrival);
+			
+			result.add(vo);
 		}
 		
 		return result;

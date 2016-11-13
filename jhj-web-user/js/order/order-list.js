@@ -203,7 +203,7 @@ function linkOrderRate(obj) {
 	
 	var orderRateUrl = "order/order-rate.html";
 	if (orderStatus == 8) {
-		orderRateUrl = "order/order-rate-view.html";
+		orderRateUrl = "order/order-rate-success.html";
 	}
 	
 	mainView.router.loadPage(orderRateUrl);

@@ -45,7 +45,7 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 					return false;
 				}
 				
-				mainView.router.loadPage("order/order-list.html");
+				mainView.router.loadPage("order/order-rate-success.html");
 			}
 		})
 	});
