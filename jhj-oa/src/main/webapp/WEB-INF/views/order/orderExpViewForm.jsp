@@ -139,6 +139,15 @@
 								<form:errors path="orderPay" class="field-has-error"></form:errors>
 							</div>
 						</div>
+						<c:if test="${ oaOrderListVoModel.overWorkStr != '' }">
+							<div class="form-group">
+								<label class="col-md-2 control-label">加时信息</label>
+								<div class="col-md-5">
+									<form:input path="overWorkStr" class="form-control" maxLength="32" readonly="true" />
+									<form:errors path="overWorkStr" class="field-has-error"></form:errors>
+								</div>
+							</div>
+						</c:if>
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单来源</label>
 							<div class="col-md-5">

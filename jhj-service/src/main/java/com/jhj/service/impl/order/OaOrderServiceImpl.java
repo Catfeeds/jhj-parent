@@ -17,6 +17,7 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -32,6 +33,7 @@ import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
@@ -42,8 +44,10 @@ import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -104,6 +108,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 	
 	@Autowired
 	private PartnerServiceTypeService partnerServiceTypeService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 	
 	@Override
 	public OaOrderListVo completeVo(Orders orders) {
@@ -466,6 +473,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 				}
 			}
 		}
+		
+
+		//是否有加时的标识
+		String overWorkStr = "";
+		overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
+		oaOrderListVo.setOverWorkStr(overWorkStr);
 				
 		return oaOrderListVo;
 	}
@@ -558,6 +571,11 @@ public class OaOrderServiceImpl implements OaOrderService {
 			
 			oaOrderListVo.setPayType(orderPrices.getPayType());
 		}
+		
+		//是否有加时的标识
+		String overWorkStr = "";
+		overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
+		oaOrderListVo.setOverWorkStr(overWorkStr);
 
 
 		return oaOrderListVo;

@@ -14,7 +14,7 @@
 <!--css for this page-->
 <link rel="stylesheet" href="<c:url value='/css/fileinput.css'/>" type="text/css" />
 <link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" />
-<link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet"  />
+<link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet" />
 </head>
 <body>
 	<section id="container"> <!--header start--> <%@ include file="../shared/pageHeader.jsp"%>
@@ -32,7 +32,9 @@
 					<form:hidden path="orderStatus" />
 					<form:hidden path="staffId" />
 					<div class="form-body">
-					<section class="panel"> <header class="panel-info"> <h4>订单基本信息</h4> </header>
+						<section class="panel"> <header class="panel-info">
+						<h4>订单基本信息</h4>
+						</header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						<div class="form-group ">
 							<div class="col-md-5">
@@ -55,31 +57,24 @@
 								<form:errors path="mobile" class="field-has-error"></form:errors>
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">服务开始时间</label>
 							<div class="col-md-5">
-								<input type="text" readonly="true" value="${oaOrderListVoModel.serviceDateStr }" class="form-control"/>
+								<input type="text" readonly="true" value="${oaOrderListVoModel.serviceDateStr }" class="form-control" />
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">服务时长</label>
 							<div class="col-md-5">
 								<form:input path="serviceHour" class="form-control" maxLength="32" readonly="true" />
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">人数</label>
 							<div class="col-md-5">
 								<form:input path="staffNums" class="form-control" maxLength="32" readonly="true" />
 							</div>
 						</div>
-						
-						
-						
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单状态</label>
 							<div class="col-md-5">
@@ -101,6 +96,15 @@
 								<form:errors path="orderPay" class="field-has-error"></form:errors>
 							</div>
 						</div>
+						<c:if test="${ oaOrderListVoModel.overWorkStr != '' }">
+							<div class="form-group">
+								<label class="col-md-2 control-label">加时信息</label>
+								<div class="col-md-5">
+									<form:input path="overWorkStr" class="form-control" maxLength="32" readonly="true" />
+									<form:errors path="overWorkStr" class="field-has-error"></form:errors>
+								</div>
+							</div>
+						</c:if>
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单来源</label>
 							<div class="col-md-5">
@@ -116,35 +120,34 @@
 							</div>
 						</div>
 						<c:if test="${ oaOrderListVoModel.couponValue > 0 }">
-						<div class="form-group">
-							<label class="col-md-2 control-label">优惠券</label>
-							<div class="col-md-5">
-								<form:input path="couponValue" class="form-control" maxLength="32" readonly="true" />
-								<form:errors path="couponValue" class="field-has-error"></form:errors>
+							<div class="form-group">
+								<label class="col-md-2 control-label">优惠券</label>
+								<div class="col-md-5">
+									<form:input path="couponValue" class="form-control" maxLength="32" readonly="true" />
+									<form:errors path="couponValue" class="field-has-error"></form:errors>
+								</div>
 							</div>
-						</div>
-						
-						<div class="form-group">
-							<label class="col-md-2 control-label">优惠券名称</label>
-							<div class="col-md-5">
-								<form:input path="couponName" class="form-control" maxLength="32" readonly="true" />
-								<form:errors path="couponName" class="field-has-error"></form:errors>
+							<div class="form-group">
+								<label class="col-md-2 control-label">优惠券名称</label>
+								<div class="col-md-5">
+									<form:input path="couponName" class="form-control" maxLength="32" readonly="true" />
+									<form:errors path="couponName" class="field-has-error"></form:errors>
+								</div>
 							</div>
-						</div>
 						</c:if>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">用户备注:</label>
 							<div class="col-md-5">
 								<form:textarea path="remarks" readonly="true" rows="2" cols="50" class="form-control" />
 							</div>
 						</div>
-					</section>
-					<section class="panel" id ="dispatchSection"> <header class="panel-info"> <h4>派工信息</h4> </header>
+						</section>
+						<section class="panel" id="dispatchSection"> <header class="panel-info">
+						<h4>派工信息</h4>
+						</header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-						
 						<div class="col-sm-12">
-							<table class="table table-striped table-advance table-hover" >
+							<table class="table table-striped table-advance table-hover">
 								<thead>
 									<tr>
 										<th>门店</th>
@@ -156,8 +159,8 @@
 										<th>接单时间</th>
 									</tr>
 								</thead>
-								<tbody >
-									 <c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
+								<tbody>
+									<c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
 										<tr>
 											<td>${item.parentOrgName }</td>
 											<td>${item.orgName }</td>
@@ -167,16 +170,15 @@
 											<td>${item.applyStatus }</td>
 											<td>${item.applyTimeStr }</td>
 										</tr>
-									 </c:forEach>
+									</c:forEach>
 								</tbody>
 							</table>
 						</div>
-						
-						
-					</section>
-					<section class="panel"> <header class="panel-info"> <h4>派工调整</h4> </header>
+						</section>
+						<section class="panel"> <header class="panel-info">
+						<h4>派工调整</h4>
+						</header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-							
 						<div class="form-group required">
 							<label class="col-md-2 control-label">用户服务地址</label>
 							<div class="col-md-5">
@@ -213,7 +215,7 @@
 						<div class="form-group required" id="div-org-id">
 							<label class="col-md-2 control-label">选择门店:</label>
 							<div class="col-md-5">
-								<orgSelectTag:select sessionOrgId="${loginOrgId }"/>
+								<orgSelectTag:select sessionOrgId="${loginOrgId }" />
 							</div>
 						</div>
 						<div class="form-group" id="div-cloud-id">
@@ -225,9 +227,9 @@
 							</div>
 						</div>
 						<div id="staffList" class="col-sm-12">
-							
-							已选择：<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true"  />
-							<table class="table table-striped table-advance table-hover" >
+							已选择：
+							<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true" />
+							<table class="table table-striped table-advance table-hover">
 								<thead>
 									<tr>
 										<th>选派员工</th>
@@ -250,7 +252,8 @@
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3">
 								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
-								<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 5}">
+								<c:if
+									test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 5}">
 									<button id="cancleOrder" class="btn btn-success">取消订单</button>
 								</c:if>
 							</div>
@@ -277,14 +280,19 @@
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderHourViewForm.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
-	
 	<script>
 		<c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
 
-			var selectedStaffId = ${item.staffId};
-			var selectedStaffName = "${item.staffName}";
-			var selectedDistanceValue = ${item.userAddrDistance};
-			addSelectedStaffs(selectedStaffId, selectedStaffName, selectedDistanceValue);
+		var selectedStaffId = $
+		{
+			item.staffId
+		};
+		var selectedStaffName = "${item.staffName}";
+		var selectedDistanceValue = $
+		{
+			item.userAddrDistance
+		};
+		addSelectedStaffs(selectedStaffId, selectedStaffName, selectedDistanceValue);
 		</c:forEach>
 	</script>
 </body>

@@ -47,6 +47,8 @@ public class OrderHourViewVo extends Orders{
 	
 	private String sex;
 	
+	private String overWorkStr;
+	
 	
 	public BigDecimal getRestMoney() {
 		return restMoney;
@@ -150,6 +152,14 @@ public class OrderHourViewVo extends Orders{
 
 	public void setServiceDateStr(String serviceDateStr) {
 		this.serviceDateStr = serviceDateStr;
+	}
+
+	public String getOverWorkStr() {
+		return overWorkStr;
+	}
+
+	public void setOverWorkStr(String overWorkStr) {
+		this.overWorkStr = overWorkStr;
 	}
 
 	

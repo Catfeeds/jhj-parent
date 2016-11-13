@@ -22,6 +22,8 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderHourDetailService;
 import com.jhj.service.order.OrderHourListService;
+import com.jhj.service.order.OrderPriceExtService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
@@ -48,7 +50,7 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 	@Autowired
 	private OrdersMapper orderMapper;
 	@Autowired
-	private OrderPricesMapper orderPricesMapper;
+	private OrderPricesService orderPriceService;
 	@Autowired
 	private OrderDispatchsMapper orderDisMapper;
 	@Autowired
@@ -74,6 +76,9 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 	@Autowired
 	private OrgStaffsService orgStaffsService;
 	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
+	
 	
 	@Override
 	public OrderHourViewVo getOrderHourDetail(String orderNo) {
@@ -96,7 +101,7 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		}
 		
 		//orderPrices相关字段    优惠券
-		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orders.getOrderNo());
+		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orders.getOrderNo());
 
 		Long couponId = orderPrices.getCouponId();
 		
@@ -113,9 +118,11 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 			}
 		}
 		
-		orderHourViewVo.setOrderMoney(orderPrices.getOrderMoney());
+		BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
+		BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
+		orderHourViewVo.setOrderMoney(orderMoney);
 		//实际支付金额
-		orderHourViewVo.setOrderPay(orderPrices.getOrderPay());
+		orderHourViewVo.setOrderPay(orderPay);
 				
 		//userAddr  服务地址名称
 		Long addrId = orders.getAddrId();
@@ -171,6 +178,10 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		String serviceDateStr = serviceDatePart1 + "(" + w.getChineseName() + ")" + " " + serviceDatePart2;
 		orderHourViewVo.setServiceDateStr(serviceDateStr);
 		
+		
+		String overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
+		orderHourViewVo.setOverWorkStr(overWorkStr);
+		
 		return orderHourViewVo;
 	}
 	@Override
@@ -195,7 +206,7 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		orderHourViewVo.setOrderMoney(new BigDecimal(0));
 		orderHourViewVo.setOrderPay(new BigDecimal(0));
 		//orderPrices相关字段    优惠券
-		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orders.getOrderNo());
+		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orders.getOrderNo());
 		
 		if (orderPrices != null) {
 			Long couponId = orderPrices.getCouponId();

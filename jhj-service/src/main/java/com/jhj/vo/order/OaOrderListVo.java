@@ -108,6 +108,8 @@ public class OaOrderListVo extends Orders {
 	private String orderOpFromName;
 	
 	private List<OrderDispatchVo> orderDispatchs;
+	
+	private String overWorkStr;
 
 	public String getServiceDateStartStr() {
 		return serviceDateStartStr;
@@ -435,5 +437,13 @@ public class OaOrderListVo extends Orders {
 
 	public void setOrderDispatchs(List<OrderDispatchVo> orderDispatchs) {
 		this.orderDispatchs = orderDispatchs;
+	}
+
+	public String getOverWorkStr() {
+		return overWorkStr;
+	}
+
+	public void setOverWorkStr(String overWorkStr) {
+		this.overWorkStr = overWorkStr;
 	}
 }

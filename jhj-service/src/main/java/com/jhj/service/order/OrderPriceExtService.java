@@ -26,4 +26,6 @@ public interface OrderPriceExtService {
 
 	List<OrderPriceExt> selectBySearchVo(OrderSearchVo searchVo);
 
+	String getOverWorkStr(Long orderId);
+
 }

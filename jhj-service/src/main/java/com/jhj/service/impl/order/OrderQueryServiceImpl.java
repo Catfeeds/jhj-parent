@@ -673,17 +673,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		
 		//是否有加时的标识
 		String overWorkStr = "";
-		OrderSearchVo osearchVo = new OrderSearchVo();
-		osearchVo.setOrderId(item.getId());
-		osearchVo.setOrderExtType((short) 1);
-		List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(osearchVo);
+		overWorkStr = orderPriceExtService.getOverWorkStr(item.getId());
 		
-		if (!list.isEmpty()) {
-			for (OrderPriceExt oe : list) {
-				overWorkStr+= "加时" + oe.getServiceHour();
-				overWorkStr+= ",价格" + MathBigDecimalUtil.round2(oe.getOrderPay());
-			}
-		}
 		result.setOverWorkStr(overWorkStr);
 		
 		// 计算订单的收入比例

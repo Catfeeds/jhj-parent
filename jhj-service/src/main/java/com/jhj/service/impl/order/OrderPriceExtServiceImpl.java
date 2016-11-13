@@ -11,6 +11,7 @@ import com.jhj.po.dao.order.OrderPriceExtMapper;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.vo.order.OrderSearchVo;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 
@@ -81,6 +82,23 @@ public class OrderPriceExtServiceImpl implements OrderPriceExtService {
 	@Override
 	public List<OrderPriceExt> selectBySearchVo(OrderSearchVo searchVo) {
 		return orderPriceExtMapper.selectBySearchVo(searchVo);
+	}
+	
+	@Override
+	public String getOverWorkStr(Long orderId) {
+		String overWorkStr = "";
+		OrderSearchVo osearchVo = new OrderSearchVo();
+		osearchVo.setOrderId(orderId);
+		osearchVo.setOrderExtType((short) 1);
+		List<OrderPriceExt> list = this.selectBySearchVo(osearchVo);
+		
+		if (!list.isEmpty()) {
+			for (OrderPriceExt oe : list) {
+				overWorkStr+= "加时" + oe.getServiceHour() + "小时";
+				overWorkStr+= ",价格" + MathBigDecimalUtil.round2(oe.getOrderPay());
+			}
+		}
+		return overWorkStr;
 	}
 
 	
