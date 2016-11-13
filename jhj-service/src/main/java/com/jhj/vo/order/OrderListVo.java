@@ -3,6 +3,12 @@ package com.jhj.vo.order;
 import java.math.BigDecimal;
 
 public class OrderListVo {
+	
+	private Long userId;
+	
+	private int isVip;
+	
+	private String userTypeStr;
 
 	private Long staffId;
 	
@@ -290,5 +296,29 @@ public class OrderListVo {
 
 	public void setPayType(Short payType) {
 		this.payType = payType;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getUserTypeStr() {
+		return userTypeStr;
+	}
+
+	public void setUserTypeStr(String userTypeStr) {
+		this.userTypeStr = userTypeStr;
+	}
+
+	public int getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(int isVip) {
+		this.isVip = isVip;
 	}	
 }

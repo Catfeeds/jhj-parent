@@ -8,6 +8,8 @@ public class OrderDetailVo extends OrderListVo {
 	
 	private String telStaff;
 	
+	private String overWorkStr;
+	
 	private List<OrderServiceAddonViewVo> serviceAddons;
 
 	public String getOrderRatio() {
@@ -32,6 +34,14 @@ public class OrderDetailVo extends OrderListVo {
 
 	public void setServiceAddons(List<OrderServiceAddonViewVo> serviceAddons) {
 		this.serviceAddons = serviceAddons;
+	}
+
+	public String getOverWorkStr() {
+		return overWorkStr;
+	}
+
+	public void setOverWorkStr(String overWorkStr) {
+		this.overWorkStr = overWorkStr;
 	}
 	
 	

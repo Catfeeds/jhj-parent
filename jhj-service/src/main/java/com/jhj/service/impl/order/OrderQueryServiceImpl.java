@@ -24,6 +24,7 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
@@ -35,6 +36,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.dict.DictService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.orderReview.SettingService;
@@ -96,6 +98,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 	@Autowired
 	PartnerServiceTypeService partnerServiceTypeService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 
 	@Override
 	public List<Orders> selectBySearchVo(OrderSearchVo searchVo) {
@@ -438,7 +443,20 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	public OrderListVo getOrderListVo(Orders item, Long staffId) {
 
 		OrderListVo vo = new OrderListVo();
-
+		
+		//获取用户信息
+		Long userId = item.getUserId();
+		Users u = usersService.selectByPrimaryKey(userId);
+		int isVip = u.getIsVip();
+		
+		vo.setIsVip(isVip);
+		
+		String userTypeStr = "";
+		if (isVip == 0) userTypeStr = "普通会员";
+		if (isVip == 1) userTypeStr = "金牌会员";
+		vo.setUserTypeStr(userTypeStr);
+		
+		
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(item.getOrderNo());
 		searchVo.setDispatchStatus((short) 1);
@@ -652,6 +670,21 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		OrderListVo vo = this.getOrderListVo(item, staffId);
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(vo, result);
+		
+		//是否有加时的标识
+		String overWorkStr = "";
+		OrderSearchVo osearchVo = new OrderSearchVo();
+		osearchVo.setOrderId(item.getId());
+		osearchVo.setOrderExtType((short) 1);
+		List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(osearchVo);
+		
+		if (!list.isEmpty()) {
+			for (OrderPriceExt oe : list) {
+				overWorkStr+= "加时" + oe.getServiceHour();
+				overWorkStr+= ",价格" + MathBigDecimalUtil.round2(oe.getOrderPay());
+			}
+		}
+		result.setOverWorkStr(overWorkStr);
 		
 		// 计算订单的收入比例
 		result.setOrderRatio("");
