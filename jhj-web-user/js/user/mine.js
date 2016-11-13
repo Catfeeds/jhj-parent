@@ -38,6 +38,7 @@ myApp.onPageBeforeInit('mine', function (page) {
 	$$('#user-logout').on('click', function() {
 		localStorage.removeItem("mobile");
 		localStorage.removeItem('user_id');
+		localStorage.removeItem('is_vip');
 		localStorage.removeItem('im_username');
 		localStorage.removeItem('im_password');
 
@@ -69,6 +70,11 @@ myApp.template7Data['page:mine']=function(){
 		async : false,
 		success : function(data) {
 			result = data.data;
+			
+			if (result != undefined ||result != "") {
+				localStorage.setItem("is_vip",result.data.is_vip);
+			}
+			
 		}
 	})
 	return result;

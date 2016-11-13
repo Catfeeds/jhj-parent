@@ -162,7 +162,9 @@ myApp.onPageInit('login', function (page) {
 
     	   	  localStorage.setItem("user_mobile",result.data.mobile);
     	   	  
-    	   	  localStorage.setItem("user_id",result.data.id)
+    	   	  localStorage.setItem("user_id",result.data.id);
+    	   	  
+    	   	  localStorage.setItem("is_vip",result.data.is_vip);
     	   	  	    	  
 	    	  //如果有默认地址则设置为默认地址
 	    	  var userAddr = result.data.default_user_addr;
