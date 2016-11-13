@@ -54,7 +54,17 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			if (orderStatus >= 3 && orderStatus < 7 && payType != 6) {
 				priceExtendStyle = 'block';
 			}
+
 			htmlPart = htmlPart.replace(new RegExp('{priceExtendStyle}', "gm"), priceExtendStyle);
+			
+			var orderRateStr = "立即评价";
+			var orderRateStyle = "none"
+			if (orderStatus >= 3 && orderStatus <= 8) {
+				orderRateStyle = "block";
+			}
+			if (orderStatus == 8) orderRateStr = "已评价";
+			htmlPart = htmlPart.replace(new RegExp('{orderRateStr}', "gm"), orderRateStr);
+			htmlPart = htmlPart.replace(new RegExp('{orderRateStyle}', "gm"), orderRateStyle);
 			
 			html+= htmlPart;
 		}
@@ -177,5 +187,26 @@ function doOrderPayExt(obj) {
 	
 }
 
+
+function linkOrderRate(obj) {
+	
+	var orderStatus = obj.find('input[name=orderStatus]').val();
+	
+	if (orderStatus <= 2) return false;
+	
+	
+	var orderId = obj.find('input[name=orderId]').val();
+	sessionStorage.setItem("order_id", orderId);
+	
+	var staffNames = obj.find('input[name=staffNames]').val();
+	sessionStorage.setItem("staff_names", staffNames);
+	
+	var orderRateUrl = "order/order-rate.html";
+	if (orderStatus == 8) {
+		orderRateUrl = "order/order-rate-view.html";
+	}
+	
+	mainView.router.loadPage(orderRateUrl);
+}
 
 

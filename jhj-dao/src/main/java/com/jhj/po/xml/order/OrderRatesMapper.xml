@@ -37,7 +37,7 @@
 	    select
 		<include refid="Base_Column_List" />
 		from order_rates
-		where id = #{id,jdbcType=NUMERIC}
+		where 1 = 1
 	    <if test="userId != null">
 			and user_id = #{userId,jdbcType=NUMERIC}
 		</if>

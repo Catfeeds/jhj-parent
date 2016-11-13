@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderRates;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.staff.OrgStaffRateVo;
 
 public interface OrderRatesService {
 
@@ -26,5 +27,7 @@ public interface OrderRatesService {
 	List<OrderRates> selectBySearchVo(OrderDispatchSearchVo searchVo);
 
 	PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize);
+
+	List<OrgStaffRateVo> changeToStaffReteVo(List<OrderRates> orderRates);
 
 }
