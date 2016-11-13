@@ -72,7 +72,7 @@ public class TestOrderController extends JUnitActionBase{
 
      	MockHttpServletRequestBuilder postRequest = post(url);
 	    postRequest = postRequest.param("staff_id", "1");
-	    postRequest = postRequest.param("order_id", "38");
+	    postRequest = postRequest.param("order_id", "44");
 	    postRequest = postRequest.param("service_hour", "2");
 	    postRequest = postRequest.param("order_pay", "100");
 	    ResultActions resultActions = mockMvc.perform(postRequest);

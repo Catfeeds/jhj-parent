@@ -473,7 +473,23 @@ public class OrderController extends BaseController {
 	    
 	    userDetailPayService.insert(detailPay);
 		
-		
+		//更新订单的服务时长
+	    double newServiceHour = order.getServiceHour();
+	    newServiceHour+= serviceHour;
+	    order.setServiceHour(newServiceHour);
+	    ordersService.updateByPrimaryKeySelective(order);
+	    
+	    //更新派工人员的服务时长
+	    OrderDispatchSearchVo dsearchVo = new OrderDispatchSearchVo();
+	    dsearchVo.setOrderId(orderId);
+	    dsearchVo.setDispatchStatus((short) 1);
+	    List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(dsearchVo);
+	    
+	    for (OrderDispatchs op : orderDispatchs) {
+	    	op.setServiceHours(newServiceHour);
+	    	op.setUpdateTime(TimeStampUtil.getNowSecond());
+	    	orderDispatchsService.updateByPrimaryKey(op);
+	    }
 		
 		
 		return result;

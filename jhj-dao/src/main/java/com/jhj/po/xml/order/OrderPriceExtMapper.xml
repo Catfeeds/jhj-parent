@@ -51,6 +51,10 @@
 		<if test="orderStatus != null">
 			and order_status = #{orderStatus,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="orderExtType != null">
+			and order_ext_type = #{orderExtType,jdbcType=NUMERIC}
+		</if>
 	</sql>
 		
 	<select id="selectByOrderNoExt" resultMap="BaseResultMap" parameterType="java.lang.String">

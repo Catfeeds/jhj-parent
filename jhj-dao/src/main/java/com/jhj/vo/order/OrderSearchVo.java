@@ -18,6 +18,8 @@ public class OrderSearchVo {
 	
 	private Short orderType;
 	
+	private Short orderExtType;
+	
 	private List<Short> orderTypes;
 
 	private Short serviceType;
@@ -314,6 +316,14 @@ public class OrderSearchVo {
 
 	public void setPayType(Short payType) {
 		this.payType = payType;
+	}
+
+	public Short getOrderExtType() {
+		return orderExtType;
+	}
+
+	public void setOrderExtType(Short orderExtType) {
+		this.orderExtType = orderExtType;
 	}
 	
 }
