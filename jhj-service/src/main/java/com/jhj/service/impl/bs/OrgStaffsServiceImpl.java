@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
@@ -124,6 +125,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 	@Override
 	public int insertSelective(OrgStaffs orgStaffs) {
+		orgStaffs.setStaffCode(getValidateStaffCode());
 		return orgStaMapper.insertSelective(orgStaffs);
 	}
 
@@ -654,5 +656,23 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		newVo.setDispathStaFlag(0);
 
 		return newVo;
+	}
+	
+	public String getValidateStaffCode(){
+		
+		Random random=new Random();
+		int code = random.nextInt(9999);
+		if (code<=1000){
+			code+=1000;
+		}
+		String staffCode = Integer.toString(code);
+		StaffSearchVo vo=new StaffSearchVo();
+		vo.setStaffCode(staffCode);
+		List<OrgStaffs> voList = orgStaMapper.selectBySearchVo(vo);
+		if(voList!=null && voList.size()>0){
+			getValidateStaffCode();
+		}
+		
+		return staffCode;
 	}
 }

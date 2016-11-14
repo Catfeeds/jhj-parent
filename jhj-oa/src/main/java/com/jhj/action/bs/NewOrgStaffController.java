@@ -3,7 +3,6 @@ package com.jhj.action.bs;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.admin.AdminController;
 import com.jhj.common.ConstantMsg;
@@ -59,8 +57,6 @@ import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrderSearchVo;
-import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffPoiVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserTrailSearchVo;
@@ -307,6 +303,7 @@ public class NewOrgStaffController extends AdminController {
 			staffService.updateByPrimaryKeySelective(orgStaffs);
 		} else {
 			staffService.insertSelective(orgStaffs);
+			
 		}
 		
 		// 员工技能
