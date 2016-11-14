@@ -92,7 +92,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		//读取用户可用的优惠劵
 		var params = {};
 		params.user_id = $$("#userId").val();
-		params.order_type = $$("#orderType").val();
+		params.service_type = $$("#serviceType").val();
 		params.service_date = sessionStorage.getItem('service_date');
 		params.order_money = $$("#orderMoney").val();
 		
