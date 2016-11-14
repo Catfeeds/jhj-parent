@@ -239,13 +239,17 @@
 	
 	<select id="selectTotalData" resultType="java.util.HashMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
 		SELECT SUM(order_money) as totalMoney,
-		SUM(order_pay) as orderPayMoney,
-		(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='6')) as cashMoney,
-		(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='7')) as platformMoney,
-		(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_type='4') refundMoney	
-		FROM org_staff_detail_pay
+			SUM(order_pay) as orderPayMoney,
+			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='6')) as cashMoney,
+			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='7')) as platformMoney,
+			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_type='4') as refundMoney	
+		 FROM org_staff_detail_pay
 		<where>
 			<include refid="searchVo"/>
 		</where>
 	</select>
+	
+	
+	
+	
 </mapper>

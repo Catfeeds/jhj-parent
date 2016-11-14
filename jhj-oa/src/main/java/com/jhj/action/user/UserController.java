@@ -221,14 +221,13 @@ public class UserController extends BaseController {
 
 		// 在店长登录门店 下过单的 用户集合
 		List<Users> userList = usersService.selectBySearchVo(userSearchVo);
-
-		List<Long> userIdList = new ArrayList<Long>();
-
-		for (Users users : userList) {
-			userIdList.add(users.getId());
+		if(userList!=null && userList.size()>0){
+			List<Long> userIdList = new ArrayList<Long>();
+			for (Users users : userList) {
+				userIdList.add(users.getId());
+			}
+			searchVo.setUserIdList(userIdList);
 		}
-
-		searchVo.setUserIdList(userIdList);
 
 		PageHelper.startPage(pageNo, pageSize);
 
@@ -700,10 +699,13 @@ public class UserController extends BaseController {
 		UserSearchVo userVo=new UserSearchVo();
 		userVo.setIsVip(1);
 		List<Users> userList = usersService.selectBySearchVo(userVo);
-		List<Long> userIds=new ArrayList<Long>();
-		for(int i=0;i<userList.size();i++){
-			Users users = userList.get(i);
-			userIds.add(users.getId());
+		if(userList!=null && userList.size()>0){
+			List<Long> userIds=new ArrayList<Long>();
+			for(int i=0;i<userList.size();i++){
+				Users users = userList.get(i);
+				userIds.add(users.getId());
+			}
+			orderCardsVo.setUserIds(userIds);
 		}
 		String addStartTimeStr = request.getParameter("addStartTimeStr");
 		if(addStartTimeStr!=null && !addStartTimeStr.equals("")){
@@ -713,7 +715,6 @@ public class UserController extends BaseController {
 		if(addEndTimeStr!=null && !addEndTimeStr.equals("")){
 			orderCardsVo.setAddEndTime(TimeStampUtil.getMillisOfDayFull(addEndTimeStr+" 23:59:59"));
 		}
-		orderCardsVo.setUserIds(userIds);
 		orderCardsVo.setOrderStatus((short)1);
 		PageInfo page = orderCardsService.selectByListPage(orderCardsVo,pageNo, pageSize);
 		List<OrderCards> orderCardsList = page.getList();

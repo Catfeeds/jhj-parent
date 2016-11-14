@@ -34,7 +34,7 @@
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		
-		<if test="userIdList != null">
+		<if test="userIdList != null and userIdList.size()>0">
 			and  user_id in
 			<foreach item="item" index="index" collection="userIdList" open="(" separator="," close=")">
 					#{userIdList[${index}]}

@@ -56,7 +56,7 @@
 			and id = #{userId,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="userIds != null">
+		<if test="userIds != null and userIds.size()>0">
 			and id in
 			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
 				${item}
