@@ -53,30 +53,50 @@
                               </div>
                            </div>
                            
+                            <div class="form-group required">
+                              <label  class="col-md-2 control-label">最小服务时长*</label>
+                              <div class="col-md-5">
+                                 <form:input path="serviceHour" class="form-control" placeholder="服务时长"/>
+                                 <form:errors path="serviceHour" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
                            
                            <div class="form-group required">
                               <label  class="col-md-2 control-label">非会员价*</label>
                               <div class="col-md-5">
-                                 <form:input path="price" class="form-control" placeholder="单价"/>
+                                 <form:input path="price" class="form-control" placeholder="非会员价"/>
                                  <form:errors path="price" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">非会员套餐价格*</label>
+                              <div class="col-md-5">
+                                 <form:input path="pprice" class="form-control" placeholder="套餐价格"/>
+                                 <form:errors path="pprice" class="field-has-error"/>
                               </div>
                            </div>
                            
                            <div class="form-group required">
                               <label  class="col-md-2 control-label">会员价*</label>
                               <div class="col-md-5">
-                                 <form:input path="mprice" class="form-control" placeholder="单价"/>
+                                 <form:input path="mprice" class="form-control" placeholder="会员价"/>
                                  <form:errors path="mprice" class="field-has-error"/>
                               </div>
                            </div>
                            
-                            <div class="form-group required">
-                              <label  class="col-md-2 control-label">服务时长*</label>
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">会员套餐价格*</label>
                               <div class="col-md-5">
-                                 <form:input path="serviceHour" class="form-control" placeholder="服务时长"/>
-                                 <form:errors path="serviceHour" class="field-has-error"/>
+                                 <form:input path="mpprice" class="form-control" placeholder="套餐价格"/>
+                                 <form:errors path="mpprice" class="field-has-error"/>
                               </div>
                            </div>
+                           
+                           
+                           
+                           
                            
 						   <div class="form-group">
                               <label  class="col-md-2 control-label">自动派工</label>

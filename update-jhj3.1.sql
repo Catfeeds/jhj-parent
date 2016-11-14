@@ -4,6 +4,14 @@ ALTER TABLE `users` ADD `is_vip` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否
 
 ALTER TABLE `partner_service_type` ADD `mprice` DECIMAL(5,2) NOT NULL DEFAULT '0' COMMENT '会员价格' AFTER `price`;
 
+ALTER TABLE `partner_service_type` ADD `pprice` DECIMAL(5,2) NOT NULL DEFAULT '0' COMMENT '套餐价格' AFTER `mprice`;
+
+ALTER TABLE `partner_service_type` CHANGE `service_hour` `service_hour` DOUBLE NOT NULL DEFAULT '0' COMMENT '起步服务小时';
+
+ALTER TABLE `partner_service_type` CHANGE `mprice` `mprice` DECIMAL(5,2) NOT NULL DEFAULT '0.00' COMMENT '会员价格(每小时)';
+
+ALTER TABLE `partner_service_type` ADD `mpprice` DECIMAL(5,2) NOT NULL DEFAULT '0' COMMENT '会员套餐价' AFTER `pprice`;
+
 
 ALTER TABLE `order_cards` ADD `referee` VARCHAR(20) NULL COMMENT '员工编号' ;
 

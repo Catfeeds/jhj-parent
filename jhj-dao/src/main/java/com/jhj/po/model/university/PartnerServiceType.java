@@ -16,6 +16,10 @@ public class PartnerServiceType {
     private BigDecimal price;
     
     private BigDecimal mprice;
+    
+    private BigDecimal pprice;
+    
+    private BigDecimal mpprice;
 
     private String remarks;
 
@@ -181,6 +185,22 @@ public class PartnerServiceType {
 
 	public void setMprice(BigDecimal mprice) {
 		this.mprice = mprice;
+	}
+
+	public BigDecimal getPprice() {
+		return pprice;
+	}
+
+	public void setPprice(BigDecimal pprice) {
+		this.pprice = pprice;
+	}
+
+	public BigDecimal getMpprice() {
+		return mpprice;
+	}
+
+	public void setMpprice(BigDecimal mpprice) {
+		this.mpprice = mpprice;
 	}
 	
 }

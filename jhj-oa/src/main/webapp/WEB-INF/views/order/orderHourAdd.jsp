@@ -43,6 +43,13 @@
 									<input type="hidden" id="userId" name="userId" />
 									<input type="hidden" id="orderType" name="orderType" value="0" />
 									<input type="hidden" id="orderForm" name="orderFrom" value="2">
+									<input type="hidden" id="isVip" name="isVip" value="0">
+									<input type="hidden" id="price" name="price"" value="50">
+									<input type="hidden" id="mprice" name="mprice"" value="45">
+									<input type="hidden" id="pprice" name="pprice"" value="149">
+									<input type="hidden" id="mpprice" name="pprice"" value="135">
+									<input type="hidden" id="maxServiceHour" name="maxServiceHour"" value="6">
+									<input type="hidden" id="minServiceHour" name="minServiceHour"" value="3">
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label">
@@ -50,6 +57,10 @@
 											</label>
 											<div class="col-md-5">
 												<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()" />
+												
+											</div>
+											<div>
+												<label class="control-label" id="userTypeStr"></label>
 											</div>
 										</div>
 										<div class="form-group required">

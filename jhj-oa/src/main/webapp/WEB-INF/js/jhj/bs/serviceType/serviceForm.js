@@ -14,6 +14,22 @@ $('#service-form').validate({
 			required : true,
 			number : true
 		},
+		
+		mprice : {
+			required : true,
+			number : true
+		},
+		
+		pprice : {
+			required : true,
+			number : true
+		},
+		
+		mpprice : {
+			required : true,
+			number : true
+		},
+		
 		serviceHour:{
 			required : true,
 			number : true
@@ -38,9 +54,24 @@ $('#service-form').validate({
 		},
 
 		price : {
-			required : "请输入单价",
+			required : "请输入非会员价格",
 			number : "请输入合法的单价数字"
 		},
+		pprice : {
+			required : "请输入非会员套餐价格",
+			number : "请输入合法的单价数字"
+		},
+		
+		mprice : {
+			required : "请输入会员价格",
+			number : "请输入合法的单价数字"
+		},
+		
+		mpprice : {
+			required : "请输入会员套餐价格",
+			number : "请输入合法的单价数字"
+		},
+		
 		serviceHour:{
 			required:"请输入服务时长",
 			number:"请输入合法的时间"

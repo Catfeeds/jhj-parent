@@ -38,7 +38,7 @@ public class UserSearchVo {
 	private Long startTime;
 	private Long endTime;
 	
-	private int isVip;
+	private Short isVip;
 	
 	public String getStartTimeStr() {
 		return startTimeStr;
@@ -152,11 +152,11 @@ public class UserSearchVo {
 		this.notUserIds = notUserIds;
 	}
 
-	public int getIsVip() {
+	public Short getIsVip() {
 		return isVip;
 	}
 
-	public void setIsVip(int isVip) {
+	public void setIsVip(Short isVip) {
 		this.isVip = isVip;
 	}
 

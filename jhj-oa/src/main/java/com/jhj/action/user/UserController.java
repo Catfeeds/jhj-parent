@@ -128,7 +128,7 @@ public class UserController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		searchVo.setOrgIds(getCouldId(request));
-		searchVo.setIsVip(1);
+		searchVo.setIsVip((short) 1);
 		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", searchVo);
@@ -213,7 +213,7 @@ public class UserController extends BaseController {
 		}
 
 		userSearchVo.setOrgIds(cloudIdList);
-		userSearchVo.setIsVip(1);
+		userSearchVo.setIsVip((short) 1);
 
 		/*
 		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
@@ -290,7 +290,7 @@ public class UserController extends BaseController {
 		}
 
 		userSearchVo.setOrgIds(cloudIdList);
-		userSearchVo.setIsVip(0);
+		userSearchVo.setIsVip((short) 0);
 
 		/*
 		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
@@ -695,7 +695,7 @@ public class UserController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		UserSearchVo userVo=new UserSearchVo();
-		userVo.setIsVip(1);
+		userVo.setIsVip((short) 1);
 		List<Users> userList = usersService.selectBySearchVo(userVo);
 		if(userList!=null && userList.size()>0){
 			List<Long> userIds=new ArrayList<Long>();

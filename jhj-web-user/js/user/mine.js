@@ -70,10 +70,9 @@ myApp.template7Data['page:mine']=function(){
 		async : false,
 		success : function(data) {
 			result = data.data;
+
+			localStorage.setItem("is_vip",result.is_vip);
 			
-			if (result != undefined ||result != "") {
-				localStorage.setItem("is_vip",result.data.is_vip);
-			}
 			
 		}
 	})

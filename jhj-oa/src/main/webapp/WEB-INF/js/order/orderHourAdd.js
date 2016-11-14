@@ -140,7 +140,7 @@ function getAddrByMobile(addrId) {
 	if (mobile == "" || mobile == undefined) return false;
 	
 	$("#addrId").find(":nth-child(2)").remove();
-	var reg = /^1[3,5,7,8]\d{9}$/;
+	var reg = /^1[3,4,5,6,7,8,9]\d{9}$/;
 	if (reg.test(mobile)) {
 		$.ajax({
 			type : "post",
@@ -148,6 +148,7 @@ function getAddrByMobile(addrId) {
 			data : {
 				"mobile" : mobile
 			},
+			
 			dataType : "json",
 			success : function(data) {
 				if (data.data != false) {
@@ -155,6 +156,14 @@ function getAddrByMobile(addrId) {
 					$("#userId").data("userId", userId)
 					$("#mobile").data("mobile", mobile);
 					$("#userId").text(userId);
+					
+					var isVip = data.data.isVip;
+					$("#isVip").val(isVip);
+					console.log(data.data);
+					console.log("is_vip ==" + isVip);
+					if (isVip == 0) $("#userTypeStr").html("普通会员");
+					if (isVip == 1) $("#userTypeStr").html("金牌会员");
+					chageServiceType();
 					$.ajax({
 						type : "get",
 						dataType : "json",
@@ -322,15 +331,32 @@ function saveAddress() {
 }
 function chageServiceType(){
 	var id=$("select[name='serviceType'] option:selected").val();
-	if(id==28){
-		$("#orderPay").val($("#hour-price").val());
-		$("#serviceHour").val(3);
-		$("#staffNums").val(1);
-	}else if(id==29){
-		$("#orderPay").val($("#cook-price").val());
-		$("#serviceHour").val(2);
-		$("#staffNums").val(1);
-	}
+	
+	if (id == "") return false;
+	
+	$.ajax({
+		type : "get",
+		dataType : "json",
+		url : "/jhj-app/app/dict/get_service_type.json?service_type_id=" + id,
+		success : function(data) {
+			var serviceType = data.data;
+			
+			$("#price").val(serviceType.price);
+	    	$("#mprice").val(serviceType.mprice);
+	    	$("#pprice").val(serviceType.pprice);
+	    	$("#mpprice").val(serviceType.mpprice);
+	    	
+	    	$("#serviceHour").val(serviceType.service_hour);
+			$("#minServiceHour").val(serviceType.service_hour);
+			$("#staffNums").val(1);
+	    	
+	    	changePrice();
+		}
+	});
+	
+	
+	
+	
 	
 }
 
@@ -340,28 +366,37 @@ function changePrice() {
 	var staffNums = $("#staffNums").val();
 	staffNums = staffNums.replace(/\D|^0/g,'');
 	
+	var minServiceHour = $("#minServiceHour").val();
+	console.log("minServiceHour = " + minServiceHour);
 	var serviceType=$("select[name='serviceType'] option:selected").val();
 	
-	var orderPay = 0;
-	if (serviceType == 28) {
-		if (staffNums == 1 && serviceHours == 3) {
-			$("#orderPay").val(149);
-		}
-		if (staffNums > 1 || serviceHours > 3) {
-			orderPay = 50 * serviceHours * staffNums;
-			$("#orderPay").val(orderPay);
-		}
-	} 
 	
-	if (serviceType == 28) {
-		if (staffNums == 1 && serviceHours == 2) {
-			$("#orderPay").val(99);
-		}
-		if (staffNums > 1 || serviceHours > 2) {
-			orderPay = 50 * serviceHours * staffNums;
-			$("#orderPay").val(orderPay);
-		}
-	} 
+	var price = $("#price").val();
+	var mprice = $("#mprice").val();
+	var pprice = $("#pprice").val();
+	var mpprice = $("#mpprice").val();
 	
+	var isVip = $("#isVip").val();
+	if (isVip == undefined || isVip == "") isVip = 0;
+	console.log(" changePrice price ==" + price);
+	console.log(" changePrice mprice ==" + mprice);
+	console.log(" changePrice pprice ==" + pprice);
+	console.log(" changePrice mpprice ==" + mpprice);
+	console.log(" changePrice is_vip ==" + isVip);
+	var orderHourPay = pprice;
+	var orderHourPrice = price;
+	if (isVip == 1) {
+		orderHourPay = mpprice;
+		orderHourPrice = mprice;
+	}
 	
+	if (staffNums == 1 && serviceHours == minServiceHour) {
+		$("#orderPay").val(orderHourPay);
+	}
+	if (staffNums > 1 || serviceHours > minServiceHour) {
+		orderPay = orderHourPrice * serviceHours * staffNums;
+		$("#orderPay").val(orderPay);
+	}
 }
+
+chageServiceType();

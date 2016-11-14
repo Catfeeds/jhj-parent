@@ -3,6 +3,45 @@ myApp.onPageInit('order-hour-choose', function(page) {
 	var serviceTypeId = page.query.service_type_id;
 	sessionStorage.setItem("service_type_id", serviceTypeId);
 	
+	//获取服务类别基本信息
+	var serviceTypeId = sessionStorage.getItem("service_type_id");
+	$$("#serviceType").val(serviceTypeId);
+	$$.ajax({
+	      type : "GET",
+	      url: siteAPIPath+"dict/get_service_type.json?service_type_id="+serviceTypeId,
+	      dataType: "json",
+	      cache : true,
+	      async : false,
+	      success: function(data) {
+	    	var serviceType = data.data;
+	    	console.log(serviceType);
+	    	if (serviceType == undefined || serviceType == "") {
+	    		return false;
+	    	}
+	    	console.log(serviceType.name);
+	    	
+	    	$$("#price").val(serviceType.price);
+	    	$$("#mprice").val(serviceType.mprice);
+	    	$$("#pprice").val(serviceType.pprice);
+	    	$$("#mpprice").val(serviceType.mpprice);
+	    	
+	    	var isVip = localStorage['is_vip'];
+	    	if (isVip == undefined || isVip == "") isVip = 0;
+	    	
+	    	if (isVip == 1) $$("#orderHourPayStr").html(serviceType.mpprice + "元");
+	      }
+	});
+	
+	var maxServiceHour = 6;
+	var minServiceHour = 3;
+	
+	if (serviceTypeId == 29) {
+		minServiceHour = 2;
+	}
+	$$("#maxServiceHour").val(maxServiceHour);
+	$$("#minServiceHour").val(minServiceHour);
+	$$("#serviceHours").val(minServiceHour);
+	
 	sessionStorage.setItem("order_type", 0);
 	
 	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
@@ -86,32 +125,47 @@ function setOrderHourTotal() {
 	
 	if (staffNums == undefined || staffNums == "" || staffNums <= 0) {
 		alert("预约服务人员数量最少为1个人.");
-		$$("#staffNums").focus();
+		$$("#staffNums").val(1);
 		return false;
 	}
 	
 	if (staffNums > 5) {
 		alert("预约服务人员数量最多可以指定5人.");
-		$$("#staffNums").focus();
+		$$("#staffNums").val(5);
 		return false;
 	}
 	
-	if (serviceHours == undefined || serviceHours == "" || serviceHours < 3) {
-		alert("预约服务时间最少为3小时.");
-		$$("#serviceHours").focus();
+	var minServiceHour = $$("#minServiceHour").val();
+	var maxServiceHour = $$("#maxServiceHour").val();
+	if (serviceHours == undefined || serviceHours == "" || serviceHours < minServiceHour) {
+		alert("预约服务时间最少为"+ minServiceHour +"小时.");
+		
+		$$("#serviceHours").val(minServiceHour);
 		return false;
 	}
 	
-	if (serviceHours > 6) {
-		alert("预约服务时间最多为6小时.");
-		$$("#serviceHours").focus();
+	if (serviceHours > maxServiceHour) {
+		alert("预约服务时间最多为"+maxServiceHour+"小时.");
+		$$("#serviceHours").val(maxServiceHour);
 		return false;
 	}
 	
-	var orderHourPay = "149";
+	var price = $$("#price").val();
+	var mprice = $$("#price").val();
+	var pprice = $$("#price").val();
+	var mpprice = $$("#mprice").val();
+	var isVip = localStorage['is_vip'];
+	if (isVip == undefined || isVip == "") isVip = 0;
+	console.log("is_vip ==" + isVip);
+	var orderHourPay = pprice;
+	var orderHourPrice = price;
+	if (isVip == 1) {
+		orderHourPay = mpprice;
+		orderHourPrice = mprice;
+	}
 	
-	if (staffNums > 1 || serviceHours > 3) {
-		orderHourPay = 50 * serviceHours * staffNums;
+	if (staffNums > 1 || serviceHours > minServiceHour) {
+		orderHourPay = orderHourPrice * serviceHours * staffNums;
 	}
 	
 	$$("#orderHourPayStr").html(orderHourPay + "元");
@@ -130,8 +184,11 @@ function initOrderHour() {
 	if (staffNums == undefined || staffNums == "" || staffNums <= 0) return false;
 	$$("#staffNums").val(staffNums);
 	
+	var minServiceHour = $$("#minServiceHour").val();
+	var maxServiceHour = $$("#maxServiceHour").val();
+	
 	var serviceHours = sessionStorage.getItem("total_service_hour");
-	if (serviceHours == undefined || serviceHours == "" || serviceHours < 3) return false;
+	if (serviceHours == undefined || serviceHours == "" || serviceHours < minServiceHour) return false;
 	$$("#serviceHours").val(serviceHours);
 	
 	var orderHourPay = sessionStorage.getItem("order_pay");
