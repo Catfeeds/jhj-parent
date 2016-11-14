@@ -221,13 +221,11 @@ public class UserController extends BaseController {
 
 		// 在店长登录门店 下过单的 用户集合
 		List<Users> userList = usersService.selectBySearchVo(userSearchVo);
-		if(userList!=null && userList.size()>0){
-			List<Long> userIdList = new ArrayList<Long>();
-			for (Users users : userList) {
-				userIdList.add(users.getId());
-			}
-			searchVo.setUserIdList(userIdList);
+		List<Long> userIdList = new ArrayList<Long>();
+		for (Users users : userList) {
+			userIdList.add(users.getId());
 		}
+		searchVo.setUserIdList(userIdList);
 
 		PageHelper.startPage(pageNo, pageSize);
 
