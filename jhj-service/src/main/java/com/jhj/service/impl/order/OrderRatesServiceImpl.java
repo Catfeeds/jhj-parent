@@ -3,7 +3,9 @@ package com.jhj.service.impl.order;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +14,21 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.order.OrderRatesMapper;
 import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.dict.DictProvince;
-import com.jhj.po.model.order.OrderPriceExt;
+import com.jhj.po.model.order.OrderRateImg;
 import com.jhj.po.model.order.OrderRates;
+import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.DictService;
+import com.jhj.service.order.OrderRateImgService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderRatesVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffRateVo;
+import com.jhj.vo.staff.StaffSearchVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -39,6 +47,12 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 	
 	@Autowired
 	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private OrderRateImgService orderRateImgService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerServiceTypeService;
 
 	@Override
 	public OrderRates initOrderRates() {
@@ -203,6 +217,52 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public OrderRatesVo transVo(OrderRates orderRate) {
+		if(orderRate==null) return null;
+		OrderRatesVo orderRagesVo=new OrderRatesVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(orderRate, orderRagesVo);
+		
+		Long orderId = orderRate.getOrderId();
+		
+		Orders order = ordersService.selectByPrimaryKey(orderId);
+		
+		orderRagesVo.setServiceDateStr(TimeStampUtil.timeStampToDateStr(order.getServiceDate()*1000));
+		orderRagesVo.setServiceTypeName(
+				partnerServiceTypeService.selectByPrimaryKey(order.getServiceType()).getName());
+		
+		OrderDispatchSearchVo searchVo=new OrderDispatchSearchVo();
+		searchVo.setOrderId(orderId);
+		List<OrderRates> orderRatesList = this.selectBySearchVo(searchVo);
+		if(orderRatesList!=null && orderRatesList.size()>0){
+			Set<Long> set=new HashSet<Long>();
+			for(int i=0,len=orderRatesList.size();i<len;i++){
+				Long staffId = orderRatesList.get(i).getStaffId();
+				set.add(staffId);
+			}
+			StaffSearchVo staffVo=new StaffSearchVo();
+			staffVo.setStaffIds(new ArrayList<Long>(set));
+			List<OrgStaffs> staffs = orgStaffsService.selectBySearchVo(staffVo);
+			orderRagesVo.setStaffList(staffs);
+		}
+		
+		
+		OrderSearchVo orderSearchVo=new OrderSearchVo();
+		orderSearchVo.setOrderId(orderId);
+		orderSearchVo.setUserId(orderRate.getUserId());
+		List<OrderRateImg> orderRateImgList = orderRateImgService.selectBySearchVo(orderSearchVo);
+		if(orderRateImgList!=null && orderRateImgList.size()>0){
+			List<String> imgUrls=new ArrayList<String>();
+			for(int i=0,len=orderRateImgList.size();i<len;i++){
+				OrderRateImg orderRateImg = orderRateImgList.get(i);
+				imgUrls.add(orderRateImg.getImgUrl());
+			}
+			orderRagesVo.setOrderRateUrl(imgUrls);
+		}
+		
+		return orderRagesVo;
 	}
 
 }

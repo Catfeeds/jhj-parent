@@ -17,7 +17,7 @@ myApp.onPageInit('order-pay-success', function(page) {
 		var htmlStr = "";
 		$$.each(recoList, function(i, item) {
 			console.log(item.name);
-			htmlStr+='<a href="'+item.url+'" class="special-color7"><span>'+item.name+'</span></a>';
+			htmlStr+='<a href="'+item.url+'" class="special-color2"><span>'+item.name+'</span></a>';
 		});
 		
 		$$("#recoList").append(htmlStr);

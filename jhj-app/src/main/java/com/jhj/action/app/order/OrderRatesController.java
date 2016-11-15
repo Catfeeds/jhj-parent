@@ -2,7 +2,11 @@ package com.jhj.action.app.order;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +30,7 @@ import com.jhj.service.order.OrderRateImgService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderRatesVo;
 import com.jhj.vo.staff.OrgStaffRateVo;
 import com.meijia.utils.ImgServerUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -174,15 +179,31 @@ public class OrderRatesController extends BaseController {
 		return result;
 	}
 	
-	// 用户评价接口
+	// 用户评价接口，返回用户已经评价的订单
 	@RequestMapping(value = "get_user_rates", method = RequestMethod.GET)
 	public AppResultData<Object> GetUserRate(
 			@RequestParam("user_id") Long userId,
-			@RequestParam("order_id") Long orderId) {
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			HttpServletRequest request) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-
-
+		OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
+		orderRateSearchVo.setDispatchStatus((short)1);
+		orderRateSearchVo.setUserId(userId);
+		List<OrderRates> orderRates = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER).getList();
+		
+		Set<String> set=new HashSet<String>();
+		
+		for(int i=0,length=orderRates.size();i<length;i++){
+			OrderRates orderRate = orderRates.get(i);
+			String orderNo = orderRate.getOrderNo();
+			if(!set.contains(orderNo)){
+				OrderRatesVo transVo = orderRatesService.transVo(orderRate);
+				orderRates.set(i, transVo);
+			}
+		}
+		
+		result.setData(orderRates);
 		return result;
 	}
 	
