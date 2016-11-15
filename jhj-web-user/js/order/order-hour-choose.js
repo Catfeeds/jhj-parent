@@ -1,5 +1,9 @@
 myApp.onPageInit('order-hour-choose', function(page) {
-
+	
+	
+	var userId = localStorage['user_id'];
+	getUserInfo(userId);	
+	
 	var serviceTypeId = page.query.service_type_id;
 	sessionStorage.setItem("service_type_id", serviceTypeId);
 	

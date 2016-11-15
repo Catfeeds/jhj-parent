@@ -149,6 +149,13 @@ function getAddrByMobile(addrId) {
 					$("#userId").data("userId", userId)
 					$("#mobile").data("mobile", mobile);
 					$("#userId").text(userId);
+					var isVip = data.data.isVip;
+					$("#isVip").val(isVip);
+					console.log(data.data);
+					console.log("is_vip ==" + isVip);
+					if (isVip == 0) $("#userTypeStr").html("普通会员");
+					if (isVip == 1) $("#userTypeStr").html("金牌会员");
+					changePrice();
 					$.ajax({
 						type : "get",
 						dataType : "json",
@@ -343,6 +350,7 @@ function serviceTypeChange() {
 				serviceContentHtml+='<td><input type="hidden" id="serviceAddonId" value="' + serviceType[i].service_addon_id + '"/>';
 				serviceContentHtml+='<input type="hidden" name="defaultNum" value="' + serviceType[i].default_num + '"/>';
 				serviceContentHtml+='<input type="hidden" name="serviceAddonServiceHour" value="' + serviceType[i].service_hour + '"/>';
+				serviceContentHtml+='<input type="hidden" name="serviceAddonPrice" value="' + serviceType[i].price + '"/>';
 				serviceContentHtml+='<input type="hidden" name="serviceAddonDisPrice" value="' + serviceType[i].dis_price + '"/>';
 				
 				serviceContentHtml+='<input type="hidden" name="serviceAddonId" value="' + serviceType[i].service_addon_id + '"/>';
@@ -355,6 +363,8 @@ function serviceTypeChange() {
 			}
 			
 			$("#service-content").append(serviceContentHtml);
+			
+			changePrice();
 		}
 	});
 }
@@ -368,7 +378,8 @@ function changePrice() {
 	var serviceAddonsJson = [];
 	$("#serviceAddonTable").find("tr").each(function() {
 		
-		var serviceAddonDisPrice = ""
+		var serviceAddonDisPrice = "";
+		var serviceAddonPrice = "";
 		var defaultNum = "";
 		var itemNum = "";
 		var serviceAddonServiceHour = "";
@@ -377,6 +388,7 @@ function changePrice() {
 		$(this).find("td input").each(function(){
 			console.log("attr = " + $(this).attr("name"));
 			if($(this).attr("name") == "serviceAddonId") serviceAddonId = $(this).val();
+			if($(this).attr("name") == "serviceAddonPrice") serviceAddonPrice = $(this).val();
 			if($(this).attr("name") == "serviceAddonDisPrice") serviceAddonDisPrice = $(this).val();
 			if($(this).attr("name") == "defaultNum") defaultNum = $(this).val();
 			if($(this).attr("name") == "serviceAddonServiceHour") serviceAddonServiceHour = $(this).val();
@@ -391,8 +403,12 @@ function changePrice() {
 //		console.log("defaultNum = " + defaultNum);
 //		console.log("serviceAddonServiceHour = " + serviceAddonServiceHour);
 //		console.log("itemNum = " + itemNum);
+		
+		var isVip = $("#isVip").val();
+		var servicePrice = serviceAddonPrice;
+		if (isVip == 1) servicePrice = serviceAddonDisPrice
 		if(itemNum != "" && itemNum != 0) {
-			var orderPay = serviceAddonDisPrice * itemNum;
+			var orderPay = servicePrice * itemNum;
 			totalOrderPay+= orderPay;
 			
 			var serviceHour = serviceAddonServiceHour * itemNum;

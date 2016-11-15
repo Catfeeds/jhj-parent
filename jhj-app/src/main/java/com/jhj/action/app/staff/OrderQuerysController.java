@@ -15,11 +15,13 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderRates;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDetailVo;
@@ -27,6 +29,7 @@ import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
+import com.jhj.vo.staff.OrgStaffRateVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -49,6 +52,9 @@ public class OrderQuerysController extends BaseController {
 	
 	@Autowired
 	private OrderServiceAddonsService orderServiceAddonsService;
+	
+	@Autowired
+	private OrderRatesService orderRatesService;
 	
 
 	/**
@@ -195,5 +201,26 @@ public class OrderQuerysController extends BaseController {
 		}
 		return result;
 	}	
+	
+	
+	// 员工评价信息接口
+	@RequestMapping(value = "get_rates", method = RequestMethod.GET)
+	public AppResultData<Object> GetStaffRate(
+			@RequestParam("staff_id") Long staffId,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+		OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
+		orderRateSearchVo.setStaffId(staffId);
+		
+		PageInfo datas = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER);
+		
+		List<OrderRates> orderRates = datas.getList();
+		List<OrgStaffRateVo> vos = orderRatesService.changeToOrgStaffReteVo(orderRates);
+		
+		result.setData(vos);
+		
+		return result;
+	}
 	
 }

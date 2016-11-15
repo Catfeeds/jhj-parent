@@ -197,7 +197,7 @@ function linkOrderRate(obj) {
 	
 	var orderId = obj.find('input[name=orderId]').val();
 	sessionStorage.setItem("order_id", orderId);
-	
+		
 	var staffNames = obj.find('input[name=staffNames]').val();
 	sessionStorage.setItem("staff_names", staffNames);
 	

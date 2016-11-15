@@ -1,44 +1,30 @@
 package com.jhj.vo.staff;
 
-import java.math.BigDecimal;
-import java.util.List;
+import com.jhj.po.model.order.OrderRates;
 
-public class OrgStaffRateVo {
-	
-	private Long staffId;
-		
-	private String name;
-	
+public class OrgStaffRateVo extends OrderRates {
+			
 	private String mobile;
 	
-	private String headImg;
+	private String userTypeStr;
 	
-	private String age;
-	
-	private String hukou;
-	
-	private String intro;
-	
-	private String skill;
-	
-	private int totalRateStar;
-	
-	private String totalArrival;
+    private String addTimeStr;
 
-	public Long getStaffId() {
-		return staffId;
+
+	public String getAddTimeStr() {
+		return addTimeStr;
 	}
 
-	public void setStaffId(Long staffId) {
-		this.staffId = staffId;
+	public void setAddTimeStr(String addTimeStr) {
+		this.addTimeStr = addTimeStr;
 	}
 
-	public String getName() {
-		return name;
+	public String getUserTypeStr() {
+		return userTypeStr;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserTypeStr(String userTypeStr) {
+		this.userTypeStr = userTypeStr;
 	}
 
 	public String getMobile() {
@@ -48,63 +34,4 @@ public class OrgStaffRateVo {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
-	public String getHeadImg() {
-		return headImg;
-	}
-
-	public void setHeadImg(String headImg) {
-		this.headImg = headImg;
-	}
-
-	public String getAge() {
-		return age;
-	}
-
-	public void setAge(String age) {
-		this.age = age;
-	}
-
-	public String getHukou() {
-		return hukou;
-	}
-
-	public void setHukou(String hukou) {
-		this.hukou = hukou;
-	}
-
-	public String getIntro() {
-		return intro;
-	}
-
-	public void setIntro(String intro) {
-		this.intro = intro;
-	}
-
-	public String getSkill() {
-		return skill;
-	}
-
-	public void setSkill(String skill) {
-		this.skill = skill;
-	}
-
-	public int getTotalRateStar() {
-		return totalRateStar;
-	}
-
-	public void setTotalRateStar(int totalRateStar) {
-		this.totalRateStar = totalRateStar;
-	}
-
-	public String getTotalArrival() {
-		return totalArrival;
-	}
-
-	public void setTotalArrival(String totalArrival) {
-		this.totalArrival = totalArrival;
-	}
-	
-
-
 }

@@ -31,6 +31,7 @@ import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderRatesVo;
+import com.jhj.vo.order.OrderStaffRateVo;
 import com.jhj.vo.staff.OrgStaffRateVo;
 import com.meijia.utils.ImgServerUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -173,7 +174,7 @@ public class OrderRatesController extends BaseController {
 		
 		if (orderRates.isEmpty()) return result;
 		
-		List<OrgStaffRateVo> vos = orderRatesService.changeToStaffReteVo(orderRates);
+		List<OrderStaffRateVo> vos = orderRatesService.changeToOrderStaffReteVo(orderRates);
 		result.setData(vos);
 		
 		return result;
@@ -207,7 +208,7 @@ public class OrderRatesController extends BaseController {
 		return result;
 	}
 	
-	// 订单详情接口
+	// 订单评价接口
 	@RequestMapping(value = "get_staff_rates", method = RequestMethod.GET)
 	public AppResultData<Object> GetStaffRate(
 			@RequestParam("staff_id") Long staffId,
@@ -231,7 +232,7 @@ public class OrderRatesController extends BaseController {
 		
 		if (orderRates.isEmpty()) return result;
 		
-		List<OrgStaffRateVo> vos = orderRatesService.changeToStaffReteVo(orderRates);
+		List<OrderStaffRateVo> vos = orderRatesService.changeToOrderStaffReteVo(orderRates);
 		
 		
 		return result;

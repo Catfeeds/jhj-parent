@@ -1,5 +1,7 @@
 myApp.onPageBeforeInit('order-deep-choose', function(page) {
 	
+	var userId = localStorage['user_id'];
+	getUserInfo(userId);
 	
 	var serviceTypeId = page.query.service_type_id;
 	sessionStorage.setItem("service_type_id", serviceTypeId);
@@ -30,6 +32,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				html+= '<input type="hidden" name="serviceAddonServiceHour" value="'+item.service_hour+'" autocomplete="off">';
 				
 				html+= '<input type="hidden" name="serviceAddonItemUnit" value="'+item.item_unit+'" autocomplete="off">';
+				html+= '<input type="hidden" name="serviceAddonPrice" value="'+item.price+'" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonDisPrice" value="'+item.dis_price+'" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonId" value="'+item.service_addon_id+'" autocomplete="off">';
 				html+= '<span onclick="onDeepAddItemNum($$(this).parent())">+</span></li>';
@@ -212,7 +215,8 @@ function setDeepTotal() {
 	var serviceAddonsJson = [];
 	var serviceAddons = [];
 	
-	
+	var isVip = localStorage['is_vip'];
+	if (isVip == undefined || isVip == "") isVip = 0;
 
 	$$("input[name = itemNum]").each(function(key, index) {
 		 
@@ -236,12 +240,13 @@ function setDeepTotal() {
 		 
 		 var serviceAddonServiceHour = $$(this).parent().find('input[name=serviceAddonServiceHour]').val();
 		 
+		 var price = $$(this).parent().find('input[name=serviceAddonPrice]').val();
 		 var disPrice = $$(this).parent().find('input[name=serviceAddonDisPrice]').val();
 		
 		 
 		 var reg = /[1-9][0-9]*/g;
-		 
-		 itemPrice = disPrice.match(reg);
+		 if (isVip == 0) itemPrice = price.match(reg);
+		 if (isVip == 1) itemPrice = disPrice.match(reg);
 
 		 orderMoney = Number(orderMoney) + Number(itemNum) * Number(itemPrice);
 		 

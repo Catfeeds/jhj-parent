@@ -45,15 +45,20 @@
 							<div class="panel-body">
 								<form:form class="form-horizontal" method="POST" name="form" id="orderExpForm">
 									<input type="hidden" id="userId" name="userId"/>
-									<input type="hidden" id="userId" name="orderType" value="1"/>
+									<input type="hidden" id="orderType" name="orderType" value="1"/>
+									<input type="hidden" id="isVip" name="isVip" value="0">
 									<input type="hidden" id="orderFrom" name="orderFrom" value="2">
 									<input type="hidden" id="serviceAddonDatas" name="serviceAddonDatas" value=""/>
+									
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>用户手机号</label>
 											<div class="col-md-5">
 												<input id="mobile" name="mobile"  class="form-control" onblur="getAddrByMobile()" />
+											</div>
+											<div>
+												<label class="control-label" id="userTypeStr"></label>
 											</div>
 										</div>
 										<div class="form-group required">

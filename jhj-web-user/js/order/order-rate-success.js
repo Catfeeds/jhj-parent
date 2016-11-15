@@ -4,6 +4,8 @@ myApp.onPageBeforeInit('order-rate-success', function(page) {
 	
 	var orderId = sessionStorage.getItem("order_id");
 	
+	var orderType = sessionStorage.getItem("order_type");
+	
 	var orderRateSuccess = function(data, textStatus, jqXHR) {
 		
 		var result = JSON.parse(data.response);
@@ -79,6 +81,10 @@ myApp.onPageBeforeInit('order-rate-success', function(page) {
 	
 });
 
-function reOrder(staffId) {
-	
+function reOrder(staffId, staffName) {
+	if (staffId == undefined || staffId == "" || staffId == 0) return false;
+		
+	sessionStorage.setItem("staff_id", staffId);
+	sessionStorage.setItem("staff_names", staffName);
+	mainView.router.loadPage("order/order-appoint.html");
 }

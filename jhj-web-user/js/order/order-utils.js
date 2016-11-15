@@ -32,6 +32,7 @@ function removeSessionData() {
 	sessionStorage.removeItem("user_coupon_name");
 	
 	//服务人员信息
+	sessionStorage.removeItem("staff_id");
 	sessionStorage.removeItem("staff_names");
 	
 	//服务人员已有的服务日期

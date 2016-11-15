@@ -17,19 +17,23 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderRateImg;
 import com.jhj.po.model.order.OrderRates;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.DictService;
 import com.jhj.service.order.OrderRateImgService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderRatesVo;
 import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.order.OrderStaffRateVo;
 import com.jhj.vo.staff.OrgStaffRateVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.MobileUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -53,6 +57,9 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 	
 	@Autowired
 	private PartnerServiceTypeService partnerServiceTypeService;
+	
+	@Autowired
+	private UsersService userService;
 
 	@Override
 	public OrderRates initOrderRates() {
@@ -123,9 +130,9 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 	}
 	
 	@Override
-	public List<OrgStaffRateVo> changeToStaffReteVo(List<OrderRates> list) {
+	public List<OrderStaffRateVo> changeToOrderStaffReteVo(List<OrderRates> list) {
 		
-		List<OrgStaffRateVo> result = new ArrayList<OrgStaffRateVo>();
+		List<OrderStaffRateVo> result = new ArrayList<OrderStaffRateVo>();
 		
 		if (list.isEmpty()) return result;
 		
@@ -134,7 +141,7 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 			Long staffId = item.getStaffId();
 			OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
 			
-			OrgStaffRateVo vo = new OrgStaffRateVo();
+			OrderStaffRateVo vo = new OrderStaffRateVo();
 			vo.setStaffId(staffId);
 			vo.setName(orgStaff.getName());
 			vo.setMobile(orgStaff.getMobile());
@@ -263,6 +270,51 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 		}
 		
 		return orderRagesVo;
+	}
+	
+	@Override
+	public List<OrgStaffRateVo> changeToOrgStaffReteVo(List<OrderRates> list) {
+		
+		List<OrgStaffRateVo> result = new ArrayList<OrgStaffRateVo>();
+		
+		if (list.isEmpty()) return result;
+		
+		
+		for (OrderRates item : list) {
+			OrgStaffRateVo vo = new OrgStaffRateVo();
+			
+			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+			
+			Long userId = item.getUserId();
+			Users u = userService.selectByPrimaryKey(userId);
+			
+			String mobile = u.getMobile();
+			mobile = MobileUtil.getMobileStar(mobile);
+			
+			vo.setUserId(userId);
+			vo.setMobile(mobile);
+			
+			String userTypeStr = "普通会员";
+			int isVip = u.getIsVip();
+			if (isVip == 1) userTypeStr = "金牌会员";
+			vo.setUserTypeStr(userTypeStr);
+			
+			vo.setOrderId(item.getOrderId());
+			vo.setOrderNo(item.getOrderNo());
+			vo.setRateArrival(item.getRateArrival());
+			vo.setRateAttitude(item.getRateAttitude());
+			vo.setRateContent(item.getRateContent());
+			
+			Long addTime = item.getAddTime();
+			String addTimeStr = TimeStampUtil.timeStampToDateStr(addTime * 1000, "yyyy-MM-dd");
+			vo.setAddTimeStr(addTimeStr);
+			
+			
+			
+			result.add(vo);
+		}
+		
+		return result;
 	}
 
 }
