@@ -293,7 +293,7 @@ public class DictCouponsController extends BaseController {
                     pageSize);
             model.addAttribute("contentModel", result);
         } else {
-            model.addAttribute("contentModel", "");
+            model.addAttribute("contentModel", null);
         }
 
         return "coupons/rechargeCouponUserList";

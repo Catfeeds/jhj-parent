@@ -658,6 +658,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		return newVo;
 	}
 	
+	/*随机生成员工编号*/
 	public String getValidateStaffCode(){
 		
 		Random random=new Random();

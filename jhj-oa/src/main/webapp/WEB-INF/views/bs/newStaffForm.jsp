@@ -103,14 +103,16 @@
 								<div id="showResult" style="float:left"></div>
 							</div>
 						</div>
-						<%-- <div class="form-group required">
-							<label class="col-md-2 control-label">员工编号*</label>
-							<div class="col-md-5">
-								<form:input path="staffCode" class="form-control" value="${newStaffFormVoModel.staffCode }" placeholder="员工编号" maxLength="32" />
-								<form:errors path="staffCode" class="field-has-error"></form:errors>
-								<div id="showResult" style="float:left"></div>
+						<c:if test="${newStaffFormVoModel.staffId!=null && newStaffFormVoModel.staffId!=0 }">
+							<div class="form-group required">
+								<label class="col-md-2 control-label">员工编号*</label>
+								<div class="col-md-5">
+									<form:input path="staffCode" class="form-control" value="${newStaffFormVoModel.staffCode }"  readonly="true"/>
+									<form:errors path="staffCode" class="field-has-error"></form:errors>
+									<div id="showResult" style="float:left"></div>
+								</div>
 							</div>
-						</div> --%>
+						</c:if>
 						<div class="form-group required">
 							<label class="col-md-2 control-label">座机号</label>
 							<div class="col-md-5">

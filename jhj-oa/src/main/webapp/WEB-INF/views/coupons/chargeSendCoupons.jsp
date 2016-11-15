@@ -112,6 +112,20 @@
 			</div>
 			</section>
 		</div>
+		<c:if test="${isForm!=0 and dictCoupons.isValid == '1'}">
+			<div id="form2-div">
+				<div class="col-lg-12">
+					<form id="form2" method="post" >
+						<input type="hidden" id="form2_id" name="id" value="${dictCoupons.id }"/>
+						<input type="checkbox" name="sendCouponsCondtion" value="0" />注册未使用的用户
+						<input type="checkbox" name="sendCouponsCondtion" value="1" />1个月内使用的用户
+						<input type="checkbox" name="sendCouponsCondtion" value="2" />3个月内使用的用户
+						<input type="checkbox" name="sendCouponsCondtion" value="3" />3个月以上使用的用户
+						<input type="button" id="from2-btn" value="发送优惠券" />
+					</form>
+				</div>
+			</div>
+		</c:if>
 	</div>
 	<!-- page end--> </section> </section> <!--main content end--> <!--footer start--> <%@ include
 		file="../shared/pageFooter.jsp"%> <!--footer end-->

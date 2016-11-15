@@ -47,21 +47,22 @@
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
                           <table class="table table-striped table-advance table-hover">
                               <thead>
-                              <tr>
-                                      <th >姓名</th>
-                              		  <th >用户手机号</th>
-                              </tr>
+	                              <tr>
+	                                 <th >姓名</th>
+	                         		  <th >用户手机号</th>
+	                              </tr>
                               </thead>
                               <tbody>
-                              <c:forEach items="${contentModel.list}" var="item">
-                              <tr>
-                                        <td>${ item.name }</td>
-                              			<td>${ item.mobile }</td>
-                              </tr>
-                              </c:forEach>
+                              <c:if test="${contentModel.list!=null}">
+	                              <c:forEach items="${contentModel.list}" var="item">
+		                              <tr>
+		                                 <td>${ item.name }</td>
+		                       			 <td>${ item.mobile }</td>
+		                              </tr>
+	                              </c:forEach>
+                              </c:if>
                               </tbody>
                           </table>
-
                           
                       </section>
                       
