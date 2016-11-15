@@ -3730,13 +3730,37 @@ i.toolbar-icon-tixing {
   margin: 0;
   margin-left: 5px;
 }
+.waiter3-1-1{
+   position: relative;
+    display: inline-block;
+    overflow: hidden;
+    color: #F89595;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 40px;
+}
+.waiter3-1-1 input {
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+/*.waiter3-1-1:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}*/
 .waiter4{
   width:100%;
   background: #fff;
   height:60px;
 }
+.waiter4-1 img{
+  width:100%;
+}
 .waiter4-1{
-  width:15%;
+  width:50px;
   height:50px;
   border:1px dashed #626262;
   float: left;
@@ -3744,7 +3768,18 @@ i.toolbar-icon-tixing {
   text-align: center;
   line-height: 50px;
   font-size: 50px;color: #D1D1D1;
-  margin-left: 4%;
+  margin-left: 5px;
+  overflow: hidden;
+}
+.waiter4-2{
+  width:20px;
+  height:20px;
+  text-align: center;float: left;
+  border-radius: 50%;
+  border:1px solid red;
+  font-size: 20px;
+  line-height: 20px;
+  color:red;
 }
 .waiter5{
   width:100%;
@@ -3754,14 +3789,20 @@ i.toolbar-icon-tixing {
 .waiter6{
   width:100%;
   background: #fff;
-  height:100px;
+  height:240px;
   margin-top: 15px;
 }
 .waiter6-1{
-  width:100%;
-  height:50px;
+  width:30%;
+  padding-left: 3%;
+  height:40px;
+  text-align: left;
+  line-height: 40px;
+  float: left;
+  font-size: 14px;
+  color:#666;
 }
-.waiter6-1 img{
+/*.waiter6-1 img{
   width:30px;
   margin-top: 10px;
   margin-left: 5px;
@@ -3795,7 +3836,7 @@ i.toolbar-icon-tixing {
   line-height: 50px;
   float: right;
   font-size: 14px;
-}
+}*/
 .waiter7{
   width:100%;
   background: #fff;
@@ -3941,6 +3982,84 @@ i.toolbar-icon-tixing {
   line-height: 50px;
   color: #FEAA28;
   margin-top: 15px;
+}
+.waiter10{
+  width:100%;
+  background: #fff;
+  margin-top: 15px;
+}
+.waiter10-1{
+  width: 100%;
+  height:50px;
+  border-bottom: 1px solid #FFDD64;
+}
+.waiter10-1 p{
+  margin:0;
+  line-height: 50px;
+  width:98%;
+  padding-left: 2%;
+  font-size: 14px;
+}
+.waiter10-1 p span{
+  font-size: 14px;
+  margin-left: 5px;
+}
+.waiter10-2{
+  width:30%;
+  height:200px;
+  float: left;
+}
+.waiter10-2-1{
+  width:90%;
+  margin-left: 5%;
+  height:90px;
+  margin-top: 10px;
+  border:1px solid #eee;
+  overflow: hidden;
+}
+.waiter10-3{
+  width:70%;
+  float: right;
+}
+.waiter10-3 li{
+  width:98%;
+  height:30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding-left: 2%;
+}
+.waiter10-3 span{
+  margin-left: 5px;
+  line-height: 30px;
+  font-size: 14px;
+}
+.waiter10-3 li img{
+  width:20px;
+  vertical-align: middle;
+}
+.waiter10-3-1{
+  background: #FFDD64;
+  color:#fff;
+}
+.waiter10-3 p{
+  width:90%;
+  font-size: 14px;
+  line-height: 1em;
+  margin:0;
+  border:1px solid #B5B5B5;
+  border-radius: 3px;
+}
+.waiter10-4{
+  width:100%;
+}
+.waiter10-4-1{
+  width:50px;
+  height:50px;
+  border:1px solid #B5B5B5;
+  border-radius: 3px;
+  margin-left: 20px;
+  float: left;
+  overflow: hidden;
 }
 
 
