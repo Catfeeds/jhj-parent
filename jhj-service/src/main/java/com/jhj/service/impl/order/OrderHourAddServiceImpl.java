@@ -500,24 +500,24 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		BigDecimal price = type.getPrice();
 		
 		//会员价单价
-		BigDecimal pprice = type.getPprice();
+		BigDecimal mprice = type.getMprice();
 		
 		//非会员价套餐价
-		BigDecimal mprice = type.getMprice();
+		BigDecimal pprice = type.getPprice();
 		
 		//会员价套餐价格
 		BigDecimal mpprice = type.getMpprice();
 		
 		
 		BigDecimal orderHourPay = price;
-		BigDecimal orderPay = mprice;
+		BigDecimal orderPay = pprice;
 		
 		Long userId = order.getUserId();
 		Users u = usersService.selectByPrimaryKey(userId);
 		
 		int isVip = u.getIsVip();
 		if (isVip == 1) {
-			orderHourPay = pprice;
+			orderHourPay = mprice;
 			orderPay = mpprice;
 		}
 		
