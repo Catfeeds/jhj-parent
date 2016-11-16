@@ -6,11 +6,11 @@ myApp.onPageInit('order-lib-cal',function(page) {
     var nextUrl = page.query.next_url;
     console.log("nextUrl = " + nextUrl);
 
-    var staffId=page.query.staff_id;
-    if(staffId==undefined){
+    var url=page.url;
+    var staffId=url.split("staff_id=")[1];
+    if(staffId==undefined || staffId==null || staffId==''){
     	staffId=0;
     }
-//    staffId=45;
 
     //获取当前日期
     var date=moment().format("YYYY-MM-DD");
