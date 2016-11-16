@@ -24,6 +24,7 @@ import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -495,19 +496,42 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		
 		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 		
-		// 单项服务的 价格
+		//非会员价 单价
 		BigDecimal price = type.getPrice();
-				
+		
+		//会员价单价
+		BigDecimal pprice = type.getPprice();
+		
+		//非会员价套餐价
+		BigDecimal mprice = type.getMprice();
+		
+		//会员价套餐价格
+		BigDecimal mpprice = type.getMpprice();
+		
+		
+		BigDecimal orderHourPay = price;
+		BigDecimal orderPay = mprice;
+		
+		Long userId = order.getUserId();
+		Users u = usersService.selectByPrimaryKey(userId);
+		
+		int isVip = u.getIsVip();
+		if (isVip == 1) {
+			orderHourPay = pprice;
+			orderPay = mpprice;
+		}
+		
 		int staffNums = order.getStaffNums();
 		double serviceHour = order.getServiceHour();
 		
 		if (staffNums > 1 || serviceHour > type.getServiceHour()) {
-			double tmpPrice = 50 * serviceHour * staffNums;
-			price = new BigDecimal(tmpPrice);
+			BigDecimal tmpPrice = orderHourPay.multiply(new BigDecimal(serviceHour));
+			tmpPrice = tmpPrice.multiply(new BigDecimal(staffNums));
+			orderPay = tmpPrice;
 		}
 		
-		prices.setOrderMoney(price);
-		prices.setOrderPay(price);
+		prices.setOrderMoney(orderPay);
+		prices.setOrderPay(orderPay);
 		
 		return prices;
 	}
