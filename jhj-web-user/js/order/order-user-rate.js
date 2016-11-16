@@ -24,9 +24,9 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 				var staffs=or.staff_list;
 				var staffLen=staffs.length;
 				for(var i=0;i<staffLen;i++){
-					staffhtml ="<a href='order/order-rate-success.html'><span class='special-color2'>"+staffs[i].name+"</span></a>"
+					staffhtml +="<span class='special-color2'>"+staffs[i].name+"</span>"
 					if(i<2){
-						headImgHtml="<img src='"+staffs[i].head_img+"' alt='' />";
+						headImgHtml+="<img src='"+staffs[i].head_img+"' alt='' />";
 					}
 				}
 				htmlPart = htmlPart.replace(new RegExp('{staff_name}', "gm"), staffhtml);
@@ -81,10 +81,12 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 			htmlPart = htmlPart.replace(new RegExp('{rate_skill}', "gm"), rateSkill);
 			
 			var rateUrl="";
-			if(or.order_rate_url!=null && rateUrlLen>0){
+			if(or.order_rate_url!=null){
 				var rateUrlLen=or.order_rate_url.length;
-				for(var i=0;i<rateUrlLen;i++){
-					rateUrl = "<div class='waiter10-4-1'><img src='"+or.order_rate_url[i]+"' alt=''></div>";
+				for(var j=0;j<rateUrlLen;j++){
+					if(j<4){
+						rateUrl += "<div class='waiter10-4-1'><img src='"+or.order_rate_url[j]+"' alt=''></div>";
+					}
 				}
 				htmlPart = htmlPart.replace(new RegExp('{rate_url}', "gm"), rateUrl);
 			}else{
@@ -103,8 +105,6 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 		loading = false;
 		
 		$$("#page").val(page);
-//		console.log("page = " + page);
-//		console.log("len = " + orders.length);
 		if (orderRates.length >= 10) {
 			console.log("order-list-more block");
 			$$('#order-list-more').css("display", "block");
@@ -137,101 +137,14 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 		});
 	}	
 		
-	// 注册'infinite'事件处理函数
 	$$('#order-list-more').on('click', function() {
 		var cpage = ++page;
 		loadOrderList(userId, cpage);
 	});
 	
-	
-	
 	loadOrderList(userId, page);
 });
 
-//function orderView(orderType, orderNo) {
-//	var url = "";
-//
-//	if (orderType == 0) url = "order/order-view-0.html";
-//	if (orderType == 1) url = "order/order-view-1.html";
-//	
-//	sessionStorage.setItem("order_type", orderType);
-//	sessionStorage.setItem("order_no", orderNo);
-//	
-//	mainView.router.loadPage(url);
-//}
 
-//function doOrderPay(obj) {
-//	
-//	var orderStatus = obj.find('input[name=orderStatus]').val();
-//	
-//	if (orderStatus != 1) return false;
-//	
-//	var serviceTypeId = obj.find('input[name=serviceTypeId]').val();
-//	var orderId = obj.find('input[name=orderId]').val();
-//	var orderNo = obj.find('input[name=orderNo]').val();
-//	var orderPay = obj.find('input[name=orderPay]').val();
-//	var userCouponId = obj.find('input[name=userCouponId]').val();
-//	var userCouponValue = obj.find('input[name=userCouponValue]').val();
-//	
-//	sessionStorage.setItem("service_type_id", serviceTypeId);
-//	sessionStorage.setItem("order_id", orderId);
-//	sessionStorage.setItem("order_no", orderNo);
-//	sessionStorage.setItem("order_pay", orderPay);
-//	sessionStorage.setItem("user_coupon_id", userCouponId);
-//	sessionStorage.setItem("user_coupon_value", userCouponValue);
-//	
-//	// 订单类型 0 = 钟点工 1 = 深度保洁 2 = 助理订单 6= 话费充值类订单 7 = 订单补差价
-//	sessionStorage.setItem("pay_order_type", 0);
-//	
-//	mainView.router.loadPage("order/order-pay.html");
-//	
-//}
-//
-//function doOrderPayExt(obj) {
-//	
-//	var orderStatus = obj.find('input[name=orderStatus]').val();
-//	
-//	if (orderStatus >= 3 && orderStatus < 7) {
-//	
-//		var serviceTypeId = obj.find('input[name=serviceTypeId]').val();
-//		var orderId = obj.find('input[name=orderId]').val();
-//		var orderNo = obj.find('input[name=orderNo]').val();
-//		var orderPay = obj.find('input[name=orderPay]').val();
-//		var staffNames = obj.find('input[name=staffNames]').val();
-//		
-//		sessionStorage.setItem("service_type_id", serviceTypeId);
-//		sessionStorage.setItem("order_id", orderId);
-//		sessionStorage.setItem("order_no", orderNo);
-//		sessionStorage.setItem("order_pay", orderPay);
-//		sessionStorage.setItem("staff_names", staffNames);
-//		
-//		console.log("staffNames = " + sessionStorage.getItem("staff_names"));
-//		
-//		mainView.router.loadPage("order/order-pay-ext.html");
-//	}
-//	
-//}
-//
-//
-//function linkOrderRate(obj) {
-//	
-//	var orderStatus = obj.find('input[name=orderStatus]').val();
-//	
-//	if (orderStatus <= 2) return false;
-//	
-//	
-//	var orderId = obj.find('input[name=orderId]').val();
-//	sessionStorage.setItem("order_id", orderId);
-//	
-//	var staffNames = obj.find('input[name=staffNames]').val();
-//	sessionStorage.setItem("staff_names", staffNames);
-//	
-//	var orderRateUrl = "order/order-rate.html";
-//	if (orderStatus == 8) {
-//		orderRateUrl = "order/order-rate-success.html";
-//	}
-//	
-//	mainView.router.loadPage(orderRateUrl);
-//}
 
 
