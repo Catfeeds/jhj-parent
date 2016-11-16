@@ -222,19 +222,23 @@ public class UserController extends BaseController {
 		// 在店长登录门店 下过单的 用户集合
 		List<Users> userList = usersService.selectBySearchVo(userSearchVo);
 		List<Long> userIdList = new ArrayList<Long>();
-		for (Users users : userList) {
-			userIdList.add(users.getId());
+		PageInfo<UserDetailPay> result=new PageInfo<UserDetailPay>(null);
+		if(userList!=null && userList.size()>0){
+			for (Users users : userList) {
+				userIdList.add(users.getId());
+			}
+			searchVo.setUserIds(userIdList);
+			
+			PageHelper.startPage(pageNo, pageSize);
+			
+			List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
+			
+			result = new PageInfo<UserDetailPay>(list);
+			Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
+			model.addAllAttributes(totolMoeny);
 		}
-		searchVo.setUserIdList(userIdList);
 
-		PageHelper.startPage(pageNo, pageSize);
-
-		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
 		
-		PageInfo<UserDetailPay> result = new PageInfo<UserDetailPay>(list);
-		
-		Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
-		model.addAllAttributes(totolMoeny);
 
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);
@@ -305,7 +309,7 @@ public class UserController extends BaseController {
 			userIdList.add(users.getId());
 		}
 
-		searchVo.setUserIdList(userIdList);
+		searchVo.setUserIds(userIdList);
 
 		PageHelper.startPage(pageNo, pageSize);
 
