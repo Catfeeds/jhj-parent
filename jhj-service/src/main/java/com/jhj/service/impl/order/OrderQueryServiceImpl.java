@@ -23,6 +23,7 @@ import com.jhj.po.dao.user.UserCouponsMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
@@ -35,6 +36,7 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.dict.DictService;
+import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
@@ -92,6 +94,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 	@Autowired
 	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private OrderAppointService orderAppointService;
 
 	@Autowired
 	private OrgsService orgsService;
@@ -454,6 +459,19 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		String userTypeStr = "";
 		if (isVip == 0) userTypeStr = "普通会员";
 		if (isVip == 1) userTypeStr = "金牌会员";
+		
+		//查询是否为会员指定
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(item.getId());
+		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
+		if (orderAppoints.isEmpty()) {
+			for (OrderAppoint oa : orderAppoints) {
+				if (oa.getStaffId().equals(staffId)) {
+					userTypeStr = "会员指定";
+				}
+			}
+		}
+		
 		vo.setUserTypeStr(userTypeStr);
 		
 		
@@ -514,10 +532,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			vo.setPayTypeName(OrderUtils.getPayTypeName(item.getOrderStatus(), orderPrices.getPayType()));
 		}
 
-		Short level = orgStaffs.getLevel();
-		String settingLevel = "-level-" + level.toString();
-		String settingType = OrderUtils.getOrderSettingType(vo.getOrderType());
-		settingType+= settingLevel;
 		// 订单价格信息
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(item.getId());
 		vo.setOrderIncoming(new BigDecimal(0));
@@ -525,64 +539,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		if (orderPrice != null) {
 			BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrice);
 			vo.setOrderMoney(orderMoney);
-			// 总金额C * 85% = 结果.
-			if (vo.getOrderType() == 0) {
-				// 基础服务收入比例 hour-ratio
-				
-				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
-				if (jhjSetting != null) {
-					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-					BigDecimal orderIncoming = orderMoney.multiply(settingValue);
-					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
-					vo.setOrderIncoming(orderIncoming);
-				}
-			}
 			
-			if (vo.getOrderType() == 1) {
-				// 深度养护收入比例 deep-ratio
-				
-				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
-				if (jhjSetting != null) {
-					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-					
-					//如果多人派工，则需要做平均值
-					searchVo = new OrderDispatchSearchVo();
-					searchVo.setOrderNo(item.getOrderNo());
-					searchVo.setDispatchStatus((short) 1);
-										
-					orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
-					
-					int totalStaffs = orderDispatchs.size();
-					
-					BigDecimal orderMoneyAvg = MathBigDecimalUtil.div(orderMoney, new BigDecimal(totalStaffs));
-					
-					BigDecimal orderIncoming = orderMoneyAvg.multiply(settingValue);
-					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
-					vo.setOrderIncoming(orderIncoming);
-				}
-			}
+			BigDecimal orderIncoming = orderPricesService.getOrderIncoming(item, staffId);
+			vo.setOrderIncoming(orderIncoming);
 
-			if (vo.getOrderType() == 2) {
-				// 助理收入比例 am-ratio
-				
-				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
-				if (jhjSetting != null) {
-					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-					BigDecimal orderIncoming = orderMoney.multiply(settingValue);
-					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
-					vo.setOrderIncoming(orderIncoming);
-				}
-			}
-			if (vo.getOrderType() == 3) {
-				// 配送服务收入比例 dispatch-ratio
-				JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
-				if (jhjSetting != null) {
-					BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-					BigDecimal orderIncoming = orderMoney.multiply(settingValue);
-					orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
-					vo.setOrderIncoming(orderIncoming);
-				}
-			}
 		}
 
 		// button_word
@@ -680,16 +640,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 计算订单的收入比例
 		result.setOrderRatio("");
 
-		String settingType = OrderUtils.getOrderSettingType(vo.getOrderType());
-
-		JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
-		if (jhjSetting != null) {
-			result.setOrderRatio(jhjSetting.getSettingValue());
-		}
-
 		// 得出服务人员的客服电话
 
-		jhjSetting = settingService.selectBySettingType("tell-staff");
+		JhjSetting jhjSetting = settingService.selectBySettingType("tell-staff");
 		if (jhjSetting != null) {
 			result.setTelStaff(jhjSetting.getSettingValue());
 		}

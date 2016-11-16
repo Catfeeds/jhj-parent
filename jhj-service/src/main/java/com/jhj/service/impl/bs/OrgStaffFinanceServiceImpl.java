@@ -26,6 +26,7 @@ import com.jhj.service.bs.OrgStaffDetailDeptService;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
@@ -51,6 +52,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 	@Autowired
 	private OrderPricesService orderPricesService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 
 	@Autowired
 	private OrgStaffDetailDeptService orgStaffDetailDeptService;
@@ -155,31 +159,12 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 		settingType += settingLevel;
 
-		BigDecimal orderIncoming = new BigDecimal(0);
+		
 		BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrices);
 		BigDecimal orderPay = orderPricesService.getOrderPay(orderPrices);
+		BigDecimal orderIncoming = orderPricesService.getOrderIncoming(orders, staffId);
+		orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 		
-		//如果为深度养护，需要判断是否为多人派工，订单金额需要平均
-		if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setOrderId(orders.getId());
-			searchVo1.setDispatchStatus((short) 1);
-			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
-			
-			if (orderDispatchs.size() > 1) {
-				orderMoney = MathBigDecimalUtil.div(orderMoney, new BigDecimal(orderDispatchs.size()));
-				orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
-			}
-		}
-		
-		
-		JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
-		if (jhjSetting != null) {
-			BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-			orderIncoming = orderMoney.multiply(settingValue);
-			orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
-		}
-
 		// 服务人员财务表
 		OrgStaffFinance orgStaffFinance = this.selectByStaffId(staffId);
 		if (orgStaffFinance == null) {
@@ -253,7 +238,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				this.updateByPrimaryKeySelective(orgStaffFinance);
 
 				BigDecimal maxOrderDept = new BigDecimal(1000);
-				jhjSetting = settingService.selectBySettingType("total-dept-blank");
+				JhjSetting jhjSetting = settingService.selectBySettingType("total-dept-blank");
 				if (jhjSetting != null) {
 					maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
 				}
@@ -282,35 +267,10 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		Long orderId = orders.getId();
 		Long staffId = orgStaffs.getStaffId();
 		Short level = orgStaffs.getLevel();
-		String settingLevel = "-level-" + level.toString();
-		// 得到订单收入比例
-		String settingType = OrderUtils.getOrderSettingType(orders.getOrderType());
-
-		settingType += settingLevel;
-
-		BigDecimal orderIncoming = new BigDecimal(0);
+		
 		BigDecimal orderPay = orderPriceExt.getOrderPay();
+		BigDecimal orderIncoming = orderPriceExtService.getOrderOverWorkIncoming(orders, staffId);
 		
-		//如果为深度养护，需要判断是否为多人派工，订单金额需要平均
-		if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setOrderId(orders.getId());
-			searchVo1.setDispatchStatus((short) 1);
-			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
-			
-			if (orderDispatchs.size() > 1) {
-				orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
-			}
-		}
-		
-		
-		JhjSetting jhjSetting = settingService.selectBySettingType(settingType);
-		if (jhjSetting != null) {
-			BigDecimal settingValue = new BigDecimal(jhjSetting.getSettingValue());
-			orderIncoming = orderPay.multiply(settingValue);
-			orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
-		}
-
 		// 服务人员财务表
 		OrgStaffFinance orgStaffFinance = this.selectByStaffId(staffId);
 		if (orgStaffFinance == null) {
@@ -379,7 +339,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				this.updateByPrimaryKeySelective(orgStaffFinance);
 
 				BigDecimal maxOrderDept = new BigDecimal(1000);
-				jhjSetting = settingService.selectBySettingType("total-dept-blank");
+				JhjSetting jhjSetting = settingService.selectBySettingType("total-dept-blank");
 				if (jhjSetting != null) {
 					maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
 				}

@@ -175,69 +175,24 @@ public class OrderStatServiceImpl implements OrderStatService {
 	
 	// . 根据开始时间，接收时间，staff_id ，得出订单总收入金额
 	@Override
-	public BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo) {
-
-		// BigDecimal money = orderService.getTotalOrderIncomeMoney(vo);
-		// 钟点工订单0订单总金额
-		vo.setOrderType(Constants.ORDER_TYPE_0);
-		vo.setOrderStatus(Constants.ORDER_HOUR_STATUS_7);
-		BigDecimal hourMoney = ordersMapper.getTotalOrderIncomeHourMoney(vo);
+	public BigDecimal getTotalOrderIncomeMoney(OrderSearchVo searchVo) {
 		
-		if (hourMoney == null) {
-			hourMoney = new BigDecimal(0);
-		}
+		BigDecimal totalIncomingMoney = new BigDecimal(0);
 		
-		BigDecimal hourMoneyExt = ordersMapper.getTotalOrderIncomeHourMoneyExt(vo);
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
+		searchVo.setOrderStatusList(orderStatusList);
 		
-		if (hourMoneyExt == null) {
-			hourMoneyExt = new BigDecimal(0);
-		}
-		hourMoney = MathBigDecimalUtil.add(hourMoney, hourMoneyExt);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 		
-		// 深度保洁1订单总金额
-		vo.setOrderType(Constants.ORDER_TYPE_1);
-		BigDecimal cleanMoney = this.getTotalOrderIncomeCleanMoney(vo);
+		if (list.isEmpty()) return totalIncomingMoney;
 		
-
-		Long staffId = vo.getStaffId();
-
-		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
-
-		Short level = staffs.getLevel();
-		String settingLevel = "-level-" + level.toString();
-
-		String hoursettingType = OrderUtils.getOrderSettingType(Constants.ORDER_TYPE_0) + settingLevel;
-		String cleansettingType = OrderUtils.getOrderSettingType(Constants.ORDER_TYPE_1) + settingLevel;
-
-
-		JhjSetting hour = settingService.selectBySettingType(hoursettingType);
-		JhjSetting clean = settingService.selectBySettingType(cleansettingType);
-
-
-		// 钟点工提成
-		BigDecimal hourRate = new BigDecimal(hour.getSettingValue());
-		// 深度保洁提成
-		BigDecimal cleanRate = new BigDecimal(clean.getSettingValue());
-
-		if (hourMoney == null) {
-			hourMoney = new BigDecimal(0);
-		}
-		if (cleanMoney == null) {
-			cleanMoney = new BigDecimal(0);
+		for (Orders order : list) {
+			BigDecimal orderIncoming = orderPriceService.getOrderIncoming(order, searchVo.getStaffId());
+			totalIncomingMoney = totalIncomingMoney.add(orderIncoming);
 		}
 
-		// 钟点工收入
-		BigDecimal hourIncomingMoney = hourMoney.multiply(hourRate);
-		// 深度保洁收入
-		BigDecimal cleanIncomingMoney = cleanMoney.multiply(cleanRate);
-
-		// 订单总收入
-		BigDecimal totalIncomingMoney = hourIncomingMoney.add(cleanIncomingMoney);
-
-		if (totalIncomingMoney == null) {
-			BigDecimal b = new BigDecimal(0);
-			return b;
-		}
 		totalIncomingMoney = MathBigDecimalUtil.round(totalIncomingMoney, 2);
 
 		return totalIncomingMoney;
@@ -256,44 +211,4 @@ public class OrderStatServiceImpl implements OrderStatService {
 
 		return ordersMapper.getTotalOrderCountByMouth(searchVo);
 	}
-	
-	//计算深度养护查询条件内的订单总金额，因为涉及到多人派工，所以需要进行每单处理
-	@Override
-	public BigDecimal getTotalOrderIncomeCleanMoney(OrderSearchVo searchVo) {
-		BigDecimal totalOrderMoney = new BigDecimal(0);
-		
-		//找出所有的订单
-		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
-		if (list.isEmpty()) return totalOrderMoney;
-		
-		List<Long> orderIds = new ArrayList<Long>();
-		for(Orders order : list) {
-			if (!orderIds.contains(order.getId())) orderIds.add(order.getId());
-		}
-		
-		List<OrderPrices> orderPrices = orderPriceService.selectByOrderIds(orderIds);
-		
-		if (orderPrices.isEmpty()) return totalOrderMoney;
-		
-		for (OrderPrices op : orderPrices) {
-			
-			BigDecimal orderMoney = orderPriceService.getOrderMoney(op);
-			
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setOrderId(op.getOrderId());
-			searchVo1.setDispatchStatus((short) 1);
-			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo1);
-			
-			if (orderDispatchs.size() == 1) {
-				totalOrderMoney = MathBigDecimalUtil.add(totalOrderMoney, orderMoney);
-			} else {
-				BigDecimal orderMoneyAvg = MathBigDecimalUtil.div(orderMoney, new BigDecimal(orderDispatchs.size()));
-				totalOrderMoney = MathBigDecimalUtil.add(totalOrderMoney, orderMoneyAvg);
-			}
-		}
-		
-		return totalOrderMoney;
-	}
-
-
 }

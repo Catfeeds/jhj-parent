@@ -242,7 +242,7 @@ public class StaffQueryController extends BaseController {
 	
 
 	/**
-	 * 获取员工的派工时间
+	 * 获取员工的技能信息
 	 * @param staffId  员工ID
 	 * 
 	 * @return 

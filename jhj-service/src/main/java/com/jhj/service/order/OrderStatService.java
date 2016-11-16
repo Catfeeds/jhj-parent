@@ -29,7 +29,4 @@ public interface OrderStatService {
 
 	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
 
-	BigDecimal getTotalOrderIncomeCleanMoney(OrderSearchVo searchVo);
-
-
 }

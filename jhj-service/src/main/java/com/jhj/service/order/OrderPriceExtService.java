@@ -1,8 +1,10 @@
 package com.jhj.service.order;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.jhj.po.model.order.OrderPriceExt;
+import com.jhj.po.model.order.Orders;
 import com.jhj.vo.order.OrderSearchVo;
 
 
@@ -27,5 +29,7 @@ public interface OrderPriceExtService {
 	List<OrderPriceExt> selectBySearchVo(OrderSearchVo searchVo);
 
 	String getOverWorkStr(Long orderId);
+
+	BigDecimal getOrderOverWorkIncoming(Orders order, Long staffId);
 
 }

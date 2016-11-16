@@ -71,11 +71,11 @@ public class OrderRatesController extends BaseController {
 		}
 		
 		Short orderStatus = orders.getOrderStatus();
-//		if (!orderStatus.equals(Constants.ORDER_HOUR_STATUS_7)) {
-//			result.setMsg("订单完成服务才能评价");
-//			result.setStatus(Constants.ERROR_999);
-//			return result;
-//		}
+		if (!orderStatus.equals(Constants.ORDER_HOUR_STATUS_7)) {
+			result.setMsg("订单完成服务之后才能评价.");
+			result.setStatus(Constants.ERROR_999);
+			return result;
+		}
 		
 		//找出是否已经评价过
 		

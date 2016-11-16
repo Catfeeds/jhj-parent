@@ -94,6 +94,7 @@ public class OrderQuerysController extends BaseController {
 		
 		if (orderFrom.equals((short)2)) {
 			orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
 			
 			int year = DateUtil.getYear();
 			int month = DateUtil.getMonth();
