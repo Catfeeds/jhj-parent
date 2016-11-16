@@ -86,7 +86,7 @@
                               	<p><font color="blue">基础保洁</font></p>
                               	<span id="jcbjtj">${totalOrderToday.jc }</span>
                               </a>
-                              <a href="../order/order-am-list?flag=2" >
+                              <a href="../order/order-exp-list?flag=2" >
                               	<p><font color="blue">深度服务</font></p>
                               	<span id="sdfwtj">${totalOrderToday.sd }</span>
                               </a>
