@@ -6,9 +6,12 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 	
 	var staffNames = sessionStorage.getItem("staff_names");
 	
+	
 	$$("#orderId").val(orderId);
 	$$("#staffNameStr").html(staffNames);
 	
+	$$("#rateAttitude").val(3);
+	$$("#rateSkill").val(3);
 	//最多只能输入254个字
 	$$("#rateContent").keydown(function() {
 		var curLength = $$("#rateContent").val().length;
@@ -29,7 +32,8 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 		var rateContent = $$("#rateContent").val();
 		if (rateContent == undefined) rateContent = "";
 		params.rate_content = rateContent;
-		
+		console.log(params);
+		return false;
 		$$.ajax({
 			type : "POST",
 			url : siteAPIPath + "order/post_rate.json",
