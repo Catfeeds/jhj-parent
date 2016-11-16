@@ -70,6 +70,9 @@ import="com.jhj.oa.common.UrlHelper"%>
                            	<tr>
                            		<td>订单总金额</td>
                            		<td>订单收入</td>
+                           		<td>余额支付</td>
+                           		<td>支付宝</td>
+                           		<td>微信</td>
                            		<td>现金收入</td>
                            		<td>平台已支付</td>
                            		<td>还款金额</td>
@@ -77,6 +80,9 @@ import="com.jhj.oa.common.UrlHelper"%>
                            	<tr>
                            		<td>${totalMoney }</td>
                            		<td>${orderPayMoney }</td>
+                           		<td>${spareMoney }</td>
+                           		<td>${alipayMoney }</td>
+                           		<td>${wechatMoney }</td>
                            		<td>${cashMoney }</td>
                            		<td>${platformMoney }</td>
                            		<td>${refundMoney }</td>

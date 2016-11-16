@@ -32,7 +32,6 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderRatesVo;
 import com.jhj.vo.order.OrderStaffRateVo;
-import com.jhj.vo.staff.OrgStaffRateVo;
 import com.meijia.utils.ImgServerUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;

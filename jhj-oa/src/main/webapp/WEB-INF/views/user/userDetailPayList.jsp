@@ -39,7 +39,7 @@
                   <div class="col-lg-12">
                       <section class="panel">
                           <header class="panel-heading">
-                          	<h4>会员消费明细列表</h4>
+                          	<h4>消费明细列表</h4>
                         	
                         	<form:form class="form-inline" onsubmit="return checkEndTime()"
                         		modelAttribute="userPayDetailSearchVoModel" action="user-pay-detail" method="get" >
@@ -71,6 +71,9 @@
                           <div>
                           	<label>消费总金额：<c:if test="${totalMoeny!=null }">${totalMoeny }元</c:if>
                           					  <c:if test="${totalMoeny==null }">0元</c:if>
+                          	</label><br/>
+                          	<label>充值总金额：<c:if test="${chargeMoney!=null }">${chargeMoney }元</c:if>
+                          					  <c:if test="${chargeMoney==null }">0元</c:if>
                           	</label>
                           </div>
                           

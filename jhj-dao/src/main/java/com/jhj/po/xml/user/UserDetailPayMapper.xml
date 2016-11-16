@@ -245,9 +245,9 @@
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
 	
-	<!-- 统计消费明细 -->
+	<!-- 统计消费明细总金额，充值总金额 -->
 	<select id="totolMoeny" resultType="java.util.Map" parameterType="com.jhj.vo.user.UserDetailSearchVo">
-		select sum(order_pay) as totalMoeny from user_detail_pay
+		select sum(order_pay) as totalMoeny,(select sum(order_pay) from user_detail_pay where order_type='1' <include refid="searchVo"/>) as chargeMoney from user_detail_pay
 		<where>
 			<include refid="searchVo"/>
 		</where>

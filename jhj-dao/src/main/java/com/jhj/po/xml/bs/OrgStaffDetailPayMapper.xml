@@ -240,6 +240,9 @@
 	<select id="selectTotalData" resultType="java.util.HashMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
 		SELECT SUM(order_money) as totalMoney,
 			SUM(order_pay) as orderPayMoney,
+			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='0') <include refid="searchVo"/>) as spareMoney,
+			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='1') <include refid="searchVo"/>) as alipayMoney,
+			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='2') <include refid="searchVo"/>) as wechatMoney,
 			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='6') <include refid="searchVo"/>) as cashMoney,
 			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='7') <include refid="searchVo"/>) as platformMoney,
 			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_type='4' <include refid="searchVo"/>) as refundMoney	
@@ -248,8 +251,5 @@
 			<include refid="searchVo"/>
 		</where>
 	</select>
-	
-	
-	
 	
 </mapper>
