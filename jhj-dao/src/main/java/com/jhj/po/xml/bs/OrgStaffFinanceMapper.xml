@@ -31,18 +31,20 @@
 	</select>
 	
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		SELECT <include refid="Base_Column_List" />
+		FROM org_staff_finance WHERE 1=1
 		<include refid="bySearchVo" />
+		order by add_time desc
 	</select>
 
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		SELECT <include refid="Base_Column_List" />
+		FROM org_staff_finance WHERE 1=1
 		<include refid="bySearchVo" />
+		order by add_time desc
 	</select>
 	
 	<sql id="bySearchVo">
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM org_staff_finance
-		WHERE 1=1
 		<if test="mobile !=null and mobile != ''">
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
@@ -74,8 +76,6 @@
 		<if test="isBlack !=null">
 			and is_black = #{isBlack,jdbcType=NUMERIC}
 		</if>
-
-		order by add_time desc
 
 	</sql>
 
@@ -217,4 +217,12 @@
 		where
 		id = #{id,jdbcType=NUMERIC}
 	</update>
+	
+	<select id="totalMoney" resultType="java.util.Map" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		SELECT sum(total_incoming) as totalIncoming,sum(total_dept) as totalDept,sum(total_cash) as totalCash,sum(rest_money) as restMoney 
+		from org_staff_finance
+		<where>
+			<include refid="bySearchVo" />
+		</where>
+	</select>
 </mapper>

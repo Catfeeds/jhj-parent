@@ -2,6 +2,7 @@ package com.jhj.service.impl.bs;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -399,6 +400,11 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				}
 			}
 		}
+	}
+
+	//统计服务人员欠款
+	public Map<String, Object> totalMoney(OrgStaffFinanceSearchVo searchVo) {
+		return orgStaffFinanceMapper.totalMoney(searchVo);
 	}	
 
 }

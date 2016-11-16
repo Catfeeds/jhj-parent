@@ -1,6 +1,7 @@
 package com.jhj.service.bs;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffFinance;
@@ -41,5 +42,8 @@ public interface OrgStaffFinanceService {
 	List<OrgStaffFinance> selectBySearchVo(OrgStaffFinanceSearchVo searchVo);
 
 	void orderOverWork(Orders orders, OrderPriceExt orderPriceExt, OrgStaffs orgStaffs);
+	
+	//统计服务人员欠款
+	Map<String,Object> totalMoney(OrgStaffFinanceSearchVo searchVo);
 
 }

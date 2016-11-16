@@ -3,6 +3,7 @@ package com.jhj.action.staff;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -72,6 +73,11 @@ public class OrgStaffPayDeptController extends BaseController {
 			searchVo.setOrgId(Long.valueOf(paramOrgId));
 		} 
 		PageInfo result = orgStaffFinanceService.selectByListPage(searchVo, pageNo, pageSize);
+		
+		//统计服务人员欠款
+		Map<String, Object> totalMoney = orgStaffFinanceService.totalMoney(searchVo);
+		model.addAllAttributes(totalMoney);
+		
 		List<OrgStaffFinance> orgStaffFinanceList = result.getList();
 
 		for (int i = 0; i < orgStaffFinanceList.size(); i++) {
@@ -115,7 +121,7 @@ public class OrgStaffPayDeptController extends BaseController {
 		model.addAttribute("orgList", orgList);
 
 		result = new PageInfo(orgStaffFinanceList);
-
+		
 		model.addAttribute("contentModel", result);
 		model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);
 		return "staff/staffPayDeptList";

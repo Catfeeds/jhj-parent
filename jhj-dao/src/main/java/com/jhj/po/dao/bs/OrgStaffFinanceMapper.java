@@ -1,6 +1,7 @@
 package com.jhj.po.dao.bs;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
@@ -23,4 +24,7 @@ public interface OrgStaffFinanceMapper {
 	List<OrgStaffFinance> selectByListPage(OrgStaffFinanceSearchVo searchVo);
 	
 	List<OrgStaffFinance> selectBySearchVo(OrgStaffFinanceSearchVo searchVo);
+	
+	//统计服务人员欠款
+	Map<String,Object> totalMoney(OrgStaffFinanceSearchVo searchVo);
 }

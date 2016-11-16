@@ -43,17 +43,28 @@
 							<option value="0">全部</option>
 						</select>
 					</td>
-                    
-                    
-                    <%-- <div class="form-group">	
-						选择云店: <form:select path="orgId">
-									<form:option value="">请选择云店</form:option>
-									<form:options items="${orgList}" itemValue="orgId" itemLabel="orgName" />
-								</form:select>
-					</div> --%>
-						手机号码：<form:input path="mobile"/>
+					手机号码：<form:input path="mobile" class="form-control"/>
 					<button type="submit" class="btn btn-primary" >搜索</button>						
-                </form:form> 
+                </form:form>
+                 <br/>
+                 <table class="table table-hover table-bordered">
+                 	<thead>
+                 		<tr>
+                 			<th>总收入金额(元)</th>
+                 			<th>总欠款金额(元)</th>
+                 			<th>总提现金额(元)</th>
+                 			<th>总剩余金额(元)</th>
+                 		</tr>
+                 	</thead>
+                 	<tbody>
+                 		<tr>
+                 			<td>${totalIncoming }</td>
+                 			<td>${totalDept }</td>
+                 			<td>${totalCash }</td>
+                 			<td>${restMoney }</td>
+                 		</tr>
+                 	</tbody>
+                 </table>
 			</header>
 			
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
