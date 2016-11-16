@@ -81,7 +81,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 		 var url = "order/order-lib-cal.html?next_url=order/order-deep-confirm.html"
 			 
 	     var staffId = sessionStorage.getItem("staff_id");
-		 if (staffId != undefined || staffId != "") {
+		 if (staffId != undefined && staffId != "" && staffId != null) {
 			 url+="?staff_id="+staffId;
 		 }	 
 		

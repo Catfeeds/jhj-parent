@@ -78,7 +78,7 @@ myApp.onPageInit('order-hour-choose', function(page) {
 		 var url = "order/order-lib-cal.html?next_url=order/order-hour-confirm.html"
 		 
 		 var staffId = sessionStorage.getItem("staff_id");
-		 if (staffId != undefined || staffId != "" || staffId != null) {
+		 if (staffId != undefined && staffId != "" && staffId != null) {
 			 url+="?staff_id="+staffId;
 		 }
 		 
