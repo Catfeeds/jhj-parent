@@ -334,15 +334,30 @@ myApp.onPageInit('order-lib-cal',function(page) {
     //过滤服务人有已占有的服务时间
     function filterServiceDate(){
         var serviceDateArr = sessionStorage.getItem("serDate");
+        var serviceHour = sessionStorage.getItem("total_service_hour");
         if(serviceDateArr=="" ||serviceDateArr==null ||serviceDateArr==undefined) return ;
         var d = serviceDateArr.split(",");
         for(var i=0;i<d.length;i++){
+        	var sd=d[i];
+        	var serviceDateAdd = moment(sd).add(serviceHour,"hours").add(2,"hours");
+        	var serviceDateSub = moment(sd).subtract(serviceHour,"hours").subtract(2,"hours");
+        	var date = moment(serviceDateAdd).format("YYYY-MM-DD");
+        	var hour1 = moment(sd).format("HH:mm");
+            var hour2 = serviceDateAdd.format("HH:mm");
+            var hoursub = serviceDateSub.format("HH:mm");
             var s = d[i].split(" ");
-            if(s[0]==getServiceDate()){
-                var t = s[1].lastIndexOf(":");
+            if(date==getServiceDate()){
                 for(var i=0;i<time.length;i++){
                 	var index=i;
-                    if(s[1].substring(0,t)==time[i]){
+                	if(hoursub>=time[0] && time[i]>hoursub && time[i]<=hour1){
+                		 var tli = $$("#rilikongjian3-dateTime li");
+                         $$(tli[index]).addClass("hour-beijingse");
+                	}
+                	if(hoursub<time[0] && time[i]<=hour1){
+                		 var tli = $$("#rilikongjian3-dateTime li");
+                         $$(tli[index]).addClass("hour-beijingse");
+                	}
+                    if(time[i]>=hour1 && time[i]<=hour2){
                        var tli = $$("#rilikongjian3-dateTime li");
                        $$(tli[index]).addClass("hour-beijingse");
                     }
