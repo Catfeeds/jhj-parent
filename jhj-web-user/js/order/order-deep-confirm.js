@@ -166,6 +166,12 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		params.remarks = $$("#remarks").val();
 		params.order_from = $$("#orderFrom").val();
 		
+		var staffId = sessionStorage.getItem("staff_id");
+		 if (staffId != undefined || staffId != "") {
+			 staffId = 0;
+		 }
+		params.staff_id = staffId;
+		
 		console.log(params);
 
 		$$.ajax({

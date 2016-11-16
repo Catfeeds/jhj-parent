@@ -16,6 +16,7 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.dict.DictServiceAddons;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
@@ -25,6 +26,7 @@ import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
+import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
@@ -94,6 +96,9 @@ public class OrderHourAddController extends BaseController {
     @Autowired
     private PartnerServiceTypeService partService;
     
+    @Autowired
+    private OrderAppointService orderAppointService;
+    
 	@RequestMapping(value = "post_hour", method = RequestMethod.POST)
 	public AppResultData<Object> submitOrder(
 			@RequestParam("userId") Long userId,
@@ -107,7 +112,8 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom,
 			@RequestParam(value = "orderPay", required = false, defaultValue = "0") BigDecimal orderPay,
-			@RequestParam(value = "orderOpFrom", required = false, defaultValue = "0") Long orderOpFrom) throws Exception{
+			@RequestParam(value = "orderOpFrom", required = false, defaultValue = "0") Long orderOpFrom,
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId) throws Exception{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
@@ -236,6 +242,15 @@ public class OrderHourAddController extends BaseController {
 		orderPrices.setOrderNo(orderNo);
 		
 		orderPricesService.insert(orderPrices);
+		
+		//如果有指定的员工，则要插入指定员工表.
+		if (!staffId.equals(0L)) {
+			OrderAppoint orderAppoint =  orderAppointService.initOrderAppoint();
+			orderAppoint.setOrderId(order.getId());
+			orderAppoint.setUserId(userId);
+			orderAppoint.setStaffId(staffId);
+			orderAppointService.insert(orderAppoint);
+		}
 		
 		/*
 		 * 2.插入订单日志表  order_log

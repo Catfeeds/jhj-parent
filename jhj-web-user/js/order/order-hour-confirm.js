@@ -169,6 +169,13 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		params.serviceHour = $$("#serviceHour").val();
 		params.remarks = $$("#remarks").val();
 		params.orderFrom = $$("#orderFrom").val();
+		
+		var staffId = sessionStorage.getItem("staff_id");
+		 if (staffId != undefined || staffId != "") {
+			 staffId = 0;
+		 }
+		params.staff_id = staffId;
+		
 		console.log(params);
 
 		$$.ajax({

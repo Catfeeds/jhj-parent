@@ -215,9 +215,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * @param serviceDate 服务日期
 	 * @param serviceHour 服务时长
 	 * @param staffNums   预约服务人员数 支持多个服务人员.
+	 * @param appointStaffIds  已经指派的员工，需要排除掉
 	 */
 	@Override
-	public List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums) {
+	public List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds) {
 
 		List<Long> dispatchStaffIds = new ArrayList<Long>();
 
@@ -334,6 +335,13 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 			
 			if (staffIds.isEmpty()) break;
+			
+			//排除掉已经指定的员工
+			if (!appointStaffIds.isEmpty()) {
+				for (Long asId : appointStaffIds) {
+					staffIds.remove(asId);
+				}
+			}
 			
 			// 如果该云店有满足员工，则加入canDispatchStaffIds ,如果canDispatchStaffIds >= staffNums 则直接跳出循环.
 			for (Long sid : staffIds) {

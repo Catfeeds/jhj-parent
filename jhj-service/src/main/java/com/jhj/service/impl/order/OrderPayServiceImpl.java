@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPriceExt;
@@ -26,6 +27,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
+import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
@@ -99,6 +101,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 	@Autowired
 	private PartnerServiceTypeService partnerServiceTypeService;
 	
+	@Autowired
+    private OrderAppointService orderAppointService;
+	
 	/**
 	 * 钟点工订单支付成功,后续通知功能
 	 * 1. 进行派工操作
@@ -132,13 +137,38 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 		if (serviceType.getIsAuto().equals((short) 0))
 			return false;
-
-		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
-		Long serviceDate = order.getServiceDate();
-		Double serviceHour = (double) order.getServiceHour();
+		
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		List<Long> appointStaffIds = new ArrayList<Long>();
 		int staffNums = order.getStaffNums();
 		if (staffNums <= 0) staffNums = 1;
-		List<Long> staffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums);
+		
+		Long serviceDate = order.getServiceDate();
+		Double serviceHour = (double) order.getServiceHour();
+		
+		//找出是否有指定的阿姨。
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(orderId);
+		
+		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
+		
+		if (!orderAppoints.isEmpty()) {
+			for (OrderAppoint oa : orderAppoints) {
+				staffIds.add(oa.getStaffId());
+				appointStaffIds.add(oa.getStaffId());
+			}
+		}
+		
+		
+		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
+		if (staffIds.isEmpty() && staffIds.size() != staffNums) {
+			List<Long> autoStaffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums, appointStaffIds);
+		
+			for (Long autoStaffId : autoStaffIds) {
+				staffIds.add(autoStaffId);
+			}
+		}
 
 		if (staffIds.isEmpty())
 			return false;
@@ -239,11 +269,33 @@ public class OrderPayServiceImpl implements OrderPayService {
 			
 			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 1);
 		}
-
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		List<Long> appointStaffIds = new ArrayList<Long>();
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
 		Long serviceDate = order.getServiceDate();
 		
-		List<Long> staffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, 1);
+		//找出是否有指定的阿姨。
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(orderId);
+		
+		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
+		
+		if (!orderAppoints.isEmpty()) {
+			for (OrderAppoint oa : orderAppoints) {
+				staffIds.add(oa.getStaffId());
+				appointStaffIds.add(oa.getStaffId());
+			}
+		}
+		
+		int staffNums = 1;
+		if (staffIds.isEmpty() && staffIds.size() != staffNums) {
+			List<Long> autoStaffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums, appointStaffIds);
+		
+			for (Long autoStaffId : autoStaffIds) {
+				staffIds.add(autoStaffId);
+			}
+		}
 
 		if (staffIds.isEmpty())
 			return false;

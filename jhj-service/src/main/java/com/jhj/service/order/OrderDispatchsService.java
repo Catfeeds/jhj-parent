@@ -54,6 +54,6 @@ public interface OrderDispatchsService {
 
 	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
 
-	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums);
+	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
    	
 }

@@ -6,7 +6,7 @@ myApp.onPageInit('order-hour-choose', function(page) {
 	
 	var serviceTypeId = page.query.service_type_id;
 	sessionStorage.setItem("service_type_id", serviceTypeId);
-	
+		
 	//获取服务类别基本信息
 	var serviceTypeId = sessionStorage.getItem("service_type_id");
 	$$("#serviceType").val(serviceTypeId);
@@ -76,6 +76,12 @@ myApp.onPageInit('order-hour-choose', function(page) {
 			 return false;
 		 } 
 		 var url = "order/order-lib-cal.html?next_url=order/order-hour-confirm.html"
+		 
+		 var staffId = sessionStorage.getItem("staff_id");
+		 if (staffId != undefined || staffId != "" || staffId != null) {
+			 url+="?staff_id="+staffId;
+		 }
+		 
 		 mainView.router.loadPage(url);
 	 });
 });
@@ -155,9 +161,9 @@ function setOrderHourTotal() {
 	}
 	
 	var price = $$("#price").val();
-	var mprice = $$("#price").val();
-	var pprice = $$("#price").val();
-	var mpprice = $$("#mprice").val();
+	var mprice = $$("#mprice").val();
+	var pprice = $$("#pprice").val();
+	var mpprice = $$("#mpprice").val();
 	var isVip = localStorage['is_vip'];
 	if (isVip == undefined || isVip == "") isVip = 0;
 	console.log("is_vip ==" + isVip);
@@ -179,6 +185,7 @@ function setOrderHourTotal() {
 	sessionStorage.setItem("total_staff_nums", staffNums);
 	sessionStorage.setItem("total_service_hour", serviceHours);
 	
+	console.log("orderHourPay = " + orderHourPay);
 	return true;
 }
 

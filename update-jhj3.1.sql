@@ -73,3 +73,33 @@ ALTER TABLE `order_rate_img`
 --
 ALTER TABLE `order_rate_img`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
+
+
+
+CREATE TABLE `order_appoint` (
+  `id` int(11) UNSIGNED NOT NULL COMMENT '主键',
+  `order_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '订单ID',
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `staff_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '员工ID',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间戳'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单指定派工人员表';
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `order_appoint`
+--
+ALTER TABLE `order_appoint`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `order_appoint`
+--
+ALTER TABLE `order_appoint`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';

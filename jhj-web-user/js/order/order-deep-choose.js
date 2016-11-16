@@ -7,7 +7,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 	sessionStorage.setItem("service_type_id", serviceTypeId);
 	
 	sessionStorage.setItem("order_type", 1);
-	
+		
 	$$.ajax({
 		type : "GET",
 		url : siteAPIPath + "dict/get_service_type_addons.json?service_type_id=" + serviceTypeId,
@@ -79,6 +79,12 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 			 return false;
 		 }
 		 var url = "order/order-lib-cal.html?next_url=order/order-deep-confirm.html"
+			 
+	     var staffId = sessionStorage.getItem("staff_id");
+		 if (staffId != undefined || staffId != "") {
+			 url+="?staff_id="+staffId;
+		 }	 
+		
 		 mainView.router.loadPage(url);
 	 });
 	

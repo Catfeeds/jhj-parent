@@ -17,6 +17,7 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
@@ -27,6 +28,7 @@ import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
@@ -80,6 +82,9 @@ public class OrderExpCleanController extends BaseController {
 
 	@Autowired
 	private UserAddrsService userAddrsService;
+	
+	@Autowired
+    private OrderAppointService orderAppointService;
 
 	/**
 	 * 深度保洁订单提交接口
@@ -198,7 +203,8 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom,
 			@RequestParam(value = "order_pay", required = false, defaultValue = "0") BigDecimal orderPay,
-			@RequestParam(value = "order_op_from", required = false) Long orderOpFrom)
+			@RequestParam(value = "order_op_from", required = false) Long orderOpFrom,
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId)
 			throws Exception {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -270,6 +276,15 @@ public class OrderExpCleanController extends BaseController {
 			orderServiceAddons.setOrderNo(orderNo);
 
 			orderServiceAddonsService.insertSelective(orderServiceAddons);
+		}
+		
+		//如果有指定的员工，则要插入指定员工表.
+		if (!staffId.equals(0L)) {
+			OrderAppoint orderAppoint =  orderAppointService.initOrderAppoint();
+			orderAppoint.setOrderId(order.getId());
+			orderAppoint.setUserId(userId);
+			orderAppoint.setStaffId(staffId);
+			orderAppointService.insert(orderAppoint);
 		}
 
 		/*
