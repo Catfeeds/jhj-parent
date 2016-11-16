@@ -14,6 +14,7 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
@@ -25,6 +26,8 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
+import com.jhj.service.order.OrderAppointService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
@@ -36,6 +39,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderPriceExtVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
@@ -95,6 +99,12 @@ public class OrderPayController extends BaseController {
 	@Autowired
 	private OrderPriceExtService orderPriceExtService;
 	
+	@Autowired
+    private OrderAppointService orderAppointService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
+	
 	// 17.订单支付前接口
 	/**
 	 * @param mobile true string 手机号 
@@ -139,6 +149,23 @@ public class OrderPayController extends BaseController {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("订单不存在");
 			return result;			
+		}
+		
+		//判断如果有指定员工，则指定员工是否满足条件
+		//找出是否有指定的阿姨。
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(orderId);
+		
+		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
+		
+		if (!orderAppoints.isEmpty()) {
+			for (OrderAppoint oa: orderAppoints) {
+				Long appointStaffID = oa.getStaffId();
+				AppResultData<Object> checkAppointResult = orderDispatchService.checAppointDispatch(orderId, appointStaffID);
+				if (checkAppointResult.getStatus() == Constants.ERROR_999) {
+					return checkAppointResult;
+				}
+			}
 		}
 		
 		//此时 orderPay 和 orderMoney 值是相等的

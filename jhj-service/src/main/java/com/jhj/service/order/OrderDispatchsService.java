@@ -9,6 +9,7 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -55,5 +56,7 @@ public interface OrderDispatchsService {
 	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
 
 	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
+
+	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
    	
 }

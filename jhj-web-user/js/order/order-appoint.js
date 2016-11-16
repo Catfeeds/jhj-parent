@@ -33,11 +33,29 @@ function doAppointOrder() {
 	if (serviceTypeId == 28 || serviceTypeId == 29) {
 		url = "order/order-hour-choose.html?service_type_id="+serviceTypeId;
 	} else {
-		url = "order/order-deep-intro.html?service_type_id="+serviceTypeId;
+		url = "order/order-deep-choose.html?service_type_id="+serviceTypeId;
 	}
 	
 	mainView.router.loadPage(url);
 	
+}
+
+//列表显示，获取用户的信息
+myApp.template7Data['page:order-appoint']=function(){
+	var result="";
+	var staffId = sessionStorage.getItem("staff_id");
+
+	$$.ajax({
+		type : "GET",
+		url : siteAPIPath + "staff/get_skills.json?staff_id="+staffId,
+		dataType : "json",
+		cache : true,
+		async : false,
+		success : function(data) {
+			result = data;
+		}
+	})
+	return result;
 }
 
 

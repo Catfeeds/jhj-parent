@@ -34,7 +34,7 @@
 		</if>
 		
 		<if test="orderId != null">
-			and id = #{orderId,jdbcType=NUMERIC}
+			and order_id = #{orderId,jdbcType=NUMERIC}
 		</if>
 		
 		<if test="orderIds != null">

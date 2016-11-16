@@ -6,7 +6,9 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -235,6 +237,38 @@ public class StaffQueryController extends BaseController {
 		
 		result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, list.toArray());
+		return result;
+	}
+	
+
+	/**
+	 * 获取员工的派工时间
+	 * @param staffId  员工ID
+	 * 
+	 * @return 
+	 * */
+	@RequestMapping(value = "get_skills.json",method = RequestMethod.GET)
+	public AppResultData<Object> getSkills(@RequestParam("staff_id") Long staffId){
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+	
+		OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
+		searchVo.setStaffId(staffId);
+		List<OrgStaffSkill> hasSkills = orgStaffSkillService.selectBySearchVo(searchVo);
+		
+		
+		List<Map<String, Object>> skills = new ArrayList<Map<String, Object>>();
+		for (OrgStaffSkill item : hasSkills) {
+			PartnerServiceType serviceType = partService.selectByPrimaryKey(item.getServiceTypeId());
+			
+			Map<String, Object> skill = new HashMap<String, Object>();
+			skill.put("service_type_id", item.getServiceTypeId());
+			skill.put("service_type_name", serviceType.getName());
+			
+			skills.add(skill);
+		}
+		
+		result.setData(skills);
 		return result;
 	}
 }

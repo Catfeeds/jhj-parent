@@ -162,7 +162,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
-		if (staffIds.isEmpty() && staffIds.size() != staffNums) {
+		if (staffIds.size() != staffNums) {
+			staffNums = staffNums - staffIds.size();
 			List<Long> autoStaffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums, appointStaffIds);
 		
 			for (Long autoStaffId : autoStaffIds) {
@@ -289,7 +290,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		}
 		
 		int staffNums = 1;
-		if (staffIds.isEmpty() && staffIds.size() != staffNums) {
+		if (staffIds.size() != staffNums) {
 			List<Long> autoStaffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums, appointStaffIds);
 		
 			for (Long autoStaffId : autoStaffIds) {

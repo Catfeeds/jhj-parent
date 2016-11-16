@@ -167,9 +167,9 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		params.order_from = $$("#orderFrom").val();
 		
 		var staffId = sessionStorage.getItem("staff_id");
-		 if (staffId != undefined || staffId != "") {
-			 staffId = 0;
-		 }
+		if (staffId == undefined || staffId == "" || staffId == null) {
+			staffId = 0;
+		}
 		params.staff_id = staffId;
 		
 		console.log(params);

@@ -55,6 +55,7 @@ import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
+import com.meijia.utils.vo.AppResultData;
 
 @Service
 public class OrderDispatchsServiceImpl implements OrderDispatchsService {
@@ -1069,6 +1070,67 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		this.insertSelective(orderDispatch);
 
 		return true;
+	}
+	
+	
+	/**
+	 * 检测用户指派员工，是否满足派工条件
+	 * 1. 时间点是否有冲突
+	 * 2. 技能是否符合
+	 * 3. 距离是否符合.(暂不处理)
+	 */
+	@Override
+	public AppResultData<Object> checAppointDispatch(Long orderId, Long staffId) {
+
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		//员工是否可用
+		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
+		if (staff == null || staff.getStatus().equals((short)0) ){
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("指定的员工已不可用.");
+			return result;
+		}
+		
+		Orders order = orderService.selectByPrimaryKey(orderId);
+		Long serviceTypeId = order.getServiceType();
+		
+		//技能是否可用
+		OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
+
+		searchVo.setStaffId(staffId);
+		searchVo.setServiceTypeId(serviceTypeId);
+		List<OrgStaffSkill> skillList = orgStaffSkillService.selectBySearchVo(searchVo);
+		
+		if (skillList.isEmpty()) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("指定的员工没有此项技能.");
+			return result;
+		}
+		
+		
+		Long serviceDate = order.getServiceDate();
+		double serviceHour = order.getServiceHour();
+		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		
+		// 注意结束时间也要服务结束后 1:59分钟
+		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
+
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setStaffId(staffId);
+		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStartServiceTime(startServiceTime);
+		searchVo1.setEndServiceTime(endServiceTime);
+		List<OrderDispatchs> disList = this.selectByMatchTime(searchVo1);
+		
+		if (!disList.isEmpty()) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("指定的员工服务时间有冲突。");
+			return result;
+		}
+		
+		
+		return result;
 	}
 
 }

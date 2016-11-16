@@ -15,23 +15,11 @@
 				<!-- 可以下拉选择项目 -->
 			</div>
 			<ul class="waiter6" id="serviceTypeList">
-				<li class="waiter6-1 special-color2" onclick="appoinSerivceType($$(this), 28)">金牌保洁</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 36)">油烟机清洗</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 56)">新居开荒</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 54)">擦玻璃</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 50)">冰箱清洗</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 51)">空调清洗</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 35)">厨卫深度清洁</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 60)">洗衣机清洗</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 34)">床品除螨杀菌</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 53)">房屋大扫除</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 52)">地板保养打蜡</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 63)">孕家洁</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 62)">月子房</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 64)">洁宝宝</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 65)">安居宝</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 29)">厨娘烧饭</li>
-				<li class="waiter6-1" onclick="appoinSerivceType($$(this), 61)">家务包月</li>
+				{{#each data}}
+				<li class="waiter6-1" onclick="appoinSerivceType($$(this), {{service_type_id}})">{{service_type_name}}</li>
+				{{/each}}
+				
+				
 			</ul>
 			<div class="all-button2" onclick="doAppointOrder()">确定</div>
 		</div>
