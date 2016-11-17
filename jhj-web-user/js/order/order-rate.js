@@ -32,8 +32,7 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 		var rateContent = $$("#rateContent").val();
 		if (rateContent == undefined) rateContent = "";
 		params.rate_content = rateContent;
-		console.log(params);
-		return false;
+
 		$$.ajax({
 			type : "POST",
 			url : siteAPIPath + "order/post_rate.json",
