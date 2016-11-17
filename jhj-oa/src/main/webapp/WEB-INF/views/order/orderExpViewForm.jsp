@@ -201,6 +201,7 @@
 										<th>派工时间</th>
 										<th>是否接单</th>
 										<th>接单时间</th>
+										<th>派工类型</th>
 									</tr>
 								</thead>
 								<tbody >
@@ -213,6 +214,7 @@
 											<td><timestampTag:timestamp patten="MM-dd HH:mm" t="${item.addTime * 1000}" /></td>
 											<td>${item.applyStatus }</td>
 											<td>${item.applyTimeStr }</td>
+											<td>${item.dispatchActionStr }</td>
 										</tr>
 									 </c:forEach>
 								</tbody>

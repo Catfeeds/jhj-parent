@@ -32,6 +32,8 @@ public class OrderDispatchVo extends OrderDispatchs{
 
 	private String applyTimeStr;
 	
+	private String dispatchActionStr;
+	
 	
 	
 	public Short getOrderStatus() {
@@ -142,6 +144,14 @@ public class OrderDispatchVo extends OrderDispatchs{
 
 	public void setParentOrgName(String parentOrgName) {
 		this.parentOrgName = parentOrgName;
+	}
+
+	public String getDispatchActionStr() {
+		return dispatchActionStr;
+	}
+
+	public void setDispatchActionStr(String dispatchActionStr) {
+		this.dispatchActionStr = dispatchActionStr;
 	}
 	
 }

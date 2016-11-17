@@ -16,6 +16,7 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
@@ -31,6 +32,7 @@ import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
+import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderPriceExtService;
@@ -111,6 +113,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 	
 	@Autowired
 	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+	private OrderAppointService orderAppointService;
 	
 	@Override
 	public OaOrderListVo completeVo(Orders orders) {
@@ -202,6 +207,16 @@ public class OaOrderServiceImpl implements OaOrderService {
 			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
 			vo.setOrgName(cloudOrg.getOrgName());
 			vo.setParentOrgName(parentOrg.getOrgName());
+			
+			
+			//派工的标识。 1. 正常派工  2. 用户指定
+			vo.setDispatchActionStr("正常派工");
+			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+			orderDispatchSearchVo.setOrderId(item.getOrderId());
+			orderDispatchSearchVo.setStaffId(item.getStaffId());
+			List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
+			if (!orderAppoints.isEmpty()) vo.setDispatchActionStr("用户指定");
+			
 			
 			orderDispatchs.add(vo);
 		}

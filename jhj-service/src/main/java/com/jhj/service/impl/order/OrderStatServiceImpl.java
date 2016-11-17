@@ -153,23 +153,20 @@ public class OrderStatServiceImpl implements OrderStatService {
 	@Override
 	public BigDecimal getTotalOrderMoney(OrderSearchVo vo) {
 
-		BigDecimal orderMoney = ordersMapper.getTotalOrderMoney(vo);
+		BigDecimal totalMoney = new BigDecimal(0);
 
-		if (orderMoney == null) {
-			BigDecimal a = new BigDecimal(0);
-			return a;
+		List<Orders> list = orderQueryService.selectBySearchVo(vo);
+		
+		if (list.isEmpty()) return totalMoney;
+		
+		for (Orders order : list) {
+			BigDecimal orderMoneyStaff = orderPriceService.getOrderMoneyStaff(order, vo.getStaffId());
+			totalMoney = totalMoney.add(orderMoneyStaff);
 		}
+
+		totalMoney = MathBigDecimalUtil.round(totalMoney, 2);
 		
-		BigDecimal orderMoneyExt = ordersMapper.getTotalOrderMoneyExt(vo);
-		
-		if (orderMoneyExt == null) {
-			orderMoneyExt = new BigDecimal(0);
-		}
-		
-		orderMoney = MathBigDecimalUtil.add(orderMoney, orderMoneyExt);
-		
-		orderMoney = MathBigDecimalUtil.round(orderMoney, 2);
-		return orderMoney;
+		return totalMoney;
 
 	}
 	

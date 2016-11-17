@@ -21,7 +21,7 @@ public class TestOrderController extends JUnitActionBase{
     public void testTotalToday() throws Exception {
 
 		String url = "/app/staff/order/total_today.json";
-		String params = "?user_id=2";
+		String params = "?user_id=4";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 	  
 		 ResultActions resultActions = this.mockMvc.perform(getRequest);
