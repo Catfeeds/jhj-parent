@@ -73,6 +73,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             filterServiceDate();
         });
         $$("#rilikongjian3-dateTime li").removeClass("hour-beijingse");
+        filterServiceDate();
         noSelectHour();
         if(cmp==date){
             $$("#rilikongjian3-day").find(":first-child").addClass("beijingse");
