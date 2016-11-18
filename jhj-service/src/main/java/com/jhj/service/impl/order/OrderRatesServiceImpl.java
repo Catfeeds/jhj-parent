@@ -153,40 +153,8 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 			Long staffId = item.getStaffId();
 			OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
 			
-			OrderStaffRateVo vo = new OrderStaffRateVo();
-			vo.setStaffId(staffId);
-			vo.setName(orgStaff.getName());
-			vo.setMobile(orgStaff.getMobile());
+			OrderStaffRateVo vo = orgStaffsService.getOrderStaffRateVo(orgStaff);
 			
-			String headImg = orgStaff.getHeadImg();
-			if (StringUtil.isEmpty(headImg)) headImg = "http://www.jia-he-jia.com/jhj-oa/upload/headImg/default-head-img.png";
-			vo.setHeadImg(headImg);
-			
-			//年龄
-			String age = "";
-			try {
-				age = DateUtil.getAge(orgStaff.getBirth());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (!StringUtil.isEmpty(age)) age = age + "岁";
-			vo.setAge(age);
-			
-			String provinceName = dictService.getProvinceName(orgStaff.getProvinceId());
-			String cityName = dictService.getCityName(orgStaff.getCityId());
-			
-			vo.setHukou(provinceName + cityName);
-			
-			vo.setIntro(orgStaff.getIntro());
-			
-			String skill = "初级";
-			Short level = orgStaff.getLevel();
-			if (level.equals((short)1)) skill = "初级";
-			if (level.equals((short)2)) skill = "中级";
-			if (level.equals((short)3)) skill = "金牌";
-			if (level.equals((short)4)) skill = "VIP";
-			vo.setSkill(skill);
 			
 			//统计平均到达率， 平均好评度
 			int totalRateStar = 0;

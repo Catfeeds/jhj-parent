@@ -1,6 +1,7 @@
 package com.jhj.action.app.order;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,10 +20,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderRateImg;
 import com.jhj.po.model.order.OrderRates;
 import com.jhj.po.model.order.Orders;
+import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.dict.DictService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderRateImgService;
 import com.jhj.service.order.OrderRatesService;
@@ -30,7 +34,9 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderRatesVo;
 import com.jhj.vo.order.OrderStaffRateVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -49,6 +55,12 @@ public class OrderRatesController extends BaseController {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
+	
+	@Autowired
+	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private DictService dictService;
 
 	@RequestMapping(value = "post_rate.json", method = RequestMethod.POST)
 	public AppResultData<Object> PostExpCleanOrder(
@@ -229,4 +241,41 @@ public class OrderRatesController extends BaseController {
 		
 		return result;
 	}
+	
+	// 订单评价接口
+		@RequestMapping(value = "get_staff_total_rate", method = RequestMethod.GET)
+		public AppResultData<Object> GetStaffTotalRate(
+				@RequestParam("staff_id") Long staffId) {
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+			
+			
+			
+			OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
+			orderRateSearchVo.setStaffId(staffId);
+			
+			List<OrderRates> orderRates = orderRatesService.selectBySearchVo(orderRateSearchVo);
+			
+			
+			List<OrderStaffRateVo> vos = new ArrayList<OrderStaffRateVo>();
+			
+			//如果没有评价，则默认为最低评价
+			if (orderRates.isEmpty()) {
+				
+				OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
+				
+				OrderStaffRateVo vo = orgStaffsService.getOrderStaffRateVo(orgStaff);
+				
+				int totalRateStar = 3;
+				String totalArrival = "100%"; 
+				vo.setTotalRateStar(totalRateStar);
+				vo.setTotalArrival(totalArrival);
+				vos.add(vo);
+				
+			} else {
+			
+				vos = orderRatesService.changeToOrderStaffReteVo(orderRates);
+			}
+			result.setData(vos);
+			return result;
+		}
 }

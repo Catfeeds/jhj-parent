@@ -2,6 +2,7 @@ package com.jhj.action.app.order;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderAppoint;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
@@ -29,6 +31,7 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderAppointService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
@@ -41,6 +44,7 @@ import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.order.DeepCleanVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
@@ -85,6 +89,9 @@ public class OrderExpCleanController extends BaseController {
 	
 	@Autowired
     private OrderAppointService orderAppointService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
 
 	/**
 	 * 深度保洁订单提交接口
@@ -359,6 +366,18 @@ public class OrderExpCleanController extends BaseController {
 			}
 		}
 		deepCleanVo.setUserAddrsList(userAddrsList);
+		
+		//派工信息
+		List<OrderDispatchs> orderDispatchs = new ArrayList<OrderDispatchs>();
+		if (orders.getOrderStatus() >= Constants.ORDER_HOUR_STATUS_3) {
+			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+			orderDispatchSearchVo.setOrderId(orders.getId());
+			orderDispatchSearchVo.setDispatchStatus((short) 1);
+			
+			orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+		}
+		
+		
 		result.setData(deepCleanVo);
 
 		return result;

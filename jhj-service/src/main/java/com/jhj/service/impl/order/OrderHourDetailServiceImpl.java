@@ -1,7 +1,9 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -20,6 +24,7 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourDetailService;
 import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrderPriceExtService;
@@ -29,6 +34,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderHourViewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -52,7 +58,7 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 	@Autowired
 	private OrderPricesService orderPriceService;
 	@Autowired
-	private OrderDispatchsMapper orderDisMapper;
+	private OrderDispatchsService orderDispatchService;
 	@Autowired
 	private UserAddrsMapper userAddrsMapper;
 	@Autowired
@@ -181,6 +187,18 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		
 		String overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
 		orderHourViewVo.setOverWorkStr(overWorkStr);
+		
+		//派工信息
+		List<OrderDispatchs> orderDispatchs = new ArrayList<OrderDispatchs>();
+		if (orderStatus >= Constants.ORDER_HOUR_STATUS_3) {
+			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+			orderDispatchSearchVo.setOrderId(orders.getId());
+			orderDispatchSearchVo.setDispatchStatus((short) 1);
+			
+			orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+		}
+		
+		orderHourViewVo.setOrderDispatchs(orderDispatchs);
 		
 		return orderHourViewVo;
 	}
