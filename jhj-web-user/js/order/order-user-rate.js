@@ -25,8 +25,9 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 				var headImgHtml="";
 				var staffs=or.staff_list;
 				var staffLen=staffs.length;
+				sessionStorage.setItem("order_id",or.order_id);
 				for(var k=0;k<staffLen;k++){
-					staffhtml +="<span class='special-color2'>"+staffs[k].name+"</span>"
+					staffhtml +="<a href='order/order-rate-success.html'><span class='special-color2'>"+staffs[k].name+"</span></a>"
 					if(k<2){
 						headImgHtml+="<img src='"+staffs[k].head_img+"' alt='' />";
 					}
