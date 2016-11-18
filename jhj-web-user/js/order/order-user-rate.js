@@ -15,18 +15,20 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 
 		var html = ''; // 当前订单
 
+	
 		for (var i = 0; i < orderRates.length; i++) {
 			var or = orderRates[i];
 			var htmlPart = htmlTemplate;
+			
 			if(or.staff_list!=null){
 				var staffhtml="";
 				var headImgHtml="";
 				var staffs=or.staff_list;
 				var staffLen=staffs.length;
-				for(var i=0;i<staffLen;i++){
-					staffhtml +="<span class='special-color2'>"+staffs[i].name+"</span>"
-					if(i<2){
-						headImgHtml+="<img src='"+staffs[i].head_img+"' alt='' />";
+				for(var k=0;k<staffLen;k++){
+					staffhtml +="<span class='special-color2'>"+staffs[k].name+"</span>"
+					if(k<2){
+						headImgHtml+="<img src='"+staffs[k].head_img+"' alt='' />";
 					}
 				}
 				htmlPart = htmlPart.replace(new RegExp('{staff_name}', "gm"), staffhtml);
@@ -50,32 +52,31 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 				rateArrival="<span class='waiter10-3-1'>准时</span><span class='waiter10-3-2'>迟到</span></li>"
 			}
 			htmlPart = htmlPart.replace(new RegExp('{rate_arrival}', "gm"), rateArrival);
-			
+
 			//服务态度
 			var rateAttitude = "";
 			if (or.rate_attitude > 0) {
-				for (var i = 1 ; i <= 5; i++) {
-					if (i <= or.rate_attitude) {
+				for (var s = 1 ; s <= 5; s++) {
+					if (s <= or.rate_attitude) {
 						rateAttitude+='<img src="img/yudingayi/xx.png" alt="">';
 					} else {
 						rateAttitude+='<img src="img/yudingayi/xx1.png" alt="">';
 					}
-					
+
 				}
 			}
 			htmlPart = htmlPart.replace(new RegExp('{rate_attitude}', "gm"), rateAttitude);
 			
 			//技能
-			
 			var rateSkill = "";
 			if (or.rate_attitude > 0) {
-				for (var i = 1 ; i <= 5; i++) {
-					if (i <= or.rate_attitude) {
+				for (var o = 1 ; o <= 5; o++) {
+					if (o <= or.rate_attitude) {
 						rateSkill+='<img src="img/yudingayi/xx.png" alt="">';
 					} else {
 						rateSkill+='<img src="img/yudingayi/xx1.png" alt="">';
 					}
-					
+
 				}
 			}
 			htmlPart = htmlPart.replace(new RegExp('{rate_skill}', "gm"), rateSkill);

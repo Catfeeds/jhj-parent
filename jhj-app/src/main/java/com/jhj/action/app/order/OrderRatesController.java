@@ -2,9 +2,7 @@ package com.jhj.action.app.order;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -192,15 +190,10 @@ public class OrderRatesController extends BaseController {
 		orderRateSearchVo.setUserId(userId);
 		List<OrderRates> orderRates = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER).getList();
 		
-		Set<String> set=new HashSet<String>();
-		
 		for(int i=0,length=orderRates.size();i<length;i++){
 			OrderRates orderRate = orderRates.get(i);
-			String orderNo = orderRate.getOrderNo();
-			if(!set.contains(orderNo)){
-				OrderRatesVo transVo = orderRatesService.transVo(orderRate);
-				orderRates.set(i, transVo);
-			}
+			OrderRatesVo transVo = orderRatesService.transVo(orderRate);
+			orderRates.set(i, transVo);
 		}
 		
 		result.setData(orderRates);

@@ -125,7 +125,19 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 	public PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrderRates> list = orderRatesMapper.selectByListPage(searchVo);
+		
+		Set<Long> set=new HashSet<Long>();
+		List<OrderRates> orderRates=new ArrayList<OrderRates>();
+		for(int i=0;i<list.size();i++){
+			OrderRates or = list.get(i);
+			if(!set.contains(or.getOrderId())){
+				set.add(or.getOrderId());
+			}else{
+				list.remove(or);
+			}
+		}
 		PageInfo result = new PageInfo(list);
+		
 		return result;
 	}
 	
