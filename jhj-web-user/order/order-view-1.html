@@ -38,6 +38,20 @@
 						<li>订单状态：</li>
 						<li>{{order_status_name}}</li>
 					</ul>
+					
+					{{#js_compare "this.order_dispatchs !='' "}}
+						<ul class="xiadan">
+							<li>服务人员：</li>
+							<li>
+							{{#each order_dispatchs}}
+								<a href="order/order-rate-staff.html?staff_id={{staff_id}}"/>{{staff_name}}</a>&nbsp;
+							{{/each}}
+							</li>
+						</ul>
+						
+						{{/each}}
+					
+					{{/js_compare}}
 				</div>
 				<div class="order-xiadan">
 					<ul class="xiadan1">

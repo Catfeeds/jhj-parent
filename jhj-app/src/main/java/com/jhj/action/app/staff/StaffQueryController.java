@@ -187,12 +187,13 @@ public class StaffQueryController extends BaseController {
 		List<Short> orderStatusList = new ArrayList<Short>();
 		orderStatusList.add((short) 0);
 		orderStatusList.add((short) 1);
+		searchVo.setOrderStatusList(orderStatusList);
 		BigDecimal totalCashIngMoney = orgStaffCashService.getTotalCashMoney(searchVo);
 		
 		//已经提现的金额
 		searchVo = new OrgStaffCashSearchVo();
 		searchVo.setStaffId(staffId);
-		searchVo.setOrderStatus((short) 2);
+		searchVo.setOrderStatus((short) 3);
 		BigDecimal totalCashedMoney = orgStaffCashService.getTotalCashMoney(searchVo);
 		
 		//剩余提现金额 = 总收入 - 提现中的金额 - 已提现金额
