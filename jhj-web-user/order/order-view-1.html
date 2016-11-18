@@ -44,7 +44,8 @@
 							<li>服务人员：</li>
 							<li>
 							{{#each order_dispatchs}}
-								<a href="order/order-rate-staff.html?staff_id={{staff_id}}"/>{{staff_name}}</a>&nbsp;
+								<a href="order/order-rate-staff.html?staff_id={{staff_id}}" style="font-size:14px;
+								">{{staff_name}}</a>&nbsp;
 							{{/each}}
 							</li>
 						</ul>
@@ -75,7 +76,7 @@
 						</li>
 						<li>留言</li>
 						<li>
-							<textarea name="remarks" id="remarks" class="tarea" >{{remarks}}</textarea>
+							<textarea name="remarks" id="remarks" class="tarea" readonly="readonly">{{remarks}}</textarea>
 						</li>
 					</ul>
 				</div>
