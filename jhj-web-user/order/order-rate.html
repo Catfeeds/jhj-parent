@@ -2,7 +2,7 @@
 <div data-page="order-rate" class="page">
 	<div id="indexPageContentDiv" class="page-content">
 		<form id="orderRateForm" enctype="multipart/form-data">
-			<input type="hidden" id="orderId"  name="orderId" value="0" />
+			<input type="hidden" id="orderId" name="orderId" value="0" />
 			<div class="beijing-index">
 				<div class="waiter">
 					<p>服务员：</p>
@@ -13,7 +13,7 @@
 					<p>到达时间：</p>
 					<span class="waiter1-2" id="rateArrival_0" onclick="doRateArrival(0)">准时</span>
 					<span class="waiter1-2" id="rateArrival_1" onclick="doRateArrival(1)">迟到</span>
-					<input type="hidden" id="rateArrival"  name="rateArrival" value="" />
+					<input type="hidden" id="rateArrival" name="rateArrival" value="" />
 				</div>
 				<div class="waiter1">
 					<p>服务态度：</p>
@@ -22,7 +22,7 @@
 					<img src="img/yudingayi/xx1.png" id="rateAttitude_3" onclick="doRateAttitude(3)">
 					<img src="img/yudingayi/xx1.png" id="rateAttitude_4" onclick="doRateAttitude(4)">
 					<img src="img/yudingayi/xx1.png" id="rateAttitude_5" onclick="doRateAttitude(5)">
-					<input type="hidden" id="rateAttitude"  name="rateAttitude" vaue="3" />
+					<input type="hidden" id="rateAttitude" name="rateAttitude" vaue="3" />
 				</div>
 				<div class="waiter1">
 					<p>服务技能：</p>
@@ -41,21 +41,35 @@
 				</div>
 				<!-- <div class="waiter3">
 					<div class="waiter3-1">
-						<img src="img/yudingayi/picture.png" alt="">
-						<p>添加删除图片</p>
+						<a href="#" id="rateFileTrigger">
+							<img src="img/yudingayi/picture.png" alt="">
+							<div class="waiter3-1-1">添加删除图片</div>
+							<input type="file" id="rateImgFile" onchange="setImagePreviews();" accept="image/*" multiple="multiple"
+								style="display: none;">
+						</a>
 					</div>
 				</div>
 				<div class="waiter4">
-					<div class="waiter4-1">+</div>
-					<div class="waiter4-1">+</div>
-					<div class="waiter4-1">+</div>
-					<div class="waiter4-1">+</div>
-					<div class="waiter4-1">+</div>
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
 				</div> -->
 				<div class="waiter5">
 					<div class="all-button13" id="rateSubmit">提交评价</div>
 				</div>
-			</div>
 		</form>
 	</div>
 </div>

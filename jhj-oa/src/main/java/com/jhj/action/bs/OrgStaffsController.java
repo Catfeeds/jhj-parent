@@ -361,7 +361,8 @@ public class OrgStaffsController extends BaseController {
 		List<OrgStaffPoiVo> offLines = new ArrayList<OrgStaffPoiVo>();
 		
 		Long now = TimeStampUtil.getNowSecond();
-//		Long now = 1479448020L;
+//		Long now = 1479448020L; //jhj-online
+//		Long now = 1479538800L; //jhj-test
 		Long maxLastTime = now - 2 * 3600;
 		
 		for (OrgStaffs os : staffList) {
@@ -448,8 +449,22 @@ public class OrgStaffsController extends BaseController {
 			}
 		}
 		
+		
+		//根据参数是否需要过滤掉 在线， 在途中， 服务中.
+		List<OrgStaffPoiVo> onlineFilter = new ArrayList<OrgStaffPoiVo>();
+		if (status > 0) {
+			for (OrgStaffPoiVo item : onlines) {
+				if (item.getPoiStatus() == status) {
+					onlineFilter.add(item);
+				}
+			}
+		} else {
+			onlineFilter = onlines;
+		}
+		
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("online", onlines);
+		resultMap.put("online", onlineFilter);
 		resultMap.put("offline", offLines);
 		
 		result.setData(resultMap);

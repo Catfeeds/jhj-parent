@@ -19,7 +19,7 @@ body, html {
 
 #allmap {
 	width: 100%;
-	height: 500px;
+	height: 400px;
 }
 
 .baidu-maps label {
@@ -87,41 +87,36 @@ body, html {
 				<div class="row">
 					<div class="col-lg-12">
 						<section class="panel">
-							<header class="panel-info">
-								<form:form class="form-inline" action="" method="get">
-									<table class="table">
-										<tr>
-											<td>选择门店:</td>
-											<td><orgSelectTag:select selectId="${sessionOrgId }" sessionOrgId="${loginOrgId }" /></td>
-											<td>选择云店:</td>
-											<td><select name="orgId" id="orgId" class="form-control">
-													<option value="0">全部</option>
-												</select></td>
-											<td>姓名:</td>
-											<td><input id="name" name="name" value="" class="form-control" type="text" /></td>
-											<td>状态:</td>
-											<td><select name="status" id="status" class="form-control">
-													<option value="0">全部</option>
-													<option value="1">在线(红色)</option>
-													<option value="2">在途中(蓝色)</option>
-													<option value="3">服务中(绿色)</option>
-												</select></td>
-											<td>
-												<button type="submit" class="btn btn-primary">搜索</button>
-											</td>
-											</button>
-										</tr>
-									</table>
-								</form:form>
-							</header>
+							<form:form class="form-inline" action="" method="get">
+								<table class="table">
+									<tr>
+										<td>选择门店:</td>
+										<td><orgSelectTag:select selectId="${sessionOrgId }" sessionOrgId="${loginOrgId }" /></td>
+										<td>选择云店:</td>
+										<td><select name="orgId" id="orgId" class="form-control">
+												<option value="0">全部</option>
+											</select></td>
+										<td>姓名:</td>
+										<td><input id="name" name="name" value="" class="form-control" type="text" /></td>
+										<td>状态:</td>
+										<td><select name="status" id="status" class="form-control">
+												<option value="0">全部</option>
+												<option value="1">在线(红色)</option>
+												<option value="2">在途中(蓝色)</option>
+												<option value="3">服务中(绿色)</option>
+											</select></td>
+										<td>
+											<button type="button" onclick="loadStaffMapDatas()" class="btn btn-primary">搜索</button>
+										</td>
+									</tr>
+								</table>
+							</form:form>
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<div class="panel-body">
 								<div class="baidu-maps" id="allmap"></div>
 								<div class="houtai-waiter-list">
 									<p>不在线人员名单</p>
 									<ul id="offline-list">
-										
-										
 									</ul>
 								</div>
 							</div>
@@ -134,8 +129,8 @@ body, html {
 	</section>
 	<%@ include file="../shared/importJs.jsp"%>
 	<!-- 引入百度地图API,其中   申请的密钥   ak 和主机 ip绑定， -->
-	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT">
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/bs/orgStaffMap.js'/>"></script>
 </body>
 </html>

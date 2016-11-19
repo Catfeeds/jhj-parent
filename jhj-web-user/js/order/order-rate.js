@@ -123,6 +123,10 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 		})
 	});
 	
+	$$("#rateImgTrigger").on("click",function(){
+		$$("#rateImgFile").trigger("click");
+	});
+	
 	
 });
 
@@ -162,4 +166,13 @@ function doRateSkill(v) {
 		}
 	}
 	$$("#rateSkill").val(v);
+}
+
+function rateUpload() {
+	$$("#rateImgFile").focus().trigger('click');
+}
+
+
+function setImagePreviews() {
+	
 }

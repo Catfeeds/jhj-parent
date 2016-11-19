@@ -137,6 +137,10 @@ function btn_add(path) {
 	location.href = appRootUrl + path;
 }
 
+function btn_add_blank(path) {
+	window.open(appRootUrl + path, "_blank");
+}
+
 // 修改按钮事件
 function btn_update(path) {
 	// location.href = appRootUrl + "account/register?id=" + id;
