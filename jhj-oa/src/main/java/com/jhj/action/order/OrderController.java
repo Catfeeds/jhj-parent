@@ -1,6 +1,5 @@
 package com.jhj.action.order;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
@@ -42,7 +42,6 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
 
 /**
  *
@@ -97,6 +96,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private OrderHourAddService orderHourAddservice;
+	
+	@Autowired
+	private OrgStaffFinanceService orgStaffFinanceService;
 	
 	/*
 	 * 深度保洁派工----固定派工人员
@@ -234,8 +236,9 @@ public class OrderController extends BaseController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
-		int status = orderService.cancelByOrder(order);
-		if (status == 0) {
+//		int status = orderService.cancelByOrder(order);
+		boolean flg = orgStaffFinanceService.cancleOrderDone(order);
+		if (flg) {
 			map.put("success", true);
 		} else {
 			map.put("fail", false);

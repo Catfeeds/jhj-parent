@@ -1,14 +1,7 @@
 package com.jhj.service.order;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
-import com.jhj.vo.chart.CoopUserOrderVo;
-import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderViewVo;
 
 public interface OrdersService {
@@ -54,5 +47,5 @@ public interface OrdersService {
 	String cancelAmOrder(Orders order);
 
 	// 在jhj-oa系统中取消订单
-	int cancelByOrder(Orders order);
+//	int cancelByOrder(Orders order);
 }

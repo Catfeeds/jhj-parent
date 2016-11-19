@@ -22,6 +22,8 @@ public class OrgStaffFinanceSearchVo {
 	//门店id
 	private Long parentId;
 	
+	private Long staffId;
+	
 	public Long getOrgId() {
 		return orgId;
 	}
@@ -84,6 +86,14 @@ public class OrgStaffFinanceSearchVo {
 
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
+	}
+
+	public Long getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
 	}
 	
 }

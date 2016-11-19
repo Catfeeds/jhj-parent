@@ -1,17 +1,11 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffsMapper;
 import com.jhj.po.dao.order.OrderLogMapper;
@@ -22,24 +16,18 @@ import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.dao.user.UserCouponsMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
-import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
-import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserDetailPayService;
-import com.jhj.vo.chart.CoopUserOrderVo;
-import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.RandomUtil;
@@ -516,8 +504,9 @@ public class OrdersServiceImpl implements OrdersService {
 	 * @param Long
 	 *            orderId 订单ID
 	 * 
+	 * 
 	 * */
-	@Override
+	/*@Override
 	public int cancelByOrder(Orders order) {
 		if (order == null) {
 			return -1;
@@ -549,25 +538,13 @@ public class OrdersServiceImpl implements OrdersService {
 					userCouponMapper.updateByPrimaryKeySelective(userCoupons);
 				}
 				
-				//消费明细
-				UserDetailPay userDetailPay =new UserDetailPay();
-				userDetailPay.setUserId(userId);
-				userDetailPay.setMobile(order.getMobile());
-				userDetailPay.setOrderType((short)0);
-				userDetailPay.setOrderId(order.getId());
-				userDetailPay.setOrderNo(orderNo);
-				userDetailPay.setOrderMoney(orderMoney);
-				userDetailPay.setOrderPay(orderPay);
-				userDetailPay.setPayType(payType);
-				userDetailPay.setAddTime(TimeStampUtil.getNowSecond());
-				userDetailPayService.insert(userDetailPay);
 			}
 		}
 
 		return 0;
-	}
+	}*/
 	
-	public void commonCancleOrder(Orders order,String orderNo){
+	/*public void commonCancleOrder(Orders order,String orderNo){
 		//更新订单状态
 		order.setOrderStatus(Constants.ORDER_STATUS_0);
 		order.setUpdateTime(TimeStampUtil.getNowSecond());
@@ -593,5 +570,5 @@ public class OrdersServiceImpl implements OrdersService {
 		//添加订单日志
 		OrderLog orderLog = orderLogService.initOrderLog(order);
 		orderLogService.insert(orderLog);
-	}
+	}*/
 }

@@ -21,6 +21,8 @@ import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
+import com.jhj.po.model.user.UserCoupons;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
 import com.jhj.service.bs.OrgStaffDetailPayService;
@@ -30,6 +32,8 @@ import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
+import com.jhj.service.users.UserCouponsService;
+import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
@@ -73,6 +77,12 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchService;
+	
+	@Autowired
+	private UsersService userService;
+	
+	@Autowired
+	private UserCouponsService userCouponsService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -365,6 +375,118 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	//统计服务人员欠款
 	public Map<String, Object> totalMoney(OrgStaffFinanceSearchVo searchVo) {
 		return orgStaffFinanceMapper.totalMoney(searchVo);
+	}
+
+
+	//取消派工
+	public boolean cancleOrderDone(Orders orders) {
+		boolean flg=false;
+			
+		String orderNo = orders.getOrderNo();
+		Long orderId = orders.getId();
+		Short orderStatus = orders.getOrderStatus();
+		
+		if(orderStatus>=Constants.ORDER_STATUS_0 && orderStatus<=Constants.ORDER_STATUS_2) return false;
+		
+		BigDecimal maxOrderDept= new BigDecimal(0);
+		JhjSetting jhjSetting = settingService.selectBySettingType("total-dept-blank");
+		if (jhjSetting != null) {
+			maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
+		}
+		
+		//取消订单
+		orders.setOrderStatus((short)0);
+		orders.setUpdateTime(TimeStampUtil.getNowSecond());
+		ordersService.updateByPrimaryKeySelective(orders);
+		
+		//支付方式
+		OrderPrices orderPrice = orderPricesService.selectByOrderNo(orderNo);
+		Short payType = orderPrice.getPayType();
+		
+		//取消派工
+		OrderDispatchSearchVo orderDispVo=new OrderDispatchSearchVo();
+		orderDispVo.setOrderNo(orderNo);
+		orderDispVo.setDispatchStatus((short)1);
+		List<OrderDispatchs> orderDispatch = orderDispatchService.selectBySearchVo(orderDispVo);
+		BigDecimal orderDept=new BigDecimal(0);
+		if(!orderDispatch.isEmpty()){
+			for(int i=0,len=orderDispatch.size();i<len;i++){
+				OrderDispatchs od = orderDispatch.get(i);
+				Long staffId = od.getStaffId();
+				od.setDispatchStatus((short)0);
+				od.setUpdateTime(TimeStampUtil.getNowSecond());
+				orderDispatchService.updateByPrimaryKeySelective(od);
+				
+				//取消已完成订单
+				if(orderStatus==Constants.ORDER_STATUS_7 || orderStatus==Constants.ORDER_STATUS_8){
+					//查询欠款
+					OrgStaffDetailPaySearchVo staffDetailPayVo=new OrgStaffDetailPaySearchVo();
+					staffDetailPayVo.setOrderId(orderId);
+					staffDetailPayVo.setOrderNo(orderNo);
+					staffDetailPayVo.setStaffId(staffId);
+					List<OrgStaffDetailDept> orgStaffDetailDept = orgStaffDetailDeptService.selectBySearchVo(staffDetailPayVo);
+					if(!orgStaffDetailDept.isEmpty()){
+						OrgStaffDetailDept staffDetailDept = orgStaffDetailDept.get(0);
+						orderDept=staffDetailDept.getOrderDept();
+						orgStaffDetailDeptService.deleteByPrimaryKey(staffDetailDept.getId());
+					}
+					
+					//查询订单收入金额
+					OrgStaffDetailPaySearchVo staffDetailPay = new OrgStaffDetailPaySearchVo();
+					staffDetailPay.setOrderId(orderId);
+					staffDetailPay.setOrderNo(orderNo);
+					staffDetailPay.setStaffId(staffId);
+					List<OrgStaffDetailPay> orgStaffDetailPay = orgStaffDetailPayService.selectBySearchVo(staffDetailPay);
+					BigDecimal orderPay = orgStaffDetailPay.get(0).getOrderPay();
+					orgStaffDetailPayService.deleteByPrimaryKey(orgStaffDetailPay.get(0).getId());
+					
+					//更新财务表
+					OrgStaffFinanceSearchVo staffFubabceVo=new OrgStaffFinanceSearchVo();
+					staffFubabceVo.setStaffId(staffId);
+					List<OrgStaffFinance> staffFinanceList = orgStaffFinanceMapper.selectBySearchVo(staffFubabceVo);
+					OrgStaffFinance orgStaffFinance = staffFinanceList.get(0);
+					
+					BigDecimal totalIncoming = orgStaffFinance.getTotalIncoming().subtract(orderPay);
+					BigDecimal totalDept = orgStaffFinance.getTotalDept();
+					BigDecimal subtract = totalDept.subtract(orderDept);
+					if(totalDept.compareTo(maxOrderDept)<0){
+						orgStaffFinance.setIsBlack((short)0);
+					}else{
+						OrgStaffBlack staffBlock = orgStaffBlackService.selectByStaffId(staffId);
+						if(subtract.compareTo(maxOrderDept)<0){
+							orgStaffBlackService.deleteByPrimaryKey(staffBlock.getId());
+							orgStaffFinance.setIsBlack((short)0);
+						}
+					}
+					orgStaffFinance.setTotalIncoming(totalIncoming);
+					orgStaffFinance.setTotalDept(subtract);
+					orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
+					orgStaffFinanceMapper.updateByPrimaryKeySelective(orgStaffFinance);
+				}
+				//退还余额支付的金额
+				if(payType==Constants.PAY_TYPE_0){
+					Long userId = orders.getUserId();
+					Users user = userService.selectByPrimaryKey(userId);
+					BigDecimal restMoney = user.getRestMoney();
+					BigDecimal add = restMoney.add(orderPrice.getOrderPay());
+					user.setRestMoney(add);
+					user.setUpdateTime(TimeStampUtil.getNowSecond());
+					userService.updateByPrimaryKeySelective(user);
+				}
+				
+				//退还优惠券
+				Long couponId = orderPrice.getCouponId();
+				if(couponId>0){
+					UserCoupons userCoupons = userCouponsService.selectByPrimaryKey(couponId);
+					userCoupons.setIsUsed((short)0);
+					userCoupons.setUsedTime(0L);
+					userCoupons.setOrderNo("");
+					userCouponsService.updateByPrimaryKeySelective(userCoupons);
+				}
+			}
+			flg=true;
+		}
+		return flg;
 	}	
 
 }

@@ -45,5 +45,7 @@ public interface OrgStaffFinanceService {
 	
 	//统计服务人员欠款
 	Map<String,Object> totalMoney(OrgStaffFinanceSearchVo searchVo);
+	
+	boolean cancleOrderDone(Orders orders);
 
 }
