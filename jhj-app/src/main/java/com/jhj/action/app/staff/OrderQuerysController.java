@@ -214,7 +214,7 @@ public class OrderQuerysController extends BaseController {
 		OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
 		orderRateSearchVo.setStaffId(staffId);
 		
-		PageInfo datas = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER);
+		PageInfo datas = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER,true);
 		
 		List<OrderRates> orderRates = datas.getList();
 		List<OrgStaffRateVo> vos = orderRatesService.changeToOrgStaffReteVo(orderRates);

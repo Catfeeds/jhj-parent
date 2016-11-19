@@ -11,9 +11,25 @@ public class OrderRatesVo extends OrderRates{
 	
 	private String serviceDateStr;
 	
+	private Long serviceDate;
+	
 	private List<String> orderRateUrl;
 	
 	private List<OrgStaffs> staffList;
+	
+	//用户手机号
+	private String usermobile;
+	
+	//用户地址
+	private String userAddr;
+	
+	private String staffMobile;
+	
+	private String staffName;
+	
+	private String orgName;
+	
+	private String parentOrgName;
 	
 	public String getServiceTypeName() {
 		return serviceTypeName;
@@ -31,6 +47,14 @@ public class OrderRatesVo extends OrderRates{
 		this.serviceDateStr = serviceDateStr;
 	}
 
+	public Long getServiceDate() {
+		return serviceDate;
+	}
+
+	public void setServiceDate(Long serviceDate) {
+		this.serviceDate = serviceDate;
+	}
+
 	public List<String> getOrderRateUrl() {
 		return orderRateUrl;
 	}
@@ -46,5 +70,54 @@ public class OrderRatesVo extends OrderRates{
 	public void setStaffList(List<OrgStaffs> staffList) {
 		this.staffList = staffList;
 	}
+
+	public String getUsermobile() {
+		return usermobile;
+	}
+
+	public void setUsermobile(String usermobile) {
+		this.usermobile = usermobile;
+	}
+
+	public String getUserAddr() {
+		return userAddr;
+	}
+
+	public void setUserAddr(String userAddr) {
+		this.userAddr = userAddr;
+	}
+
+	public String getStaffMobile() {
+		return staffMobile;
+	}
+
+	public void setStaffMobile(String staffMobile) {
+		this.staffMobile = staffMobile;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getParentOrgName() {
+		return parentOrgName;
+	}
+
+	public void setParentOrgName(String parentOrgName) {
+		this.parentOrgName = parentOrgName;
+	}
+	
 
 }

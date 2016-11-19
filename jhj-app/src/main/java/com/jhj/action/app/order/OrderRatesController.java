@@ -34,9 +34,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderRatesVo;
 import com.jhj.vo.order.OrderStaffRateVo;
-import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
-import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -200,7 +198,7 @@ public class OrderRatesController extends BaseController {
 		OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
 		orderRateSearchVo.setDispatchStatus((short)1);
 		orderRateSearchVo.setUserId(userId);
-		List<OrderRates> orderRates = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER).getList();
+		List<OrderRates> orderRates = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER,true).getList();
 		
 		for(int i=0,length=orderRates.size();i<length;i++){
 			OrderRates orderRate = orderRates.get(i);

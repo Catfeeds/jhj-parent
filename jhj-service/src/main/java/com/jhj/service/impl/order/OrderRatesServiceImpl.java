@@ -14,21 +14,26 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.order.OrderRatesMapper;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderRateImg;
 import com.jhj.po.model.order.OrderRates;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.bs.OrgsService;
 import com.jhj.service.dict.DictService;
 import com.jhj.service.order.OrderRateImgService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderRatesVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderStaffRateVo;
+import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffRateVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -60,6 +65,12 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 	
 	@Autowired
 	private UsersService userService;
+	
+	@Autowired
+	private UserAddrsService userAddrService;
+	
+	@Autowired
+	private OrgsService orgService;
 
 	@Override
 	public OrderRates initOrderRates() {
@@ -122,18 +133,20 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 	}
 	
 	@Override
-	public PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize) {
+	public PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize,boolean isUseApp) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrderRates> list = orderRatesMapper.selectByListPage(searchVo);
 		
-		Set<Long> set=new HashSet<Long>();
-		List<OrderRates> orderRates=new ArrayList<OrderRates>();
-		for(int i=0;i<list.size();i++){
-			OrderRates or = list.get(i);
-			if(!set.contains(or.getOrderId())){
-				set.add(or.getOrderId());
-			}else{
-				list.remove(or);
+		if(isUseApp){
+			Set<Long> set=new HashSet<Long>();
+			List<OrderRates> orderRates=new ArrayList<OrderRates>();
+			for(int i=0;i<list.size();i++){
+				OrderRates or = list.get(i);
+				if(!set.contains(or.getOrderId())){
+					set.add(or.getOrderId());
+				}else{
+					list.remove(or);
+				}
 			}
 		}
 		PageInfo result = new PageInfo(list);
@@ -295,6 +308,42 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public OrderRatesVo transVoOa(OrderRates orderRate) {
+		
+		if(orderRate==null) return null;
+		OrderRatesVo orderRagesVo=new OrderRatesVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(orderRate, orderRagesVo);
+		
+		Long orderId = orderRate.getOrderId();
+		Orders order = ordersService.selectByPrimaryKey(orderId);
+		
+		orderRagesVo.setServiceDate(order.getServiceDate()*1000);
+		orderRagesVo.setServiceTypeName(
+				partnerServiceTypeService.selectByPrimaryKey(order.getServiceType()).getName());
+		
+		Long userId = orderRate.getUserId();
+		UserAddrs userAddrs = userAddrService.selectByDefaultAddr(userId);
+//		UserAddrs userAddrs = userAddrService.selectUserId(userId);
+		orderRagesVo.setUsermobile(userAddrs.getMobile());
+		orderRagesVo.setUserAddr(userAddrs.getName()+userAddrs.getAddr());
+		
+		Long staffId = orderRate.getStaffId();
+		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
+		
+		orderRagesVo.setStaffName(staffs.getName());
+		orderRagesVo.setStaffMobile(staffs.getMobile());
+		
+		Orgs orgs = orgService.selectByPrimaryKey(staffs.getOrgId());
+		orderRagesVo.setOrgName(orgs.getOrgName());
+		OrgSearchVo vo=new OrgSearchVo();
+		vo.setOrgId(orgs.getParentId());
+		Orgs orgs2 = orgService.selectBySearchVo(vo).get(0);
+		orderRagesVo.setParentOrgName(orgs2.getOrgName());
+		
+		return orderRagesVo;
 	}
 
 }

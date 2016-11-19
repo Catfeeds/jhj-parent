@@ -60,6 +60,9 @@
 		<if test="mobile !=null and mobile !='' ">
 			and mobile like  CONCAT('%',#{mobile},'%')
 		</if>
+		<if test="staffMobile !=null and staffMobile !='' ">
+			and staff_id in (select staff_id from org_staffs where mobile like concat('%',#{staffMobile},'%'))
+		</if>
 		
 		<if test="staffId != null">
 			and staff_id = #{staffId,jdbcType=NUMERIC}
@@ -87,11 +90,25 @@
 			and order_no like CONCAT('%','${orderNo}','%' )
 		</if>
 
+		<if test="orgId!= null and orgId>0">
+			and staff_id in (select staff_id from org_staffs where org_id=#{orgId})
+		</if>
 		
-
+		<if test="parentId!= null">
+			and staff_id in (select staff_id from org_staffs where parent_org_id=#{parentId})
+		</if>
+		
+		<if test="startServiceTime != null">
+			<![CDATA[and order_id in (select id from orders where service_date >= #{startServiceTime})]]>
+		</if>
+		<if test="endServiceTime != null">
+			<![CDATA[and order_id in (select id from orders where service_date <= #{endServiceTime})]]>
+		</if>
+		<if test="staffName != null">
+			and staff_id in (select staff_id from org_staffs where  name like concat('%',#{staffName},'%'))
+		</if>
+		
 	</sql>
-	
-	
 	
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

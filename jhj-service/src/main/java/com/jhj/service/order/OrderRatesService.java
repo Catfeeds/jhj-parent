@@ -28,7 +28,7 @@ public interface OrderRatesService {
 
 	List<OrderRates> selectBySearchVo(OrderDispatchSearchVo searchVo);
 
-	PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize);
+	PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize,boolean isUseApp);
 
 	HashMap totalByStaff(OrderDispatchSearchVo searchVo);
 	
@@ -37,5 +37,7 @@ public interface OrderRatesService {
 	List<OrderStaffRateVo> changeToOrderStaffReteVo(List<OrderRates> list);
 
 	List<OrgStaffRateVo> changeToOrgStaffReteVo(List<OrderRates> list);
+	
+	OrderRatesVo transVoOa(OrderRates orderRate); 
 
 }
