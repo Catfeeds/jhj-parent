@@ -2646,54 +2646,59 @@ i.toolbar-icon-tixing {
   margin-left: 5px;
 }
 */
+.cankaotime-box{
+  width:95%;
+  height:210px;
+  margin-top: 15px;
+  margin-left: 2.5%;
+  border:1px solid #4BCFC4;
+  border-bottom:0;
+}
 .shendu-cankaotime{
   width:100%;
 }
 .shendu-cankaotime1{
-  width:30%;
-  margin-left: 5%;
-  background: #7ABFFA;
+  width:35%;
+  background: #4BCFC4;
   color:#fff;
   height:35px;
   line-height: 35px;
-  margin-top: 15px;
   text-align: center;
-  border-radius: 5px;
   float: left;
   font-size: 14px;
 }
 .shendu-cankaotime2{
-  width:48%;
-  background: #FFDD64;
+  width:65%;
+  background: #4BCFC4;
   color:#fff;
   height:35px;
   line-height: 35px;
-  margin-top: 15px;
   text-align: center;
-  border-radius: 5px;
   float: right;
-  margin-right: 2%;
   font-size: 14px;
 }
 .shendu-cankaotime11{
   width:30%;
-  margin-left: 5%;
+  padding-left: 5%;
   color:#7ABFFA;
   height:35px;
   line-height: 35px;
   text-align: left;
   float: left;
   font-size: 14px;
+  border-bottom: 1px solid #4BCFC4;
+  border-right: 1px solid #4BCFC4;
 }
 .shendu-cankaotime22{
-  width:48%;
+  width:59.5%;
+  padding-left: 5%;
   color:#FFDD64;
   height:35px;
   line-height: 35px;
   text-align: left;
   float: right;
-  margin-right: 2%;
   font-size: 14px;
+  border-bottom: 1px solid #4BCFC4;
 }
 
 
