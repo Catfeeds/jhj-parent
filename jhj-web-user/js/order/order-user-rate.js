@@ -48,9 +48,9 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 			
 			var rateArrival="";
 			if(or.rate_arrival==0){
-				rateArrival="<span class='waiter10-3-2'>准时</span><span class='waiter10-3-1'>迟到</span></li>";
+				rateArrival="<span class='waiter10-3-1'>准时</span><span class='waiter10-3-2'>迟到</span></li>";
 			}else if(or.rate_arrival==1){
-				rateArrival="<span class='waiter10-3-1'>准时</span><span class='waiter10-3-2'>迟到</span></li>"
+				rateArrival="<span class='waiter10-3-2'>准时</span><span class='waiter10-3-1'>迟到</span></li>"
 			}
 			htmlPart = htmlPart.replace(new RegExp('{rate_arrival}', "gm"), rateArrival);
 
