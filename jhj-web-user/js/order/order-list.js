@@ -197,13 +197,19 @@ function linkOrderRate(obj) {
 	
 	var orderId = obj.find('input[name=orderId]').val();
 	sessionStorage.setItem("order_id", orderId);
+	
+	var orderNo = obj.find('input[name=orderNo]').val();
+	sessionStorage.setItem("order_no", orderNo);
+	
+	var orderType = obj.find('input[name=orderType]').val();
+	sessionStorage.setItem("order_type", orderType);
 		
 	var staffNames = obj.find('input[name=staffNames]').val();
 	sessionStorage.setItem("staff_names", staffNames);
 	
 	var orderRateUrl = "order/order-rate.html";
 	if (orderStatus == 8) {
-		orderRateUrl = "order/order-rate-success.html";
+		orderRateUrl = "order/order-user-rate.html";
 	}
 	
 	mainView.router.loadPage(orderRateUrl);

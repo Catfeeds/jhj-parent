@@ -44,7 +44,11 @@ function loadStaffMapDatas() {
 			var offlineDatas = datas.data.offline;
 			
 			if (onlineDatas != undefined || onlineDatas != "") {
-				setOrgStaffMapPoi(onlineDatas);
+				setOnlines(onlineDatas);
+			}
+			
+			if (offlineDatas != undefined || offlineDatas != "") {
+				setOfflines(offlineDatas);
 			}
 			
 		},
@@ -54,7 +58,7 @@ function loadStaffMapDatas() {
 	});
 }
 
-function setOrgStaffMapPoi(datas) {
+function setOnlines(datas) {
 	console.log("setOrgMapPoi");
 
 	// 设置门店地图标注
@@ -76,8 +80,9 @@ function setOrgStaffMapPoi(datas) {
 		label.setStyle({
 			 color : "black",
 			 fontSize : "12px",
-			 height : "20px",
+			 height : "25px",
 			 lineHeight : "20px",
+			 lineWeight : "50px", 
 			 fontFamily:"微软雅黑"
 		 });
 		
@@ -101,6 +106,18 @@ function setOrgStaffMapPoi(datas) {
 		
 
 	});	
+}
+
+function setOfflines(datas) {
+	
+	$("#offline-list").html("");
+	
+	var offlinelistHtml="";
+	$.each(datas, function(i, obj) {
+		var name = obj.name;
+		offlinelistHtml+="<li>"+name+"</li>"
+	});
+	$("#offline-list").html(offlinelistHtml);
 }
 
 loadStaffMapDatas();

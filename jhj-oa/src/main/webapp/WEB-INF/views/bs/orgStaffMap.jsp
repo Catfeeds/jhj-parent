@@ -21,8 +21,54 @@ body, html {
 	width: 100%;
 	height: 500px;
 }
+
 .baidu-maps label {
-  max-width: none;
+	max-width: none;
+}
+
+.houtai-waiter-list {
+	width: 200px;
+	background: #000;
+	height: 50%;
+	position: fixed;
+	top: 190px;
+	left: 241px;
+}
+
+.houtai-waiter-list p {
+	margin: 0;
+	width: 90%;
+	margin-left: 5%;
+	background: #fff;
+	color: #000;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	margin-top: 15px;
+	border-radius: 5px;
+}
+
+.houtai-waiter-list ul {
+	width: 160px;
+	height: 80%;
+	margin: 0;
+	margin-left: 20px;
+	margin-top: 15px;
+	overflow: auto;
+	padding: 0;
+}
+
+.houtai-waiter-list ul li {
+	width: 90%;
+	text-align: left;
+	line-height: 30px;
+	border-bottom: 1px solid #fff;
+	color: #fff;
+	list-style-type: disc;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
 }
 </style>
 </head>
@@ -71,6 +117,13 @@ body, html {
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<div class="panel-body">
 								<div class="baidu-maps" id="allmap"></div>
+								<div class="houtai-waiter-list">
+									<p>不在线人员名单</p>
+									<ul id="offline-list">
+										
+										
+									</ul>
+								</div>
 							</div>
 						</section>
 					</div>

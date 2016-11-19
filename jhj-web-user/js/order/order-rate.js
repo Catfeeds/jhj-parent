@@ -6,12 +6,60 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 	
 	var staffNames = sessionStorage.getItem("staff_names");
 	
+	var orderNo = sessionStorage.getItem("order_no");
+	
+	var orderType = sessionStorage.getItem("order_type");
+	
+	console.log("orderType = " + orderType);
+	var postdata = {};
+	postdata.order_no = orderNo;
+	if (orderType == 0) {
+		$$.ajax({
+			type : "GET",
+			url : siteAPIPath + "order/order_hour_detail.json",
+			dataType : "json",
+			data : postdata,
+			cache : true,
+			async : false, // 不能是异步
+			success : function(data) {
+				console.log(data);
+				var staffNameStr = "";
+				list = data.data.order_dispatchs;
+				console.log(list);
+				$$.each(list, function(i, item){
+					console.log(i);
+					staffNameStr+='<a href="order/order-rate-staff.html?staff_id='+item.staff_id+'">'+item.staff_name+'</a>&nbsp;';
+				});
+				console.log(staffNameStr);
+				$$("#staffNameStr").html(staffNameStr);
+			}
+		});
+	} else if (orderType == 1) {
+		$$.ajax({
+			type : "GET",
+			url : siteAPIPath + "order/get_exp_clean_order_detail.json",
+			dataType : "json",
+			data : postdata,
+			cache : true,
+			async : false, // 不能是异步
+			success : function(data) {
+				var staffNameStr = "";
+				list = data.data.order_dispatchs;
+				$$.each(list, function(i, item){
+					staffNameStr+='<a href="order/order-rate-staff.html?staff_id='+item.staff_id+'">'+item.staff_name+'</a>&nbsp;';
+				});
+				$$("#staffNameStr").html(staffNameStr);
+			}
+		})
+	}
+	
 	
 	$$("#orderId").val(orderId);
-	$$("#staffNameStr").html(staffNames);
+//	$$("#staffNameStr").html(staffNames);
 	
-	$$("#rateAttitude").val(3);
-	$$("#rateSkill").val(3);
+	$$("#rateAttitude").val(0);
+	$$("#rateSkill").val(0);
+	
 	//最多只能输入254个字
 	$$("#rateContent").keydown(function() {
 		var curLength = $$("#rateContent").val().length;
@@ -22,6 +70,28 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 	});
 	
 	$$("#rateSubmit").on("click",function(){
+		
+		var rateArrival = $$("#rateArrival").val();
+		var rateAttitude = $$("#rateAttitude").val();
+		var rateSkill = $$("#rateSkill").val();
+		
+		if (rateArrival == "") {
+			myApp.alert("请评价到达时间.");
+			return false;
+		}
+		
+		if (rateAttitude == "" || rateAttitude == 0) {
+			myApp.alert("请评价服务态度.");
+			return false;
+		}
+		
+		if (rateSkill == "" || rateSkill == 0) {
+			myApp.alert("请评价服务技能.");
+			return false;
+		}
+		
+		
+		
 		var params = {};
 		params.user_id = userId;
 		params.order_id = orderId;
