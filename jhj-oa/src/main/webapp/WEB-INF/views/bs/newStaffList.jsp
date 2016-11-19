@@ -49,7 +49,7 @@
 										</td>
 										
 										<td>
-											<button onClick="btn_add('newbs/staff-map')" class="btn btn-danger" type="button">
+											<button onClick="btn_add('bs/staff-map')" class="btn btn-danger" type="button">
 											<i class="icon-expand-alt"></i>
 											地图
 										</td>

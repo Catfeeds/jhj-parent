@@ -5,7 +5,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,25 +24,35 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
+import com.jhj.common.ConstantMsg;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Tags;
+import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
+import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.bs.OrgStaffVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.staff.OrgStaffPoiVo;
 import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -64,6 +76,12 @@ public class OrgStaffsController extends BaseController {
 	
 	@Autowired
 	private OrgStaffAuthService authService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
+	
+	@Autowired
+	private UserTrailRealService userTrailRealService;
 	
 	
 //	@AuthPassport
@@ -285,5 +303,157 @@ public class OrgStaffsController extends BaseController {
 		}else{
 			out.write("yes");
 		}
+	}
+	
+	@AuthPassport
+	@RequestMapping(value = "/staff-map", method = RequestMethod.GET)
+	public String staffMap(Model model,HttpServletRequest request) {
+		
+		
+		//得到 当前登录 的 门店id，并作为搜索条件
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+		model.addAttribute("sessionOrgId", sessionOrgId);
+		return "bs/orgStaffMap";
+	}	
+	
+	
+	@RequestMapping(value = "get_staff_map.json", method = RequestMethod.GET)
+	public AppResultData<Object> submitManuBaseOrder(Model model, 
+			HttpServletRequest request,
+			@RequestParam(value = "parentId",required =false,defaultValue = "0") Long parentId,
+			@RequestParam(value = "orgId",required =false,defaultValue = "0") Long orgId,
+			@RequestParam(value = "status",required =false,defaultValue = "0") int status, // 0 = 全部  1 = 在线 2 = 途中  3 = 服务中 
+			@RequestParam(value = "staff_name",required =false,defaultValue = "") String staffName
+			
+			) {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		StaffSearchVo searchVo = new StaffSearchVo();
+		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+		
+		if (sessionParentId > 0L)
+			searchVo.setParentId(sessionParentId);
+
+		if (parentId > 0L) searchVo.setParentId(parentId);
+
+		if (orgId > 0L) searchVo.setOrgId(orgId);
+		
+		if (!StringUtil.isEmpty(staffName)) searchVo.setName(staffName);
+		
+		if (searchVo.getStatus() == null) searchVo.setStatus(1);
+		
+		List<OrgStaffs> staffList = orgStaffsService.selectBySearchVo(searchVo);
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		for (OrgStaffs s : staffList) {
+			if (!staffIds.contains(s.getStaffId())) staffIds.add(s.getStaffId());
+		}
+		
+		
+		UserTrailSearchVo searchVo1 = new UserTrailSearchVo();
+		searchVo1.setUserIds(staffIds);
+		searchVo1.setUserType((short) 0);
+		
+		List<UserTrailReal> userTrails = userTrailRealService.selectBySearchVo(searchVo1);
+		
+		//两个小时内在线的，两个小时之外的为不在线.
+		List<OrgStaffPoiVo> onlines = new ArrayList<OrgStaffPoiVo>();
+		List<OrgStaffPoiVo> offLines = new ArrayList<OrgStaffPoiVo>();
+		
+		Long now = TimeStampUtil.getNowSecond();
+//		Long now = 1479448020L;
+		Long maxLastTime = now - 2 * 3600;
+		
+		for (OrgStaffs os : staffList) {
+			OrgStaffPoiVo vo = new OrgStaffPoiVo();
+			BeanUtilsExp.copyPropertiesIgnoreNull(os, vo);
+			vo.setLat("");
+			vo.setLng("");
+			vo.setPoiTime(0L);
+			vo.setPoiStatus(0);
+			
+			UserTrailReal ut = null;
+			for (UserTrailReal item : userTrails) {
+				if (os.getStaffId().equals(item.getUserId())) {
+					ut = item;
+					break;
+				}
+			}
+			
+			if (ut == null) {
+				//如果找不到，则为离线人员；
+				offLines.add(vo);
+				continue;
+			}
+				
+			if (ut.getAddTime() >= maxLastTime) {
+				vo.setLat(ut.getLat());
+				vo.setLng(ut.getLng());
+				vo.setPoiTime(ut.getAddTime());
+				vo.setPoiStatus(1);
+				onlines.add(vo);
+			} else {
+				vo.setLat(ut.getLat());
+				vo.setLng(ut.getLng());
+				vo.setPoiTime(ut.getAddTime());
+				offLines.add(vo);
+				
+			}
+			
+		
+		}
+		
+		//在线的要找出当前的状态 / 0 = 全部  1 = 在线 2 = 途中  3 = 服务中
+		if (!onlines.isEmpty()) {
+			List<Long> onlineStaffIds = new ArrayList<Long>();
+			for (OrgStaffPoiVo on : onlines) {
+				onlineStaffIds.add(on.getStaffId());
+			}
+			
+			
+			Long startServiceTime = TimeStampUtil.getBeginOfToday();
+			Long endServiceTime = TimeStampUtil.getEndOfToday();
+			
+			OrderDispatchSearchVo dispatchSearchVo = new OrderDispatchSearchVo();
+			dispatchSearchVo.setStaffIds(onlineStaffIds);
+			dispatchSearchVo.setDispatchStatus((short) 1);
+			dispatchSearchVo.setStartServiceTime(startServiceTime);
+			dispatchSearchVo.setEndServiceTime(endServiceTime);
+			List<OrderDispatchs> disList = orderDispatchService.selectBySearchVo(dispatchSearchVo);
+			
+			
+			for (OrderDispatchs item : disList) {
+				Long serviceTime = item.getServiceDate();
+				Long staffId = item.getStaffId();
+				double serviceHour = item.getServiceHours();
+				Long servicePreTime = serviceTime - Constants.SERVICE_PRE_TIME;
+				Long serviceEndTime = (long) (serviceTime + serviceHour * 3600);
+				
+				
+				for (int i = 0; i < onlines.size(); i++) {
+					OrgStaffPoiVo poiVo = onlines.get(i);
+					if (poiVo.getStaffId().equals(staffId)) {
+						//如果服务时间内，则为服务中
+						if (now >= servicePreTime && now < serviceTime  ) {
+							poiVo.setPoiStatus(2);
+							onlines.set(i, poiVo);
+						}
+						
+						if (now >= serviceTime && now <= serviceEndTime) {
+							poiVo.setPoiStatus(3);
+							onlines.set(i, poiVo);
+						}
+					}
+				}	
+			}
+		}
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("online", onlines);
+		resultMap.put("offline", offLines);
+		
+		result.setData(resultMap);
+		
+		return result;
 	}
 }
