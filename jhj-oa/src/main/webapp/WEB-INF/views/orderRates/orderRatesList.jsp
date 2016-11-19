@@ -102,6 +102,7 @@
 										<th width="5%">服务态度</th>
 										<th width="5%">服务技能</th>
 										<th>评价内容</th>
+										<th width="7%">操作</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -119,15 +120,23 @@
 												<td>${ item.staffMobile }</td>
 												<td>
 													<c:if test="${item.rateArrival == 0 }">
-														是
+														准时
 													</c:if>
 													<c:if test="${item.rateArrival == 1 }">
-														否
+														迟到
 													</c:if>
 												</td>
 												<td>${item.rateAttitude }颗星</td>
 												<td>${ item.rateSkill }颗星</td>
 												<td>${ item.rateContent }</td>
+												<td>
+													<c:if test="${item.orderType==0 }">
+														<a href="order-hour-list?orderId=${item.orderId }">查看订单</a>
+													</c:if>
+													<c:if test="${item.orderType==1 }">
+														<a href="order-exp-list?orderId=${item.orderId }">查看订单</a>
+													</c:if>
+												</td>
 											</tr>
 									</c:forEach>
 								</tbody>

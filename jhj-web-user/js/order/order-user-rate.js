@@ -43,7 +43,7 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 			if(or.rate_content!='' && or.rate_content!=null){
 				htmlPart = htmlPart.replace(new RegExp('{rate_content}', "gm"), or.rate_content);
 			}else{
-				htmlPart = htmlPart.replace(new RegExp('{rate_content}', "gm"), "");
+				htmlPart = htmlPart.replace(new RegExp('{rate_content}', "gm"), "暂无评价");
 			}
 			
 			var rateArrival="";
@@ -82,6 +82,7 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 			}
 			htmlPart = htmlPart.replace(new RegExp('{rate_skill}', "gm"), rateSkill);
 			
+			//图片
 			var rateUrl="";
 			if(or.order_rate_url!=null){
 				var rateUrlLen=or.order_rate_url.length;

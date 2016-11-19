@@ -5,32 +5,34 @@ import java.util.List;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderRates;
 
-public class OrderRatesVo extends OrderRates{
-	
+public class OrderRatesVo extends OrderRates {
+
 	private String serviceTypeName;
-	
+
 	private String serviceDateStr;
-	
+
 	private Long serviceDate;
-	
+
 	private List<String> orderRateUrl;
-	
+
 	private List<OrgStaffs> staffList;
-	
-	//用户手机号
+
+	// 用户手机号
 	private String usermobile;
-	
-	//用户地址
+
+	// 用户地址
 	private String userAddr;
-	
+
 	private String staffMobile;
-	
+
 	private String staffName;
-	
+
 	private String orgName;
-	
+
 	private String parentOrgName;
-	
+
+	private Short orderType;
+
 	public String getServiceTypeName() {
 		return serviceTypeName;
 	}
@@ -118,6 +120,13 @@ public class OrderRatesVo extends OrderRates{
 	public void setParentOrgName(String parentOrgName) {
 		this.parentOrgName = parentOrgName;
 	}
-	
+
+	public Short getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Short orderType) {
+		this.orderType = orderType;
+	}
 
 }

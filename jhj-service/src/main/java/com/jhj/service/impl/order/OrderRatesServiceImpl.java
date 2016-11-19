@@ -321,6 +321,7 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 		Orders order = ordersService.selectByPrimaryKey(orderId);
 		
 		orderRagesVo.setServiceDate(order.getServiceDate()*1000);
+		orderRagesVo.setOrderType(order.getOrderType());
 		orderRagesVo.setServiceTypeName(
 				partnerServiceTypeService.selectByPrimaryKey(order.getServiceType()).getName());
 		
