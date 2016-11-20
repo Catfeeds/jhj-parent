@@ -9,6 +9,8 @@
 <title>工作人员地图展现</title>
 <%@ include file="../shared/importCss.jsp"%>
 <!--css for this page-->
+<link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>" rel="stylesheet"
+	type="text/css" />
 <style type="text/css">
 body, html {
 	width: 100%;
@@ -31,7 +33,7 @@ body, html {
 	background: #000;
 	height: 50%;
 	position: fixed;
-	top: 190px;
+	top: 210px;
 	left: 241px;
 }
 
@@ -109,6 +111,24 @@ body, html {
 											<button type="button" onclick="loadStaffMapDatas()" class="btn btn-primary">搜索</button>
 										</td>
 									</tr>
+									
+									<tr>
+										<td>日期:</td>
+										<td>
+											<input id="serviceDateStr" name="serviceDateStr" value="" class="form-control form_datetime"
+																	style="width: 170px; margin-bottom: 0" readonly="true" />
+										
+										</td>
+										
+										<td>手机号:</td>
+										<td>
+											<input id="mobile" name="mobile" value="" class="form-control" type="text" />
+										
+										</td>
+										<td colspan="4">
+											<button type="button" onclick="loadStaffTrail()" class="btn btn-primary">轨迹查询</button>
+										</td>
+									</tr>
 								</table>
 							</form:form>
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
@@ -129,6 +149,8 @@ body, html {
 	</section>
 	<%@ include file="../shared/importJs.jsp"%>
 	<!-- 引入百度地图API,其中   申请的密钥   ak 和主机 ip绑定， -->
+	<script src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/bs/orgStaffMap.js'/>"></script>

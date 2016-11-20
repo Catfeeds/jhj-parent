@@ -103,3 +103,8 @@ ALTER TABLE `order_appoint`
 --
 ALTER TABLE `order_appoint`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
+
+
+update `user_trail_history` set user_type = 0;
+
+update `user_trail_real` set user_type = 0;

@@ -26,6 +26,8 @@ public class OrgStaffsVo {
 	private BigDecimal totalIncoming;
 	
 	private List<String> skills;
+	
+	private String staffCode;
 
 	public Long getStaffId() {
 		return staffId;
@@ -113,6 +115,14 @@ public class OrgStaffsVo {
 
 	public void setSkills(List<String> skills) {
 		this.skills = skills;
+	}
+
+	public String getStaffCode() {
+		return staffCode;
+	}
+
+	public void setStaffCode(String staffCode) {
+		this.staffCode = staffCode;
 	}
 
 }

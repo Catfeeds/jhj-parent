@@ -1,6 +1,9 @@
 package com.jhj.service.users;
 
+import java.util.List;
+
 import com.jhj.po.model.user.UserTrailHistory;
+import com.jhj.vo.user.UserTrailSearchVo;
 
 public interface UserTrailHistoryService {
 	
@@ -17,5 +20,7 @@ public interface UserTrailHistoryService {
     int updateByPrimaryKey(UserTrailHistory record);
 
     UserTrailHistory initUserTrailHistory();
+
+	List<UserTrailHistory> selectBySearchVo(UserTrailSearchVo searchVo);
 
 }

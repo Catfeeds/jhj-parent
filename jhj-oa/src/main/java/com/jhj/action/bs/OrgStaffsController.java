@@ -34,6 +34,7 @@ import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.user.UserTrailHistory;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffTagsService;
@@ -41,12 +42,14 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.users.UserTrailHistoryService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.staff.OrgStaffPoiVo;
 import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserTrailHistoryVo;
 import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -82,6 +85,11 @@ public class OrgStaffsController extends BaseController {
 	
 	@Autowired
 	private UserTrailRealService userTrailRealService;
+	
+	@Autowired
+	private UserTrailHistoryService userTrailHistoryService;
+	
+	
 	
 	
 //	@AuthPassport
@@ -360,8 +368,8 @@ public class OrgStaffsController extends BaseController {
 		List<OrgStaffPoiVo> onlines = new ArrayList<OrgStaffPoiVo>();
 		List<OrgStaffPoiVo> offLines = new ArrayList<OrgStaffPoiVo>();
 		
-		Long now = TimeStampUtil.getNowSecond();
-//		Long now = 1479448020L; //jhj-online
+//		Long now = TimeStampUtil.getNowSecond();
+		Long now = 1479448020L; //jhj-online
 //		Long now = 1479538800L; //jhj-test
 		Long maxLastTime = now - 2 * 3600;
 		
@@ -471,4 +479,64 @@ public class OrgStaffsController extends BaseController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "get_staff_trail.json", method = RequestMethod.GET)
+	public AppResultData<Object> getStaffTrain(Model model, 
+			HttpServletRequest request,
+			@RequestParam(value = "service_date",required =false,defaultValue = "") String serviceDateStr,
+			@RequestParam(value = "mobile",required =false,defaultValue = "") String mobile
+			
+			) {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		StaffSearchVo searchVo = new StaffSearchVo();
+		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+		
+		if (sessionParentId > 0L)
+			searchVo.setParentId(sessionParentId);
+		
+		if (!StringUtil.isEmpty(mobile)) searchVo.setMobile(mobile);
+		
+		if (searchVo.getStatus() == null) searchVo.setStatus(1);
+		
+		List<OrgStaffs> staffList = orgStaffsService.selectBySearchVo(searchVo);
+		
+		Long staffId = 0L;
+		if (!staffList.isEmpty()) staffId = staffList.get(0).getStaffId();
+		
+		if (staffId.equals(0L)) return result;
+		
+		UserTrailSearchVo searchVo1 = new UserTrailSearchVo();
+		searchVo1.setUserId(staffId);
+		searchVo1.setUserType((short) 0);
+		
+		//时间
+		if (StringUtil.isEmpty(serviceDateStr)) serviceDateStr = DateUtil.getToday();
+		
+		Long startTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 00:00:00");
+		Long endTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 23:59:59");
+		searchVo1.setStartTime(startTime / 1000);
+		searchVo1.setEndTime(endTime / 1000);
+		
+		List<UserTrailHistory> userTrailHistory = userTrailHistoryService.selectBySearchVo(searchVo1);
+		
+		List<UserTrailHistoryVo> vos = new ArrayList<UserTrailHistoryVo>();
+		
+		if (userTrailHistory.isEmpty()) return result;
+		
+		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
+		
+		for (UserTrailHistory item : userTrailHistory) {
+			UserTrailHistoryVo vo = new UserTrailHistoryVo();
+			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+			
+			vo.setName(orgStaff.getName());
+			vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(item.getAddTime() * 1000, "HH:mm"));
+			vos.add(vo);
+		}
+		
+		result.setData(vos);
+		return result;
+	}
+
 }
