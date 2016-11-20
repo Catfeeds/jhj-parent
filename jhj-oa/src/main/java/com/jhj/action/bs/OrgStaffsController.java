@@ -55,6 +55,7 @@ import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.baidu.MapPoiUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -526,14 +527,64 @@ public class OrgStaffsController extends BaseController {
 		
 		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
 		
-		for (UserTrailHistory item : userTrailHistory) {
-			UserTrailHistoryVo vo = new UserTrailHistoryVo();
-			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+		
+		String tmpTimeStr = "";
+		UserTrailHistory curItem = null;
+		UserTrailHistory preItem = null;
+		UserTrailHistoryVo vo = new UserTrailHistoryVo();
+		for (int i = 0; i < userTrailHistory.size(); i ++) {
 			
-			vo.setName(orgStaff.getName());
-			vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(item.getAddTime() * 1000, "HH:mm"));
-			vos.add(vo);
+			curItem = userTrailHistory.get(i);
+			tmpTimeStr = TimeStampUtil.timeStampToDateStr(curItem.getAddTime() * 1000, "HH:mm");
+			if (i == 0) {
+				preItem = userTrailHistory.get(i);
+				
+				BeanUtilsExp.copyPropertiesIgnoreNull(curItem, vo);
+				
+				vo.setName(orgStaff.getName());
+				vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(curItem.getAddTime() * 1000, "HH:mm"));
+				continue;
+			} else {
+				preItem = userTrailHistory.get(i - 1);
+			}
+			
+			String fromLng = curItem.getLng();
+			String fromLat = curItem.getLat();
+			String destLng = preItem.getLng();
+			String destLat = preItem.getLat();
+			int distance = MapPoiUtil.poiDistance(fromLng, fromLat, destLng, destLat);
+			System.out.println("i = " + i + "--- distncae = " + distance);
+			//超过1公里，则标记为一个点;
+			if (distance >= 1000) {
+				
+				vo.setAddTimeStr(vo.getAddTimeStr() + "到" + tmpTimeStr);
+				vos.add(vo);
+				
+				vo = new UserTrailHistoryVo();
+				BeanUtilsExp.copyPropertiesIgnoreNull(curItem, vo);
+				vo.setName(orgStaff.getName());
+				vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(curItem.getAddTime() * 1000, "HH:mm"));
+				
+				if (i == (userTrailHistory.size() - 1) ) {
+					vos.add(vo);
+				}
+				
+			} else {
+				if (i == (userTrailHistory.size() - 1) ) {
+					vo.setAddTimeStr(vo.getAddTimeStr() + "到" + tmpTimeStr);
+					vos.add(vo);
+				}
+			}
 		}
+		
+//		for (UserTrailHistory item : userTrailHistory) {
+//			UserTrailHistoryVo vo = new UserTrailHistoryVo();
+//			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+//			
+//			vo.setName(orgStaff.getName());
+//			vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(item.getAddTime() * 1000, "HH:mm"));
+//			vos.add(vo);
+//		}
 		
 		result.setData(vos);
 		return result;

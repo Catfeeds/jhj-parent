@@ -178,58 +178,116 @@ function loadStaffTrail() {
 
 function setStaffTrail(trailDatas) {
 	
-	var points = [];//原始点信息数组  
-	var bPoints = [];//百度化坐标数组。用于更新显示范围。  
+	//如果只有一个点，则不需要折线，地图标一个点即可.
+	if (trailDatas.length == 1) {
+		var o = trailDatas[0];
+		var opoint = new BMap.Point(o.lng, o.lat);
+		var o1 = new BMap.Marker(opoint);
+		 map.addOverlay(o1);
+		 var ol1 = new BMap.Label(o.add_time_str, {offset : new BMap.Size(-10, -30), position: opoint });
+		 map.addOverlay(ol1);
+		 return false;
+	}
 	
-	var makerPoints = []; 
 	
 	
-	$.each(trailDatas, function(i, obj) {
+	var chartData = [];
+	
+	var walking = new BMap.WalkingRoute(map, { renderOptions: { map: map, autoViewport: true} });
+	
+	var startTrail = trailDatas[0];
+	var endTrail = trailDatas[trailDatas.length-1];
+	
+	var startpoint = new BMap.Point(startTrail.lng, startTrail.lat);
+    var endpoint = new BMap.Point(endTrail.lng, endTrail.lat);
+    walking.search(startpoint, endpoint);
+    
+  //定义集合用来存放沿线的坐标值
+    var chartData = [];
+  //通过setSearchCompleteCallback回调事件可以把步行间的坐标信息获取
+    walking.setSearchCompleteCallback(function (rs) {
+        var pts = walking.getResults().getPlan(0).getRoute(0).getPath();
+        for (var i = 0; i < pts.length; i++) {
+            chartData.push(new BMap.Point(pts[i].lat, pts[i].lng));
+        }
+    });
+    
+  //把步行线路的坐标集合转化成折线
+    var polyline = new BMap.Polyline(chartData, { strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5 });
+    map.addOverlay(polyline);
+    
+  //对起点、终点、途经点做一个简单的处理，泡泡跟文字提示
+    addMaker(startTrail.lng, startTrail.lat, startTrail.add_time_str);
+    addMaker(endTrail.lng, endTrail.lat, endTrail.add_time_str);
+
+	
+	//处理途经点
+    console.log("trailDatas.length == " + trailDatas.length);
+    if (trailDatas.length == 2) return false;
+    
+
+    $.each(trailDatas, function(i, obj) {
+    	
+    	if (i == 0) return true;
+    	if (i == (trailDatas.length - 1)  ) return true;
+    	console.log("i ==" + i);
 		var name = obj.name;
 		var lng = obj.lng;
 		var lat = obj.lat;
-		var id = obj.user_id;
-		var addTimeStr = obj.add_time_str;
-		var point = {"lng":lng,"lat":lat,"status":1,"id":id, "addTimeStr" : addTimeStr} ;
-		points.push(point);
-		makerPoints.push(point);   
 		
-		bPoints.push(new BMap.Point(lng,lat));  
+		addMakerPoint(lng, lat, obj.add_time_str);
 	});
+
+    
+}
+
+
+function addMaker(lng, lat, title) {
 	
-	var len = points.length;  
-//    newLinePoints = points.slice(len-2, len);//最后两个点用来画线。  
-	
-    addLine(points);//增加轨迹线  
-    setZoom(bPoints);  
+	var point = new BMap.Point(lng, lat);
+	var label = new BMap.Label(title, { offset : new BMap.Size(-10, 10), position: point });
+	label.setStyle({
+		 color : "black",
+		 fontSize : "12px",
+		 height : "25px",
+		 lineHeight : "20px",
+		 lineWeight : "50px", 
+		 fontFamily:"微软雅黑"
+	 });
+	map.addOverlay(point);
+	map.addOverlay(label);
 	
 }
 
 
-//添加线  
-function addLine(points){  
-  
-    var linePoints = [],pointsLen = points.length,i,polyline;  
-    if(pointsLen == 0){  
-        return;  
-    }  
-    // 创建标注对象并添加到地图     
-    for(i = 0;i <pointsLen;i++){  
-        linePoints.push(new BMap.Point(points[i].lng,points[i].lat));  
-    }  
-  
-    polyline = new BMap.Polyline(linePoints, {strokeColor:"red", strokeWeight:2, strokeOpacity:0.5});   //创建折线  
-    map.addOverlay(polyline);   //增加折线  
-}  
+
+function addMakerPoint(lng, lat, title) {
+	
+	var iconUrl = "/jhj-oa/img/circle-green.png";
+	var myIcon = new BMap.Icon(iconUrl, new BMap.Size(30,20));
+	var point = new BMap.Point(lng, lat);
+	var label = new BMap.Label(title, { offset : new BMap.Size(-40, -30), position: point });
+	label.setStyle({
+		 color : "black",
+		 fontSize : "12px",
+		 height : "25px",
+		 lineHeight : "20px",
+		 lineWeight : "50px", 
+		 fontFamily:"微软雅黑"
+	 });
+	
+	var marker = new BMap.Marker(point, {icon:myIcon});
+	
+	marker.setLabel(label);
+	
+	map.addOverlay(marker);
+}
+
+
 
 function setZoom(bPoints){  
     var view = map.getViewport(eval(bPoints));  
     var mapZoom = view.zoom;   
     var centerPoint = view.center;   
     map.centerAndZoom(centerPoint,mapZoom);  
-}
-
-function addMarker(point){
-	  var marker = new BMap.Marker(point);
-	  map.addOverlay(marker);
 }
