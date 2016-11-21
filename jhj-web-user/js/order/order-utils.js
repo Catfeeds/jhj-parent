@@ -198,7 +198,8 @@ function orderRecomment(serviceTypeId){
 		{"serviceTypeId":"62","list":yuezifang},
 		{"serviceTypeId":"65","list":anjubao},
 		{"serviceTypeId":"29","list":jinpai},
-		{"serviceTypeId":"64","list":jiebaobao}
+		{"serviceTypeId":"64","list":jiebaobao},
+		{"serviceTypeId":"67","list":jinpai}
 	]
 
 	for(var i=0;i<recoArr.length;i++){
