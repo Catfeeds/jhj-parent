@@ -2692,7 +2692,7 @@ i.toolbar-icon-tixing {
 .shendu-cankaotime22{
   width:59.5%;
   padding-left: 5%;
-  color:#FFDD64;
+  color:#7ABFFA;
   height:35px;
   line-height: 35px;
   text-align: left;
@@ -3829,6 +3829,13 @@ i.toolbar-icon-tixing {
   line-height: 35px;
   font-size: 14px;
   color:#666;
+}
+.waiter7-1-1{
+  width:66%;
+  float: right;
+  font-size: 14px;
+  color:#666;
+  margin-top: 7px;
 }
 .waiter7-1 img{
   width:20px;
