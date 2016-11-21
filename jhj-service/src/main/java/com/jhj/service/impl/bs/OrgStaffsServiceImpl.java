@@ -137,6 +137,11 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 	@Override
 	public int updateByPrimaryKeySelective(OrgStaffs orgStaffs) {
+		//修改员工信息， 如果员工信息中没有员工编号，则生成员工编号
+		OrgStaffs os = this.selectByPrimaryKey(orgStaffs.getStaffId());
+		if(os.getStaffCode()==null && !os.getStaffCode().equals("")){
+			orgStaffs.setStaffCode(getValidateStaffCode());
+		}
 		return orgStaMapper.updateByPrimaryKeySelective(orgStaffs);
 	}
 
