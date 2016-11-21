@@ -12,10 +12,8 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 		var orderRates = result.data;
 
 		var htmlTemplate = $$('#order-user-rate-temp').html();
-
 		var html = ''; // 当前订单
 
-	
 		for (var i = 0; i < orderRates.length; i++) {
 			var or = orderRates[i];
 			var htmlPart = htmlTemplate;
