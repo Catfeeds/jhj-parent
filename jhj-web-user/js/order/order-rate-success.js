@@ -3,6 +3,9 @@ myApp.onPageBeforeInit('order-rate-success', function(page) {
 	var userId = localStorage['user_id'];
 	
 	var orderId = sessionStorage.getItem("order_id");
+	if(orderId==null || orderId==''||orderId==undefined){
+		orderId = page.query.order_id;
+	}
 	
 	var orderType = sessionStorage.getItem("order_type");
 	
@@ -55,12 +58,13 @@ myApp.onPageBeforeInit('order-rate-success', function(page) {
 	};
 	
 	function loadOrderRate(userId, orderId) {
-		
+		var staffId = page.query.staff_id;
 		var postdata = {};
 		
 		var apiUrl = "order/get_order_rate.json";
 		postdata.user_id = userId;
 		postdata.order_id = orderId;
+		postdata.staff_id = staffId;
 		
 		$$.ajax({
 			type : "GET",

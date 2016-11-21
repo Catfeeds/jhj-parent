@@ -66,27 +66,31 @@ import="com.jhj.oa.common.UrlHelper"%>
                            </form:form>     
                           </header>
                            
-                           <table class="table table-bordered">
-                           	<tr>
-                           		<td>订单总金额</td>
-                           		<td>订单收入</td>
-                           		<td>余额支付</td>
-                           		<td>支付宝</td>
-                           		<td>微信</td>
-                           		<td>现金收入</td>
-                           		<td>平台已支付</td>
-                           		<td>还款金额</td>
-                           	</tr>
-                           	<tr>
-                           		<td>${totalMoney }</td>
-                           		<td>${orderPayMoney }</td>
-                           		<td>${spareMoney }</td>
-                           		<td>${alipayMoney }</td>
-                           		<td>${wechatMoney }</td>
-                           		<td>${cashMoney }</td>
-                           		<td>${platformMoney }</td>
-                           		<td>${refundMoney }</td>
-                           	</tr>
+                           <table class="table table-hover table-bordered">
+                           	<thead>
+	                           	<tr>
+	                           		<td>订单总金额（元）</td>
+	                           		<td>订单收入（元）</td>
+	                           		<td>余额支付（元）</td>
+	                           		<td>支付宝（元）</td>
+	                           		<td>微信（元）</td>
+	                           		<td>平台已支付（元）</td>
+	                           		<td>现金收入（元）</td>
+	                           		<td>还款金额（元）</td>
+	                           	</tr>
+                           	</thead>
+                           	<tbody>
+	                           	<tr>
+	                           		<td>${totalMoney }</td>
+	                           		<td>${orderPayMoney }</td>
+	                           		<td>${spareMoney }</td>
+	                           		<td>${alipayMoney }</td>
+	                           		<td>${wechatMoney }</td>
+	                           		<td>${platformMoney }</td>
+	                           		<td>${cashMoney }</td>
+	                           		<td>${refundMoney }</td>
+	                           	</tr>
+                           	</tbody>
                            </table>
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
                       	

@@ -164,7 +164,8 @@ public class OrderRatesController extends BaseController {
 	@RequestMapping(value = "get_order_rate", method = RequestMethod.GET)
 	public AppResultData<Object> GetOrderRate(
 			@RequestParam("user_id") Long userId, 
-			@RequestParam("order_id") Long orderId) {
+			@RequestParam("order_id") Long orderId,
+			@RequestParam(value="staff_id",required=false) Long staffId) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
 		Orders orders = ordersService.selectByPrimaryKey(orderId);
@@ -177,6 +178,9 @@ public class OrderRatesController extends BaseController {
 		
 		OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
 		orderRateSearchVo.setOrderId(orderId);
+		if(staffId!=null && staffId>0L){
+			orderRateSearchVo.setStaffId(staffId);
+		}
 		List<OrderRates> orderRates = orderRatesService.selectBySearchVo(orderRateSearchVo);
 		
 		if (orderRates.isEmpty()) return result;

@@ -20,7 +20,6 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.user.UserCoupons;
-import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.UserPayStatus;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.GiftsService;
@@ -32,11 +31,9 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.GiftCouponVo;
 import com.jhj.vo.bs.GiftVo;
 import com.jhj.vo.order.OrderCardsVo;
-import com.jhj.vo.staff.OrgStaffsVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserCardVo;
 import com.jhj.vo.user.UserChargeVo;
-import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OrderNoUtil;
@@ -288,8 +285,13 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		if(orderCards.getReferee()!=null && !orderCards.getReferee().equals("")){
 			StaffSearchVo staffsVo =new StaffSearchVo();
 			staffsVo.setStaffCode(orderCards.getReferee());
-			List<OrgStaffs> staff = orgStaffService.selectBySearchVo(staffsVo);
-			orderCoardVo.setStaffName(staff.get(0).getName());
+			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffsVo);
+			OrgStaffs staff = staffList.get(0);
+			if(staff!=null){
+				orderCoardVo.setStaffName(staff.getName());
+			}else{
+				orderCoardVo.setStaffName(orderCards.getReferee());
+			}
 		}else{
 			orderCoardVo.setStaffName("-");
 		}

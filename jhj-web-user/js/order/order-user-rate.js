@@ -25,11 +25,12 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 				var headImgHtml="";
 				var staffs=or.staff_list;
 				var staffLen=staffs.length;
-				sessionStorage.setItem("order_id",or.order_id);
+				var orderId=or.order_id;
+//				sessionStorage.setItem("order_id",or.order_id);
 				for(var k=0;k<staffLen;k++){
-					staffhtml +="<a href='order/order-rate-success.html'><span class='special-color2'>"+staffs[k].name+"</span></a>"
+					staffhtml +="<a href='order/order-rate-success.html?order_id="+orderId+"&staff_id="+staffs[k].staff_id+"'><span class='special-color2'>"+staffs[k].name+"</span></a>";
 					if(k<2){
-						headImgHtml+="<img src='"+staffs[k].head_img+"' alt='' />";
+						headImgHtml+="<a href='order/order-rate-success.html?order_id="+orderId+"&staff_id="+staffs[k].staff_id+"'><div id='staffId-img' class='waiter10-2-1'><img src='"+staffs[k].head_img+"' alt='' /></div></a>";
 					}
 				}
 				htmlPart = htmlPart.replace(new RegExp('{staff_name}', "gm"), staffhtml);
@@ -116,7 +117,6 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 		}
 	};
 	
-	
 	function loadOrderList(userId, page) {
 		console.log("page = " + page);
 		var postdata = {};
@@ -146,7 +146,26 @@ myApp.onPageBeforeInit('order-user-rate', function(page) {
 	});
 	
 	loadOrderList(userId, page);
+	
+	$$('#order-user-rate .waiter10-1 #staffId').on("click",function(){
+//		<a href='order/order-rate-success.html'>
+		alert();
+		var staffId = $$("#staff_id").val();
+		sessionStorage.setItem('staff_id',staffId);
+		mainView.router.loadPage("order/order-rate-success.html");
+	});
+	
+	$$('').on("click",function(){
+//		<a href='order/order-rate-success.html'>
+		alert();
+		var staffId = $$("#staff_id").val();
+		sessionStorage.setItem('staff_id',staffId);
+		mainView.router.loadPage("order/order-rate-success.html");
+	});
+	
+	
 });
+
 
 
 
