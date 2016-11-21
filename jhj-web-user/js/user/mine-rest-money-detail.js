@@ -20,9 +20,9 @@ myApp.onPageInit('mine-rest-money-detail-page', function (page) {
 			
 			var orderType = item.order_type;
 			var detailImg = "";
-			if (orderType == 0 || orderType == 1 || orderType == 2 || orderType == 3) {
+			if (orderType == 0  || orderType == 2 || orderType == 3) {
 				detailImg = '<img src="img/laonian/jianhao.png" alt="" class="all-img7">';
-			} else {
+			} else if (orderType == 1) {
 				detailImg = '<img src="img/laonian/jiahao.png" alt="" class="all-img7">';
 			}
 			htmlPart = htmlPart.replace(new RegExp('{detailImg}', "gm"), detailImg);
