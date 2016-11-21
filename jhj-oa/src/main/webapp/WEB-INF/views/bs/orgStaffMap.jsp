@@ -134,7 +134,7 @@ body, html {
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<div class="panel-body">
 								<div class="baidu-maps" id="allmap"></div>
-								<div class="houtai-waiter-list">
+								<div class="houtai-waiter-list" id="offline-div">
 									<p>不在线人员名单</p>
 									<ul id="offline-list">
 									</ul>

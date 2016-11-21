@@ -19,7 +19,7 @@ map.addControl(top_right_navigation);
 function loadStaffMapDatas() {
 	//清空
 	map.clearOverlays();
-	
+	$("#offline-div").css('display','block'); 
 	// 发送ajax请求根据省ID获取城市ID
 	
 	var parentId = $("#parentId").val();
@@ -150,7 +150,7 @@ function loadStaffTrail() {
 	}
 	
 	map.clearOverlays();
-	
+	$("#offline-div").css('display','none'); 
 	var params = {};
 	params.service_date = serviceDateStr;
 	params.mobile = mobile;
@@ -177,67 +177,66 @@ function loadStaffTrail() {
 
 
 function setStaffTrail(trailDatas) {
-	
+	var chartData = [];
 	//如果只有一个点，则不需要折线，地图标一个点即可.
 	if (trailDatas.length == 1) {
 		var o = trailDatas[0];
-		var opoint = new BMap.Point(o.lng, o.lat);
-		var o1 = new BMap.Marker(opoint);
-		 map.addOverlay(o1);
-		 var ol1 = new BMap.Label(o.add_time_str, {offset : new BMap.Size(-10, -30), position: opoint });
-		 map.addOverlay(ol1);
-		 return false;
+		addMakerPoint(o.lng, o.lat, o.add_time_str);
+		return false;
 	}
 	
+	//把所有的点先做标注
+	$.each(trailDatas, function(i, obj) {
+		
+		var title = obj.add_time_str;
+		if (i == 0) title = "起点:" + obj.add_time_str;
+		if (i == (trailDatas.length - 1)) title = "终点:" + obj.add_time_str;
+		
+		addMakerPoint(obj.lng, obj.lat, title);
+	});
 	
 	
-	var chartData = [];
-	
-	var walking = new BMap.WalkingRoute(map, { renderOptions: { map: map, autoViewport: true} });
-	
-	var startTrail = trailDatas[0];
-	var endTrail = trailDatas[trailDatas.length-1];
-	
-	var startpoint = new BMap.Point(startTrail.lng, startTrail.lat);
-    var endpoint = new BMap.Point(endTrail.lng, endTrail.lat);
-    walking.search(startpoint, endpoint);
+	//定义集合用来存放沿线的坐标值
     
-  //定义集合用来存放沿线的坐标值
-    var chartData = [];
-  //通过setSearchCompleteCallback回调事件可以把步行间的坐标信息获取
+    
+    var walking = new BMap.WalkingRoute(map, { renderOptions: { map: map, autoViewport: true} });
     walking.setSearchCompleteCallback(function (rs) {
         var pts = walking.getResults().getPlan(0).getRoute(0).getPath();
-        for (var i = 0; i < pts.length; i++) {
-            chartData.push(new BMap.Point(pts[i].lat, pts[i].lng));
-        }
+        var polyline = new BMap.Polyline(pts);
+        map.addOverlay(polyline);
+//        for (var i = 0; i < pts.length; i++) {
+//            chartData.push(pts);
+//        }
     });
-    
-  //把步行线路的坐标集合转化成折线
-    var polyline = new BMap.Polyline(chartData, { strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5 });
-    map.addOverlay(polyline);
-    
-  //对起点、终点、途经点做一个简单的处理，泡泡跟文字提示
-    addMaker(startTrail.lng, startTrail.lat, startTrail.add_time_str);
-    addMaker(endTrail.lng, endTrail.lat, endTrail.add_time_str);
 
-	
-	//处理途经点
-    console.log("trailDatas.length == " + trailDatas.length);
-    if (trailDatas.length == 2) return false;
+    for(var i =0;i<trailDatas.length;i++){
+    	if (i == (trailDatas.length - 1)) return false;
+    	var fromObj = trailDatas[i];
+    	var toObj = trailDatas[i+1];
+        var fromPoint = new BMap.Point(fromObj.lng, fromObj.lat);        
+        var toPoint = new BMap.Point(toObj.lng, toObj.lat); 
+        walking.search(fromPoint, toPoint);//waypoints表示途经点
+     }
     
+    
+    
+//    setTimeout(function(){
+//    	$.each(chartData, function (i, value) {
+//    	var polyline = new BMap.Polyline(value, { strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5 });
+//        maps.addOverlay(polyline);
+//    	});
+//    }, 3000);
+}
 
-    $.each(trailDatas, function(i, obj) {
-    	
-    	if (i == 0) return true;
-    	if (i == (trailDatas.length - 1)  ) return true;
-    	console.log("i ==" + i);
-		var name = obj.name;
-		var lng = obj.lng;
-		var lat = obj.lat;
-		
-		addMakerPoint(lng, lat, obj.add_time_str);
-	});
-
+function ShowRoute() {
+    
+    var newChartData = [];
+    //对坐标点重新定义
+    $.each(chartData, function (item, value) {
+        newChartData.push(new BMap.Point(value.lat, value.lng));
+    });
+ 
+    //把步行线路的坐标集合转化成折线
     
 }
 
