@@ -129,6 +129,9 @@
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</delete>
 	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffs">
+	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="staffId">
+			SELECT LAST_INSERT_ID() AS staff_id
+		</selectKey>
 		insert into org_staffs (staff_id, province_id, city_id,
 		region_id, org_id, staff_type,
 		status, sex, name,
@@ -154,6 +157,9 @@
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffs">
+	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="staffId">
+			SELECT LAST_INSERT_ID() AS staff_id
+		</selectKey>
 		insert into org_staffs
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="staffId != null">

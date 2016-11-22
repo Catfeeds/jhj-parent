@@ -369,8 +369,8 @@ public class OrgStaffsController extends BaseController {
 		List<OrgStaffPoiVo> onlines = new ArrayList<OrgStaffPoiVo>();
 		List<OrgStaffPoiVo> offLines = new ArrayList<OrgStaffPoiVo>();
 		
-//		Long now = TimeStampUtil.getNowSecond();
-		Long now = 1479448020L; //jhj-online
+		Long now = TimeStampUtil.getNowSecond();
+//		Long now = 1479448020L; //jhj-online
 //		Long now = 1479538800L; //jhj-test
 		Long maxLastTime = now - 2 * 3600;
 		

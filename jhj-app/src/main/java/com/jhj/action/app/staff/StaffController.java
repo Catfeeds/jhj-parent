@@ -216,6 +216,12 @@ public class StaffController extends BaseController {
 			orgStaff = orgStaffsService.initOrgStaffs();
 			orgStaff.setMobile(mobile);
 			orgStaffsService.insert(orgStaff);
+			
+			Long staffId = orgStaff.getStaffId();
+			String staffCode = String.valueOf(1000 + staffId.intValue());
+			orgStaff.setStaffCode(staffCode);
+			orgStaffsService.updateByPrimaryKey(orgStaff);
+			
 
 //			List<PartnerServiceType> list = partnerServiceTypeService.selectAll();
 			PartnerServiceTypeVo serviceTypeVo = new PartnerServiceTypeVo();

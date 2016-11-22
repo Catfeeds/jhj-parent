@@ -1,4 +1,4 @@
-ALTER TABLE `org_staffs` ADD `staff_code` VARCHAR(3) NOT NULL COMMENT '员工编号' ;
+ALTER TABLE `org_staffs` ADD `staff_code` VARCHAR(10) NOT NULL COMMENT '员工编号' ;
 
 ALTER TABLE `users` ADD `is_vip` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否会员 0 = 否 1 = 是' AFTER `user_type`;
 
@@ -108,3 +108,5 @@ ALTER TABLE `order_appoint`
 update `user_trail_history` set user_type = 0;
 
 update `user_trail_real` set user_type = 0;
+
+update users set is_vip = 1 where id in ( SELECT user_id FROM `order_cards` WHERE card_money >= 1000 and order_status = 1 );
