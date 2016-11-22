@@ -126,7 +126,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 	@Override
 	public int insertSelective(OrgStaffs orgStaffs) {
-		orgStaffs.setStaffCode(getValidateStaffCode());
+//		orgStaffs.setStaffCode(getValidateStaffCode());
 		return orgStaMapper.insertSelective(orgStaffs);
 	}
 
@@ -140,7 +140,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		//修改员工信息， 如果员工信息中没有员工编号，则生成员工编号
 		OrgStaffs os = this.selectByPrimaryKey(orgStaffs.getStaffId());
 		if(os.getStaffCode()==null && !os.getStaffCode().equals("")){
-			orgStaffs.setStaffCode(getValidateStaffCode());
+			orgStaffs.setStaffCode(String.valueOf(1000+os.getStaffId()));
 		}
 		return orgStaMapper.updateByPrimaryKeySelective(orgStaffs);
 	}
@@ -662,25 +662,6 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		newVo.setDispathStaFlag(0);
 
 		return newVo;
-	}
-	
-	/*随机生成员工编号*/
-	public String getValidateStaffCode(){
-		
-		Random random=new Random();
-		int code = random.nextInt(9999);
-		if (code<=1000){
-			code+=1000;
-		}
-		String staffCode = Integer.toString(code);
-		StaffSearchVo vo=new StaffSearchVo();
-		vo.setStaffCode(staffCode);
-		List<OrgStaffs> voList = orgStaMapper.selectBySearchVo(vo);
-		if(voList!=null && voList.size()>0){
-			getValidateStaffCode();
-		}
-		
-		return staffCode;
 	}
 	
 	@Override

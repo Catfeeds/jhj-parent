@@ -7,6 +7,7 @@ $('.form_datetime').datetimepicker({
 	minuteStep : 30
 });
 
+$('.form_datetime').datetimepicker('setStartDate', new Date());
 
 $('#selectedStaffs').tagsinput({
 	  itemValue: 'id',

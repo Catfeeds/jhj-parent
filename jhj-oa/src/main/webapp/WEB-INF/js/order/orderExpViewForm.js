@@ -6,7 +6,7 @@ $('.form_datetime').datetimepicker({
 	todayBtn : true,
 	minuteStep : 30
 });
-
+$('.form_datetime').datetimepicker('setStartDate', new Date());
 
 $('#selectedStaffs').tagsinput({
 	  itemValue: 'id',

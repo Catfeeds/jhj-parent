@@ -302,7 +302,12 @@ public class NewOrgStaffController extends AdminController {
 			orgStaffs.setUpdateTime(TimeStampUtil.getNow() / 1000);
 			staffService.updateByPrimaryKeySelective(orgStaffs);
 		} else {
+
 			staffService.insertSelective(orgStaffs);
+			
+			Long staffId = orgStaffs.getStaffId();
+			orgStaffs.setStaffCode(String.valueOf(1000 + staffId));
+			staffService.updateByPrimaryKey(orgStaffs);
 			
 		}
 		
