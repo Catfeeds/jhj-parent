@@ -423,9 +423,58 @@ public class OrderController extends BaseController {
 				
 		if (serviceHour == 0 ) {
 			result.setStatus(Constants.ERROR_999);
-			result.setMsg("小时数和金额不能为0.");
+			result.setMsg("小时数为0.");
 			return result;
 		}
+		
+		if (orderPay == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("请输入加时价格.");
+			return result;
+		}
+
+		if (orderPay.compareTo(BigDecimal.ZERO) == -1) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("加时价格不正确.");
+			return result;
+		}
+		
+		//检测延长的时间是否跟服务人员有冲突
+		Long serviceDate = order.getServiceDate();
+		double newServiceHour = order.getServiceHour();
+	    newServiceHour+= serviceHour;
+		
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderId(order.getId());
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+		for (OrderDispatchs op : disList) {
+			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
+			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+			
+			// 注意结束时间也要服务结束后 1:59分钟
+			Long endServiceTime = (long) (serviceDate + newServiceHour * 3600 + Constants.SERVICE_PRE_TIME);
+			
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setStaffId(op.getStaffId());
+			searchVo1.setDispatchStatus((short) 1);
+			searchVo1.setStartServiceTime(startServiceTime);
+			searchVo1.setEndServiceTime(endServiceTime);
+			List<OrderDispatchs> ooDisList = orderDispatchsService.selectByMatchTime(searchVo1);
+			
+			for (OrderDispatchs nop : ooDisList) {
+				
+				if (nop.getOrderId().equals(orderId)) continue;
+				String nowServiceDateStr = TimeStampUtil.timeStampToDateStr(nop.getServiceDate() * 1000, "MM-dd HH:MM");
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(nop.getStaffName() + "在" + nowServiceDateStr + "已有其他派工，加时时长有冲突.");
+				return result;
+			}
+			
+		}
+		
+		
 		
 		OrderPriceExt orderPriceExt = orderPriceExtService.initOrderPriceExt();
 		orderPriceExt.setUserId(order.getUserId());
@@ -484,8 +533,7 @@ public class OrderController extends BaseController {
 	    userDetailPayService.insert(detailPay);
 		
 		//更新订单的服务时长
-	    double newServiceHour = order.getServiceHour();
-	    newServiceHour+= serviceHour;
+	    
 	    order.setServiceHour(newServiceHour);
 	    ordersService.updateByPrimaryKeySelective(order);
 	    

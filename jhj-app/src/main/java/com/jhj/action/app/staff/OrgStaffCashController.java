@@ -70,12 +70,13 @@ public class OrgStaffCashController extends BaseController {
 		List<Short> orderStatusList = new ArrayList<Short>();
 		orderStatusList.add((short) 0);
 		orderStatusList.add((short) 1);
+		searchVo.setOrderStatusList(orderStatusList);
 		BigDecimal totalCashIngMoney = orgStaffCashService.getTotalCashMoney(searchVo);
 		
 		//已经提现的金额
 		searchVo = new OrgStaffCashSearchVo();
 		searchVo.setStaffId(userId);
-		searchVo.setOrderStatus((short) 2);
+		searchVo.setOrderStatus((short) 1);
 		BigDecimal totalCashedMoney = orgStaffCashService.getTotalCashMoney(searchVo);
 		
 		//总收入-总欠款-总提现金额的钱数来比较
