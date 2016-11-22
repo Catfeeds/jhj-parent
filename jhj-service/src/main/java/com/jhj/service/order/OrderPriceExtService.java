@@ -32,4 +32,6 @@ public interface OrderPriceExtService {
 
 	BigDecimal getOrderOverWorkIncoming(Orders order, Long staffId);
 
+	BigDecimal getOrderExtPay(OrderPriceExt orderPriceExt, Long staffId, Short orderExtType);
+
 }

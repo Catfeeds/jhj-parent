@@ -42,5 +42,7 @@ public interface OrderPricesService {
 	BigDecimal getOrderIncoming(Orders order, Long staffId);
 
 	BigDecimal getOrderMoneyStaff(Orders order, Long staffId);
+
+	BigDecimal getOrderPayStaff(Orders order, Long staffId);
 	
 }

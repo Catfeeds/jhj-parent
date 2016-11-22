@@ -420,7 +420,7 @@ public class OrderController extends BaseController {
 			result.setMsg("开始服务的订单才能加时");
 			return result;
 		}
-		
+				
 		if (serviceHour == 0 || orderPay.equals(new BigDecimal(0))) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("小时数和金额不能为0.");
@@ -448,11 +448,21 @@ public class OrderController extends BaseController {
 		
 		orderPriceExtService.insert(orderPriceExt);
 		
-		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
-		
 		//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
-		orgStaffFinanceService.orderOverWork(order, orderPriceExt, orgStaffs);
 		
+		if (orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) || orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) {
+			
+			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+			orderDispatchSearchVo.setOrderId(orderId);
+			orderDispatchSearchVo.setDispatchStatus((short) 1);
+			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
+			for (OrderDispatchs item : orderDispatchs) {
+				OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(item.getStaffId());
+				orgStaffFinanceService.orderOverWork(order, orderPriceExt, orgStaffs);
+			}
+		}
+		
+
 		//更新用户明细表
 		UserDetailPay detailPay = new UserDetailPay();
 		detailPay.setId(0L);

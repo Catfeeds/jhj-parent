@@ -321,9 +321,6 @@
 				#{staffCode,jdbcType=VARCHAR},
 			</if>
 		</trim>
-		<selectKey keyProperty="staffId" resultType="long">
-			select LAST_INSERT_ID()
-		</selectKey>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffs">
 		update org_staffs

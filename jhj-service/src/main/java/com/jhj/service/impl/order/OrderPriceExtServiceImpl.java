@@ -201,7 +201,27 @@ public class OrderPriceExtServiceImpl implements OrderPriceExtService {
 		}
 		return incoming;
 	}
-
 	
+	
+	@Override
+	public BigDecimal getOrderExtPay(OrderPriceExt orderPriceExt, Long staffId, Short orderExtType) {
+		
+		String orderNo = orderPriceExt.getOrderNo();
+		
+		BigDecimal orderPayExt = orderPriceExt.getOrderPay();
+		
+		//找出派工，是否为多个
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderNo(orderNo);
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+		
+		if (orderDispatchs.size() > 1) {
+			orderPayExt = MathBigDecimalUtil.div(orderPayExt, new BigDecimal(orderDispatchs.size()));
+		}
+		
+		orderPayExt = MathBigDecimalUtil.round(orderPayExt, 2);
+		return orderPayExt;
+	}
 
 }

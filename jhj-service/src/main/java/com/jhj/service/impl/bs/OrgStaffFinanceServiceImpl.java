@@ -36,6 +36,7 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -162,16 +163,11 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	public void orderDone(Orders orders, OrderPrices orderPrices, OrgStaffs orgStaffs) {
 		Long orderId = orders.getId();
 		Long staffId = orgStaffs.getStaffId();
-		Short level = orgStaffs.getLevel();
-		String settingLevel = "-level-" + level.toString();
-		// 得到订单收入比例
-		String settingType = OrderUtils.getOrderSettingType(orders.getOrderType());
-
-		settingType += settingLevel;
-
 		
-		BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrices);
-		BigDecimal orderPay = orderPricesService.getOrderPay(orderPrices);
+//		BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrices);
+//		BigDecimal orderMoney = orderPricesService.getOrderMoneyStaff(orders, staffId);
+//		BigDecimal orderPay = orderPricesService.getOrderPay(orderPrices);
+		BigDecimal orderPay = orderPricesService.getOrderPayStaff(orders, staffId);
 		BigDecimal orderIncoming = orderPricesService.getOrderIncoming(orders, staffId);
 		orderIncoming = MathBigDecimalUtil.round(orderIncoming, 2);
 		
@@ -199,7 +195,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			orgStaffDetailPay.setOrderType(orders.getOrderType());
 			orgStaffDetailPay.setOrderId(orderId);
 			orgStaffDetailPay.setOrderNo(orders.getOrderNo());
-			orgStaffDetailPay.setOrderMoney(orderMoney);
+			orgStaffDetailPay.setOrderMoney(orderPay);
 			orgStaffDetailPay.setOrderPay(orderIncoming);
 			orgStaffDetailPay.setOrderStatusStr(OrderUtils.getOrderStatusName(orders.getOrderType(), orders.getOrderStatus()));
 			orgStaffDetailPay.setRemarks(orders.getRemarks());
@@ -234,7 +230,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				orgStaffDetailDept.setOrderType(orders.getOrderType());
 				orgStaffDetailDept.setOrderId(orderId);
 				orgStaffDetailDept.setOrderNo(orders.getOrderNo());
-				orgStaffDetailDept.setOrderMoney(orderMoney);
+				orgStaffDetailDept.setOrderMoney(orderPay);
 				orgStaffDetailDept.setOrderDept(orderPay);
 				orgStaffDetailDept.setOrderStatusStr(OrderUtils.getOrderStatusName(orders.getOrderType(), orders.getOrderStatus()));
 				orgStaffDetailDept.setRemarks(orders.getRemarks());
@@ -268,6 +264,17 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 					ordersService.userJoinBlackSuccessTodo(orgStaffs.getMobile());
 				}
 			}
+		} else {
+			//判断是否订单支付方式不是现金支付，但是有订单加时，则这个也需要增加
+			OrderSearchVo osearchVo = new OrderSearchVo();
+			osearchVo.setOrderId(orderId);
+			osearchVo.setOrderExtType((short) 1);
+			List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(osearchVo);
+			if (!list.isEmpty()) {
+				for (OrderPriceExt ope : list) {
+					this.orderOverWork(orders, ope, orgStaffs);
+				}
+			}
 		}
 	}
 	
@@ -276,9 +283,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	public void orderOverWork(Orders orders, OrderPriceExt orderPriceExt, OrgStaffs orgStaffs) {
 		Long orderId = orders.getId();
 		Long staffId = orgStaffs.getStaffId();
-		Short level = orgStaffs.getLevel();
 		
-		BigDecimal orderPay = orderPriceExt.getOrderPay();
+		Short orderExtType = 1;
+		BigDecimal orderPay = orderPriceExtService.getOrderExtPay(orderPriceExt, staffId, orderExtType);
 		BigDecimal orderIncoming = orderPriceExtService.getOrderOverWorkIncoming(orders, staffId);
 		
 		// 服务人员财务表
@@ -334,7 +341,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				orgStaffDetailDept.setMobile(orgStaffs.getMobile());
 				orgStaffDetailDept.setOrderType(orders.getOrderType());
 				orgStaffDetailDept.setOrderId(orderId);
-				orgStaffDetailDept.setOrderNo(orders.getOrderNo());
+				orgStaffDetailDept.setOrderNo(orderPriceExt.getOrderNoExt());
 				orgStaffDetailDept.setOrderMoney(orderPay);
 				orgStaffDetailDept.setOrderDept(orderIncoming);
 				orgStaffDetailDept.setOrderStatusStr("加时服务");

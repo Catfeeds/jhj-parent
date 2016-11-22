@@ -338,6 +338,35 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 	 * @return
 	 */
 	@Override
+	public BigDecimal getOrderPayStaff(Orders order, Long staffId) {
+		Long orderId = order.getId();
+		
+		OrderPrices orderPrice = this.selectByOrderId(orderId);
+		
+		BigDecimal orderPay = this.getOrderPay(orderPrice);
+		
+		//找出派工，是否为多个
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(orderId);
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+		
+		if (orderDispatchs.size() > 1) {
+			orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
+		}
+		
+		
+		orderPay = MathBigDecimalUtil.round(orderPay, 2);
+		return orderPay;
+	}
+	
+	/**
+	 * 获得员工指定的订单的实际金额，如果是多个订单，则为平均数.
+	 * @param orders
+	 * @params staffId
+	 * @return
+	 */
+	@Override
 	public BigDecimal getOrderMoneyStaff(Orders order, Long staffId) {
 		Long orderId = order.getId();
 		
