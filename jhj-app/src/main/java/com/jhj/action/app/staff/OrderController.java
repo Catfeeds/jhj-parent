@@ -421,7 +421,7 @@ public class OrderController extends BaseController {
 			return result;
 		}
 				
-		if (serviceHour == 0 || orderPay.equals(new BigDecimal(0))) {
+		if (serviceHour == 0 ) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("小时数和金额不能为0.");
 			return result;
