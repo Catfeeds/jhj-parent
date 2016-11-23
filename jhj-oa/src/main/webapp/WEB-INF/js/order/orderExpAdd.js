@@ -155,6 +155,7 @@ function getAddrByMobile(addrId) {
 					console.log("is_vip ==" + isVip);
 					if (isVip == 0) $("#userTypeStr").html("普通会员");
 					if (isVip == 1) $("#userTypeStr").html("金牌会员");
+					serviceTypeChange();
 					changePrice();
 					$.ajax({
 						type : "get",
@@ -344,6 +345,7 @@ function serviceTypeChange() {
 			$("#service-content").children().remove();
 			var serviceType = data.data;
 			var serviceContentHtml = "";
+			var isVip = $("#isVip").val();
 			for (var i = 0; i < serviceType.length; i++) {
 				
 				serviceContentHtml+="<tr>";
@@ -355,7 +357,12 @@ function serviceTypeChange() {
 				
 				serviceContentHtml+='<input type="hidden" name="serviceAddonId" value="' + serviceType[i].service_addon_id + '"/>';
 				serviceContentHtml+= serviceType[i].name + "</td>";
-				serviceContentHtml+="<td>" + serviceType[i].dis_price + "&nbsp;<span>" + serviceType[i].item_unit + "</span></td>";
+				if (isVip == 1) {
+					serviceContentHtml+="<td>" + serviceType[i].dis_price + "&nbsp;<span>" + serviceType[i].item_unit + "</span></td>";
+				} else {
+					serviceContentHtml+="<td>" + serviceType[i].price + "&nbsp;<span>" + serviceType[i].item_unit + "</span></td>";
+				}
+				
 				
 				serviceContentHtml+="<td>" + serviceType[i].service_hour + "小时</td>";
 				serviceContentHtml+="<td><input type='text' name='itemNum' value='" + serviceType[i].default_num + "' onkeyup='changePrice()'  onafterpaste='changePrice()' ></td>";
