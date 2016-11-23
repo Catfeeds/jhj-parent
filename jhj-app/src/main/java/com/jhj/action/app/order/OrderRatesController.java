@@ -267,7 +267,7 @@ public class OrderRatesController extends BaseController {
 				
 				OrderStaffRateVo vo = orgStaffsService.getOrderStaffRateVo(orgStaff);
 				
-				int totalRateStar = 3;
+				int totalRateStar = 5;
 				String totalArrival = "100%"; 
 				vo.setTotalRateStar(totalRateStar);
 				vo.setTotalArrival(totalArrival);

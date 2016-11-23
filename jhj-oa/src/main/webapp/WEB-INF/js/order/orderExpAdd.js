@@ -156,7 +156,7 @@ function getAddrByMobile(addrId) {
 					if (isVip == 0) $("#userTypeStr").html("普通会员");
 					if (isVip == 1) $("#userTypeStr").html("金牌会员");
 					serviceTypeChange();
-					changePrice();
+//					changePrice();
 					$.ajax({
 						type : "get",
 						dataType : "json",
@@ -192,7 +192,15 @@ getAddrByMobile(0);
  * 提交订单
  */
 function saveFrom() {
-
+	console.log("saveform");
+	var serviceAddonDatas = $("#serviceAddonDatas").val();
+	console.log(serviceAddonDatas);
+	console.log(serviceAddonDatas.length);
+	if (serviceAddonDatas == undefined || serviceAddonDatas == "" || serviceAddonDatas == []) {
+		alert("请输入服务子项的数量");
+		return false;
+	}	
+	
 	var params = {};
 	params.user_id = $("#userId").text();
 	params.mobile = $("#mobile").val();
@@ -207,6 +215,7 @@ function saveFrom() {
 	params.remarks = $("#remarks").val();
 	var orderPayType = $("#orderPayType").val();
 	params.service_addons_datas = $("#serviceAddonDatas").val();
+
 	if ($('#orderExpForm').validate().form()) {
 		$('#submitForm').attr('disabled',"true");
 		$.ajax({
@@ -379,7 +388,9 @@ function serviceTypeChange() {
 serviceTypeChange();
 
 function changePrice() {
-	
+	$("#orderPay").val(0);
+	$("#serviceHour").val(0);
+	$("#serviceAddonDatas").val("");
 	var totalOrderPay = 0;
 	var totalServiceHour = 0;
 	var serviceAddonsJson = [];
@@ -393,7 +404,7 @@ function changePrice() {
 		var serviceAddonId = "";
 			
 		$(this).find("td input").each(function(){
-			console.log("attr = " + $(this).attr("name"));
+//			console.log("attr = " + $(this).attr("name"));
 			if($(this).attr("name") == "serviceAddonId") serviceAddonId = $(this).val();
 			if($(this).attr("name") == "serviceAddonPrice") serviceAddonPrice = $(this).val();
 			if($(this).attr("name") == "serviceAddonDisPrice") serviceAddonDisPrice = $(this).val();
@@ -444,8 +455,9 @@ function changePrice() {
 	
 //	console.log(JSON.stringify(serviceAddonsJson));
 	// json赋值.
-	$("#serviceAddonDatas").val(JSON.stringify(serviceAddonsJson) );
+	if (serviceAddonsJson.length > 0) {
+		$("#serviceAddonDatas").val(JSON.stringify(serviceAddonsJson) );
+	}
 	
-	console.log("" +$("#serviceAddonDatas").val());
 	
 }
