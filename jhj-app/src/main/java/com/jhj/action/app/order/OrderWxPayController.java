@@ -101,6 +101,7 @@ public class OrderWxPayController extends BaseController {
 
 			BigDecimal orderPayNow = orderPricesService.getPayByOrder(orderId, userCouponId);
 			wxPay = orderPayNow.toString();
+			System.out.println("支付金额="+wxPay+"-----------------------------");
 			tradeName = "叮当到家家庭服务";
 		}
 

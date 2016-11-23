@@ -1,5 +1,6 @@
 package com.jhj.action.user;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -693,7 +694,7 @@ public class UserController extends BaseController {
 	//用户充值列表
 	@AuthPassport
 	@RequestMapping(value="/user-charge-list",method=RequestMethod.GET)
-	public String userCharge(Model model,HttpServletRequest request,OrderCardsVo orderCardsVo){
+	public String userCharge(Model model,HttpServletRequest request,OrderCardsVo orderCardsVo) throws UnsupportedEncodingException{
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
@@ -709,13 +710,17 @@ public class UserController extends BaseController {
 			}
 			orderCardsVo.setUserIds(userIds);
 		}
+		String staffName = orderCardsVo.getStaffName();
+		if(staffName!=null && !staffName.equals("")){
+			orderCardsVo.setStaffName(new String(staffName.getBytes("ISO-8859-1") ,"UTF-8"));
+		}
 		String addStartTimeStr = request.getParameter("addStartTimeStr");
 		if(addStartTimeStr!=null && !addStartTimeStr.equals("")){
-			orderCardsVo.setAddStartTime(TimeStampUtil.getMillisOfDayFull(addStartTimeStr+" 00:00:00"));
+			orderCardsVo.setAddStartTime(TimeStampUtil.getMillisOfDayFull(addStartTimeStr+" 00:00:00")/1000);
 		}
 		String addEndTimeStr = request.getParameter("addEndTimeStr");
 		if(addEndTimeStr!=null && !addEndTimeStr.equals("")){
-			orderCardsVo.setAddEndTime(TimeStampUtil.getMillisOfDayFull(addEndTimeStr+" 23:59:59"));
+			orderCardsVo.setAddEndTime(TimeStampUtil.getMillisOfDayFull(addEndTimeStr+" 23:59:59")/1000);
 		}
 		orderCardsVo.setOrderStatus((short)1);
 		PageInfo page = orderCardsService.selectByListPage(orderCardsVo,pageNo, pageSize);

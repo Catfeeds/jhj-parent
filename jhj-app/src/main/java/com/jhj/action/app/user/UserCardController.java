@@ -78,6 +78,7 @@ public class UserCardController extends BaseController {
 			record.setParentId(staff.getParentOrgId());
 			record.setOrgId(staff.getOrgId());
 		}
+		record.setReferee(staffCode);
 		orderCardsService.insert(record);
 
 		result.setData(record);

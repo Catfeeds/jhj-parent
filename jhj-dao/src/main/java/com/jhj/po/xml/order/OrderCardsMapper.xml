@@ -346,10 +346,10 @@
 		<if test="parentId != null">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
-		<if test="orgId != null">
+		<if test="orgId != null and orgId >0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
-		<if test="staffName!=null">
+		<if test="staffName!=null and staffName!=''">
 			and referee in (select staff_code from org_staffs where name like concat('%',#{staffName},'%'))
 		</if>
 	</sql>
