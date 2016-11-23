@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -24,12 +23,12 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.GiftsService;
-import com.jhj.service.dict.CouponsTypeService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.user.UserCouponVo;
 import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -212,7 +211,6 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 			}
 			result.add(vo);
 		}
-		long currentTimeMillis1 = System.currentTimeMillis();
 		return result;
 	}
 
@@ -260,11 +258,17 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		}
 
 		// 4. 判断优惠劵的服务类型是否正确.
-		String serviceType = order.getServiceType().toString();
-		if (!serviceType.equals(userCoupon.getServiceType())) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.COUPON_IS_INVALID);
-			return result;
+		
+		
+		DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(userCoupon.getCouponId());
+		int couponsTypeId = dictCoupons.getCouponsTypeId();
+		if(couponsTypeId!=1){
+			String serviceType = order.getServiceType().toString();
+			if (!serviceType.equals(userCoupon.getServiceType())) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+				return result;
+			}
 		}
 
 		// 5. 判断优惠劵消费金额必须满多少可使用. 3.1版本不需要判断

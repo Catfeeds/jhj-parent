@@ -163,19 +163,14 @@ public class UserAppController extends BaseController {
 					if (userType == 0) {
 						// 给新注册的用户发送优惠券
 						Map<String, Object> map = new HashMap<String, Object>();
-						Date date = new Date();
 
 						map.put("couponsTypeId", 1);
-						// map.put("toDate",
-						// DateUtil.getUnixTimeStamp(DateUtil.getNow()));
 						List<DictCoupons> coupons = couponsService.getSelectByMap(map);
 						List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>();
 						if (coupons != null && coupons.size() > 0) {
 							for (DictCoupons c : coupons) {
-								if (c.getToDate().getTime() >= date.getTime()) {
-									UserCoupons uc = userCouponService.initUserCoupons(u.getId(), c);
-									userCouponsList.add(uc);
-								}
+								UserCoupons uc = userCouponService.initUserCoupons(u.getId(), c);
+								userCouponsList.add(uc);
 							}
 						}
 						if (userCouponsList != null && userCouponsList.size() > 0) {

@@ -151,7 +151,7 @@ public class UserCouponsController extends BaseController {
 		@RequestMapping(value = "get_validate_coupons",method = RequestMethod.GET)
 		public AppResultData<List<UserCouponVo>> getValidateCoupons(
 				@RequestParam("user_id") Long userId,
-				@RequestParam(value="service_date",required=false) Long serviceDate,
+				@RequestParam(value="service_date") Long serviceDate,
 				@RequestParam(value="order_money",required=false) Float orderMoney,
 				@RequestParam("service_type") String serviceTypeId){
 
@@ -169,7 +169,7 @@ public class UserCouponsController extends BaseController {
 			UserCoupons userCoupons = new UserCoupons();
 			userCoupons.setIsUsed((short)0);
 			userCoupons.setUserId(userId);
-			userCoupons.setServiceType(serviceTypeId);
+//			userCoupons.setServiceType(serviceTypeId);
 			List<UserCoupons> list = userCouponsService.selectByUserCoupons(userCoupons);
 			List<UserCouponVo> listNew = new ArrayList<UserCouponVo>();
 
@@ -177,29 +177,38 @@ public class UserCouponsController extends BaseController {
 
 			List<UserCouponVo> listUserCouponVo = userCouponsService.changeToUserCouponVos(list);
 			
-			boolean falg=false;
-			if(serviceDate!=null){
-				Date date = TimeStampUtil.timeStampToDate(serviceDate);
-				int weekNumber = DateUtil.getWeek(date).getNumber();
-				if(weekNumber==Week.MONDAY.getNumber() ||weekNumber==Week.TUESDAY.getNumber() || weekNumber==Week.WEDNESDAY.getNumber()){
-					falg=true;
-				}
-			}
-			BigDecimal moeney=new BigDecimal(0);
-			if(orderMoney!=null){
-				moeney=new BigDecimal(orderMoney);
-			}
+//			boolean falg=false;
+//			if(serviceDate!=null){
+//				Date date = TimeStampUtil.timeStampToDate(serviceDate);
+//				int weekNumber = DateUtil.getWeek(date).getNumber();
+//				if(weekNumber==Week.MONDAY.getNumber() ||weekNumber==Week.TUESDAY.getNumber() || weekNumber==Week.WEDNESDAY.getNumber()){
+//					falg=true;
+//				}
+//			}
+//			BigDecimal moeney=new BigDecimal(0);
+//			if(orderMoney!=null){
+//				moeney=new BigDecimal(orderMoney);
+//			}
 			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
 				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
 				
-				if (StringUtil.isEmpty(userCouponVo.getCouponsTypeId())) continue;
+				//判读优惠券的有效期
+				if(serviceDate*1000<=userCouponVo.getFromDate().getTime() || serviceDate*1000>=userCouponVo.getToDate().getTime()){
+					listNew.add(userCouponVo);
+				}
 				
-				if(userCouponVo.getCouponsTypeId().equals("2") && !falg){
+				if(!userCouponVo.getCouponsTypeId().equals("1") && !serviceTypeId.equals(userCouponVo.getServiceType())){
+					
 					listNew.add(userCouponVo);
 				}
-				if(moeney.compareTo(userCouponVo.getMaxValue())==-1){
-					listNew.add(userCouponVo);
-				}
+//				if (StringUtil.isEmpty(userCouponVo.getCouponsTypeId())) continue;
+				
+//				if(userCouponVo.getCouponsTypeId().equals("2") && !falg){
+//					listNew.add(userCouponVo);
+//				}
+//				if(moeney.compareTo(userCouponVo.getMaxValue())==-1){
+//					listNew.add(userCouponVo);
+//				}
 			}
 			listUserCouponVo.removeAll(listNew);
 			result.setData(listUserCouponVo);
