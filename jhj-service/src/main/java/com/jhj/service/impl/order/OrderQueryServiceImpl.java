@@ -537,8 +537,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setOrderIncoming(new BigDecimal(0));
 		vo.setOrderMoney(new BigDecimal(0));
 		if (orderPrice != null) {
-			BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrice);
-			vo.setOrderMoney(orderMoney);
+			BigDecimal orderPay = orderPricesService.getOrderPay(orderPrice);
+			vo.setOrderMoney(orderPay);
 			
 			BigDecimal orderIncoming = orderPricesService.getOrderIncoming(item, staffId);
 			vo.setOrderIncoming(orderIncoming);

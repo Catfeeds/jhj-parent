@@ -160,8 +160,8 @@ public class OrderStatServiceImpl implements OrderStatService {
 		if (list.isEmpty()) return totalMoney;
 		
 		for (Orders order : list) {
-			BigDecimal orderMoneyStaff = orderPriceService.getOrderMoneyStaff(order, vo.getStaffId());
-			totalMoney = totalMoney.add(orderMoneyStaff);
+			BigDecimal orderPayStaff = orderPriceService.getOrderPayStaff(order, vo.getStaffId());
+			totalMoney = totalMoney.add(orderPayStaff);
 		}
 
 		totalMoney = MathBigDecimalUtil.round(totalMoney, 2);
