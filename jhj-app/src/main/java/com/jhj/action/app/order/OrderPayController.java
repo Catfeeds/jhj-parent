@@ -188,8 +188,6 @@ public class OrderPayController extends BaseController {
 		
 		long updateTime = TimeStampUtil.getNowSecond();
 
-		orderPrice.setOrderMoney(orderPay);
-		
 		
 		if (orderPayType.equals(Constants.PAY_TYPE_0)) {
 			//1.先判断用户余额是否够支付
