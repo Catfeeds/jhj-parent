@@ -116,7 +116,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 				|| orgStaffDetailPay.getOrderType() == 1
 				|| orgStaffDetailPay.getOrderType() == 2
 				|| orgStaffDetailPay.getOrderType() == 3) {
-			BigDecimal orderMoney = orgStaffDetailPay.getOrderMoney();
+			BigDecimal orderMoney = orgStaffDetailPay.getOrderPay();
 			String orderMoneyStr = MathBigDecimalUtil.round2(orderMoney);
 			vo.setOrderTypeName("订单收入,订单金额:" + orderMoneyStr);
 		}
