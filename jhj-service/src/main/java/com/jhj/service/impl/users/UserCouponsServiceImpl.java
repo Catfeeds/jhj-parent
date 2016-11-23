@@ -260,8 +260,8 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		}
 
 		// 4. 判断优惠劵的服务类型是否正确.
-		String orderType = order.getOrderType().toString();
-		if (!orderType.equals(userCoupon.getServiceType())) {
+		String serviceType = order.getServiceType().toString();
+		if (!serviceType.equals(userCoupon.getServiceType())) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.COUPON_IS_INVALID);
 			return result;
