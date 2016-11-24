@@ -197,7 +197,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 		orgStaffs.setParentOrgId(0L);
 		orgStaffs.setLevel((short) 1); // 员工等级 1=1级 2=2级 3=3级 4=4级
-
+		orgStaffs.setStaffCode("");
 		return orgStaffs;
 	}
 

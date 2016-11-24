@@ -148,6 +148,7 @@ public class UsersServiceImpl implements UsersService {
 		u.setRemarks(" ");
 		u.setAddTime(TimeStampUtil.getNow() / 1000);
 		u.setUpdateTime(TimeStampUtil.getNow() / 1000);
+		u.setIsVip(0);
 		return u;
 	}
 
