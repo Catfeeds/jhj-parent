@@ -250,7 +250,7 @@
 			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE) )
 		</if>
 		
-		<if test="payType!=null and payType!=''">
+		<if test="payType!=null">
 			and order_no in (select order_no from order_prices where pay_type = #{payType,jdbcType=NUMERIC})
 		</if>
 
