@@ -196,27 +196,25 @@ public class UserCouponsController extends BaseController {
 				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
 				
 				//1. 判断优惠券的有效期
-				if(serviceDate * 1000 >= userCouponVo.getFromDate().getTime() && serviceDate*1000 <= userCouponVo.getToDate().getTime()){
+				if(serviceDate * 1000 <= userCouponVo.getFromDate().getTime() && serviceDate*1000 >= userCouponVo.getToDate().getTime()){
 					listNew.add(userCouponVo);
 				}
 				
 				//2. 判断服务类型是否正确
-				if (userCouponVo.getServiceType().equals((short)0) ||
-					userCouponVo.getServiceType().toString().equals(serviceTypeId)) {
+				if (!userCouponVo.getServiceType().equals((short)0) &&
+					!userCouponVo.getServiceType().toString().equals(serviceTypeId)) {
 					listNew.add(userCouponVo);
 				}
 				
-				if (userCouponVo.getMaxValue().equals(BigDecimal.ZERO)) {
-					listNew.add(userCouponVo);
-				} else {
+				if (!userCouponVo.getMaxValue().equals(BigDecimal.ZERO)) {
 					BigDecimal maxValue = userCouponVo.getMaxValue();
-					if (moeney.compareTo(maxValue) >= 0) {
+					if (moeney.compareTo(maxValue) < 0) {
 						listNew.add(userCouponVo);
 					}
 				}
-
 			}
-			result.setData(listNew);
+			listUserCouponVo.removeAll(listNew);
+			result.setData(listUserCouponVo);
 			return result;
 		}
 
