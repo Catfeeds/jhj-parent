@@ -256,7 +256,7 @@
 								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
 								<c:if
 									test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 5 }">
-									<c:if test="oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9">
+									<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9 }">
 										<button id="cancleOrder" class="btn btn-success">取消订单</button>
 									</c:if>
 								</c:if>

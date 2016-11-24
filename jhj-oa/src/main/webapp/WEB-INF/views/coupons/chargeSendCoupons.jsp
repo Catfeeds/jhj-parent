@@ -56,7 +56,14 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">服务类型* </label>
 							<div class="col-md-5">
-								<form:select path="serviceType" cssClass="form-control" items="${serviceTypeList}" itemLabel="name" itemValue="serviceTypeId"/> 
+								<%-- <form:select path="serviceType" cssClass="form-control" items="${serviceTypeList}" itemLabel="name" itemValue="serviceTypeId"/> --%>
+								<form:select path="serviceType" cssClass="form-control">
+									<option value="">--请选择服务类型--</option>
+									<c:forEach items="${serviceTypeList}" var="serviceType">
+										<form:option value="${serviceType.serviceTypeId }">${serviceType.name }</form:option>
+									</c:forEach>
+									<option value="0">全部</option> 
+								</form:select>
 							</div>
 						</div>
 						<%-- <div class="form-group">
