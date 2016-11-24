@@ -169,7 +169,7 @@ public class UserCouponsController extends BaseController {
 			UserCoupons userCoupons = new UserCoupons();
 			userCoupons.setIsUsed((short)0);
 			userCoupons.setUserId(userId);
-//			userCoupons.setServiceType(serviceTypeId);
+			userCoupons.setServiceType(serviceTypeId);
 			List<UserCoupons> list = userCouponsService.selectByUserCoupons(userCoupons);
 			List<UserCouponVo> listNew = new ArrayList<UserCouponVo>();
 
@@ -197,10 +197,10 @@ public class UserCouponsController extends BaseController {
 					listNew.add(userCouponVo);
 				}
 				
-				if(!userCouponVo.getCouponsTypeId().equals("1") && !serviceTypeId.equals(userCouponVo.getServiceType())){
-					
-					listNew.add(userCouponVo);
-				}
+//				if(!userCouponVo.getCouponsTypeId().equals("1") && !serviceTypeId.equals(userCouponVo.getServiceType())){
+//					
+//					listNew.add(userCouponVo);
+//				}
 //				if (StringUtil.isEmpty(userCouponVo.getCouponsTypeId())) continue;
 				
 //				if(userCouponVo.getCouponsTypeId().equals("2") && !falg){

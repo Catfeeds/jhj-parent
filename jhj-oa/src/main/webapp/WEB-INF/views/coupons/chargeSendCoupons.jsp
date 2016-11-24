@@ -112,7 +112,7 @@
 			</div>
 			</section>
 		</div>
-		<c:if test="${isForm!=0 and dictCoupons.isValid == '1'}">
+		<c:if test="${dictCoupons.id>0}">
 			<div id="form2-div">
 				<div class="col-lg-12">
 					<form id="form2" method="post" >

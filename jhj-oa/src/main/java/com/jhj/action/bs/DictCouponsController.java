@@ -373,7 +373,7 @@ public class DictCouponsController extends BaseController {
 //            dictCoupon.setDescription(dictCoupons.getDescription());
 //            dictCoupon.setIntroduction(dictCoupons.getIntroduction());
             dictCoupon.setRangMonth(dictCoupons.getRangMonth());
-            dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
+//            dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
             dictCoupon.setIsValid(dictCoupons.getIsValid());
             couponService.updateByPrimaryKeySelective(dictCoupon);
         } else {
