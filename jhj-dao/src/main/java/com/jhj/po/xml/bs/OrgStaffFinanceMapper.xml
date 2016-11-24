@@ -49,6 +49,10 @@
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
 		
+		<if test="staffId!=null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
 		<if test="staffIds!=null and staffIds.size()>0">
 			and staff_id in 
 			<foreach item="item" collection="staffIds" separator="," open="(" close=")" index="">
