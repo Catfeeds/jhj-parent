@@ -132,19 +132,14 @@ public class OrderCalendarController extends BaseController {
 		}
 		Long startTime = TimeStampUtil.getMillisOfDay(startTimeStr) / 1000;
 		searchVo.setStartServiceTime(startTime);
-		
 		String endTimeStr = request.getParameter("endTimeStr");
 		if (StringUtil.isEmpty(endTimeStr)) {
 			endTimeStr =  DateUtil.sevenDayAfterToday(DateUtil.parse(startTimeStr));
 		}
-		
 		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr + " 23:59:59") / 1000;
 		searchVo.setEndServiceTime(endTime);
-
-		searchVo.setDispatchStatus((short)1);
-		// 排班列表
-		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
 		
+		// 排班列表人员统计
 		int dispatchSizeAM=0;
 		int dispatchSizePM=0;
 
@@ -157,14 +152,13 @@ public class OrderCalendarController extends BaseController {
 		
 		Date startDate = DateUtil.parse(startTimeStr);
 		Date endDate = DateUtil.parse(endTimeStr);
-		
 		leaveSearchVo.setRangeStartDate(startDate);
 		leaveSearchVo.setRangeEndDate(endDate);
 		leaveSearchVo.setLeaveStatus("1");
 
 		// 请假列表
-		List<OrgStaffLeave> leaveList = leaveService.selectBySearchVo(leaveSearchVo);
 		
+		//请假人员统计
 		int leaveStaffSize=0;
 		
 		// 页面 Vo
@@ -172,22 +166,16 @@ public class OrderCalendarController extends BaseController {
 
 		// 一个 7天的 时间段, 由 开始时间决定。如果没有，则从今天起 往前 7天
 		List<String> weekDateList = DateUtil.getLastWeekArray(startTimeStr);
-		
-		
 		Long compareTime=TimeStampUtil.getMillisOfDayFull(startTimeStr+" 12:00:00");
 		
 		// 初始化时间、staff
 		for (OrgStaffs orgStaff : staffList) {
-
 			Long staffId = orgStaff.getStaffId();
-
 			OaStaffDisAndLeaveVo disAndLeaveVo = new OaStaffDisAndLeaveVo();
 			disAndLeaveVo.setStaffId(orgStaff.getStaffId());
 			disAndLeaveVo.setStaffName(orgStaff.getName());
 			List<TimeEventVo> timeEventList = new ArrayList<TimeEventVo>();
-
 			for (String weekDate : weekDateList) {
-
 				TimeEventVo timeEventVo = new TimeEventVo();
 				timeEventVo.setTimeStr(weekDate);
 				// 具体事件
@@ -195,23 +183,17 @@ public class OrderCalendarController extends BaseController {
 				
 				boolean falg=false;
 				// 加入请假事件
+				leaveSearchVo.setStaffId(staffId);
+				List<OrgStaffLeave> leaveList = leaveService.selectBySearchVo(leaveSearchVo);
 				if(leaveList!=null && leaveList.size()>0){
 					for (OrgStaffLeave staffLeave : leaveList) {
-
-						Long leaveStaffId = staffLeave.getStaffId();
+//						Long leaveStaffId = staffLeave.getStaffId();
 //						String leaveDate = DateUtil.formatDate(staffLeave.getLeaveDate());
 						Long leaveDate = staffLeave.getLeaveDate().getTime();
 						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
 						Long weekDateToday=TimeStampUtil.getMillisOfDay(weekDate);
-						if (leaveStaffId == staffId && (leaveDate<=weekDateToday && leaveDateEnd >=weekDateToday)) {
-
+						if (leaveDate<=weekDateToday && leaveDateEnd >=weekDateToday) {
 							EventVo eventVo = new EventVo();
-
-//							// 请假开始时间点
-//							Short start = staffLeave.getStart();
-//							// 请假结束时间点
-//							Short end = staffLeave.getEnd();
-
 							eventVo.setDateDuration(weekDate);
 							eventVo.setEventName("请假中");
 							eventVo.setServiceTime(leaveDate);
@@ -226,32 +208,24 @@ public class OrderCalendarController extends BaseController {
 				
 				// 加入 排班事件
 				if(!falg){
-					for (OrderDispatchs staffDisVo : disList) {
-						
+					searchVo.setStaffId(staffId);
+					searchVo.setDispatchStatus((short)1);
+					List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+					for(OrderDispatchs staffDisVo : disList){
 						// 服务日期 , 格式 'yyyy-MM-dd'
 						Long serviceDate = staffDisVo.getServiceDate() * 1000;
-						
 						String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
-						Long disStaffId = staffDisVo.getStaffId();
-						
+//						Long disStaffId = staffDisVo.getStaffId();
 						String orderNo = staffDisVo.getOrderNo();
-						
-						if (disStaffId == staffId && serviceDateStr.equals(weekDate)) {
-							
+						if (serviceDateStr.equals(weekDate)) {
 							EventVo eventVo = new EventVo();
-							
 							Orders orders = orderService.selectByOrderNo(orderNo);
-							
 							double serviceHour = orders.getServiceHour();
-							
 							Long serviceType = orders.getServiceType();
-							
-							// 得到 订单服务时间的 时间点--> 如 16:30、 08:00
+							 //得到 订单服务时间的 时间点--> 如 16:30、 08:00
 							String startHourMinStr = TimeStampUtil.timeStampToDateStr(serviceDate, "HH:mm");
-							
 							// 订单服务时间的 结束时间点
 							String endHourMinStr = TimeStampUtil.timeStampToDateStr((long) (serviceDate + serviceHour * 3600 * 1000), "HH:mm");
-							
 							eventVo.setEventName("");
 							PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 							if (type != null) {
@@ -269,7 +243,6 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setOrderType(orders.getOrderType());
 							eventList.add(eventVo);
 							falg=true;
-							
 							if(startTimeStr.equals(serviceDateStr)&& serviceDate>=compareTime){
 								dispatchSizePM++;
 							}
@@ -277,29 +250,23 @@ public class OrderCalendarController extends BaseController {
 								dispatchSizeAM++;
 							}
 						}
+						timeEventVo.setEventList(eventList);
+						timeEventList.add(timeEventVo);
 					}
 				}
-
-				timeEventVo.setEventList(eventList);
-				timeEventList.add(timeEventVo);
 			}
 			disAndLeaveVo.setTimeEventList(timeEventList);
-
 			listVo.add(disAndLeaveVo);
 		}
 
 		Gson gson = new Gson();
-
 		String json = gson.toJson(listVo);
-
 		System.out.println(json);
 		
 		model.addAttribute("listVoModel", json);
 		model.addAttribute("disAndLeaveSearchVoModel", searchVo);
 		model.addAttribute("loginOrgId", parentId); // 当前登录的 id,动态显示搜索 条件
-
 		model.addAttribute("weekDateModel", weekDateList);
-		
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
 
