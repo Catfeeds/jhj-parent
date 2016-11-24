@@ -181,6 +181,8 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 
 		String cardOrderNo = String.valueOf(OrderNoUtil.getOrderCardNo());
 		record.setCardOrderNo(cardOrderNo);
+		record.setParentId(0L);
+		record.setOrgId(0L);
 
 		return record;
 	}
