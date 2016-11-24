@@ -140,8 +140,8 @@ public class OrderController extends BaseController {
 		// 订单总数
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setStaffId(staffId);
-		searchVo.setStartTime(startTime);
-		searchVo.setEndTime(endTime);
+		searchVo.setStartAddTime(startTime);
+		searchVo.setEndAddTime(endTime);
 		Long totalOrder = orderStatService.getTotalOrderCount(searchVo);
 		vo.setTotalOrder(totalOrder);
 		
