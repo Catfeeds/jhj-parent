@@ -181,8 +181,10 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 
 		String cardOrderNo = String.valueOf(OrderNoUtil.getOrderCardNo());
 		record.setCardOrderNo(cardOrderNo);
+		record.setReferee("");
 		record.setParentId(0L);
 		record.setOrgId(0L);
+		
 
 		return record;
 	}
@@ -199,6 +201,9 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		record.setOrderStatus((short) 0);
 		record.setPayType(payType);
 		record.setUpdateTime(0L);
+		record.setReferee("");
+		record.setParentId(0L);
+		record.setOrgId(0L);
 		
 		String cardOrderNo = String.valueOf(OrderNoUtil.getOrderCardNo());
 		record.setCardOrderNo(cardOrderNo);

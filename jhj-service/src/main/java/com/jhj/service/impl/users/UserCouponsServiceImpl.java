@@ -258,27 +258,26 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		}
 
 		// 4. 判断优惠劵的服务类型是否正确.
-		
-		
-//		DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(userCoupon.getCouponId());
-//		int couponsTypeId = dictCoupons.getCouponsTypeId();
-//		if(couponsTypeId!=1){
 		String serviceType = order.getServiceType().toString();
-		if (!serviceType.equals(userCoupon.getServiceType())) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.COUPON_IS_INVALID);
-			return result;
+		if (!userCoupon.getServiceType().equals((short) 0)) {
+			if (!serviceType.equals(userCoupon.getServiceType())) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+				return result;
+			}
 		}
-//		}
+
 
 		// 5. 判断优惠劵消费金额必须满多少可使用. 3.1版本不需要判断
-//		BigDecimal orderMoney = orderPrice.getOrderMoney();
-//		BigDecimal maxValue = userCouponVo.getMaxValue();
-//		if (orderMoney.compareTo(maxValue) == -1) {
-//			result.setStatus(Constants.ERROR_999);
-//			result.setMsg(ConstantMsg.COUPON_IS_INVALID);
-//			return result;
-//		}
+		BigDecimal orderMoney = orderPrice.getOrderMoney();
+		BigDecimal maxValue = userCouponVo.getMaxValue();
+		if (!maxValue.equals(BigDecimal.ZERO)) {
+			if (orderMoney.compareTo(maxValue) == -1) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+				return result;
+			}
+		}
 
 		// 6. 判断优惠劵是否属于该用户.
 		if (!userCoupon.getUserId().equals(userId)) {

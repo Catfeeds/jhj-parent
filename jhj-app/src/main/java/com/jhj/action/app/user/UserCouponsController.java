@@ -169,14 +169,17 @@ public class UserCouponsController extends BaseController {
 			UserCoupons userCoupons = new UserCoupons();
 			userCoupons.setIsUsed((short)0);
 			userCoupons.setUserId(userId);
-			userCoupons.setServiceType(serviceTypeId);
+//			userCoupons.setServiceType(serviceTypeId);
 			List<UserCoupons> list = userCouponsService.selectByUserCoupons(userCoupons);
+			
+			//有效的优惠劵列表
 			List<UserCouponVo> listNew = new ArrayList<UserCouponVo>();
 
 			if(list.isEmpty()) return result;
 
 			List<UserCouponVo> listUserCouponVo = userCouponsService.changeToUserCouponVos(list);
 			
+			//此为判断是否在周一到周三使用.
 //			boolean falg=false;
 //			if(serviceDate!=null){
 //				Date date = TimeStampUtil.timeStampToDate(serviceDate);
@@ -185,33 +188,35 @@ public class UserCouponsController extends BaseController {
 //					falg=true;
 //				}
 //			}
-//			BigDecimal moeney=new BigDecimal(0);
-//			if(orderMoney!=null){
-//				moeney=new BigDecimal(orderMoney);
-//			}
+			BigDecimal moeney=new BigDecimal(0);
+			if(orderMoney!=null){
+				moeney=new BigDecimal(orderMoney);
+			}
 			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
 				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
 				
-				//判读优惠券的有效期
-				if(serviceDate*1000<=userCouponVo.getFromDate().getTime() || serviceDate*1000>=userCouponVo.getToDate().getTime()){
+				//1. 判断优惠券的有效期
+				if(serviceDate * 1000 >= userCouponVo.getFromDate().getTime() && serviceDate*1000 <= userCouponVo.getToDate().getTime()){
 					listNew.add(userCouponVo);
 				}
 				
-//				if(!userCouponVo.getCouponsTypeId().equals("1") && !serviceTypeId.equals(userCouponVo.getServiceType())){
-//					
-//					listNew.add(userCouponVo);
-//				}
-//				if (StringUtil.isEmpty(userCouponVo.getCouponsTypeId())) continue;
+				//2. 判断服务类型是否正确
+				if (userCouponVo.getServiceType().equals((short)0) ||
+					userCouponVo.getServiceType().toString().equals(serviceTypeId)) {
+					listNew.add(userCouponVo);
+				}
 				
-//				if(userCouponVo.getCouponsTypeId().equals("2") && !falg){
-//					listNew.add(userCouponVo);
-//				}
-//				if(moeney.compareTo(userCouponVo.getMaxValue())==-1){
-//					listNew.add(userCouponVo);
-//				}
+				if (userCouponVo.getMaxValue().equals(BigDecimal.ZERO)) {
+					listNew.add(userCouponVo);
+				} else {
+					BigDecimal maxValue = userCouponVo.getMaxValue();
+					if (moeney.compareTo(maxValue) >= 0) {
+						listNew.add(userCouponVo);
+					}
+				}
+
 			}
-			listUserCouponVo.removeAll(listNew);
-			result.setData(listUserCouponVo);
+			result.setData(listNew);
 			return result;
 		}
 
