@@ -89,10 +89,13 @@ function setOnlines(datas) {
 		label.setStyle({
 			color : "black",
 			fontSize : "12px",
-			height : "25px",
+			height : "30px",
 			lineHeight : "20px",
 			lineWeight : "50px",
-			fontFamily : "微软雅黑"
+			fontFamily : "微软雅黑",
+			background :"url('../img/baidumap/staffImg.png') no-repeat center",
+			border:'0',
+			backgroundColor:"0"
 		});
 		
 		var iconUrl = "";
@@ -275,7 +278,10 @@ function addMakerPoint(lng, lat, title, content) {
 		height : "25px",
 		lineHeight : "20px",
 		lineWeight : "50px",
-		fontFamily : "微软雅黑"
+		fontFamily : "微软雅黑",
+		background :"url('../img/baidumap/staffImg.png') no-repeat center",
+		border:'0',
+		backgroundColor:"0"
 	});
 	
 	var marker = new BMap.Marker(point, {
