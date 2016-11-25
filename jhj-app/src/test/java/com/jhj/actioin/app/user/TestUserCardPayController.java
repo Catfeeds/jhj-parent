@@ -28,12 +28,14 @@ public class TestUserCardPayController extends JUnitActionBase  {
 
      	MockHttpServletRequestBuilder postRequest = post(url);
 	    postRequest = postRequest.param("user_id", "1");
-	    postRequest = postRequest.param("card_order_no", "634215554466451456");
+	    postRequest = postRequest.param("card_order_no", "802037364296781824");
 	    postRequest = postRequest.param("pay_type", "2");
-	    postRequest = postRequest.param("notify_id", "1212121234123412341234");
-	    postRequest = postRequest.param("notify_time", "2015-08-19 18:50:23");
-	    postRequest = postRequest.param("trade_no", "12121211111234567890");
+	    postRequest = postRequest.param("notify_id", "b64a70760bb75e3ecfd1ad86d8f10c88");
+	    postRequest = postRequest.param("notify_time", "20161125143312");
+	    postRequest = postRequest.param("trade_no", "4001912001201611250778296065");
 	    postRequest = postRequest.param("trade_status", "SUCCESS");
+	    postRequest = postRequest.param("pay_account", "=opyMAwVzq-qSNrO7XAm24X7vfwDs");
+	    
 
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 

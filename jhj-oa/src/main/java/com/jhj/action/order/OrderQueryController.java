@@ -23,13 +23,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
+import com.jhj.common.ConstantMsg;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
@@ -51,10 +54,14 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OaOrderListVo;
+import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.poi.POIUtils;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -495,6 +502,49 @@ public class OrderQueryController extends BaseController {
 			if (bos != null)
 				bos.close();
 		}
+	}
+	
+	@RequestMapping(value = "get_list_by_date", method = RequestMethod.GET)
+	public AppResultData<Object> getListByDate(
+			@RequestParam("staff_id") Long staffId,
+			@RequestParam(value = "service_date", required = false, defaultValue = "") String serviceDateStr) {
+				
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+	
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setStaffId(staffId);
+		
+		if (StringUtil.isEmpty(serviceDateStr)) serviceDateStr = DateUtil.getToday();
+		
+		Long startTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 00:00:00");
+		Long endTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 23:59:59");
+		searchVo.setStartServiceTime(startTime / 1000);
+		searchVo.setEndServiceTime(endTime / 1000);
+		
+		
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
+		
+		searchVo.setOrderStatusList(orderStatusList);
+		searchVo.setOrderByProperty("service_date asc");
+		
+		List<Orders> orderList = orderQueryService.selectBySearchVo(searchVo);
+		List<OaOrderListVo> list = new ArrayList<OaOrderListVo>();
+		for (int i = 0; i < orderList.size(); i++) {
+			Orders item  = orderList.get(i);
+			
+			OaOrderListVo completeVo = oaOrderService.completeNewVo(item);
+			list.add(completeVo);
+		}
+		
+		result.setData(list);
+		
+		return result;
+
 	}
 
 }

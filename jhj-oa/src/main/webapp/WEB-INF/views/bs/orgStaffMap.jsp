@@ -32,7 +32,7 @@ body, html {
 	width: 160px;
 	background: #000;
 	height: 65%;
-	overflow:hidden;
+	overflow: hidden;
 	position: fixed;
 	top: 210px;
 	left: 241px;
@@ -99,7 +99,6 @@ body, html {
 										<td><select name="orgId" id="orgId" class="form-control">
 												<option value="0">全部</option>
 											</select></td>
-										
 										<td>状态:</td>
 										<td><select name="status" id="status" class="form-control">
 												<option value="0">全部</option>
@@ -111,26 +110,16 @@ body, html {
 											<button type="button" onclick="loadStaffMapDatas()" class="btn btn-primary">实时定位</button>
 										</td>
 									</tr>
-									
 									<tr>
 										<td>日期:</td>
-										<td>
-											<input id="serviceDateStr" name="serviceDateStr" value="${today}" class="form-control form_datetime"
-																	style="width: 170px; margin-bottom: 0" readonly="true" />
-										
-										</td>
-										
+										<td><input id="serviceDateStr" name="serviceDateStr" value="${today}" class="form-control form_datetime"
+												style="width: 170px; margin-bottom: 0" readonly="true" /></td>
 										<td>姓名:</td>
 										<td><select name="selectStaff" id="selectStaff" class="form-control">
 												<option value="0">全部</option>
-											</select>
-										</td>
-										
+											</select></td>
 										<td>合并范围(单位:米):</td>
-										<td>
-											<input id="mergeDistance" name="mergeDistance" value="2000" class="form-control" type="text" />
-										
-										</td>
+										<td><input id="mergeDistance" name="mergeDistance" value="2000" class="form-control" type="text" /></td>
 										<td colspan="4">
 											<button type="button" onclick="loadStaffRoute()" class="btn btn-primary">轨迹查询</button>
 										</td>
@@ -139,6 +128,24 @@ body, html {
 							</form:form>
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<div class="panel-body">
+								<table class="table table-striped table-advance table-hover" id="order-list-table" style="display:none">
+									<thead>
+										<tr>
+											<th width="10%">服务人员</th>
+											<th>人数</th>
+											<th>订单类型</th>
+											<th>服务日期</th>
+											<th>时长</th>
+											<th width="10%">地址</th>
+											<th>订单来源</th>
+											<th>订单状态</th>
+											<th>支付方式</th>
+											<th>支付金额</th>
+										</tr>
+									</thead>
+									<tbody id="order-list-tbody">
+									</tbody>
+								</table>
 								<div class="baidu-maps" id="allmap"></div>
 								<div class="houtai-waiter-list" id="offline-div">
 									<p>不在线人员名单</p>

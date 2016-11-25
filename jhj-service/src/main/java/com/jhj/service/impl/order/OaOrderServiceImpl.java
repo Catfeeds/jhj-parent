@@ -601,7 +601,14 @@ public class OaOrderServiceImpl implements OaOrderService {
 		OaOrderListVo oaOrderListVo = initVO();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(orders, oaOrderListVo);
-
+		
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(orders.getServiceDate() * 1000, "MM-dd HH:mm");
+		oaOrderListVo.setServiceDateStr(serviceDateStr);
+		
+		
+		String orderStatusName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orders.getOrderStatus());
+		oaOrderListVo.setOrderStatusName(orderStatusName);
+		
 		String orderNo = orders.getOrderNo();
 
 		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orderNo);

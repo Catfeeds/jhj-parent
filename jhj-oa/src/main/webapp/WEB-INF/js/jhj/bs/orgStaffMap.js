@@ -30,6 +30,7 @@ function loadStaffMapDatas() {
 	// 清空
 	map.clearOverlays();
 	$("#offline-div").css('display', 'block');
+	$("#order-list-table").css('display', 'none');
 	// 发送ajax请求根据省ID获取城市ID
 	
 	var parentId = $("#parentId").val();
@@ -160,11 +161,14 @@ function loadStaffRoute() {
 	var mergeDistance = $("#mergeDistance").val();
 	map.clearOverlays();
 	$("#offline-div").css('display', 'none');
+	$("#order-list-table").css('display', 'none');
 	var params = {};
 	params.service_date = serviceDateStr;
 	params.staff_id = staffId;
 	params.merge_distance = mergeDistance;
 	
+	
+	//读取地图信息
 	$.ajax({
 		type : 'GET',
 		url : '/jhj-oa/bs/get_staff_trail.json',
@@ -178,6 +182,46 @@ function loadStaffRoute() {
 			if (trailDatas != undefined || trailDatas != "" || trailDatas.length > 0) {
 				setStaffRoute(trailDatas);
 			}
+		},
+		error : function() {
+			
+		}
+	});
+	
+	//读取订单信息.
+	$.ajax({
+		type : 'GET',
+		url : '/jhj-oa/order/get_list_by_date.json',
+		dataType : 'json',
+		cache : false,
+		data : params,
+		success : function(datas) {
+			console.log(datas.data);
+			
+			var tableDatas = datas.data;
+			if (tableDatas == undefined || tableDatas == "") return false;
+			
+			var htmlStr = "";
+			$.each(tableDatas, function(i, obj) {
+				htmlStr = "<tr>";
+				htmlStr+= "<td>" + obj.staff_name + "</td>";
+				htmlStr+= "<td>" + obj.staff_nums + "</td>";
+				htmlStr+= "<td>" + obj.order_type_name + "</td>";
+				htmlStr+= "<td>" + obj.service_date_str + "</td>";
+				htmlStr+= "<td>" + obj.service_hour + "</td>";
+				htmlStr+= "<td>" + obj.order_address + "</td>";
+				htmlStr+= "<td>" + obj.order_op_from_name + "</td>";
+				htmlStr+= "<td>" + obj.order_status_name + "</td>";
+				htmlStr+= "<td>" + obj.pay_type_name + "</td>";
+				htmlStr+= "<td>" + obj.order_pay + "</td>";
+				htmlStr+= "<tr>";
+			});
+			
+			if (htmlStr != "") {
+				$("#order-list-tbody").html(htmlStr);
+				$("#order-list-table").css('display', 'block');
+			}
+			
 		},
 		error : function() {
 			
@@ -208,13 +252,6 @@ function showPoly(trailDatas) {
 		var p = new BMap.Point(obj.lng, obj.lat, obj.poi_name);
 		pointList.push(p);
 		
-//		var marker = new BMap.Marker(p);
-//		map.addOverlay(marker);
-//		// 将途经点按顺序添加到地图上
-//		var label = new BMap.Label(obj.add_time_str, {
-//			offset : new BMap.Size(20, -10)
-//		});
-//		marker.setLabel(label);
 		addMakerPoint(obj.lng, obj.lat, obj.add_time_str, obj.poi_name);
 
 	});

@@ -31,6 +31,7 @@ import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.staff.OrgStaffRateVo;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -223,5 +224,4 @@ public class OrderQuerysController extends BaseController {
 		
 		return result;
 	}
-	
 }
