@@ -47,12 +47,7 @@
 											<i class="icon-expand-alt"></i>
 											新增
 										</td>
-										
-										<td>
-											<button onClick="btn_add_blank('bs/staff-map')" class="btn btn-danger" type="button">
-											<i class="icon-expand-alt"></i>
-											地图
-										</td>
+
 									</button>
 									</tr>
 									<tr>

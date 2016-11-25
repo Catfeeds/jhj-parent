@@ -322,6 +322,10 @@ public class OrgStaffsController extends BaseController {
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		model.addAttribute("sessionOrgId", sessionOrgId);
+		
+		//当天
+		String today = DateUtil.getToday();
+		model.addAttribute("today", today);
 		return "bs/orgStaffMap";
 	}	
 	
@@ -370,7 +374,7 @@ public class OrgStaffsController extends BaseController {
 		List<OrgStaffPoiVo> offLines = new ArrayList<OrgStaffPoiVo>();
 		
 		Long now = TimeStampUtil.getNowSecond();
-//		Long now = 1479448020L; //jhj-online
+//		Long now = 1480042800L; //jhj-online
 //		Long now = 1479538800L; //jhj-test
 		Long maxLastTime = now - 2 * 3600;
 		
@@ -380,7 +384,9 @@ public class OrgStaffsController extends BaseController {
 			vo.setLat("");
 			vo.setLng("");
 			vo.setPoiTime(0L);
+			vo.setPoiTimeStr("");
 			vo.setPoiStatus(0);
+			vo.setPoiName("");
 			
 			UserTrailReal ut = null;
 			for (UserTrailReal item : userTrails) {
@@ -401,11 +407,15 @@ public class OrgStaffsController extends BaseController {
 				vo.setLng(ut.getLng());
 				vo.setPoiTime(ut.getAddTime());
 				vo.setPoiStatus(1);
+				vo.setPoiName(ut.getPoiName());
+				vo.setPoiTimeStr(TimeStampUtil.timeStampToDateStr(ut.getAddTime() * 1000, "yyyy-MM-dd HH:MM"));
 				onlines.add(vo);
 			} else {
 				vo.setLat(ut.getLat());
 				vo.setLng(ut.getLng());
 				vo.setPoiTime(ut.getAddTime());
+				vo.setPoiName(ut.getPoiName());
+				vo.setPoiTimeStr(TimeStampUtil.timeStampToDateStr(ut.getAddTime() * 1000, "yyyy-MM-dd HH:MM"));
 				offLines.add(vo);
 				
 			}
@@ -485,26 +495,12 @@ public class OrgStaffsController extends BaseController {
 	public AppResultData<Object> getStaffTrain(Model model, 
 			HttpServletRequest request,
 			@RequestParam(value = "service_date",required =false,defaultValue = "") String serviceDateStr,
-			@RequestParam(value = "mobile",required =false,defaultValue = "") String mobile
+			@RequestParam(value = "staff_id",required =false,defaultValue = "0") Long staffId,
+			@RequestParam(value = "merge_distance",required =false,defaultValue = "2000") int mergeDistance
 			
 			) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
-		StaffSearchVo searchVo = new StaffSearchVo();
-		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
-		
-		if (sessionParentId > 0L)
-			searchVo.setParentId(sessionParentId);
-		
-		if (!StringUtil.isEmpty(mobile)) searchVo.setMobile(mobile);
-		
-		if (searchVo.getStatus() == null) searchVo.setStatus(1);
-		
-		List<OrgStaffs> staffList = orgStaffsService.selectBySearchVo(searchVo);
-		
-		Long staffId = 0L;
-		if (!staffList.isEmpty()) staffId = staffList.get(0).getStaffId();
-		
+				
 		if (staffId.equals(0L)) return result;
 		
 		UserTrailSearchVo searchVo1 = new UserTrailSearchVo();
@@ -535,6 +531,15 @@ public class OrgStaffsController extends BaseController {
 		for (int i = 0; i < userTrailHistory.size(); i ++) {
 			
 			curItem = userTrailHistory.get(i);
+			
+			if (StringUtil.isEmpty(curItem.getLng()) || StringUtil.isEmpty(curItem.getLat())) {
+				continue;
+			}
+			//百度定位失败,安卓返回4.9E-324;
+			if (curItem.getLng().equals("4.9E-324") || curItem.getLat().equals("4.9E-324")) {
+				continue;
+			}
+			
 			tmpTimeStr = TimeStampUtil.timeStampToDateStr(curItem.getAddTime() * 1000, "HH:mm");
 			if (i == 0) {
 				preItem = userTrailHistory.get(i);
@@ -554,11 +559,12 @@ public class OrgStaffsController extends BaseController {
 			String destLat = preItem.getLat();
 			int distance = MapPoiUtil.poiDistance(fromLng, fromLat, destLng, destLat);
 			System.out.println("i = " + i + "--- distncae = " + distance);
-			//超过1公里，则标记为一个点;
-			if (distance >= 1000) {
+			//超过2公里，则标记为一个点;
+			if (distance >= mergeDistance) {
 				
 				vo.setAddTimeStr(vo.getAddTimeStr() + "到" + tmpTimeStr);
-				vos.add(vo);
+				vos = mergeDistance(vos, vo, mergeDistance);
+
 				
 				vo = new UserTrailHistoryVo();
 				BeanUtilsExp.copyPropertiesIgnoreNull(curItem, vo);
@@ -566,27 +572,79 @@ public class OrgStaffsController extends BaseController {
 				vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(curItem.getAddTime() * 1000, "HH:mm"));
 				
 				if (i == (userTrailHistory.size() - 1) ) {
-					vos.add(vo);
+					vos = mergeDistance(vos, vo, mergeDistance);
 				}
 				
 			} else {
 				if (i == (userTrailHistory.size() - 1) ) {
 					vo.setAddTimeStr(vo.getAddTimeStr() + "到" + tmpTimeStr);
-					vos.add(vo);
+					vos = mergeDistance(vos, vo, mergeDistance);
 				}
 			}
 		}
 		
-//		for (UserTrailHistory item : userTrailHistory) {
-//			UserTrailHistoryVo vo = new UserTrailHistoryVo();
-//			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
-//			
-//			vo.setName(orgStaff.getName());
-//			vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(item.getAddTime() * 1000, "HH:mm"));
-//			vos.add(vo);
-//		}
-		
 		result.setData(vos);
+		return result;
+	}
+	
+	
+	public List<UserTrailHistoryVo> mergeDistance(List<UserTrailHistoryVo> vos, UserTrailHistoryVo vo, int mergeDistance) {
+		
+		if (vos.isEmpty()) {
+			vos.add(vo);
+			return vos;
+		}
+		
+		int mergeIndex = -1;
+		
+		for (int i = 0; i < vos.size(); i++) {
+			UserTrailHistoryVo item = vos.get(i);
+			String fromLng = item.getLng();
+			String fromLat = item.getLat();
+			String destLng = vo.getLng();
+			String destLat = vo.getLat();
+							
+			int distance = MapPoiUtil.poiDistance(fromLng, fromLat, destLng, destLat);
+			if (distance <= mergeDistance) {
+				mergeIndex = i;
+				break;
+			} 
+			
+		}
+		
+		if (mergeIndex > -1) {
+			UserTrailHistoryVo item = vos.get(mergeIndex);
+			String addTimeStr = vo.getAddTimeStr() + "     " + vo.getAddTimeStr();
+			item.setAddTimeStr(addTimeStr);
+			vos.set(mergeIndex, item);
+		} else {
+			vos.add(vo);
+		}
+		
+		
+		
+		return vos;
+		
+	}
+	
+	
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "select-staff-by-org.json", method = RequestMethod.POST)
+	public  AppResultData<Object> selectByORg(
+			@RequestParam(value = "parentId", required = true, defaultValue = "0") Long parentId,
+			@RequestParam(value = "orgId", required = true, defaultValue = "0") Long orgId) {
+
+		AppResultData<Object> result = new AppResultData<Object>(
+		Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, false);
+		
+		StaffSearchVo searchVo = new StaffSearchVo();
+		searchVo.setParentId(parentId);
+		searchVo.setOrgId(orgId);
+		searchVo.setStatus(1);
+		List<OrgStaffs> list = orgStaffsService.selectBySearchVo(searchVo);
+				
+		result.setData(list);
+		
 		return result;
 	}
 

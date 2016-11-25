@@ -1,3 +1,4 @@
+
 // 百度地图API功能
 // 百度地图API功能
 var map = new BMap.Map("allmap"); // 创建Map实例
@@ -6,25 +7,34 @@ map.addControl(new BMap.MapTypeControl()); // 添加地图类型控件
 map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
 map.enableScrollWheelZoom(false); // 开启鼠标滚轮缩放
 
-var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
-var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
-var top_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL}); //右上角，仅包含平移和缩放按钮
-/*缩放控件type有四种类型:
-BMAP_NAVIGATION_CONTROL_SMALL：仅包含平移和缩放按钮；BMAP_NAVIGATION_CONTROL_PAN:仅包含平移按钮；BMAP_NAVIGATION_
-*/
-map.addControl(top_left_control);        
-map.addControl(top_left_navigation);     
-map.addControl(top_right_navigation);    
+map.setMapStyle({style:"grayscale"});
+
+var top_left_control = new BMap.ScaleControl({
+	anchor : BMAP_ANCHOR_TOP_LEFT
+});// 左上角，添加比例尺
+var top_left_navigation = new BMap.NavigationControl(); // 左上角，添加默认缩放平移控件
+var top_right_navigation = new BMap.NavigationControl({
+	anchor : BMAP_ANCHOR_TOP_RIGHT,
+	type : BMAP_NAVIGATION_CONTROL_SMALL
+}); // 右上角，仅包含平移和缩放按钮
+/*
+ * 缩放控件type有四种类型:
+ * BMAP_NAVIGATION_CONTROL_SMALL：仅包含平移和缩放按钮；BMAP_NAVIGATION_CONTROL_PAN:仅包含平移按钮；BMAP_NAVIGATION_
+ */
+
+map.addControl(top_left_control);
+map.addControl(top_left_navigation);
+map.addControl(top_right_navigation);
 
 function loadStaffMapDatas() {
-	//清空
+	// 清空
 	map.clearOverlays();
-	$("#offline-div").css('display','block'); 
+	$("#offline-div").css('display', 'block');
 	// 发送ajax请求根据省ID获取城市ID
 	
 	var parentId = $("#parentId").val();
 	var orgId = $("#orgId").val();
-	var name = $("#name").val();
+	var name = "";
 	var status = $("#status").val();
 	
 	var params = {};
@@ -38,7 +48,7 @@ function loadStaffMapDatas() {
 		url : '/jhj-oa/bs/get_staff_map.json',
 		dataType : 'json',
 		cache : false,
-		data: params,
+		data : params,
 		success : function(datas) {
 			console.log(datas.data);
 			var onlineDatas = datas.data.online;
@@ -59,34 +69,31 @@ function loadStaffMapDatas() {
 	});
 }
 
-function setOnlines(datas) {
-	console.log("setOrgMapPoi");
-
+function setOnlines(datas) {	
 	// 设置门店地图标注
 	$.each(datas, function(i, obj) {
 		var name = obj.name;
 		var lng = obj.lng;
 		var lat = obj.lat;
 		
-
 		if (lng == undefined || lng == "") return false;
 		if (lat == undefined || lat == "") return false;
-//		console.log(name + "----" + lng + "-----" + lat);
+		// console.log(name + "----" + lng + "-----" + lat);
 		var point = new BMap.Point(lng, lat);
 		
 		var label = new BMap.Label(name, {
-			offset : new BMap.Size(-10, -30), position:point
+			offset : new BMap.Size(-10, -30),
+			position : point
 		});
 		
 		label.setStyle({
-			 color : "black",
-			 fontSize : "12px",
-			 height : "25px",
-			 lineHeight : "20px",
-			 lineWeight : "50px", 
-			 fontFamily:"微软雅黑"
-		 });
-		
+			color : "black",
+			fontSize : "12px",
+			height : "25px",
+			lineHeight : "20px",
+			lineWeight : "50px",
+			fontFamily : "微软雅黑"
+		});
 		
 		var iconUrl = "";
 		var poiStatus = obj.poi_status;
@@ -94,79 +101,79 @@ function setOnlines(datas) {
 		if (poiStatus == 2) iconUrl = "/jhj-oa/img/circle-blue.png";
 		if (poiStatus == 3) iconUrl = "/jhj-oa/img/circle-green.png";
 		
-		var myIcon = new BMap.Icon(iconUrl, new BMap.Size(30,20));
-		var marker = new BMap.Marker(point, {icon:myIcon});
-		
+		var myIcon = new BMap.Icon(iconUrl, new BMap.Size(30, 20));
+		var marker = new BMap.Marker(point, {
+			icon : myIcon
+		});
 		
 		marker.setLabel(label);
 		
 		map.addOverlay(marker);
 		
-		
-		
-		
-
-	});	
+		var poiName = obj.poi_name;
+		if (poiName == undefined )  poiName = "";
+		var msgContent = "时间：" + obj.poi_time_str + "<br>位置："+ poiName;
+		addClickHandler(msgContent,marker);
+	});
 }
 
 function setOfflines(datas) {
 	
 	$("#offline-list").html("");
 	
-	var offlinelistHtml="";
+	var offlinelistHtml = "";
 	$.each(datas, function(i, obj) {
 		var name = obj.name;
-		offlinelistHtml+="<li>"+name+"</li>"
+		offlinelistHtml += "<li>" + name + "</li>"
 	});
 	$("#offline-list").html(offlinelistHtml);
 }
 
 loadStaffMapDatas();
 
-
-
 $('.form_datetime').datepicker({
-	format: 'yyyy-mm-dd',
+	format : 'yyyy-mm-dd',
 	language : "zh-CN",
 	autoclose : true,
 	startView : 0,
 	todayBtn : true
 });
 
-
-function loadStaffTrail() {
-	
+function loadStaffRoute() {
 	
 	var serviceDateStr = $("#serviceDateStr").val();
 	if (serviceDateStr == undefined || serviceDateStr == "") {
 		alert("请指定日期.");
 		return false;
 	}
+		
+	var staffId = $("#selectStaff").val();
 	
-	var mobile = $("#mobile").val();
-	if (mobile == undefined || mobile == "") {
-		alert("请输入手机号，轨迹只能查询某一天，一个服务人员的轨迹.");
+	if (staffId == undefined || staffId == "") {
+		alert("请指定一位服务人员进行轨迹追踪.");
 		return false;
 	}
 	
+	var mergeDistance = $("#mergeDistance").val();
 	map.clearOverlays();
-	$("#offline-div").css('display','none'); 
+	$("#offline-div").css('display', 'none');
 	var params = {};
 	params.service_date = serviceDateStr;
-	params.mobile = mobile;
-
+	params.staff_id = staffId;
+	params.merge_distance = mergeDistance;
+	
 	$.ajax({
 		type : 'GET',
 		url : '/jhj-oa/bs/get_staff_trail.json',
 		dataType : 'json',
 		cache : false,
-		data: params,
+		data : params,
 		success : function(datas) {
 			console.log(datas.data);
 			var trailDatas = datas.data;
 			
-			if (trailDatas != undefined || trailDatas != "") {
-				setStaffTrail(trailDatas);
+			if (trailDatas != undefined || trailDatas != "" || trailDatas.length > 0) {
+				setStaffRoute(trailDatas);
 			}
 		},
 		error : function() {
@@ -175,118 +182,124 @@ function loadStaffTrail() {
 	});
 }
 
+function setStaffRoute(trailDatas) {
 
-function setStaffTrail(trailDatas) {
-	var chartData = [];
-	//如果只有一个点，则不需要折线，地图标一个点即可.
+	// 如果只有一个点，则不需要折线，地图标一个点即可.
 	if (trailDatas.length == 1) {
 		var o = trailDatas[0];
 		addMakerPoint(o.lng, o.lat, o.add_time_str);
 		return false;
 	}
 	
-	//把所有的点先做标注
+	showPoly(trailDatas);
+
+}
+
+
+
+function showPoly(trailDatas) {
+		
+	var pointList = [];
 	$.each(trailDatas, function(i, obj) {
+				
+		var p = new BMap.Point(obj.lng, obj.lat, obj.poi_name);
+		pointList.push(p);
 		
-		var title = obj.add_time_str;
-		if (i == 0) title = "起点:" + obj.add_time_str;
-		if (i == (trailDatas.length - 1)) title = "终点:" + obj.add_time_str;
-		
-		addMakerPoint(obj.lng, obj.lat, title);
+//		var marker = new BMap.Marker(p);
+//		map.addOverlay(marker);
+//		// 将途经点按顺序添加到地图上
+//		var label = new BMap.Label(obj.add_time_str, {
+//			offset : new BMap.Size(20, -10)
+//		});
+//		marker.setLabel(label);
+		addMakerPoint(obj.lng, obj.lat, obj.add_time_str, obj.poi_name);
+
 	});
 	
 	
-	//定义集合用来存放沿线的坐标值
-    
-    
-    var walking = new BMap.WalkingRoute(map, { renderOptions: { map: map, autoViewport: true} });
-    walking.setSearchCompleteCallback(function (rs) {
-        var pts = walking.getResults().getPlan(0).getRoute(0).getPath();
-        var polyline = new BMap.Polyline(pts);
-        map.addOverlay(polyline);
-//        for (var i = 0; i < pts.length; i++) {
-//            chartData.push(pts);
-//        }
-    });
-
-    for(var i =0;i<trailDatas.length;i++){
-    	if (i == (trailDatas.length - 1)) return false;
-    	var fromObj = trailDatas[i];
-    	var toObj = trailDatas[i+1];
-        var fromPoint = new BMap.Point(fromObj.lng, fromObj.lat);        
-        var toPoint = new BMap.Point(toObj.lng, toObj.lat); 
-        walking.search(fromPoint, toPoint);//waypoints表示途经点
-     }
-    
-    
-    
-//    setTimeout(function(){
-//    	$.each(chartData, function (i, value) {
-//    	var polyline = new BMap.Polyline(value, { strokeColor: "red", strokeWeight: 6, strokeOpacity: 0.5 });
-//        maps.addOverlay(polyline);
-//    	});
-//    }, 3000);
-}
-
-function ShowRoute() {
-    
-    var newChartData = [];
-    //对坐标点重新定义
-    $.each(chartData, function (item, value) {
-        newChartData.push(new BMap.Point(value.lat, value.lng));
-    });
- 
-    //把步行线路的坐标集合转化成折线
-    
-}
-
-
-function addMaker(lng, lat, title) {
+	var group = Math.floor(pointList.length / 11);
+	var mode = pointList.length % 11;
 	
-	var point = new BMap.Point(lng, lat);
-	var label = new BMap.Label(title, { offset : new BMap.Size(-10, 10), position: point });
-	label.setStyle({
-		 color : "black",
-		 fontSize : "12px",
-		 height : "25px",
-		 lineHeight : "20px",
-		 lineWeight : "50px", 
-		 fontFamily:"微软雅黑"
-	 });
-	map.addOverlay(point);
-	map.addOverlay(label);
+	var driving = new BMap.DrivingRoute(map, 
+		{
+//		renderOptions:{map: map, autoViewport: true},
+		policy: BMAP_DRIVING_POLICY_AVOID_HIGHWAYS, 
+		onSearchComplete : function(results) {
+			if (driving.getStatus() == BMAP_STATUS_SUCCESS) {
+				var plan = driving.getResults().getPlan(0);
+				var num = plan.getNumRoutes();
+				for (var j = 0; j < num; j++) {
+					var pts = plan.getRoute(j).getPath(); // 通过驾车实例，获得一系列点的数组
+					var polyline = new BMap.Polyline(pts);
+					map.addOverlay(polyline);
+				}
+			}
+		}
+	});
+	for (var i = 0; i < group; i++) {
+		var waypoints = pointList.slice(i * 11 + 1, (i + 1) * 11);
+		driving.search(pointList[i * 11], pointList[(i + 1) * 11], {
+			waypoints : waypoints
+		});// waypoints表示途经点
+	}
+	if (mode != 0) {
+		var waypoints = pointList.slice(group * 11, pointList.length - 1);// 多出的一段单独进行search
+		driving.search(pointList[group * 11], pointList[pointList.length - 1], {
+			waypoints : waypoints
+		});
+	}
 	
 }
 
+//信息窗口配置
+var opts = {
+		width : 250, // 信息窗口宽度
+		height : 80, // 信息窗口高度
+		title : "", // 信息窗口标题
+		enableMessage : true
+	// 设置允许信息窗发送短息
+	};
 
-
-function addMakerPoint(lng, lat, title) {
+function addMakerPoint(lng, lat, title, content) {
 	
 	var iconUrl = "/jhj-oa/img/circle-green.png";
-	var myIcon = new BMap.Icon(iconUrl, new BMap.Size(30,20));
+	var myIcon = new BMap.Icon(iconUrl, new BMap.Size(30, 20));
 	var point = new BMap.Point(lng, lat);
-	var label = new BMap.Label(title, { offset : new BMap.Size(-40, -30), position: point });
+	var label = new BMap.Label(title, {
+		offset : new BMap.Size(10, -20),
+		position : point
+	});
 	label.setStyle({
-		 color : "black",
-		 fontSize : "12px",
-		 height : "25px",
-		 lineHeight : "20px",
-		 lineWeight : "50px", 
-		 fontFamily:"微软雅黑"
-	 });
+		color : "black",
+		fontSize : "12px",
+		height : "25px",
+		lineHeight : "20px",
+		lineWeight : "50px",
+		fontFamily : "微软雅黑"
+	});
 	
-	var marker = new BMap.Marker(point, {icon:myIcon});
+	var marker = new BMap.Marker(point, {
+		icon : myIcon
+	});
 	
 	marker.setLabel(label);
 	
 	map.addOverlay(marker);
+	
+	var msgContent = "时间：" + title + "<br>位置："+ content;
+	addClickHandler(msgContent,marker);
 }
 
 
+function addClickHandler(content,marker){
+	marker.addEventListener("click",function(e){
+		openInfo(content,e)}
+	);
+}
 
-function setZoom(bPoints){  
-    var view = map.getViewport(eval(bPoints));  
-    var mapZoom = view.zoom;   
-    var centerPoint = view.center;   
-    map.centerAndZoom(centerPoint,mapZoom);  
+function openInfo(content,e){
+	var p = e.target;
+	var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+	var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
+	map.openInfoWindow(infoWindow,point); //开启信息窗口
 }

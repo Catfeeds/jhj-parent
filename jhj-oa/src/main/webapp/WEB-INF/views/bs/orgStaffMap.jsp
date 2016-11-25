@@ -92,14 +92,13 @@ body, html {
 							<form:form class="form-inline" action="" method="get">
 								<table class="table">
 									<tr>
-										<td>选择门店:</td>
+										<td>门店:</td>
 										<td><orgSelectTag:select selectId="${sessionOrgId }" sessionOrgId="${loginOrgId }" /></td>
-										<td>选择云店:</td>
+										<td>云店:</td>
 										<td><select name="orgId" id="orgId" class="form-control">
 												<option value="0">全部</option>
 											</select></td>
-										<td>姓名:</td>
-										<td><input id="name" name="name" value="" class="form-control" type="text" /></td>
+										
 										<td>状态:</td>
 										<td><select name="status" id="status" class="form-control">
 												<option value="0">全部</option>
@@ -108,25 +107,31 @@ body, html {
 												<option value="3">服务中(绿色)</option>
 											</select></td>
 										<td>
-											<button type="button" onclick="loadStaffMapDatas()" class="btn btn-primary">搜索</button>
+											<button type="button" onclick="loadStaffMapDatas()" class="btn btn-primary">实时定位</button>
 										</td>
 									</tr>
 									
 									<tr>
 										<td>日期:</td>
 										<td>
-											<input id="serviceDateStr" name="serviceDateStr" value="" class="form-control form_datetime"
+											<input id="serviceDateStr" name="serviceDateStr" value="${today}" class="form-control form_datetime"
 																	style="width: 170px; margin-bottom: 0" readonly="true" />
 										
 										</td>
 										
-										<td>手机号:</td>
+										<td>姓名:</td>
+										<td><select name="selectStaff" id="selectStaff" class="form-control">
+												<option value="0">全部</option>
+											</select>
+										</td>
+										
+										<td>合并范围(单位:米):</td>
 										<td>
-											<input id="mobile" name="mobile" value="" class="form-control" type="text" />
+											<input id="mergeDistance" name="mergeDistance" value="2000" class="form-control" type="text" />
 										
 										</td>
 										<td colspan="4">
-											<button type="button" onclick="loadStaffTrail()" class="btn btn-primary">轨迹查询</button>
+											<button type="button" onclick="loadStaffRoute()" class="btn btn-primary">轨迹查询</button>
 										</td>
 									</tr>
 								</table>
@@ -152,6 +157,7 @@ body, html {
 	<script src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
 	<script src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-staff.js'/>"></script>
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/bs/orgStaffMap.js'/>"></script>
 </body>

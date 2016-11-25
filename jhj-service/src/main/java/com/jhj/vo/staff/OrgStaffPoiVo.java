@@ -18,6 +18,8 @@ public class OrgStaffPoiVo {
 
     private Long poiTime;
     
+    private String poiTimeStr;
+    
     private int poiStatus;  // 1 = 在线  2= 在途中 3 = 服务中
 
 	public Long getStaffId() {
@@ -90,6 +92,14 @@ public class OrgStaffPoiVo {
 
 	public void setPoiStatus(int poiStatus) {
 		this.poiStatus = poiStatus;
+	}
+
+	public String getPoiTimeStr() {
+		return poiTimeStr;
+	}
+
+	public void setPoiTimeStr(String poiTimeStr) {
+		this.poiTimeStr = poiTimeStr;
 	}
 
 
