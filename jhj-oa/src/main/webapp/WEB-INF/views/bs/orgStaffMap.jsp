@@ -29,9 +29,10 @@ body, html {
 }
 
 .houtai-waiter-list {
-	width: 200px;
+	width: 160px;
 	background: #000;
-	height: 50%;
+	height: 65%;
+	overflow:hidden;
 	position: fixed;
 	top: 210px;
 	left: 241px;
@@ -51,7 +52,7 @@ body, html {
 }
 
 .houtai-waiter-list ul {
-	width: 160px;
+	width: 120px;
 	height: 80%;
 	margin: 0;
 	margin-left: 20px;
