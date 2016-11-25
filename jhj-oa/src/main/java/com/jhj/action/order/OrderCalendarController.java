@@ -138,6 +138,7 @@ public class OrderCalendarController extends BaseController {
 		}
 		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr + " 23:59:59") / 1000;
 		searchVo.setEndServiceTime(endTime);
+		searchVo.setDispatchStatus((short)1);
 		
 		// 排班列表人员统计
 		int dispatchSizeAM=0;
@@ -175,20 +176,20 @@ public class OrderCalendarController extends BaseController {
 			disAndLeaveVo.setStaffId(orgStaff.getStaffId());
 			disAndLeaveVo.setStaffName(orgStaff.getName());
 			List<TimeEventVo> timeEventList = new ArrayList<TimeEventVo>();
+			
+			// 加入请假事件
+			leaveSearchVo.setStaffId(staffId);
+			List<OrgStaffLeave> leaveList = leaveService.selectBySearchVo(leaveSearchVo);
+			//加入派工
+			searchVo.setStaffId(staffId);
+			List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
 			for (String weekDate : weekDateList) {
 				TimeEventVo timeEventVo = new TimeEventVo();
 				timeEventVo.setTimeStr(weekDate);
 				// 具体事件
 				List<EventVo> eventList = new ArrayList<EventVo>();
-				
-				boolean falg=false;
-				// 加入请假事件
-				leaveSearchVo.setStaffId(staffId);
-				List<OrgStaffLeave> leaveList = leaveService.selectBySearchVo(leaveSearchVo);
 				if(leaveList!=null && leaveList.size()>0){
 					for (OrgStaffLeave staffLeave : leaveList) {
-//						Long leaveStaffId = staffLeave.getStaffId();
-//						String leaveDate = DateUtil.formatDate(staffLeave.getLeaveDate());
 						Long leaveDate = staffLeave.getLeaveDate().getTime();
 						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
 						Long weekDateToday=TimeStampUtil.getMillisOfDay(weekDate);
@@ -198,7 +199,6 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setEventName("请假中");
 							eventVo.setServiceTime(leaveDate);
 							eventList.add(eventVo);
-							falg=true;
 							if(startTimeStr.equals(weekDate)){
 								leaveStaffSize++;
 							}
@@ -207,10 +207,7 @@ public class OrderCalendarController extends BaseController {
 				}
 				
 				// 加入 排班事件
-				if(!falg){
-					searchVo.setStaffId(staffId);
-					searchVo.setDispatchStatus((short)1);
-					List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+				if(disList!=null && disList.size()>0){
 					for(OrderDispatchs staffDisVo : disList){
 						// 服务日期 , 格式 'yyyy-MM-dd'
 						Long serviceDate = staffDisVo.getServiceDate() * 1000;
@@ -242,7 +239,6 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setOrderNo(orderNo);
 							eventVo.setOrderType(orders.getOrderType());
 							eventList.add(eventVo);
-							falg=true;
 							if(startTimeStr.equals(serviceDateStr)&& serviceDate>=compareTime){
 								dispatchSizePM++;
 							}
@@ -250,10 +246,10 @@ public class OrderCalendarController extends BaseController {
 								dispatchSizeAM++;
 							}
 						}
-						timeEventVo.setEventList(eventList);
-						timeEventList.add(timeEventVo);
 					}
 				}
+				timeEventVo.setEventList(eventList);
+				timeEventList.add(timeEventVo);
 			}
 			disAndLeaveVo.setTimeEventList(timeEventList);
 			listVo.add(disAndLeaveVo);
