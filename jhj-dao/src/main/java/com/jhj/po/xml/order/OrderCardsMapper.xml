@@ -320,7 +320,7 @@
 	
 	<sql id="searchVo">
 		<if test="mobile!=null and mobile!=''">
-			and mobile = #{mobile,jdbcType=CHAR}
+			and mobile like concat('%',#{mobile,jdbcType=CHAR},'%') 
 		</if>
 		<if test="cardType!=null">
 			and card_pay = #{cardType,jdbcType=NUMERIC}
