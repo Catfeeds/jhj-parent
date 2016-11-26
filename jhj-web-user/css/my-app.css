@@ -4517,6 +4517,15 @@ i.toolbar-icon-tixing {
   margin-top:22px;
   line-height: 1em;
 }
+.tarea2{
+  width:70%;
+  height:60px;
+  line-height: 60px;
+  display:block;
+  white-space:nowrap;
+  overflow:hidden; 
+  text-overflow:ellipsis;
+}
 /*所有按钮位置*/
 /*立即预约按钮*/
 .all-button{
