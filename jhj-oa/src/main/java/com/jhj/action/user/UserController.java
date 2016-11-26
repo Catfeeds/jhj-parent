@@ -701,6 +701,10 @@ public class UserController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		UserSearchVo userVo=new UserSearchVo();
 		userVo.setIsVip((short) 1);
+		String mobile = orderCardsVo.getMobile();
+		if(mobile!=null && !mobile.equals("")){
+			userVo.setMobile(mobile);
+		}
 		List<Users> userList = usersService.selectBySearchVo(userVo);
 		if(userList!=null && userList.size()>0){
 			List<Long> userIds=new ArrayList<Long>();
