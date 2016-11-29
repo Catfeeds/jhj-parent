@@ -53,18 +53,15 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		legendAll.add("一千面值占比");
 		legendAll.add("两千面值");
 		legendAll.add("两千面值占比");
-		legendAll.add("五千面值");
-		legendAll.add("五千面值占比");
-		legendAll.add("一万面值");
-		legendAll.add("一万面值占比");
+		legendAll.add("三千面值");
+		legendAll.add("三千面值占比");
 		legendAll.add("营业额小计");
 
 		// 2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
 		legend.add("一千面值");
 		legend.add("两千面值");
-		legend.add("五千面值");
-		legend.add("一万面值");
+		legend.add("三千面值");
 
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 
@@ -110,12 +107,13 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		BigDecimal oneMoney = new BigDecimal(0);
 		BigDecimal twopMoney = new BigDecimal(0);
 		BigDecimal fiveMoney = new BigDecimal(0);
-		BigDecimal tenMoney = new BigDecimal(0);
+//		BigDecimal tenMoney = new BigDecimal(0);
 		for (ChartMapVo chartSqlData : statDatas) {
 			
 			for (HashMap<String, String> tableDataItem : tableDatas) {
-			if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-				// 1 = 1000面值    2 = 2000面值      3 = 5000面值      4 = 10000面值   
+			String str = tableDataItem.get("series").split("-")[1];
+			if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
+				// 1 = 1000面值    2 = 2000面值      3 =3000面值    
 				if (chartSqlData.getName().equals("1")) {
 					
 					
@@ -130,13 +128,13 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 				if (chartSqlData.getName().equals("3")) {
 					
 					fiveMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("五千面值", MathBigDecimalUtil.round2(fiveMoney));
+					tableDataItem.put("三千面值", MathBigDecimalUtil.round2(fiveMoney));
 				}
-				if (chartSqlData.getName().equals("4")) {
-					
-					tenMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("一万面值", MathBigDecimalUtil.round2(tenMoney));
-				}
+//				if (chartSqlData.getName().equals("4")) {
+//					
+//					tenMoney =  chartSqlData.getTotalMoney();
+//					tableDataItem.put("一万面值", MathBigDecimalUtil.round2(tenMoney));
+//				}
 			}	
 			}
 		}
@@ -146,23 +144,23 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		for (HashMap<String, String> tableDataItem : tableDatas) {
 			BigDecimal oneThousandMoney = new BigDecimal(tableDataItem.get("一千面值"));
 			BigDecimal twoThousandMoney = new BigDecimal(tableDataItem.get("两千面值"));
-			BigDecimal fiveThousandMoney = new BigDecimal(tableDataItem.get("五千面值"));
-			BigDecimal oneHundredThousandMoney = new BigDecimal(tableDataItem.get("一万面值"));
+			BigDecimal fiveThousandMoney = new BigDecimal(tableDataItem.get("三千面值"));
+//			BigDecimal oneHundredThousandMoney = new BigDecimal(tableDataItem.get("一万面值"));
 		
-			BigDecimal moneySum = oneThousandMoney.add(twoThousandMoney).add(fiveThousandMoney).add(oneHundredThousandMoney);
+			BigDecimal moneySum = oneThousandMoney.add(twoThousandMoney).add(fiveThousandMoney);
 			
 			tableDataItem.put("营业额小计", moneySum.toString());
 			
 			if (moneySum.intValue() > 0) {
 				tableDataItem.put("一千面值占比", MathDoubleUtil.getPercent(oneThousandMoney.intValue(),moneySum.intValue()));
 				tableDataItem.put("两千面值占比", MathDoubleUtil.getPercent(twoThousandMoney.intValue(),moneySum.intValue()));
-				tableDataItem.put("五千面值占比", MathDoubleUtil.getPercent(fiveThousandMoney.intValue(),moneySum.intValue()));
-				tableDataItem.put("一万面值占比", MathDoubleUtil.getPercent(oneHundredThousandMoney.intValue(),moneySum.intValue()));
+				tableDataItem.put("三千面值占比", MathDoubleUtil.getPercent(fiveThousandMoney.intValue(),moneySum.intValue()));
+//				tableDataItem.put("一万面值占比", MathDoubleUtil.getPercent(oneHundredThousandMoney.intValue(),moneySum.intValue()));
 			}else {
 				tableDataItem.put("一千面值占比","0.00%");
 				tableDataItem.put("两千面值占比","0.00%");
-				tableDataItem.put("五千面值占比","0.00%");
-				tableDataItem.put("一万面值占比","0.00%");
+				tableDataItem.put("三千面值占比","0.00%");
+//				tableDataItem.put("一万面值占比","0.00%");
 			}
 			
 			
@@ -314,7 +312,8 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 			for (ChartMapVo chartSqlData : statDatas) {
 				//处理表格形式的数据.
 				for (HashMap<String, String> tableDataItem : tableDatas) {
-					if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {	
+					String str = tableDataItem.get("series").split("-")[1];
+					if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
 
 						tableDataItem.put("余额用户", String.valueOf(chartSqlData.getTotal()));
 					}
@@ -342,7 +341,8 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 			for (ChartMapVo chartSqlData : statDatas) {
 				
 				for (HashMap<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
+					String str = tableDataItem.get("series").split("-")[1];
+					if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
 					
 						allRestMoney =  chartSqlData.getTotalMoney();
 						tableDataItem.put("余额总金额", MathBigDecimalUtil.round2(allRestMoney));
@@ -367,7 +367,8 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 			for (ChartMapVo chartSqlData : statDatas) {
 				//处理表格形式的数据.
 				for (HashMap<String, String> tableDataItem : tableDatas) {
-					if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {	
+					String str = tableDataItem.get("series").split("-")[1];
+					if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {	
 
 						tableDataItem.put("余额不足200", String.valueOf(chartSqlData.getTotal()));
 					}
@@ -436,7 +437,8 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 						for (ChartMapVo chartSqlData : statDatas) {
 							//处理表格形式的数据.
 							for (HashMap<String, String> tableDataItem : tableDatas) {
-								if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {	
+								String str = tableDataItem.get("series").split("-")[1];
+								if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {	
 
 									tableDataItem.put("余额>3k", String.valueOf(chartSqlData.getTotal()));
 								}
@@ -498,6 +500,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 							for (int j =1; j < timeSeries.size(); j++) {
 								for (HashMap<String, String> tableDataItem : tableDatas) {
 									if (timeSeries.get(j).equals(tableDataItem.get("series").toString())) {
+										
 										String valueStr = tableDataItem.get(legend.get(i)).toString();
 										Integer v = Integer.valueOf(valueStr);
 										datas.add(v);

@@ -47,7 +47,7 @@ public class UserChartController extends BaseController {
 		}
 		
 		if (chartSearchVo.getSelectCycle() == 0)
-			chartSearchVo.setSelectCycle(3);
+			chartSearchVo.setSelectCycle(6);
 
 		//30天前.
 		Date nowDate = DateUtil.parse(DateUtil.getBeginOfDay());
@@ -119,7 +119,7 @@ public class UserChartController extends BaseController {
 		}
 		
 		if (chartSearchVo.getSelectCycle() == 0)
-			chartSearchVo.setSelectCycle(3);
+			chartSearchVo.setSelectCycle(6);
 
 		//30天前.
 		Date nowDate = DateUtil.parse(DateUtil.getBeginOfDay());

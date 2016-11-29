@@ -113,7 +113,8 @@ public class UserChartServiceImpl implements UserChartService {
 		for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
+				String str = tableDataItem.get("series").split("-")[1];
+				if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
 					// 0代表APP 1 = 微网站来源
 					if (chartSqlData.getName().equals("0")){
 							
@@ -344,7 +345,8 @@ public class UserChartServiceImpl implements UserChartService {
 		for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
+				String str = tableDataItem.get("series").split("-")[1];
+				if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
 					// 0代表APP 1 = 微网站来源
 					if (chartSqlData.getName().equals("0"))
 						tableDataItem.put("App来源", String.valueOf(chartSqlData.getTotal()));

@@ -45,7 +45,7 @@ public class RestMoneyChartController extends BaseController{
 		}
 		
 		if (chartSearchVo.getSelectCycle() == 0){
-			chartSearchVo.setSelectCycle(3);
+			chartSearchVo.setSelectCycle(6);
 		}
 		
 		//30天前
@@ -129,7 +129,7 @@ public class RestMoneyChartController extends BaseController{
 		}
 		
 		if (chartSearchVo.getSelectCycle() == 0){
-			chartSearchVo.setSelectCycle(3);
+			chartSearchVo.setSelectCycle(6);
 		}
 		
 		//30天前
