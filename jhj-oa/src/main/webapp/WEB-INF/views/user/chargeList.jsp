@@ -105,7 +105,9 @@
 					            <td>${ item.score }</td>
 					            <td>${item.staffName }</td>
 					            <td>
-					            	<userTypeTag:userTypeId userTypeId="${ item.userType }"/>
+					            	<c:if test="${item.isVip==0 }">普通用户</c:if>
+					            	<c:if test="${item.isVip==1 }">金牌会员</c:if>
+					            	<%-- <userTypeTag:userTypeId userTypeId="${ item.userType }"/> --%>
 					            </td>
 					          
 					            <td>

@@ -60,7 +60,7 @@ public class HomeController extends AdminController {
     	int totalUser = userChartService.statTotalUser(chartSearchVo);
     	
     	
-    	Short[] status={3,4,5,7,8};
+    	Short[] status={3,4,5,6,7,8,9};
     	chartSearchVo.setStatus(Arrays.asList(status));
     	//总订单数
     	Map<String,Integer> totalOrder = orderChartService.statTotalOrder(chartSearchVo) ; 

@@ -3,6 +3,7 @@ package com.jhj.action.order;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -169,6 +170,9 @@ public class OrderCalendarController extends BaseController {
 		List<String> weekDateList = DateUtil.getLastWeekArray(startTimeStr);
 		Long compareTime=TimeStampUtil.getMillisOfDayFull(startTimeStr+" 12:00:00");
 		
+		int todayOrder=0,tomOrder=0;
+		String today = DateUtil.getToday();
+		String tom=DateUtil.addDay(DateUtil.getNowOfDate(), 1, Calendar.DAY_OF_WEEK, "yyyy-MM-dd");
 		// 初始化时间、staff
 		for (OrgStaffs orgStaff : staffList) {
 			Long staffId = orgStaff.getStaffId();
@@ -212,6 +216,12 @@ public class OrderCalendarController extends BaseController {
 						// 服务日期 , 格式 'yyyy-MM-dd'
 						Long serviceDate = staffDisVo.getServiceDate() * 1000;
 						String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
+						//统计今日明日派工订单数
+						if(serviceDateStr.equals(today)){
+							todayOrder++;
+						}else if(serviceDateStr.equals(tom)){
+							tomOrder++;
+						}
 //						Long disStaffId = staffDisVo.getStaffId();
 						String orderNo = staffDisVo.getOrderNo();
 						if (serviceDateStr.equals(weekDate)) {
@@ -265,6 +275,8 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("weekDateModel", weekDateList);
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
+		model.addAttribute("todayOrder",todayOrder);
+		model.addAttribute("tomorrowOrder",tomOrder);
 
 		return "staffDisAndLeave/staffDisAndLeaveList";
 	}

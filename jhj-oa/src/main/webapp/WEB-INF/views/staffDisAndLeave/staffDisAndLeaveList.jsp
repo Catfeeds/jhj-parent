@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 import="com.jhj.oa.common.UrlHelper"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@ include file="../shared/taglib.jsp"%>
 <%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
@@ -90,7 +90,11 @@ import="com.jhj.oa.common.UrlHelper"%>
 	                           		<tr>
 	                           			<td>下午:<b><font color="red">&nbsp;${pmStaffSize }&nbsp;</font></b>人</td>
 	                           		</tr>
-	                           </table>   
+	                           </table>
+	                            <aside>
+	                            	<span>今日派单数：${todayOrder }</span>
+	                            	<span>明日派单数：${tomorrowOrder }</span>
+	                            </aside>
 	                         </header>
                            
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  

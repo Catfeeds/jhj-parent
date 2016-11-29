@@ -101,7 +101,11 @@
 					            	<!-- todo 不能显示 充值记录！！ -->
 					            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
 					            </td>
-					            <td align="center">￥${ item.orderMoney }</td>
+					            <td align="center">
+					            	<c:if test="${item.orderType==1 }">
+					            	 	￥${ item.orderMoney }
+					            	</c:if>
+					            </td>
 					            <td align="center" >￥ ${ item.orderPay } </td>
 					            <td>
 									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>

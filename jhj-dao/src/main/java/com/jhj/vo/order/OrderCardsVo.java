@@ -34,6 +34,8 @@ public class OrderCardsVo extends OrderCards{
 	private String addStartTimeStr;
 	
 	private String addEndTimeStr;
+	
+	private int isVip;
 
 	public Long getAddStartTime() {
 		return addStartTime;
@@ -129,6 +131,14 @@ public class OrderCardsVo extends OrderCards{
 
 	public void setAddEndTimeStr(String addEndTimeStr) {
 		this.addEndTimeStr = addEndTimeStr;
+	}
+
+	public int getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(int isVip) {
+		this.isVip = isVip;
 	}
 	
 }

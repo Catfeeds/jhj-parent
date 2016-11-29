@@ -288,6 +288,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			orderCoardVo.setScore(user.getScore());
 			orderCoardVo.setUserType(user.getUserType());
 			orderCoardVo.setAddFrom(user.getAddFrom());
+			orderCoardVo.setIsVip(user.getIsVip());
 		}
 		if(orderCards.getReferee()!=null && !orderCards.getReferee().equals("")){
 			StaffSearchVo staffsVo =new StaffSearchVo();
