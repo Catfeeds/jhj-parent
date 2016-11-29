@@ -1,9 +1,7 @@
 package com.jhj.action.app.user;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -211,6 +209,20 @@ public class UserAddressController extends BaseController {
 		}
 
 		result.setData(userAddrs);
+
+		return result;
+	}
+	
+	/**
+	 * 地址删除接口
+	 * 根据addr_id删除对应用户的地址
+	 */
+	@RequestMapping(value = "delete_addr.json", method = RequestMethod.GET)
+	public AppResultData<String> deleteAddr(@RequestParam("addr_id") Long addrId) {
+
+		AppResultData<String> result = new AppResultData<String>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		userAddrsService.deleteByPrimaryKey(addrId);
 
 		return result;
 	}

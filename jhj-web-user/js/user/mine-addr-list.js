@@ -116,3 +116,17 @@ function goBackToOrder(addrId, addrName){
 	mainView.router.loadPage(returnPage);
 
 }
+
+//删除地址
+function delAddr(obj){
+	var id=$$(obj).next().val();
+	if(id==null || id=='' || id==undefined) return false;
+	$$.ajax({
+		type:"get",
+		url:siteAPIPath + "user/delete_addr.json",
+		data:{"addr_id":id},
+		success:function(){
+			
+		}
+	});
+}
