@@ -328,8 +328,10 @@ public class OrderRatesServiceImpl implements OrderRatesService {
 		Long userId = orderRate.getUserId();
 		UserAddrs userAddrs = userAddrService.selectByDefaultAddr(userId);
 //		UserAddrs userAddrs = userAddrService.selectUserId(userId);
-		orderRagesVo.setUsermobile(userAddrs.getMobile());
-		orderRagesVo.setUserAddr(userAddrs.getName()+userAddrs.getAddr());
+		if(userAddrs!=null){
+			orderRagesVo.setUsermobile(userAddrs.getMobile());
+			orderRagesVo.setUserAddr(userAddrs.getName()+userAddrs.getAddr());
+		}
 		
 		Long staffId = orderRate.getStaffId();
 		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
