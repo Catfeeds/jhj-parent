@@ -145,8 +145,13 @@ function onDeepSubItemNum(obj) {
 
 function checkDefaultNum() {
 	//判断如果有起步数量 ，并且有多个，则只要有一个不超过起步数量即可.
-	
+	console.log("checkDefaultNum");
 	var hasDefaultNum = false;
+	
+	var inputItemNum = 0;
+	var minDefaultNum = 0;
+	
+	
 	$$("input[name = itemNum]").each(function(key, index) {
 		itemNum = $$(this).val();
 		 
@@ -154,35 +159,30 @@ function checkDefaultNum() {
 			 itemNum = 0;
 		 } 
 		 
+		 inputItemNum = Number(inputItemNum) + Number(itemNum);
+		 
+		 
+		 
 		 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
 		 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
-		 if (Number(defaultNum) > 0 && Number(itemNum) >= Number(defaultNum) ) {
-			 hasDefaultNum = true;
-		 }
 		 
+		 if (minDefaultNum == 0 ) {
+			 minDefaultNum = defaultNum;
+		 } else {
+			 if (minDefaultNum > defaultNum)   minDefaultNum = defaultNum;
+		 }
 	});
-	
+	console.log("minDefaultNum==" + minDefaultNum );
+	console.log("inputItemNum==" + inputItemNum);
 	var validateMsg = ""
-	console.log("hasDefaultNum =" + hasDefaultNum);
-	if (hasDefaultNum == false) {
-		$$("input[name = itemNum]").each(function(key, index) {
-			itemNum = $$(this).val();
-			 
-			 if (itemNum == undefined || itemNum == "") {
-				 itemNum = 0;
-			 } 
-			 
-			 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
-			 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
-
-			 if (Number(itemNum) > 0 && Number(defaultNum) > 0 && Number(itemNum) < Number(defaultNum) ) {
-				 validateMsg = serviceAddonName + "最低数量为" + defaultNum;
-				 return false;
-				 
-			 }
-			 
-		});
+	if (Number(minDefaultNum) > 0 && Number(inputItemNum) < Number(minDefaultNum) ) {
+		validateMsg = "最低数量为" +minDefaultNum;
 	}
+	
+	console.log("validateMsg == " + validateMsg);
+	
+	
+	
 	
 	return validateMsg;
 }
