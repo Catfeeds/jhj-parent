@@ -217,9 +217,9 @@ public class OrderCalendarController extends BaseController {
 						Long serviceDate = staffDisVo.getServiceDate() * 1000;
 						String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
 						//统计今日明日派工订单数
-						if(serviceDateStr.equals(today)){
+						if(serviceDateStr.equals(today) && weekDate.equals(today)){
 							todayOrder++;
-						}else if(serviceDateStr.equals(tom)){
+						}else if(serviceDateStr.equals(tom) && weekDate.equals(tom)){
 							tomOrder++;
 						}
 //						Long disStaffId = staffDisVo.getStaffId();
