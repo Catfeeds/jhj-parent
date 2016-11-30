@@ -77,7 +77,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         noSelectHour();
         if(cmp==date){
             $$("#rilikongjian3-day").find(":first-child").addClass("beijingse");
-            tomm();
+            tomm(cmp);
         }
     }
     getDay(date);
@@ -101,11 +101,29 @@ myApp.onPageInit('order-lib-cal',function(page) {
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
         $$("#all-button2").removeClass("all-button2").addClass("all-button11");
         var dy=$$(selectDay).parent().find(":first-child").text();
+        var cmp='';
         if(dy==null ||dy==""){
-            dy=moment(getServiceDate()).add(count, 'days').format("DD");
+            dy=moment(getServiceDate()).subtract(1, 'days');
+            var com_dy=moment(getServiceDate()).format("DD");
+            var dy_month = dy.format("YYYY-MM");
+            var com_month = moment(getServiceDate()).format("YYYY-MM");
+            var ss=dy.format("DD");
+            if(dy.format("DD")>com_dy && dy_month<=com_month){
+            	cmp = getServiceDate();
+            }else if(dy.format("DD")<com_dy &&dy_month<=com_month){
+            	cmp = getServiceDate();
+            }else{
+            	cmp = moment(date).format("YYYY-MM")+"-"+dy.format("DD");
+            }
+        }else{
+        	var ym=moment(getServiceDate());
+        	if(ym.format("DD")<=dy){
+        		cmp=moment().format("YYYY-MM")+"-"+dy;
+        	}else if(ym.format("DD")>dy){
+        		cmp=getServiceDate();
+        	}
         }
-        var cmp = moment().format("YYYY-MM")+"-"+dy;
-        if(cmp<=date) return ;
+        if(cmp<=date) return false;
         count--;
         getPreDay(count);
     });
@@ -149,7 +167,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var month = $$("#rilikongjian1-month").text();
         var day = $$(selectDay).text();
         if($$(selectDay).text()==undefined ||$$(selectDay).text()=="" || $$(selectDay).text()==null){
-            day=moment().format('DD');
+            day=moment(date).add(count, 'days').format("DD");
         }
         var pre_li = $$(selectDay).prevAll("li");
         var after_li = $$(selectDay).nextAll("li");
@@ -196,7 +214,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             }
         }
         if(after_li.length==0 && pre_li.length==0){
-            serviceDate=date;
+            serviceDate=year+"-"+month+"-"+day;
         }
         return serviceDate;
     }
@@ -220,8 +238,13 @@ myApp.onPageInit('order-lib-cal',function(page) {
      *根据当前时间，判断下单可以选择的时间
      *
      * */
-    function tomm(){
-        var nyr=getServiceDate();
+    function tomm(val){
+    	var nyr
+    	if(val==undefined ||val==null || val==''){
+    		var nyr=getServiceDate();
+    	}else{
+    		nyr=val;
+    	}
         if(nyr==moment().format("YYYY-MM-DD")){
             var lis = $$("#rilikongjian3-dateTime").find("li");
 
