@@ -6,8 +6,8 @@
             		<div class="list-block">
 					  <ul>
             		  {{#each data}}
-					    <li class="swipeout addr-dizhi" onclick="clickToSetDefault(this,{{id}})">
-					      <div class="swipeout-content item-content">
+					    <li class="swipeout addr-dizhi" >
+					      <div class="swipeout-content item-content" onclick="clickToSetDefault(this,{{id}})">
 					        <div class="item-inner" id="mine-add-addr-link">
 					        {{#js_compare "this.is_default === 1"}}[默认]{{/js_compare}}
 					        {{name}} {{addr}}
