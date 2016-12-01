@@ -62,12 +62,16 @@ myApp.onPageInit('order-lib-cal',function(page) {
             $$("#all-button2").removeClass("all-button2").addClass("all-button11");
             $$(this).addClass("beijingse");
             tomm();
-            if(moment(getServiceDate()+" "+nowHour).format("YYYY-MM-DD HH")<=moment().format("YYYY-MM-DD HH")){
+            var s=getServiceDate();
+            if(getServiceDate()==date){
                 if(nowHour>=16){
                     $$("#rilikongjian3-day li").removeClass("beijingse");
                     $$(selectDay).addClass("beijingse");
                     $$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
                 }
+            }
+            if(getServiceDate()<date){
+            	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
             }
             noSelectHour();
             filterServiceDate();
@@ -75,8 +79,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
         $$("#rilikongjian3-dateTime li").removeClass("hour-beijingse");
         filterServiceDate();
         noSelectHour();
+        $$("#rilikongjian3-day").find(":first-child").addClass("beijingse");
         if(cmp==date){
-            $$("#rilikongjian3-day").find(":first-child").addClass("beijingse");
             tomm(cmp);
         }
     }
@@ -101,27 +105,26 @@ myApp.onPageInit('order-lib-cal',function(page) {
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
         $$("#all-button2").removeClass("all-button2").addClass("all-button11");
         var dy=$$(selectDay).parent().find(":first-child").text();
+        if(dy==null){
+        	dy = $$("#rilikongjian3-day").find("li[class='beijingse']").text();
+        }
         var cmp='';
         if(dy==null ||dy==""){
             dy=moment(getServiceDate()).subtract(1, 'days');
+            if(dy.format("YYYY-MM-DD")<=date) return false;
             var com_dy=moment(getServiceDate()).format("DD");
             var dy_month = dy.format("YYYY-MM");
             var com_month = moment(getServiceDate()).format("YYYY-MM");
-            var ss=dy.format("DD");
-            if(dy.format("DD")>com_dy && dy_month<=com_month){
+            var ss=$$(dy).parent().find(":first-child").text();
+            if(ss>com_dy && dy_month<=com_month){
             	cmp = getServiceDate();
-            }else if(dy.format("DD")<com_dy &&dy_month<=com_month){
+            }else if(ss<com_dy &&dy_month<=com_month){
             	cmp = getServiceDate();
             }else{
             	cmp = moment(date).format("YYYY-MM")+"-"+dy.format("DD");
             }
         }else{
-        	var ym=moment(getServiceDate());
-        	if(ym.format("DD")<=dy){
-        		cmp=moment().format("YYYY-MM")+"-"+dy;
-        	}else if(ym.format("DD")>dy){
-        		cmp=getServiceDate();
-        	}
+        	cmp=moment().format("YYYY-MM")+"-"+dy;
         }
         if(cmp<=date) return false;
         count--;
