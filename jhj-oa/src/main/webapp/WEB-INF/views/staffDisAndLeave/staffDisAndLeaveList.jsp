@@ -92,8 +92,8 @@ import="com.jhj.oa.common.UrlHelper"%>
 	                           		</tr>
 	                           </table>
 	                            <aside>
-	                            	<span>今日派单数：${todayOrder }</span>
-	                            	<span>明日派单数：${tomorrowOrder }</span>
+	                            	<span>今日派单人数：<em style="color:red;">${todayOrder }</em></span>
+	                            	<span>明日派单人数：<em style="color:red;">${tomorrowOrder }</em></span>
 	                            </aside>
 	                         </header>
                            

@@ -277,6 +277,7 @@ public class OrderPayController extends BaseController {
 				 *  2016年4月13日18:50:29  没啥大用了， jhj2.1 已经没有 深度 保洁订单类型了
  				 * 
 				 */
+				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
 				orderPayService.orderPaySuccessToDoForDeep(order);
 			}
 

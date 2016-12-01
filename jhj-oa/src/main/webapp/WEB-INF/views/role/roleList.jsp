@@ -56,7 +56,10 @@
                               <c:forEach items="${contentModel.list}" var="item">
                               <tr>
 						            <td>${ item.name }</td>
-						            <td>${ item.enable }</td>
+						            <td>
+						            	<c:if test="${item.enable==1 }">是</c:if>
+						            	<c:if test="${item.enable==0 }">否</c:if>
+						            </td>
                                   	<td>
 	                                    <button id="btn_update" onClick="btn_update('role/toRoleForm?id=${item.id}')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
 	                                    <button id="btn_del" onClick="btn_del('role/delete/${item.id}')" class="btn btn-danger btn-xs"  title="删除"><i class="icon-trash "></i></button>
@@ -71,7 +74,7 @@
                       
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="contentModel"/>
-	        				<c:param name="urlAddress" value="/account/list"/>
+	        				<c:param name="urlAddress" value="/role/list"/>
 	       			  </c:import>
                   </div>
               </div>
