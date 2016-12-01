@@ -3,16 +3,24 @@
         <div id="indexPageContentDiv" class="page-content">
             <div class="beijing-index">
             	<div class="addr-dizhi-big">
-            	{{#each data}}
-	                <ul class="addr-dizhi" onclick="clickToSetDefault(this,{{id}})" style="padding:0">
-	                    <li id="mine-add-addr-link">{{#js_compare "this.is_default === 1"}}[默认]{{/js_compare}}
-	                        {{name}} {{addr}}
-	                    </li>
-	                    <li>
-		                	<input type="hidden" id="addr_id" name="addr_id" value="{{id}}"   />
-	                    </li>
-	                </ul>
-	                {{/each}}
+            		<div class="list-block">
+					  <ul>
+            		  {{#each data}}
+					    <li class="swipeout">
+					      <div class="swipeout-content item-content">
+					        <div class="item-inner">
+					        {{#js_compare "this.is_default === 1"}}[默认]{{/js_compare}}
+					        {{name}} {{addr}}
+					        </div>
+					      </div>
+					      <div class="swipeout-actions-right">
+					        <a href="#" id="delete-addr" class="swipeout-delete" data-confirm="是否删除地址?" onclick="delAddr(this)">删除</a>
+					        <input type="hidden" id="id" value="{{id}}"/>
+					      </div>
+					    </li>
+	                  {{/each}}
+	                  </ul>
+	                </div>
                 </div>
                 <div class="all-button9" id="mine-add-addr">添加一个地址</div>
             </div>

@@ -98,16 +98,12 @@ myApp.onPageBeforeInit('order-rate', function(page) {
 		params.rate_arrival = $$("#rateArrival").val();
 		params.rate_attitude = $$("#rateAttitude").val();
 		params.rate_skill = $$("#rateSkill").val();
-		var input =$$("#rateImgFile");
-		var files = $$(input).files;
-		alert(files)
-//		params.imgs = ;
 
 		var rateContent = $$("#rateContent").val();
 		if (rateContent == undefined) rateContent = "";
 		params.rate_content = rateContent;
 		
-		return false;
+//		return false;
 
 		$$.ajax({
 			type : "POST",
