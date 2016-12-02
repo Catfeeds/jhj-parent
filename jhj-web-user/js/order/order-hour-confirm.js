@@ -257,7 +257,7 @@ function formValidation() {
 	
 	//校验服务地址是否为空
 	var addrId = $$("#orderHourAddrId").val;
-	if (addrId == 0 || addrId == "") {
+	if (addrId == 0 || addrId == "" || addrId == undefined) {
 		alert("请选择服务地址");
 		return false;
 	}

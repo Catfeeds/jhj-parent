@@ -47,16 +47,33 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
 	var addrId = "";
 	var addrName = ""
-	if (localStorage['default_addr_id'] != null)  addrId = localStorage['default_addr_id'];
-	if (localStorage['default_addr_name'] != null)  addrName = localStorage['default_addr_name'];
+	if (localStorage['default_addr_id'] != null && localStorage['default_addr_id'] != undefined)  {
+		addrId = localStorage['default_addr_id'];
+	}
+	if (localStorage['default_addr_name'] != null && localStorage['default_addr_name'] != undefined)  {
+		addrName = localStorage['default_addr_name'];
+	}
 	
 	//优先为刚选择的地址
-	if (sessionStorage.getItem('addr_id') != null)  addrId = sessionStorage.getItem('addr_id');
-	if (sessionStorage.getItem('addr_name') != null)  addrName = sessionStorage.getItem('addr_name');
+	if (sessionStorage.getItem('addr_id') != null && sessionStorage.getItem('addr_id') != undefined)  {
+		addrId = sessionStorage.getItem('addr_id');
+	}
 	
-	if (addrId != undefined || addrId != "") $$("#addrId").val(addrId);
+	if (sessionStorage.getItem('addr_name') != null && sessionStorage.getItem('addr_name') != undefined)  {
+		addrName = sessionStorage.getItem('addr_name');
+	}
+	
+	if (addrId != undefined && addrId != "" && addrId != 0) {
+		$$("#orderDeepAddrId").val(addrId);
+	}
 	if (addrName != undefined || addrName != "") {
 		$$("#orderHourAddrName").html(addrName);
+	}
+	
+	if (userId == 4953) {
+		myApp.alert("addrId = " + addrId);
+		myApp.alert("oDAddrId val = " + $$("#orderDeepAddrId").val() );
+		myApp.alert("session addr_id = " + sessionStorage.getItem('addr_id'));
 	}
 	
 	//设置服务时间.
@@ -155,19 +172,13 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 			return false;
 		}
 		
-		var addrId = $$("#addrId").val();
-		if (addrId == undefined || addrId == "" || addrId == 0) {
-			alert("请选择地址.");
-			return false;
-		}
-
 		var params = {};
 		params.user_id = $$("#userId").val();
 		params.mobile =  localStorage['user_mobile'];
 		params.service_type = $$("#serviceType").val();
 		params.service_date = $$("#serviceDate").val();
 		params.serviceHour = sessionStorage.getItem("total_service_hour");
-		params.addr_id = $$("#addrId").val();
+		params.addr_id = $$("#orderDeepAddrId").val();
 		params.service_addons_datas = sessionStorage.getItem("service_addons_json");
 		params.remarks = $$("#remarks").val();
 		params.order_from = $$("#orderFrom").val();
@@ -234,8 +245,8 @@ function formValidation() {
 	}
 	
 	//校验服务地址是否为空
-	var addrId = $$("#addrId").val;
-	if (addrId == 0 || addrId == "") {
+	var addrId = $$("#orderDeepAddrId").val;
+	if (addrId == 0 || addrId == "" || addrId == undefined) {
 		alert("请选择服务地址");
 		return false;
 	}
