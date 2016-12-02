@@ -57,6 +57,12 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		$$("#orderHourAddrName").html(addrName);
 	}
 	
+	if (userId == 4953) {
+		myApp.alert("addrId = " + addrId);
+		myApp.alert("orderHourAddrId val = " + $$("#orderHourAddrId").val() );
+		myApp.alert("session addr_id = " + sessionStorage.getItem('addr_id'));
+	}
+	
 	//设置服务时间.
 	if (sessionStorage.getItem('service_date') != null) {
 		$$("#serviceDate").val(sessionStorage.getItem('service_date'));

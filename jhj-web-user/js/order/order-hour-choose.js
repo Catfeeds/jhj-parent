@@ -70,6 +70,11 @@ myApp.onPageInit('order-hour-choose', function(page) {
 		$$("#addrId").val(addrId);
 	}
 	
+	if (userId == 4953) {
+		myApp.alert("addrId = " + addrId);
+		myApp.alert("addrID val = " + $$("#addrId").val() );
+	}
+	
 	if (addrName != undefined && addrName != "") {
 		$$("#orderChooseAddrName").html(addrName);
 	}
