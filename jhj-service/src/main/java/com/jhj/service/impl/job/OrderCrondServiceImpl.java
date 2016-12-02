@@ -18,6 +18,7 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderRates;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
@@ -27,11 +28,13 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.JsonOrderRateItemVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.SmsUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -70,6 +73,9 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 
 	@Autowired
 	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerServiceTypeService;
 
 	/*
 	 * 1.钟点工-- 服务开始前两小时 通知 -- 接收方： 用户
@@ -79,7 +85,7 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setOrderType(Constants.ORDER_TYPE_0);
-		searchVo.setOrderStatus(Constants.ORDER_STATUS_4);
+		searchVo.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
 
 		Long now = TimeStampUtil.getNowMin();
 		Long twoHourBefore = now - 2 * 3600;
@@ -94,7 +100,13 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 			String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
 			String endTimeStr = TimeStampUtil.timeStampToDateStr((long)(order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
 			String timeStr = beginTimeStr + "-" + endTimeStr;
-
+			
+			Long serviceTypeId = order.getServiceType();
+			PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+			String serviceTypeName = "";
+			if (serviceType != null) {
+				serviceTypeName = serviceType.getName();
+			}
 			// 家政师 xx 　在开始前２小时之内换人???
 
 			Long orderId = order.getId();
@@ -102,25 +114,28 @@ public class OrderCrondServiceImpl implements OrderCrondService {
 			searchVo1.setOrderId(orderId);
 			searchVo1.setDispatchStatus((short) 1);
 			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
-
-			OrderDispatchs orderDispatch = null;
-			if (!orderDispatchs.isEmpty()) {
-				orderDispatch = orderDispatchs.get(0);
+			
+			if (orderDispatchs.isEmpty()) continue;
+			
+			String staffName = "";
+			for (OrderDispatchs item : orderDispatchs) {
+				String tmpStaffName = item.getStaffName();
+				if (staffName.indexOf(tmpStaffName + ",") < 0) staffName+= tmpStaffName + ",";
+			}
+			
+			if (!StringUtil.isEmpty(staffName) && staffName.substring(staffName.length()-1).equals(",")) {
+				staffName = staffName.substring(0, staffName.length()-1);
 			}
 
-			if (orderDispatch == null)
-				continue;
-
-			String staffName = orderDispatch.getStaffName();
 
 			// 用户手机号
 			Long userId = order.getUserId();
 
 			Users user = userService.selectByPrimaryKey(userId);
 
-			String[] tempStr = new String[] { timeStr, staffName };
+			String[] tempStr = new String[] { timeStr, serviceTypeName, staffName };
 
-			SmsUtil.SendSms(user.getMobile(), "29156", tempStr);
+			SmsUtil.SendSms(user.getMobile(), "114844", tempStr);
 
 			// SmsUtil.SendSms("13521193653", "29156", tempStr);
 		}
