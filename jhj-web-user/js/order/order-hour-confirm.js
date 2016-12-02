@@ -51,7 +51,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	}
 	
 	if (addrId != undefined && addrId != "" && addrId == 0) {
-		$$("#addrId").val(addrId);
+		$$("#orderHourAddrId").val(addrId);
 	}
 	if (addrName != undefined && addrName != "") {
 		$$("#orderHourAddrName").html(addrName);
@@ -170,7 +170,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 			return false;
 		}
 		
-		var addrId = $$("#addrId").val();
+		var addrId = $$("#orderHourAddrId").val();
 		if (addrId == undefined || addrId == "" || addrId == 0) {
 			alert("请选择地址.");
 			return false;
@@ -250,7 +250,7 @@ function formValidation() {
 	}
 	
 	//校验服务地址是否为空
-	var addrId = $$("#addrId").val;
+	var addrId = $$("#orderHourAddrId").val;
 	if (addrId == 0 || addrId == "") {
 		alert("请选择服务地址");
 		return false;

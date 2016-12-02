@@ -50,7 +50,7 @@ public class UsersServiceImpl implements UsersService {
 
 	@Autowired
 	private UsersMapper usersMapper;
-
+	
 	@Autowired
 	private UserAddrsService userAddrService;
 
@@ -162,7 +162,9 @@ public class UsersServiceImpl implements UsersService {
 		UserAppVo vo = new UserAppVo();
 
 		Users user = this.selectByPrimaryKey(userId);
-
+		
+		if (user == null) return vo;
+		
 		BeanUtilsExp.copyPropertiesIgnoreNull(user, vo);
 		vo.setHasUserAddr(false);
 		List<UserAddrs> userAddrs = userAddrService.selectByUserId(userId);
