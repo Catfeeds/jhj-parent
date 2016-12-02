@@ -154,6 +154,12 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		if (formValidation() == false) {
 			return false;
 		}
+		
+		var addrId = $$("#addrId").val();
+		if (addrId == undefined || addrId == "" || addrId == 0) {
+			alert("请选择地址.");
+			return false;
+		}
 
 		var params = {};
 		params.user_id = $$("#userId").val();

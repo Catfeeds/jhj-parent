@@ -74,9 +74,10 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 			 return false;
 		 }
 		 
-		 if ($$("#addrId").val() == "") {
-			 myApp.alert("请选择地址.");
-			 return false;
+		 var addrId = $$("#addrId").val();
+		 if (addrId == undefined || addrId == "" || addrId == 0) {
+				myApp.alert("请选择地址.");
+				return false;	
 		 }
 		 var url = "order/order-lib-cal.html?next_url=order/order-deep-confirm.html"
 			 

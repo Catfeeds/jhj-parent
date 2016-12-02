@@ -158,7 +158,14 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		if (formValidation() == false) {
 			return false;
 		}
-
+		
+		var addrId = $$("#addrId").val();
+		if (addrId == undefined || addrId == "" || addrId == 0) {
+			alert("请选择地址.");
+			return false;
+		}
+			
+		
 		var params = {};
 		params.userId = $$("#userId").val();
 		params.serviceType = $$("#serviceType").val();
