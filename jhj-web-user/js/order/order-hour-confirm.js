@@ -1,4 +1,4 @@
-myApp.onPageInit('order-hour-confirm', function(page) {
+myApp.onPageBeforeInit('order-hour-confirm', function(page) {
 	
 	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
 	sessionStorage.setItem("pay_order_type", 0);
@@ -50,7 +50,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 		addrName = sessionStorage.getItem('addr_name');
 	}
 	
-	if (addrId != undefined && addrId != "" && addrId == 0) {
+	if (addrId != undefined && addrId != "" && addrId != 0) {
 		$$("#orderHourAddrId").val(addrId);
 	}
 	if (addrName != undefined && addrName != "") {
@@ -59,7 +59,7 @@ myApp.onPageInit('order-hour-confirm', function(page) {
 	
 	if (userId == 4953) {
 		myApp.alert("addrId = " + addrId);
-		myApp.alert("orderHourAddrId val = " + $$("#orderHourAddrId").val() );
+		myApp.alert("oHAddrId val = " + $$("#orderHourAddrId").val() );
 		myApp.alert("session addr_id = " + sessionStorage.getItem('addr_id'));
 	}
 	
