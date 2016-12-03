@@ -359,7 +359,9 @@ public class OrderAmController extends BaseController {
 			return result;
 		}
 
+		Long userId = orders.getUserId();
 		Users u = userService.selectByPrimaryKey(orders.getUserId());
+		
 		/**
 		 * 更新订单信息
 		 */
@@ -386,7 +388,7 @@ public class OrderAmController extends BaseController {
 		 */
 
 		int results = orderServiceAddonsService.deleteByOrderNo(orderNo);
-		List<OrderServiceAddons> lists = orderExpCleanService.updateOrderServiceAddons(orders.getServiceType(), serviceAddonsDatas);
+		List<OrderServiceAddons> lists = orderExpCleanService.updateOrderServiceAddons(userId, orders.getServiceType(), serviceAddonsDatas);
 		for (Iterator iterator = lists.iterator(); iterator.hasNext();) {
 			OrderServiceAddons orderServiceAddons = (OrderServiceAddons) iterator.next();
 			orderServiceAddons.setOrderId(orders.getId());

@@ -14,8 +14,8 @@ public interface OrderExpCleanService {
 	
 	
 	OrderPrices getOrderPriceOfOrderExpClean(Long serviceType, String serviceAddonsDatas);
-	
-	List<OrderServiceAddons> updateOrderServiceAddons(Long serviceType, String serviceAddonsDatas);
+
+	List<OrderServiceAddons> updateOrderServiceAddons(Long userId, Long serviceType, String serviceAddonsDatas);
 
 	
 

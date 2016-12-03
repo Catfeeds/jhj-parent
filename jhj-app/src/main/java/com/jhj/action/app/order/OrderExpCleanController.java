@@ -176,7 +176,7 @@ public class OrderExpCleanController extends BaseController {
 		/*
 		 * 3.更新订单附加服务表
 		 */
-		List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(serviceType, serviceAddonsDatas);
+		List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(userId, serviceType, serviceAddonsDatas);
 		for (Iterator<OrderServiceAddons> iterator = list.iterator(); iterator.hasNext();) {
 			OrderServiceAddons orderServiceAddons = (OrderServiceAddons) iterator.next();
 			orderServiceAddons.setOrderId(order.getId());
@@ -275,7 +275,7 @@ public class OrderExpCleanController extends BaseController {
 		/*
 		 * 3.更新订单附加服务表
 		 */
-		List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(serviceType, serviceAddonsDatas);
+		List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(userId, serviceType, serviceAddonsDatas);
 		for (Iterator<OrderServiceAddons> iterator = list.iterator(); iterator.hasNext();) {
 			OrderServiceAddons orderServiceAddons = (OrderServiceAddons) iterator.next();
 			orderServiceAddons.setOrderId(order.getId());
