@@ -20,11 +20,14 @@ import com.google.gson.Gson;
 import com.jhj.action.BaseController;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.service.bs.OrgStaffBlackService;
+import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -36,6 +39,7 @@ import com.jhj.vo.order.newDispatch.EventVo;
 import com.jhj.vo.order.newDispatch.OaStaffDisAndLeaveVo;
 import com.jhj.vo.order.newDispatch.TimeEventVo;
 import com.jhj.vo.org.LeaveSearchVo;
+import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -69,6 +73,9 @@ public class OrderCalendarController extends BaseController {
 
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrgStaffFinanceService staffFinanceService;
 	
 	/**
 	 *   
@@ -172,7 +179,12 @@ public class OrderCalendarController extends BaseController {
 		
 		int todayOrder=0,tomOrder=0;
 		String today = DateUtil.getToday();
-		String tom=DateUtil.addDay(DateUtil.getNowOfDate(), 1, Calendar.DAY_OF_WEEK, "yyyy-MM-dd");
+//		String tom=DateUtil.addDay(DateUtil.getNowOfDate(), 1, Calendar.DAY_OF_WEEK, "yyyy-MM-dd");
+		
+		//黑名单员工
+		OrgStaffFinanceSearchVo vo=new OrgStaffFinanceSearchVo();
+		vo.setIsBlack((short)1);
+		List<OrgStaffFinance> staffFinanceList = staffFinanceService.selectBySearchVo(vo);
 		// 初始化时间、staff
 		for (OrgStaffs orgStaff : staffList) {
 			Long staffId = orgStaff.getStaffId();
@@ -219,9 +231,10 @@ public class OrderCalendarController extends BaseController {
 						//统计今日明日派工订单数
 						if(serviceDateStr.equals(today) && weekDate.equals(today)){
 							todayOrder++;
-						}else if(serviceDateStr.equals(tom) && weekDate.equals(tom)){
-							tomOrder++;
 						}
+					/*	else if(serviceDateStr.equals(tom) && weekDate.equals(tom)){
+							tomOrder++;
+						}*/
 //						Long disStaffId = staffDisVo.getStaffId();
 						String orderNo = staffDisVo.getOrderNo();
 						if (serviceDateStr.equals(weekDate)) {
@@ -275,8 +288,8 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("weekDateModel", weekDateList);
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
-		model.addAttribute("todayOrder",todayOrder);
-		model.addAttribute("tomorrowOrder",tomOrder);
+		model.addAttribute("dispatchNum",staffList.size()-todayOrder-staffFinanceList.size());
+//		model.addAttribute("tomorrowOrder",tomOrder);
 
 		return "staffDisAndLeave/staffDisAndLeaveList";
 	}

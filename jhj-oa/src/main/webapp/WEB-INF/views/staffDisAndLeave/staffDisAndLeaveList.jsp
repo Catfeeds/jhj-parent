@@ -82,19 +82,23 @@ import="com.jhj.oa.common.UrlHelper"%>
 										
 										<button type="submit" id="btnSearch" class="btn btn-primary" >搜索</button>
 	                           </form:form>
-	                           <table style="border:1px dotted grey;margin-top:15px">
+	                           <table style="margin-top:15px;font-size:16px;">
+		                           <tr>
+	                          			<td>可接单人数：</td>
+	                          			<td>${dispatchNum}人</td>
+	                          		</tr>
 	                           		<tr>
-	                           			<td rowspan="2">可派单人数：</td>
-	                           			<td>上午:<b><font color="red">&nbsp;${amStaffSize }&nbsp;</font></b>人</td>
+	                           			<td rowspan="2">可派单：</td>
+	                           			<td style="color:red;">上午可派单:<b>&nbsp;${amStaffSize }&nbsp;</b>单</td>
 	                           		</tr>
 	                           		<tr>
-	                           			<td>下午:<b><font color="red">&nbsp;${pmStaffSize }&nbsp;</font></b>人</td>
+	                           			<td style="color:green;">下午可派单:<b>&nbsp;${pmStaffSize }&nbsp;</b>单</td>
 	                           		</tr>
 	                           </table>
-	                            <aside>
+	                            <%-- <aside>
 	                            	<span>今日派单人数：<em style="color:red;">${todayOrder }</em></span>
 	                            	<span>明日派单人数：<em style="color:red;">${tomorrowOrder }</em></span>
-	                            </aside>
+	                            </aside> --%>
 	                         </header>
                            
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
