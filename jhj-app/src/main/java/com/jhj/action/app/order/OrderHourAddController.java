@@ -105,7 +105,7 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam("serviceType") Long serviceType,
 			@RequestParam(value = "serviceContent",required =false,defaultValue = "") String serviceContent,
 			@RequestParam("serviceDate") Long serviceDate,
-			@RequestParam("addrId") Long addrId,
+			@RequestParam(value = "addrId", required = false, defaultValue = "") String addrIdStr,
 			@RequestParam("serviceHour") Short serviceHour,
 			@RequestParam(value = "staffNums", required = false, defaultValue = "1") int staffNums,
 			@RequestParam(value = "serviceAddons", required = false, defaultValue = "") String serviceAddons,
@@ -116,6 +116,24 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId) throws Exception{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		Long addrId = 0L;
+		if (addrIdStr.equals("undefined")) {
+			//找出该用户是否有默认的地址，有则为他
+			List<UserAddrs> userAddrs = userAddrService.selectByUserId(userId);
+			if (!userAddrs.isEmpty() && userAddrs.size() == 1) {
+				UserAddrs userAddr = userAddrs.get(0);
+				addrId = userAddr.getId();
+			}
+		} else if (!StringUtil.isEmpty(addrIdStr)) {
+			addrId = Long.valueOf(addrIdStr);
+		}
+		
+		if (addrId.equals(0L)) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("地址选择错误，请重新选择.");
+			return result;
+		}
 		
 		//当前时间 的时间戳
 		Long nowTimeStamp =  new Date().getTime()/1000;

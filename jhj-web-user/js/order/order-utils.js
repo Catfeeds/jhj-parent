@@ -43,6 +43,34 @@ function removeSessionData() {
 }
 
 
+function getItemAddrId() {
+	var selectAddrId = "";
+	if (localStorage['default_addr_id'] != undefined && localStorage['default_addr_id'] != null && localStorage['default_addr_id'] != "undefined") {
+		selectAddrId = localStorage['default_addr_id'];
+	}
+	
+	if (sessionStorage.getItem('addr_id') != undefined  && sessionStorage.getItem('addr_id') != null && sessionStorage.getItem('addr_id') != "undefined") {
+		selectAddrId = sessionStorage.getItem('addr_id');
+	}
+	
+	return selectAddrId;
+}
+
+function getItemAddrName() {
+	var selectAddrName = "";
+	if (localStorage['default_addr_name'] != undefined && localStorage['default_addr_name'] != null && localStorage['default_addr_name'] != "undefined") {
+		selectAddrName = localStorage['default_addr_name'];
+	}
+	
+	if (sessionStorage.getItem('addr_name') != undefined  && sessionStorage.getItem('addr_name') != null && sessionStorage.getItem('addr_name') != "undefined") {
+		selectAddrName = sessionStorage.getItem('addr_name');
+	}
+	
+	return selectAddrName;
+}
+
+
+
 /**
  * 推荐服务
  *

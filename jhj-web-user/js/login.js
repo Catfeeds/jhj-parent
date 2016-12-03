@@ -167,15 +167,13 @@ myApp.onPageInit('login', function (page) {
     	   	  localStorage.setItem("is_vip",result.data.is_vip);
     	   	  	    	  
 	    	  //如果有默认地址则设置为默认地址
-	    	  var userAddr = result.data.default_user_addr;
+	    	  var userAddr = result.default_user_addr;
 
-	    	  if (userAddr != undefined) {
+	    	  if (userAddr != undefined && userAddr != null) {
 	    		  if (userAddr.is_default == 1) {
 	    			  
-		    		  var addrId = userAddr.id;
-		    		  var addrName = userAddr.name + " " + userAddr.addr;
-	    			  localStorage['default_addr_id'] = addrId;
-	    			  localStorage['default_addr_name'] = addrName;	
+	    			  localStorage.setItem('default_addr_id', userAddr.id);
+	    			  localStorage.setItem('default_addr_name', userAddr.name + " " + userAddr.addr);	
 	    		  }
 	    	  }
     	   	  

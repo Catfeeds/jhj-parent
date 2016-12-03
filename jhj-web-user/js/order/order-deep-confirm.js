@@ -45,23 +45,8 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 	$$("#userId").val(userId);
 	
 	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
-	var addrId = "";
-	var addrName = ""
-	if (localStorage['default_addr_id'] != null && localStorage['default_addr_id'] != undefined)  {
-		addrId = localStorage['default_addr_id'];
-	}
-	if (localStorage['default_addr_name'] != null && localStorage['default_addr_name'] != undefined)  {
-		addrName = localStorage['default_addr_name'];
-	}
-	
-	//优先为刚选择的地址
-	if (sessionStorage.getItem('addr_id') != null && sessionStorage.getItem('addr_id') != undefined)  {
-		addrId = sessionStorage.getItem('addr_id');
-	}
-	
-	if (sessionStorage.getItem('addr_name') != null && sessionStorage.getItem('addr_name') != undefined)  {
-		addrName = sessionStorage.getItem('addr_name');
-	}
+	var addrId = getItemAddrId();
+	var addrName = getItemAddrName();
 	
 	if (addrId != undefined && addrId != "" && addrId != 0) {
 		$$("#orderDeepAddrId").val(addrId);

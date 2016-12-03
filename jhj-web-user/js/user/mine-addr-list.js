@@ -41,11 +41,10 @@ myApp.onPageInit('mine-addr-list', function (page) {
 function clickToSetDefault(obj,addrId){
 	//当前被点击的地址
 	var addrNameClick= $$(obj).find("#mine-add-addr-link").text();
-	//当前被点击的地址  id
-	var addrIdClick =  $$(obj).find("#addr_id").val();
+
 	if(addrNameClick.indexOf("默认")>0){
 		localStorage.setItem("default_addr_name",addrNameClick.replace("[默认]", "").trim());
-		localStorage.setItem("default_addr_id",addrIdClick);
+		localStorage.setItem("default_addr_id",addrId);
 		goBackToOrder(localStorage['default_addr_id'], localStorage['default_addr_name']);
 		return false;
 	}
@@ -85,22 +84,15 @@ function clickToSetDefault(obj,addrId){
 		},
 		//  点击 "取消/返回",不设置默认地址,但是 把该点击地址 作为 选中项，传回上一页
 		function (){
-			goBackToOrder(addrIdClick,addrNameClick);
+			goBackToOrder(addrId,addrNameClick);
 		}
 	);
 }
 
 //点选 ‘取消/返回’  1.不修改默认地址  2.把该地址 传回下单页
-function goBackToOrder(selectedAddrId, selectedAddrName){
-	
-	if (userId == 4953) {
-		myApp.alert("addrlist selectedAddrId = " + selectedAddrId);
-	}	
-	
-	if (selectedAddrId == undefined || selectedAddrId == "") return false;
-	if (selectedAddrName == undefined || selectedAddrName == "") return false;
-	
-	
+function goBackToOrder(addrId, addrName){
+	console.log("goBackToOrder addr_id = " + addrId);
+	console.log(" goBackToOrder addr_name = " + addrName);
 	var returnPage = "";
 	for (var i =1; i < 5; i++) {	// 判断前一页是不是 下单页,如果是,则作为 返回页
 		var historyPage = mainView.history[mainView.history.length-i];
@@ -117,15 +109,10 @@ function goBackToOrder(selectedAddrId, selectedAddrName){
 
 	if (returnPage == "") return;
 
-	sessionStorage.setItem('addr_id', selectedAddrId);
-	sessionStorage.setItem('addr_name', selectedAddrName);
+	sessionStorage.setItem('addr_id', addrId);
+	sessionStorage.setItem('addr_name', addrName);
 	console.log("addr_id = " + sessionStorage.getItem("addr_id"));
 	console.log("addr_name = " + sessionStorage.getItem("addr_name"));
-	
-	if (userId == 4953) {
-		myApp.alert("addrlist id = " + sessionStorage.getItem("addr_id"));
-	}
-	
 	mainView.router.loadPage(returnPage);
 
 }

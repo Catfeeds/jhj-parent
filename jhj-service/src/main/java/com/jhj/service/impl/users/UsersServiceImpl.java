@@ -168,9 +168,28 @@ public class UsersServiceImpl implements UsersService {
 		BeanUtilsExp.copyPropertiesIgnoreNull(user, vo);
 		vo.setHasUserAddr(false);
 		List<UserAddrs> userAddrs = userAddrService.selectByUserId(userId);
-		if (!userAddrs.isEmpty())
+		if (!userAddrs.isEmpty()) {
 			vo.setHasUserAddr(true);
-
+			
+			UserAddrs defaultUserAddr = null;
+			
+			for (UserAddrs ua : userAddrs) {
+				if (ua.getIsDefault().equals((short)1)) {
+					defaultUserAddr = ua;
+					break;
+				}
+			}
+			
+			if (defaultUserAddr == null) {
+				defaultUserAddr = userAddrs.get(userAddrs.size() - 1);
+				defaultUserAddr.setIsDefault((short) 1);
+				
+				userAddrService.updateByPrimaryKeySelective(defaultUserAddr);
+			}
+			
+			vo.setDefaultUserAddr(defaultUserAddr);
+		}
+			
 		List<UserCoupons> userCoupons = userCouponsService.selectByUserId(userId);
 		vo.setTotalCoupon(userCoupons.size());
 		// 显示优惠个数

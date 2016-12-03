@@ -7,6 +7,7 @@
 					  <ul>
             		  {{#each data}}
 					    <li class="swipeout addr-dizhi" >
+					     
 					      <div class="swipeout-content item-content" onclick="clickToSetDefault(this,{{id}})">
 					        <div class="item-inner" id="mine-add-addr-link">
 					        {{#js_compare "this.is_default === 1"}}[默认]{{/js_compare}}
@@ -15,7 +16,7 @@
 					      </div>
 					      <div class="swipeout-actions-right">
 					        <a href="#" id="delete-addr" class="swipeout-delete" data-confirm="是否删除地址?" onclick="delAddr(this)">删除</a>
-					        <input type="hidden" id="addr_id" value="{{id}}"/>
+					         <input type="hidden" id="addr_id" value="{{id}}"/>
 					      </div>
 					    </li>
 	                  {{/each}}
