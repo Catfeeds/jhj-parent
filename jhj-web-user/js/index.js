@@ -28,8 +28,6 @@ function getUserInfo() {
 	})
 }
 
-getUserInfo();
-
 function orderLink(url, serviceTypeId) {
 	
 	localStorage.setItem("firstServiceType",serviceTypeId);
