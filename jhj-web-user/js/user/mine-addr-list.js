@@ -91,8 +91,16 @@ function clickToSetDefault(obj,addrId){
 }
 
 //点选 ‘取消/返回’  1.不修改默认地址  2.把该地址 传回下单页
-function goBackToOrder(addrId, addrName){
-
+function goBackToOrder(selectedAddrId, selectedAddrName){
+	
+	if (userId == 4953) {
+		myApp.alert("addrlist selectedAddrId = " + selectedAddrId);
+	}	
+	
+	if (selectedAddrId == undefined || selectedAddrId == "") return false;
+	if (selectedAddrName == undefined || selectedAddrName == "") return false;
+	
+	
 	var returnPage = "";
 	for (var i =1; i < 5; i++) {	// 判断前一页是不是 下单页,如果是,则作为 返回页
 		var historyPage = mainView.history[mainView.history.length-i];
@@ -109,10 +117,15 @@ function goBackToOrder(addrId, addrName){
 
 	if (returnPage == "") return;
 
-	sessionStorage.setItem('addr_id', addrId);
-	sessionStorage.setItem('addr_name', addrName);
+	sessionStorage.setItem('addr_id', selectedAddrId);
+	sessionStorage.setItem('addr_name', selectedAddrName);
 	console.log("addr_id = " + sessionStorage.getItem("addr_id"));
 	console.log("addr_name = " + sessionStorage.getItem("addr_name"));
+	
+	if (userId == 4953) {
+		myApp.alert("addrlist id = " + sessionStorage.getItem("addr_id"));
+	}
+	
 	mainView.router.loadPage(returnPage);
 
 }

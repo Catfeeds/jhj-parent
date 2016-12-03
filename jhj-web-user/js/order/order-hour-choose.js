@@ -51,18 +51,18 @@ myApp.onPageInit('order-hour-choose', function(page) {
 	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
 	var addrId = "";
 	var addrName = ""
-	if (localStorage['default_addr_id'] != null && localStorage['default_addr_id'] != undefined) {
+	if (localStorage['default_addr_id'] != undefined && localStorage['default_addr_id'] != null) {
 		addrId = localStorage['default_addr_id'];
 	}
-	if (localStorage['default_addr_name'] != null && localStorage['default_addr_name'] != undefined) {
+	if (localStorage['default_addr_name'] != undefined && localStorage['default_addr_name'] != null) {
 		addrName = localStorage['default_addr_name'];
 	}
 	
 	//优先为刚选择的地址
-	if (sessionStorage.getItem('addr_id') != null  && sessionStorage.getItem('addr_id') != undefined) {
+	if (sessionStorage.getItem('addr_id') != undefined  && sessionStorage.getItem('addr_id') != null) {
 		addrId = sessionStorage.getItem('addr_id');
 	}
-	if (sessionStorage.getItem('addr_name') != null  && sessionStorage.getItem('addr_name') != undefined) {
+	if (sessionStorage.getItem('addr_name') != undefined  && sessionStorage.getItem('addr_name') != null) {
 		addrName = sessionStorage.getItem('addr_name');
 	}
 	
