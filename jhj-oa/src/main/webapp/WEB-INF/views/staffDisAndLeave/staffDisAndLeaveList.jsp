@@ -85,7 +85,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 	                           <table style="margin-top:15px;font-size:16px;">
 		                           <tr>
 	                          			<td>可接单人数：</td>
-	                          			<td>${dispatchNum}人</td>
+	                          			<td tyle="color:red;">${dispatchNum}人</td>
 	                          		</tr>
 	                           		<tr>
 	                           			<td rowspan="2">可派单：</td>
