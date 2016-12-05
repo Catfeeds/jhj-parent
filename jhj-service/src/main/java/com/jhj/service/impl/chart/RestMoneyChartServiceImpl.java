@@ -62,7 +62,6 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		legend.add("一千面值");
 		legend.add("两千面值");
 		legend.add("三千面值");
-
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 
 		// 3.x轴
@@ -74,12 +73,10 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		
 		// 4.填充table
 		List<HashMap<String, String>> tableDatas = new ArrayList<HashMap<String, String>>();
-
 		HashMap<String, String> tableData = null;
 		for (int i = 0; i < timeSeries.size(); i++) {
 			tableData = new HashMap<String, String>();
 			tableData.put("series", timeSeries.get(i));
-
 			for (int j = 0; j < legendAll.size(); j++) {
 				tableData.put(legendAll.get(j), "0");
 			}
@@ -90,10 +87,12 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 
 		if (chartSearchVo.getStatType().equals("day")) {
-			statDatas = orderCardsMapper.saleCardByDay(chartSearchVo);
+			chartSearchVo.setFormatParam("%c-%e");
+			statDatas = orderCardsMapper.saleCardByMonth(chartSearchVo);
 		}
 
 		if (chartSearchVo.getStatType().equals("month")) {
+			chartSearchVo.setFormatParam("%c");
 			statDatas = orderCardsMapper.saleCardByMonth(chartSearchVo);
 		}
 
@@ -102,110 +101,100 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		}
 
 		//4-2.真实数据填充（table表格），计算每行总计，以及各品类占比
-		
-		
 		BigDecimal oneMoney = new BigDecimal(0);
 		BigDecimal twopMoney = new BigDecimal(0);
 		BigDecimal fiveMoney = new BigDecimal(0);
-//		BigDecimal tenMoney = new BigDecimal(0);
+		
+		String str=null,str1 = null;
 		for (ChartMapVo chartSqlData : statDatas) {
-			
 			for (HashMap<String, String> tableDataItem : tableDatas) {
-			String str = tableDataItem.get("series").split("-")[1];
-			if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
-				// 1 = 1000面值    2 = 2000面值      3 =3000面值    
-				if (chartSqlData.getName().equals("1")) {
-					
-					
-					oneMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("一千面值", MathBigDecimalUtil.round2(oneMoney));
+				if(chartSearchVo.getSelectCycle()==1){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==12){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
+					str = tableDataItem.get("series").split("-")[1];
+					if(chartSearchVo.getSearchType()==0){
+						str1 = chartSqlData.getSeries();
+					}
+					if(chartSearchVo.getSearchType()==1){
+						str1 = chartSqlData.getSeries().split("-")[1];
+					}
 				}
-				if (chartSqlData.getName().equals("2")) {
-					
-					twopMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("两千面值", MathBigDecimalUtil.round2(twopMoney));
+				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
+					// 2 = 1000面值    3 = 2000面值      4 =3000面值    
+					if (chartSqlData.getName().equals("2")) {
+						oneMoney =  chartSqlData.getTotalMoney();
+						tableDataItem.put("一千面值", MathBigDecimalUtil.round2(oneMoney));
+					}
+					if (chartSqlData.getName().equals("3")) {
+						twopMoney =  chartSqlData.getTotalMoney();
+						tableDataItem.put("两千面值", MathBigDecimalUtil.round2(twopMoney));
+					}
+					if (chartSqlData.getName().equals("4")) {
+						fiveMoney =  chartSqlData.getTotalMoney();
+						tableDataItem.put("三千面值", MathBigDecimalUtil.round2(fiveMoney));
+					}
 				}
-				if (chartSqlData.getName().equals("3")) {
-					
-					fiveMoney =  chartSqlData.getTotalMoney();
-					tableDataItem.put("三千面值", MathBigDecimalUtil.round2(fiveMoney));
+				
+				BigDecimal moneySum = new BigDecimal(0);
+				BigDecimal oneThousandMoney = new BigDecimal(tableDataItem.get("一千面值"));
+				BigDecimal twoThousandMoney = new BigDecimal(tableDataItem.get("两千面值"));
+				BigDecimal fiveThousandMoney = new BigDecimal(tableDataItem.get("三千面值"));
+				//计算百分比
+				moneySum = oneThousandMoney.add(twoThousandMoney).add(fiveThousandMoney);
+				tableDataItem.put("营业额小计", moneySum.toString());
+				if (moneySum.intValue() > 0) {
+					tableDataItem.put("一千面值占比", MathDoubleUtil.getPercent(oneThousandMoney.intValue(),moneySum.intValue()));
+					tableDataItem.put("两千面值占比", MathDoubleUtil.getPercent(twoThousandMoney.intValue(),moneySum.intValue()));
+					tableDataItem.put("三千面值占比", MathDoubleUtil.getPercent(fiveThousandMoney.intValue(),moneySum.intValue()));
+				}else {
+					tableDataItem.put("一千面值占比","0.00%");
+					tableDataItem.put("两千面值占比","0.00%");
+					tableDataItem.put("三千面值占比","0.00%");
 				}
-//				if (chartSqlData.getName().equals("4")) {
-//					
-//					tenMoney =  chartSqlData.getTotalMoney();
-//					tableDataItem.put("一万面值", MathBigDecimalUtil.round2(tenMoney));
-//				}
-			}	
 			}
-		}
-		
-		//4-3. 计算各面值 占比
-
-		for (HashMap<String, String> tableDataItem : tableDatas) {
-			BigDecimal oneThousandMoney = new BigDecimal(tableDataItem.get("一千面值"));
-			BigDecimal twoThousandMoney = new BigDecimal(tableDataItem.get("两千面值"));
-			BigDecimal fiveThousandMoney = new BigDecimal(tableDataItem.get("三千面值"));
-//			BigDecimal oneHundredThousandMoney = new BigDecimal(tableDataItem.get("一万面值"));
-		
-			BigDecimal moneySum = oneThousandMoney.add(twoThousandMoney).add(fiveThousandMoney);
-			
-			tableDataItem.put("营业额小计", moneySum.toString());
-			
-			if (moneySum.intValue() > 0) {
-				tableDataItem.put("一千面值占比", MathDoubleUtil.getPercent(oneThousandMoney.intValue(),moneySum.intValue()));
-				tableDataItem.put("两千面值占比", MathDoubleUtil.getPercent(twoThousandMoney.intValue(),moneySum.intValue()));
-				tableDataItem.put("三千面值占比", MathDoubleUtil.getPercent(fiveThousandMoney.intValue(),moneySum.intValue()));
-//				tableDataItem.put("一万面值占比", MathDoubleUtil.getPercent(oneHundredThousandMoney.intValue(),moneySum.intValue()));
-			}else {
-				tableDataItem.put("一千面值占比","0.00%");
-				tableDataItem.put("两千面值占比","0.00%");
-				tableDataItem.put("三千面值占比","0.00%");
-//				tableDataItem.put("一万面值占比","0.00%");
-			}
-			
-			
 		}
 		
 		//5. 去掉第一个tableDataItem;
-				if (tableDatas.size() > 0) tableDatas.remove(0);
-				
-				//6. 根据表格的数据生成图表的数据.
-				//初始化图表数据格式
-				List<HashMap<String, Object>> dataItems = new ArrayList<HashMap<String, Object>>();
-				HashMap<String, Object> chartDataItem = null;
-				List<Integer> datas = null;
-				for (int i =0; i < legend.size(); i++) {
-					chartDataItem = new HashMap<String,Object>();
-					chartDataItem.put("name", legend.get(i));
-					chartDataItem.put("type", "line");
-					datas = new ArrayList<Integer>();
-					
-					for (int j =1; j < timeSeries.size(); j++) {
-						for (HashMap<String, String> tableDataItem : tableDatas) {
-							if (timeSeries.get(j).equals(tableDataItem.get("series").toString())) {
-								String valueStr = tableDataItem.get(legend.get(i)).toString();
-								Integer v = Double.valueOf(valueStr).intValue();
-								datas.add(v);
-								
-								
-							}
-						}
-					}
-					chartDataItem.put("data", datas);
-					dataItems.add(chartDataItem);
-				}
-				chartDataVo.setSeries(JSON.toJSONString(dataItems));		
-				
-				
-				//最后要把tableData -》时间序列 ，比如有 6，7，8转换为 6月，7月，8月
+		if (tableDatas.size() > 0) tableDatas.remove(0);
+		
+		//6. 根据表格的数据生成图表的数据.
+		//初始化图表数据格式
+		List<HashMap<String, Object>> dataItems = new ArrayList<HashMap<String, Object>>();
+		HashMap<String, Object> chartDataItem = null;
+		List<Integer> datas = null;
+		for (int i =0; i < legend.size(); i++) {
+			chartDataItem = new HashMap<String,Object>();
+			chartDataItem.put("name", legend.get(i));
+			chartDataItem.put("type", "line");
+			datas = new ArrayList<Integer>();
+			
+			for (int j =1; j < timeSeries.size(); j++) {
 				for (HashMap<String, String> tableDataItem : tableDatas) {
-					String seriesName = tableDataItem.get("series").toString();
-					seriesName = ChartUtil.getTimeSeriesName(statType, seriesName);
-					tableDataItem.put("series", seriesName);
+					if (timeSeries.get(j).equals(tableDataItem.get("series").toString())) {
+						String valueStr = tableDataItem.get(legend.get(i)).toString();
+						Integer v = Double.valueOf(valueStr).intValue();
+						datas.add(v);
+					}
 				}
-				
-				chartDataVo.setTableDatas(tableDatas);
-				return chartDataVo;		
+			}
+			chartDataItem.put("data", datas);
+			dataItems.add(chartDataItem);
+		}
+		chartDataVo.setSeries(JSON.toJSONString(dataItems));		
+		
+		//最后要把tableData -》时间序列 ，比如有 6，7，8转换为 6月，7月，8月
+		for (HashMap<String, String> tableDataItem : tableDatas) {
+			String seriesName = tableDataItem.get("series").toString();
+			seriesName = ChartUtil.getTimeSeriesName(statType, seriesName);
+			tableDataItem.put("series", seriesName);
+		}
+		
+		chartDataVo.setTableDatas(tableDatas);
+		return chartDataVo;		
 	}
 		
 	

@@ -35,9 +35,7 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			
-
-				<form:form modelAttribute="searchVo" method="GET" >
+				<form:form modelAttribute="searchVo"  method="GET" >
 					<div class="form-inline">
 						时间周期：
 						<form:select path="selectCycle">

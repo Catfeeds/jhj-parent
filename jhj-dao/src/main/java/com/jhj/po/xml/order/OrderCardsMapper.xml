@@ -50,66 +50,44 @@
 		<result column="name" property="name" />
 		<result column="series" property="series" />
 		<result column="total" property="total" />
-
 		<result column="totalMoney" property="totalMoney" />
 	</resultMap>
-	<!-- *****************充值卡销售图表 **************** -->
-<select id="saleCardByDay" resultMap="ChartMap"
-		parameterType="com.jhj.vo.chart.ChartSearchVo">
- SELECT card_type AS name,FROM_UNIXTIME(add_time, "%c-%e") AS series, SUM(card_money) AS totalMoney FROM
- order_cards where 1 = 1  
- <if test="startTime !=null">
-<![CDATA[ and add_time >= #{startTime}]]>
+	<!-- *****************充值卡销售图表 start **************** -->
+	<sql id="chartSearchVo">
+		 <if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
 		</if>
 		<if test="endTime !=null">
-<![CDATA[ and add_time <= #{endTime}]]>
+			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-		<if test="status != null">
-					and order_status in
-					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-						#{item}
-					</foreach>
-				</if> 
- GROUP BY name, series ORDER BY series ASC
-</select>
-<select id="saleCardByMonth" resultMap="ChartMap"
-		parameterType="com.jhj.vo.chart.ChartSearchVo">
- SELECT card_type AS name,FROM_UNIXTIME(add_time, "%c") AS series, SUM(card_money) AS totalMoney FROM
+		<!-- <if test="status != null">
+			and order_status in
+			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if> -->
+		and order_status='1'
+		GROUP BY name, series ORDER BY series ASC 
+	</sql>
+<!-- <select id="saleCardByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+ SELECT card_type AS name,FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(card_money) AS totalMoney FROM
  order_cards where 1 = 1  
- <if test="startTime !=null">
-<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-					and order_status in
-					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-						#{item}
-					</foreach>
-				</if> 
- GROUP BY name, series ORDER BY series ASC
+ <include refid="chartSearchVo"/>
+</select> -->
+<select id="saleCardByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+   SELECT card_type AS name,FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(card_money) AS totalMoney FROM
+   order_cards where 1 = 1  
+   <include refid="chartSearchVo"/>
 </select>
-<select id="saleCardByQuarter" resultMap="ChartMap"
-		parameterType="com.jhj.vo.chart.ChartSearchVo">
- SELECT card_type AS name,
- CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
- SUM(card_money) AS totalMoney FROM
- order_cards where 1 = 1  
- <if test="startTime !=null">
-<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-					and order_status in
-					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-						#{item}
-					</foreach>
-				</if> 
- GROUP BY name, series ORDER BY series ASC
+<select id="saleCardByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+   SELECT card_type AS name,
+   CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+   SUM(card_money) AS totalMoney FROM
+   order_cards where 1 = 1  
+   <include refid="chartSearchVo"/>
 </select>
+<!-- *****************充值卡销售图表 end **************** -->
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
 		order_cards

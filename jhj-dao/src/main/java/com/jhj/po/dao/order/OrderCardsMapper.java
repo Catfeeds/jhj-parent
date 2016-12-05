@@ -30,7 +30,7 @@ public interface OrderCardsMapper {
 	 * @param chartSearchVo
 	 * @return
 	 */
-	List<ChartMapVo> saleCardByDay(ChartSearchVo chartSearchVo);
+//	List<ChartMapVo> saleCardByDay(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> saleCardByMonth(ChartSearchVo chartSearchVo);
 

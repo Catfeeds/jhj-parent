@@ -4,7 +4,6 @@ import java.util.List;
 
 public class ChartSearchVo {
 	
-	
 	/*
 	 * 页面搜索条件
 	 */
@@ -23,7 +22,8 @@ public class ChartSearchVo {
 	private List<Long> userIds;
 	private Long orgId;
 	
-	
+	//时间格式参数
+	private String formatParam;
 	
 	public List<Long> getUserIds() {
 		return userIds;
@@ -85,6 +85,11 @@ public class ChartSearchVo {
 	public void setOrgId(Long orgId) {
 		this.orgId = orgId;
 	}
+	public String getFormatParam() {
+		return formatParam;
+	}
+	public void setFormatParam(String formatParam) {
+		this.formatParam = formatParam;
+	}
 
-	
 }
