@@ -48,10 +48,10 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 	 * 获得深度保洁的总价
 	 */
 	@Override
-	public OrderPrices getOrderPriceOfOrderExpClean(Long serviceType, String serviceAddonsDatas) {
+	public OrderPrices getOrderPriceOfOrderExpClean(Long userId, Long serviceType, String serviceAddonsDatas) {
 		
 		OrderPrices orderPrices = orderPricesService.initOrderPrices();
-		Long userId = orderPrices.getUserId();
+
 		Users u = userService.selectByPrimaryKey(userId);
 		
 		int isVip = 0 ;

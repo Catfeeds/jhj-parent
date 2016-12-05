@@ -166,7 +166,7 @@ public class OrderExpCleanController extends BaseController {
 		/*
 		 * 2.设置订单总金额。插入 order_prices表
 		 */
-		OrderPrices orderPrices = orderExpCleanService.getOrderPriceOfOrderExpClean(serviceType, serviceAddonsDatas);
+		OrderPrices orderPrices = orderExpCleanService.getOrderPriceOfOrderExpClean(userId, serviceType, serviceAddonsDatas);
 		orderPrices.setUserId(userId);
 		orderPrices.setMobile(u.getMobile());
 		orderPrices.setOrderNo(orderNo);
@@ -258,7 +258,7 @@ public class OrderExpCleanController extends BaseController {
 		/*
 		 * 2.设置订单总金额。插入 order_prices表
 		 */
-		OrderPrices orderPrices = orderExpCleanService.getOrderPriceOfOrderExpClean(serviceType, serviceAddonsDatas);
+		OrderPrices orderPrices = orderExpCleanService.getOrderPriceOfOrderExpClean(userId, serviceType, serviceAddonsDatas);
 		
 		if (orderFrom.equals((short)2) && orderPay.compareTo(new BigDecimal(0)) == 1) {
 			orderPrices.setOrderMoney(orderPay);
