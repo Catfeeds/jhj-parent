@@ -5,7 +5,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -177,14 +179,17 @@ public class OrderCalendarController extends BaseController {
 		List<String> weekDateList = DateUtil.getLastWeekArray(startTimeStr);
 		Long compareTime=TimeStampUtil.getMillisOfDayFull(startTimeStr+" 12:00:00");
 		
-		int todayOrder=0,tomOrder=0;
+		int dispathNum=0,leaveNum=0,blackNum=0;
 		String today = DateUtil.getToday();
+		Long longToday=TimeStampUtil.getMillisOfDay(today);
 //		String tom=DateUtil.addDay(DateUtil.getNowOfDate(), 1, Calendar.DAY_OF_WEEK, "yyyy-MM-dd");
+		Set<Long> set=new HashSet<Long>();
 		
 		//黑名单员工
 		OrgStaffFinanceSearchVo vo=new OrgStaffFinanceSearchVo();
 		vo.setIsBlack((short)1);
 		List<OrgStaffFinance> staffFinanceList = staffFinanceService.selectBySearchVo(vo);
+		
 		// 初始化时间、staff
 		for (OrgStaffs orgStaff : staffList) {
 			Long staffId = orgStaff.getStaffId();
@@ -209,6 +214,9 @@ public class OrderCalendarController extends BaseController {
 						Long leaveDate = staffLeave.getLeaveDate().getTime();
 						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
 						Long weekDateToday=TimeStampUtil.getMillisOfDay(weekDate);
+						if(weekDate.equals(today) && leaveDate<=longToday && leaveDateEnd >=longToday){
+							leaveNum++;
+						}
 						if (leaveDate<=weekDateToday && leaveDateEnd >=weekDateToday) {
 							EventVo eventVo = new EventVo();
 							eventVo.setDateDuration(weekDate);
@@ -230,7 +238,10 @@ public class OrderCalendarController extends BaseController {
 						String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
 						//统计今日明日派工订单数
 						if(serviceDateStr.equals(today) && weekDate.equals(today)){
-							todayOrder++;
+							if(!set.contains(staffId)){
+								set.add(staffId);
+								dispathNum++;
+							}
 						}
 					/*	else if(serviceDateStr.equals(tom) && weekDate.equals(tom)){
 							tomOrder++;
@@ -277,6 +288,14 @@ public class OrderCalendarController extends BaseController {
 			disAndLeaveVo.setTimeEventList(timeEventList);
 			listVo.add(disAndLeaveVo);
 		}
+		if(staffFinanceList!=null && staffFinanceList.size()>0){
+			blackNum=staffFinanceList.size();
+			for(OrgStaffFinance sf:staffFinanceList){
+				if(set.contains(sf.getStaffId())){
+					blackNum--;
+				}
+			}
+		}
 
 		Gson gson = new Gson();
 		String json = gson.toJson(listVo);
@@ -288,7 +307,7 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("weekDateModel", weekDateList);
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
-		model.addAttribute("dispatchNum",staffList.size()-todayOrder-staffFinanceList.size());
+		model.addAttribute("dispatchNum",staffList.size()-dispathNum-blackNum-leaveNum);
 //		model.addAttribute("tomorrowOrder",tomOrder);
 
 		return "staffDisAndLeave/staffDisAndLeaveList";
