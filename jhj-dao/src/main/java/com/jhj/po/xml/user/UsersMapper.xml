@@ -284,7 +284,7 @@
 	<!-- 统计新增用户id按月统计 -->
 	<select id="statUserIdsByMonth" resultMap="ChartMap2" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT series, count(*) AS total FROM
-		(SELECT FROM_UNIXTIME(add_time, "%c") AS series
+		(SELECT FROM_UNIXTIME(add_time, "%Y-%m") AS series
 		FROM users
 		WHERE 1=1
 		<if test="startTime !=null">
@@ -315,7 +315,7 @@
 	<select id="statByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name, series, COUNT(*) AS total FROM
 		(SELECT add_from AS name,
-		FROM_UNIXTIME(add_time, "%c") AS series
+		FROM_UNIXTIME(add_time, "%Y-%m") AS series
 		FROM users
 		WHERE 1=1
 		<if test="startTime !=null">

@@ -41,8 +41,9 @@ function loadOrderChart(legend, xAxis, seriesDatas) {
         [               
             'echarts',
             'echarts/theme/infographic',
+            'echarts/chart/bar',
             'echarts/chart/line',
-            'echarts/chart/bar'
+            
         ],
         function (ec) {
             // 基于准备好的dom，初始化echarts图表
@@ -65,7 +66,6 @@ function loadOrderChart(legend, xAxis, seriesDatas) {
                     data:legend
                 },
                 
-                
                 toolbox: {
                     show : true,
                     feature : {
@@ -82,7 +82,7 @@ function loadOrderChart(legend, xAxis, seriesDatas) {
                 xAxis : [
                          {
                              type : 'category',
-                             boundaryGap : false,
+//                             boundaryGap : false,
                              data : xAxis
                          }
                     ],

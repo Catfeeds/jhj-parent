@@ -1213,7 +1213,7 @@
 		</if>
 		) as T1
 		inner join
-		(select id, FROM_UNIXTIME(add_time, "%c") AS series
+		(select id, FROM_UNIXTIME(add_time, "%Y-%m") AS series
 		FROM users where 1=1
 		<if test="startTime !=null">
 					<![CDATA[ and add_time >= #{startTime}]]>

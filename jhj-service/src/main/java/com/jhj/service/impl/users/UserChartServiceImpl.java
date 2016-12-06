@@ -52,16 +52,16 @@ public class UserChartServiceImpl implements UserChartService {
 		// 确认legend;
 		List<String> legendAll = new ArrayList<String>();
 		legendAll.add("增长率");
-		legendAll.add("微网站来源");
-		legendAll.add("App来源");
+//		legendAll.add("微网站来源");
+//		legendAll.add("管理后台");
 		legendAll.add("新增用户小计");
 		legendAll.add("已转换用户小计");
 		legendAll.add("客户转换率");
 
 		List<String> legend = new ArrayList<String>();
 		//legend.add("增长率");
-		legend.add("微网站来源");
-		legend.add("App来源");
+//		legend.add("微网站来源");
+//		legend.add("管理后台");
 		legend.add("新增用户小计");
 		legend.add("已转换用户小计");
 		//legend.add("客户转换率");
@@ -113,24 +113,29 @@ public class UserChartServiceImpl implements UserChartService {
 		for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
-				String str = tableDataItem.get("series").split("-")[1];
-				if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
-					// 0代表APP 1 = 微网站来源
-					if (chartSqlData.getName().equals("0")){
-							
-							tableDataItem.put("App来源",String.valueOf(chartSqlData.getTotal()));
-					}
-					if (chartSqlData.getName().toString().equals("1"))
-						tableDataItem.put("微网站来源", String.valueOf(chartSqlData.getTotal()));
+//				String str = tableDataItem.get("series").split("-")[1];
+//				if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
+				if (tableDataItem.get("series").equals(chartSqlData.getSeries())) {
+					// 0代表APP 1 = 微网站来源 2= 管理后台
+//					if (chartSqlData.getName().equals("0")){
+//							
+//							tableDataItem.put("App来源",String.valueOf(chartSqlData.getTotal()));
+//					}
+//					
+					
+					// if (chartSqlData.getName().toString().equals("1"))
+					// tableDataItem.put("微网站来源",
+					// String.valueOf(chartSqlData.getTotal()));
+					//
+					// if (chartSqlData.getName().toString().equals("2"))
+					// tableDataItem.put("管理后台",
+					// String.valueOf(chartSqlData.getTotal()));
 
 					// 新增订单小计
 					Integer subTotal = Integer.valueOf(tableDataItem.get("新增用户小计"));
 					subTotal = subTotal + chartSqlData.getTotal();
 
 					tableDataItem.put("新增用户小计", subTotal.toString());
-		
-					
-					
 				}
 			}
 		}
