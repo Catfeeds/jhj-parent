@@ -206,7 +206,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<Integer>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {
@@ -396,7 +396,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<Integer>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {

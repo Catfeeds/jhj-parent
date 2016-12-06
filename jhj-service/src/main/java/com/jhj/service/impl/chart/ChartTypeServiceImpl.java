@@ -182,7 +182,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<Integer>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {
@@ -251,9 +251,9 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		
 		//2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
-		legend.add("钟点工");
-//		legend.add("深度保洁");
-		legend.add("助理预约单");	
+		legend.add("基础服务");
+		legend.add("深度服务");
+		legend.add("母婴到家");	
 		
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 		
@@ -394,7 +394,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<Integer>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {
