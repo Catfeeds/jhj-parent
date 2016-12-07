@@ -1634,4 +1634,24 @@
 		) GROUP BY name,series
 	</select>
 
+	<select id="getOrderSrc" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT o.order_from as orderFrom,o.order_op_from as orderOpFrom,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(o.add_time, #{formatParam}) AS series,
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(o.add_time)),"-",quarter(FROM_UNIXTIME(o.add_time))) AS series,
+		</if>
+		sum(order_money) as totalMoney,count(*) as total 
+		from order_prices as op,orders as o 
+		WHERE op.order_id = o.id 
+		<if test="startTime !=null">
+			<![CDATA[ and o.add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and o.add_time <= #{endTime}]]>
+		</if>
+		and o.order_status between 2 and 9
+		GROUP BY o.order_from,o.order_op_from,series
+	</select>
 </mapper>

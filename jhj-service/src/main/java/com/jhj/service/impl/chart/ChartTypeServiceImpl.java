@@ -39,32 +39,25 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		/*
 		 *    组装参数
 		 */
-		
 		if (timeSeries.isEmpty()) return chartDataVo;
-
+		
 		String statType = chartSearchVo.getStatType();
 		
 		//1. table 列名
 		List<String> legendAll = new ArrayList<String>();
 		legendAll.add("总单数");
-		legendAll.add("钟点工");
-		legendAll.add("钟点工占比");
-//		legendAll.add("深度保洁");
-//		legendAll.add("深度保洁占比");
-		legendAll.add("助理预约单");
-		legendAll.add("助理预约单占比");
-		
-		legendAll.add("提醒订单");
-		legendAll.add("提醒订单占比");
+		legendAll.add("基础服务");
+		legendAll.add("基础服务占比");
+		legendAll.add("深度服务");
+		legendAll.add("深度服务占比");
+		legendAll.add("母婴到家");
+		legendAll.add("母婴到家占比");
 		
 		//2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
-		legend.add("钟点工");
-//		legend.add("深度保洁");
-		legend.add("助理预约单");	
-		
-		legend.add("提醒订单");		
-		
+		legend.add("基础服务");
+		legend.add("深度服务");	
+		legend.add("母婴到家");		
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 		
 		//3. x轴 
@@ -72,7 +65,6 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (int i =1; i < timeSeries.size(); i++) {
 			xAxis.add(ChartUtil.getTimeSeriesName(statType, timeSeries.get(i)));
 		}
-		
 		chartDataVo.setxAxis(JSON.toJSONString(xAxis));
 
 		/*
@@ -119,10 +111,8 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 //						tableDataItem.put("深度保洁", String.valueOf(chartSqlData.getTotal()));
 					if (chartSqlData.getName().equals("2"))
 						tableDataItem.put("助理预约单", String.valueOf(chartSqlData.getTotal()));
-					
 					if (chartSqlData.getName().equals("5"))
 						tableDataItem.put("提醒订单", String.valueOf(chartSqlData.getTotal()));
-					
 					//每行记录的总单数
 					Integer sumTotal = Integer.valueOf(tableDataItem.get("总单数"));
 					sumTotal = sumTotal + chartSqlData.getTotal();
@@ -133,42 +123,28 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		}
 		
 		//4-3. 计算各品类 占比
-		
-		String orderHourPercent = "0";	//钟点工占比
-//		String deepPercent = "0";		//深度保洁占比
-		String amPercent = "0";			//助理预约单占比
-		
+		String orderHourPercent = "0";	//基础服务占比
+//		String deepPercent = "0";		//深度服务占比
+		String amPercent = "0";			//母婴到家占比
 		String remindPercent = "0";		//提醒订单占比
 		for (Map<String, String> tableDataItem : tableDatas) {
-			
 			Integer sumTotal = Integer.valueOf(tableDataItem.get("总单数"));
-			
 			//每行记录，各类订单数量
-			Integer orderHour = Integer.valueOf(tableDataItem.get("钟点工"));
-//			Integer deepOrder = Integer.valueOf(tableDataItem.get("深度保洁"));
-			Integer amOrder = Integer.valueOf(tableDataItem.get("助理预约单"));
-			
-			Integer remindOrder = Integer.valueOf(tableDataItem.get("提醒订单"));
+			Integer orderHour = Integer.valueOf(tableDataItem.get("基础服务"));
+			Integer amOrder = Integer.valueOf(tableDataItem.get("深度服务"));
+			Integer remindOrder = Integer.valueOf(tableDataItem.get("母婴到家"));
 			
 			if(sumTotal > 0){
-				
 				orderHourPercent = MathDoubleUtil.getPercent(orderHour,sumTotal);
-				tableDataItem.put("钟点工占比", orderHourPercent);
-				
-//				deepPercent = MathDoubleUtil.getPercent(deepOrder, sumTotal);
-//				tableDataItem.put("深度保洁占比", deepPercent);
-				
+				tableDataItem.put("基础服务占比", orderHourPercent);
 				amPercent = MathDoubleUtil.getPercent(amOrder, sumTotal);
-				tableDataItem.put("助理预约单占比", amPercent);
-				
+				tableDataItem.put("深度服务占比", amPercent);
 				remindPercent = MathDoubleUtil.getPercent(remindOrder, sumTotal);
-				tableDataItem.put("提醒订单占比", remindPercent);
+				tableDataItem.put("母婴到家占比", remindPercent);
 			}else{
-				tableDataItem.put("钟点工占比","0.00%");
-//				tableDataItem.put("深度保洁占比","0.00%" );
-				tableDataItem.put("助理预约单占比","0.00%");
-				
-				tableDataItem.put("提醒订单占比", "0.00%");
+				tableDataItem.put("基础服务占比","0.00%");
+				tableDataItem.put("深度服务占比","0.00%");
+				tableDataItem.put("母婴到家占比", "0.00%");
 			}
 		}
 		
@@ -208,9 +184,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			
 			// 得到当前 series 的 开始时间和 结束时间
 			HashMap<String,Long> timeDuration = ChartUtil.getTimeDuration(statType, seriesName);
-			
 			tableDataItem.put("startTime", timeDuration.get("startTime").toString());
-			
 			tableDataItem.put("endTime", timeDuration.get("endTime").toString());
 			
 		}

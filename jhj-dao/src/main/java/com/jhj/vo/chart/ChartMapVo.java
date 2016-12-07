@@ -29,6 +29,10 @@ public class ChartMapVo {
 	
 	private BigDecimal totalMoney;	//营业额
 	
+	private String orderFrom;
+	
+	private String orderOpFrom;
+	
 	public Long getUserId() {
 		return userId;
 	}
@@ -110,6 +114,18 @@ public class ChartMapVo {
 		this.allLoginTal = allLoginTal;
 	}
 	*/
+	public String getOrderFrom() {
+		return orderFrom;
+	}
+	public void setOrderFrom(String orderFrom) {
+		this.orderFrom = orderFrom;
+	}
+	public String getOrderOpFrom() {
+		return orderOpFrom;
+	}
+	public void setOrderOpFrom(String orderOpFrom) {
+		this.orderOpFrom = orderOpFrom;
+	}
 	
 	
 }

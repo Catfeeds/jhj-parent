@@ -25,6 +25,10 @@ public class ChartSearchVo {
 	//时间格式参数
 	private String formatParam;
 	
+	private String orderFrom;
+	
+	private String orderOpFrom;
+	
 	public List<Long> getUserIds() {
 		return userIds;
 	}
@@ -91,5 +95,17 @@ public class ChartSearchVo {
 	public void setFormatParam(String formatParam) {
 		this.formatParam = formatParam;
 	}
-
+	public String getOrderFrom() {
+		return orderFrom;
+	}
+	public void setOrderFrom(String orderFrom) {
+		this.orderFrom = orderFrom;
+	}
+	public String getOrderOpFrom() {
+		return orderOpFrom;
+	}
+	public void setOrderOpFrom(String orderOpFrom) {
+		this.orderOpFrom = orderOpFrom;
+	}
+	
 }

@@ -94,6 +94,8 @@ public interface OrdersMapper {
 	List<ChartMapVo> chartTypeByMonth(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> chartTypeByQuarter(ChartSearchVo chartSearchVo);
+	
+	
 
 	/*
 	 * 不同时间粒度，统计下过单子的用户个数
@@ -173,5 +175,9 @@ public interface OrdersMapper {
 	Long totalOrderInUserIds(List<Long> userIds);
 
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
-
+	
+	
+	//订单来源统计
+	List<ChartMapVo> getOrderSrc(ChartSearchVo chartSearchVo);
+	
 }
