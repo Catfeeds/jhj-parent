@@ -82,7 +82,7 @@ function loadOrderChart(legend, xAxis, seriesDatas) {
                 xAxis : [
                          {
                              type : 'category',
-                             boundaryGap : false,
+//                             boundaryGap : false,
                              data : xAxis
                          }
                     ],
