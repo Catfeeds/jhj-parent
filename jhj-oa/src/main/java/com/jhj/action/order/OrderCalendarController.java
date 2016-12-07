@@ -307,7 +307,7 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("weekDateModel", weekDateList);
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
-		model.addAttribute("dispatchNum",staffList.size()-dispathNum-blackNum-leaveNum);
+		model.addAttribute("dispatchNum",staffList.size()-blackNum-leaveNum);
 //		model.addAttribute("tomorrowOrder",tomOrder);
 
 		return "staffDisAndLeave/staffDisAndLeaveList";

@@ -33,6 +33,8 @@ public class ChartMapVo {
 	
 	private String orderOpFrom;
 	
+	private Short serviceType;
+	
 	public Long getUserId() {
 		return userId;
 	}
@@ -125,6 +127,12 @@ public class ChartMapVo {
 	}
 	public void setOrderOpFrom(String orderOpFrom) {
 		this.orderOpFrom = orderOpFrom;
+	}
+	public Short getServiceType() {
+		return serviceType;
+	}
+	public void setServiceType(Short serviceType) {
+		this.serviceType = serviceType;
 	}
 	
 	

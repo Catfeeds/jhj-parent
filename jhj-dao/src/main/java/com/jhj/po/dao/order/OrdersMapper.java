@@ -5,15 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.jhj.po.model.order.Orders;
-import com.jhj.vo.OaPhoneChargeOrderSearchVo;
-import com.jhj.vo.OaRemindOrderSearchVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.jhj.vo.chart.CoopUserOrderVo;
-import com.jhj.vo.order.OaOrderSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 
@@ -111,11 +106,11 @@ public interface OrdersMapper {
 	/*
 	 * 品类收入图表
 	 */
-	List<ChartMapVo> chartTypeRevenueByDay(ChartSearchVo chartSearchVo);
+	List<ChartMapVo> chartTypeRevenue(ChartSearchVo chartSearchVo);
 
-	List<ChartMapVo> chartTypeRevenueByMonth(ChartSearchVo chartSearchVo);
+//	List<ChartMapVo> chartTypeRevenueByMonth(ChartSearchVo chartSearchVo);
 
-	List<ChartMapVo> chartTypeRevenueByQuarter(ChartSearchVo chartSearchVo);
+//	List<ChartMapVo> chartTypeRevenueByQuarter(ChartSearchVo chartSearchVo);
 
 	/*
 	 * 助理品类图表

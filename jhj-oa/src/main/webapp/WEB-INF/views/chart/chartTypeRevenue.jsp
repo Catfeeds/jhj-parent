@@ -75,47 +75,44 @@
 						<th>时间</th>
 						<th>总单数</th>
 						<th>总营业额(元)</th>
-						<th>钟点工(单)</th>
-						<th>钟点工营业额(元)</th>
-						<th>钟点工营业额占比</th>
-						<!-- <th>深度保洁(单)</th>
-						<th>深度保洁营业额(元)</th>
-						<th>深度保洁营业额占比</th> -->
-						<th>助理(单)</th>
-						<th>助理营业额(元)</th>
-						<th>助理营业额占比</th>
+						<th>基础服务(单)</th>
+						<th>基础服务营业额(元)</th>
+						<th>基础服务营业额占比</th>
+						<th>深度服务(单)</th>
+						<th>深度服务营业额(元)</th>
+						<th>深度服务营业额占比</th>
+						<th>母婴到家(单)</th>
+						<th>母婴到家营业额(元)</th>
+						<th>母婴到家营业额占比</th>
 					</tr>
 				</thead>
 				<tbody>
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
-						<th>${item.series}</th>
-						<th>${item.总单数}</th>
-						<th>${item.总营业额}</th>
-						<th>
-							<a href="../order/order-hour-list?startTime=${item.startTime }
-										&endTime=${item.endTime}">
-								${item.钟点工}
+						<td>${item.series}</td>
+						<td style="text-align: right;">${item.总单数}</td>
+						<td style="text-align: right;">${item.总营业额}</td>
+						<td style="text-align: right;">
+							<a href="../order/order-hour-list?startTime=${item.startTime }&endTime=${item.endTime}">
+								${item.基础服务}
+							</a>
+						</td>
+						<td style="text-align: right;">${item.基础服务营业额}</td>
+						<td style="text-align: right;">${item.基础服务营业额占比}</td>
+						<td style="text-align: right;">
+							<a href="../order/order-exp-list?startTime=${item.startTime }&endTime=${item.endTime}">
+								${item.深度服务}
 							</a>
 						</th>
-						<th>${item.钟点工营业额}</th>
-						<th>${item.钟点工营业额占比}</th>
-						<%-- <th>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}&searchOrderType=1">
-								${item.深度保洁}
+						<td style="text-align: right;">${item.深度服务营业额}</td>
+						<td style="text-align: right;">${item.深度服务营业额占比}</td>
+						<td style="text-align: right;">
+							<a href="../order/order-exp-baby-list?startTime=${item.startTime }&endTime=${item.endTime}">
+								${item.母婴到家}
 							</a>
-						</th>
-						<th>${item.深度保洁营业额}</th>
-						<th>${item.深度保洁营业额占比}</th> --%>
-						<th>
-							<a href="../order/order-am-list?startTime=${item.startTime }
-										&endTime=${item.endTime}">
-								${item.助理预约单}
-							</a>
-						</th>
-						<th>${item.助理预约单营业额}</th>
-						<th>${item.助理预约单营业额占比}</th>
+						</td>
+						<td style="text-align: right;">${item.母婴到家营业额}</td>
+						<td style="text-align: right;">${item.母婴到家营业额占比}</td>
 					</tr>
 				</c:forEach>
 				</tbody>
@@ -144,7 +141,5 @@
 		var seriesDatas = ${chartDatas.series};
 		loadOrderChart(legend, xAxis, seriesDatas);
 	</script>
-	
-	
 </body>
 </html>

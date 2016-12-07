@@ -775,9 +775,9 @@
 
 	<resultMap id="ChartMap" type="com.jhj.vo.chart.ChartMapVo">
 		<result column="name" property="name" />
+		<result column="serviceType" property="serviceType" />
 		<result column="series" property="series" />
 		<result column="total" property="total" />
-
 		<result column="totalMoney" property="totalMoney" />
 	</resultMap>
 	<!-- **************************** 市场订单图表 ***************************** -->
@@ -1257,29 +1257,13 @@
 	</select>
 
 	<!-- **************************** 品类收入图表 ***************************** -->
-
-	<select id="chartTypeRevenueByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_type AS name,
-		FROM_UNIXTIME(add_time, "%c-%e") AS series,
-		order_money
-		FROM
-		(
-		SELECT T1.order_type, T1.add_time, T2.order_money FROM
-		(SELECT
-		id, order_type, add_time
-		FROM orders
-		WHERE 1=1
-
-		and
-		order_type in (0,1,2)
+	<!--统计查询条件  -->
+	<sql id="chartSearchVo">
 		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
+			<![CDATA[ and add_time >= #{startTime}]]>
 		</if>
 		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
+			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		<if test="status != null">
 			and order_status in
@@ -1290,94 +1274,61 @@
 		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
-		) AS T1
-		LEFT JOIN order_prices AS T2
-		ON T1.id = T2. order_id
+	</sql>
+
+	<select id="chartTypeRevenue" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT name,service_type as serviceType, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		(SELECT order_type AS name,service_type,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		</if>
+		<if test="selectCycle==12">
+			CONCAT(year(FROM_UNIXTIME(add_time)), "-",quarter(FROM_UNIXTIME(add_time)) ) as series,
+		</if>
+		order_money FROM
+		(SELECT T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
+		(SELECT id, order_type,service_type, add_time FROM orders
+		WHERE 1=1
+		<include refid="chartSearchVo"/>
+		and order_type in (0,1)
+		) AS T1 LEFT JOIN order_prices AS T2 ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
+		GROUP BY name,serviceType, series ORDER BY series ASC
 	</select>
 
-	<select id="chartTypeRevenueByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+	<!-- <select id="chartTypeRevenueByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_type AS name,
-		FROM_UNIXTIME(add_time, "%Y-%m") AS series,
-		order_money
+		SELECT name,service_type as serviceType, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		(SELECT order_type AS name,service_type,FROM_UNIXTIME(add_time, "%Y-%m") AS series,order_money
 		FROM
-		(
-		SELECT T1.order_type, T1.add_time, T2.order_money FROM
-		(SELECT
-		id, order_type, add_time
+		(SELECT T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
+		(SELECT id, order_type,service_type, add_time
 		FROM orders
 		WHERE 1=1
-
-		and
-		order_type in (0,1,2)
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-		) AS T1
-		LEFT JOIN order_prices AS T2
-		ON T1.id = T2. order_id
+		<include refid="chartSearchVo"/>
+		and order_type in (0,1)
+		) AS T1 LEFT JOIN order_prices AS T2 ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
+		GROUP BY name,serviceType, series ORDER BY series ASC
 	</select>
+ -->
+	<!-- <select id="chartTypeRevenueByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 
-	<select id="chartTypeRevenueByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_type AS name,
-		CONCAT(year(FROM_UNIXTIME( add_time)), "-",
-		quarter(FROM_UNIXTIME( add_time)) ) as series,
-		order_money
+		SELECT name,service_type as serviceType, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		(SELECT order_type AS name,service_type,CONCAT(year(FROM_UNIXTIME(add_time)), "-",quarter(FROM_UNIXTIME(add_time)) ) as series,order_money
 		FROM
-		(
-		SELECT T1.order_type, T1.add_time, T2.order_money FROM
-		(SELECT
-		id, order_type, add_time
-		FROM orders
+		(SELECT T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
+		(SELECT id,order_type,service_type, add_time FROM orders
 		WHERE 1=1
-
-		and
-		order_type in (0,1,2)
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-		) AS T1
-		LEFT JOIN order_prices AS T2
-		ON T1.id = T2. order_id
+		<include refid="chartSearchVo"/>
+		and order_type in (0,1)
+		) AS T1 LEFT JOIN order_prices AS T2 ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
-	</select>
+		GROUP BY name,serviceType, series ORDER BY series ASC
+	</select> -->
 
 	<!--助理品类按天统计 -->
 	<select id="statChartAmTypeByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
