@@ -2646,6 +2646,30 @@ i.toolbar-icon-tixing {
   margin-left: 5px;
 }
 */
+.jinpai-index{
+  width:50%;
+  float: left;
+  margin-top: 15px;
+}
+.jinpai-index img{
+  width:30%;
+  margin-left: 35%;
+}
+.jinpai-index p{
+  width:100%;
+  margin:0;
+  height:30px;
+  text-align: center;
+  line-height: 30px;
+  color:#000;
+  font-size: 14px;
+}
+
+
+
+
+
+
 .cankaotime-box{
   width:95%;
   height:210px;
