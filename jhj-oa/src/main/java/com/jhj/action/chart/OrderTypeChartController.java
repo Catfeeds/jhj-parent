@@ -116,7 +116,7 @@ public class OrderTypeChartController extends BaseController {
 			chartSearchVo.setOrgId(sessionOrgId);
 		}	
 		
-		ChartDataVo chartDataVo = chartTypeService.getChartTypeData(chartSearchVo, timeSeries);
+		ChartDataVo chartDataVo = chartTypeService.chartTypeRevenueData(chartSearchVo, timeSeries);
 		
 		model.addAttribute("chartDatas", chartDataVo);
 		
@@ -141,7 +141,7 @@ public class OrderTypeChartController extends BaseController {
 			/*
 			 * 市场品类图表，默认展示为 “按季度统计”
 			 */
-			chartSearchVo.setSelectCycle(12);
+			chartSearchVo.setSelectCycle(6);
 		
 		//30天前.
 		Date nowDate = DateUtil.parse(DateUtil.getBeginOfDay());

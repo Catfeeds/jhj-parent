@@ -111,8 +111,8 @@
 				</c:forEach>
 				</tbody>
 			</table>
-<br/>
-<table class="table table-striped table-advance table-hover table2excel" id="table2excel">
+			<br/>
+			<table class="table table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
 					<tr>
 						<th>时间</th>
@@ -172,7 +172,7 @@
 	
 	<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
 	<script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script>
-	<script type="text/javascript" src="<c:url value='/js/chart/chartOrder.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/chart/chartOrderSrc.js'/>"></script>
 	<script>
 		var legend = ${chartDatas.legend};
 		var xAxis = ${chartDatas.xAxis};

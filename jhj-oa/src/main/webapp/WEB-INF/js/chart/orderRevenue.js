@@ -64,7 +64,8 @@ function loadOrderChart(legend, xAxis, seriesDatas) {
         	        trigger: 'axis'
         	    },
                 legend: {
-                    data:legend
+                    data:legend,
+                    y:35
                 },
                 
                 
@@ -94,7 +95,11 @@ function loadOrderChart(legend, xAxis, seriesDatas) {
                          type : 'value',
                          
                      }
-                 ],    
+                 ],  
+                 grid:{
+                	 y:90
+                 },
+             
                 series : seriesDatas
 
             };

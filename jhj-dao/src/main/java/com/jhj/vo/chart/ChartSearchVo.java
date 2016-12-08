@@ -31,6 +31,8 @@ public class ChartSearchVo {
 	
 	private String serviceType;
 	
+	private Short orderStatus;
+	
 	public List<Long> getUserIds() {
 		return userIds;
 	}
@@ -114,6 +116,12 @@ public class ChartSearchVo {
 	}
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
+	}
+	public Short getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(Short orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 	
 }

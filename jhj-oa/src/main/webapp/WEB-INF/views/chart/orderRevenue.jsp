@@ -69,7 +69,7 @@
 			
 			<button id="exportExcel" class="btn btn-success">导出Excel</button></div>
 
-			<table class="table table-striped table-advance table-hover table2excel" id="table2excel">
+			<%-- <table class="table table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
 					<tr>
 						<th>时间</th>
@@ -91,6 +91,50 @@
 						<th>${item.App营业额}</th>
 						<th>${item.营业额小计}</th>
 						<th>${item.增长率}</th>
+					</tr>
+				</c:forEach>
+				</tbody>
+			</table> --%>
+			<table class="table table-striped table-advance table-hover table2excel" id="table2excel">
+				<thead>
+					<tr>
+						<th>时间</th>
+						<th>微网站金额</th>
+						<th>来电订单金额</th>
+						<th>淘宝金额</th>
+						<th>京东金额</th>
+						<th>到位金额</th>
+						<th>糯米金额</th>
+						<th>国安社区金额</th>
+						<th>大众点评金额</th>
+						<th>美团金额</th>
+						<th>葡萄生活金额</th>
+						<th>居然之家金额</th>
+						<th>百度金额</th>
+						<th>朝阳门店金额</th>
+						<th>海淀门店金额</th>
+						<th>包月定制金额</th>
+					</tr>
+				</thead>
+				<tbody>
+				<c:forEach items="${chartDatas.tableDatas}" var="item">
+					<tr>
+						<td>${item.series}</td>
+						<td>${item.微网站金额}</td>
+						<td>${item.来电订单金额}</td>
+						<td>${item.淘宝金额}</td>
+						<td>${item.京东金额}</td>
+						<td>${item.到位金额}</td>
+						<td>${item.糯米金额}</td>
+						<td>${item.国安社区金额}</td>
+						<td>${item.大众点评金额}</td>
+						<td>${item.美团金额}</td>
+						<td>${item.葡萄生活金额}</td>
+						<td>${item.居然之家金额}</td>
+						<td>${item.百度金额}</td>
+						<td>${item.朝阳门店金额}</td>
+						<td>${item.海淀门店金额}</td>
+						<td>${item.包月定制金额}</td>
 					</tr>
 				</c:forEach>
 				</tbody>

@@ -708,10 +708,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 			OrgStaffs staffs = staffService.selectByPrimaryKey(tmpStaffId);
 			
 			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
-			Orgs cloudOrg = orgService.selectByPrimaryKey(staffs.getOrgId());
-			if(cloudOrg!=null){
-				if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
-				vo.setOrgName(cloudOrg.getOrgName());
+			if(staffs.getOrgId()!=null && staffs.getOrgId()!=0L){
+				Orgs cloudOrg = orgService.selectByPrimaryKey(staffs.getOrgId());
+				if(cloudOrg!=null){
+					if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
+					vo.setOrgName(cloudOrg.getOrgName());
+				}
 			}
 			
 			Orgs parentOrg = orgService.selectByPrimaryKey(staffs.getParentOrgId());

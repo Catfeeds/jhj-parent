@@ -53,12 +53,6 @@ public interface OrdersMapper {
 	// 按天统计
 	List<ChartMapVo> statByDay(ChartSearchVo chartSearchVo);
 
-	// 按月统计
-	List<ChartMapVo> statByMonth(ChartSearchVo chartSearchVo);
-
-	// 按季度统计
-	List<ChartMapVo> statByQuarter(ChartSearchVo chartSearchVo);
-
 	// 按天统计--退单数
 	List<ChartMapVo> statOrderCancelByDay(ChartSearchVo chartSearchVo);
 
@@ -107,10 +101,6 @@ public interface OrdersMapper {
 	 * 品类收入图表
 	 */
 	List<ChartMapVo> chartTypeRevenue(ChartSearchVo chartSearchVo);
-
-//	List<ChartMapVo> chartTypeRevenueByMonth(ChartSearchVo chartSearchVo);
-
-//	List<ChartMapVo> chartTypeRevenueByQuarter(ChartSearchVo chartSearchVo);
 
 	/*
 	 * 助理品类图表

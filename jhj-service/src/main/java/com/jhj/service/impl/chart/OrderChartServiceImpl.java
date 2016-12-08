@@ -1,6 +1,7 @@
 package com.jhj.service.impl.chart;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
-import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.chart.OrderChartService;
@@ -38,9 +38,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 	private OrdersMapper orderMapper;
 	
 	@Autowired
-	private OrderPricesMapper orderPriceMapper;
-	
-	@Autowired
 	private CooperativeBusinessMapper businessMapper;
 	/*
 	 * 市场订单图表 service
@@ -59,6 +56,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		legendAll.add("增长率");
 		legendAll.add("微网站来源");
 		legendAll.add("App来源");
+		legendAll.add("平台来源");
 		legendAll.add("退单数");
 		legendAll.add("退单率");
 		
@@ -66,15 +64,14 @@ public class OrderChartServiceImpl implements OrderChartService {
 		legend.add("新增订单小计");
 		legend.add("微网站来源");
 		legend.add("App来源");
+		legend.add("平台来源");
 		legend.add("退单数");	
-		
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 		
 		List<String> xAxis = new ArrayList<String>();
 		for (int i =1; i < timeSeries.size(); i++) {
 			xAxis.add(ChartUtil.getTimeSeriesName(statType, timeSeries.get(i)));
 		}
-		
 		chartDataVo.setxAxis(JSON.toJSONString(xAxis));
 
 		//初始化表格数据格式.
@@ -84,7 +81,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 		for (int i =0; i < timeSeries.size(); i++) {
 			tableData = new HashMap<String, String>();
 			tableData.put("series", timeSeries.get(i));
-			
 			for (int j =0; j < legendAll.size(); j++) {
 				tableData.put(legendAll.get(j), "0");
 			}
@@ -95,111 +91,83 @@ public class OrderChartServiceImpl implements OrderChartService {
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day") ) {
+			chartSearchVo.setFormatParam("%c-%e");
 			statDatas = orderMapper.statByDay(chartSearchVo);
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			statDatas = orderMapper.statByMonth(chartSearchVo);
+			chartSearchVo.setFormatParam("%c");
+			statDatas = orderMapper.statByDay(chartSearchVo);
 		}	
 		
 		if (chartSearchVo.getStatType().equals("quarter") ) {
-			statDatas = orderMapper.statByQuarter(chartSearchVo);
+			statDatas = orderMapper.statByDay(chartSearchVo);
 		}			
 
 		//循环统计数据，完成表格数据替换
 		//1.先实现表格数据的替换. 计算App来源和微网站来源. 新增订单小计
-
-		for (ChartMapVo chartSqlData : statDatas) {
+		String str=null,str1 = null;
+		for (Map<String, String> tableDataItem : tableDatas) {
+			int appNum=0;
+			int webNum=0;
+			int thrNum=0;
+			int cancleNum=0;
+			Integer subTotal =1;
+			for (ChartMapVo chartSqlData : statDatas) {
 			//处理表格形式的数据.
-			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-					//0代表APP  1 = 微网站来源
+				if(chartSearchVo.getSelectCycle()==1){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==12){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
+					str = tableDataItem.get("series").split("-")[1];
+					if(chartSearchVo.getSearchType()==0){
+						str1 = chartSqlData.getSeries();
+					}
+					if(chartSearchVo.getSearchType()==1){
+						str1 = chartSqlData.getSeries().split("-")[1];
+					}
+				}
+				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
+					//0代表APP  1 = 微网站来源  2平台来源
 					if (chartSqlData.getName().equals("0")){
-						tableDataItem.put("App来源", String.valueOf(chartSqlData.getTotal()));
+						if(chartSqlData.getTotal()!=null){
+							appNum+=chartSqlData.getTotal();
+						}
+						tableDataItem.put("App来源", String.valueOf(appNum));
 					}
 					if(chartSqlData.getName().equals("1")){
-						tableDataItem.put("微网站来源", String.valueOf(chartSqlData.getTotal()));
+						if(chartSqlData.getTotal()!=null){
+							webNum+=chartSqlData.getTotal();
+						}
+						tableDataItem.put("微网站来源", String.valueOf(webNum));
 					}
-					
-					
+					if(chartSqlData.getName().equals("2")){
+						if(chartSqlData.getTotal()!=null){
+							thrNum+=chartSqlData.getTotal();
+						}
+						tableDataItem.put("平台来源", String.valueOf(thrNum));
+					}
+					if(chartSqlData.getOrderStatus()==0){
+						if(chartSqlData.getTotal()!=null){
+							cancleNum+=chartSqlData.getTotal();
+						}
+						tableDataItem.put("退单数", String.valueOf(cancleNum));
+					}
 					//新增订单小计 
-					Integer subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
+					subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
 					subTotal = subTotal + chartSqlData.getTotal();
-					
 					tableDataItem.put("新增订单小计", subTotal.toString());
-				}
-//				System.out.println(tableDataItem.get("新增订单小计"));
-			}
-		}
-		
-		//2. 计算增长率
-		Integer tmpSubTotal = 0;
-		Integer subTotal = 0;
-		for (Map<String, String> tableDataItem : tableDatas) {
-			
-			if (tmpSubTotal.equals(0)) {
-				tmpSubTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
-				tableDataItem.put("增长率", "-");
-				continue;
-			} 
-			
-			subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
-			
-			if (!subTotal.equals(0)) {
-				String incrPercent = MathDoubleUtil.getRiseRate(subTotal, tmpSubTotal);
-				tableDataItem.put("增长率", incrPercent);
-			} else {
-				tableDataItem.put("增长率", "-");
-			}
-			tmpSubTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));	
-		}
-		
-		//3. 计算退单和退单率
-		statDatas = new ArrayList<ChartMapVo>();
-		
-		List<Short> status = new ArrayList<Short>();
-		status.add((short)0);
-		chartSearchVo.setStatus(status);
-		
-		if (chartSearchVo.getStatType().equals("day") ) {
-			statDatas = orderMapper.statByDay(chartSearchVo);
-		}
-		
-		if (chartSearchVo.getStatType().equals("month") ) {
-			statDatas = orderMapper.statByMonth(chartSearchVo);
-		}	
-	
-		if (chartSearchVo.getStatType().equals("quarter") ) {
-			statDatas = orderMapper.statByQuarter(chartSearchVo);
-		}			
-		
-		for (ChartMapVo chartSqlData : statDatas) {
-			//处理表格形式的数据.
-			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-
-					tableDataItem.put("退单数", chartSqlData.getTotal().toString());
+					NumberFormat nf=NumberFormat.getPercentInstance();
+					nf.setMaximumFractionDigits(2);
+					float s=(float)cancleNum/(float)subTotal;
+					tableDataItem.put("退单率", String.valueOf(nf.format(s)));
 				}
 			}
-		}		
-		
-		//4. 计算退单率
-
-		subTotal = 0;
-		Integer subTotalCancel = 0;
-		for (Map<String, String> tableDataItem : tableDatas) {
-			
-			subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
-			subTotalCancel = Integer.valueOf(tableDataItem.get("退单数"));
-			if (subTotal.equals(0) || subTotalCancel.equals(0)) {
-				tableDataItem.put("退单率", "-");
-				continue;
-			} 
-
-			String incrPercent = MathDoubleUtil.getPercent(subTotalCancel, subTotal);
-			tableDataItem.put("退单率", incrPercent);
-
 		}
+		
 		
 		//5. 去掉第一个tableDataItem;
 		if (tableDatas.size() > 0) tableDatas.remove(0);
@@ -238,9 +206,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 			
 			// 得到当前 series 的 开始时间和 结束时间
 			HashMap<String,Long> timeDuration = ChartUtil.getTimeDuration(statType, seriesName);
-			
 			tableDataItem.put("startTime", timeDuration.get("startTime").toString());
-			
 			tableDataItem.put("endTime", timeDuration.get("endTime").toString());
 			
 		}
@@ -258,8 +224,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 		
 		return orderMapper.statTotalOrder(chartSearchVo);
 	}
-	
-	
 	
 	/*
 	 *  订单收入图表

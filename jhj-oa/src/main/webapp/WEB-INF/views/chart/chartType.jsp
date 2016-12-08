@@ -74,44 +74,37 @@
 					<tr>
 						<th>时间</th>
 						<th>总单数</th>
-						<th>钟点工</th>
-						<th>钟点工占比</th>
-					<!-- 	<th>深度保洁</th>
-						<th>深度保洁占比</th> -->
-						<th>助理预约单</th>
-						<th>助理预约单占比</th>
-						<th>提醒订单</th>
-						<th>提醒订单占比</th>
+						<th>基础服务</th>
+						<th>基础服务占比</th>
+						<th>深度服务</th>
+						<th>深度服务占比</th>
+						<th>母婴到家</th>
+						<th>母婴到家占比</th>
 					</tr>
 				</thead>
 				<tbody>
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
-						<th>${item.series}</th>
-						<th>${item.总单数}</th>
-						<th>
-							<a href="../order/order-hour-list?startTime=${item.startTime }
-										&endTime=${item.endTime}">
-								${item.钟点工}
+						<td>${item.series}</td>
+						<td>${item.总单数}</td>
+						<td>
+							<a href="../order/order-hour-list?startTime=${item.startTime }&endTime=${item.endTime}">
+								${item.基础服务}
 							</a>
-						</th>
-						<th>${item.钟点工占比}</th>
-						<%-- <th>
-							<a href="../order/order-list?startTime=${item.startTime }
-										&endTime=${item.endTime}&searchOrderType=1">
-								${item.深度保洁}
+						</td>
+						<td>${item.基础服务营业额占比}</td>
+						<td>
+							<a href="../order/order-exp-list?startTime=${item.startTime }&endTime=${item.endTime}">
+								${item.深度服务}
 							</a>
-						</th>
-						<th>${item.深度保洁占比}</th> --%>
-						<th>
-							<a href="../order/order-am-list?startTime=${item.startTime }
-										&endTime=${item.endTime}">
-								${item.助理预约单}
+						</td>
+						<td>${item.深度服务营业额占比}</td>
+						<td>
+							<a href="../order/order-exp-baby-list?startTime=${item.startTime }&endTime=${item.endTime}">
+								${item.母婴到家 }
 							</a>
-						</th>
-						<th>${item.助理预约单占比 }</th>
-						<th>${item.提醒订单 }</th>
-						<th>${item.提醒订单占比 }</th>
+						</td>
+						<td>${item.母婴到家营业额占比 }</td>
 					</tr>
 				</c:forEach>
 				</tbody>

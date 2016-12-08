@@ -202,9 +202,10 @@ public class OrderChartController extends BaseController {
 		}	
 		
 		
-		ChartDataVo chartDataVo = orderChartService.getOrderRevenue(chartSearchVo, timeSeries);
+//		ChartDataVo chartDataVo = orderChartService.getOrderRevenue(chartSearchVo, timeSeries);
+		ChartDataVo chartDatas = orderChartService.getOrderSrc(chartSearchVo, timeSeries);
 		
-		model.addAttribute("chartDatas", chartDataVo);
+		model.addAttribute("chartDatas", chartDatas);
 		
 		return "chart/orderRevenue";
 	}
