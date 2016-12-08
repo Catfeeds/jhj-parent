@@ -160,9 +160,10 @@ public class OrderChartServiceImpl implements OrderChartService {
 					subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
 					subTotal = subTotal + chartSqlData.getTotal();
 					tableDataItem.put("新增订单小计", subTotal.toString());
-					NumberFormat nf=NumberFormat.getPercentInstance();
+					NumberFormat nf=NumberFormat.getPercentInstance(); 
 					nf.setMaximumFractionDigits(2);
-					float s=(float)cancleNum/(float)subTotal;
+					float s =(float)cancleNum/(float)subTotal;
+					
 					tableDataItem.put("退单率", String.valueOf(nf.format(s)));
 				}
 			}

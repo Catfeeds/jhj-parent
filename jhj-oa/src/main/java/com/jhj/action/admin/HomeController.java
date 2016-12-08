@@ -84,6 +84,7 @@ public class HomeController extends AdminController {
     	
     	//统计最近十天的订单数
     	chartSearchVo.setSearchType(1);
+    	chartSearchVo.setSelectCycle(1);
     	Date nowDate = DateUtil.parse(DateUtil.getBeginOfDay());
     	startTimeStr = DateUtil.addDay(nowDate, -10, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
     	
