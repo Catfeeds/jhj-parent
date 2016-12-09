@@ -2664,6 +2664,35 @@ i.toolbar-icon-tixing {
   color:#000;
   font-size: 14px;
 }
+.jinpai-first1{
+  width:40%;
+  float: right;
+  margin-top: -160px;
+  margin-right: 15px;
+}
+.jinpai-first2{
+  width:40%;
+  float: right;
+  margin-top: -270px;
+  margin-right: 5px;
+}
+.jinpai-first3{
+  clear: both;
+  width:30%;
+  float: left;
+  margin-left: 15px;
+}
+.jinpai-first4{
+  height:40px;
+  margin-top: 40px;
+  color: #FFBA00;
+  line-height: 40px;
+  font-size: 14px;
+}
+
+
+
+
 
 
 
