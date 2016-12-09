@@ -28,6 +28,10 @@
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
 		
+		<if test="staffName !=null and staffName != ''">
+			and staff_id in (select staff_id from org_staffs where name like concat('%', #{staffName},'%'))
+		</if>
+		
 		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
 		   	 and staff_id in (
 			   	 		select staff_id from org_staffs where org_id in 

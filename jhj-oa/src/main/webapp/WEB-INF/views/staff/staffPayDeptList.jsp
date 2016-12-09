@@ -44,6 +44,7 @@
 						</select>
 					</td>
 					手机号码：<form:input path="mobile" class="form-control"/>
+					员工名称：<form:input path="staffName" class="form-control"/>
 					<button type="submit" class="btn btn-primary" >搜索</button>						
                 </form:form>
                  <br/>

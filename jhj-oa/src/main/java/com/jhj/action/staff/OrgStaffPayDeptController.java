@@ -1,5 +1,6 @@
 package com.jhj.action.staff;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class OrgStaffPayDeptController extends BaseController {
 	// 归还欠款列表
 	@AuthPassport
 	@RequestMapping(value = "/staffPayDept-list", method = RequestMethod.GET)
-	public String getStaffPayList(Model model, HttpServletRequest request, OrgStaffFinanceSearchVo searchVo) {
+	public String getStaffPayList(Model model, HttpServletRequest request, OrgStaffFinanceSearchVo searchVo) throws UnsupportedEncodingException {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
@@ -60,9 +61,12 @@ public class OrgStaffPayDeptController extends BaseController {
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		if (sessionOrgId > 0L){
 			searchVo.setParentId(sessionOrgId);
-			
 		}
-
+		if(searchVo.getStaffName()!=null){
+			String staffName = searchVo.getStaffName();
+			searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+		}
+		
 		String parentIdParam = request.getParameter("parentId");
 		if(parentIdParam!=null && parentIdParam!="" && Long.valueOf(parentIdParam)>0){
 			searchVo.setParentId(Long.valueOf(parentIdParam));

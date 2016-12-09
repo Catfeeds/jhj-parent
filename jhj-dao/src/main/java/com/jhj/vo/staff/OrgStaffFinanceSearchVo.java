@@ -24,6 +24,8 @@ public class OrgStaffFinanceSearchVo {
 	
 	private Long staffId;
 	
+	private String staffName;
+	
 	public Long getOrgId() {
 		return orgId;
 	}
@@ -94,6 +96,14 @@ public class OrgStaffFinanceSearchVo {
 
 	public void setStaffId(Long staffId) {
 		this.staffId = staffId;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
 	}
 	
 }

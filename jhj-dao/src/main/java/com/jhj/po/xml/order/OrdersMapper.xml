@@ -1509,7 +1509,7 @@
 		<if test="endTime !=null">
 			<![CDATA[ and o.add_time <= #{endTime}]]>
 		</if>
-		and o.order_status between 2 and 9
+		and o.order_status between 1 and 9
 		GROUP BY o.order_from,o.order_op_from,series
 	</select>
 </mapper>

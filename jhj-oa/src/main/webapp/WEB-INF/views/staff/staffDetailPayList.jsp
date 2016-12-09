@@ -42,6 +42,9 @@ import="com.jhj.oa.common.UrlHelper"%>
                       	 	<form:form class="form-inline" onsubmit="return checkEndTime()"
                       	 			modelAttribute="orgStaffDetailPaySearchVoModel" 
                       	 			action="staffPay-list" method="GET">
+                      	 		<div class="form-group">
+                          			员工名称：<form:input path="staffName" class="form-control"/>
+                          		</div>
                           		<div class="form-group">
                           			手机号：<form:input path="mobile" class="form-control"/>
                           		</div>

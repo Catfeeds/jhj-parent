@@ -1,5 +1,6 @@
 package com.jhj.action.staff;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -67,11 +68,12 @@ public class OrgStaffDetailPayController extends BaseController {
 	 * @param searchVo
 	 * @return
 	 * @throws ParseException
+	 * @throws UnsupportedEncodingException 
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/staffPay-list", method = RequestMethod.GET)
 	public String getStaffPayList(Model model, HttpServletRequest request, @RequestParam(value = "mobile", required = false, defaultValue = "") String mobile,
-			OrgStaffDetailPaySearchVo searchVo) throws ParseException {
+			OrgStaffDetailPaySearchVo searchVo) throws ParseException, UnsupportedEncodingException {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
@@ -82,6 +84,11 @@ public class OrgStaffDetailPayController extends BaseController {
 			searchVo = new OrgStaffDetailPaySearchVo();
 		}
 		searchVo.setMobile(mobile);
+		
+		if(searchVo.getStaffName()!=null){
+			String staffName = searchVo.getStaffName();
+			searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+		}
 		
 		//判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);

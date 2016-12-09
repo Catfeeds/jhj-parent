@@ -53,6 +53,10 @@
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
 		
+		<if test="staffName!=null">
+			and staff_id in (select staff_id from org_staffs where name like concat('%',#{staffName},'%')) 
+		</if>
+		
 		<if test="staffIds!=null and staffIds.size()>0">
 			and staff_id in 
 			<foreach item="item" collection="staffIds" separator="," open="(" close=")" index="">

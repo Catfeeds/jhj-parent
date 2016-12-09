@@ -140,6 +140,10 @@ public class NewOrgStaffController extends AdminController {
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
 			staffSearchVo.setParentId(sessionOrgId);
 		}
+		if(staffSearchVo.getName()!=null){
+			String name = staffSearchVo.getName();
+			staffSearchVo.setName(new String(name.getBytes("ISO-8859-1"),"UTF-8"));
+		}
 		
 		if (staffSearchVo.getStatus() == null) staffSearchVo.setStatus(1);
 		

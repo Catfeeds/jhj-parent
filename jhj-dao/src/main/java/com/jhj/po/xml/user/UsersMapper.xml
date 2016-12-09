@@ -242,7 +242,7 @@
 	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name, series, COUNT(*) AS total FROM
 		(SELECT add_from AS name,
-		FROM_UNIXTIME(add_time, "%c-%e") AS series
+		FROM_UNIXTIME(add_time, #{formatParam}) AS series
 		FROM users
 		WHERE 1=1
 		<if test="startTime !=null">
@@ -312,10 +312,10 @@
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<!-- 市场用户图表-按月统计 -->
-	<select id="statByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+	<!-- <select id="statByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name, series, COUNT(*) AS total FROM
 		(SELECT add_from AS name,
-		FROM_UNIXTIME(add_time, "%Y-%m") AS series
+		FROM_UNIXTIME(add_time, "%y-%m") AS series
 		FROM users
 		WHERE 1=1
 		<if test="startTime !=null">
@@ -326,7 +326,7 @@
 		</if>
 		) as T
 		GROUP BY name, series ORDER BY series ASC
-	</select>
+	</select> -->
 	<!-- 市场用户图表-按季度统计 -->
 	<select id="statByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name, series, COUNT(*) AS total FROM
