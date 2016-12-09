@@ -253,12 +253,7 @@
 		<if test="payType!=null">
 			and order_no in (select order_no from order_prices where pay_type = #{payType,jdbcType=NUMERIC})
 		</if>
-
-		
 	</sql>
-	
-
-
 
 	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">
 		select
@@ -381,8 +376,6 @@
 		from orders
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
-
-
 
 	<select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -547,8 +540,6 @@
 			<if test="remarksBussinessConfirm !=null">
 				remarks_bussiness_confirm
 			</if>
-
-
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -700,7 +691,6 @@
 			<if test="remarksBussinessConfirm !=null and remarksBussinessConfirm !='' ">
 				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR}
 			</if>
-
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -765,7 +755,6 @@
 		add_time =
 		#{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},
-
 		remarks_bussiness_confirm =
 		#{remarksBussinessConfirm,jdbcType=VARCHAR},
 
@@ -806,22 +795,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -832,21 +806,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -857,22 +817,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -881,22 +826,7 @@
 		select count(*) as total,count(case when order_type=0 then 1 else null end) as jc,count(case when order_type=1 then 1 else null end) as sd from orders
 		WHERE
 		1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 
 	</select>
 
@@ -916,21 +846,7 @@
 		id, order_from, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		) AS T1
 		LEFT JOIN order_prices AS T2
 		ON T1.id = T2. order_id
@@ -953,21 +869,7 @@
 		id, order_from, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		) AS T1
 		LEFT JOIN order_prices AS T2
 		ON T1.id = T2. order_id
@@ -990,21 +892,7 @@
 		id, order_from, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		) AS T1
 		LEFT JOIN order_prices AS T2
 		ON T1.id = T2. order_id
@@ -1023,21 +911,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -1048,21 +922,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -1073,21 +933,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 	<!--某段时间之前用户个数 -->
@@ -1213,6 +1059,9 @@
 		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
+		<if test="serviceType!=null">
+		
+		</if>
 	</sql>
 
 	<select id="chartTypeRevenue" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -1243,17 +1092,8 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1270,17 +1110,8 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1299,17 +1130,8 @@
 		FROM
 		orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1333,17 +1155,8 @@
 		id, service_type, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1372,17 +1185,8 @@
 		id, service_type, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null and orgId != 0">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1414,15 +1218,7 @@
 		FROM
 		orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
 		SELECT
 		service_type_id
@@ -1512,4 +1308,5 @@
 		and o.order_status between 1 and 9
 		GROUP BY o.order_from,o.order_op_from,series
 	</select>
+	
 </mapper>
