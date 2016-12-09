@@ -32,19 +32,25 @@ myApp.onPageInit('order-hour-choose', function(page) {
 	    	var isVip = localStorage['is_vip'];
 	    	if (isVip == undefined || isVip == "") isVip = 0;
 	    	
-	    	if (isVip == 1) $$("#orderHourPayStr").html(serviceType.mpprice + "元");
+	    	if (isVip == 0) {
+	    		$$("#orderHourPayStr").html(serviceType.pprice + "元");
+	    	}
+	    	
+	    	if (isVip == 1) {
+	    		$$("#orderHourPayStr").html(serviceType.mpprice + "元");
+	    	}
+	    	
+	    	var minServiceHour = 3;
+	    	
+	    	minServiceHour = serviceType.service_hour;
+	    	$$("#minServiceHour").val(minServiceHour);
+	    	$$("#serviceHours").val(minServiceHour);
 	      }
 	});
 	
 	var maxServiceHour = 6;
-	var minServiceHour = 3;
-	
-	if (serviceTypeId == 29) {
-		minServiceHour = 2;
-	}
 	$$("#maxServiceHour").val(maxServiceHour);
-	$$("#minServiceHour").val(minServiceHour);
-	$$("#serviceHours").val(minServiceHour);
+	
 	
 	sessionStorage.setItem("order_type", 0);
 	

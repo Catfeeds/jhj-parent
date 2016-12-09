@@ -121,7 +121,7 @@
 		service_times, service_content, is_auto, is_multi,service_hour)
 		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC},
 		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, 
-		#{price,jdbcType=DECIMAL}, #{mprice,jdbcType=DECIMAL}, #{pprice,jdbcType=DECIMAL},
+		#{price,jdbcType=DECIMAL}, #{mprice,jdbcType=DECIMAL}, #{pprice,jdbcType=DECIMAL}, #{mpprice,jdbcType=DECIMAL},
 		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC},
 		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
 		#{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR}, 

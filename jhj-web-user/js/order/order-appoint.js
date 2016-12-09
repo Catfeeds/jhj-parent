@@ -30,7 +30,11 @@ function doAppointOrder() {
 	var url = "";
 	console.log("serviceTypeId = " + serviceTypeId);
 
-	if (serviceTypeId == 28 || serviceTypeId == 29) {
+	if (serviceTypeId == 28 || 
+	    serviceTypeId == 29 || 
+	    serviceTypeId == 68 || 
+	    serviceTypeId == 69 ||
+	    serviceTypeId == 70 ) {
 		url = "order/order-hour-choose.html?service_type_id="+serviceTypeId;
 	} else {
 		url = "order/order-deep-choose.html?service_type_id="+serviceTypeId;
