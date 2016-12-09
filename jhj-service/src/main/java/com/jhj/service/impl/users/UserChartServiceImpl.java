@@ -2,6 +2,7 @@ package com.jhj.service.impl.users;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.user.UserLoginedMapper;
 import com.jhj.po.dao.user.UsersMapper;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.users.UserChartService;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
@@ -330,21 +332,8 @@ public class UserChartServiceImpl implements UserChartService {
 		for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
-				if(chartSearchVo.getSelectCycle()==1){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
-					str = tableDataItem.get("series").split("-")[1];
-					if(chartSearchVo.getSearchType()==0){
-						str1 = chartSqlData.getSeries();
-					}
-					if(chartSearchVo.getSearchType()==1){
-						str1 = chartSqlData.getSeries().split("-")[1];
-					}
-				}
+				str = tableDataItem.get("series").split("-")[1];
+				str1 = chartSqlData.getSeries().split("-")[1];
 				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
 					// 0代表APP 1 = 微网站来源
 					if (chartSqlData.getName().equals("0"))
@@ -397,7 +386,7 @@ public class UserChartServiceImpl implements UserChartService {
 		if (chartSearchVo.getStatType().equals("quarter")) {
 			statDataes = usersMapper.statUserIdsByQuarter(chartSearchVo);
 		}
-		/*List<Users> list = usersMapper.getUserIds(chartSearchVo);
+		List<Users> list = usersMapper.getUserIds(chartSearchVo);
 		List<Long> userIds = new ArrayList<Long>();
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Users users = (Users) iterator.next();
@@ -405,7 +394,7 @@ public class UserChartServiceImpl implements UserChartService {
 			chartSearchVo.setUserIds(userIds);
 		}
 		List<ChartMapVo> chartMapVos  = new ArrayList<ChartMapVo>();
-		//不同时间粒度统计新下单子的用户个数
+		//不同时间粒度统计新下单子的用户个数 
 		//按天统计
 		if (chartSearchVo.getStatType().equals("day")) {
 			chartMapVos = orderMapper.totalByDay(chartSearchVo);
@@ -440,18 +429,18 @@ public class UserChartServiceImpl implements UserChartService {
 		}
 		
 		//当月活跃总人数
-		List<ChartMapVo> statDataes = new ArrayList<ChartMapVo>();
+		List<ChartMapVo> statDatae = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day")) {
-			statDataes = userLoginedMapper.selectUserLoginTotalByDay(chartSearchVo);
+			statDatae = userLoginedMapper.selectUserLoginTotalByDay(chartSearchVo);
 		}
 		if (chartSearchVo.getStatType().equals("month")) {
-			statDataes = userLoginedMapper.selectUserLoginTotalByMonth(chartSearchVo);
+			statDatae = userLoginedMapper.selectUserLoginTotalByMonth(chartSearchVo);
 		}
 		if (chartSearchVo.getStatType().equals("quarter")) {
-			statDataes = userLoginedMapper.selectUserLoginTotalByQuarter(chartSearchVo);
+			statDatae = userLoginedMapper.selectUserLoginTotalByQuarter(chartSearchVo);
 		}
-		for (ChartMapVo chartSqlData : statDataes) {
+		for (ChartMapVo chartSqlData : statDatae) {
 			//处理表格形式的数据.
 			for (HashMap<String, String> tableDataItem : tableDatas) {
 				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {	
@@ -483,7 +472,7 @@ public class UserChartServiceImpl implements UserChartService {
 					tableDataItem.put("活跃总人数",allLoginTotal.toString());
 				}
 			}
-		}*/
+		}
 		
 		
 		//活跃度 （当月活跃总人数/截止到当月活跃总人数）
