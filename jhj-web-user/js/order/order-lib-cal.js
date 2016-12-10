@@ -11,6 +11,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
     if(staffId==undefined || staffId==null || staffId==''){
     	staffId=0;
     }
+    
+    var serviceTypeId=sessionStorage.getItem("service_type_id");
 
     //获取当前日期
     var date=moment().format("YYYY-MM-DD");
@@ -75,6 +77,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             }
             noSelectHour();
             filterServiceDate();
+            filterWeek(serviceTypeId);
         });
         $$("#rilikongjian3-dateTime li").removeClass("hour-beijingse");
         filterServiceDate();
@@ -83,6 +86,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         if(cmp==date){
             tomm(cmp);
         }
+        filterWeek(serviceTypeId);
     }
     getDay(date);
 
@@ -327,7 +331,6 @@ myApp.onPageInit('order-lib-cal',function(page) {
                 }
             }
             if(nowHour>=20 && nowHour<=23){
-//                $$(lis[0]).addClass("hour-beijingse");
                 for(var i=0;i<=lis.length;i++){
                     if(i<2){
                         $$(lis[i]).addClass("hour-beijingse");
@@ -390,9 +393,23 @@ myApp.onPageInit('order-lib-cal',function(page) {
                     }
                 }
             }
-
         }
     }
+    
+    //过滤非周一到周三的时间
+    function filterWeek(serviceTypeId){
+    	if(serviceTypeId==undefined ||serviceTypeId=='' ||serviceTypeId==null) return false;
+    	if(serviceTypeId=='69' || serviceTypeId=='70'){
+    		var serviceTime = getServiceDate();
+    		var week = moment(serviceTime).format("d");
+    		
+    		if(week=='4' || week=='5' || week=='6' || week=='0'){
+    			var ss=$$("#rilikongjian3-dateTime");
+    			$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+    		}
+    	}
+    }
+    filterWeek(serviceTypeId);
 
     //获取选择的服务时间
     $$("#all-button2").click(function(){
@@ -407,5 +424,4 @@ myApp.onPageInit('order-lib-cal',function(page) {
             return;
         }
     });
-
 });
