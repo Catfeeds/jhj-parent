@@ -198,7 +198,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             if(flag1 && flag2){
                 serviceDate=year+"-"+month+"-"+day;
             }else{
-                serviceDate=year+"-"+(parseInt(month)+1)+"-"+day;
+            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
             }
         }
 
@@ -208,7 +208,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             if(nextVal>day || (nextVal<day && next5Val<day)){
                 serviceDate=year+"-"+month+"-"+day;
             }else{
-                serviceDate=year+"-"+(parseInt(month)+1)+"-"+day;
+            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
             }
         }
         if(after_li.length==0){
@@ -217,7 +217,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             if(preVal<day && pre5Val<day){
                 serviceDate=year+"-"+month+"-"+day;
             }else{
-                serviceDate=year+"-"+(parseInt(month)+1)+"-"+day;
+            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
             }
         }
         if(after_li.length==0 && pre_li.length==0){
