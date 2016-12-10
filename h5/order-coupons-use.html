@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>叮当到家</title>
+    <link rel="stylesheet" href="css/framework7.ios.min.css">
+    <link rel="stylesheet" href="css/mobiscroll.custom-2.16.1.min.css">
+    <link rel="stylesheet" href="css/my-app.css">
+    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+		function getParam(param){
+			  var reg = new RegExp("(^|&)"+ param +"=([^&]*)(&|$)");
+			  var r = window.location.search.substr(1).match(reg);
+			  if(r!=null)return  unescape(r[2]); return null;
+		}
+		var couponsId = getParam(getParam("coupons_id"));
+		
+		$("#couponsId").text(couponsId);
+		var html = "";
+		if(couponsId=='4167'){
+			html +="<p class='youhuiquan5-1'>￥</p>"+
+            "<p class='youhuiquan5-2'>20</p>"
+            "<div class='youhuiquan5-3'>全品类型</div>"
+            "<div class='youhuiquan5-4'>有效期:2017-01-12</div>"
+		}
+		if(couponsId=='4168'){
+			html +="<p class='youhuiquan5-1'>￥</p>"+
+            "<p class='youhuiquan5-2'>40</p>"
+            "<div class='youhuiquan5-3'>全品类型</div>"
+            "<div class='youhuiquan5-4'>有效期:2017-01-12</div>"
+		}
+		if(couponsId=='4169'){
+			html +="<p class='youhuiquan5-1'>￥</p>"+
+            "<p class='youhuiquan5-2'>60</p>"
+            "<div class='youhuiquan5-3'>全品类型</div>"
+            "<div class='youhuiquan5-4'>有效期:2017-01-12</div>"
+		}
+		
+		$("#coupons-content").html(html);
+		
+		var reg = /^(( (13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}) )+\d{8})$/;
+		
+		
+		
+		var param = $("#form").serialize();
+		
+		function fn(){
+			var mobile=$("#mobile").val()
+			if(mobile.match(reg)){
+				$.ajax({
+					type:"post",
+					url:"http://jia-he-jia.com/jhj-app/app/user/receive_coupon.json",
+					data:param,
+					success:function(){
+						
+					}
+				});
+			}else{
+				alert("请输入正确的手机号");
+			}
+			
+		}
+		
+		
+	</script>
+</head>
+<body>
+<div class="views">
+    <div class="view view-main">
+        <div class="pages navbar-through toolbar-through">
+            <div data-page="order-coupons-use" class="page">
+                <div id="indexPageContentDiv" class="page-content">
+                    <div class="beijing-index">
+                        <div class="youhuiquan4">
+                            <img src="img/logo1.png" alt="">
+                        </div>
+                        <div class="youhuiquan5" id="coupons-content">
+                           <!--  <p class="youhuiquan5-1">￥</p>
+                            <p class="youhuiquan5-2">10</p>
+                            <div class="youhuiquan5-3">全品类型</div>
+                            <div class="youhuiquan5-4">有效期:2017-01-01</div> -->
+                        </div>
+                        
+                        
+                     	<form id="from">
+	                        <div class="youhuiquan6">
+	                            <img src="img/phone.png" alt="">
+	                            <input type="text" placeholder="请输入手机号" id="mobile">
+	                            <input type="hidden" value="" id="couponsId">
+	                        </div>
+	                        <div class="all-button15" id="lingqu" onclick="fn()">领取</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

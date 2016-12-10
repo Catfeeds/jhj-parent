@@ -218,4 +218,36 @@ public class UserCouponsController extends BaseController {
 			return result;
 		}
 
+		/*
+		 * 从http://www.jia-he-jia.com/h5/页面领取优惠券
+		 * 
+		 */
+		@RequestMapping(value = "receive_coupon.json", method = RequestMethod.POST)
+		public AppResultData<String> receiveCoupon(
+				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") Long couponsId) {
+			
+			AppResultData<String> result = new AppResultData<String>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,"");
+			
+			Users u = userService.selectByMobile(mobile);
+			
+			// 如果用户不存在，则存入改用户
+			if (u == null) {
+				u = userService.initUsers(mobile, (short)1);
+				userService.insertSelective(u);
+			}			
+			
+			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
+			UserCoupons uc=new UserCoupons();
+			uc.setUserId(u.getId());
+			uc.setCouponId(couponsId);
+			List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
+			if(coupons!=null &&couponList==null){
+				UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), coupons);
+				userCouponsService.insertSelective(userCoupons);
+			}
+			
+			result.setData("");
+			return result;
+		}
 }
