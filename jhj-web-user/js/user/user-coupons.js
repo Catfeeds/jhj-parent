@@ -39,7 +39,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			}
 			
 			
-			if(orderMoney<maxVlaue){
+			if(parseFloat(orderMoney) < parseFloat(maxVlaue)){
 				myApp.alert("当前优惠劵不适用!");
 				return false;
 			}
