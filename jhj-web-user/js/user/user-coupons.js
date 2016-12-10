@@ -28,10 +28,13 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			
 //			if(couponsTypeId!=1){
 				//判断优惠券的使用类型
-			if (couponOrderType.indexOf(serviceTypeId) < 0) {
-				myApp.alert("当前优惠劵不适用!");
-				return false;
+			if(couponOrderType>0){
+				if (couponOrderType.indexOf(serviceTypeId) < 0) {
+					myApp.alert("当前优惠劵不适用!");
+					return false;
+				}
 			}
+			
 //			}
 			
 			//判断有效期
