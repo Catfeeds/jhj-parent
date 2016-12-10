@@ -237,17 +237,40 @@ public class UserCouponsController extends BaseController {
 				userService.insertSelective(u);
 			}			
 			
+			//判断只有这三种优惠劵可用
+			List<Long> validateCouponIds = new ArrayList<Long>();
+			validateCouponIds.add(4167L);
+			validateCouponIds.add(4168L);
+			validateCouponIds.add(4169L);
+			
+			if (!validateCouponIds.contains(couponsId)) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("无效的优惠劵");
+				return result;
+			}
+				
 			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
-			UserCoupons uc=new UserCoupons();
+			
+			if (coupons == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("无效的优惠劵");
+				return result;
+			}
+			
+			
+			UserCoupons uc = new UserCoupons();
 			uc.setUserId(u.getId());
 			uc.setCouponId(couponsId);
 			List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
-			if(coupons!=null &&couponList==null){
+			if(couponList.isEmpty() ){
 				UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), coupons);
 				userCouponsService.insertSelective(userCoupons);
+			} else {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("你已经领取过此优惠劵");
+				return result;
 			}
 			
-			result.setData("");
 			return result;
 		}
 }

@@ -80,12 +80,26 @@
 			var mobile=$("#mobile").val();
 			var url = location.href;
 			var param = url.split("?")[1].split("=")[1];
+			
+			var host = window.location.host;
+			var appName = "jhj-app";
+			var localUrl = "http://" + host;
+			var siteAPIPath = localUrl + "/" + appName + "/app/";
+			
+			
 			if(mobile.match(reg)){
 				$.ajax({
 					type:"post",
-					url:"http://jia-he-jia.com/jhj-app/app/user/receive_coupon.json",
+					url: siteAPIPath + "/user/receive_coupon.json",
 					data:{'mobile':mobile,'coupons_id':param},
 					success:function(data){
+						
+						var status = data.status;
+						if (status == "999") {
+							alert(data.msg);
+							return false;
+						}
+						
 						location.href="order-coupons-get.html"
 					}
 				});
