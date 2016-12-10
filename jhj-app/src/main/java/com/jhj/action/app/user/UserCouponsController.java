@@ -201,7 +201,7 @@ public class UserCouponsController extends BaseController {
 				}
 				
 				//2. 判断服务类型是否正确
-				if (!userCouponVo.getServiceType().equals((short)0) &&
+				if (!userCouponVo.getServiceType().equals("0") &&
 					!userCouponVo.getServiceType().toString().equals(serviceTypeId)) {
 					listNew.add(userCouponVo);
 				}
