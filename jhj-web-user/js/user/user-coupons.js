@@ -21,6 +21,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			var userCouponId = $$(this).find("#user_coupon_id").val();
 			var userCouponValue = $$(this).find("#user_coupon_value").val();
 			var maxVlaue = $$(this).find("#max_value").val();
+			console.log("maxVlaue="+maxVlaue);
 			var userCouponName = "￥" + userCouponValue;
 			
 			var fromDate = $$(this).find("#from_date").val();
@@ -38,8 +39,9 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			}
 			
 			
-			if(orderMoney>maxVlaue){
+			if(orderMoney<maxVlaue){
 				myApp.alert("当前优惠劵不适用!");
+				return false;
 			}
 //			}
 			
