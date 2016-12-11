@@ -201,7 +201,7 @@ public class UserCouponsController extends BaseController {
 				}
 				
 				//2. 判断服务类型是否正确
-				if (!userCouponVo.getServiceType().equals((short)0) &&
+				if (!userCouponVo.getServiceType().equals("0") &&
 					!userCouponVo.getServiceType().toString().equals(serviceTypeId)) {
 					listNew.add(userCouponVo);
 				}
@@ -218,4 +218,59 @@ public class UserCouponsController extends BaseController {
 			return result;
 		}
 
+		/*
+		 * 从http://www.jia-he-jia.com/h5/页面领取优惠券
+		 * 
+		 */
+		@RequestMapping(value = "receive_coupon.json", method = RequestMethod.POST)
+		public AppResultData<String> receiveCoupon(
+				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") Long couponsId) {
+			
+			AppResultData<String> result = new AppResultData<String>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,"");
+			
+			Users u = userService.selectByMobile(mobile);
+			
+			// 如果用户不存在，则存入改用户
+			if (u == null) {
+				u = userService.initUsers(mobile, (short)1);
+				userService.insertSelective(u);
+			}			
+			
+			//判断只有这三种优惠劵可用
+			List<Long> validateCouponIds = new ArrayList<Long>();
+			validateCouponIds.add(4167L);
+			validateCouponIds.add(4168L);
+			validateCouponIds.add(4169L);
+			
+			if (!validateCouponIds.contains(couponsId)) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("无效的优惠劵");
+				return result;
+			}
+				
+			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
+			
+			if (coupons == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("无效的优惠劵");
+				return result;
+			}
+			
+			
+			UserCoupons uc = new UserCoupons();
+			uc.setUserId(u.getId());
+			uc.setCouponId(couponsId);
+			List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
+			if(couponList.isEmpty() ){
+				UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), coupons);
+				userCouponsService.insertSelective(userCoupons);
+			} else {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("你已经领取过此优惠劵");
+				return result;
+			}
+			
+			return result;
+		}
 }
