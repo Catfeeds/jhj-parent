@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
@@ -40,11 +41,13 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.university.StudyStaffPassQueryService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
 import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
+import com.jhj.vo.order.OrderStaffRateVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffAuthSearchVo;
@@ -123,6 +126,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 	@Override
 	public int insertSelective(OrgStaffs orgStaffs) {
+//		orgStaffs.setStaffCode(getValidateStaffCode());
 		return orgStaMapper.insertSelective(orgStaffs);
 	}
 
@@ -133,6 +137,11 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 	@Override
 	public int updateByPrimaryKeySelective(OrgStaffs orgStaffs) {
+		//修改员工信息， 如果员工信息中没有员工编号，则生成员工编号
+		OrgStaffs os = this.selectByPrimaryKey(orgStaffs.getStaffId());
+		if(os.getStaffCode()==null && !os.getStaffCode().equals("")){
+			orgStaffs.setStaffCode(String.valueOf(1000+os.getStaffId()));
+		}
 		return orgStaMapper.updateByPrimaryKeySelective(orgStaffs);
 	}
 
@@ -181,14 +190,14 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		orgStaffs.setEdu("");
 		orgStaffs.setAstro((short) 0);
 		orgStaffs.setBloodType("");
-		orgStaffs.setHeadImg("");
+		orgStaffs.setHeadImg("http://www.jia-he-jia.com/u/img/default-head-img.png");
 		orgStaffs.setIntro("");
 		orgStaffs.setAddTime(TimeStampUtil.getNow() / 1000);
 		orgStaffs.setUpdateTime(0L);
 
 		orgStaffs.setParentOrgId(0L);
 		orgStaffs.setLevel((short) 1); // 员工等级 1=1级 2=2级 3=3级 4=4级
-
+		orgStaffs.setStaffCode("");
 		return orgStaffs;
 	}
 
@@ -577,7 +586,10 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 			}
 			// 处理 列表中 标签字段的 展示
 			if (tagIdList.size() > 0) {
-				tags = tagService.selectByIds(tagIdList);
+				
+				TagSearchVo searchVo1 = new TagSearchVo();
+				searchVo1.setTagIds(tagIdList);
+				tags = tagService.selectBySearchVo(searchVo1);
 				for (Tags item : tags) {
 					// 查找 tagId对应的 tagName
 					tagNames += item.getTagName() + " ";
@@ -586,8 +598,10 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		}
 
 		formVo.setTagIds(tagIds);
-
-		List<Tags> list = tagService.selectAll();
+		
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagType((short) 0);
+		List<Tags> list = tagService.selectBySearchVo(searchVo1);
 
 		formVo.setTagList(list);
 
@@ -641,7 +655,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		newVo.setDistanceText("");
 		newVo.setDurationValue(0);
 		newVo.setDurationText("");
-		newVo.setTodayOrderNum(0L);
+		newVo.setTodayOrderNum(0);
 		newVo.setStaffOrgName("");
 		newVo.setStaffCloudOrgName("");
 		newVo.setDispathStaStr("");
@@ -649,4 +663,46 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 		return newVo;
 	}
+	
+	@Override
+	public OrderStaffRateVo getOrderStaffRateVo(OrgStaffs orgStaff) {
+		OrderStaffRateVo vo = new OrderStaffRateVo();
+		
+		vo.setStaffId(orgStaff.getStaffId());
+		vo.setName(orgStaff.getName());
+		vo.setMobile(orgStaff.getMobile());
+		
+		String headImg = orgStaff.getHeadImg();
+		if (StringUtil.isEmpty(headImg)) headImg = "http://www.jia-he-jia.com/jhj-oa/upload/headImg/default-head-img.png";
+		vo.setHeadImg(headImg);
+		
+		//年龄
+		String age = "";
+		try {
+			age = DateUtil.getAge(orgStaff.getBirth());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (!StringUtil.isEmpty(age)) age = age + "岁";
+		vo.setAge(age);
+		
+		String provinceName = dictService.getProvinceName(orgStaff.getProvinceId());
+		String cityName = dictService.getCityName(orgStaff.getCityId());
+		
+		vo.setHukou(provinceName + cityName);
+		
+		vo.setIntro(orgStaff.getIntro());
+		
+		String skill = "初级";
+		Short level = orgStaff.getLevel();
+		if (level.equals((short)1)) skill = "初级";
+		if (level.equals((short)2)) skill = "中级";
+		if (level.equals((short)3)) skill = "金牌";
+		if (level.equals((short)4)) skill = "VIP";
+		vo.setSkill(skill);
+		
+		return vo;
+	}
+	
 }

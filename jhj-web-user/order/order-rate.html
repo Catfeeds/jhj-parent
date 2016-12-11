@@ -1,89 +1,73 @@
 
-  <body style="font-family:normal;">
-    <div class="views">
-      <div class="view view-main">
-        <div class="pages">
-          <div data-page="order-rate-page" class="page navbar-fixed"style="background-color:#E5E5E5!important;overflow:auto">
-            <input type="hidden" id="serviceAddons" name ="serviceAddons" value="">
-            <div class="page-content"style="margin:0;color:#999;height:792px">
-              <div class="pingjia-top">
-              	<div class="list-block chongzhi-qingchu"style="margin:0 auto;">
-	                <ul style="background:#F8F8F8;">
-	                  <li class="item-content">
-	                    <div class="item-inner">
-	                      <div class="item-title labels"style="font-size:14px;">优质的服务,需要您的支持和监督</div>
-	                    </div>
-	                  </li>
-	                  <li class="item-content">
-	                    <div class="item-inner">
-	                      <div class="item-title labels"style="font-size:14px;">请您在百忙之中,对我们此次的服务作如下评价</div>
-	                    </div>
-	                  </li>
-	                </ul>
-              	</div>
-              </div>
-              <div class="list-block chongzhi-qingchu"style="margin:0 auto;">
-                <ul style="background:#F8F8F8;">
-                  <li class="item-content" style="border:0">
-                    <div class="item-inner">
-                      <div class="item-title labels"style="font-size:14px;">准时到达</div>
-                      <div class="item-xx"style="width:32%;">
-                        <img src="img/icons/shi-x.png" alt="" name="order_type_0_img" value="0" >是
-                        <img src="img/icons/shi.png" alt="" name="order_type_0_img" value="1">否
-                        <input type="hidden" id="rate_type_0" name="rate_type_0" value="0"/>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title labels"style="font-size:14px;">仪容仪表整洁</div>
-                      <div class="item-xx" style="width:32%;">
-                        <img src="img/icons/shi-x.png" alt="" name="order_type_1_img" value="0">是
-                        <img src="img/icons/shi.png" alt="" name="order_type_1_img" value="1">否
-                        <input type="hidden" id="rate_type_1" name="rate_type_1" value="0"/>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title labels"style="font-size:14px;">细节到位</div>
-                      <div class="item-xx" style="width:32%;">
-                        <img src="img/icons/shi-x.png" alt="" name="order_type_2_img" value="0">是
-                        <img src="img/icons/shi.png" alt="" name="order_type_2_img" value="1">否
-                        <input type="hidden" id="rate_type_2" name="rate_type_2" value="0"/>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title labels"style="font-size:14px;">服务整体感官</div>
-                      <div class="item-xx" style="width:63%">
-                        <img src="img/icons/henbang-x.png" alt="" name="order_type_3_img" value="0">很棒
-                        <img src="img/icons/yiban.png" alt="" name="order_type_3_img" value="1">一般
-                        <img src="img/icons/jiaocha.png" alt="" name="order_type_3_img" value="2">较差
-                        <input type="hidden" id="rate_type_3" name="rate_type_3" value="0"/>
-                      </div>
-                      
-                    </div>
-                  </li>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title labels"style="font-size:14px;">整体服务</div>
-                      <div class="item-xx" style="width:63%">
-                        <img src="img/icons/henbang-x.png" alt="" name="order_type_4_img" value="0">很棒
-                        <img src="img/icons/yiban.png" alt="" name="order_type_4_img" value="1">一般
-                        <img src="img/icons/jiaocha.png" alt="" name="order_type_4_img" value="2">较差
-                        <input type="hidden" id="rate_type_4" name="rate_type_4" value="0"/>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <textarea rows="5" id="rateContents" name="rateContents"style="margin-left:5%;border:0;padding-top:10px;width:90%"placeholder="您的意见与建议:"></textarea>
-              <a href="#" id ="pingjia-submit" class="button active shendu-submit">提交</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+<div data-page="order-rate" class="page">
+	<div id="indexPageContentDiv" class="page-content">
+		<form id="orderRateForm" enctype="multipart/form-data">
+			<input type="hidden" id="orderId" name="orderId" value="0" />
+			<div class="beijing-index">
+				<div class="waiter">
+					<p>服务员：</p>
+					<span id="staffNameStr"></span>
+					<input type="hidden" id="staffId" name="staffId" value="0" />
+				</div>
+				<div class="waiter1">
+					<p>到达时间：</p>
+					<span class="waiter1-2" id="rateArrival_0" onclick="doRateArrival(0)">准时</span>
+					<span class="waiter1-2" id="rateArrival_1" onclick="doRateArrival(1)">迟到</span>
+					<input type="hidden" id="rateArrival" name="rateArrival" value="" />
+				</div>
+				<div class="waiter1">
+					<p>服务态度：</p>
+					<img src="img/yudingayi/xx1.png" id="rateAttitude_1" onclick="doRateAttitude(1)">
+					<img src="img/yudingayi/xx1.png" id="rateAttitude_2" onclick="doRateAttitude(2)">
+					<img src="img/yudingayi/xx1.png" id="rateAttitude_3" onclick="doRateAttitude(3)">
+					<img src="img/yudingayi/xx1.png" id="rateAttitude_4" onclick="doRateAttitude(4)">
+					<img src="img/yudingayi/xx1.png" id="rateAttitude_5" onclick="doRateAttitude(5)">
+					<input type="hidden" id="rateAttitude" name="rateAttitude" vaue="3" />
+				</div>
+				<div class="waiter1">
+					<p>服务技能：</p>
+					<img src="img/yudingayi/xx1.png" id="rateSkill_1" onclick="doRateSkill(1)">
+					<img src="img/yudingayi/xx1.png" id="rateSkill_2" onclick="doRateSkill(2)">
+					<img src="img/yudingayi/xx1.png" id="rateSkill_3" onclick="doRateSkill(3)">
+					<img src="img/yudingayi/xx1.png" id="rateSkill_4" onclick="doRateSkill(4)">
+					<img src="img/yudingayi/xx1.png" id="rateSkill_5" onclick="doRateSkill(5)">
+					<input type="hidden" id="rateSkill" name="rateSkill" vaue="3" />
+				</div>
+				<div class="waiter1">
+					<p>服务评价：</p>
+				</div>
+				<div class="waiter2">
+					<textarea class="waiter2-1" id="rateContent"></textarea>
+				</div>
+				<!--  <div class="waiter3">
+					<div class="waiter3-1">
+						<div class="waiter3-1-1">添加删除图片
+						<img src="img/yudingayi/picture.png" alt="">
+							<input type="file" id="rateImgFile" onchange="setImagePreviews();" accept="image/*" multiple="multiple"/>
+						</div>
+					</div>
+				</div>
+				<div class="waiter4">
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
+					<div class="waiter4-1">
+						<img src="" alt="">
+					</div>
+					<div class="waiter4-2">×</div>
+				</div> -->
+				<div class="waiter5">
+					<div class="all-button13" id="rateSubmit">提交评价</div>
+				</div>
+		</form>
+	</div>
+</div>

@@ -1,5 +1,6 @@
 package com.jhj.po.dao.user;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +25,7 @@ public interface UserDetailPayMapper {
 	List<UserDetailPay> selectByListPages(UserDetailSearchVo userDetailSearchVo);
 
 	UserDetailPay selectByTradeNo(String tradeNo);
+	
+	Map<String,BigDecimal> totolMoeny(UserDetailSearchVo userDetailSearchVo);
 
 }

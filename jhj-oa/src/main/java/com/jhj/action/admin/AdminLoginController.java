@@ -7,7 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.quartz.xml.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,7 +64,7 @@ public class AdminLoginController extends BaseController {
     }
 
 	@RequestMapping(value="/login", method = {RequestMethod.POST})
-	public String login(HttpServletRequest request, Model model, @Valid @ModelAttribute("contentModel") AccountLoginVo accountLoginVo, BindingResult result) throws ValidationException, NoSuchAlgorithmException{
+	public String login(HttpServletRequest request, Model model, @Valid @ModelAttribute("contentModel") AccountLoginVo accountLoginVo, BindingResult result) throws NoSuchAlgorithmException{
 		//如果有验证错误 返回到form页面
         if (result.hasErrors())
             return login(model);

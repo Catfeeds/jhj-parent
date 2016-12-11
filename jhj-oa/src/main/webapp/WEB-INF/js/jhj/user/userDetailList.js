@@ -23,3 +23,9 @@ $('.form_datetime').datepicker({
      }  
      return true;  
  }
+ 
+ $("#submit").on('click',function(){
+	 var url = $(this).val();
+	 $("form").attr("action",url);
+	 $("form").submit();
+ });

@@ -44,7 +44,7 @@
                           </div>
                       </section>
                   </div>
-                  <a href="../user/home-user-list">
+                 <!--  <a href="../user/home-user-list">
 	                  <div class="col-lg-3 col-sm-6">
 	                      <section class="panel">
 	                          <div class="symbol red">
@@ -58,7 +58,7 @@
 	                          </div>
 	                      </section>
 	                  </div>
-                  </a>
+                  </a> -->
                   <div class="col-lg-3 col-sm-6">
                       <section class="panel">
                           <div class="symbol yellow">
@@ -72,27 +72,27 @@
                           </div>
                       </section>
                   </div>
-                  <div class="col-lg-3 col-sm-6">
+                  <%-- <div class="col-lg-3 col-sm-6">
                       <section class="panel">
                           <div class="symbol blue">
                               <i class="icon-bar-chart"></i>
                           </div>
                           <div class="value">
-                              <h1 class=" count4">
+                              <h1 class=" count4" style="margin-top: -18px">
                                   ${totalOrderToday.total }
                               </h1>
                               <p>今日订单</p>
                               <a href="../order/order-hour-list?flag=1" style="float:left;">
-                              	<p>基础保洁</p>
+                              	<p><font color="blue">基础保洁</font></p>
                               	<span id="jcbjtj">${totalOrderToday.jc }</span>
                               </a>
-                              <a href="../order/order-am-list?flag=2" >
-                              	<p>深度服务</p>
+                              <a href="../order/order-exp-list?flag=2" >
+                              	<p><font color="blue">深度服务</font></p>
                               	<span id="sdfwtj">${totalOrderToday.sd }</span>
                               </a>
                           </div>
                       </section>
-                  </div>
+                  </div> --%>
               </div>
               <!--state overview end-->
 			  <hr style="width: 100%; color: black; height: 1px; background-color: black;" />

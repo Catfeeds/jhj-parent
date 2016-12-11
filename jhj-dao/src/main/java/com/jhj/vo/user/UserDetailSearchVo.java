@@ -2,8 +2,10 @@ package com.jhj.vo.user;
 
 import java.util.List;
 
+import com.jhj.po.model.user.UserDetailPay;
 
-public class UserDetailSearchVo {
+
+public class UserDetailSearchVo extends UserDetailPay{
 
     private String mobile;
   
@@ -22,18 +24,16 @@ public class UserDetailSearchVo {
 	private Long startTime;	
 	
 	private Long endTime;
-    
 	
 	// 在店长对应 云店下过单的 用户
-	private List<Long> userIdList;
+	private List<Long> userIds;
 	
-
-	public List<Long> getUserIdList() {
-		return userIdList;
+	public List<Long> getUserIds() {
+		return userIds;
 	}
 
-	public void setUserIdList(List<Long> userIdList) {
-		this.userIdList = userIdList;
+	public void setUserIds(List<Long> userIds) {
+		this.userIds = userIds;
 	}
 
 	public String getStartTimeStr() {
@@ -83,18 +83,6 @@ public class UserDetailSearchVo {
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
-
-	
-
-	
-
-
-	
-	
-
-
-	
-
 
 
 }

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.order.OrderAppointMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderAppoint">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="order_id" property="orderId" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, order_id, user_id, staff_id, add_time
+	</sql>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from order_appoint
+		where 1=1
+
+		<if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="staffId != null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="staffIds != null">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		
+		<if test="orderId != null">
+			and order_id = #{orderId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orderIds != null">
+			and order_id in
+			<foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from order_appoint
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from order_appoint
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.order.OrderAppoint">
+		insert into order_appoint (id, order_id, user_id,
+		staff_id, add_time)
+		values (#{id,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
+		#{staffId,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderAppoint">
+		insert into order_appoint
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderAppoint">
+		update order_appoint
+		<set>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				staff_id = #{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderAppoint">
+		update order_appoint
+		set order_id = #{orderId,jdbcType=NUMERIC},
+		user_id = #{userId,jdbcType=NUMERIC},
+		staff_id = #{staffId,jdbcType=NUMERIC},
+		add_time = #{addTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+</mapper>

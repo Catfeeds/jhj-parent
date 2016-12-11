@@ -2,9 +2,13 @@ package com.jhj.action.app.staff;
 
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,15 +25,21 @@ import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.staff.OrgStaffCashSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceAppVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.OrgStaffsVo;
@@ -63,6 +73,13 @@ public class StaffQueryController extends BaseController {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrderStatService orderStatService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchsService;
+	
 	/**
 	 * 我的接口
 	 * @param request
@@ -101,19 +118,24 @@ public class StaffQueryController extends BaseController {
 			vo.setAuthStatus(orgStaffAuth.getAutStatus());
 		}
 		
-		String startTime = DateUtil.getfirstDayOfMonth();
+
 //		String endTime = DateUtil.getLastDayOfMonth() + "23:59:59";
-		
+		int year = DateUtil.getYear();
+		int month = DateUtil.getMonth();
 		OrderQuerySearchVo searchVo = new OrderQuerySearchVo();
-		searchVo.setStartTime(TimeStampUtil.getMillisOfDay(startTime)/1000);
-		searchVo.setEndTime(TimeStampUtil.getNow());
+		searchVo.setStartTime(TimeStampUtil.getBeginOfMonth(year, month));
+		searchVo.setEndTime(TimeStampUtil.getNowSecond());
 		searchVo.setStaffId(staffId);
 		
 		//当月订单总数
-		Long totalOrder = orderQueryService.getTotalOrderCountByMouth(searchVo);
+		Long totalOrder = orderStatService.getTotalOrderCountByMouth(searchVo);
 		vo.setTotalOrder(totalOrder);
 		//当月收入
-		BigDecimal totalIncoming = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		OrderSearchVo orderSearchVo = new OrderSearchVo();
+		orderSearchVo.setStaffId(staffId);
+		orderSearchVo.setStartServiceTime(TimeStampUtil.getBeginOfMonth(year, month));
+		orderSearchVo.setEndServiceTime(TimeStampUtil.getNowSecond());
+		BigDecimal totalIncoming = orderStatService.getTotalOrderIncomeMoney(orderSearchVo);
 		vo.setTotalIncoming(totalIncoming);
 		
 		//获取技能信息
@@ -158,12 +180,25 @@ public class StaffQueryController extends BaseController {
 		}
 		
 		
-		//BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(orgStaffFinance.getTotalCash());
-		//总提现金额
-		BigDecimal totalCashMoney = orgStaffCashService.getTotalCashMoney(staffId);
-		//剩余提现金额 = 总收入 - 欠款总金额 - 已提现金额
-		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(orgStaffFinance.getTotalCash()).subtract(totalCashMoney);
-				
+		
+		//总提现中的金额
+		OrgStaffCashSearchVo searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(staffId);
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 0);
+		orderStatusList.add((short) 1);
+		searchVo.setOrderStatusList(orderStatusList);
+		BigDecimal totalCashIngMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
+		//已经提现的金额
+		searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(staffId);
+		searchVo.setOrderStatus((short) 3);
+		BigDecimal totalCashedMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
+		//剩余提现金额 = 总收入 - 提现中的金额 - 已提现金额
+		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(totalCashIngMoney).subtract(totalCashedMoney);
+		
 		vo.setTotalCash(money);
 		vo.setTotalDept(orgStaffFinance.getTotalDept());
 		
@@ -172,5 +207,69 @@ public class StaffQueryController extends BaseController {
 	
 	}
 	
+	/**
+	 * 获取员工的派工时间
+	 * @param staffId  员工ID
+	 * 
+	 * @return 
+	 * */
+	@RequestMapping(value = "get_dispatch_dates.json",method = RequestMethod.GET)
+	public AppResultData<Object> getOrderDispatchDates(@RequestParam("staff_id") Long staffId){
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setDispatchStatus((short) 1);
+		searchVo.setStaffId(staffId);
+		searchVo.setStartServiceTime(TimeStampUtil.getNow()/1000);
+		Calendar cal=Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, 7);
+		searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDate(cal.getTime())/1000);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		List<String> list=new ArrayList<String>();
+		if(orderDispatchs!=null && orderDispatchs.size()>0){
+			for(int i=0;i<orderDispatchs.size();i++){
+				OrderDispatchs od = orderDispatchs.get(i);
+				Long serviceDate = od.getServiceDate();
+				String strDate = TimeStampUtil.timeStampToDateStr(serviceDate*1000);
+				list.add(strDate);
+			}
+		}
+		
+		result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, list.toArray());
+		return result;
+	}
 	
+
+	/**
+	 * 获取员工的技能信息
+	 * @param staffId  员工ID
+	 * 
+	 * @return 
+	 * */
+	@RequestMapping(value = "get_skills.json",method = RequestMethod.GET)
+	public AppResultData<Object> getSkills(@RequestParam("staff_id") Long staffId){
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+	
+		OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
+		searchVo.setStaffId(staffId);
+		List<OrgStaffSkill> hasSkills = orgStaffSkillService.selectBySearchVo(searchVo);
+		
+		
+		List<Map<String, Object>> skills = new ArrayList<Map<String, Object>>();
+		for (OrgStaffSkill item : hasSkills) {
+			PartnerServiceType serviceType = partService.selectByPrimaryKey(item.getServiceTypeId());
+			
+			Map<String, Object> skill = new HashMap<String, Object>();
+			skill.put("service_type_id", item.getServiceTypeId());
+			skill.put("service_type_name", serviceType.getName());
+			
+			skills.add(skill);
+		}
+		
+		result.setData(skills);
+		return result;
+	}
 }

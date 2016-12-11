@@ -1,35 +1,30 @@
-<div class="pages">
-	<!-- Page, data-page contains page name-->
-	<div data-page="mine-addr-list" id="mine-addr-list" class="page" style="overflow:auto;">
-		<div class="page-content" style="margin:0;height:792px!important;background:#FDEEEE;">
-
-			<div class="list-block address-list-block">
-				<ul id="address_list" class="am-list am-list-static am-list-border" style="background:#fffce8;">
-					{{#each data}}
-					<a href="#" class="item-link" id="selectAddrLink" onclick="clickToSetDefault(this,{{id}})" >
- 					<li class="swipeout">
-						
-							<div class="item-inner" id="addrName">
-								<div class="item-title"style="margin-left:-10px;">
-								{{#js_compare "this.is_default === 1"}}[默认]{{/js_compare}}
-								{{name}} {{addr}}</div>
-	
-								<input type="hidden" id="addr_id" name="addr_id" value="{{id}}"   />
-							</div>
-							</a>
-	 						<!-- <div class="swipeout-actions-right">
-						        <a href="#" class="action1 bg-orange" onclick="setAddrDefault({{id}})">默认</a>
-					      	</div> -->
-				      	
-					
-					</li>
-					</a>
-					 {{/each}}
-
-				</ul>
-			</div>
-				
-			<a href="#" class="button active mine-add-addr-link my-submit">添加一个地址</a>
-		</div>
-	</div>
+<div class="pages navbar-through toolbar-through">
+    <div data-page="mine-addr-list" class="page">
+        <div id="indexPageContentDiv" class="page-content">
+            <div class="beijing-index">
+            	<div class="addr-dizhi-big">
+            		<div class="list-block">
+					  <ul>
+            		  {{#each data}}
+					    <li class="swipeout addr-dizhi" >
+					     
+					      <div class="swipeout-content item-content" onclick="clickToSetDefault(this,{{id}})">
+					        <div class="item-inner" id="mine-add-addr-link">
+					        {{#js_compare "this.is_default === 1"}}[默认]{{/js_compare}}
+					        {{name}} {{addr}}
+					        </div>
+					      </div>
+					      <div class="swipeout-actions-right">
+					        <a href="#" id="delete-addr" class="swipeout-delete" data-confirm="是否删除地址?" onclick="delAddr(this)">删除</a>
+					         <input type="hidden" id="addr_id" value="{{id}}"/>
+					      </div>
+					    </li>
+	                  {{/each}}
+	                  </ul>
+	                </div>
+                </div>
+                <div class="all-button9" id="mine-add-addr">添加一个地址</div>
+            </div>
+        </div>
+    </div>
 </div>

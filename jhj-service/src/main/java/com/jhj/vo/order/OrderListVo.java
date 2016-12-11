@@ -3,6 +3,12 @@ package com.jhj.vo.order;
 import java.math.BigDecimal;
 
 public class OrderListVo {
+	
+	private Long userId;
+	
+	private int isVip;
+	
+	private String userTypeStr;
 
 	private Long staffId;
 	
@@ -49,7 +55,7 @@ public class OrderListVo {
 	
 	private String pickAddrLng;
 	
-	private Short serviceHour;
+	private String serviceHour;
 	
 	private String remarks;
 	
@@ -228,11 +234,11 @@ public class OrderListVo {
 		this.orderStatusStr = orderStatusStr;
 	}
 
-	public Short getServiceHour() {
+	public String getServiceHour() {
 		return serviceHour;
 	}
 
-	public void setServiceHour(Short serviceHour) {
+	public void setServiceHour(String serviceHour) {
 		this.serviceHour = serviceHour;
 	}
 
@@ -290,5 +296,29 @@ public class OrderListVo {
 
 	public void setPayType(Short payType) {
 		this.payType = payType;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getUserTypeStr() {
+		return userTypeStr;
+	}
+
+	public void setUserTypeStr(String userTypeStr) {
+		this.userTypeStr = userTypeStr;
+	}
+
+	public int getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(int isVip) {
+		this.isVip = isVip;
 	}	
 }

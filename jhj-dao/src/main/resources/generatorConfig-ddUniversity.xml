@@ -15,7 +15,7 @@
 
 		<!-- 数据库链接URL、用户名、密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/jhj2.1" userId="root"
+			connectionURL="jdbc:mysql://localhost:3306/jhj3.0" userId="root"
 			password="root1qaz" />
 
 		<!-- 解决数字转换问题 -->

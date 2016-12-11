@@ -22,8 +22,8 @@ public interface OrderChartService {
 	Map<String,Integer> statTotalOrder(ChartSearchVo chartSearchVo);
 
 	//订单收入图表
-	
 	ChartDataVo getOrderRevenue(ChartSearchVo chartSearchVo,List<String> timeSeries);
 	
-	
+	//订单来源图表
+	ChartDataVo getOrderSrc(ChartSearchVo chartSearchVo,List<String> timeSeries);
 }

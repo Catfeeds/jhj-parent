@@ -8,10 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.bs.OrgStaffCashMapper;
+import com.jhj.po.dao.bs.OrgStaffsMapper;
 import com.jhj.po.model.bs.OrgStaffCash;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.vo.staff.OrgStaffCashSearchVo;
+import com.jhj.vo.staff.OrgStaffCashVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -27,6 +32,9 @@ public class OrgStaffCashServiceImpl implements OrgStaffCashService {
 
 	@Autowired
 	private OrgStaffCashMapper orgStaffCashMapper;
+	
+	@Autowired
+	private OrgStaffsMapper orgStaffsMapper;
 
 	@Override
 	public int deleteByPrimaryKey(Long orderId) {
@@ -85,24 +93,28 @@ public class OrgStaffCashServiceImpl implements OrgStaffCashService {
 
 	@Override
 	public List<OrgStaffCash> selectByStaffId(Long userId) {
-		
 		return orgStaffCashMapper.selectByStaffId(userId);
+	}
+	
+	@Override
+	public List<OrgStaffCash> selectBySearchVo(OrgStaffCashSearchVo searchVo) {
+		return orgStaffCashMapper.selectBySearchVo(searchVo);
 	}
 
 	@Override
-	public List<OrgStaffCash> selectVoByListPage(OrgStaffCashSearchVo searchVo,
+	public PageInfo selectByListPage(OrgStaffCashSearchVo searchVo,
 			int pageNo, int pageSize) {
 
 		PageHelper.startPage(pageNo, pageSize);
-		List<OrgStaffCash> list = orgStaffCashMapper.selectVoByListPage(searchVo);
-		
-		return list;
+		List<OrgStaffCash> list = orgStaffCashMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);	
+		return result;
 	}
 
 	@Override
-	public BigDecimal getTotalCashMoney(Long staffId) {
+	public BigDecimal getTotalCashMoney(OrgStaffCashSearchVo searchVo) {
 
-		BigDecimal totalCashMoney = orgStaffCashMapper.getTotalCashMoney(staffId);
+		BigDecimal totalCashMoney = orgStaffCashMapper.getTotalCashMoney(searchVo);
 
 		if (totalCashMoney == null) {
 			BigDecimal a = new BigDecimal(0);
@@ -110,6 +122,18 @@ public class OrgStaffCashServiceImpl implements OrgStaffCashService {
 		}
 		totalCashMoney = MathBigDecimalUtil.round(totalCashMoney, 2);
 		return totalCashMoney;
+	}
+
+	@Override
+	public OrgStaffCashVo transVo(OrgStaffCash orgStaffCash) {
+		OrgStaffCashVo vo=new OrgStaffCashVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffCash,vo);
+		Long staffId = orgStaffCash.getStaffId();
+		OrgStaffs staffs = orgStaffsMapper.selectByPrimaryKey(staffId);
+		if(staffs!=null){
+			vo.setStaffName(staffs.getName());
+		}
+		return vo;
 	}
 
 	

@@ -36,6 +36,7 @@
     <include refid="Base_Column_List" />
     from dict_coupons
     where coupon_type = #{couponType,jdbcType=NUMERIC}
+    order by rang_month desc,value desc
   </select>
 
   <select id="selectByIds" parameterType="java.lang.String" resultMap="BaseResultMap">

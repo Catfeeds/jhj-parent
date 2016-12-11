@@ -1,0 +1,88 @@
+<div class="pages">
+	<div data-page="order-deep-confirm" class="page">
+		<div id="indexPageContentDiv" class="page-content">
+			<form id="orderHour-Form" >
+				<input type="hidden" id="userId" name="userId" value="0">
+				<input type="hidden" id="orderType" name="orderType" value="1">
+				<input type="hidden" id="serviceType" name="serviceType" value="28">
+				<input type="hidden" id="orderFrom" name="orderFrom" value="1">
+				<input type="hidden" id="serviceContent" name="serviceContent" value="">
+				<input type="hidden" id="serviceHour" name="serviceHour" value="3">
+				<input type="hidden" id="serviceAddons" name="serviceAddons" value="">
+				
+				<input type="hidden" id="serviceDate" name="serviceDate" value="0">
+				<input type="hidden" id="orderMoney" name="orderMoney" value="0">
+				<input type="hidden" id="userCouponId" name="userCouponId" value="0">
+				<input type="hidden" id="userCouponValue" name="userCouponValue" value="0">
+				<input type="hidden" id="orderDeepAddrId" value="">
+				<div class="beijing-index">
+					<div class="order-xiadan">
+						<ul class="xiadan">
+							<li>服务类型：</li>
+							<li id="serviceTypeName">日常保洁</li>
+						</ul>
+						<a href="user/mine-addr-list.html" class="special-color7" id="addrSelect">
+							<ul class="xiadan">
+								<li>服务地址：</li>
+								<li id="orderHourAddrName">请选择服务地址.</li>
+							</ul>
+						</a>
+						<ul class="xiadan">
+							<li>服务人员数量：</li>
+							<li id="isMultiStr">1位服务人员</li>
+						</ul>
+						<ul class="xiadan">
+							<li>服务时长：</li>
+							<li id="serviceHourStr">3小时</li>
+						</ul>
+						<ul class="xiadan">
+							<li>服务时间：</li>
+							<li id="serviceDateStr"></li>
+						</ul>
+						<ul class="xiadan">
+							<li>费用明细：</li>
+							<li id="priceStr">149</li>
+						</ul>
+					</div>
+					<div class="order-xiadan">
+						<ul class="xiadan1">
+							<li>
+								<img src="img/xiadan/dingdanjine.png" alt="">
+							</li>
+							<li>订单金额</li>
+							<li id="orderMoneyStr">149元</li>
+						</ul>
+						<a href="user/user-coupons.html?back_url=order/order-deep-confirm.html"  class="special-color7" >
+							<ul class="xiadan1">
+								<li>
+									<img src="img/xiadan/youhuiquan.png" alt="">
+								</li>
+								<li>优惠券</li>
+								<li id="userCouponName"></li>
+							</ul>
+						</a>
+						<ul class="xiadan1" style="border: 0;">
+							<li>
+								<img src="img/xiadan/liuyan.png" alt="">
+							</li>
+							<li>留言</li>
+							<li>
+								<textarea name="remarks" id="remarks" class="tarea" placeholder="嘱咐服务员一句话"></textarea>
+							</li>
+						</ul>
+					</div>
+					<div class="order-xiadan">
+						<ul class="xiadan2">
+							<li class="special-color3" id="orderPayStr">149元</li>
+						</ul>
+						<ul class="xiadan3">
+							<a href="#" id="orderHourSubmit">
+								<li>确认下单</li>
+							</a>
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

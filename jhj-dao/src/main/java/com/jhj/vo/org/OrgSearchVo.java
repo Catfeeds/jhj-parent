@@ -6,6 +6,8 @@ public class OrgSearchVo {
 	
 	private Long parentId;
 	
+	private int isParent;
+	
 	private Short isCloud;
 	
 	private String orgName;
@@ -60,6 +62,14 @@ public class OrgSearchVo {
 
 	public void setOrgStatus(Short orgStatus) {
 		this.orgStatus = orgStatus;
+	}
+
+	public int getIsParent() {
+		return isParent;
+	}
+
+	public void setIsParent(int isParent) {
+		this.isParent = isParent;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.jhj.service.impl.users;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.user.UserLoginedMapper;
 import com.jhj.po.dao.user.UsersMapper;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.users.UserChartService;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
@@ -52,19 +54,13 @@ public class UserChartServiceImpl implements UserChartService {
 		// 确认legend;
 		List<String> legendAll = new ArrayList<String>();
 		legendAll.add("增长率");
-		legendAll.add("微网站来源");
-		legendAll.add("App来源");
 		legendAll.add("新增用户小计");
 		legendAll.add("已转换用户小计");
 		legendAll.add("客户转换率");
 
 		List<String> legend = new ArrayList<String>();
-		//legend.add("增长率");
-		legend.add("微网站来源");
-		legend.add("App来源");
 		legend.add("新增用户小计");
 		legend.add("已转换用户小计");
-		//legend.add("客户转换率");
 		// 设置chart的legend
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 
@@ -94,11 +90,13 @@ public class UserChartServiceImpl implements UserChartService {
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 
 		if (chartSearchVo.getStatType().equals("day")) {
+			chartSearchVo.setFormatParam("%c-%e");
 			statDatas = usersMapper.statByDay(chartSearchVo);
 		}
 
 		if (chartSearchVo.getStatType().equals("month")) {
-			statDatas = usersMapper.statByMonth(chartSearchVo);
+			chartSearchVo.setFormatParam("%y-%m");
+			statDatas = usersMapper.statByDay(chartSearchVo);
 
 		}
 
@@ -113,23 +111,14 @@ public class UserChartServiceImpl implements UserChartService {
 		for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-					// 0代表APP 1 = 微网站来源
-					if (chartSqlData.getName().equals("0")){
-							
-							tableDataItem.put("App来源",String.valueOf(chartSqlData.getTotal()));
-					}
-					if (chartSqlData.getName().toString().equals("1"))
-						tableDataItem.put("微网站来源", String.valueOf(chartSqlData.getTotal()));
-
+				String str = tableDataItem.get("series").split("-")[1];
+				String str1 = chartSqlData.getSeries().split("-")[1];
+				if (str.equals(str1)) {
 					// 新增订单小计
 					Integer subTotal = Integer.valueOf(tableDataItem.get("新增用户小计"));
 					subTotal = subTotal + chartSqlData.getTotal();
 
 					tableDataItem.put("新增用户小计", subTotal.toString());
-		
-					
-					
 				}
 			}
 		}
@@ -187,18 +176,19 @@ public class UserChartServiceImpl implements UserChartService {
 		}
 	
 		//3.1、不同时间粒度下，新用户个数循环
+		String str=null,str1 = null;
 		for (ChartMapVo statatas : statDataes) {
 			//3.2、下过单子的新用户个数
 			for (ChartMapVo chartSqlData : chartMapVos) {
-				if (statatas.getSeries().equals(chartSqlData.getSeries())){
+				str = statatas.getSeries().split("-")[1];
+				str1 = chartSqlData.getSeries().split("-")[1];
+				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
 					//3.3、计算转换率 =total1/total2 total1=下过单在新用户个数,total2=新用户个数
 					String changeRat = MathDoubleUtil.getPercent(chartSqlData.getTotal(),statatas.getTotal());
 						//3.4、循环为客户转换率赋值
 						for (Map<String, String> tableDataItem : tableDatas) {
 							if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
 								if(!StringUtil.isEmpty(changeRat) ){
-									
-									
 									//已转换客户小计
 									Integer changeTotal = Integer.valueOf(tableDataItem.get("已转换用户小计"));
 									changeTotal = chartSqlData.getTotal();
@@ -226,7 +216,7 @@ public class UserChartServiceImpl implements UserChartService {
 		for (int i = 0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String, Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<String>();
 
 			for (int j = 1; j < timeSeries.size(); j++) {
@@ -294,11 +284,9 @@ public class UserChartServiceImpl implements UserChartService {
 		legendAll.add("活跃度");
 
 		List<String> legend = new ArrayList<String>();
-		//legend.add("增长率");
 		legend.add("微网站来源");
 		legend.add("App来源");
 		legend.add("新增用户小计");
-		//legend.add("活跃度");
 
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 
@@ -340,11 +328,13 @@ public class UserChartServiceImpl implements UserChartService {
 
 		// 循环统计数据，完成表格数据替换
 		// 1.先实现表格数据的替换. 计算App来源和微网站来源. 新增订单小计
-
+		String str=null,str1 = null;
 		for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
+				str = tableDataItem.get("series").split("-")[1];
+				str1 = chartSqlData.getSeries().split("-")[1];
+				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
 					// 0代表APP 1 = 微网站来源
 					if (chartSqlData.getName().equals("0"))
 						tableDataItem.put("App来源", String.valueOf(chartSqlData.getTotal()));
@@ -383,7 +373,7 @@ public class UserChartServiceImpl implements UserChartService {
 		}
 		// 3. 计算用户转换率
 		// 不同时间粒度统计新用户个数
-		/*List<ChartMapVo> statDataes = new ArrayList<ChartMapVo>();
+		List<ChartMapVo> statDataes = new ArrayList<ChartMapVo>();
 		//按天统计
 		if (chartSearchVo.getStatType().equals("day")) {
 			statDataes = usersMapper.statUserIdsByDay(chartSearchVo);
@@ -395,16 +385,16 @@ public class UserChartServiceImpl implements UserChartService {
 		//按季度统计
 		if (chartSearchVo.getStatType().equals("quarter")) {
 			statDataes = usersMapper.statUserIdsByQuarter(chartSearchVo);
-		}*/
-		/*List<Users> list = usersMapper.getUserIds(chartSearchVo);
+		}
+		List<Users> list = usersMapper.getUserIds(chartSearchVo);
 		List<Long> userIds = new ArrayList<Long>();
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Users users = (Users) iterator.next();
 			userIds.add(users.getId());
 			chartSearchVo.setUserIds(userIds);
-		}*/
-		/*List<ChartMapVo> chartMapVos  = new ArrayList<ChartMapVo>();
-		//不同时间粒度统计新下单子的用户个数
+		}
+		List<ChartMapVo> chartMapVos  = new ArrayList<ChartMapVo>();
+		//不同时间粒度统计新下单子的用户个数 
 		//按天统计
 		if (chartSearchVo.getStatType().equals("day")) {
 			chartMapVos = orderMapper.totalByDay(chartSearchVo);
@@ -418,9 +408,9 @@ public class UserChartServiceImpl implements UserChartService {
 			chartMapVos = orderMapper.totalByQuarter(chartSearchVo);
 		}
 		//3.1、不同时间粒度下，新用户个数循环
-		for (ChartMapVo statatas : statDataes) {
+		for (ChartMapVo chartSqlData : chartMapVos) {
+			for (ChartMapVo statatas : statDataes) {
 			//3.2、下过单子的新用户个数
-			for (ChartMapVo chartSqlData : chartMapVos) {
 				if (statatas.getSeries().equals(chartSqlData.getSeries())){
 					//3.3、计算转换率
 					String changeRat = MathDoubleUtil.getPercent(chartSqlData.getTotal(),statatas.getTotal());
@@ -436,21 +426,21 @@ public class UserChartServiceImpl implements UserChartService {
 					}
 			}
 		}
-		}*/
+		}
 		
 		//当月活跃总人数
-		List<ChartMapVo> statDataes = new ArrayList<ChartMapVo>();
+		List<ChartMapVo> statDatae = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day")) {
-			statDataes = userLoginedMapper.selectUserLoginTotalByDay(chartSearchVo);
+			statDatae = userLoginedMapper.selectUserLoginTotalByDay(chartSearchVo);
 		}
 		if (chartSearchVo.getStatType().equals("month")) {
-			statDataes = userLoginedMapper.selectUserLoginTotalByMonth(chartSearchVo);
+			statDatae = userLoginedMapper.selectUserLoginTotalByMonth(chartSearchVo);
 		}
 		if (chartSearchVo.getStatType().equals("quarter")) {
-			statDataes = userLoginedMapper.selectUserLoginTotalByQuarter(chartSearchVo);
+			statDatae = userLoginedMapper.selectUserLoginTotalByQuarter(chartSearchVo);
 		}
-		for (ChartMapVo chartSqlData : statDataes) {
+		for (ChartMapVo chartSqlData : statDatae) {
 			//处理表格形式的数据.
 			for (HashMap<String, String> tableDataItem : tableDatas) {
 				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {	
@@ -519,7 +509,7 @@ public class UserChartServiceImpl implements UserChartService {
 		for (int i = 0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String, Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<String>();
 
 			for (int j = 1; j < timeSeries.size(); j++) {

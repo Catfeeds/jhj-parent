@@ -1,12 +1,16 @@
 package com.jhj.service.impl.users;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.user.UserTrailHistoryMapper;
 import com.jhj.po.model.user.UserTrailHistory;
+import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.users.UserTrailHistoryService;
+import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 @Service
@@ -69,6 +73,12 @@ public class UserTrailHistoryServiceImpl implements UserTrailHistoryService {
 	public int updateByPrimaryKey(UserTrailHistory record) {
 	
 		return userTrailHistoryMapper.updateByPrimaryKey(record);
+	}
+	
+	@Override
+	public List<UserTrailHistory> selectBySearchVo(UserTrailSearchVo searchVo) {
+
+		return userTrailHistoryMapper.selectBySearchVo(searchVo);
 	}
 
 	

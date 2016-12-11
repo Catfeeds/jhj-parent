@@ -15,10 +15,12 @@
 		<result column="service_content" property="serviceContent" jdbcType="VARCHAR" />
 		<result column="service_date" property="serviceDate" jdbcType="NUMERIC" />
 		<result column="service_hour" property="serviceHour" jdbcType="NUMERIC" />
+		<result column="staff_nums" property="staffNums" jdbcType="NUMERIC" />
 		<result column="order_status" property="orderStatus" jdbcType="NUMERIC" />
 		<result column="order_rate" property="orderRate" jdbcType="NUMERIC" />
 		<result column="order_rate_content" property="orderRateContent" jdbcType="VARCHAR" />
 		<result column="order_from" property="orderFrom" jdbcType="NUMERIC" />
+		<result column="order_op_from" property="orderOpFrom" jdbcType="NUMERIC" />
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="remarks_confirm" property="remarksConfirm" jdbcType="VARCHAR" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
@@ -28,9 +30,9 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_no, order_type,
-		service_type,service_content, service_date, service_hour, order_status,
+		service_type,service_content, service_date, service_hour, staff_nums, order_status,
 		order_rate,
-		order_rate_content, order_from, remarks,remarks_confirm, add_time, update_time
+		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time
 		,remarks_bussiness_confirm
 	</sql>
 
@@ -45,15 +47,92 @@
 
 	<!-- 运营平台，提醒订单 列表 -->
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
-		<include refid="bySearchVo" />
-	</select>
-
-	<sql id="bySearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from orders
-		where 1=1
+		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
 
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from orders
+		<include refid="bySearchVo" />
+		order by 
+		<if test="orderByProperty!=null">
+			${orderByProperty}
+		</if>
+		<if test="orderByProperty==null or orderByProperty==''">
+			add_time desc
+		</if>
+	</select>
+	
+	<!-- 根据开始时间，接收时间，staff_id ，得出订单总数: -->
+	<select id="getTotalOrderCount" resultType="java.lang.Long" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select count(*) 
+		from orders
+		<include refid="bySearchVo" />
+	</select>
+	
+		<!-- 根据开始时间，接收时间，staff_id ，得出订单总金额 -->
+	<select id="getTotalOrderMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_money) from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
+	<select id="getTotalOrderMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_pay) from order_price_ext where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
+	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_pay)from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+	</select>
+	
+	<select id="getTotalOrderIncomeMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_pay)from order_price_ext where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+	</select>
+	
+	<!-- 钟点工订单0订单总金额 -->
+	<select id="getTotalOrderIncomeHourMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
+		select sum(order_money) from order_prices where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
+	<!-- 钟点工订单0订单总金额 -->
+	<select id="getTotalOrderIncomeHourMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
+		select sum(order_pay) from order_price_ext where order_id in
+		(
+			select id from orders
+			<include refid="bySearchVo" />
+		)
+
+	</select>
+	
+	<sql id="bySearchVo">
+		
+		where 1=1
 		<if test="amId != null">
 			and am_id = #{amId,jdbcType=NUMERIC}
 		</if>
@@ -63,9 +142,13 @@
 		</if>
 
 		<if test="mobile !=null and mobile !='' ">
-			and mobile = #{mobile}
+			and mobile like  CONCAT('%',#{mobile},'%')
 		</if>
-
+		
+		<if test="staffId != null">
+			and id in (select order_id from order_dispatchs where staff_id = #{staffId,jdbcType=NUMERIC}  and dispatch_status = 1)
+		</if>
+		
 		<if test="orderId != null">
 			and id = #{orderId,jdbcType=NUMERIC}
 		</if>
@@ -81,7 +164,7 @@
 		<if test="orderTypes != null">
 			and order_type in
 			<foreach item="item" index="index" collection="orderTypes" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 
@@ -91,8 +174,8 @@
 
 		<if test="orderStatusList != null">
 			and order_status in
-			<foreach item="item" index="index" collection="orderStatusList" open="(" separator="," close=")">
-				#{item}
+			<foreach item="item" collection="orderStatusList" open="(" separator="," close=")">
+				${item}
 			</foreach>
 		</if>
 
@@ -102,8 +185,8 @@
 
 		<if test="serviceTypes != null">
 			and service_type in
-			<foreach item="item" index="index" collection="serviceType" open="(" separator="," close=")">
-				#{item}
+			<foreach item="item" index="index" collection="serviceTypes"  open="(" separator="," close=")">
+				${item}
 			</foreach>
 		</if>
 
@@ -113,6 +196,10 @@
 
 		<if test="orderFrom != null">
 			and order_from = #{orderFrom,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orderOpFrom != null">
+			and order_op_from = #{orderOpFrom,jdbcType=NUMERIC}
 		</if>
 
 		<if test="startServiceTime !=null">
@@ -146,22 +233,27 @@
 		<if test="endUpdateTime !=null">
 			<![CDATA[ and update_time <= #{endUpdateTime}]]>
 		</if>
-		
+
 		<if test="parentId !=null">
-			and order_id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC} and dispatch_status = 1)
 		</if>
-		
-		<if test="orgId !=null">
-			and order_id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC})
+
+		<if test="orgId !=null and orgId != 0">
+			and id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC} and dispatch_status = 1)
 		</if>
-		
+
 		<if test="isApply !=null">
-			and order_id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC})
+			and id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC} and dispatch_status = 1)
 		</if>
 
-		order by add_time desc
+		<if test="addrName !=null and addrName !=''">
+			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE) )
+		</if>
+		
+		<if test="payType!=null">
+			and order_no in (select order_no from order_prices where pay_type = #{payType,jdbcType=NUMERIC})
+		</if>
 	</sql>
-
 
 	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">
 		select
@@ -173,7 +265,7 @@
 		where
 		user_id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 		group by user_id
 		order by user_id desc
@@ -187,7 +279,7 @@
 		where
 		user_id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 	</select>
 
@@ -214,92 +306,12 @@
 		from orders
 		where user_id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 		group by user_id
 		order by user_id desc
 	</select>
 
-	<!-- 根据开始时间，接收时间，staff_id ，得出订单总金额 -->
-	<select id="getTotalOrderMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money) from order_prices where order_id in
-		(
-		select id from orders
-		where id in (select order_id from order_dispatchs where
-		staff_id
-		=#{staffId,jdbcType=NUMERIC}
-		and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and service_date >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and service_date <= ${endTime} ]]>
-		</if>
-		)
-
-		)
-
-	</select>
-	<!-- 根据开始时间，接收时间，staff_id ，得出订单总收入金额 -->
-
-	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money)from order_prices where order_id in
-		(
-		select id from orders
-		where id in (select order_id from order_dispatchs where staff_id
-		=#{staffId,jdbcType=NUMERIC}
-		<if test="startTime != null">
-				<![CDATA[	and service_date >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and service_date <= ${endTime} ]]>
-		</if>
-		)
-		and order_type in (2, 3)
-		and order_status = 7
-		)
-
-	</select>
-	<!-- 钟点工订单0订单总金额 -->
-	<select id="getTotalOrderIncomeHourMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money)from order_prices where order_id in
-		(
-		select id from orders
-		where order_no in (select order_no from order_dispatchs where
-		staff_id
-		=#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and update_time >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and update_time <= ${endTime} ]]>
-		</if>
-		)
-		and order_type = 0
-		and order_status = 7
-		)
-
-	</select>
-	<!-- 深度保洁1订单总金额 -->
-	<select id="getTotalOrderIncomeCleanMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select sum(order_money)from order_prices where order_id in
-		(
-		select id from orders
-		where order_no in (select order_no from order_dispatchs where
-		staff_id
-		=#{staffId,jdbcType=NUMERIC} and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and update_time >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and update_time <= ${endTime} ]]>
-		</if>
-		)
-		and order_type = 1
-		and order_status = 7
-		)
-
-	</select>
 	<!-- 助理订单2订单总金额 -->
 	<select id="getTotalOrderIncomeStaffMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
 		select sum(order_money)from order_prices where order_id in
@@ -340,21 +352,7 @@
 		)
 
 	</select>
-	<!-- 根据开始时间，接收时间，staff_id ，得出订单总数: -->
-	<select id="getTotalOrderCount" resultType="java.lang.Long" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
-		select count(*) from orders where order_no in
-		(
-		select order_no from order_dispatchs where
-		staff_id =#{staffId,jdbcType=NUMERIC}
-		and dispatch_status = 1
-		<if test="startTime != null">
-				<![CDATA[	and add_time >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and add_time <= ${endTime} ]]>
-		</if>
-		)
-	</select>
+	
 
 	<!-- 当月订单总数order_status7,8: -->
 	<select id="getTotalOrderCountByMouth" resultType="java.lang.Long" parameterType="com.jhj.vo.order.OrderQuerySearchVo">
@@ -364,12 +362,12 @@
 		staff_id =#{staffId,jdbcType=NUMERIC}
 		and dispatch_status = 1
 		<if test="startTime != null">
-				<![CDATA[	and add_time >= ${startTime} ]]>
+				<![CDATA[	and service_date >= ${startTime} ]]>
 		</if>
 		<if test="endTime != null">
-				<![CDATA[	and add_time <= ${endTime} ]]>
+				<![CDATA[	and service_date <= ${endTime} ]]>
 		</if>
-		) and order_status in (0,7,8,9)
+		) and order_status in (7,8)
 	</select>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -378,8 +376,6 @@
 		from orders
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
-
-
 
 	<select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -440,9 +436,9 @@
 		mobile, city_id, org_id, addr_id,
 		order_no,
 		order_type, service_type,
-		service_content, service_date, service_hour,
+		service_content, service_date, service_hour, staff_nums,
 		order_status, order_rate, order_rate_content,
-		order_from, remarks,remarks_confirm,add_time, update_time,
+		order_from,order_op_from, remarks,remarks_confirm,add_time, update_time,
 		remarks_bussiness_confirm
 		)
 		values
@@ -453,10 +449,12 @@
 		#{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=NUMERIC},
 		#{serviceType,jdbcType=NUMERIC},
 		#{serviceContent,jdbcType=VARCHAR},
-		#{serviceDate,jdbcType=NUMERIC}, #{serviceHour,jdbcType=NUMERIC},
+		#{serviceDate,jdbcType=NUMERIC}, #{serviceHour,jdbcType=NUMERIC}, #{staffNums,jdbcType=NUMERIC},
 		#{orderStatus,jdbcType=NUMERIC}, #{orderRate,jdbcType=NUMERIC},
 		#{orderRateContent,jdbcType=VARCHAR},
-		#{orderFrom,jdbcType=NUMERIC},#{remarks,jdbcType=VARCHAR},
+		#{orderFrom,jdbcType=NUMERIC},
+		#{orderOpFrom,jdbcType=NUMERIC},
+		#{remarks,jdbcType=VARCHAR},
 		#{remarksConfirm,jdbcType=VARCHAR},
 		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},
 		#{remarksBussinessConfirm,jdbcType=VARCHAR}
@@ -508,6 +506,9 @@
 			<if test="serviceHour != null">
 				service_hour,
 			</if>
+			<if test="staffNums != null">
+				staff_nums,
+			</if>
 			<if test="orderStatus != null">
 				order_status,
 			</if>
@@ -519,6 +520,9 @@
 			</if>
 			<if test="orderFrom != null">
 				order_from,
+			</if>
+			<if test="orderOpFrom != null">
+				order_op_from,
 			</if>
 			<if test="remarks !=null">
 				remarks,
@@ -534,10 +538,8 @@
 			</if>
 
 			<if test="remarksBussinessConfirm !=null">
-				remarks_bussiness_confirm,
+				remarks_bussiness_confirm
 			</if>
-
-
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -579,6 +581,9 @@
 			<if test="serviceHour != null">
 				#{serviceHour,jdbcType=NUMERIC},
 			</if>
+			<if test="staffNums != null">
+				#{staffNums,jdbcType=NUMERIC},
+			</if>
 			<if test="orderStatus != null">
 				#{orderStatus,jdbcType=NUMERIC},
 			</if>
@@ -591,6 +596,9 @@
 			<if test="orderFrom != null">
 				#{orderFrom,jdbcType=NUMERIC},
 			</if>
+			<if test="orderOpFrom != null">
+				#{orderOpFrom,jdbcType=NUMERIC},
+			</if>
 			<if test="remarks !=null">
 				#{remarks,jdbcType=VARCHAR},
 			</if>
@@ -602,6 +610,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="remarksBussinessConfirm !=null">
+				#{remarksBussinessConfirm,jdbcType=VARCHAR}
 			</if>
 		</trim>
 	</insert>
@@ -644,6 +655,9 @@
 			<if test="serviceHour != null">
 				service_hour = #{serviceHour,jdbcType=NUMERIC},
 			</if>
+			<if test="staffNums != null">
+				staff_nums = #{staffNums,jdbcType=NUMERIC},
+			</if>
 			<if test="orderStatus != null">
 				order_status = #{orderStatus,jdbcType=NUMERIC},
 			</if>
@@ -655,6 +669,9 @@
 			</if>
 			<if test="orderFrom != null">
 				order_from = #{orderFrom,jdbcType=NUMERIC},
+			</if>
+			<if test="orderOpFrom != null">
+				order_op_from = #{orderOpFrom,jdbcType=NUMERIC},
 			</if>
 			<!-- TODO 当初 因为这里有bug ,给注释了 ,现在改好了 -->
 			<if test="remarks !=null and remarks !='' ">
@@ -674,7 +691,6 @@
 			<if test="remarksBussinessConfirm !=null and remarksBussinessConfirm !='' ">
 				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR}
 			</if>
-
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -724,6 +740,7 @@
 		service_date =
 		#{serviceDate,jdbcType=NUMERIC},
 		service_hour = #{serviceHour,jdbcType=NUMERIC},
+		staff_nums = #{staffNums,jdbcType=NUMERIC},
 		order_status =
 		#{orderStatus,jdbcType=NUMERIC},
 		order_rate =
@@ -731,13 +748,15 @@
 		order_rate_content = #{orderRateContent,jdbcType=VARCHAR},
 		order_from =
 		#{orderFrom,jdbcType=NUMERIC},
+		order_op_from = #{orderOpFrom,jdbcType=NUMERIC},
 		remarks = #{remarks,jdbcType=VARCHAR},
-		remarks_confirm = #{remarksConfirm,jdbcType=VARCHAR},
+		remarks_confirm =
+		#{remarksConfirm,jdbcType=VARCHAR},
 		add_time =
 		#{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},
-
-		remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR},
+		remarks_bussiness_confirm =
+		#{remarksBussinessConfirm,jdbcType=VARCHAR},
 
 		where id =
 		#{id,jdbcType=NUMERIC}
@@ -745,89 +764,28 @@
 
 	<resultMap id="ChartMap" type="com.jhj.vo.chart.ChartMapVo">
 		<result column="name" property="name" />
+		<result column="orderStatus" property="orderStatus"/>
+		<result column="serviceType" property="serviceType" />
 		<result column="series" property="series" />
 		<result column="total" property="total" />
-
 		<result column="totalMoney" property="totalMoney" />
 	</resultMap>
 	<!-- **************************** 市场订单图表 ***************************** -->
 
 	<!-- 市场订单图表-按天统计 -->
 	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT order_from AS name,
-		FROM_UNIXTIME(add_time, "%c-%e") AS series,
+		SELECT order_from AS name,order_status as orderStatus,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		</if>
+		<if test="selectCycle==12">
+			CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		</if>
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-		GROUP BY name, series ORDER BY series ASC
-	</select>
-
-	<!-- 市场订单图表-按月统计 -->
-	<select id="statByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT order_from AS name,
-		FROM_UNIXTIME(add_time, "%Y-%m") AS series,
-		COUNT(*) AS total
-		FROM orders
-		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-		GROUP BY name, series ORDER BY series ASC
-	</select>
-
-	<!-- 市场订单图表-按季度统计 -->
-	<select id="statByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT order_from AS name,
-		CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
-		COUNT(*) AS total
-		FROM orders
-		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-		GROUP BY name, series ORDER BY series ASC
+		<include refid="chartSearchVo"/>
+		GROUP BY name,orderStatus, series ORDER BY series ASC
 	</select>
 
 	<!-- 市场订单图表-按天统计 退单数 -->
@@ -837,22 +795,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -863,21 +806,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -888,46 +817,16 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
 	<!-- 市场订单数求和 -->
 	<select id="statTotalOrder" resultType="java.util.HashMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		select count(*) as total,count(case when order_type=0 then 1 else null end) as jc,count(case when order_type=2 then 1 else null end) as sd from orders
+		select count(*) as total,count(case when order_type=0 then 1 else null end) as jc,count(case when order_type=1 then 1 else null end) as sd from orders
 		WHERE
 		1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 
 	</select>
 
@@ -947,21 +846,7 @@
 		id, order_from, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		) AS T1
 		LEFT JOIN order_prices AS T2
 		ON T1.id = T2. order_id
@@ -984,21 +869,7 @@
 		id, order_from, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		) AS T1
 		LEFT JOIN order_prices AS T2
 		ON T1.id = T2. order_id
@@ -1021,21 +892,7 @@
 		id, order_from, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		) AS T1
 		LEFT JOIN order_prices AS T2
 		ON T1.id = T2. order_id
@@ -1054,21 +911,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -1079,21 +922,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 
@@ -1104,21 +933,7 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 	<!--某段时间之前用户个数 -->
@@ -1183,7 +998,7 @@
 		</if>
 		) as T1
 		inner join
-		(select id, FROM_UNIXTIME(add_time, "%c") AS series
+		(select id, FROM_UNIXTIME(add_time, "%Y-%m") AS series
 		FROM users where 1=1
 		<if test="startTime !=null">
 					<![CDATA[ and add_time >= #{startTime}]]>
@@ -1227,126 +1042,47 @@
 	</select>
 
 	<!-- **************************** 品类收入图表 ***************************** -->
-
-	<select id="chartTypeRevenueByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_type AS name,
-		FROM_UNIXTIME(add_time, "%c-%e") AS series,
-		order_money
-		FROM
-		(
-		SELECT T1.order_type, T1.add_time, T2.order_money FROM
-		(SELECT
-		id, order_type, add_time
-		FROM orders
-		WHERE 1=1
-
-		and
-		order_type in (0,1,2)
+	<!--统计查询条件  -->
+	<sql id="chartSearchVo">
 		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
+			<![CDATA[ and add_time >= #{startTime}]]>
 		</if>
 		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
+			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		<if test="status != null">
 			and order_status in
 			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
-		<if test="orgId !=null">
+		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
-		) AS T1
-		LEFT JOIN order_prices AS T2
-		ON T1.id = T2. order_id
-		) AS T3
-		) AS T4
-		GROUP BY name, series ORDER BY series ASC
-	</select>
+		<if test="serviceType!=null">
+		
+		</if>
+	</sql>
 
-	<select id="chartTypeRevenueByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_type AS name,
-		FROM_UNIXTIME(add_time, "%Y-%m") AS series,
-		order_money
-		FROM
-		(
-		SELECT T1.order_type, T1.add_time, T2.order_money FROM
-		(SELECT
-		id, order_type, add_time
-		FROM orders
+	<select id="chartTypeRevenue" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT name,service_type as serviceType, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		(SELECT order_type AS name,service_type,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		</if>
+		<if test="selectCycle==12">
+			CONCAT(year(FROM_UNIXTIME(add_time)), "-",quarter(FROM_UNIXTIME(add_time)) ) as series,
+		</if>
+		order_money FROM
+		(SELECT T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
+		(SELECT id, order_type,service_type, add_time FROM orders
 		WHERE 1=1
-
-		and
-		order_type in (0,1,2)
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-		) AS T1
-		LEFT JOIN order_prices AS T2
-		ON T1.id = T2. order_id
+		<include refid="chartSearchVo"/>
+		and order_type in (0,1)
+		) AS T1 LEFT JOIN order_prices AS T2 ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
-	</select>
-
-	<select id="chartTypeRevenueByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_type AS name,
-		CONCAT(year(FROM_UNIXTIME( add_time)), "-",
-		quarter(FROM_UNIXTIME( add_time)) ) as series,
-		order_money
-		FROM
-		(
-		SELECT T1.order_type, T1.add_time, T2.order_money FROM
-		(SELECT
-		id, order_type, add_time
-		FROM orders
-		WHERE 1=1
-
-		and
-		order_type in (0,1,2)
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
-		) AS T1
-		LEFT JOIN order_prices AS T2
-		ON T1.id = T2. order_id
-		) AS T3
-		) AS T4
-		GROUP BY name, series ORDER BY series ASC
+		GROUP BY name,serviceType, series ORDER BY series ASC
 	</select>
 
 	<!--助理品类按天统计 -->
@@ -1356,17 +1092,8 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1383,17 +1110,8 @@
 		COUNT(*) AS total
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1412,17 +1130,8 @@
 		FROM
 		orders
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1446,17 +1155,8 @@
 		id, service_type, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1485,17 +1185,8 @@
 		id, service_type, add_time
 		FROM orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
-
 		SELECT
 		service_type_id
 		FROM
@@ -1527,15 +1218,7 @@
 		FROM
 		orders
 		WHERE 1=1
-		<if test="startTime !=null">
-					<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-					<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="orgId !=null">
-			and org_id = #{orgId,jdbcType=NUMERIC}
-		</if>
+		<include refid="chartSearchVo"/>
 		and service_type in(
 		SELECT
 		service_type_id
@@ -1604,4 +1287,26 @@
 		) GROUP BY name,series
 	</select>
 
+	<!-- 订单来源统计 -->
+	<select id="getOrderSrc" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT o.order_from as orderFrom,o.order_op_from as orderOpFrom,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(o.add_time, #{formatParam}) AS series,
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(o.add_time)),"-",quarter(FROM_UNIXTIME(o.add_time))) AS series,
+		</if>
+		sum(order_money) as totalMoney,count(*) as total 
+		from order_prices as op,orders as o 
+		WHERE op.order_id = o.id 
+		<if test="startTime !=null">
+			<![CDATA[ and o.add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and o.add_time <= #{endTime}]]>
+		</if>
+		and o.order_status between 1 and 9
+		GROUP BY o.order_from,o.order_op_from,series
+	</select>
+	
 </mapper>

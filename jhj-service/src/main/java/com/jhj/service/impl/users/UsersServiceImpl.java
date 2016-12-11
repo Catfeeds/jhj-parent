@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.CopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.dict.DictCardType;
+import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.tags.UserRefTags;
 import com.jhj.po.model.user.UserAddrs;
@@ -26,25 +28,29 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.TagsService;
+import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.tags.UserRefTagsService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.TagSearchVo;
+import com.jhj.vo.order.OrderCardsVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.sun.mail.util.BEncoderStream;
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
 	@Autowired
 	private UsersMapper usersMapper;
-
+	
 	@Autowired
 	private UserAddrsService userAddrService;
 
@@ -74,6 +80,9 @@ public class UsersServiceImpl implements UsersService {
 
 	@Autowired
 	private DictCouponsService dictCouponService;
+	
+	@Autowired
+	private OrderCardsService orderCardsService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -139,6 +148,7 @@ public class UsersServiceImpl implements UsersService {
 		u.setRemarks(" ");
 		u.setAddTime(TimeStampUtil.getNow() / 1000);
 		u.setUpdateTime(TimeStampUtil.getNow() / 1000);
+		u.setIsVip(0);
 		return u;
 	}
 
@@ -152,13 +162,34 @@ public class UsersServiceImpl implements UsersService {
 		UserAppVo vo = new UserAppVo();
 
 		Users user = this.selectByPrimaryKey(userId);
-
+		
+		if (user == null) return vo;
+		
 		BeanUtilsExp.copyPropertiesIgnoreNull(user, vo);
 		vo.setHasUserAddr(false);
 		List<UserAddrs> userAddrs = userAddrService.selectByUserId(userId);
-		if (!userAddrs.isEmpty())
+		if (!userAddrs.isEmpty()) {
 			vo.setHasUserAddr(true);
-
+			
+			UserAddrs defaultUserAddr = null;
+			
+			for (UserAddrs ua : userAddrs) {
+				if (ua.getIsDefault().equals((short)1)) {
+					defaultUserAddr = ua;
+					break;
+				}
+			}
+			
+			if (defaultUserAddr == null) {
+				defaultUserAddr = userAddrs.get(userAddrs.size() - 1);
+				defaultUserAddr.setIsDefault((short) 1);
+				
+				userAddrService.updateByPrimaryKeySelective(defaultUserAddr);
+			}
+			
+			vo.setDefaultUserAddr(defaultUserAddr);
+		}
+			
 		List<UserCoupons> userCoupons = userCouponsService.selectByUserId(userId);
 		vo.setTotalCoupon(userCoupons.size());
 		// 显示优惠个数
@@ -214,8 +245,11 @@ public class UsersServiceImpl implements UsersService {
 			for (UserRefTags item : userRefTagsList) {
 				tagIds.add(item.getTagId());
 			}
+			
+			TagSearchVo searchVo1 = new TagSearchVo();
+			searchVo1.setTagIds(tagIds);
+			List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
 
-			List<Tags> tag = tagsService.selectByIds(tagIds);
 
 			userEditViewVo.setList(tag);
 		}
@@ -304,8 +338,11 @@ public class UsersServiceImpl implements UsersService {
 			for (UserRefTags item : userRefTagsList) {
 				tagIds.add(item.getTagId());
 			}
+			
+			TagSearchVo searchVo1 = new TagSearchVo();
+			searchVo1.setTagIds(tagIds);
+			List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
 
-			List<Tags> tag = tagsService.selectByIds(tagIds);
 
 			userEditViewVo.setList(tag);
 		}
@@ -332,8 +369,10 @@ public class UsersServiceImpl implements UsersService {
 
 		userEditViewVo.setAddrName(userAddrs.getName() + userAddrs.getAddr());
 		// 用户标签
-
-		List<Tags> tag = tagsService.selectList();
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagType((short) 2);
+		List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
+		
 		userEditViewVo.setList(tag);
 		List<UserRefTags> userRefTags = userRefTagsService.selectListByUserId(userId);
 
@@ -369,8 +408,11 @@ public class UsersServiceImpl implements UsersService {
 		}
 
 		// 用户标签
+		
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagType((short) 2);
+		List<Tags> tag = tagsService.selectBySearchVo(searchVo1);
 
-		List<Tags> tag = tagsService.selectList();
 		userEditViewVo.setList(tag);
 		List<UserRefTags> userRefTags = userRefTagsService.selectListByUserId(userId);
 
@@ -386,7 +428,7 @@ public class UsersServiceImpl implements UsersService {
 	public Map<Long, String> selectDictCardDataSource() {
 		Map<Long, String> map = new HashMap<Long, String>();
 		List<DictCardType> list = dictCardTypeMapper.selectAll();
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+		for (Iterator<DictCardType> iterator = list.iterator(); iterator.hasNext();) {
 			DictCardType dictCardType = (DictCardType) iterator.next();
 			map.put(dictCardType.getId(), dictCardType.getName());
 		}
@@ -407,10 +449,10 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public PageInfo selectByListPage(UserSearchVo searchVo, int pageNo, int pageSize) {
+	public PageInfo<Users> selectByListPage(UserSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<Users> list = usersMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
+		PageInfo<Users> result = new PageInfo<Users>(list);
 		return result;
 	}
 
@@ -421,13 +463,12 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public Users selectByMobile(String mobile) {
-		// TODO Auto-generated method stub
 		return usersMapper.selectByMobile(mobile);
 	}
 
 	@Override
 	public List<Users> selectUsersByOrderMobile() {
-		// TODO Auto-generated method stub
 		return usersMapper.selectUsersByOrderMobile();
 	}
+	
 }

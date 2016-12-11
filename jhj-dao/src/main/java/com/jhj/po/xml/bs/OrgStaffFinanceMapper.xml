@@ -29,16 +29,39 @@
 		from org_staff_finance
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</select>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		SELECT <include refid="Base_Column_List" />
+		FROM org_staff_finance WHERE 1=1
+		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
 
-	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
-
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM org_staff_finance
-		WHERE 1=1
-
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		SELECT <include refid="Base_Column_List" />
+		FROM org_staff_finance WHERE 1=1
+		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
+	
+	<sql id="bySearchVo">
 		<if test="mobile !=null and mobile != ''">
 			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		
+		<if test="staffId!=null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="staffName!=null">
+			and staff_id in (select staff_id from org_staffs where name like concat('%',#{staffName},'%')) 
+		</if>
+		
+		<if test="staffIds!=null and staffIds.size()>0">
+			and staff_id in 
+			<foreach item="item" collection="staffIds" separator="," open="(" close=")" index="">
+				${item}
+			</foreach>
 		</if>
 
 		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
@@ -50,13 +73,19 @@
 			)
 		</if>
 		
+		<if test="parentId!=null">
+			and staff_id in (select staff_id from org_staffs where parent_org_id = #{parentId})
+		</if>
+		
+		<if test="orgId!=null and orgId!=0">
+			and staff_id in (select staff_id from org_staffs where org_id = #{orgId})
+		</if>
+
 		<if test="isBlack !=null">
 			and is_black = #{isBlack,jdbcType=NUMERIC}
 		</if>
 
-		order by add_time desc
-
-	</select>
+	</sql>
 
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -68,9 +97,10 @@
 			SELECT LAST_INSERT_ID() AS id
 		</selectKey>
 		insert into org_staff_finance (id, staff_id, mobile,
-		total_incoming, total_cash,total_dept, rest_money, is_black
+		total_incoming, total_cash,total_dept, rest_money, is_black,
 		add_time, update_time)
-		values (#{id,jdbcType=NUMERIC},
+		values
+		(#{id,jdbcType=NUMERIC},
 		#{staffId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
 		#{totalIncoming,jdbcType=DECIMAL}, #{totalDept,jdbcType=DECIMAL},
 		#{totalCash,jdbcType=DECIMAL},
@@ -187,10 +217,20 @@
 		total_incoming = #{totalIncoming,jdbcType=DECIMAL},
 		total_dept = #{totalDept,jdbcType=DECIMAL},
 		total_cash = #{totalCash,jdbcType=DECIMAL},
-		rest_money = #{restMoney,jdbcType=DECIMAL},
+		rest_money =
+		#{restMoney,jdbcType=DECIMAL},
 		is_black = #{isBlack,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC}
-		where id = #{id,jdbcType=NUMERIC}
+		where
+		id = #{id,jdbcType=NUMERIC}
 	</update>
+	
+	<select id="totalMoney" resultType="java.util.Map" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+		SELECT sum(total_incoming) as totalIncoming,sum(total_dept) as totalDept,sum(total_cash) as totalCash,sum(rest_money) as restMoney 
+		from org_staff_finance
+		<where>
+			<include refid="bySearchVo" />
+		</where>
+	</select>
 </mapper>

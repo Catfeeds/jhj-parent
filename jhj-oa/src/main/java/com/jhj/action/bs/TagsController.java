@@ -107,7 +107,10 @@ public class TagsController extends BaseController {
 	public void validTagName(PrintWriter out,String name) throws UnsupportedEncodingException{
 		
 		String names = URLDecoder.decode(name,"utf-8");
-		List<Tags> list = tagsService.selectByTagName(names);
+		
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagName(names);
+		List<Tags> list = tagsService.selectBySearchVo(searchVo1);
 		
 		if(list.size()>0 && list !=null){
 			//如果输入的名称能查出来记录，则返回 名称已存在 标识

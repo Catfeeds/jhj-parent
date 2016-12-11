@@ -21,13 +21,14 @@ import com.jhj.service.bs.OrgStaffCashService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.staff.OrgStaffCashSearchVo;
 import com.jhj.vo.staff.OrgStaffCashVo;
-import com.meijia.utils.vo.AppResultData;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
+import com.meijia.utils.vo.AppResultData;
 
 @Controller
 @RequestMapping(value = "/app/staff")
@@ -62,10 +63,24 @@ public class OrgStaffCashController extends BaseController {
 					ConstantMsg.TOTALDEPT_NO_NULL, "");
 			return result;
 		}
-		//总提现金额
-		BigDecimal totalCashMoney = orgStaffCashService.getTotalCashMoney(userId);
+		
+		//总提现中的金额
+		OrgStaffCashSearchVo searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(userId);
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 0);
+		orderStatusList.add((short) 1);
+		searchVo.setOrderStatusList(orderStatusList);
+		BigDecimal totalCashIngMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
+		//已经提现的金额
+		searchVo = new OrgStaffCashSearchVo();
+		searchVo.setStaffId(userId);
+		searchVo.setOrderStatus((short) 1);
+		BigDecimal totalCashedMoney = orgStaffCashService.getTotalCashMoney(searchVo);
+		
 		//总收入-总欠款-总提现金额的钱数来比较
-		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(orgStaffFinance.getTotalCash()).subtract(totalCashMoney);
+		BigDecimal money = orgStaffFinance.getTotalIncoming().subtract(totalCashIngMoney).subtract(totalCashedMoney);
 		
 		if (cashMoney.compareTo(money)==1) {
 			

@@ -2,6 +2,7 @@ package com.jhj.service.bs;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.vo.bs.LeaveStaffVo;
 import com.jhj.vo.org.LeaveSearchVo;
@@ -22,13 +23,13 @@ public interface OrgStaffLeaveService {
 
     int updateByPrimaryKeySelective(OrgStaffLeave record);
 
-	List<OrgStaffLeave> selectByListPage(LeaveSearchVo searchVo,int pageNo,int pageSize);
-	
 	LeaveStaffVo transToVO(OrgStaffLeave leave);
 	
 	OrgStaffLeave initLeave();
 	
 	LeaveStaffVo initLeaveVo();
 	
-	List<OrgStaffLeave> selectByLeaveSearchVo(LeaveSearchVo searchVo);
+	PageInfo selectByListPage(LeaveSearchVo searchVo,int pageNo,int pageSize);
+	
+	List<OrgStaffLeave> selectBySearchVo(LeaveSearchVo searchVo);
 }

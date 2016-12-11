@@ -1,16 +1,11 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffsMapper;
 import com.jhj.po.dao.order.OrderLogMapper;
@@ -21,7 +16,6 @@ import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.dao.user.UserCouponsMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
@@ -33,9 +27,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
-import com.jhj.vo.chart.CoopUserOrderVo;
-import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.service.users.UserDetailPayService;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.RandomUtil;
@@ -47,6 +39,7 @@ public class OrdersServiceImpl implements OrdersService {
 
 	@Autowired
 	private OrdersMapper ordersMapper;
+	
 	@Autowired
 	private OrderPricesMapper orderPricesMapper;
 
@@ -76,7 +69,10 @@ public class OrdersServiceImpl implements OrdersService {
 
 	@Autowired
 	private PartnerServiceTypeMapper partServiceTypeMapper;
-
+	
+	@Autowired
+	private UserDetailPayService userDetailPayService;
+	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return ordersMapper.deleteByPrimaryKey(id);
@@ -99,11 +95,13 @@ public class OrdersServiceImpl implements OrdersService {
 		record.setServiceContent("");
 		record.setServiceDate(0L);
 		record.setServiceHour((short) 0);
+		record.setStaffNums(0);
 		record.setOrderNo("");
 		record.setOrderRate((short) 0);// 0 = 好 1 = 一般 2 = 差
 		record.setOrderRateContent("");
 		record.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);
 		record.setOrderFrom(Constants.USER_NET);
+		record.setOrderOpFrom(0L);
 		record.setRemarks("");
 		record.setRemarksConfirm("");
 
@@ -277,28 +275,9 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public List<Orders> selectOrderListByAmId(Long amId, int pageNo, int pageSize) {
-		PageHelper.startPage(pageNo, pageSize);
-		OrderSearchVo orderSearchVo = new OrderSearchVo();
-		orderSearchVo.setAmId(amId);
-		List<Orders> list = ordersMapper.selectByListPage(orderSearchVo);
-		return list;
-	}
-
-	@Override
-	public List<HashMap> totalByUserIds(List<Long> id) {
-		return ordersMapper.totalByUserIds(id);
-	}
-
-	@Override
 	public int updateCleanUpdateTime(Orders orders) {
 
 		return ordersMapper.updateByCleanUpdateTimeSelective(orders);
-	}
-
-	@Override
-	public int totalIntimacyOrders(Map<String, Long> map) {
-		return ordersMapper.totalIntimacyOrders(map);
 	}
 
 	@Override
@@ -328,16 +307,6 @@ public class OrdersServiceImpl implements OrdersService {
 		String[] content = new String[] { code, Constants.GET_CODE_MAX_VALID };
 		SmsUtil.SendSms(mobile, Constants.STAFF_JOIN_BLACK, content);
 		return true;
-	}
-
-	@Override
-	public Long totalOrderInUserIds(List<Long> userIds) {
-		return ordersMapper.totalOrderInUserIds(userIds);
-	}
-
-	@Override
-	public List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds) {
-		return ordersMapper.totalUserAndOrder(userIds);
 	}
 
 	@Override
@@ -530,13 +499,14 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	/**
-	 * 后台取消现金支付订单
+	 * 后台取消订单
 	 * 
 	 * @param Long
 	 *            orderId 订单ID
 	 * 
+	 * 
 	 * */
-	@Override
+	/*@Override
 	public int cancelByOrder(Orders order) {
 		if (order == null) {
 			return -1;
@@ -545,46 +515,60 @@ public class OrdersServiceImpl implements OrdersService {
 		Short orderStatus = order.getOrderStatus();
 		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orderNo);
 		Short payType = orderPrices.getPayType();
-		if (payType == Constants.PAY_TYPE_6) {
-			if (orderStatus == Constants.ORDER_STATUS_0 || orderStatus < 5) {
-				order.setOrderStatus(Constants.ORDER_STATUS_0);
-				ordersMapper.updateByPrimaryKeySelective(order);
-
-				OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-				searchVo.setOrderNo(orderNo);
-				searchVo.setDispatchStatus((short) 1);
-				List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
-
-				OrderDispatchs orderDispatch = null;
-				if (!orderDispatchs.isEmpty()) {
-					orderDispatch = orderDispatchs.get(0);
+		BigDecimal orderPay = orderPrices.getOrderPay();
+		BigDecimal orderMoney = orderPrices.getOrderMoney();
+		if(orderStatus>=Constants.ORDER_HOUR_STATUS_2 && orderStatus<Constants.ORDER_HOUR_STATUS_7){
+			if (payType == Constants.PAY_TYPE_1|| payType == Constants.PAY_TYPE_2 ||payType == Constants.PAY_TYPE_3 || payType == Constants.PAY_TYPE_6 ||payType == Constants.PAY_TYPE_7) {
+				commonCancleOrder(order,orderNo);
+			}else if(payType==Constants.PAY_TYPE_0){
+				commonCancleOrder(order,orderNo);
+				Long userId = order.getUserId();
+				Users user = usersMapper.selectByPrimaryKey(userId);
+				BigDecimal restMoney = user.getRestMoney();
+				BigDecimal mon = restMoney.add(orderPay);
+				user.setRestMoney(mon);
+				usersMapper.updateByPrimaryKeySelective(user);
+				
+				Long couponId = orderPrices.getCouponId();
+				if(couponId>0){
+					UserCoupons userCoupons = userCouponMapper.selectByPrimaryKey(couponId);
+					userCoupons.setIsUsed((short)0);
+					userCoupons.setUsedTime(TimeStampUtil.getNowSecond());
+					userCoupons.setOrderNo(null);
+					userCouponMapper.updateByPrimaryKeySelective(userCoupons);
 				}
-
-				if (orderDispatch != null) {
-					orderDispatch.setDispatchStatus(Constants.ORDER_DIS_DISABLE);
-					orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
-				}
-				OrderLog orderLog = orderLogService.initOrderLog(order);
-				orderLogService.insert(orderLog);
+				
 			}
-		} else {
-			return -2;
 		}
 
 		return 0;
-	}
+	}*/
+	
+	/*public void commonCancleOrder(Orders order,String orderNo){
+		//更新订单状态
+		order.setOrderStatus(Constants.ORDER_STATUS_0);
+		order.setUpdateTime(TimeStampUtil.getNowSecond());
+		ordersMapper.updateByPrimaryKeySelective(order);
 
-	@Override
-	public List<Orders> selectBySearchVo(OrderSearchVo searchVo) {
-		return ordersMapper.selectBySearchVo(searchVo);
-	}
-
-	@Override
-	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
-		PageHelper.startPage(pageNo, pageSize);
-		List<Orders> list = ordersMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
-		return result;
-	}
-
+		//取消派工
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderNo(orderNo);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		if (!orderDispatchs.isEmpty()) {
+			OrderDispatchs orderDispatch = null;
+			Iterator<OrderDispatchs> iterator = orderDispatchs.iterator();
+			while (iterator.hasNext()) {
+				orderDispatch=iterator.next();
+				orderDispatch.setDispatchStatus(Constants.ORDER_DIS_DISABLE);
+				orderDispatch.setUpdateTime(TimeStampUtil.getNowSecond());
+				orderDispatchsService.updateByPrimaryKeySelective(orderDispatch);
+				
+			}
+		}
+		
+		//添加订单日志
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLogService.insert(orderLog);
+	}*/
 }

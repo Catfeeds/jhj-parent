@@ -2,9 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
 
-    <!-- <classPathEntry location="D:/workspase/tools/path/mysql-connector-java-5.1.33.jar" />  --> 
-	<classPathEntry location="D:\lib\mysql\mysql-connector-java-5.1.18.jar" /> 
-    <!--  <classPathEntry location="D:/workspace/jar/mysql-connector-java-5.1.33.jar" /> -->
+	<classPathEntry location="/workspace/work/java/libs/mysql-connector-java-5.1.33.jar" />
 	<!-- 数据库链接URL、用户名、密码 -->
 	<context id="jdbc-test">
 
@@ -14,185 +12,164 @@
 		</commentGenerator>
 
 		<!-- 数据库链接URL、用户名、密码 -->
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/jhj" userId="root"
-			password="root1qaz" />
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/jhj3.0" userId="root" password="root1qaz" />
 
 		<!-- 解决数字转换问题 -->
 		<javaTypeResolver>
-			<!-- 只有一个属于forceBigDecimals，默认false。 如果字段精确超过0，生成BigDecimal 如果字段精确是0，总长度10-18生成Long;
-				如果字段精确是0，总长5-9生成Integer; 如果字段精确是0，总长小于5生成Short; 如果forceBigDecimals为true,统一生成BigDecimal -->
+			<!-- 只有一个属于forceBigDecimals，默认false。 如果字段精确超过0，生成BigDecimal 如果字段精确是0，总长度10-18生成Long; 如果字段精确是0，总长5-9生成Integer; 如果字段精确是0，总长小于5生成Short; 如果forceBigDecimals为true,统一生成BigDecimal -->
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
 		<!-- 生成模型的包名和位置 -->
-		<javaModelGenerator targetPackage="com.jhj.po.model.order"
-			targetProject="jhj-dao">
-            <property name="enableSubPackages" value="false" />
-            <property name="trimStrings" value="true" />
-        </javaModelGenerator>
+		<javaModelGenerator targetPackage="com.jhj.po.model.order" targetProject="jhj-dao">
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
 
 		<!-- 生成的映射文件包名和位置 -->
-		<sqlMapGenerator targetPackage="com.jhj.po.xml.order"
-			targetProject="jhj-dao">
+		<sqlMapGenerator targetPackage="com.jhj.po.xml.order" targetProject="jhj-dao">
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- 生成DAO的包名和位置 -->
-		<javaClientGenerator targetPackage="com.jhj.po.dao.order"
-			targetProject="jhj-dao" type="XMLMAPPER">
+		<javaClientGenerator targetPackage="com.jhj.po.dao.order" targetProject="jhj-dao" type="XMLMAPPER">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
-		
-		 <!--  订单表 -->
-		<table schema="jhj" tableName="orders"
-			enableInsert="true"
-			enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true"
-			selectByExampleQueryId="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			enableCountByExample="false">
-			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="city_id" property="cityId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="service_date" property="serviceDate" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="addr_id" property="addrId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 
-			<columnOverride  column="service_type" property="serviceType" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_type" property="orderType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="service_type" property="serviceType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="service_hour" property="serviceHour" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_from" property="orderFrom" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_status" property="orderStatus" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_rate" property="orderRate" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+
+		<!-- 订单表 -->
+		<table schema="jhj" tableName="orders" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" selectByExampleQueryId="false"
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="city_id" property="cityId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="service_date" property="serviceDate" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="addr_id" property="addrId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+
+			<columnOverride column="service_type" property="serviceType" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_type" property="orderType" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="service_type" property="serviceType" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="service_hour" property="serviceHour" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="order_from" property="orderFrom" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="order_status" property="orderStatus" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="order_rate" property="orderRate" javaType="java.lang.Short" jdbcType="NUMERIC" />
 
 		</table>
-			<!-- 订单价格表 -->
-		<table schema="jhj" tableName="order_prices"
-			enableInsert="true"
-			enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true"
-			selectByExampleQueryId="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			enableCountByExample="false">
-			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="coupon_id" property="couponId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		<!-- 订单价格表 -->
+		<table schema="jhj" tableName="order_prices" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" selectByExampleQueryId="false"
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="coupon_id" property="couponId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
 
-			<columnOverride  column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC" />
 
-		</table> 
-		<!-- 派工表  -->
-		<table schema="jhj" tableName="order_dispatchs"
-			enableInsert="true"
-			enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true"
-			selectByExampleQueryId="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			enableCountByExample="false">
-			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="service_date_pre" property="serviceDatePre" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="service_date" property="serviceDate" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="service_hours" property="serviceHours" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="staff_id" property="staffId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="dispatch_status" property="dispatchStatus" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 		</table>
-		
+
+		<!-- 订单价格差价表 -->
+		<table schema="jhj3.0" tableName="order_price_ext" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+
+			<columnOverride column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC" />
+
+		</table>
+
+		<!-- 派工表 -->
+		<table schema="jhj" tableName="order_dispatchs" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="service_date_pre" property="serviceDatePre" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="service_date" property="serviceDate" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="service_hours" property="serviceHours" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="staff_id" property="staffId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="dispatch_status" property="dispatchStatus" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+		</table>
+
 		<!-- 附加服务表 -->
-		<table schema="jhj" tableName="order_service_addons"
-			enableInsert="true"
-			enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true"
-			selectByExampleQueryId="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			enableCountByExample="false">
-			
-			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="user_Id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="service_addon_id" property="serviceAddonId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			
-			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			</table>
-<!-- 订单日志表 -->
-		<table schema="jhj" tableName="order_log"
-			enableInsert="true"
-			enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true"
-			selectByExampleQueryId="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			enableCountByExample="false">
-			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		<table schema="jhj" tableName="order_service_addons" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
 
-			<columnOverride  column="order_status" property="orderStatus" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_Id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="service_addon_id" property="serviceAddonId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+		</table>
+		<!-- 订单日志表 -->
+		<table schema="jhj" tableName="order_log" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" selectByExampleQueryId="false"
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+
+			<columnOverride column="order_status" property="orderStatus" javaType="java.lang.Short" jdbcType="NUMERIC" />
 
 		</table>
 		<!-- 充值卡订单表 -->
-		<table schema="jhj" tableName="order_cards"
-			enableInsert="true"
-			enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true"
-			selectByExampleQueryId="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			enableCountByExample="false">
-			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="card_type" property="cardType" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_status" property="orderStatus" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+		<table schema="jhj" tableName="order_cards" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" selectByExampleQueryId="false"
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="card_type" property="cardType" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_status" property="orderStatus" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC" />
 
 		</table>
- <!--  订单评价表 -->
-		<table schema="jhj" tableName="order_rates"
-			enableInsert="true"
-			enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true"
-			selectByExampleQueryId="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			enableCountByExample="false">
-			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
-			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		<!-- 订单评价表 -->
+		<table schema="jhj" tableName="order_rates" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" selectByExampleQueryId="false"
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="am_id" property="amId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
 
-			<columnOverride  column="rate_type" property="rateType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-			<columnOverride  column="rate_value" property="rateValue" javaType="java.lang.Short" jdbcType="NUMERIC"/>
-		
+			<columnOverride column="rate_type" property="rateType" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="rate_value" property="rateValue" javaType="java.lang.Short" jdbcType="NUMERIC" />
+
 		</table>
-		
+		<!-- 订单指定派工人员表 -->
+		<table schema="jhj3.0" tableName="order_appoint" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"
+		>
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="staff_id" property="staffId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+		</table>
 
 
-		
-	
+
+
+
 	</context>
 </generatorConfiguration>

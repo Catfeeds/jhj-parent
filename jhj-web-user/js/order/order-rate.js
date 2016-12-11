@@ -1,168 +1,209 @@
-myApp.onPageBeforeInit('order-rate-page', function(page) {
-	
-	var userId = localStorage.getItem("user_id");
-	var orderId = page.query.order_id;
-	// 附加服务 Id 的 字符串
-	var tagIds = "";
-	//点击图片变色效果。 有一定的局限性（需要是 .png 格式  、选中后的图片名需要是    xxx-2x.png 、 未选中的图片名需要是  xxx.png ）
-	//准时到达
-	$$("img[name=order_type_0_img]").on('click',function(e) {
+myApp.onPageBeforeInit('order-rate', function(page) {
 
-		var selectValue = $$(this).attr("value");
-		$$("img[name=order_type_0_img]").each(function(key, index) {
-			if ($$(this).attr("value") == selectValue) {
-				$$(this).attr("src", "img/icons/shi-x.png");
-			} else {
-				$$(this).attr("src", "img/icons/shi.png");
+	var userId = localStorage['user_id'];
+
+	var orderId = sessionStorage.getItem("order_id");
+
+	var staffNames = sessionStorage.getItem("staff_names");
+
+	var orderNo = sessionStorage.getItem("order_no");
+
+	var orderType = sessionStorage.getItem("order_type");
+
+	console.log("orderType = " + orderType);
+	var postdata = {};
+	postdata.order_no = orderNo;
+	if (orderType == 0) {
+		$$.ajax({
+			type : "GET",
+			url : siteAPIPath + "order/order_hour_detail.json",
+			dataType : "json",
+			data : postdata,
+			cache : true,
+			async : false, // 不能是异步
+			success : function(data) {
+				console.log(data);
+				var staffNameStr = "";
+				list = data.data.order_dispatchs;
+				console.log(list);
+				$$.each(list, function(i, item){
+					console.log(i);
+					staffNameStr+='<a href="order/order-rate-staff.html?staff_id='+item.staff_id+'">'+item.staff_name+'</a>&nbsp;';
+				});
+				console.log(staffNameStr);
+				$$("#staffNameStr").html(staffNameStr);
 			}
 		});
-		$$("#rate_type_0").val(selectValue);
-//		console.log($$("#rate_type_0").val())
-	});
-	//易容仪表整洁
-	$$("img[name=order_type_1_img]").on('click',function(e) {
-
-		var selectValue = $$(this).attr("value");
-		$$("img[name=order_type_1_img]").each(function(key, index) {
-			if ($$(this).attr("value") == selectValue) {
-				$$(this).attr("src", "img/icons/shi-x.png");
-			} else {
-				$$(this).attr("src", "img/icons/shi.png");
+	} else if (orderType == 1) {
+		$$.ajax({
+			type : "GET",
+			url : siteAPIPath + "order/get_exp_clean_order_detail.json",
+			dataType : "json",
+			data : postdata,
+			cache : true,
+			async : false, // 不能是异步
+			success : function(data) {
+				var staffNameStr = "";
+				list = data.data.order_dispatchs;
+				$$.each(list, function(i, item){
+					staffNameStr+='<a href="order/order-rate-staff.html?staff_id='+item.staff_id+'">'+item.staff_name+'</a>&nbsp;';
+				});
+				$$("#staffNameStr").html(staffNameStr);
 			}
-		});
-		$$("#rate_type_1").val(selectValue);
-//		console.log($$("#rate_type_1").val())
-	});
-	//细节到位
-	$$("img[name=order_type_2_img]").on('click',function(e) {
+		})
+	}
 
-		var selectValue = $$(this).attr("value");
-		$$("img[name=order_type_2_img]").each(function(key, index) {
-			if ($$(this).attr("value") == selectValue) {
-				$$(this).attr("src", "img/icons/shi-x.png");
-			} else {
-				$$(this).attr("src", "img/icons/shi.png");
-			}
-		});
-		$$("#rate_type_2").val(selectValue);
-//		console.log($$("#rate_type_2").val())
-	});
-	
-	//服务整体感观
-	$$("img[name=order_type_3_img]").on('click',function(e) {
 
-		var selectValue = $$(this).attr("value");
-		console.log("selecrValue 的值"+selectValue);
-		$$("img[name=order_type_3_img]").each(function(key, index) {
-			var thisValue = $$(this).attr("value");
-			if (thisValue == selectValue) {
-				if(selectValue == 0 )
-					$$(this).attr("src", "img/icons/henbang-x.png");
-				if(selectValue == 1 )
-					$$(this).attr("src", "img/icons/yiban-x.png");
-				if(selectValue == 2 )
-					$$(this).attr("src", "img/icons/jiaocha-x.png");				
-			} 
-			else {
-				if(thisValue == 0 )
-					$$(this).attr("src", "img/icons/henbang.png");
-				if(thisValue == 1 )
-					$$(this).attr("src", "img/icons/yiban.png");
-				if(thisValue == 2 )
-					$$(this).attr("src", "img/icons/jiaocha.png");
-			}
-		});
-		$$("#rate_type_3").val(selectValue);
-//		console.log($$("#rate_type_3").val())
-		
-	});
+	$$("#orderId").val(orderId);
+//	$$("#staffNameStr").html(staffNames);
 
-	
-	//整体服务
-	
-	$$("img[name=order_type_4_img]").on('click',function(e) {
+	$$("#rateAttitude").val(0);
+	$$("#rateSkill").val(0);
 
-		var selectValue = $$(this).attr("value");
-		console.log("selecrValue 的值"+selectValue);
-		$$("img[name=order_type_4_img]").each(function(key, index) {
-			var thisValue = $$(this).attr("value");
-			if (thisValue == selectValue) {
-				if(selectValue == 0 )
-					$$(this).attr("src", "img/icons/henbang-x.png");
-				if(selectValue == 1 )
-					$$(this).attr("src", "img/icons/yiban-x.png");
-				if(selectValue == 2 )
-					$$(this).attr("src", "img/icons/jiaocha-x.png");				
-			} 
-			else {
-				if(thisValue == 0 )
-					$$(this).attr("src", "img/icons/henbang.png");
-				if(thisValue == 1 )
-					$$(this).attr("src", "img/icons/yiban.png");
-				if(thisValue == 2 )
-					$$(this).attr("src", "img/icons/jiaocha.png");
-			}
-		});
-		$$("#rate_type_4").val(selectValue);
-//		console.log($$("#rate_type_4").val())
-		
-	});
-	
-	var  saveOrderSuccess = function(data, textStatus, jqXHR) {
-		myApp.hideIndicator();
-		var results = JSON.parse(data.response);
-		//var results = result.appResultData;
-		if (results.status == "999") {
-			myApp.alert(results.msg);
-			$$("#pingjia-submit").attr("disabled",true);
-			return;
+	//最多只能输入254个字
+	$$("#rateContent").keydown(function() {
+		var curLength = $$("#rateContent").val().length;
+		if (curLength >= 253) {
+			var content = $$("#rateContent").val().substr(0, 254);
+			$$("#rateContent").val(content);
 		}
-		if (results.status == "0") {
-			myApp.alert("订单评价完成");
-			mainView.router.loadPage("order/order-hour-now-list.html");
+	});
+
+	$$("#rateSubmit").on("click",function(){
+
+		var rateArrival = $$("#rateArrival").val();
+		var rateAttitude = $$("#rateAttitude").val();
+		var rateSkill = $$("#rateSkill").val();
+
+		if (rateArrival == "") {
+			myApp.alert("请评价到达时间.");
+			return false;
 		}
-	} 
-	//提交平价
-	$$("#pingjia-submit").on("click", function() {
+
+		if (rateAttitude == "" || rateAttitude == 0) {
+			myApp.alert("请评价服务态度.");
+			return false;
+		}
+
+		if (rateSkill == "" || rateSkill == 0) {
+			myApp.alert("请评价服务技能.");
+			return false;
+		}
+
+
+
+		var params = {};
+		params.user_id = userId;
+		params.order_id = orderId;
+		params.rate_arrival = $$("#rateArrival").val();
+		params.rate_attitude = $$("#rateAttitude").val();
+		params.rate_skill = $$("#rateSkill").val();
+
+		var rateContent = $$("#rateContent").val();
+		if (rateContent == undefined) rateContent = "";
+		params.rate_content = rateContent;
 		
-		var postdata = {};
-		var rate_type_0 = $$("#rate_type_0").val();
-		var rate_type_1 = $$("#rate_type_1").val();
-		var rate_type_2 = $$("#rate_type_2").val();
-		var rate_type_3 = $$("#rate_type_3").val();
-		var rate_type_4 = $$("#rate_type_4").val();
-		var rateJson = [{"rateType":0, "rateValue": rate_type_0},
-		                {"rateType":1, "rateValue": rate_type_1},
-		                {"rateType":2, "rateValue": rate_type_2},
-		                {"rateType":3, "rateValue": rate_type_3},
-		                {"rateType":4, "rateValue": rate_type_4}]
-		
-		postdata.user_id = userId;
-		postdata.order_id = orderId;
-		
-		postdata.rate_content = $$("#rateContents").val();
-		postdata.rate_datas = JSON.stringify(rateJson);
-		console.log(postdata);
-		//return;
-		
+//		return false;
+
 		$$.ajax({
 			type : "POST",
-			url : siteAPIPath+ "order/post_rate.json",
+			url : siteAPIPath + "order/post_rate.json",
 			dataType : "json",
-			cache : false,
-			data : postdata,
-			statusCode : {
-				200 : saveOrderSuccess,
-				400 : ajaxError,
-				500 : ajaxError
+			cache : true,
+			async : false,
+			data : params,
+			success : function(data) {
+
+				var s = data.status;
+				if (s == "999") {
+					myApp.alert(data.msg);
+					return false;
+				}
+
+				mainView.router.loadPage("order/order-rate-success.html");
 			}
-		});
-	})
-	
+		})
+	});
+
+//	$$("#rateImgTrigger").on("click",function(){
+//		$$("#rateImgFile").trigger("click");
+//	});
+
 
 });
 
+function doRateArrival(v) {
+	if (v == 0) {
+		$$("#rateArrival_0").removeClass("waiter1-2").addClass("waiter1-1");
+		$$("#rateArrival_1").removeClass("waiter1-1").addClass("waiter1-2");
+	}
+
+	if (v == 1) {
+		$$("#rateArrival_0").removeClass("waiter1-1").addClass("waiter1-2");
+		$$("#rateArrival_1").removeClass("waiter1-2").addClass("waiter1-1");
+	}
+
+	$$("#rateArrival").val(v);
+}
+
+function doRateAttitude(v) {
+
+	for (var i = 1; i <= 5; i++) {
+		if (v >= i) {
+			$$("#rateAttitude_" + i).attr("src", "img/yudingayi/xx.png");
+		} else {
+			$$("#rateAttitude_" + i).attr("src", "img/yudingayi/xx1.png");
+		}
+	}
+	$$("#rateAttitude").val(v);
+}
+
+function doRateSkill(v) {
+
+	for (var i = 1; i <= 5; i++) {
+		if (v >= i) {
+			$$("#rateSkill_" + i).attr("src", "img/yudingayi/xx.png");
+		} else {
+			$$("#rateSkill_" + i).attr("src", "img/yudingayi/xx1.png");
+		}
+	}
+	$$("#rateSkill").val(v);
+}
+
+//function rateUpload() {
+//	$$("#rateImgFile").focus().trigger('click');
+//}
 
 
+//预览图片
+function setImagePreviews(obj) {
+	var files = obj.files;
+	if(files.length>0){
+	    var hml='';
+	    var index=0;
+	    for(var i= 0,len=files.length;i<len;i++){
+	    	var reader = new FileReader();
+			var f = files[i];
+			if(!/image\/\w+/.test(f.type)){
+				alert("文件必须为图片！"); 
+				return false;
+			}
+			reader.readAsDataURL(f);
+			reader.onload=function(e){
+				hml+="<div class='waiter4-1'><img src='"+e.target.result+"' alt=''/></div>"
+				+"<div class='waiter4-2' id='delImg' onclick='delImg(this)'>×</div>";
+				index++;
+				if(index<=4){
+					$$("#img").html(hml);
+				}
+			}
+	    }
+    }
+}
 
-
+//删除图片
+function delImg(obj){
+	var ele=$$(obj).prev();
+	ele.remove();
+	$$(obj).remove();
+}

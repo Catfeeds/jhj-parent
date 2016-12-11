@@ -60,4 +60,18 @@ public class TestUserCouponsController extends JUnitActionBase {
 
     }
 
+	
+	@Test
+    public void testGetValidateCoupons() throws Exception {
+
+		String url = "/app/user/get_validate_coupons.json";
+		String params = "?user_id=3620&service_type=0&service_date=1476467510000&order_money=149";
+		MockHttpServletRequestBuilder getRequest = get(url + params);
+
+	    ResultActions resultActions = this.mockMvc.perform(getRequest);
+	    resultActions.andExpect(content().contentType(this.mediaType));
+	    resultActions.andExpect(status().isOk());
+
+	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
+    }
 }

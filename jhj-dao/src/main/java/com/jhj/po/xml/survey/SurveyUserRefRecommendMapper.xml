@@ -51,7 +51,7 @@
     result_no in
     <foreach item="item" index="index" collection="list" 
               open="(" separator="," close=")">
-             #{item}
+             ${item}
 	</foreach>	
   </select>
   

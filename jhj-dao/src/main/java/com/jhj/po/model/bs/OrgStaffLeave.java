@@ -22,6 +22,15 @@ public class OrgStaffLeave {
     private Long adminId;
 
     private Long addTime;
+    
+    //请假结束日期
+    private Date leaveDateEnd;
+    
+    //请假天数
+    private int totalDays;
+    
+    //请假状态
+    private String leaveStatus;
 
     public Long getId() {
         return id;
@@ -102,4 +111,30 @@ public class OrgStaffLeave {
     public void setAddTime(Long addTime) {
         this.addTime = addTime;
     }
+
+	public Date getLeaveDateEnd() {
+		return leaveDateEnd;
+	}
+
+	public void setLeaveDateEnd(Date leaveDateEnd) {
+		this.leaveDateEnd = leaveDateEnd;
+	}
+
+	public int getTotalDays() {
+		return totalDays;
+	}
+
+	public void setTotalDays(int totalDays) {
+		this.totalDays = totalDays;
+	}
+
+	public String getLeaveStatus() {
+		return leaveStatus;
+	}
+
+	public void setLeaveStatus(String leaveStatus) {
+		this.leaveStatus = leaveStatus;
+	}
+
+	
 }

@@ -26,10 +26,12 @@ import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserGetAmService;
 import com.jhj.service.users.UserRefAmService;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserGetAmVo;
@@ -76,6 +78,9 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 	private PartnerServiceTypeService partService;
 	
 	@Autowired
+	private OrderStatService orderStatService;
+	
+	@Autowired
 	private OrderDispatchsMapper disMapper;
 	
 	/*
@@ -100,7 +105,7 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 		map.put("userId", userId);
 		map.put("amId", staffId);
 		
-		int orderNum = orderService.totalIntimacyOrders(map);
+		int orderNum = orderStatService.totalIntimacyOrders(map);
 		
 		userGetAmVo.setOrderNum(orderNum);
 		
@@ -226,7 +231,9 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 			tagIdList.add(orgStaffTags.getTagId());
 		}
 		
-		List<Tags> tagsList = tagService.selectByIds(tagIdList);
+		TagSearchVo searchVo1 = new TagSearchVo();
+		searchVo1.setTagIds(tagIdList);
+		List<Tags> tagsList = tagService.selectBySearchVo(searchVo1);
 		
 		// 标签
 		userGetAmVo.setTagList(tagsList);
@@ -312,7 +319,10 @@ public class UserGetAmServiceImpl implements UserGetAmService {
 				tagIdList.add(orgStaTags.getTagId());
 			}
 			
-			List<Tags> tagList = tagService.selectByIds(tagIdList);
+			TagSearchVo searchVo1 = new TagSearchVo();
+			searchVo1.setTagIds(tagIdList);
+			List<Tags> tagList = tagService.selectBySearchVo(searchVo1);
+			
 			userGetAmVo.setTagList(tagList);
 		}else{
 			userGetAmVo.setTagList(new ArrayList<Tags>());

@@ -33,15 +33,14 @@ import com.meijia.utils.BeanUtilsExp;
 public class OrgStaffBlackController extends BaseController {
 	@Autowired
 	private OrgStaffBlackService orgStaffBlackService;
-	
+
 	@Autowired
 	private OrgStaffsService orgStaffsService;
-	
+
 	@Autowired
 	private OrgStaffFinanceService orgStaffFinanceService;
-	
-	
-	//黑名单列表
+
+	// 黑名单列表
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@AuthPassport
 	@RequestMapping(value = "/staffBlack-list", method = RequestMethod.GET)
@@ -53,14 +52,15 @@ public class OrgStaffBlackController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		//分页
-		PageHelper.startPage(pageNo, pageSize);
+//		PageHelper.startPage(pageNo, pageSize);
 		
 		if (searchVo == null)
 			searchVo = new OrgStaffFinanceSearchVo();
 		
 		searchVo.setIsBlack((short) 1);
 		
-		List<OrgStaffFinance> orgStaffBlackList = orgStaffFinanceService.selectByListPage(searchVo,pageNo,pageSize);
+		PageInfo result = orgStaffFinanceService.selectByListPage(searchVo,pageNo,pageSize);
+		List<OrgStaffFinance> orgStaffBlackList = result.getList();
 		
         for (int i = 0; i < orgStaffBlackList.size(); i++) {
         	OrgStaffFinance orgStaffBlack = orgStaffBlackList.get(i);
@@ -73,72 +73,72 @@ public class OrgStaffBlackController extends BaseController {
         	orgStaffBlackList.set(i, vo);
 		}
         
-        PageInfo result = new PageInfo(orgStaffBlackList);	
+        result = new PageInfo(orgStaffBlackList);	
 		
 		model.addAttribute("contentModel", result);
 		return "staff/staffBlackList";
 	}
-	
-	//黑名单日志列表
+
+	// 黑名单日志列表
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@AuthPassport
 	@RequestMapping(value = "/black-log", method = RequestMethod.GET)
-	public String blackLog(Model model, HttpServletRequest request,
-			OrgStaffDetailPaySearchVo searchVo) {
-		
-		int pageNo = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
-		int pageSize = ServletRequestUtils.getIntParameter(request,
-				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		//分页
+	public String blackLog(Model model, HttpServletRequest request, OrgStaffDetailPaySearchVo searchVo) {
+
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		// 分页
 		PageHelper.startPage(pageNo, pageSize);
-		
-		
-        List<OrgStaffBlack> orgStaffBlackList = orgStaffBlackService.selectByListPage(searchVo,pageNo,pageSize);
-        OrgStaffBlackVo vo = new OrgStaffBlackVo();
-        for (int i = 0; i < orgStaffBlackList.size(); i++) {
-        	OrgStaffBlack orgStaffBlack = orgStaffBlackList.get(i);
-        	BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffBlack, vo);
-        	OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffBlack.getStaffId());
-        	vo.setName(orgStaffs.getName());
-        	orgStaffBlackList.set(i, vo);
+
+		List<OrgStaffBlack> orgStaffBlackList = orgStaffBlackService.selectByListPage(searchVo, pageNo, pageSize);
+		OrgStaffBlackVo vo = new OrgStaffBlackVo();
+		for (int i = 0; i < orgStaffBlackList.size(); i++) {
+			OrgStaffBlack orgStaffBlack = orgStaffBlackList.get(i);
+			BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffBlack, vo);
+			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffBlack.getStaffId());
+			vo.setName(orgStaffs.getName());
+			orgStaffBlackList.set(i, vo);
 		}
-        
-        PageInfo result = new PageInfo(orgStaffBlackList);	
-		
+
+		PageInfo result = new PageInfo(orgStaffBlackList);
+
 		model.addAttribute("contentModel", result);
-		//model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);
+		// model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);
 		return "staff/staffBlackLog";
 	}
-	
+
 	/*
 	 * 服务人员消费明细表单
-	 * 
 	 */
-	//@AuthPassport
-	/*@RequestMapping(value = "/staffBlackForm",method = RequestMethod.GET)
-	public String  staffBlackForm(Long id,Model model){
-		
-		OrgStaffBlack orgStaffBlack = orgStaffBlackService.initOrgStaffBlack();
-	
-		model.addAttribute("contentModel", orgStaffBlack);
-		
-		return "staff/staffBlackForm";
-	}*/
+	// @AuthPassport
+	/*
+	 * @RequestMapping(value = "/staffBlackForm",method = RequestMethod.GET)
+	 * public String staffBlackForm(Long id,Model model){
+	 * 
+	 * OrgStaffBlack orgStaffBlack = orgStaffBlackService.initOrgStaffBlack();
+	 * 
+	 * model.addAttribute("contentModel", orgStaffBlack);
+	 * 
+	 * return "staff/staffBlackForm";
+	 * }
+	 */
 	/*
 	 * 
 	 * 修改服务人员消费明细
 	 */
-	
-	//@AuthPassport
-/*	@RequestMapping(value = "/staffBlackForm",method = RequestMethod.POST)
-	public String  staffBlackForm(@ModelAttribute("orgStaffBlack") OrgStaffBlack orgStaffBlack){
-		//后台输入手机号后，进入各接口查询服务人员是否存在，不存在提示，存在继续修改
-		OrgStaffBlack
-		orgStaffBlack.setAddTime(TimeStampUtil.getNowSecond());
-		orgStaffBlackService.updateByPrimaryKeySelective(orgStaffBlack);
-		
-		return "redirect:staffBlack-list";
-	}*/
-	
+
+	// @AuthPassport
+	/*
+	 * @RequestMapping(value = "/staffBlackForm",method = RequestMethod.POST)
+	 * public String staffBlackForm(@ModelAttribute("orgStaffBlack")
+	 * OrgStaffBlack orgStaffBlack){
+	 * //后台输入手机号后，进入各接口查询服务人员是否存在，不存在提示，存在继续修改
+	 * OrgStaffBlack
+	 * orgStaffBlack.setAddTime(TimeStampUtil.getNowSecond());
+	 * orgStaffBlackService.updateByPrimaryKeySelective(orgStaffBlack);
+	 * 
+	 * return "redirect:staffBlack-list";
+	 * }
+	 */
+
 }

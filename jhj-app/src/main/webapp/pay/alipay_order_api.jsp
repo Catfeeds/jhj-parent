@@ -1,21 +1,3 @@
-<%
-/* *
- *功能：手机网站支付接口接入页
- *版本：3.4
- *修改日期：2016-03-08
- *说明：
- *以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
- *该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
-
- *************************注意*****************
- *如果您在接口集成过程中遇到问题，可以按照下面的途径来解决
- *1、开发文档中心（https://doc.open.alipay.com/doc2/detail.htm?spm=a219a.7629140.0.0.2Z6TSk&treeId=60&articleId=103693&docType=1）
- *2、商户帮助中心（https://cshall.alipay.com/enterprise/help_detail.htm?help_id=473888）
- *3、支持中心（https://support.open.alipay.com/alipay/support/index.htm）
- *如果不想使用扩展功能请把扩展功能参数赋空值。
- **********************************************
- */
-%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.alipay.config.*"%>
@@ -37,14 +19,33 @@
 		
         //付款金额，必填
         String total_fee = new String(request.getParameter("orderPay").getBytes("ISO-8859-1"),"UTF-8");
+		//total_fee = "0.01";
+        System.out.println("total_fee = " + total_fee);
+        //订单类型
+        String orderType = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
 		
+        //服务品类
+        String serviceTypeId = new String(request.getParameter("serviceTypeId").getBytes("ISO-8859-1"),"UTF-8");
+		
+     	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+        String payOrderType = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
+		
+        String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
+        
         //收银台页面上，商品展示的超链接，必填
-        String show_url = "http://www.jia-he-jia.com/u/#!/order/order-view-0.html?order_no="+out_trade_no;
+        String show_url = host + "/u/#!/order/order-pay.html";
 		
-        //商品描述，可空， 传递order_type
-        String body = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
-		
-		
+        //商品描述，可空， 传递payOrderType
+        
+        String body = payOrderType;
+        
+        String notifyUrl = host + "/jhj-app/pay/notify_alipay_order.jsp";
+        
+        if (payOrderType.equals("3")) {
+        	notifyUrl = host + "/jhj-app/pay/notify_alipay_order_ext.jsp";
+        }
+
+        String returnUrl = host + "/u/#!/order/order-pay-success.html?service_type_id="+serviceTypeId;
 		
 		//////////////////////////////////////////////////////////////////////////////////
 		
@@ -55,8 +56,8 @@
         sParaTemp.put("seller_id", AlipayConfig.seller_id);
         sParaTemp.put("_input_charset", AlipayConfig.input_charset);
 		sParaTemp.put("payment_type", AlipayConfig.payment_type);
-		sParaTemp.put("notify_url", AlipayConfig.notify_url);
-		sParaTemp.put("return_url", AlipayConfig.return_url);
+		sParaTemp.put("notify_url", notifyUrl);
+		sParaTemp.put("return_url", returnUrl);
 		sParaTemp.put("out_trade_no", out_trade_no);
 		sParaTemp.put("subject", subject);
 		sParaTemp.put("total_fee", total_fee);

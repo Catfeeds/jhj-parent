@@ -1,16 +1,27 @@
-<div data-page="mine-rest-money-detail-page" class="page" style="overflow:auto;background:#FDEEEE;">
-	<div class="page-content" id="nowScroll" style="min-height:792px;height:auto!important;padding-bottom:60px!important;">
-			
-				<div class="list-block virtual-list" >
-					
-				
-				
-				
-				</div>
-				<div id="more">
-					<a href="#" id="pay-detail-list-more" class="button active hjyh-submit">点击加载更多</a>
-				</div> 
+<div data-page="mine-rest-money-detail-page" class="page" style="overflow: auto; background: #EFF2F9;">
+	<div class="page-content" id="nowScroll">
+		<div id="rest-detail-list"></div>
+		<div id="more">
+			<a href="#" id="pay-detail-list-more" class="hjyh-submit"><div class="all-button12">点击加载更多</div></a>
+		</div> 
+		<input type="hidden" id="page" name="page" value="1" />
+		<div id="rest-detail-list-part" style="display: none">
+			<ul class="jiaoyimingxi">
+				{detailImg}
+				<li>
+					<p>{orderTypeName}</p>
+					<p>
+						支付金额：
+						<span>{orderPay}元</span>
+					</p>
+				</li>
+				<li>
+					<p style="width: 100%;">
+						时间：
+						<span>{addTimeStr}</span>
+					</p>
+				</li>
+			</ul>
 		</div>
-	</div>	
+	</div>
 </div>
-	

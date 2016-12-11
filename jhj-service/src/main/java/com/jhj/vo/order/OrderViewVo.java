@@ -13,6 +13,9 @@ public class OrderViewVo extends Orders {
 	//服务类型名称
 	private String serviceTypeName;
 	
+	//是否一单多人
+	private Short isMulti;
+	
 	//订单类型名称
 	private String orderTypeName;
 	
@@ -123,6 +126,14 @@ public class OrderViewVo extends Orders {
 
 	public void setOrderTypeName(String orderTypeName) {
 		this.orderTypeName = orderTypeName;
+	}
+
+	public Short getIsMulti() {
+		return isMulti;
+	}
+
+	public void setIsMulti(Short isMulti) {
+		this.isMulti = isMulti;
 	}
 	
 }

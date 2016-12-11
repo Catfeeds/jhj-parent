@@ -56,6 +56,8 @@ public interface UsersMapper {
 	List<ChartMapVo> statUserIdsByMonth(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> statUserIdsByQuarter(ChartSearchVo chartSearchVo);
+	
+	List getUserIds(ChartSearchVo chartSearchVo);
 
 	// 统计
 	int statTotalUser(ChartSearchVo chartSearchVo);

@@ -115,7 +115,16 @@ public class ConstantMsg {
 	//2016年5月25日17:31:12  用户添加 地址。超出范围提示
 	public static String ADDRESS_OUT_OF_BJ = "新增地址需要在北京市范围内";
 	
+	//不能派工原因说明
+	public static String NOT_DISPATCH_OVER_MAX_DISTANCE = "距离超出";
 	
+	public static String NOT_DISPATCH_NOT_SKILL = "技能不符";
+	
+	public static String NOT_DISPATCH_SERVICE_DATE_CONFLIT = "服务时间已有派工";
+	
+	public static String NOT_DISPATCH_BLACK_LIST = "在黑名单中";
+	
+	public static String NOT_DISPATCH_LEAVE = "服务时间在假期中";
 }
 
 

@@ -6,6 +6,8 @@ public class DictServiceAddons {
     private Long serviceAddonId;
 
     private Long serviceType;
+    
+    private double serviceHour;
 
     private String name;
 
@@ -27,15 +29,15 @@ public class DictServiceAddons {
     
     private String itemUnit;
     
-    private Short defaultNum;
+    private int defaultNum;
     
     
     
-	public Short getDefaultNum() {
+	public int getDefaultNum() {
 		return defaultNum;
 	}
 
-	public void setDefaultNum(Short defaultNum) {
+	public void setDefaultNum(int defaultNum) {
 		this.defaultNum = defaultNum;
 	}
 
@@ -134,4 +136,12 @@ public class DictServiceAddons {
     public void setEnable(Short enable) {
         this.enable = enable;
     }
+
+	public double getServiceHour() {
+		return serviceHour;
+	}
+
+	public void setServiceHour(double serviceHour) {
+		this.serviceHour = serviceHour;
+	}
 }

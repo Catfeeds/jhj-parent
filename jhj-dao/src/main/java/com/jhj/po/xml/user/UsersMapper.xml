@@ -17,10 +17,11 @@
 		<result column="add_from" property="addFrom" jdbcType="NUMERIC" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		<result column="is_vip" property="isVip" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, province_name, mobile, 3rd_type, openid, name, sex, head_img, rest_money, score,
-		user_type, remarks,add_from, add_time, update_time
+		user_type, remarks,add_from, add_time, update_time,is_vip
 	</sql>
 	
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -39,6 +40,7 @@
 	
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
 		<include refid="bySearchVo" />
+		order by add_time desc
 	</select>
 	
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
@@ -54,17 +56,17 @@
 			and id = #{userId,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="userIds != null">
+		<if test="userIds != null and userIds.size()>0">
 			and id in
 			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
 		<if test="notUserIds != null">
 			and id not in
 			<foreach item="item" index="index" collection="notUserIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
@@ -83,10 +85,9 @@
 		<if test="addFroms != null">
 			and add_from in
 			<foreach item="item" index="index" collection="addFroms" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
-		
 		
 		<if test="startTime !=null">
 			<![CDATA[ and add_time >= #{startTime}]]>
@@ -94,11 +95,14 @@
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
+		
+		<if test="isVip!=null">
+			and is_vip = #{isVip,jdbcType=NUMERIC}
+		</if>
 	</sql>
 
 	<!-- 展示 只在 当前门店 下过单的 客户 -->
 	<select id="selectByListPages" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
-
 		SELECT
 		<include refid="Base_Column_List" />
 		FROM
@@ -111,7 +115,7 @@
 			<if test="searchOrgList != null">
 				orders.`org_id` in
 				<foreach item="item" index="index" collection="searchOrgList" open="(" separator="," close=")">
-					#{item}
+					${item}
 				</foreach>
 			</if>
 		</where>
@@ -135,7 +139,6 @@
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		order by add_time desc
-
 	</select>
 
 	<select id="selectByUserIds" resultMap="BaseResultMap" parameterType="java.util.List">
@@ -144,10 +147,11 @@
 		from users
 		where id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 		order by add_time asc
 	</select>
+	
 	<select id="selectByUserIdPage" resultMap="BaseResultMap" parameterType="java.util.List">
 		select
 		<include refid="Base_Column_List" />
@@ -167,12 +171,12 @@
 		users where 1 = 1
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
-		<![CDATA[ and add_time <= #{endTime}]]>
+			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		<if test="status != null">
 			and order_status in
 			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		GROUP BY series ORDER BY series ASC
@@ -183,12 +187,12 @@
 		users where 1 = 1
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
-<![CDATA[ and add_time <= #{endTime}]]>
+			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		<if test="status != null">
 			and order_status in
 			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		GROUP BY series ORDER BY series ASC
@@ -201,12 +205,12 @@
 		users where 1 = 1
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
-<![CDATA[ and add_time <= #{endTime}]]>
+			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 		<if test="status != null">
 			and order_status in
 			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		GROUP BY series ORDER BY series ASC
@@ -217,7 +221,7 @@
 		from users
 		where id in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+			${item}
 		</foreach>
 		group by id
 		order by id desc
@@ -233,19 +237,15 @@
 		<result column="series" property="series" />
 		<result column="total" property="total" />
 	</resultMap>
+	
 	<!--市场用户图表-按天统计 -->
 	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name, series, COUNT(*) AS total FROM
 		(SELECT add_from AS name,
-		FROM_UNIXTIME(add_time, "%c-%e") AS series
+		FROM_UNIXTIME(add_time, #{formatParam}) AS series
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/>
 		) as T
 		GROUP BY name, series ORDER BY series ASC
 	</select>
@@ -255,12 +255,7 @@
 		(SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/>
 		) as T
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -269,25 +264,15 @@
 		<include refid="Base_Column_List" />
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/>
 	</select>
 	<!-- 统计新增用户id按月统计 -->
 	<select id="statUserIdsByMonth" resultMap="ChartMap2" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT series, count(*) AS total FROM
-		(SELECT FROM_UNIXTIME(add_time, "%c") AS series
+		(SELECT FROM_UNIXTIME(add_time, "%Y-%m") AS series
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/>
 		) as T
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -297,12 +282,7 @@
 		(SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) AS series
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/>
 		) as T
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -310,15 +290,10 @@
 	<select id="statByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name, series, COUNT(*) AS total FROM
 		(SELECT add_from AS name,
-		FROM_UNIXTIME(add_time, "%c") AS series
+		FROM_UNIXTIME(add_time, "%y-%m") AS series
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/>
 		) as T
 		GROUP BY name, series ORDER BY series ASC
 	</select>
@@ -329,12 +304,7 @@
 		CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) AS series
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/>
 		) as T
 		GROUP BY name, series ORDER BY series ASC
 	</select>
@@ -356,7 +326,7 @@
 		3rd_type, openid, name,
 		sex, head_img, rest_money,
 		score, user_type,remarks, add_from,
-		add_time, update_time)
+		add_time, update_time,is_vip)
 		values
 		(#{id,jdbcType=NUMERIC}, #{provinceName,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR},
 		#{thirdType,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR},
@@ -364,7 +334,7 @@
 		#{sex,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{restMoney,jdbcType=NUMERIC},
 		#{score,jdbcType=NUMERIC},
 		#{userType,jdbcType=NUMERIC}, #{remarks,jdbcType=VARCHAR},#{addFrom,jdbcType=NUMERIC},
-		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},#{isVip,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.user.Users">
 		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -418,6 +388,9 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<if test="isVip!=null">
+				is_vip
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -465,6 +438,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="isVip != null">
+				#{isVip,jdbcType=NUMERIC},
 			</if>
 		</trim>
 	</insert>
@@ -514,6 +490,9 @@
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=NUMERIC},
 			</if>
+			<if test="isVip!=null">
+				is_vip = #{isVip,jdbcType=NUMERIC}
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -534,7 +513,8 @@
 		#{remarks,jdbcType=VARCHAR}
 		add_from = #{addFrom,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
-		update_time = #{updateTime,jdbcType=NUMERIC}
+		update_time = #{updateTime,jdbcType=NUMERIC},
+		is_vip = #{isVip,jdbcType=NUMERIC}
 		where id
 		= #{id,jdbcType=NUMERIC}
 	</update>
@@ -545,12 +525,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE 1=1
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
+		<include refid="charSearchVo"/> 
 	</select>
 	<!--某段时间之前用户的个数 -->
 	<select id="statTotalUserByStatTime" resultType="java.lang.Integer" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -568,13 +543,10 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money > 0
-
-
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -586,7 +558,6 @@
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -598,7 +569,6 @@
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-
 		GROUP BY series ORDER BY series ASC
 	</select>
 
@@ -609,13 +579,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt; 0 and rest_money &lt; 200
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessTwoByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -623,13 +587,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt; 0 and rest_money &lt; 200
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessTwoByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -637,13 +595,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt; 0 and rest_money &lt; 200
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<!-- 用户余额不足1000的人数 -->
@@ -653,13 +605,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt;0 and rest_money &lt; 1000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -667,13 +613,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt;0 and rest_money &lt; 1000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -681,13 +621,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt;0 and rest_money &lt; 1000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
@@ -698,13 +632,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money > 3000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyThreeThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -712,13 +640,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money > 3000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyThreeThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -726,13 +648,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money > 3000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
@@ -743,13 +659,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyBetweenByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -757,13 +667,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyBetweenByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
@@ -771,13 +675,7 @@
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-
+		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
@@ -792,13 +690,17 @@
 		<include refid="Base_Column_List" />
 		from users
 		<where>
-			<if test="startTime!=null">
-				<![CDATA[ and add_time >= #{startTime}]]>
-			</if>
-			<if test="endTime">
-				<![CDATA[ and add_time <=#{endTime}]]>
-			</if>
+			<include refid="charSearchVo"/>
 		</where>
 	</select>
+	
+	<sql id="charSearchVo">
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+	</sql>
 
 </mapper>

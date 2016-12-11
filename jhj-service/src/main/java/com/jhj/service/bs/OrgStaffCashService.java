@@ -3,8 +3,10 @@ package com.jhj.service.bs;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffCash;
 import com.jhj.vo.staff.OrgStaffCashSearchVo;
+import com.jhj.vo.staff.OrgStaffCashVo;
 
 
 /**
@@ -31,11 +33,14 @@ public interface OrgStaffCashService {
 
 	List<OrgStaffCash> selectByStaffId(Long userId);
 
-	List<OrgStaffCash> selectVoByListPage(OrgStaffCashSearchVo searchVo,
-			int pageNo, int pageSize);
+	PageInfo selectByListPage(OrgStaffCashSearchVo searchVo, int pageNo, int pageSize);
 
-	//总提现金额
-	BigDecimal getTotalCashMoney(Long staffId);
+	OrgStaffCashVo transVo(OrgStaffCash orgStaffCash);
 
+	BigDecimal getTotalCashMoney(OrgStaffCashSearchVo searchVo);
+
+	List<OrgStaffCash> selectBySearchVo(OrgStaffCashSearchVo searchVo);
+
+	
 
 }

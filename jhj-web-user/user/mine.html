@@ -1,132 +1,82 @@
-<!-- We don't need full layout here, because this page will be parsed with Ajax-->
-<!-- Top Navbar-->
-<div class="pages">
-	<!-- Page, data-page contains page name-->
-	<div data-page="mine" class="page">
-		<div class="page-content" style="background:#FDEEEE;height:100%!important;">
-			<form id="my-form" class="list-block chongzhi-qingchu"style="color:#999;padding-bottom:10px;">
-				<div class="list-block">
-					<div class="list-group">
-						<ul style="background:#fffce8;">
-							<li>
-								<a href="#" id="mine-info" class="item-link smart-select"  >
-									<div class="item-content">
-										<div class="item-inner">
-											<div class="item-title">
-												<img src="img/icons/my-main.png" alt="">
-											</div>
-											<div class="item-input"style="text-align:left;">
-												<span id="mobile" >{{mobile}}</span>
-												<select align="center" name="city_id">
-													<option value="0"></option>
-												</select>
-											</div>
-										</div>
-									</div>
+
+<div class="views">
+	<div class="view view-main">
+		<div class="pages navbar-through toolbar-through">
+			<div data-page="mine"  class="page">
+				<div id="indexPageContentDiv" class="page-content">
+					<div class="beijing-index">
+						<div class="rilikongjian order-my">
+							<img src="img/order-my/my-1.png" alt="" class="all-img3">
+							<p>{{mobile}}</p>
+						</div>
+						<div class="order-my1">
+							<a href="user/mine-rest-money-detail.html">
+							<ul>
+								<li><img src="img/order-my/my-2.png" alt=""></li>
+								<li>账户余额</li>
+								<li>{{rest_money_span}}</li>
+							</ul>
+							</a>
+							<ul id="mine-coupons">
+								<li><img src="img/order-my/my-12.png" alt=""></li>
+								<li>优惠券</li>
+								<li>{{total_coupon_span}}</li>
+							</ul>
+							
+							<ul>
+								{{#js_compare "this.is_vip==1"}}
+									<li><img src="img/order-my/my-14.png" alt=""></li>
+									<li>会员级别</li>
+									<li>金牌会员</li>
+								{{/js_compare}}
+								{{#js_compare "this.is_vip==0"}}
+									<li><img src="img/order-my/my-13.png" alt=""></li>
+									<li>会员级别</li>
+									<li>普通用户</li>
+								{{/js_compare}}
+								
+							</ul>
+						</div>
+						<div class="order-my2">
+							<ul id="mine-about-us">
+								<li><img src="img/order-my/my-5.png" alt=""></li>
+								<li>关于我们</li>
+								<li>〉</li>
+							</ul>
+							<a href="order/order-user-rate.html">
+								<ul id="mine-evaluate">
+									<li><img src="img/order-my/my-5.png" alt=""></li>
+									<li>我的评论</li>
+									<li>〉</li>
+								</ul>
+							</a>
+							<ul id="mine-issue">
+								<li><img src="img/order-my/my-6.png" alt=""></li>
+								<li>常见问题</li>
+								<li>〉</li>
+							</ul>
+							<ul id="mine-addr-manager">
+								<li><img src="img/order-my/my-7.png" alt=""></li>
+								<li>地址管理</li>
+								<li>〉</li>
+							</ul>
+							<ul id="mine-agreement">
+								<li><img src="img/order-my/my-8.png" alt=""></li>
+								<li>用户协议</li>
+								<li>〉</li>
+							</ul>
+							<ul style="border:0;">
+								<a href="tel:010-56429112" class="external">
+									<li><img src="img/order-my/my-9.png" alt=""></li>
+									<li>联系客服</li>
+									<li>〉</li>
 								</a>
-							</li>
-							<li class="my-jiben" style="background:#fffce8;">
-								<div>会员级别</div>
-								<div style="color:#EF7C00;">普通会员</div>
-							</li>
-							<li class="my-jiben" id="restMoneyDiv" style="background:#fffce8;">
-								<div>余额</div>
-								<div style="color:#EF7C00;" id="mine-rest-money">{{rest_money}}</div>
-							</li>
-						</ul>
+							</ul>
+							<div class="all-button5" id="user-logout">退出当前账号</div>
+						</div>
 					</div>
 				</div>
-			</form>
-			
-			<form  class="list-block chongzhi-qingchu"style="color:#999;">
-				<div  class="list-block">
-					<div class="list-group" style="margin-top:50px">
-						<ul style="background:#fffce8;">
-							<li>
-								<a href="#" id="mine-order-lists" class="item-link" >
-									<div class="item-content">
-										<div class="item-inner">
-											<div class="item-title label">我的订单</div>
-											<div class="item-input">
-											</div>
-										</div>
-									</div>
-								</a>
-							</li>	
-						
-							<li>
-								<a href="#" id="mine-coupon-lists" class="item-link smart-select " 	data-back-on-select="true">
-									<div class="item-content">
-										<div class="item-inner">
-											<div class="item-title label">优惠券</div>
-											<div class="item-input"style="text-align:right;">
-												<span style="color:#EF7C00;" id="total_coupon">{{total_coupon_span}}</span>
-												<select align="center" name="city_id">
-													<option value="0"></option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="#" id="mine-charge-list" class="item-link smart-select" 	data-back-on-select="true">
-									<div class="item-content">
-										<div class="item-inner">
-											<div class="item-title label">充值</div>
-											<div class="item-input">
-												<select align="center" name="city_id">
-													<option value="0"></option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li>
-							<a href="#" id="mine-addr-list" class="item-link"  >
-									<div class="item-content">
-										<div class="item-inner">
-											<div class="item-title label">地址管理</div>
-											<div class="item-input">
-											</div>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="#" id="mine-feedback-info" class="item-link smart-select"  >
- 									<div class="item-content">
-										<div class="item-inner">
-											<div class="item-title label">意见反馈</div>
-											<div class="item-input">
-												<select align="center" name="city_id">
-													<option value="0"></option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="#"  id="mine-more" class="item-link smart-select" >
-									<div class="item-content">
-										<div class="item-inner">
-											<div class="item-title label">更多</div>
-											<div class="item-input">
-												<select align="center" name="city_id">
-													<option value="0"></option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</a>
-							</li>	
-						</ul>
-					</div>
-				</div>
-			</form>
-			<a href="#" class="button active user-logout my-submit">退出当前账号</a>
+			</div>
 		</div>
 	</div>
-</div>						
+</div>

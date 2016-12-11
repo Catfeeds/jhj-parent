@@ -1,5 +1,9 @@
 package com.jhj.vo.staff;
 
+import java.util.List;
+
+import com.jhj.po.model.bs.OrgStaffCash;
+
 /**
  *
  * @author :hulj
@@ -9,9 +13,41 @@ package com.jhj.vo.staff;
  */
 public class OrgStaffCashSearchVo {
 	
+    private Long staffId;
 
-	private Short orderStatus;  //订单状态
+    private String mobile;
+    
+    private Short orderStatus;
+    
+    private List<Short> orderStatusList;
 
+	//员工名称
+	private String staffName;
+
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public Long getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 
 	public Short getOrderStatus() {
 		return orderStatus;
@@ -19,6 +55,14 @@ public class OrgStaffCashSearchVo {
 
 	public void setOrderStatus(Short orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+	public List<Short> getOrderStatusList() {
+		return orderStatusList;
+	}
+
+	public void setOrderStatusList(List<Short> orderStatusList) {
+		this.orderStatusList = orderStatusList;
 	}
 
 	

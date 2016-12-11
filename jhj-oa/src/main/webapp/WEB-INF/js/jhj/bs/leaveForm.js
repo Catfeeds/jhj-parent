@@ -3,6 +3,10 @@ $('#leaveForm').validate({
 	errorClass: 'help-block', // default input error message class
 	focusInvalid: false, // do not focus the last invalid input
 	rules: {
+		parentId:{
+			required: true,
+			parentId:"parentId"
+		},
 		orgId: {
 			required: true,
 			orgId:"orgId"
@@ -13,12 +17,21 @@ $('#leaveForm').validate({
 		},
 		leaveDate:{
 			required: true,
+		},
+		leaveDateEnd:{
+			required: true,
 		}
 	},
 
 	messages: {
+		parentId:{
+			required: "请选择门店",
+		},
 		leaveDate: {
-			required: "请输入假期时间",
+			required: "请输入假期开始时间",
+		},
+		leaveDateEnd: {
+			required: "请输入假期结束时间",
 		}
 	},
 
@@ -61,12 +74,20 @@ $.validator.addMethod("staffId",function(value,elements){
 
 
 
-$('.input-group.date').datepicker({
+$('.form-control.form_datetime').datepicker({
 	format : "yyyy-mm-dd",
 	language : "zh-CN",
 	autoclose : true,
-	startView : 1,
+	startView : 0,
 	todayBtn:true,
 	startDate:new Date()
 });
 
+function fn(){
+	var id = $("#id").val();
+	if(id >0){
+		$("select[name='parentId']").attr("disabled",true);
+		$("#orgId").attr("disabled",true);
+	}
+}
+fn();

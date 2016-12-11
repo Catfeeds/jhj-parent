@@ -16,8 +16,6 @@ public interface OrderCrondService {
 	void updateAfterService();
 
 	void updateOverTimeNotPay();
-
-	void setOrderRateOverServenDay();
 	
 	void amOrderStatusOverOneDay();
 		

@@ -3,6 +3,7 @@ package com.jhj.vo.order;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.user.UserAddrs;
 
 public class DeepCleanVo extends OrderViewVo {
@@ -16,6 +17,8 @@ public class DeepCleanVo extends OrderViewVo {
 	private BigDecimal restMoney;
 	
 	private BigDecimal couponValue;
+	
+	private List<OrderDispatchs> orderDispatchs;
 	
 
 	public BigDecimal getCouponValue() {
@@ -56,5 +59,13 @@ public class DeepCleanVo extends OrderViewVo {
 
 	public void setList(List<OrderServiceAddonViewVo> list) {
 		this.list = list;
+	}
+
+	public List<OrderDispatchs> getOrderDispatchs() {
+		return orderDispatchs;
+	}
+
+	public void setOrderDispatchs(List<OrderDispatchs> orderDispatchs) {
+		this.orderDispatchs = orderDispatchs;
 	}
 }

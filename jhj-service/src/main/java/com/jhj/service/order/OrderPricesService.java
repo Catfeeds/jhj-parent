@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.Orders;
 
 
 public interface OrderPricesService {
@@ -33,5 +34,15 @@ public interface OrderPricesService {
 	OrderPrices selectByOrderNo(String orderNo);
 
 	BigDecimal getPayByOrder(Long orderId, Long userCouponId);
+
+	BigDecimal getOrderPay(OrderPrices orderPrice);
+
+	BigDecimal getOrderMoney(OrderPrices orderPrice);
+
+	BigDecimal getOrderIncoming(Orders order, Long staffId);
+
+	BigDecimal getOrderMoneyStaff(Orders order, Long staffId);
+
+	BigDecimal getOrderPayStaff(Orders order, Long staffId);
 	
 }

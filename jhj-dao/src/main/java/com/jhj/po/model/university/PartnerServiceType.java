@@ -14,6 +14,12 @@ public class PartnerServiceType {
     private Short defaultNum;
 
     private BigDecimal price;
+    
+    private BigDecimal mprice;
+    
+    private BigDecimal pprice;
+    
+    private BigDecimal mpprice;
 
     private String remarks;
 
@@ -30,6 +36,12 @@ public class PartnerServiceType {
     private Double serviceTimes;
 
     private String serviceContent;
+    
+    private Short isAuto;
+    
+    private Short isMulti;
+    
+    private double serviceHour;
 
     public Long getServiceTypeId() {
         return serviceTypeId;
@@ -142,4 +154,53 @@ public class PartnerServiceType {
     public void setServiceContent(String serviceContent) {
         this.serviceContent = serviceContent == null ? null : serviceContent.trim();
     }
+
+	public Short getIsAuto() {
+		return isAuto;
+	}
+
+	public void setIsAuto(Short isAuto) {
+		this.isAuto = isAuto;
+	}
+
+	public Short getIsMulti() {
+		return isMulti;
+	}
+
+	public void setIsMulti(Short isMulti) {
+		this.isMulti = isMulti;
+	}
+
+	public double getServiceHour() {
+		return serviceHour;
+	}
+
+	public void setServiceHour(double serviceHour) {
+		this.serviceHour = serviceHour;
+	}
+
+	public BigDecimal getMprice() {
+		return mprice;
+	}
+
+	public void setMprice(BigDecimal mprice) {
+		this.mprice = mprice;
+	}
+
+	public BigDecimal getPprice() {
+		return pprice;
+	}
+
+	public void setPprice(BigDecimal pprice) {
+		this.pprice = pprice;
+	}
+
+	public BigDecimal getMpprice() {
+		return mpprice;
+	}
+
+	public void setMpprice(BigDecimal mpprice) {
+		this.mpprice = mpprice;
+	}
+	
 }

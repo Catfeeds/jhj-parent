@@ -13,9 +13,9 @@ import com.jhj.po.model.order.OrderServiceAddons;
 public interface OrderExpCleanService {
 	
 	
-	OrderPrices getOrderPriceOfOrderExpClean(Long serviceType, String serviceAddonsDatas);
-	
-	List<OrderServiceAddons> updateOrderServiceAddons(Long serviceType, String serviceAddonsDatas);
+	List<OrderServiceAddons> updateOrderServiceAddons(Long userId, Long serviceType, String serviceAddonsDatas);
+
+	OrderPrices getOrderPriceOfOrderExpClean(Long userId, Long serviceType, String serviceAddonsDatas);
 
 	
 

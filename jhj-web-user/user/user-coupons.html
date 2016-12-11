@@ -1,0 +1,22 @@
+<div data-page="mine-coupons-list" class="page">
+    <div id="indexPageContentDiv" class="page-content">
+        <div class="beijing-index">
+            {{#each data}}
+            <div class="youhuiquan" id="mine-coupons-use">
+                <div class="youhuiquan1">￥</div>
+                <span>状态：可用</span>
+                <div class="youhuiquan2">{{value}}</div>
+                <p>{{service_type_name}}</p>
+                <div class="youhuiquan3">有效期至:{{to_date_str}}</div>
+                <input type="hidden" name="user_coupon_id" id="user_coupon_id" value="{{id}}" />
+                <input type="hidden" name="service_type" id="service_type" class="service_type" value="{{service_type}}"/>
+                <input type="hidden" name="user_coupon_value" id="user_coupon_value" value="{{value}}" />
+                <input type="hidden" name="from_date" id="from_date"  value="{{from_date}}"/>
+                <input type="hidden" name="to_date" id="to_date"  value="{{to_date}}"/>
+                <input type="hidden" name="max_value" id="max_value"  value="{{max_value}}"/>
+               <!--  <input type="hidden" name="coupons_type_id" id="coupons_type_id"  value="{{coupons_type_id}}"/> -->
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

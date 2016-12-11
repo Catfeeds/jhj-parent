@@ -29,66 +29,22 @@ var myApp = new Framework7({
 	},
 	preroute : function(view, options) {
 
-		/*
-		 * if(!isLogin() && options.url!='login.html'){ // console.log('must
-		 * login'); view.router.loadPage('login.html'); return false; }
-		 */
-		// 反向判断不好使！！！
-		if (!isLogin() && options.url == 'order/order-form-zhongdiangong.html') {
+		if (!isLogin() && options.url.indexOf('order/order-hour-choose.html') >= 0 ) {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'order/order-list-shendubaojiezl.html') {
+		} else if (!isLogin() && options.url.indexOf('order/order-deep-choose.html') >= 0 ) {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=3') {
+		} else if (!isLogin() && options.url == 'order/order-list.html') {
 			view.router.loadPage('login.html');
 			return false;
 		} else if (!isLogin() && options.url == 'user/mine.html') {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'user/user-am-detail.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-hour-now-list.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=4') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=5') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=6') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=7') {
-			view.router.loadPage('login.html');
-			return false;
 		} else if (!isLogin() && options.url == 'user/charge/mine-charge-list.html') {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'huodong-detail.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'huodong-list.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/remind/order-remind-tixing.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am.html') {
-			view.router.loadPage('login.html');
-			return false;
 		} else if (!isLogin() && options.url == 'user/serviceCharge/order-service-charge.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'xianshi-huodong.html') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=10') {
-			view.router.loadPage('login.html');
-			return false;
-		} else if (!isLogin() && options.url == 'order/order-am-faqiyuyue.html?service_type=11') {
 			view.router.loadPage('login.html');
 			return false;
 		}
@@ -116,137 +72,19 @@ var ajaxError = function(data, textStatus, jqXHR) {
 	myApp.alert('网络繁忙,请稍后再试.');
 };
 
-// 网上商城弹出框
-/*
- * $$(".index-shangcheng").click(function(){
- * mainView.router.loadPage("http://kdt.im/OZjLSAKoJ"); //alert("敬请期待"); })
- */
 function toolBarHref(url, toolbarName) {
-	// 首页
-	var toolBarIndex = $$('#toolbar-index');
-	// 助理
-	var toolBarAm = $$('#toolbar-am');
-	// 活动
-	var toolBarHuodong = $$('#toolbar-huodong');
-	// 商城
-	var toolBarYouzan = $$('#toolbar-youzan');
-	// 我的
-	var toolBarMine = $$('#toolbar-mine');
-
-	if (toolbarName == 'toolbar-index') {
-		toolBarIndex.addClass("active");
-		toolBarIndex.css("color", "#FB571E");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-	}
-
-	if (toolbarName == 'toolbar-am') {
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.addClass("active");
-		toolBarAm.css("color", "#FB571E");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-
-		if (localStorage.getItem('user_id') == null) {
-			mainView.router.loadPage("login.html");
-			return;
+	
+	var toolBars = ['toolbar-index', 'toolbar-order', 'toolbar-charge', 'toolbar-mine'];
+	
+	$$.each(toolBars,function(n,value) {  
+		if (value == toolbarName) {
+			$$('#' + value).addClass("active");
+			$$('#' + value).css("color", "#FB571E");
+		} else {
+			$$('#' + value).removeClass("active");
+			$$('#' + value).css("color", "#000");
 		}
-
-		// if (localStorage.getItem('am_id') == 'null' ||
-		// localStorage.getItem('am_mobile') == 'null') {
-		//			
-		// myApp.alert('您还没有添加地址，点击确定前往添加地址立刻获得家庭助理', "", function () {
-		// mainView.router.loadPage("user/mine-add-addr.html?addr_id=0&return_url=user/user-am-detail.html");
-		// });
-		// return;
-		// }
-
-	}
-
-	if (toolbarName == 'toolbar-huodong') {
-
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.addClass("active");
-		toolBarHuodong.css("color", "#FB571E");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-
-		if (localStorage.getItem('user_id') == null) {
-			mainView.router.loadPage("login.html");
-			return;
-		}
-
-	}
-
-	if (toolbarName == 'toolbar-youzan') {
-
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.addClass("active");
-		toolBarYouzan.css("color", "#FB571E");
-
-		toolBarMine.removeClass("active");
-		toolBarMine.css("color", "#FFF");
-
-	}
-
-	if (toolbarName == 'toolbar-mine') {
-
-		toolBarIndex.removeClass("active");
-		toolBarIndex.css("color", "#FFF");
-
-		toolBarAm.removeClass("active");
-		toolBarAm.css("color", "#FFF");
-
-		toolBarHuodong.removeClass("active");
-		toolBarHuodong.css("color", "#FFF");
-
-		toolBarYouzan.removeClass("active");
-		toolBarYouzan.css("color", "#FFF");
-
-		toolBarMine.addClass("active");
-		toolBarMine.css("color", "#FB571E");
-
-		if (localStorage.getItem('user_id') == null) {
-			mainView.router.loadPage("login.html");
-			return;
-		}
-	}
+	});
 
 	mainView.router.loadPage(url);
 }

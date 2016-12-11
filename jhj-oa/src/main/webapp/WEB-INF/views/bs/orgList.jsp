@@ -37,6 +37,7 @@
                           	
 	                          	<div class="pull-right" >
 	                          		<button onClick="btn_add('bs/orgForm?orgId=0')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
+	                          		<button onClick="btn_add('bs/org-map')" class="btn btn-danger" type="button"><i class="icon-expand-alt"></i>地图</button>
 	                    		</div>      
                           </header>
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />

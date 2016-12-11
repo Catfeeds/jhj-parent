@@ -5,6 +5,8 @@ import java.util.List;
 public class OrgStaffSkillSearchVo {
 
 	private Long staffId;
+	
+	private List<Long> staffIds;
 
 	private Long orgId;
 	
@@ -13,7 +15,7 @@ public class OrgStaffSkillSearchVo {
 	private Long serviceTypeId;
 	
 	private List<Long> serviceTypeIds;
-
+	
 	public Long getStaffId() {
 		return staffId;
 	}
@@ -52,6 +54,14 @@ public class OrgStaffSkillSearchVo {
 
 	public void setServiceTypeIds(List<Long> serviceTypeIds) {
 		this.serviceTypeIds = serviceTypeIds;
+	}
+
+	public List<Long> getStaffIds() {
+		return staffIds;
+	}
+
+	public void setStaffIds(List<Long> staffIds) {
+		this.staffIds = staffIds;
 	}
 
 

@@ -45,7 +45,10 @@ public class UserTrailController extends BaseController {
 	@RequestMapping(value = "post_user_trail", method = RequestMethod.POST)
 	public AppResultData<String> trail(@RequestParam("user_id") Long userId, @RequestParam("user_type") short userType, @RequestParam("lat") String lat,
 			@RequestParam("lng") String lng, @RequestParam(value = "poi_name", required = false, defaultValue = "") String poiName) {
-
+		
+		//默认现在user_type 都等于 0 
+		userType = 0;
+		
 		UserTrailReal record = null;
 
 		UserTrailSearchVo searchVo = new UserTrailSearchVo();

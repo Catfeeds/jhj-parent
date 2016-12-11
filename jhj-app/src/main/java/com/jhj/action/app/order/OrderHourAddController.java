@@ -1,6 +1,7 @@
 package com.jhj.action.app.order;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.dict.DictServiceAddons;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
@@ -22,8 +24,10 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.ValidateService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
+import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
@@ -36,9 +40,13 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.order.OrderHourAddVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.Week;
 
 /**
  *
@@ -92,60 +100,73 @@ public class OrderHourAddController extends BaseController {
     @Autowired
     private PartnerServiceTypeService partService;
     
+    @Autowired
+    private OrderAppointService orderAppointService;
+    
+    @Autowired
+	private ValidateService validateService;	
+    
 	@RequestMapping(value = "post_hour", method = RequestMethod.POST)
 	public AppResultData<Object> submitOrder(
 			@RequestParam("userId") Long userId,
 			@RequestParam("serviceType") Long serviceType,
 			@RequestParam(value = "serviceContent",required =false,defaultValue = "") String serviceContent,
 			@RequestParam("serviceDate") Long serviceDate,
-			@RequestParam("addrId") Long addrId,
+			@RequestParam(value = "addrId", required = false, defaultValue = "") String addrIdStr,
 			@RequestParam("serviceHour") Short serviceHour,
+			@RequestParam(value = "staffNums", required = false, defaultValue = "1") int staffNums,
 			@RequestParam(value = "serviceAddons", required = false, defaultValue = "") String serviceAddons,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
-			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom) throws Exception{
+			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom,
+			@RequestParam(value = "orderPay", required = false, defaultValue = "0") BigDecimal orderPay,
+			@RequestParam(value = "orderOpFrom", required = false, defaultValue = "0") Long orderOpFrom,
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId) throws Exception{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-		//当前时间 的时间戳
-		Long nowTimeStamp =  new Date().getTime()/1000;
+		AppResultData<Object> v = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		v = validateService.validateUser(userId);
+		if (v.getStatus() == Constants.ERROR_999) {
+			return v;
+		}
 		
-		if(nowTimeStamp >= serviceDate){
-			
-			result.setStatus(Constants.ERROR_999);
-			
-			result.setMsg(ConstantMsg.OLD_TIME);
-			return result;
+		Long addrId = 0L;
+		if (addrIdStr.equals("undefined")) {
+			//找出该用户是否有默认的地址，有则为他
+			List<UserAddrs> userAddrs = userAddrService.selectByUserId(userId);
+			if (!userAddrs.isEmpty() && userAddrs.size() == 1) {
+				UserAddrs userAddr = userAddrs.get(0);
+				addrId = userAddr.getId();
+			}
+		} else if (!StringUtil.isEmpty(addrIdStr)) {
+			addrId = Long.valueOf(addrIdStr);
+		}
+				
+		//判断用户地址是否存在
+		v = validateService.validateUserAddr(userId, addrId);
+		if (v.getStatus() == Constants.ERROR_999) {
+			return v;
+		}
+		
+		//判断服务时间不能为过去时间
+		v = validateService.validateServiceDate(serviceDate);
+		if (v.getStatus() == Constants.ERROR_999) {
+			return v;
+		}
+		
+		//如果为特惠日，需要判断是否为周一到周三.
+		if (serviceType.equals(69L) || serviceType.equals(70L)) {
+			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000);
+			Date sDate = DateUtil.parse(serviceDateStr);
+			Week sWeek = DateUtil.getWeek(sDate);
+			if (sWeek.getNumber() < 1 || sWeek.getNumber() > 3) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("只能限定周一到周三使用.");
+				return result;
+			}
 		}
 		
 		Users u = userService.selectByPrimaryKey(userId);
-
-		// 判断是否为注册用户，非注册用户返回 999
-		if (u == null) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
-			return result;
-		}
-		
-		//判断用户地址是否存在
-		if (addrId.equals(0L)) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
-			return result;
-		} else {
-			UserAddrs userAddr = userAddrService.selectByPrimaryKey(addrId);
-			
-			if (userAddr == null) {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
-				return result;
-			}
-			
-			if (!userAddr.getUserId().equals(userId)) {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
-				return result;
-			}
-		}
 		
 		// 调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());
@@ -158,9 +179,11 @@ public class OrderHourAddController extends BaseController {
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);
 		order.setServiceHour(serviceHour);
+		order.setStaffNums(staffNums);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);//钟点工未支付
 		order.setOrderNo(orderNo);
-		
+		order.setOrderFrom(orderFrom);
+		order.setOrderOpFrom(orderOpFrom);
 		
 		PartnerServiceType partnerServiceType = partService.selectByPrimaryKey(serviceType);
 		
@@ -178,7 +201,10 @@ public class OrderHourAddController extends BaseController {
 					serviceAddonIds.add(serviceAddonId);
 				}
 			}
-			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectByServiceAddonIds(serviceAddonIds);
+			
+			ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+			searchVo1.setServiceAddonIds(serviceAddonIds);
+			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
 			
 			for (int i = 0; i < serviceAddonArray.length; i++) {	
 				Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
@@ -195,7 +221,7 @@ public class OrderHourAddController extends BaseController {
 					if (item.getServiceAddonId().equals(serviceAddonId)) {
 						record.setItemNum(item.getDefaultNum());
 						record.setItemUnit(item.getItemUnit());
-						record.setPrice(item.getPrice());
+						record.setPrice(item.getDisPrice());
 					}
 					serviceName += item.getName() +" ";
 				}
@@ -212,7 +238,13 @@ public class OrderHourAddController extends BaseController {
 		
 		//设置订单总金额。插入 order_prices表
 		
-		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(serviceType);
+		OrderPrices orderPrices = orderHourAddservice.getNewOrderPrice(order, serviceType);
+		
+		if (orderFrom.equals((short)2) && orderPay.compareTo(new BigDecimal(0)) == 1) {
+
+			orderPrices.setOrderMoney(orderPay);
+			orderPrices.setOrderPay(orderPay);
+		}
 		
 		orderPrices.setUserId(userId);
 		orderPrices.setOrderId(order.getId());
@@ -220,6 +252,15 @@ public class OrderHourAddController extends BaseController {
 		orderPrices.setOrderNo(orderNo);
 		
 		orderPricesService.insert(orderPrices);
+		
+		//如果有指定的员工，则要插入指定员工表.
+		if (!staffId.equals(0L)) {
+			OrderAppoint orderAppoint =  orderAppointService.initOrderAppoint();
+			orderAppoint.setOrderId(order.getId());
+			orderAppoint.setUserId(userId);
+			orderAppoint.setStaffId(staffId);
+			orderAppointService.insert(orderAppoint);
+		}
 		
 		/*
 		 * 2.插入订单日志表  order_log
@@ -232,38 +273,4 @@ public class OrderHourAddController extends BaseController {
 		
 		return result;
 	}
-	
-	
-	/*
-	 * 
-	 * 用户版-钟点工 --提交订单 页面加载，调用这个接口
-	 */
-	@RequestMapping(value = "get_some_list.json" ,method = RequestMethod.GET)
-	public AppResultData<Object> getReleativeList(
-			@RequestParam(value = "userId") Long userId){
-
-		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
-		
-		OrderHourAddVo orderHourAddVo = new OrderHourAddVo();
-		
-		//用户地址列表
-		List<UserAddrs> userAddrList = userAddrService.selectByUserId(userId);
-		if(userAddrList!=null){
-			orderHourAddVo.setUserAddrList(userAddrList);
-		}else{
-			orderHourAddVo.setUserAddrList(new ArrayList<UserAddrs>());
-		}
-		
-		//附加服务列表，页面已经确定。。，即 钟点工
-		
-		List<DictServiceAddons> dictList = dictServiceAddonService.selectAllHourAddons();
-		
-		orderHourAddVo.setDictServiceAddonList(dictList);
-		
-		result.setData(orderHourAddVo);
-		
-		return result;
-		
-	}
-	
 }

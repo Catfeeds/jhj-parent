@@ -6,31 +6,23 @@ myApp.template7Data['page:mine-charge-list'] = function(){
 	  userId = 0;
   }
   $$.ajax({
-          type : "GET",
-          url  : siteAPIPath+"/dict/get_cards.json?user_id="+userId,
-          dataType: "json",
-          cache : true,
-          async : false,
-          success: function(data){
-              result = data;
-          }
+      type : "GET",
+      url  : siteAPIPath+"/dict/get_cards.json?user_id="+userId,
+      dataType: "json",
+      cache : true,
+      async : false,
+      success: function(data){
+          result = data;
+      }
   })
   return result;
 }
 myApp.onPageInit('mine-charge-list', function (page) {
-	var userId = localStorage.getItem("user_id");;
-	if (userId == undefined || userId == '' || userId == 0) {
-		return;
+	$$(".charge-way").on("click",function(){
+	var cardId = $$(this).next("#id").val();
+	if(cardId!=null || cardId!=""){
+		sessionStorage.setItem("card_id",cardId);
+		mainView.router.loadPage("user/charge/mine-charge-way.html?card_id="+cardId);
 	}
-     $$(".charge-way").on("click",function(){
-    	 var cardId = $$(this).prev().prev().prev().val();
-    	 var cardPay = $$(this).next().val();
-    	 var sendMoney = $$(this).next().next().val();
-    	 if(cardPay <= 5000){
-        	 mainView.router.loadPage("user/charge/mine-charge-way.html?card_id="+cardId);
-    	 }
- 	});
-//     $$(".feed_back_money").on("click",function(){
-//    	 mainView.router.loadPage("user/charge/mine-charge-fanquan.html");
-//     });
+});
 })

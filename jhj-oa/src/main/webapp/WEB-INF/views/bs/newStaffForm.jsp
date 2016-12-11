@@ -6,6 +6,7 @@
 <%@ taglib prefix="citySelectTag" uri="/WEB-INF/tags/citySelect.tld"%>
 <%@ taglib prefix="provinceSelectTag" uri="/WEB-INF/tags/provinceSelect.tld"%>
 <%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
+<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="staffLevelSelectTag" uri="/WEB-INF/tags/staffLevelSelect.tld"%>
 
 <%@ taglib prefix="degreeSelectTag" uri="/WEB-INF/tags/degreeTypeSelect.tld" %>
@@ -60,18 +61,26 @@
 	
 					<input type="hidden" name="authIds" id="authIds" value="${newStaffFormVoModel.authIds }">		
 								
-					<input type="hidden" name="tagIds" id="tagIds" value="${newStaffFormVoModel.tagIds }"/>			
+					<input type="hidden" name="tagIds" id="tagIds" value="${newStaffFormVoModel.tagIds }"/>	
 								
-					<div class="form-body">
-					 
+						<div class="form-group required">
+							<label class="col-md-2 control-label">选择门店*</label>
+							<div class="col-md-5">
+								<orgSelectTag:select selectId="${newStaffFormVoModel.parentOrgId }" sessionOrgId="${loginOrgId }"/>
+							</div>
+						</div>
 						<div class="form-group required">
 							<label class="col-md-2 control-label">选择云店*</label>
 							<div class="col-md-5">
 								
-								<cloudOrgSelectTag:select 
-										logInParentOrgId="${loginOrgId}"
-										selectId="${newStaffFormVoModel.orgId }"/>	
-							    		
+								<select name="orgId" id="orgId" class="form-control">
+									<c:if test="${newStaffFormVoModel.orgId==0 }">
+										<option value="0">全部</option>
+									</c:if>
+									<c:if test="${newStaffFormVoModel.orgId!=0 }">
+										<option value="${org.orgId }" selected="selected">${org.orgName}</option>
+									</c:if>
+								</select>
 							</div>
 						</div>
 							
@@ -94,6 +103,16 @@
 								<div id="showResult" style="float:left"></div>
 							</div>
 						</div>
+						<c:if test="${newStaffFormVoModel.staffId!=null && newStaffFormVoModel.staffId!=0 }">
+							<div class="form-group required">
+								<label class="col-md-2 control-label">员工编号*</label>
+								<div class="col-md-5">
+									<form:input path="staffCode" class="form-control" value="${newStaffFormVoModel.staffCode }"  readonly="true"/>
+									<form:errors path="staffCode" class="field-has-error"></form:errors>
+									<div id="showResult" style="float:left"></div>
+								</div>
+							</div>
+						</c:if>
 						<div class="form-group required">
 							<label class="col-md-2 control-label">座机号</label>
 							<div class="col-md-5">
@@ -249,13 +268,13 @@
 						<div class="form-group required">
 							<label class="col-md-2 control-label">员工自我介绍</label>
 							<div class="col-md-5">
-								 <form:textarea path="intro" rows="5" cols="50"
+								 <form:textarea path="intro" rows="5" cols="50" class="form-control" 
                                  	placeholder="不超过120字" maxlength="120"/>	
 							</div>
 						</div> 
 						
 						
-						<div class="form-group required">
+						<div class="form-group required" style="display:none;">
 								<label class="col-md-2 control-label">技能标签</label>
 								<div class="col-md-5" id="allTag" >
 									<c:forEach items="${newStaffFormVoModel.tagList }" var="tag">
@@ -357,6 +376,8 @@
 	<script type="text/javascript"  src="<c:url value='/js/jhj/select-province.js'/>"	></script>
 	<!-- 当前页面校验js -->
 	<script type="text/javascript"  src="<c:url value='/js/jhj/validate-reg.js'/>"	></script>
+	
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	
 	<script type="text/javascript"  src="<c:url value='/js/jhj/bs/newStaffForm.js'/>"	></script> 
 </body>

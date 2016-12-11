@@ -1,6 +1,7 @@
 package com.jhj.action.admin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.service.chart.OrderChartService;
@@ -57,6 +59,9 @@ public class HomeController extends AdminController {
     	//总用户数
     	int totalUser = userChartService.statTotalUser(chartSearchVo);
     	
+    	
+    	Short[] status={3,4,5,6,7,8,9};
+    	chartSearchVo.setStatus(Arrays.asList(status));
     	//总订单数
     	Map<String,Integer> totalOrder = orderChartService.statTotalOrder(chartSearchVo) ; 
     	//今日新增用户数
@@ -79,6 +84,7 @@ public class HomeController extends AdminController {
     	
     	//统计最近十天的订单数
     	chartSearchVo.setSearchType(1);
+    	chartSearchVo.setSelectCycle(1);
     	Date nowDate = DateUtil.parse(DateUtil.getBeginOfDay());
     	startTimeStr = DateUtil.addDay(nowDate, -10, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
     	

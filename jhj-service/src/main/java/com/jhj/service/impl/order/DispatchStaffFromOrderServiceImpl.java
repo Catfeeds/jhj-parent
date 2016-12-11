@@ -53,6 +53,7 @@ import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.PushUtil;
 import com.meijia.utils.RegexUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduMapUtil;
@@ -493,7 +494,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, staffAddrList);
 			List<BaiduPoiVo> baiduPoiVos = new ArrayList<BaiduPoiVo>();
 			
-			baiduPoiVos = MapPoiUtil.getMinDest(destList);
+			baiduPoiVos = MapPoiUtil.getMinDest(destList, Constants.MAX_DISTANCE);
 			
 			BaiduPoiVo baiduPoiVo = null;
 			if (!baiduPoiVos.isEmpty()) {
@@ -715,7 +716,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orderLogService.insert(orderLog);
 		
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
 	}
@@ -752,7 +753,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orderLogService.insert(orderLog);
 		
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
 		if(orderDispatchs.getDispatchStatus()==1){
@@ -811,7 +812,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		orderLogService.insert(orderLog);
 		
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr( (order.getServiceDate() + order.getServiceHour() * 3600) * 1000, "HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr( (long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
 		if(orderDispatchs.getDispatchStatus()==1){
@@ -893,7 +894,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 		    tranParams.put("service_time", serviceTime);
 		    
 		    //服务时长 
-		    String serviceHour = order.getServiceHour().toString() + "小时";
+		    String serviceHour = order.getServiceHour() + "小时";
 		    tranParams.put("service_hour", serviceHour);
 		    
 		    //服务项目
@@ -918,17 +919,7 @@ public class DispatchStaffFromOrderServiceImpl implements DispatchStaffFromOrder
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		//2.0为员工发送短信
-//		//2.1)派工成功,为服务人员发送短信
-//		OrgStaffs orgStaffs = orgStaffsMapper.selectByPrimaryKey(staffId);
-//		Orders orders = ordersService.selectByPrimaryKey(orderId);
-//		String beginTimeStr = TimeStampUtil.timeStampToDateStr(orders.getServiceDate() * 1000, "MM月-dd日HH:mm");
-//		String endTimeStr = TimeStampUtil.timeStampToDateStr( (orders.getServiceDate() + orders.getServiceHour() * 3600) * 1000, "HH:mm");
-//		String timeStr = beginTimeStr + "-" + endTimeStr;
-//		String[] contentForUser = new String[] { timeStr };
-//		SmsUtil.SendSms(orgStaffs.getMobile(),  "64746", contentForUser);
-		
+		}		
 	}
 	
 	

@@ -3,6 +3,8 @@ package com.jhj.utils;
 import java.text.ParseException;
 
 import com.jhj.common.Constants;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.vo.order.OaOrderListVo;
 
 public class OrderUtils {
 	// 获得订单类型名称
@@ -251,12 +253,68 @@ public class OrderUtils {
 
 		return paytypeName;
 	}
-	
-	public static void main(String[] args) throws ParseException {
+
+	// 订单来源
+	public static OaOrderListVo isOrderSrc(short orderFrom, Long orderOpFrom, OaOrderListVo vo, CooperativeBusiness cooperativeBusiness) {
+		if (orderFrom == 0) {
+			vo.setOrderOpFromName("app");
+		}
+		if (orderFrom == 1) {
+			vo.setOrderOpFromName("微网站");
+		}
+		if (orderFrom == 2 && orderOpFrom != null) {
+			if (orderOpFrom == 1) {
+				vo.setOrderOpFromName("来电订单");
+			} else {
+				if (cooperativeBusiness != null) {
+					vo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				} else {
+					vo.setOrderOpFromName("");
+				}
+			}
+		}
+
+		// if(orderOpFrom!=null){
+		// if(orderOpFrom==1){
+		// oaOrderListVo.setOrderOpFromName("来电订单");
+		// }else{
+		// CooperativeBusiness cooperativeBusiness =
+		// cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+		// if (cooperativeBusiness != null) {
+		// oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+		// }
+		// }
+		// }
+		return vo;
+	}
+
+	// 获得订单分成比例名称
+	public static String getOrderSettingType(Short orderType) {
+
+		String settingType = "";
+
+		if (orderType.equals(Constants.ORDER_TYPE_0)) {
+			settingType = "hour-ratio";
+		}
+		if (orderType.equals(Constants.ORDER_TYPE_1)) {
+			settingType = "deep-ratio";
+		}
+		if (orderType.equals(Constants.ORDER_TYPE_2)) {
+			settingType = "am-ratio";
+		}
+		if (orderType.equals(Constants.ORDER_TYPE_3)) {
+			settingType = "dis-ratio";
+		}
 		
+		return settingType;
+
+	}
+
+	public static void main(String[] args) throws ParseException {
+
 		Short status = 5;
 		Short patType = 6;
-		
+
 		System.out.println(OrderUtils.getPayTypeName(status, patType));
 	}
 }

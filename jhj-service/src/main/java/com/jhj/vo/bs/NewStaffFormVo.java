@@ -45,7 +45,6 @@ public class NewStaffFormVo extends OrgStaffs {
 	
 	private String tagIds;
 	
-
 	public List<Tags> getTagList() {
 		return tagList;
 	}
@@ -109,5 +108,4 @@ public class NewStaffFormVo extends OrgStaffs {
 	public void setSkillIdsStr(String skillIdsStr) {
 		this.skillIdsStr = skillIdsStr;
 	}
-	
 }

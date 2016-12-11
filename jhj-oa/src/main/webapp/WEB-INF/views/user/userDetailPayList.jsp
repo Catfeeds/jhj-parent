@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@ include file="../shared/taglib.jsp"%>
 
@@ -39,7 +39,7 @@
                   <div class="col-lg-12">
                       <section class="panel">
                           <header class="panel-heading">
-                          	<h4>会员消费明细列表</h4>
+                          	<h4>消费明细列表</h4>
                         	
                         	<form:form class="form-inline" onsubmit="return checkEndTime()"
                         		modelAttribute="userPayDetailSearchVoModel" action="user-pay-detail" method="get" >
@@ -63,10 +63,19 @@
 									style="width:110px; margin-bottom:0" readonly="true" />
 								</div>
 								 
-								<button type="submit" class="btn btn-primary" >搜索</button>
+								<button type="submit" id="submit" class="btn btn-primary" value="${listUrl }">搜索</button>
                            </form:form> 
                           
                           </header>
+                          
+                          <div>
+                          	<label>消费总金额：<c:if test="${totalMoeny!=null }">${totalMoeny }元</c:if>
+                          					  <c:if test="${totalMoeny==null }">0元</c:if>
+                          	</label><br/>
+                          	<label>充值总金额：<c:if test="${chargeMoney!=null }">${chargeMoney }元</c:if>
+                          					  <c:if test="${chargeMoney==null }">0元</c:if>
+                          	</label>
+                          </div>
                           
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
                           
@@ -77,9 +86,8 @@
                             		  <th >订单号</th>
 		                              <th >会员手机号</th>
 		                              <th >订单类型</th>
-		                              <th>订单总金额</th>
-		                              <th >订单实际支付</th>
-		                              <th>交易状态</th>
+		                              <th>充值金额</th>
+		                              <th >支付金额</th>
 		                              <th>付款类型</th>
 		                              <th >添加时间</th>
                               </tr>
@@ -87,42 +95,33 @@
                               <tbody>
                               <c:forEach items="${userPayDetailList.list}" var="item">
                               <tr>
-                              			<td>
-											${ item.orderNo }
-							            </td>
-							            <td>${ item.mobile }</td>
-							            <td>
-							            
-							            	<!-- todo 不能显示 充值记录！！ -->
-							            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
-							            </td>
-							            <td align="center">
-											￥${ item.orderMoney }
-							            </td>
-							            <td align="center" >
-									    	       ￥ ${ item.orderPay }
-							            </td>
-							            <td>
-												支付成功
-							            </td>
-							            <td>
-
-											<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
-							            </td>
-							            <td>
-							            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>
-							            </td>
+                            	<td>${ item.orderNo }</td>
+					            <td>${ item.mobile }</td>
+					            <td>
+					            	<!-- todo 不能显示 充值记录！！ -->
+					            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
+					            </td>
+					            <td align="center">
+					            	<c:if test="${item.orderType==1 }">
+					            	 	￥${ item.orderMoney }
+					            	</c:if>
+					            </td>
+					            <td align="center" >￥ ${ item.orderPay } </td>
+					            <td>
+									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
+					            </td>
+					            <td>
+					            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>
+					            </td>
                               </tr>
                               </c:forEach>
                               </tbody>
                           </table>
-
-                          
                       </section>
                       
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="userPayDetailList"/>
-	        				<c:param name="urlAddress" value="/user/user-pay-detail"/>
+	        				<c:param name="urlAddress" value="/user/${listUrl }"/>
 	       			  </c:import>
                   </div>
               </div>

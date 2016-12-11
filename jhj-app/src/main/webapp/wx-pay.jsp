@@ -2,7 +2,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String basePath = request.getScheme()+"://"+request.getServerName()+"/";
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -282,7 +282,7 @@ a {
 	                                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
 	                                	
 	                                	// 微信支付成功后,跳转到对应的 成功页面
-	                                	if (payOrderType == 0) {
+	                                	if (payOrderType == 0 || payOrderType == 3) {
 	                                		
 		                                	successUrl = wxAppUrl + "order/order-pay-success.html";
 		                                	successUrl+= "?order_no="+orderNo;
@@ -308,22 +308,10 @@ a {
 	                                } else if(res.err_msg=="get_brand_wcpay_request:cancel") {
 										
 	                                	var fromUrl = "";
-	                                	if (payOrderType == 0) {
-	                                	
-		                                	if (orderType == 0) {
-		                                		fromUrl = wxAppUrl + "order/order-view-0.html";
-		                                	} 
-		                                	
-		                                	if (orderType == 1) {
-		                                		fromUrl = wxAppUrl + "order/order-view-1.html";
-		                                	}
-		                                	
-		                                	if (orderType == 2) {
-		                                		fromUrl = wxAppUrl + "order/order-view-2.html";                                		
-		                                	}
-														                                
-		                                	//TODO 取消或者失败。跳转到首页
+	                                	if (payOrderType == 0 || payOrderType == 3) {
+	                                		fromUrl = "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
+	                                		fromUrl+= "&order_type="+orderType;
 	                                	}
 	                                	
 	                                	if (payOrderType == 1) {
@@ -333,25 +321,13 @@ a {
 	                                	if(payOrderType == 2){
 	                                		fromUrl = "user/serviceCharge/order-service-charge.html";
 	                                	}
-	                                	
 	                                	window.location.href = wxAppUrl + fromUrl;
 	                                }else{
 	                                	var fromUrl = "";
-	                                	if (payOrderType == 0) {
-	                                	
-		                                	if (orderType == 0) {
-		                                		fromUrl = wxAppUrl + "order/order-view-0.html";
-		                                	}
-		                                	
-		                                	if (orderType == 1) {
-		                                		fromUrl = wxAppUrl + "order/order-view-1.html";
-		                                	}
-		                                	
-		                                	if (orderType == 2) {
-		                                		fromUrl = wxAppUrl + "order/order-view-2.html";                                		
-		                                	}
-		                                	
+	                                	if (payOrderType == 0 || payOrderType == 3) {
+	                                		fromUrl = wxAppUrl + "order/order-pay.html";
 	                                		fromUrl+= "?order_no="+orderNo;
+	                                		fromUrl+= "&order_type="+orderType;
 	                                	}
 	                                	
 	                                	if (payOrderType == 1) {

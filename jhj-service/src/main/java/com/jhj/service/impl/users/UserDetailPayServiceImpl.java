@@ -3,6 +3,7 @@ package com.jhj.service.impl.users;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,19 +12,22 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.user.UserDetailPayMapper;
+import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderCards;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
-import com.jhj.service.order.OrdersService;
-import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.users.UserDetailPayService;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.AppUserDetailPayVo;
 import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.jhj.po.model.order.OrderCards;
 
 
 @Service
@@ -33,10 +37,10 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	private UserDetailPayMapper userDetailPayMapper;
 
 	@Autowired
-	private OrdersService orderService;
+	private OrderCardsService orderCardsService;
 	
 	@Autowired
-	private PartnerServiceTypeService partService;
+	private OrgStaffsService staffService;
 	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -97,10 +101,45 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		userDetailPay.setOrderId(order.getId());
 		userDetailPay.setOrderNo(order.getOrderNo());
 
-		userDetailPay.setOrderType(order.getOrderType());
+		userDetailPay.setOrderType(Constants.PAY_ORDER_TYPE_0);
 		userDetailPay.setPayType(orderPrice.getPayType());
 		userDetailPay.setOrderMoney(orderPrice.getOrderMoney());
 		userDetailPay.setOrderPay(orderPrice.getOrderPay());
+		
+		//trade_no
+		userDetailPay.setPayAccount(payAccount);
+		userDetailPay.setTradeNo(tradeNo);
+		userDetailPay.setTradeStatus(tradeStatus);
+		
+		userDetailPay.setAddTime(TimeStampUtil.getNowSecond());
+		
+		userDetailPayMapper.insert(userDetailPay);
+		return userDetailPay;
+	}	
+	
+	
+	/**
+	 * 用户明细- 订单差价支付.
+	 */
+	@Override
+	public UserDetailPay addUserDetailPayForOrderPayExt(
+			Users user, 
+			Orders order, 
+			OrderPriceExt orderPriceExt, 
+			String tradeStatus,
+			String tradeNo, 
+			String payAccount) {
+		
+		UserDetailPay userDetailPay = new UserDetailPay();
+		
+		userDetailPay.setUserId(user.getId());
+		userDetailPay.setMobile(user.getMobile());
+		userDetailPay.setOrderId(order.getId());
+		userDetailPay.setOrderNo(order.getOrderNo());
+		userDetailPay.setOrderType(Constants.PAY_ORDER_TYPE_3);
+		userDetailPay.setPayType(orderPriceExt.getPayType());
+		userDetailPay.setOrderMoney(orderPriceExt.getOrderPay());
+		userDetailPay.setOrderPay(orderPriceExt.getOrderPay());
 		
 		//trade_no
 		userDetailPay.setPayAccount(payAccount);
@@ -149,7 +188,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		userDetailPay.setOrderId(orderCard.getId());
 		userDetailPay.setOrderNo(orderCard.getCardOrderNo());
 
-		userDetailPay.setOrderType(Constants.ORDER_TYPE_4);
+		userDetailPay.setOrderType(Constants.PAY_ORDER_TYPE_1);
 		userDetailPay.setPayType(orderCard.getPayType());
 		userDetailPay.setOrderMoney(orderCard.getCardMoney());
 		userDetailPay.setOrderPay(orderCard.getCardPay());
@@ -194,13 +233,17 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 				 * 
 				 * 	 其余 都是 消费，作用是使 该用户钱减少
 				 */
-				if(orderType == Constants.ORDER_TYPE_4){
+				if(orderType == Constants.PAY_ORDER_TYPE_1){
 					vo.setOrderFlag(Constants.USER_PAY_FLAG_PLUS);
 					vo.setOrderTypeName("账户充值");
 					
 					vo.setImgUrl("img/userRestMoney/iconfont-jiahao.png");
+				} else if(orderType == Constants.PAY_ORDER_TYPE_3) {
+					vo.setOrderFlag(Constants.USER_PAY_FLAG_MINUS);
+					vo.setOrderTypeName("订单补差价");
 					
-				}else{
+					vo.setImgUrl("img/userRestMoney/iconfont-jianhao.png");
+				} else {
 					vo.setOrderFlag(Constants.USER_PAY_FLAG_MINUS);
 					vo.setOrderTypeName("订单支付");
 					
@@ -264,4 +307,10 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	public List<UserDetailPay> selectBySearchVo(UserDetailSearchVo searchVo) {
 		return userDetailPayMapper.selectByListPages(searchVo);
 	}
+
+	@Override
+	public Map<String, BigDecimal> totolMoeny(UserDetailSearchVo userDetailSearchVo) {
+		return userDetailPayMapper.totolMoeny(userDetailSearchVo);
+	}
+	
 }

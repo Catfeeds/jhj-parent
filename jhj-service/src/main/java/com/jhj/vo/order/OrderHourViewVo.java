@@ -1,6 +1,10 @@
 package com.jhj.vo.order;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 
 /**
@@ -39,9 +43,17 @@ public class OrderHourViewVo extends Orders{
 	
 	private String orderTypeName; //  订单类型名称
 	
+	private String serviceTypeName; // 服务品类名称
+	
+	private String serviceDateStr;
+	
 	private String name;
 	
 	private String sex;
+	
+	private String overWorkStr;
+	
+	private List<OrderDispatchs> orderDispatchs;
 	
 	
 	public BigDecimal getRestMoney() {
@@ -130,6 +142,38 @@ public class OrderHourViewVo extends Orders{
 
 	public void setCouponName(String couponName) {
 		this.couponName = couponName;
+	}
+
+	public String getServiceTypeName() {
+		return serviceTypeName;
+	}
+
+	public void setServiceTypeName(String serviceTypeName) {
+		this.serviceTypeName = serviceTypeName;
+	}
+
+	public String getServiceDateStr() {
+		return serviceDateStr;
+	}
+
+	public void setServiceDateStr(String serviceDateStr) {
+		this.serviceDateStr = serviceDateStr;
+	}
+
+	public String getOverWorkStr() {
+		return overWorkStr;
+	}
+
+	public void setOverWorkStr(String overWorkStr) {
+		this.overWorkStr = overWorkStr;
+	}
+
+	public List<OrderDispatchs> getOrderDispatchs() {
+		return orderDispatchs;
+	}
+
+	public void setOrderDispatchs(List<OrderDispatchs> orderDispatchs) {
+		this.orderDispatchs = orderDispatchs;
 	}
 
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.Orders;
 
 /**
  *
@@ -24,9 +25,6 @@ public interface OrderHourAddService {
 	
 	List<Long> getMatchTagStaffIds(Long orderId, List<Long> staffIds);
 	
-	
-	//2016年3月14日18:03:46  jhj2.1 计算 服务价格
-	
-	OrderPrices getNewOrderPrice(Long serviceType);
+	OrderPrices getNewOrderPrice(Orders order, Long serviceType);
 	
 }

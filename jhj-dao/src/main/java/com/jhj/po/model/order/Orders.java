@@ -25,7 +25,9 @@ public class Orders {
 
     private Long serviceDate;
 
-    private Short serviceHour;
+    private double serviceHour;
+    
+    private int staffNums;
 
     private Short orderStatus;
 
@@ -34,6 +36,8 @@ public class Orders {
     private String orderRateContent;
 
     private Short orderFrom;
+    
+    private Long orderOpFrom;
 
     private String remarks;
     
@@ -149,11 +153,11 @@ public class Orders {
         this.serviceDate = serviceDate;
     }
 
-    public Short getServiceHour() {
+    public double getServiceHour() {
         return serviceHour;
     }
 
-    public void setServiceHour(Short serviceHour) {
+    public void setServiceHour(double serviceHour) {
         this.serviceHour = serviceHour;
     }
 
@@ -188,8 +192,16 @@ public class Orders {
     public void setOrderFrom(Short orderFrom) {
         this.orderFrom = orderFrom;
     }
+    
+    public Long getOrderOpFrom() {
+		return orderOpFrom;
+	}
 
-    public String getRemarks() {
+	public void setOrderOpFrom(Long orderOpFrom) {
+		this.orderOpFrom = orderOpFrom;
+	}
+
+	public String getRemarks() {
         return remarks;
     }
 
@@ -221,150 +233,12 @@ public class Orders {
         this.updateTime = updateTime;
     }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((addTime == null) ? 0 : addTime.hashCode());
-		result = prime * result + ((addrId == null) ? 0 : addrId.hashCode());
-		result = prime * result + ((amId == null) ? 0 : amId.hashCode());
-		result = prime * result + ((cityId == null) ? 0 : cityId.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
-		result = prime * result + ((orderFrom == null) ? 0 : orderFrom.hashCode());
-		result = prime * result + ((orderNo == null) ? 0 : orderNo.hashCode());
-		result = prime * result + ((orderRate == null) ? 0 : orderRate.hashCode());
-		result = prime * result + ((orderRateContent == null) ? 0 : orderRateContent.hashCode());
-		result = prime * result + ((orderStatus == null) ? 0 : orderStatus.hashCode());
-		result = prime * result + ((orderType == null) ? 0 : orderType.hashCode());
-		result = prime * result + ((orgId == null) ? 0 : orgId.hashCode());
-		result = prime * result + ((remarks == null) ? 0 : remarks.hashCode());
-		result = prime * result + ((remarksConfirm == null) ? 0 : remarksConfirm.hashCode());
-		result = prime * result + ((serviceContent == null) ? 0 : serviceContent.hashCode());
-		result = prime * result + ((serviceDate == null) ? 0 : serviceDate.hashCode());
-		result = prime * result + ((serviceHour == null) ? 0 : serviceHour.hashCode());
-		result = prime * result + ((serviceType == null) ? 0 : serviceType.hashCode());
-		result = prime * result + ((updateTime == null) ? 0 : updateTime.hashCode());
-		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
-		return result;
+	public int getStaffNums() {
+		return staffNums;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Orders other = (Orders) obj;
-		if (addTime == null) {
-			if (other.addTime != null)
-				return false;
-		} else if (!addTime.equals(other.addTime))
-			return false;
-		if (addrId == null) {
-			if (other.addrId != null)
-				return false;
-		} else if (!addrId.equals(other.addrId))
-			return false;
-		if (amId == null) {
-			if (other.amId != null)
-				return false;
-		} else if (!amId.equals(other.amId))
-			return false;
-		if (cityId == null) {
-			if (other.cityId != null)
-				return false;
-		} else if (!cityId.equals(other.cityId))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (mobile == null) {
-			if (other.mobile != null)
-				return false;
-		} else if (!mobile.equals(other.mobile))
-			return false;
-		if (orderFrom == null) {
-			if (other.orderFrom != null)
-				return false;
-		} else if (!orderFrom.equals(other.orderFrom))
-			return false;
-		if (orderNo == null) {
-			if (other.orderNo != null)
-				return false;
-		} else if (!orderNo.equals(other.orderNo))
-			return false;
-		if (orderRate == null) {
-			if (other.orderRate != null)
-				return false;
-		} else if (!orderRate.equals(other.orderRate))
-			return false;
-		if (orderRateContent == null) {
-			if (other.orderRateContent != null)
-				return false;
-		} else if (!orderRateContent.equals(other.orderRateContent))
-			return false;
-		if (orderStatus == null) {
-			if (other.orderStatus != null)
-				return false;
-		} else if (!orderStatus.equals(other.orderStatus))
-			return false;
-		if (orderType == null) {
-			if (other.orderType != null)
-				return false;
-		} else if (!orderType.equals(other.orderType))
-			return false;
-		if (orgId == null) {
-			if (other.orgId != null)
-				return false;
-		} else if (!orgId.equals(other.orgId))
-			return false;
-		if (remarks == null) {
-			if (other.remarks != null)
-				return false;
-		} else if (!remarks.equals(other.remarks))
-			return false;
-		if (remarksConfirm == null) {
-			if (other.remarksConfirm != null)
-				return false;
-		} else if (!remarksConfirm.equals(other.remarksConfirm))
-			return false;
-		if (serviceContent == null) {
-			if (other.serviceContent != null)
-				return false;
-		} else if (!serviceContent.equals(other.serviceContent))
-			return false;
-		if (serviceDate == null) {
-			if (other.serviceDate != null)
-				return false;
-		} else if (!serviceDate.equals(other.serviceDate))
-			return false;
-		if (serviceHour == null) {
-			if (other.serviceHour != null)
-				return false;
-		} else if (!serviceHour.equals(other.serviceHour))
-			return false;
-		if (serviceType == null) {
-			if (other.serviceType != null)
-				return false;
-		} else if (!serviceType.equals(other.serviceType))
-			return false;
-		if (updateTime == null) {
-			if (other.updateTime != null)
-				return false;
-		} else if (!updateTime.equals(other.updateTime))
-			return false;
-		if (userId == null) {
-			if (other.userId != null)
-				return false;
-		} else if (!userId.equals(other.userId))
-			return false;
-		return true;
+	public void setStaffNums(int staffNums) {
+		this.staffNums = staffNums;
 	}
-    
-    
+
 }

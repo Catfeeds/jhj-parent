@@ -4,29 +4,37 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.dict.DictCardTypeMapper;
 import com.jhj.po.dao.order.OrderCardsMapper;
 import com.jhj.po.dao.user.UserPayStatusMapper;
 import com.jhj.po.model.bs.Gifts;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.UserPayStatus;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.GiftsService;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.GiftCouponVo;
 import com.jhj.vo.bs.GiftVo;
+import com.jhj.vo.order.OrderCardsVo;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserCardVo;
 import com.jhj.vo.user.UserChargeVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -52,7 +60,10 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 	private DictCardTypeMapper dictCardTypeMapper;
 	
 	@Autowired
-	private GiftsService giftService;	
+	private GiftsService giftService;
+	
+	@Autowired
+	private OrgStaffsService orgStaffService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -86,7 +97,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		userPayStatus.setTradeId(tradeNo);
 		userPayStatus.setTradeStatus(tradeStatus);
 		userPayStatus.setUserId(orderCards.getUserId());
-		userPayStatus.setPostParams("");// TODO PostParams
+		userPayStatus.setPostParams("");
 		userPayStatus.setIsSync((short) 0);
 		userPayStatus.setAddTime(TimeStampUtil.getNowSecond());
 		userPayStatusMapper.insert(userPayStatus);
@@ -95,9 +106,12 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		BigDecimal cardMoney = orderCards.getCardMoney();
 		DictCardType dictCardType = dictCardTypeMapper.selectByPrimaryKey(orderCards.getCardType());
 		BigDecimal restMoney = users.getRestMoney().add(cardMoney);
-		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
-		users.setRestMoney(lastRestMoney);
+//		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
+		users.setRestMoney(restMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
+		if(cardMoney.compareTo(new BigDecimal(1000))>=0){
+			users.setIsVip(1);
+		}
 		usersService.updateByPrimaryKeySelective(users);
 
 		orderCardsMapper.updateByPrimaryKeySelective(orderCards);
@@ -167,6 +181,10 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 
 		String cardOrderNo = String.valueOf(OrderNoUtil.getOrderCardNo());
 		record.setCardOrderNo(cardOrderNo);
+		record.setReferee("");
+		record.setParentId(0L);
+		record.setOrgId(0L);
+		
 
 		return record;
 	}
@@ -183,6 +201,9 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		record.setOrderStatus((short) 0);
 		record.setPayType(payType);
 		record.setUpdateTime(0L);
+		record.setReferee("");
+		record.setParentId(0L);
+		record.setOrgId(0L);
 		
 		String cardOrderNo = String.valueOf(OrderNoUtil.getOrderCardNo());
 		record.setCardOrderNo(cardOrderNo);
@@ -232,6 +253,58 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			e.printStackTrace();
 		}
 		return userCardVo;
+	}
+
+	@Override
+	public List<OrderCards> selectByVo(OrderCardsVo vo) {
+		return orderCardsMapper.selectByVo(vo);
+	}
+
+	
+	//充值总金额
+	public Map<String, Double> countTotal(OrderCardsVo orderCardsVo) {
+		return orderCardsMapper.countTotal(orderCardsVo);
+	}
+
+	@Override
+	public PageInfo<OrderCards> selectByListPage(OrderCardsVo vo,int pageNo,int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<OrderCards> orderCardsList = orderCardsMapper.selectByListPage(vo);
+		PageInfo<OrderCards> page =new PageInfo<OrderCards>(orderCardsList);
+		return page;
+	}
+
+	@Override
+	public OrderCardsVo transVo(OrderCards orderCards) {
+		if(orderCards==null) return null;
+		
+		OrderCardsVo orderCoardVo=new OrderCardsVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(orderCards, orderCoardVo);
+		
+		Long userId = orderCards.getUserId();
+		Users user = usersService.selectByPrimaryKey(userId);
+		if(user!=null){
+			orderCoardVo.setUserRestMoney(user.getRestMoney());
+			orderCoardVo.setScore(user.getScore());
+			orderCoardVo.setUserType(user.getUserType());
+			orderCoardVo.setAddFrom(user.getAddFrom());
+			orderCoardVo.setIsVip(user.getIsVip());
+		}
+		if(orderCards.getReferee()!=null && !orderCards.getReferee().equals("")){
+			StaffSearchVo staffsVo =new StaffSearchVo();
+			staffsVo.setStaffCode(orderCards.getReferee());
+			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffsVo);
+			OrgStaffs staff = staffList.get(0);
+			if(staff!=null){
+				orderCoardVo.setStaffName(staff.getName());
+			}else{
+				orderCoardVo.setStaffName(orderCards.getReferee());
+			}
+		}else{
+			orderCoardVo.setStaffName("-");
+		}
+		
+		return orderCoardVo;
 	}
 	
 	

@@ -44,7 +44,7 @@
                           <header class="panel-heading">
                           	充值后赠送-列表
                           	<div class="pull-right">
-                          		<button onClick="btn_add('bs/toRechargeCouponForm')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
+                          		<button onClick="btn_add('bs/chargeSendCoupons')" class="btn btn-primary" type="button"><i class="icon-expand-alt"></i>新增</button>
                     		</div>      
                           </header>
                           
@@ -56,7 +56,7 @@
                               <tr>
                               		  <th >描述</th>
 		                              <th >优惠券金额</th>
-		                              <th >订单金额满</th>
+		                              <!-- <th >订单金额满</th> -->
 		                              <th >服务类型</th>
 		                              <th >日期范围</th>
 		                              <th >添加时间</th>
@@ -69,9 +69,16 @@
                               <tr>
                               			<td>${ item.introduction }</td>
 							            <td>${ item.value }</td>
-							            <td>${ item.maxValue }</td>
+							            <%-- <td>${ item.maxValue }</td> --%>
 							            <td>
-							            	<serviceTypeTag:servicetype serviceType="${item.serviceType }"/>
+							            	<%-- <serviceTypeTag:servicetype serviceType="${item.serviceType }"/> --%>
+							            	<c:if test="${serviceTypeList!=null }">
+							            		<c:forEach items="${serviceTypeList }" var="serviceType">
+							            			<c:if test="${item.serviceType==serviceType.serviceTypeId }">
+							            				${serviceType.name }
+							            			</c:if>
+							            		</c:forEach>
+							            	</c:if>
 							            </td>
 							            <td>
 							            	${ item.rangMonth }个月
@@ -84,7 +91,7 @@
 							            	<c:if test="${item.isValid ==0}">否</c:if>
 							            </td>
 							            <td>
-							            	<button id="btn_update"  onClick="btn_update('bs/toRechargeCouponForm?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
+							            	<button id="btn_update"  onClick="btn_update('bs/chargeSendCoupons?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
 	                                  		<button id="btn_del" onClick="btn_del('bs/deleteByRechargeCouponId?id=${item.id}')" class="btn btn-danger btn-xs"  title="删除"><i class="icon-trash "></i></button>
 							                <button id="btn_userList"  onClick="btn_update('bs/toRechargeCouponUserList?id=${ item.id }')" class="btn btn-primary btn-xs" title="用户"><i class="icon-user"></i></button>
 							            </td>
@@ -98,7 +105,7 @@
                       
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="contentModel"/>
-	        				<c:param name="urlAddress" value="/bs/coupon-list"/>
+	        				<c:param name="urlAddress" value="/bs/recharge-coupon-list"/>
 	       			  </c:import>
                   </div>
               </div>

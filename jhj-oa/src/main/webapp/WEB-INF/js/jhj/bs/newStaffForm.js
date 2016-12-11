@@ -23,7 +23,8 @@ $('#newStaff-form').validate({
 		orgId: {
 			required: true,
 			orgId:"orgId"
-		},
+		}
+		
 	
 	},
 
@@ -40,7 +41,7 @@ $('#newStaff-form').validate({
 		},
 		addr : {
 			required : "请输入员工联系地址"
-		},
+		}
 
 	},
 

@@ -24,6 +24,7 @@ import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderPricesService;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderSearchVo;
@@ -36,6 +37,9 @@ public class JobOrderController extends BaseController {
 
 	@Autowired
 	private OrdersService ordersService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 
 	@Autowired
 	private OrgStaffsService orgStaffsService;
@@ -75,7 +79,7 @@ public class JobOrderController extends BaseController {
 		
 		searchVo.setEndAddTime(endAddTime);
 		
-		List<Orders> list = ordersService.selectBySearchVo(searchVo);
+		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 
 		for (int i = 0; i < list.size(); i++) {
 			// 订单状态设置为0 已关闭

@@ -14,7 +14,9 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderLog;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -24,9 +26,12 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
+import com.jhj.service.order.OrderAppointService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
@@ -34,9 +39,13 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderPriceExtVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -86,12 +95,22 @@ public class OrderPayController extends BaseController {
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+    private OrderAppointService orderAppointService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
+	
 	// 17.订单支付前接口
 	/**
 	 * @param mobile true string 手机号 
 	 * @param order_id true int 订单id 
 	 * @param order_no true string 订单号
-	 * @param pay_type true int 支付方式： 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付(保留,暂不开发) 4 = 上门刷卡（保留，暂不开发） 
+	 * @param pay_type true int 支付方式： 付款方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位） 6 = 现金支付 7 = 平台已支付
 	 * @return  OrderViewVo
 	 */
 	@RequestMapping(value = "post_pay", method = RequestMethod.POST)
@@ -132,6 +151,23 @@ public class OrderPayController extends BaseController {
 			return result;			
 		}
 		
+		//判断如果有指定员工，则指定员工是否满足条件
+		//找出是否有指定的阿姨。
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(orderId);
+		
+		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
+		
+		if (!orderAppoints.isEmpty()) {
+			for (OrderAppoint oa: orderAppoints) {
+				Long appointStaffID = oa.getStaffId();
+				AppResultData<Object> checkAppointResult = orderDispatchService.checAppointDispatch(orderId, appointStaffID);
+				if (checkAppointResult.getStatus() == Constants.ERROR_999) {
+					return checkAppointResult;
+				}
+			}
+		}
+		
 		//此时 orderPay 和 orderMoney 值是相等的
 		BigDecimal orderPay = orderPrice.getOrderMoney();
 		BigDecimal orderMoney = orderPrice.getOrderMoney();		
@@ -152,8 +188,6 @@ public class OrderPayController extends BaseController {
 		
 		long updateTime = TimeStampUtil.getNowSecond();
 
-		orderPrice.setOrderMoney(orderPrice.getOrderMoney());
-		
 		
 		if (orderPayType.equals(Constants.PAY_TYPE_0)) {
 			//1.先判断用户余额是否够支付
@@ -165,7 +199,7 @@ public class OrderPayController extends BaseController {
 		}		
 		
 		//判断当前是否有满足条件阿姨，没有则返回提示信息.
-		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
+//		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
 				
 		orderPrice.setOrderPay(orderPay);
 		orderPrice.setPayType(orderPayType);
@@ -183,6 +217,7 @@ public class OrderPayController extends BaseController {
 		//如果是余额支付或者需支付金额为0 
 		if (orderPayType.equals(Constants.PAY_TYPE_0) || 
 				orderPayType.equals(Constants.PAY_TYPE_6) ||
+				orderPayType.equals(Constants.PAY_TYPE_7) ||
 				orderPay.compareTo(new BigDecimal(0)) == 0) {
 			// 1. 扣除用户余额.
 			// 2. 用户账号明细增加.
@@ -193,21 +228,9 @@ public class OrderPayController extends BaseController {
 				u.setUpdateTime(updateTime);
 				userService.updateByPrimaryKeySelective(u);
 			}
-			
-			/**
-			 * 2016年3月24日19:11:16  
-			 * 		
-			 * 		修改已支付 状态时。。  
-			 * 
-			 * 	jhj2.1	钟点工(基础保洁类) 修改为 2、  助理单修改为 3
-			 */
-			
-			if(order.getOrderType() == Constants.ORDER_TYPE_2){
-				
-				order.setOrderStatus(Constants.ORDER_AM_STATUS_3);//已支付
-			}
-			
-			if(order.getOrderType() == Constants.ORDER_TYPE_0){
+						
+			if(order.getOrderType() == Constants.ORDER_TYPE_0 ||
+			   order.getOrderType() == Constants.ORDER_TYPE_1){
 				
 				order.setOrderStatus(Constants.ORDER_HOUR_STATUS_2);//已支付
 			}
@@ -245,7 +268,7 @@ public class OrderPayController extends BaseController {
 				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
 				
 				
-				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), orgStaffsNewVos, false);
+				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), false);
 			}
 			
 			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
@@ -254,6 +277,7 @@ public class OrderPayController extends BaseController {
 				 *  2016年4月13日18:50:29  没啥大用了， jhj2.1 已经没有 深度 保洁订单类型了
  				 * 
 				 */
+				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
 				orderPayService.orderPaySuccessToDoForDeep(order);
 			}
 
@@ -275,5 +299,120 @@ public class OrderPayController extends BaseController {
 		
 		return result;
 	}
+	
+	// 17.订单支付前接口
+		/**
+		 * @param mobile true string 手机号 
+		 * @param order_id true int 订单id 
+		 * @param order_no true string 订单号
+		 * @param pay_type true int 支付方式： 付款方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位） 6 = 现金支付 7 = 平台已支付
+		 * @param pay_order_type int  订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+		 * @return  OrderViewVo
+		 */
+		@RequestMapping(value = "post_pay_ext", method = RequestMethod.POST)
+		public AppResultData<Object> postPayExt(
+				@RequestParam("user_id") Long userId, 
+				@RequestParam("order_no") String orderNo, 
+				@RequestParam("order_pay_ext") BigDecimal orderPayExt, 
+				@RequestParam("order_pay_type") Short orderPayType
+				) {
+
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+			Users u = userService.selectByPrimaryKey(userId);
+
+			// 判断是否为注册用户，非注册用户返回 999
+			if (u == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
+				return result;
+			}		
+			
+			Orders order = ordersService.selectByOrderNo(orderNo);
+			if (order == null){
+				return result;
+			}
+			
+			Long orderId = order.getId();
+			
+			
+			
+			if(order.getOrderStatus() <= Constants.ORDER_HOUR_STATUS_1 || order.getOrderStatus() > Constants.ORDER_HOUR_STATUS_5){
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("订单当前状态不能进行补差价");
+				return result;
+			}
+			
+			OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
+			
+			if (orderPrice != null && orderPrice.getPayType().equals(Constants.PAY_TYPE_6)) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("现金支付不能补差价.");
+				return result;
+			}
+
+			if (orderPayExt.compareTo(new BigDecimal(0)) == 0) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("金额不能为0");
+				return result;
+			}
+			
+			if (orderPayType.equals(Constants.PAY_TYPE_0)) {
+				//1.先判断用户余额是否够支付
+				if(u.getRestMoney().compareTo(orderPayExt) < 0) {
+					result.setStatus(Constants.ERROR_999);
+					result.setMsg(ConstantMsg.ERROR_999_MSG_5);
+					return result;
+				}
+			}
+			
+			OrderPriceExt orderPriceExt = orderPriceExtService.initOrderPriceExt();
+			orderPriceExt.setUserId(order.getUserId());
+			orderPriceExt.setMobile(order.getMobile());
+			orderPriceExt.setOrderId(order.getId());
+			orderPriceExt.setOrderNo(order.getOrderNo());
+			
+			//生成唯一的补差价订单号
+			String orderNoExt = String.valueOf(OrderNoUtil.genOrderNo());
+			orderPriceExt.setOrderNoExt(orderNoExt);
+			orderPriceExt.setOrderPay(orderPayExt);
+			orderPriceExt.setPayType(orderPayType);
+			
+			orderPriceExtService.insert(orderPriceExt);
+
+			//如果是余额支付或者需支付金额为0 
+			if (orderPayType.equals(Constants.PAY_TYPE_0)) {
+				
+				//1. 用户余额扣除
+				u.setRestMoney(u.getRestMoney().subtract(orderPayExt));
+				u.setUpdateTime(TimeStampUtil.getNowSecond());
+				userService.updateByPrimaryKeySelective(u);
+				
+				//2记录用户消费明细
+				userDetailPayService.addUserDetailPayForOrderPayExt(u, order, orderPriceExt, "", "", "");
+				
+				//更新订单差价为已支付
+				orderPriceExt.setOrderStatus(2);
+				orderPriceExt.setUpdateTime(TimeStampUtil.getNowSecond());
+				orderPriceExtService.updateByPrimaryKey(orderPriceExt);
+				
+				//更新通知服务人员.
+				orderPayService.orderPaySuccessToDoOrderPayExt(order, orderPriceExt);
+			}
+			
+			OrderPriceExtVo vo = new OrderPriceExtVo();
+			BeanUtilsExp.copyPropertiesIgnoreNull(order, vo);
+			vo.setId(orderPriceExt.getId());
+			vo.setOrderNoExt(orderPriceExt.getOrderNoExt());
+			vo.setPayType(orderPriceExt.getPayType());
+			vo.setOrderPayStatus(orderPriceExt.getOrderStatus());
+			vo.setOrderPay(orderPriceExt.getOrderPay());
+			vo.setRemarks(orderPriceExt.getRemarks());
+			
+			result.setData(vo);
+			
+			
+			return result;
+		}
 
 }

@@ -36,7 +36,7 @@ public class TestStaffPayController extends JUnitActionBase{
     public void testGetPayDept() throws Exception {
 
 		String url = "/app/staff/pay/pay_dept.json";
-		String params = "?staff_id=78&&pay_type=1";
+		String params = "?staff_id=2&pay_type=1";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);
@@ -52,11 +52,11 @@ public class TestStaffPayController extends JUnitActionBase{
 		MockHttpServletRequestBuilder postRequest = post(url);
 	
      	//通用订单  需要支付
-	    postRequest = postRequest.param("trade_no", "2016092021001004930077298409");
-	    postRequest = postRequest.param("notify_time", "2016-09-20 17:32:12");
+	    postRequest = postRequest.param("trade_no", "2016101821001004930273746221");
+	    postRequest = postRequest.param("notify_time", "2016-10-18 16:53:33");
 	    postRequest = postRequest.param("pay_type", "1");
-	    postRequest = postRequest.param("notify_id", "efa23ad48b266a0add29cd17e9385d7n6c");
-	    postRequest = postRequest.param("order_no", "778164635927838720");
+	    postRequest = postRequest.param("notify_id", "3a22665b35b6ba413dff866eaf630aen6e");
+	    postRequest = postRequest.param("order_no", "788301132345638912");
 	    postRequest = postRequest.param("trade_status", "TRADE_SUCCESS");
 	    postRequest = postRequest.param("pay_account", "lnczx@tom.com");
 //	    postRequest = postRequest.param("order_pay", "10");

@@ -15,15 +15,23 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderRates;
+import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderRatesService;
+import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.vo.order.OrderDetailVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.order.OrderServiceAddonViewVo;
+import com.jhj.vo.staff.OrgStaffRateVo;
+import com.meijia.utils.DateUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -43,11 +51,17 @@ public class OrderQuerysController extends BaseController {
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
 	
+	@Autowired
+	private OrderServiceAddonsService orderServiceAddonsService;
+	
+	@Autowired
+	private OrderRatesService orderRatesService;
+	
 
 	/**
 	 * 订单列表接口
 	 * @param staffId
-	 * @param orderForm
+	 * @param orderForm  0 = 待服务 1 = 服务中  2 = 本月已完成订单.
 	 * @param page
 	 * @return
 	 */
@@ -55,7 +69,7 @@ public class OrderQuerysController extends BaseController {
 	@RequestMapping(value = "get_list", method = RequestMethod.GET)
 	public AppResultData<Object> list(
 			@RequestParam("user_id") Long staffId,
-			@RequestParam("order_from") Short orderForm,
+			@RequestParam("order_from") Short orderFrom,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		
 		List<OrderListVo> orderListVo = new ArrayList<OrderListVo>();
@@ -68,22 +82,42 @@ public class OrderQuerysController extends BaseController {
 			return result;
 		}
 		OrderSearchVo searchVo = new OrderSearchVo();
-		searchVo.setAmId(staffId);
-		searchVo.setOrderFrom(orderForm);
-//		searchVo.setServiceDateStart(DateUtil.curStartDate(0));
-//		searchVo.setServiceDateEnd(DateUtil.curLastDate(0));
-		PageInfo list = orderQueryService.selectByListVoPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
+		searchVo.setStaffId(staffId);
+		
+		List<Short> orderStatusList = new ArrayList<Short>();
+		if (orderFrom.equals((short)0)) {
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
+		}
+		
+		if (orderFrom.equals((short)1)) {
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
+		}
+		
+		if (orderFrom.equals((short)2)) {
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+			orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
+			
+			int year = DateUtil.getYear();
+			int month = DateUtil.getMonth();
+			searchVo.setStartServiceTime(TimeStampUtil.getBeginOfMonth(year, month));
+			searchVo.setEndServiceTime(TimeStampUtil.getEndOfMonth(year, month));
+		}
+		
+		searchVo.setOrderStatusList(orderStatusList);
+		searchVo.setOrderByProperty("service_date asc");
+		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
 		List<Orders> orderList = list.getList();
 		for (Orders item : orderList) {
 			
 			OrderListVo vo = new OrderListVo(); 
-			vo = orderQueryService.getOrderListVo(item);
+			vo = orderQueryService.getOrderListVo(item, staffId);
 			
 			//如果是未接单，则设置服务地址为 ******
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setOrderNo(vo.getOrderNo());
 			searchVo1.setDispatchStatus((short) 1);
+			searchVo1.setStaffId(staffId);
 			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
 
 			OrderDispatchs orderDispatch = null;
@@ -108,7 +142,7 @@ public class OrderQuerysController extends BaseController {
 		return result;
 
 	}
-	
+		
 	// 19.订单详情接口
 	/**
 	 * mobile:手机号 order_id订单ID
@@ -129,7 +163,22 @@ public class OrderQuerysController extends BaseController {
 			return result;
 		}
 		
-		OrderDetailVo vo = orderQueryService.getOrderDetailVo(order);
+		OrderDetailVo vo = orderQueryService.getOrderDetailVo(order, staffId);
+		
+		//如果有服务子项，则需要增加服务子项
+		List<OrderServiceAddonViewVo> serviceAddons = new ArrayList<OrderServiceAddonViewVo>();
+		
+		if (vo.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+			
+			List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+			
+			if (!orderAddons.isEmpty()) {
+				serviceAddons = orderServiceAddonsService.changeToOrderServiceAddons(orderAddons);
+				
+			}
+		}
+		vo.setServiceAddons(serviceAddons);
+		
 		
 		result.setData(vo);
 		
@@ -137,6 +186,7 @@ public class OrderQuerysController extends BaseController {
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrderNo(order.getOrderNo());
 		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStaffId(staffId);
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
 
 		OrderDispatchs orderDispatch = null;
@@ -154,4 +204,24 @@ public class OrderQuerysController extends BaseController {
 		return result;
 	}	
 	
+	
+	// 员工评价信息接口
+	@RequestMapping(value = "get_rates", method = RequestMethod.GET)
+	public AppResultData<Object> GetStaffRate(
+			@RequestParam("staff_id") Long staffId,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+		OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
+		orderRateSearchVo.setStaffId(staffId);
+		
+		PageInfo datas = orderRatesService.selectByListPage(orderRateSearchVo, page, Constants.PAGE_MAX_NUMBER,true);
+		
+		List<OrderRates> orderRates = datas.getList();
+		List<OrgStaffRateVo> vos = orderRatesService.changeToOrgStaffReteVo(orderRates);
+		
+		result.setData(vos);
+		
+		return result;
+	}
 }

@@ -8,7 +8,7 @@ $('#org-form').validate({
 		},
 		orgTel:{
 			required: true,
-			number: true
+			isTel: true
 		},
 		orgOwner:{
 			required: true
@@ -68,6 +68,11 @@ $('#org-form').validate({
 
 });
 
+$.validator.addMethod("isTel",function(value,element,param){
+	var reg= /^\d{3,4}-?\d{7,9}$/;
+	return this.optional(element) || (reg.test(value));
+},"请输入正确的电话号码");
+
 //校验门店名称是否重复
 function valid(){
 	var inputName = encodeURIComponent(document.getElementById("orgName").value);
@@ -110,6 +115,7 @@ $("#orgForm_btn").click(function(form) {
 });
 
 //baiduMap 相关
+$(function(){
 var map = new BMap.Map("containers");//初始化地图       
 map.addControl(new BMap.NavigationControl());  //初始化地图控件              
 map.addControl(new BMap.ScaleControl());                   
@@ -139,7 +145,6 @@ var gc = new BMap.Geocoder();//地址解析类
         	});
     });
 
- 
 //信息窗口
 function showLocationInfo(pt, rs){
     var opts = {
@@ -262,7 +267,5 @@ function showLocationInfo(pt, rs){
         	}
         });
     }
-    
-//修改页面一加载就回显地图位置
-window.onload = hhh;
+});
 

@@ -20,9 +20,11 @@ public interface OrgStaffCashMapper {
     int updateByPrimaryKey(OrgStaffCash record);
 
 	List<OrgStaffCash> selectByStaffId(Long userId);
+	
+	List<OrgStaffCash> selectBySearchVo(OrgStaffCashSearchVo searchVo);
 
-	List<OrgStaffCash> selectVoByListPage(OrgStaffCashSearchVo searchVo);
+	List<OrgStaffCash> selectByListPage(OrgStaffCashSearchVo searchVo);
 
-	BigDecimal getTotalCashMoney(Long staffId);
+	BigDecimal getTotalCashMoney(OrgStaffCashSearchVo searchVo);
 
 }

@@ -15,6 +15,7 @@ import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.order.OrderAmTypeChartService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
@@ -126,7 +127,11 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		/*
 		 *   助理服务大类--贴心家事
 		 */
-		List<PartnerServiceType> txList = partService.selectByParentId(25L);
+		
+		PartnerServiceTypeVo vo=new PartnerServiceTypeVo();
+		vo.setParentId(25L);
+		vo.setEnable((short)1);
+		List<PartnerServiceType> txList = partService.selectByPartnerServiceTypeVo(vo);
 		
 		// 贴心家事 子服务id
 		List<Long> txChildIdList = new ArrayList<Long>();
@@ -137,7 +142,10 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		/*
 		 *  助理服务大类--深度养护
 		 */
-		List<PartnerServiceType> sdList = partService.selectByParentId(26L);
+		PartnerServiceTypeVo vo1=new PartnerServiceTypeVo();
+		vo1.setParentId(26L);
+		vo1.setEnable((short)1);
+		List<PartnerServiceType> sdList = partService.selectByPartnerServiceTypeVo(vo1);
 		
 		// 深度养护子服务id
 		List<Long> sdChildIdList = new ArrayList<Long>();
@@ -148,7 +156,10 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		/*
 		 * 助理服务大类--企业服务
 		 */
-		List<PartnerServiceType> qyList = partService.selectByParentId(27L);
+		PartnerServiceTypeVo vo2=new PartnerServiceTypeVo();
+		vo2.setParentId(27L);
+		vo2.setEnable((short)1);
+		List<PartnerServiceType> qyList = partService.selectByPartnerServiceTypeVo(vo2);
 		
 		//企业服务子服务id
 		List<Long> qyChildIdList = new ArrayList<Long>();
@@ -296,7 +307,7 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<String>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {
@@ -420,7 +431,10 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		/*
 		 *   助理服务大类--贴心家事
 		 */
-		List<PartnerServiceType> txList = partService.selectByParentId(25L);
+		PartnerServiceTypeVo vo1=new PartnerServiceTypeVo();
+		vo1.setParentId(25L);
+		vo1.setEnable((short)1);
+		List<PartnerServiceType> txList = partService.selectByPartnerServiceTypeVo(vo1);
 		
 		// 贴心家事 子服务id
 		List<Long> txChildIdList = new ArrayList<Long>();
@@ -431,7 +445,10 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		/*
 		 *  助理服务大类--深度养护
 		 */
-		List<PartnerServiceType> sdList = partService.selectByParentId(26L);
+		PartnerServiceTypeVo vo2=new PartnerServiceTypeVo();
+		vo2.setParentId(26L);
+		vo2.setEnable((short)1);
+		List<PartnerServiceType> sdList = partService.selectByPartnerServiceTypeVo(vo2);
 		
 		// 深度养护子服务id
 		List<Long> sdChildIdList = new ArrayList<Long>();
@@ -442,7 +459,10 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		/*
 		 * 助理服务大类--企业服务
 		 */
-		List<PartnerServiceType> qyList = partService.selectByParentId(27L);
+		PartnerServiceTypeVo vo3=new PartnerServiceTypeVo();
+		vo3.setParentId(27L);
+		vo3.setEnable((short)1);
+		List<PartnerServiceType> qyList = partService.selectByPartnerServiceTypeVo(vo3);
 		
 		//企业服务子服务id
 		List<Long> qyChildIdList = new ArrayList<Long>();
@@ -570,7 +590,7 @@ public class OrderAmTypeChartServiceImpl implements OrderAmTypeChartService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<String>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {

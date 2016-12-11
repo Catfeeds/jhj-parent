@@ -273,6 +273,9 @@ public class OneCareUtil {
 			case 6:
 				payTypeName = "现金支付";
 				break;
+			case 7:
+				payTypeName = "平台已支付";
+				break;
 			default:
 				payTypeName = "";
 		}
@@ -487,7 +490,7 @@ public class OneCareUtil {
 		String orderTypeName = "";
 		switch (orderType) {
 		case 0:
-			orderTypeName = "钟点工";
+			orderTypeName = "金牌保洁";
 			break;
 		case 1:
 			orderTypeName = "深度保洁";
@@ -506,6 +509,30 @@ public class OneCareUtil {
 			break;
 		case 6:	
 			orderTypeName = "缴费单";	//2015-10-13 15:58:46 新增业务，充值话费、水电煤气费 类 订单
+			break;
+		default:
+			orderTypeName = "";
+		}
+		return orderTypeName;
+	}
+	
+	public static String getOrderTypeForDetailPay(Short orderType) {
+		String orderTypeName = "";
+		switch (orderType) {
+		case 0:
+			orderTypeName = "订单支付";
+			break;
+		case 1:
+			orderTypeName = "充值卡支付";
+			break;
+		case 2:
+			orderTypeName = "手机充值卡支付";
+			break;
+		case 3:
+			orderTypeName = "订单补差价支付";
+			break;
+		case 4:
+			orderTypeName = "订单加时";
 			break;
 		default:
 			orderTypeName = "";

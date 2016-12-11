@@ -1,72 +1,67 @@
-
-<div class="pages">
-	<div data-page="mine-charge-way" class="page navbar-fixed" style="background-color: #FDEEEE!important;">
-		<div class="page-content" style="margin: 0; color: #999;">
-			<span class="fangshiwenzi">信息核对</span>
-			<form id="order-view" class="list-block" style="margin: 0 auto!important;">
-				<ul style="background: #fffce8">
-					<li>
-						<div class="item-content">
-							<div class="item-inner">
-								<div class="item-title label">充值账户:</div>
-								<div class="item-xx">
-									<span id="mobile"></span>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="item-content">
-							<div class="item-inner">
-								<div class="item-title label">充值金额:</div>
-								<div class="item-xx">
-									<span id="card_pay_view"></span>元
-								</div>
-							</div>
-						</div>
-					</li>
-					<li class="pay-li">
-						<div class="item-content">
-							<div class="item-inner">
-								<div class="item-title label">赠送金额:</div>
-								<div class="item-xx">
-									<span id="send-money"></span>元
-								</div>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</form>
-			<span class="fangshiwenzi">支付方式</span>
-              <div id="order-view" class="list-block chongzhi-qingchu"style="margin:0 auto!important;">
-                <ul style="background:#fffce8">
-                    <!-- <li>
-                      <div class="item-content">
-                        <div class="item-inner">
-                          <div class="item-title label"style="width:196px!important;line-height:20px;">
-                            <img src="img/icons/weixin.png" alt=""style="height:40px;margin-left:-5px;">
-                            <div style="float:left;margin-left:110px;margin-top:-36px;">微信支付</div>
-                          </div>
-                          <div style="margin-right:10px;color:#666">
-                            <img src="img/icons/duigou-green.png" alt="">
-                          </div>
-                        </div>
-                      </div>
-                    </li> -->
-                    <li>
-						<label class="label-checkbox item-content"style="background:#fffce8;">
-							<div class="item-media"><img src="img/icons/weixin.png"style="width:45px;"></div>
-							<div class="item-inner">
-								<div class="item-title"style="margin-left:-15px;color:#000;">微信支付</div>
-								<input type="hidden"  value="2"/>
-								<img  src="img/icons/duigou-green.png" id="order_pay_type" name="order_pay_type"/> 
-							</div>
-						</label>
-					</li>
+<div data-page="mine-charge-way" class="page">
+    <div id="indexPageContentDiv" class="page-content">
+        <div class="beijing-index">
+            <div class="chongzhi">
+                <p>充值账户：<span id="mobile"></span></p>
+                <p>支付方式：<span>微信支付</span></p>
+                <p>推荐人号码：<sapn><input name="staffCode" id="staffCode"  placeholder=""/></span></p>
+            </div>
+            <div class="chongzhi1">
+                <p>赠送优惠券</p>
+            </div>
+            {{#js_compare "this.card_pay==1000"}}
+            <div class="chongzhi2">
+                <img src="img/youhuiquan/1.png" alt="">
+                <img src="img/youhuiquan/2.png" alt="">
+                <img src="img/youhuiquan/3.png" alt="">
+                <img src="img/youhuiquan/4.png" alt="">
+                <img src="img/youhuiquan/5.png" alt="">
+                <div class="chongzhi5-kong1"></div>
+            </div>
+            {{/js_compare}}
+            {{#js_compare "this.card_pay==2000"}}
+            <div class="chongzhi2">
+                <img src="img/youhuiquan/6.png" alt="">
+                <img src="img/youhuiquan/7.png" alt="">
+                <img src="img/youhuiquan/8.png" alt="">
+                <img src="img/youhuiquan/9.png" alt="">
+                <img src="img/youhuiquan/10.png" alt="">
+                <img src="img/youhuiquan/11.png" alt="">
+                <img src="img/youhuiquan/25.png" alt="">
+                <img src="img/youhuiquan/26.png" alt="">
+                <img src="img/youhuiquan/27.png" alt="">
+                <img src="img/youhuiquan/28.png" alt="">
+                <img src="img/youhuiquan/29.png" alt="">
+                <div class="chongzhi5-kong1"></div>
+            </div>
+            {{/js_compare}}
+            {{#js_compare "this.card_pay==3000"}}
+            <div class="chongzhi3">
+                <img src="img/youhuiquan/12.png" alt="">
+                <img src="img/youhuiquan/13.png" alt="">
+                <img src="img/youhuiquan/14.png" alt="">
+                <img src="img/youhuiquan/15.png" alt="">
+                <img src="img/youhuiquan/16.png" alt="">
+                <img src="img/youhuiquan/17.png" alt="">
+                <img src="img/youhuiquan/18.png" alt="">
+                <img src="img/youhuiquan/19.png" alt="">
+                <img src="img/youhuiquan/20.png" alt="">
+                <img src="img/youhuiquan/21.png" alt="">
+                <img src="img/youhuiquan/22.png" alt="">
+                <div class="chongzhi5-kong1"></div>
+            </div>
+            {{/js_compare}}
+            
+            <div class="order-xiadan">
+                <ul class="xiadan2">
+                    <li id="card_pay_view" class="special-color3">{{this.card_pay}}<b>元</b></li>
                 </ul>
-              </div>
-              <a href="#" class="button active my-submit chongzhi-submit"style="background:#5EA6EE;border:1px solid #5EA6EE;">确认支付</a>
-		</div>
-	</div>
+                <ul class="xiadan3">
+                    <a href="#" id="chongzhi-submit">
+                        <li>确认支付</li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-

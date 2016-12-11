@@ -11,6 +11,7 @@ import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.vo.cooperate.CooperateVo;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -116,6 +117,12 @@ public class CooperateBusinessImpl implements CooperateBusinessService {
 	@Override
 	public List<Long> getAllCoopId() {
 		return cooMapper.getAllCoopId();
+	}
+
+	@Override
+	public List<CooperativeBusiness> selectCooperativeBusinessVo(
+			CooperativeBusinessSearchVo vo) {
+		return cooMapper.selectCooperativeBusinessVo(vo);
 	}
 	
 	

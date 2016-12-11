@@ -99,7 +99,7 @@ public class TimeStampUtil {
 	 */
 	public static Long getEndOfToday() {
 		String today = DateUtil.getEndOfDay();
-		Date d = DateUtil.parse(today);
+		Date d = DateUtil.parseFull(today);
 		return getMillisOfDate(d) / 1000;
 	}
 
@@ -183,8 +183,8 @@ public class TimeStampUtil {
 //		Long seconds = TimeStampUtil.getMillisOfDate(new Date())/1000;
 //		Date date =TimeStampUtil.timeStampToDateFull(seconds*1000, "yyyy-MM-dd");
 		
-		System.out.println(TimeStampUtil.timeStampToDateStr(1464597140L*1000, "HH"));
+//		System.out.println(TimeStampUtil.timeStampToDateStr(1464597140L*1000, "HH"));
 		
-		System.out.println(TimeStampUtil.getNowMin());
+		System.out.println(TimeStampUtil.getEndOfToday());
 	}
 }

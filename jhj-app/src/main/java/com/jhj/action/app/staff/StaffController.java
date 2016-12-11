@@ -37,6 +37,7 @@ import com.jhj.service.users.UserTrailRealService;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.bs.StaffVo;
 import com.jhj.vo.staff.StaffAuthSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
@@ -215,8 +216,17 @@ public class StaffController extends BaseController {
 			orgStaff = orgStaffsService.initOrgStaffs();
 			orgStaff.setMobile(mobile);
 			orgStaffsService.insert(orgStaff);
+			
+			Long staffId = orgStaff.getStaffId();
+			String staffCode = String.valueOf(1000 + staffId.intValue());
+			orgStaff.setStaffCode(staffCode);
+			orgStaffsService.updateByPrimaryKey(orgStaff);
+			
 
-			List<PartnerServiceType> list = partnerServiceTypeService.selectAll();
+//			List<PartnerServiceType> list = partnerServiceTypeService.selectAll();
+			PartnerServiceTypeVo serviceTypeVo = new PartnerServiceTypeVo();
+			serviceTypeVo.setEnable((short)1);
+			List<PartnerServiceType> list = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo);
 
 			OrgStaffAuth orgStaffAuth = orgStaffAuthService.initOrgStaffAuth();
 

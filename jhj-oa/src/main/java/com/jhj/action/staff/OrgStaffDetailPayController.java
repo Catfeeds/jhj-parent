@@ -1,9 +1,11 @@
 package com.jhj.action.staff;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,15 +26,20 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.order.OrderPriceExt;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.order.OrderPriceExtService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 
 @Controller
@@ -46,6 +53,12 @@ public class OrgStaffDetailPayController extends BaseController {
 	
 	@Autowired
 	private OrgsService orgService;
+	
+	@Autowired
+	private OrderPricesService orderPriceService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 
 	/**
 	 * 服务人员财务明细
@@ -55,11 +68,12 @@ public class OrgStaffDetailPayController extends BaseController {
 	 * @param searchVo
 	 * @return
 	 * @throws ParseException
+	 * @throws UnsupportedEncodingException 
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/staffPay-list", method = RequestMethod.GET)
 	public String getStaffPayList(Model model, HttpServletRequest request, @RequestParam(value = "mobile", required = false, defaultValue = "") String mobile,
-			OrgStaffDetailPaySearchVo searchVo) throws ParseException {
+			OrgStaffDetailPaySearchVo searchVo) throws ParseException, UnsupportedEncodingException {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
@@ -70,6 +84,11 @@ public class OrgStaffDetailPayController extends BaseController {
 			searchVo = new OrgStaffDetailPaySearchVo();
 		}
 		searchVo.setMobile(mobile);
+		
+		if(searchVo.getStaffName()!=null){
+			String staffName = searchVo.getStaffName();
+			searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+		}
 		
 		//判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
@@ -113,6 +132,10 @@ public class OrgStaffDetailPayController extends BaseController {
 		}
 
 		List<OrgStaffDetailPay> orgStaffdetailPayList = orgStaffDetailPayService.selectVoByListPage(searchVo, pageNo, pageSize);
+		//统计查询
+		Map<String, Double> statisticalData = orgStaffDetailPayService.selectTotalData(searchVo);
+		model.addAllAttributes(statisticalData);
+		
 		List<OrgStaffDetailPayOaVo> orgStaffPayVoList = new ArrayList<OrgStaffDetailPayOaVo>();
 		for (int i = 0; i < orgStaffdetailPayList.size(); i++) {
 			OrgStaffDetailPay orgStaffDetailPay = orgStaffdetailPayList.get(i);
@@ -127,7 +150,21 @@ public class OrgStaffDetailPayController extends BaseController {
 			oaVo.setName(orgStaffs.getName());
 			oaVo.setOrderTypeName(vo.getOrderTypeName());
 			oaVo.setOrderPay(new BigDecimal(vo.getOrderPay()));
-
+			OrderPrices orderPrices = orderPriceService.selectByOrderNo(orgStaffDetailPay.getOrderNo());
+			
+			oaVo.setPayTypeName("");
+			if (orderPrices != null && orderPrices.getPayType() != null) {
+				oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPrices.getPayType()));
+			}
+			
+			if (oaVo.getOrderType().equals((short)9)) {
+				OrderPriceExt orderPriceExt = orderPriceExtService.selectByOrderNoExt(oaVo.getOrderNo());
+				
+				if (orderPriceExt != null) {
+					oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPriceExt.getPayType()));
+				}
+			}
+			
 			orgStaffdetailPayList.set(i, oaVo);
 			// orgStaffPayVoList.add(oaVo);
 		}

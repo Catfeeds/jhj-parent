@@ -90,7 +90,7 @@
 					where staff_id in
 					 	<foreach item="item" index="index" collection="list"
 					             open="(" separator="," close=")">
-					        #{item}
+					       ${item}
 					    </foreach>
 			
 				) as T1
@@ -101,7 +101,7 @@
 				 where staff_id in
 				 	<foreach item="item" index="index" collection="list"
 				             open="(" separator="," close=")">
-				        #{item}
+				        ${item}
 				    </foreach>
 				 group by staff_id
 				) as T2

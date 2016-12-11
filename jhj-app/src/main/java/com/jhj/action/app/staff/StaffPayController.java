@@ -152,7 +152,7 @@ public class StaffPayController extends BaseController {
 		vo.setOrderId(orgstaffPayDept.getOrderId());
 		vo.setOrderNo(orderNo);
 		vo.setOrderMoney(orgstaffPayDept.getOrderMoney());
-		vo.setNotifyUrl("http://www.jia-he-jia.com/jhj-app/pay/notify_alipay_dep.jsp");
+		vo.setNotifyUrl(Constants.PAY_CALLBACK_SERVICE_HOST + "/jhj-app/pay/notify_alipay_dep.jsp");
 
 		result.setData(vo);
 		return result;
@@ -221,6 +221,12 @@ public class StaffPayController extends BaseController {
 		if (orgStaffFinance == null) {
 			return result;
 		}
+		BigDecimal totalDept = orgStaffFinance.getTotalDept();
+		//更新服务人财务表
+		orgStaffFinance.setTotalDept(new BigDecimal(0));
+		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
+		orgStaffFinanceService.updateByPrimaryKey(orgStaffFinance);
+		
 		// 操作服务人员财务明细表 org_staff_detail_pay，插入一条 order_type = 4 = 还款订单 的记录
 		OrgStaffDetailPay orgStaffDetailPay = orgStaffDetailPayService.initStaffDetailPay();
 		orgStaffDetailPay.setStaffId(staffId);
@@ -228,13 +234,11 @@ public class StaffPayController extends BaseController {
 		orgStaffDetailPay.setOrderType((short) 4);
 		orgStaffDetailPay.setOrderId(orgstaffPayDept.getOrderId());
 		orgStaffDetailPay.setOrderNo(orderNo);
-		orgStaffDetailPay.setOrderMoney(orgStaffFinance.getTotalDept());
-		orgStaffDetailPay.setOrderPay(orgStaffFinance.getTotalDept());
+		orgStaffDetailPay.setOrderMoney(totalDept);
+		orgStaffDetailPay.setOrderPay(totalDept);
 		orgStaffDetailPay.setOrderStatusStr("完成支付");
 		orgStaffDetailPayService.insert(orgStaffDetailPay);
-		// 操作服务人员财务表 org_staff_finance， 将总欠款减去 此次支付成功的金额.
-		orgStaffFinance.setTotalDept(orgStaffFinance.getTotalDept().subtract(orgStaffDetailPay.getOrderMoney()));
-		orgStaffFinanceService.updateByPrimaryKeySelective(orgStaffFinance);
+
 		// 如果总欠款，低于设定的1000元，则去检查 org_staff_black , 找出是否有记录，并且black_type = 0
 		// 的情况，如果有记录，则将他删除掉.
 
@@ -247,7 +251,7 @@ public class StaffPayController extends BaseController {
 		if (orgStaffFinance.getTotalDept().compareTo(maxOrderDept) == -1) {
 			orgStaffFinance.setIsBlack((short) 0);
 			orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
-			
+			orgStaffFinanceService.updateByPrimaryKey(orgStaffFinance);
 				// d. 发送短信，告知员工已经支付欠款成功，并告知已不在黑名单中
 				orgStaffsService.userOutBlackSuccessTodo(orgstaff.getMobile());
 			
@@ -259,33 +263,6 @@ public class StaffPayController extends BaseController {
 		String[] content = new String[] { deptStr, timeStr, "1000" };
 		HashMap<String, String> sendSmsResult = SmsUtil.SendSms(orgstaff.getMobile(), Constants.STAFF_PAY_DEPT_SUCCESS, content);
 
-		// 发送推送消息，告知欠款支付成功
-		UserPushBind userPushBind = null;
-		UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
-		searchVo.setUserId(staffId);
-		List<UserPushBind> list = bindService.selectBySearchVo(searchVo);
-		if (!list.isEmpty()) userPushBind = list.get(0);
-
-		if (userPushBind != null) {
-			String clientId = userPushBind.getClientId();
-			// 透传消息 参数 map
-			HashMap<String, String> paramsMap = new HashMap<String, String>();
-
-			paramsMap.put("cid", clientId);
-
-			HashMap<String, String> transMap = new HashMap<String, String>();
-
-			transMap.put("is_show", "true");
-			transMap.put("action", "msg");
-			transMap.put("remind_title", "支付欠款成功");
-			transMap.put("remind_content", "您好，您的服务订单欠款已还清.");
-
-			String jsonParams = GsonUtil.GsonString(transMap);
-
-			paramsMap.put("transmissionContent", jsonParams);
-
-			PushUtil.AndroidPushToSingle(paramsMap);
-		}
 
 		return result;
 	}

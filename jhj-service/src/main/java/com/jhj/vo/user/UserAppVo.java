@@ -17,28 +17,6 @@ public class UserAppVo extends Users {
 	
 	private String restMoneySpan;
 	
-	//登录时，获得当前用户的助理信息
-	private Long amId;
-	
-	private String amMobile;
-	
-	
-	public Long getAmId() {
-		return amId;
-	}
-
-	public void setAmId(Long amId) {
-		this.amId = amId;
-	}
-
-	public String getAmMobile() {
-		return amMobile;
-	}
-
-	public void setAmMobile(String amMobile) {
-		this.amMobile = amMobile;
-	}
-
 	public boolean isHasUserAddr() {
 		return hasUserAddr;
 	}

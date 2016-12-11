@@ -122,6 +122,9 @@ public class Constants {
 	//2015-10-30 16:44:26 新增支付方式  ：针对 助理预约单的  现金支付
 	public static Short PAY_TYPE_6 = 6;
 	
+	//平台已支付.
+	public static Short PAY_TYPE_7 = 7;
+	
 	
 	public static int SUCCESS_0 = 0;
 	public static int ERROR_999 = 999;
@@ -141,17 +144,19 @@ public class Constants {
 	public static Short ORDER_TYPE_2 = 2; //助理订单
 	public static Short ORDER_TYPE_3 = 3; //配送服务订单
 	public static Short ORDER_TYPE_4 = 4; //充值卡订单
+	
 	//新增订单类型： 提醒类 订单
 	public static Short ORDER_TYPE_5 = 5;//提醒类 订单，不收费
 	//2015年10月13日16:58:48 新增订单 类型 ：  话费、水电煤缴费类订单
 	public static Short ORDER_TYPE_6 = 6;
-	
-	
+		
 	//消费类型
 	public static Short PAY_ORDER_TYPE_0 = 0;  //订单支付
-	public static Short PAY_ORDER_TYPE_1 = 1; //购买充值卡
+	public static Short PAY_ORDER_TYPE_1 = 1;  //购买充值卡
 	
-	public static Short PAY_ORDER_TYPE_2 = 2;	//手机话费类充值
+	public static Short PAY_ORDER_TYPE_2 = 2;  //手机话费类充值
+	
+	public static Short PAY_ORDER_TYPE_3 = 3;  //订单差价
 	
 	
 
@@ -220,7 +225,7 @@ public class Constants {
 	public static short ORDER_AM_STATUS_7=7;//完成服务
 	public static short ORDER_AM_STATUS_9=9;//已关闭
 	//深度保洁
-	public static short ORDERD_DEP_STATUS_0=0;//已取消
+	public static short ORDER_DEP_STATUS_0=0;//已取消
 	public static short ORDER_DEP_STATUS_1=1;//未支付
 	public static short ORDER_DEP_STATUS_2=2;//已支付
 	public static short ORDER_DEP_STATUS_3=3;//已派工
@@ -268,6 +273,9 @@ public class Constants {
 	//图片服务器 地址
 	public static String IMG_SERVER_HOST = "http://img.jia-he-jia.com:8080";
 	
+	//支付配置
+	public static String PAY_CALLBACK_SERVICE_HOST = "http://www.jia-he-jia.com";
+//	public static String PAY_CALLBACK_SERVICE_HOST = "http://123.57.209.81";
 	
 	//2016年3月7日16:06:01  门店 和 小组 的标识
 	public static short ORG_OR_GROUP_0 = 0;	//门店
@@ -381,6 +389,12 @@ public class Constants {
 	 *你的{1}的订单{2}已取消，请及时关注叮当到家APP获取相关订单信息。
 	 */
 	 public static String MESSAGE_ORDER_CANCLE="108638";
+	 
+	 //派工最远匹配距离
+	 public static int MAX_DISTANCE = 20000;
+	 
+	 //派工服务前2小时占位
+	 public static Long SERVICE_PRE_TIME = (long) (119 * 60);
 	
 	
 }

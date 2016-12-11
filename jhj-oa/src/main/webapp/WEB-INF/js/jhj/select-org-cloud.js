@@ -10,7 +10,7 @@ $("#parentId").on('change', function(){
 	$orgId = $(this).val();
 	if(0 == $orgId){
 		$optionList = '<option value="0">全部</option>';
-		$("#cloudId").html($optionList);
+		$("#orgId").html($optionList);
 		return;
 	}
 	
@@ -31,7 +31,7 @@ $("#parentId").on('change', function(){
 					$cloudOptions += '<option value="'+obj.org_id+'">' + obj.org_name + "</option>";
 				});
 				
-				$("#cloudId").html($cloudOptions);
+				$("#orgId").html($cloudOptions);
 			}
 		},
 		error:function(){
@@ -39,3 +39,5 @@ $("#parentId").on('change', function(){
 		}
 	});
 });
+
+$("#parentId").trigger("change");

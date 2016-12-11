@@ -44,7 +44,7 @@
 		from user_coupons
 		where user_id= #{userId,jdbcType=NUMERIC} and is_used = 0
 		AND UNIX_TIMESTAMP(to_date) > UNIX_TIMESTAMP(NOW())
-		order by value, to_date asc;
+		order by value desc, to_date asc;
 	</select>
 	
 	<select id="selectAllByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -260,5 +260,45 @@
 		)
 		</foreach>
 		
-	</insert>	
+	</insert>
+	
+	<select id="selectByUserCoupons" resultMap="BaseResultMap" parameterType="com.jhj.po.model.user.UserCoupons">
+		select <include refid="Base_Column_List"/>
+		from user_coupons
+		<where>
+			<if test="userId != null">
+				and user_id = #{userId,jdbcType=NUMERIC}
+			</if>
+			<if test="couponId != null">
+				and coupon_id = #{couponId,jdbcType=NUMERIC}
+			</if>
+			<if test="value != null">
+		        and value = #{value,jdbcType=DECIMAL}
+		    </if>
+			<if test="giftId != null">
+				and gift_id = #{giftId,jdbcType=NUMERIC}
+			</if>
+			<if test="serviceType != null">
+				and service_type = #{serviceType,jdbcType=VARCHAR}
+			</if>
+			<if test="fromDate != null">
+				and from_date = #{fromDate,jdbcType=DATE}
+			</if>
+			<if test="toDate != null">
+				<![CDATA[ and to_date < #{toDate,jdbcType=DATE}]]>
+			</if>
+			<if test="isUsed != null">
+				and is_used = #{isUsed,jdbcType=NUMERIC}
+			</if>
+			<if test="usedTime != null">
+				and used_time = #{usedTime,jdbcType=NUMERIC}
+			</if>
+			<if test="orderNo != null">
+				and order_no = #{orderNo,jdbcType=VARCHAR}
+			</if>
+			<if test="addTime != null">
+				and add_time = #{addTime,jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>	
 </mapper>

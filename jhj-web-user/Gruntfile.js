@@ -9,17 +9,13 @@ module.exports = function(grunt) {
 			},
 			
 			jslib : {
-				src : [ 'js/lib/moment-with-locales.min.js',
-//					    'js/echarts/echarts.js','js/echarts/gauge.js',
-					    'js/lib/appframework.min.js', 'js/lib/mobiscroll.custom-2.16.1.min.js'],
-				dest : 'js/u-lib.js',
+				src : [ 'js/lib/moment.min.js'],
+				dest : 'js/u-lib.min.js',
 			},
 			
 			jsmain : {					
 				// 源文件路径
-				src : [ 'js/main.js', 'js/require-data.js', 'js/utils.js', 'js/validate-reg.js', 
-				        'js/service-date-select.js', 'js/remind-date-select.js',
-				        'js/cook-date-select.js'],
+				src : [ 'js/main.js', 'js/require-data.js', 'js/utils.js', 'js/validate-reg.js'],
 				dest : 'js/u-main.js'
 			},
 			
@@ -53,12 +49,12 @@ module.exports = function(grunt) {
 		        }
 		     },
 		     
-			lib : {
-
-				files : {
-					'js/u-lib.min.js' : [ 'js/u-lib.js' ]
-				}
-			},
+//			lib : {
+//
+//				files : {
+//					'js/u-lib.min.js' : [ 'js/u-lib.js' ]
+//				}
+//			},
 			
 			main : {
 

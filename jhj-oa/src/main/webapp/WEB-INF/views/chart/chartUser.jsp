@@ -74,8 +74,8 @@
 						<th>时间</th>
 						<!-- <th>新增订单小计</th> -->
 						<th>增长率</th>
-						<th>微网站来源</th>
-						<th>App来源</th>
+						<!-- <th>微网站来源</th>
+						<th>App来源</th> -->
 						<th>新增用户小计</th>
 						<th>已转换用户小计</th>
 						<th>客户转换率</th>
@@ -94,15 +94,15 @@
 								${item.增长率}
 							</c:if>
 						</th>
-						<th>
+						<%-- <th>
 						<c:if test="${item.微网站来源==0}">
 							${item.微网站来源}
 						</c:if>
 						<c:if test="${item.微网站来源>0}">
 							<a href="../user/user-list?addFrom=1&startTime=${item.startTime}&endTime=${item.endTime}">${item.微网站来源}</a>
 						</c:if>
-						</th>
-						<th>
+						</th> --%>
+						<%-- <th>
 						<c:if test="${item.App来源==0}">
 							${item.App来源}
 						</c:if>
@@ -111,7 +111,7 @@
 								${item.App来源}
 							</a>
 						</c:if>
-						</th>
+						</th> --%>
 						<th>
 						<c:if test="${item.新增用户小计==0}">
 							${item.新增用户小计}

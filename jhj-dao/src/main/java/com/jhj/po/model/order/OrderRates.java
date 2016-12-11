@@ -7,15 +7,17 @@ public class OrderRates {
 
     private String orderNo;
 
-    private Long amId;
+    private Long staffId;
 
     private Long userId;
 
     private String mobile;
 
-    private Short rateType;
+    private int rateArrival;
 
-    private Short rateValue;
+    private int rateAttitude;
+
+    private int rateSkill;
 
     private String rateContent;
 
@@ -45,14 +47,6 @@ public class OrderRates {
         this.orderNo = orderNo == null ? null : orderNo.trim();
     }
 
-    public Long getAmId() {
-        return amId;
-    }
-
-    public void setAmId(Long amId) {
-        this.amId = amId;
-    }
-
     public Long getUserId() {
         return userId;
     }
@@ -69,20 +63,28 @@ public class OrderRates {
         this.mobile = mobile == null ? null : mobile.trim();
     }
 
-    public Short getRateType() {
-        return rateType;
+    public int getRateArrival() {
+        return rateArrival;
     }
 
-    public void setRateType(Short rateType) {
-        this.rateType = rateType;
+    public void setRateArrival(int rateArrival) {
+        this.rateArrival = rateArrival;
     }
 
-    public Short getRateValue() {
-        return rateValue;
+    public int getRateAttitude() {
+        return rateAttitude;
     }
 
-    public void setRateValue(Short rateValue) {
-        this.rateValue = rateValue;
+    public void setRateAttitude(int rateAttitude) {
+        this.rateAttitude = rateAttitude;
+    }
+
+    public int getRateSkill() {
+        return rateSkill;
+    }
+
+    public void setRateSkill(int rateSkill) {
+        this.rateSkill = rateSkill;
     }
 
     public String getRateContent() {
@@ -100,4 +102,12 @@ public class OrderRates {
     public void setAddTime(Long addTime) {
         this.addTime = addTime;
     }
+
+	public Long getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
+	}
 }

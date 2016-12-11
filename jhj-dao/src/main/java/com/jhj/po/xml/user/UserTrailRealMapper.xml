@@ -36,11 +36,20 @@
 		</if>
 		
 		<if test="userIds !=null and userIds.size() > 0 ">
-			and staff_id in
+			and user_id in
 			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
+		
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime,jdbcType=NUMERIC}]]>
+		</if>
+		
+		<if test="endTime !=null">
+			<![CDATA[ and add_time  <= #{endTime,jdbcType=NUMERIC}]]>
+		</if>
+		order by add_time asc
 		
 		
 	</select>
@@ -61,9 +70,9 @@
 		</if>
 		
 		<if test="userIds !=null and userIds.size() > 0 ">
-			and staff_id in
+			and user_id in
 			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		

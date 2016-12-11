@@ -2,6 +2,7 @@ package com.jhj.service.impl.bs;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -115,7 +116,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 				|| orgStaffDetailPay.getOrderType() == 1
 				|| orgStaffDetailPay.getOrderType() == 2
 				|| orgStaffDetailPay.getOrderType() == 3) {
-			BigDecimal orderMoney = orgStaffDetailPay.getOrderMoney();
+			BigDecimal orderMoney = orgStaffDetailPay.getOrderPay();
 			String orderMoneyStr = MathBigDecimalUtil.round2(orderMoney);
 			vo.setOrderTypeName("订单收入,订单金额:" + orderMoneyStr);
 		}
@@ -129,6 +130,8 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 			vo.setOrderTypeName("利息金额");
 		if (orgStaffDetailPay.getOrderType() == 8)
 			vo.setOrderTypeName("各项核检");
+		if (orgStaffDetailPay.getOrderType() == 9)
+			vo.setOrderTypeName("订单补时");
 		// 订单金额
 		if (orgStaffDetailPay.getOrderType() == 0
 			|| orgStaffDetailPay.getOrderType() == 1
@@ -163,6 +166,11 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	@Override
 	public List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo) {		
 		return orgStaffDetailPayMapper.selectBySearchVo(searchVo);
+	}
+
+	@Override
+	public Map<String, Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo) {
+		return orgStaffDetailPayMapper.selectTotalData(searchVo);
 	}
 
 }

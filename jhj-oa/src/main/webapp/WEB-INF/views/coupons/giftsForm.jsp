@@ -83,7 +83,7 @@
 								<c:forEach items="${gifts.giftCoupons}" var="item">
 									<tr class="odd gradeX">
 										<td>
-										   <select id="selectCouponId" name="selectCouponId">
+										   <select id="selectCouponId" name="selectCouponId" class="form-control">
 										   <c:forEach items="${selectDataSources}" var="selectItem">
 										   		<option value="${selectItem.getKey()}"
 													<c:if test="${item.couponId eq selectItem.getKey() }">

@@ -1,0 +1,27 @@
+
+<div data-page="order-appoint" class="page">
+	<div id="indexPageContentDiv" class="page-content">
+		<div class="beijing-index">
+			<input type="hidden" id="staffId" value="0" />
+			<input type="hidden" id="staffName" value="0" />
+			<input type="hidden" id="serviceTypeId" value="28" />
+			<div class="waiter1">
+				<p>服务员：</p>
+				<span id="spanStaffName">李久平</span>
+			</div>
+			<div class="waiter1">
+				<p>服务项目：</p>
+				<span id="spanServiceType">金牌保洁</span>
+				<!-- 可以下拉选择项目 -->
+			</div>
+			<ul class="waiter6" id="serviceTypeList">
+				{{#each data}}
+				<li class="waiter6-1" onclick="appoinSerivceType($$(this), {{service_type_id}})">{{service_type_name}}</li>
+				{{/each}}
+				<div class="chongzhi5-kong1"></div>
+				
+			</ul>
+			<div class="all-button2" onclick="doAppointOrder()">确定</div>
+		</div>
+	</div>
+</div>

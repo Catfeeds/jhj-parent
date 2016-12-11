@@ -20,7 +20,7 @@
 		staff_id = #{staffId,jdbcType=NUMERIC}
 	</delete>
 
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.StaffSearchVo">
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffSkillSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from org_staff_skill
@@ -30,11 +30,18 @@
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="orgId !=null">
+		<if test="staffIds !=null and staffIds.size() > 0 ">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		
+		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="parentId !=null">
+		<if test="parentId != null and parentId != 0">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
 		
@@ -45,7 +52,7 @@
 		<if test="serviceTypeIds !=null and serviceTypeIds.size() > 0 ">
 			and service_type_id in
 			<foreach item="item" index="index" collection="serviceTypeIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 		
@@ -62,10 +69,10 @@
 		where id = #{id,jdbcType=NUMERIC}
 	</delete>
 	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffSkill">
-		insert into org_staff_skill (id, staff_id, service_type_id,
+		insert into org_staff_skill (id, staff_id, service_type_id,org_id,parent_id,
 		add_time)
 		values (#{id,jdbcType=NUMERIC}, #{staffId,jdbcType=NUMERIC}, #{serviceTypeId,jdbcType=NUMERIC},
-		#{addTime,jdbcType=NUMERIC})
+		#{orgId,jdbcType=NUMERIC},#{parentId,jdbcType=NUMERIC},#{addTime,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffSkill">
 		insert into org_staff_skill
@@ -78,6 +85,12 @@
 			</if>
 			<if test="serviceTypeId != null">
 				service_type_id,
+			</if>
+			<if test="orgId != null">
+				org_id,
+			</if>
+			<if test="parentId != null">
+				parent_id,
 			</if>
 			<if test="addTime != null">
 				add_time,
@@ -107,6 +120,12 @@
 			<if test="serviceTypeId != null">
 				service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
 			</if>
+			<if test="orgId != null">
+				org_id = #{orgId,jdbcType=NUMERIC},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=NUMERIC},
+			</if>
 			<if test="addTime != null">
 				add_time = #{addTime,jdbcType=NUMERIC},
 			</if>
@@ -117,6 +136,8 @@
 		update org_staff_skill
 		set staff_id = #{staffId,jdbcType=NUMERIC},
 		service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+		org_id = #{orgId,jdbcType=NUMERIC},
+		parent_id = #{parentId,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>

@@ -18,7 +18,7 @@ public class OrderTypeNameTag extends SimpleTagSupport {
         try {
         	String orderTypeName = "";
         	if (orderTypeId != null) {
-        		orderTypeName = OneCareUtil.getJhjOrderTypeName(orderTypeId);
+        		orderTypeName = OneCareUtil.getOrderTypeForDetailPay(orderTypeId);
         	}
             getJspContext().getOut().write(orderTypeName);
         } catch (Exception e) {

@@ -4,7 +4,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +62,7 @@ public class OrgsController extends BaseController{
 			orgSearchVo = new OrgSearchVo();
 		}
 		
-		orgSearchVo.setParentId(0L);
+		orgSearchVo.setIsParent(1);
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		if (sessionOrgId > 0L) {
@@ -177,6 +179,82 @@ public class OrgsController extends BaseController{
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, list);
 
+		return result;
+	}
+	
+	/*
+	 * 列表查看所有门店信息
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/org-map", method = {RequestMethod.GET})
+	public String orgsMap(Model model, HttpServletRequest request){
+						
+	
+		OrgSearchVo orgSearchVo = new OrgSearchVo();
+		orgSearchVo.setIsParent(1);
+		//得到 当前登录 的 门店id，并作为搜索条件
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+		if (sessionOrgId > 0L) {
+			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
+			orgSearchVo.setOrgId(Long.valueOf(sessionOrgId));
+		}
+		orgSearchVo.setOrgStatus((short) 1);
+		
+		List<Orgs> parentOrgs = orgsService.selectBySearchVo(orgSearchVo);
+		model.addAttribute("parentOrgs", parentOrgs);
+		
+		orgSearchVo = new OrgSearchVo();
+		if (sessionOrgId > 0L) {
+			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
+			orgSearchVo.setParentId(Long.valueOf(sessionOrgId));
+		}
+		orgSearchVo.setIsCloud((short) 1);
+		orgSearchVo.setOrgStatus((short) 1);
+		List<Orgs> orgs = orgsService.selectBySearchVo(orgSearchVo);
+		model.addAttribute("orgs", orgs);
+		
+		return "bs/orgMap";
+	}
+	
+	/*
+	 * 列表查看所有门店信息
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/get-all-orgs", method = {RequestMethod.GET})
+	public AppResultData<Object> getAllOrgs(Model model, HttpServletRequest request){
+						
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+	
+		OrgSearchVo orgSearchVo = new OrgSearchVo();
+		orgSearchVo.setIsParent(1);
+		//得到 当前登录 的 门店id，并作为搜索条件
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+		if (sessionOrgId > 0L) {
+			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
+			orgSearchVo.setOrgId(Long.valueOf(sessionOrgId));
+		}
+		orgSearchVo.setOrgStatus((short) 1);
+		
+		List<Orgs> parentOrgs = orgsService.selectBySearchVo(orgSearchVo);
+		
+		
+		orgSearchVo = new OrgSearchVo();
+		if (sessionOrgId > 0L) {
+			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
+			orgSearchVo.setParentId(Long.valueOf(sessionOrgId));
+		}
+		orgSearchVo.setIsCloud((short) 1);
+		orgSearchVo.setOrgStatus((short) 1);
+		List<Orgs> orgs = orgsService.selectBySearchVo(orgSearchVo);
+
+		Map<String, List<Orgs>> datas = new HashMap<String, List<Orgs>>();
+		
+		datas.put("parentOrgs", parentOrgs);
+		datas.put("orgs", orgs);
+		
+		result.setData(datas);
+		
 		return result;
 	}
 }

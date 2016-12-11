@@ -3,20 +3,22 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String basePath = request.getScheme()+"://"+request.getServerName()+"/";
 
 String orderId = request.getParameter("orderId");
 String userCouponId = request.getParameter("userCouponId");
 String orderType = request.getParameter("orderType");
 String payOrderType = request.getParameter("payOrderType");
+String serviceTypeId = request.getParameter("serviceTypeId");
 String fromUrl = request.getParameter("fromUrl");
 String successUrl = request.getParameter("successUrl");
 
-String redirectUrl = "http://www.jia-he-jia.com/jhj-app/app/wxpay";
+String redirectUrl = basePath + "jhj-app/app/wxpay";
 redirectUrl += "?orderId=" + orderId;
 redirectUrl += "&userCouponId=" + userCouponId;
 redirectUrl += "&orderType=" + orderType;
 redirectUrl += "&payOrderType=" + payOrderType;
+redirectUrl += "&serviceTypeId=" + serviceTypeId;
 redirectUrl = URLEncoder.encode(redirectUrl,"utf-8");
 
 String wxAccessUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+WxUtil.appId+"&redirect_uri="+redirectUrl+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
@@ -57,6 +59,4 @@ System.out.println("wx-pay-pre.jsp ==" + wxAccessUrl);
 </script>
 </head>
 <body>
-
-</body>
 </html>

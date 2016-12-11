@@ -13,3 +13,9 @@ target
 .classpath
 .settings
 .metadata
+
+# ignore windows files
+*Thumbs.db
+*thumbs.db
+/jhj-app/*.gitignore
+/jhj-app/bin/*.gitignore

@@ -159,34 +159,21 @@ myApp.onPageInit('login', function (page) {
     	   	
     	   	if (result.status == "0") {
     	   	  //登录成功后记录用户有关信息
-    	   	  localStorage['user_mobile'] = result.data.mobile;
-    	   	  localStorage['user_id']= result.data.id;
-    	   	  localStorage['im_username'] = result.data.im_user_name;
-    	   	  localStorage['im_password'] = result.data.im_password;
-    	   	 
+
+    	   	  localStorage.setItem("user_mobile",result.data.mobile);
     	   	  
-    	   	  var logInAmId = result.data.am_id;
+    	   	  localStorage.setItem("user_id",result.data.id);
     	   	  
-	    	  var logInAmMobile = result.data.am_mobile;
-    	   	  
-	    	  // 这里 不管是 null 还是 ‘null’ 都能进入循环！不影响后边判断
-	    	  if(logInAmId != "" || logInAmId != null){
-	    		  localStorage['am_id'] = logInAmId;
-	    	  }
-	    	  if(logInAmMobile !="" || logInAmMobile != null){
-	    		  localStorage['am_mobile'] = logInAmMobile;
-	    	  }
-	    	  
+    	   	  localStorage.setItem("is_vip",result.data.is_vip);
+    	   	  	    	  
 	    	  //如果有默认地址则设置为默认地址
-	    	  var userAddr = result.data.default_user_addr;
-	    	  console.log(userAddr);
-	    	  if (userAddr != undefined) {
+	    	  var userAddr = result.default_user_addr;
+
+	    	  if (userAddr != undefined && userAddr != null) {
 	    		  if (userAddr.is_default == 1) {
 	    			  
-		    		  var addrId = userAddr.id;
-		    		  var addrName = userAddr.name + " " + userAddr.addr;
-	    			  localStorage['default_addr_id'] = addrId;
-	    			  localStorage['default_addr_name'] = addrName;	
+	    			  localStorage.setItem('default_addr_id', userAddr.id);
+	    			  localStorage.setItem('default_addr_name', userAddr.name + " " + userAddr.addr);	
 	    		  }
 	    	  }
     	   	  

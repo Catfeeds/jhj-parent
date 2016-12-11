@@ -169,7 +169,8 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 		Map<String, String> rangeMonth = new HashMap<String, String>();
 		rangeMonth.put("1","一个月");
 		rangeMonth.put("3","三个月");
-		rangeMonth.put("6","半年");
+		rangeMonth.put("5","五个月");
+		rangeMonth.put("6","六个月");
 		return rangeMonth;
 	}
 
@@ -212,10 +213,10 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 	@Override
 	public Map<Long, String> getSelectRechargeCouponSource() {
 		Map<Long, String> dictCouponsMap = new HashMap<Long, String>();
-		List<DictCoupons> list = dictCouponsMapper.selectByCouponType((short)1);;
+		List<DictCoupons> list = dictCouponsMapper.selectByCouponType((short)1);
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			DictCoupons dictCoupons = (DictCoupons) iterator.next();
-			dictCouponsMap.put(dictCoupons.getId(),dictCoupons.getIntroduction());
+			dictCouponsMap.put(dictCoupons.getId(),dictCoupons.getIntroduction()+" "+dictCoupons.getRangMonth()+"月");
 		}
 		return dictCouponsMap;
 	}

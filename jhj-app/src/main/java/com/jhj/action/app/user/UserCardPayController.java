@@ -83,6 +83,7 @@ public class UserCardPayController extends BaseController {
 		
 		
 		Users u = usersService.selectByPrimaryKey(userId);
+		
 		//如果已经付款，则直接返回
 		if (orderCards != null && orderCards.getOrderStatus().equals(Constants.PAY_STATUS_1)) {
 			return result;
@@ -99,7 +100,7 @@ public class UserCardPayController extends BaseController {
 		/*
 		 * 2016年4月15日17:06:44  新增短信
 		 * 
-		 * 您好，您的账户于{1}充值{2}。定制全年套餐，让美好生活不再有家务之忧
+		 * 充值成功短信通知
 		 * 
 		 */
 		//充值时间

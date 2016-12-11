@@ -1,56 +1,29 @@
-myApp.onPageInit('order-pay-success-page', function(page) {
-
+myApp.onPageInit('order-pay-success', function(page) {
+	console.log("order-pay-success-page");
 	var orderNo = page.query.order_no;
 	
 	var orderType = page.query.order_type;
 	
-	var orderPayType = page.query.order_pay_type;
-	localStorage.removeItem("service_date");
+	var serviceTypeId = page.query.service_type_id;
 	
-	if (orderType == 0) {
-		$$("#blackContent").text("订单支付成功!")
-		$$("#grayContent").text("我们正在为您安排服务人员");
+	if (sessionStorage.getItem('service_type_id') != "") {
+		serviceTypeId = sessionStorage.getItem('service_type_id');
 	}
-	
-	if(orderType == 1){
-		$$("#blackContent").text("订单支付成功!")
-		$$("#grayContent").text("服务人员即将为您服务");
-	}
-	
-	if(orderType == 2){
-		
-		if(orderPayType == 6){
-			//如果是 现金支付
-			$$("#blackContent").text("现金支付成功!")
-			$$("#grayContent").text("您的助理会按约定时间为您服务");
-		}else{
-			$$("#blackContent").text("订单支付成功!")
-			$$("#grayContent").text("您的助理会按约定时间为您服务");
-		}
-	}
-	
-	$$('#order-pay-success-btn').click(function(){
 
-		var fromUrl = "";
-    	if (orderType == 0) {
-    		fromUrl =  "order/order-view-0.html";
-    	}
-    	
-    	if (orderType == 1) {
-    		fromUrl = "order/order-view-1.html";
-    	}
-    	
-    	if (orderType == 2) {
-    		fromUrl = "order/order-view-2.html";                                		
-    	}
-    	
+	var recoList = orderRecomment(serviceTypeId);
+	
+	console.log(recoList);
+	if (recoList != undefined && recoList != "") {
+		var htmlStr = "";
+		$$.each(recoList, function(i, item) {
+			console.log(item.name);
+			htmlStr+='<a href="'+item.url+'" class="special-color2"><span>'+item.name+'</span></a>';
+		});
 		
-		localStorage.setItem('order_no', orderNo);
-		
-		fromUrl+= "?order_no="+orderNo;
-		
-		mainView.router.loadPage(fromUrl);
-	});
+		$$("#recoList").append(htmlStr);
+	}
+	
+	
 	
 });
 

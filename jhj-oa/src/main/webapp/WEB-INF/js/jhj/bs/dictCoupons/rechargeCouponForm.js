@@ -13,12 +13,12 @@ $('#recharge-coupon-form').validate({
 					number:true,
 					maxlength:6 
 				},
-				introduction: {
-					required: true
-				},
-				description: {
-					required: true
-				},
+//				introduction: {
+//					required: true
+//				},
+//				description: {
+//					required: true
+//				},
 				rangMonth :{
 					required:true
 				},
@@ -38,12 +38,12 @@ $('#recharge-coupon-form').validate({
 					number:"请输入数字",
 					maxlength:"最多输入5位数字"
 				},
-				introduction: {
-					required: "请输入描述信息"
-				},
-				description: {
-					required: "请输入详细信息"
-				},
+//				introduction: {
+//					required: "请输入描述信息"
+//				},
+//				description: {
+//					required: "请输入详细信息"
+//				},
 				rangMonth:{
 					required:"请选择日期范围"
 				},
@@ -92,7 +92,7 @@ $('#recharge-coupon-form').validate({
 						success:function(data){
 							if(data.success==200)
 								alert("优惠券添加成功！！");
-//							    $("#form2-div").css("display","block");
+							   location.href = "recharge-coupon-list";
 						}
 					});
 				}
@@ -115,6 +115,7 @@ $("#from2-btn").click(function(){
 				if(data.success==200){
 					$("input[name='sendCouponsCondtion']").attr("checked", false);
 					alert("发送优惠券成功！");
+					location.href = "recharge-coupon-list";
 				}
 			}
 		});

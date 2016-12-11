@@ -3,6 +3,7 @@ package com.jhj.service.university;
 import java.util.List;
 
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.bs.NewPartnerServiceVo;
 import com.jhj.vo.university.OaPartnerServiceTypeVo;
@@ -27,7 +28,7 @@ public interface PartnerServiceTypeService {
     PartnerServiceType  initPartner();
     
     //下拉选择
-    List<PartnerServiceType> selectAll();
+//    List<PartnerServiceType> selectAll();
     
     OaPartnerServiceTypeVo completeVo(PartnerServiceType partner);
     
@@ -54,7 +55,7 @@ public interface PartnerServiceTypeService {
     
     NewPartnerServiceVo initVo();
     
-    List<PartnerServiceType> selectByParentId(Long id);
+//    List<PartnerServiceType> selectByParentId(Long id);
     
     List<Long> selectChildIdByParentId(Long id);
     
@@ -62,4 +63,8 @@ public interface PartnerServiceTypeService {
      *  助理页面  技能 树，根据  员工的 技能 得到  技能的 上级 及对应的技能 
      */
     List<AmSkillVo> selectSkillNameAndParent(List<Long> childServiceIdList);
+    
+    List<PartnerServiceType> selectByPartnerServiceTypeVo(PartnerServiceTypeVo vo);
+
+	List<PartnerServiceType> selectByIds(List<Long> ids);
 }

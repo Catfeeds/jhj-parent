@@ -81,7 +81,7 @@ public class UserController extends BaseController {
 		
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setUserId(userId);
-		List<Orders> orders = ordersService.selectBySearchVo(searchVo);
+		List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
 		if (orders.isEmpty()) {
 			List<UserAddrs> userAddrsList = userAddrsService
 					.selectByUserId(userId);
@@ -126,7 +126,7 @@ public class UserController extends BaseController {
 
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setUserId(userId);
-		List<Orders> orders = ordersService.selectBySearchVo(searchVo);
+		List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
 		if (orders.isEmpty()) {
 			List<UserAddrs> userAddrsList = userAddrsService
 					.selectByUserId(userId);

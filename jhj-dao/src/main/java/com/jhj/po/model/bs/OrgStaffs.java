@@ -52,6 +52,8 @@ public class OrgStaffs {
     private Long parentOrgId;
 
     private Short level;
+    
+    private String staffCode;
 
     public Long getStaffId() {
         return staffId;
@@ -252,4 +254,13 @@ public class OrgStaffs {
     public void setLevel(Short level) {
         this.level = level;
     }
+
+	public String getStaffCode() {
+		return staffCode;
+	}
+
+	public void setStaffCode(String staffCode) {
+		this.staffCode = staffCode;
+	}
+    
 }

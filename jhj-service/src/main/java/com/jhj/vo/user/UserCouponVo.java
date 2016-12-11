@@ -31,6 +31,8 @@ public class UserCouponVo extends UserCoupons {
     private String couponsTypeId;
     
     private String couponsTypeDesc;
+    
+    private String serviceTypeName;
 
 
 	public String getServiceTypeItem() {
@@ -141,6 +143,14 @@ public class UserCouponVo extends UserCoupons {
 
 	public void setCouponsTypeDesc(String couponsTypeDesc) {
 		this.couponsTypeDesc = couponsTypeDesc;
+	}
+
+	public String getServiceTypeName() {
+		return serviceTypeName;
+	}
+
+	public void setServiceTypeName(String serviceTypeName) {
+		this.serviceTypeName = serviceTypeName;
 	}
 
 }

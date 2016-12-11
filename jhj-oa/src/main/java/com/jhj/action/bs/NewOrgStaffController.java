@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
@@ -25,32 +27,39 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.admin.AdminController;
+import com.jhj.common.ConstantMsg;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.models.TreeModel;
 import com.jhj.models.extention.TreeModelExtension;
 import com.jhj.oa.auth.AuthHelper;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.bs.TagsService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.staff.OrgStaffPoiVo;
 import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.ImgServerUtil;
@@ -58,6 +67,7 @@ import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.common.extension.ArrayHelper;
 import com.meijia.utils.common.extension.StringHelper;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -97,6 +107,11 @@ public class NewOrgStaffController extends AdminController {
 	@Autowired
 	private UserTrailRealService userTrailRealService;
 	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
+	
+	
+	
 	
 	/**
 	 * @throws UnsupportedEncodingException 
@@ -107,6 +122,7 @@ public class NewOrgStaffController extends AdminController {
 	  * @param staffSearchVo
 	  * @throws
 	 */
+	@AuthPassport
 	@RequestMapping(value = "new_staff_list",method = {RequestMethod.GET,RequestMethod.POST})
 	public String newStaffList(Model model, HttpServletRequest request,
 			@RequestParam(value = "orgId",required = false,defaultValue = "0") Long orgId,
@@ -116,17 +132,7 @@ public class NewOrgStaffController extends AdminController {
 				ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		// 分页
-		PageHelper.startPage(pageNo, pageSize);
-		
-		if(orgId != 0L){
-			staffSearchVo.setOrgId(orgId);
-		}
-		
-		String name = request.getParameter("name");
-		if(name!=null){
-			staffSearchVo.setName(new String(name.getBytes("iso-8859-1"),"UTF-8"));
-		}
+
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
@@ -134,8 +140,15 @@ public class NewOrgStaffController extends AdminController {
 			//未选择 门店， 且 当前 登录 用户 为 店长 （  session中的  orgId 不为 0）,设置搜索条件为  店长的门店
 			staffSearchVo.setParentId(sessionOrgId);
 		}
+		if(staffSearchVo.getName()!=null){
+			String name = staffSearchVo.getName();
+			staffSearchVo.setName(new String(name.getBytes("ISO-8859-1"),"UTF-8"));
+		}
 		
-		List<OrgStaffs> list = staffService.selectBySearchVo(staffSearchVo);
+		if (staffSearchVo.getStatus() == null) staffSearchVo.setStatus(1);
+		
+		PageInfo infoList = staffService.selectByListPage(staffSearchVo, pageNo, pageSize);
+		List<OrgStaffs> list = infoList.getList();
 		OrgStaffs orgStaff = null;
 		for (int i = 0; i < list.size(); i++) {
 			orgStaff = list.get(i);
@@ -155,6 +168,7 @@ public class NewOrgStaffController extends AdminController {
 	/*
 	 *  跳转form页
 	 */
+//	@AuthPassport
 	@RequestMapping(value = "new_staff_form", method = RequestMethod.GET)
 	public String toOrgStaffAsForm(Model model,HttpServletRequest request,
 			@RequestParam("orgStaffId") Long orgStaffId) {
@@ -211,9 +225,12 @@ public class NewOrgStaffController extends AdminController {
 		//得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 		
-		if (sessionOrgId > 0L) {
-			model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
+		if(formVo.getOrgId()!=0){
+			model.addAttribute("org", orgService.selectByPrimaryKey(formVo.getOrgId()));
 		}
+
+		model.addAttribute("loginOrgId", sessionOrgId);	//当前登录的 id,动态显示搜索 条件
+
 		
 		return "bs/newStaffForm";
 	}
@@ -221,6 +238,7 @@ public class NewOrgStaffController extends AdminController {
 	/*
 	 * 提交表单
 	 */
+//	@AuthPassport
 	@RequestMapping(value = "new_staff_form", method = RequestMethod.POST)
 	public String doOrgStaffAsForm(HttpServletRequest request, Model model,
 			@ModelAttribute("newStaffFormVoModel") NewStaffFormVo formVo,
@@ -280,7 +298,7 @@ public class NewOrgStaffController extends AdminController {
 			}
 		}
 		
-		if (StringUtil.isEmpty(orgStaffs.getHeadImg())) {
+		if (StringUtil.isEmpty(orgStaffs.getHeadImg().trim())) {
 			orgStaffs.setHeadImg("http://www.jia-he-jia.com/u/img/default-head-img.png");
 		}
 		
@@ -288,7 +306,13 @@ public class NewOrgStaffController extends AdminController {
 			orgStaffs.setUpdateTime(TimeStampUtil.getNow() / 1000);
 			staffService.updateByPrimaryKeySelective(orgStaffs);
 		} else {
+
 			staffService.insertSelective(orgStaffs);
+			
+			Long staffId = orgStaffs.getStaffId();
+			orgStaffs.setStaffCode(String.valueOf(1000 + staffId));
+			staffService.updateByPrimaryKey(orgStaffs);
+			
 		}
 		
 		// 员工技能
@@ -310,6 +334,8 @@ public class NewOrgStaffController extends AdminController {
 				staffSkill.setId(0L);
 				staffSkill.setStaffId(orgStaffs.getStaffId());
 				staffSkill.setServiceTypeId(Long.valueOf(skillArray[i]));
+				staffSkill.setOrgId(orgStaffs.getOrgId());
+				staffSkill.setParentId(orgStaffs.getParentOrgId());
 				staffSkill.setAddTime(TimeStampUtil.getNowSecond());
 				
 				skillService.insert(staffSkill);
@@ -372,9 +398,12 @@ public class NewOrgStaffController extends AdminController {
 		return "redirect:/newbs/new_staff_list";
 	}
 	
+	
+	
 	/*
 	 * 获取服务人员最新的地理位置
 	 * */
+	@AuthPassport
 	@RequestMapping(value="/staffRegion",method={RequestMethod.GET,RequestMethod.POST})
 	public String staffRegion(Model model,HttpServletRequest request,
 			@RequestParam(value="mobile",required=false) String mobile){

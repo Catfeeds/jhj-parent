@@ -13,40 +13,64 @@ $(document).ready(function(){
 		$.each(v.timeEventList,function(tk,tv){
 			
 			var timeStr = tv.timeStr;
-			
-			//table 头
+			//具体事件
+			var eventVoList = tv.eventList;
 			$("#resultThead").find("th").each(function(thk,thv){
-				
 				if($(this).text() == timeStr){
-					//如果 和 头部时间值 相同。
-					
-					//则在 对应位置的  td 添加数据
-					
-					//具体事件
-					var eventVoList = tv.eventList;
-					
-					var eventStr = "";
+					var am="";
+					var pm="";
 					$.each(eventVoList,function(eventVoK,eventVoV){
-						eventStr += eventVoV.eventName +" "+ eventVoV.dateDuration+"<br/>";
-					})
-					$("#resultTr").find("td").eq(thk).html(eventStr);
+						var serviceDate=eventVoV.serviceTime;
+						var s=moment(serviceDate).format('YYYY-MM-DD')+" 12:00:00";
+						var date = moment(s,'YYYY-MM-DD HH:mm:ss').unix();
+						var orderNo=eventVoV.orderNo;
+						var orderType=eventVoV.orderType;
+						if((serviceDate/1000)<date){
+							var eventStrAM = "";
+							eventStrAM +="<font color='red'>上午</font>"+ eventVoV.dateDuration +" "+ eventVoV.eventName+"<br/>";
+							if(orderNo==null){
+								am=eventStrAM;
+							}
+							if(orderNo!=null && orderType==0){
+								am+="<a href='../order/order-hour-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
+							}
+							if(orderNo!=null && orderType==1){
+								am+="<a href='../order/order-exp-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
+							}
+						}else{
+							var eventStrPM="";
+							eventStrPM +="<font color='green'>下午</font>"+ eventVoV.dateDuration +" "+ eventVoV.eventName+"<br/>";
+							if(orderNo==null){
+								pm=eventStrPM;
+							}
+							if(orderNo!=null && orderType==0){
+								pm +="<a href='../order/order-hour-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
+							}
+							if(orderNo!=null && orderType==1){
+								pm +="<a href='../order/order-exp-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
+							}
+						}
+					});
+					$("#resultTr").find("td div").eq(thk-1).html(am);
+					$("#resultTr").find("td span").eq(thk-1).html(pm);
 				}
 			});
-		})
-		
+		});
 		$("#resultTr").find("td").eq(0).text(staffName);
 		
 		$("#resultDisplay").append("<tr>"+$("#resultTr").html()+"</tr>");
 	});
-})
+});
 
 
 
 $('.form_datetime').datepicker({
 	format : "yyyy-mm-dd",
-	language : "zh-CN",
-	autoclose : true,
-	startView : 1
+	language: "zh-CN",
+	autoclose: true,
+	todayBtn:true,
+	defaultDate: new Date(),
+	startView : 0
 });
 
 

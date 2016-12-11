@@ -1,8 +1,7 @@
-myApp.onPageBeforeInit('charge-pay-success-page', function(page) {
+myApp.onPageBeforeInit('mine-charge-pay-success', function(page) {
 	
 	var userId = localStorage.getItem("user_id");
 //	var paycardId=localStorage.getItem("pay_card_id");
-
 	var userInfoSuccess = function(data, textStatus, jqXHR) {
 	  	myApp.hideIndicator();
 		var result = JSON.parse(data.response);
@@ -11,7 +10,10 @@ myApp.onPageBeforeInit('charge-pay-success-page', function(page) {
 			return;
 		}
 		var userInfo = result.data; 
-		$$("#rest_money").text(userInfo.rest_money);
+//		$$("#rest_money").text(userInfo.rest_money);
+
+		localStorage.setItem("is_vip",userInfo.is_vip);
+		
 	};
 	
 	//获取用户充值信息接口
@@ -26,9 +28,9 @@ myApp.onPageBeforeInit('charge-pay-success-page', function(page) {
 			500 : ajaxError
 		}
     });
-    
-    $$('#charge-pay-success-btn').click(function(){
-    	mainView.router.loadPage("user/mine.html");
-    });
-	
+//    
+//    $$('#charge-pay-success-btn').click(function(){
+//    	mainView.router.loadPage("user/mine.html");
+//    });
+//	
 });

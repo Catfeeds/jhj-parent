@@ -18,13 +18,17 @@ public class OrderSearchVo {
 	
 	private Short orderType;
 	
+	private Short orderExtType;
+	
 	private List<Short> orderTypes;
 
 	private Short serviceType;
 	
-	private List<Short> serviceTypes;
+	private List<Long> serviceTypes;
 	
 	private Short orderFrom;
+	
+	private Long orderOpFrom;
 	
 	private Short orderStatus;
 	
@@ -58,6 +62,13 @@ public class OrderSearchVo {
 	private Long orgId;
 	
 	private String addrName;
+	
+	private Short isApply;
+	
+	//排序字段
+	private String orderByProperty;
+	
+	private Short payType; // 支付方式
 
 	public String getMobile() {
 		return mobile;
@@ -81,6 +92,14 @@ public class OrderSearchVo {
 
 	public void setOrderFrom(Short orderFrom) {
 		this.orderFrom = orderFrom;
+	}
+	
+	public Long getOrderOpFrom() {
+		return orderOpFrom;
+	}
+
+	public void setOrderOpFrom(Long orderOpFrom) {
+		this.orderOpFrom = orderOpFrom;
 	}
 
 	public Short getOrderStatus() {
@@ -211,11 +230,11 @@ public class OrderSearchVo {
 		this.serviceType = serviceType;
 	}
 
-	public List<Short> getServiceTypes() {
+	public List<Long> getServiceTypes() {
 		return serviceTypes;
 	}
 
-	public void setServiceTypes(List<Short> serviceTypes) {
+	public void setServiceTypes(List<Long> serviceTypes) {
 		this.serviceTypes = serviceTypes;
 	}
 
@@ -274,4 +293,37 @@ public class OrderSearchVo {
 	public void setAddrName(String addrName) {
 		this.addrName = addrName;
 	}
+
+	public Short getIsApply() {
+		return isApply;
+	}
+
+	public void setIsApply(Short isApply) {
+		this.isApply = isApply;
+	}
+
+	public String getOrderByProperty() {
+		return orderByProperty;
+	}
+
+	public void setOrderByProperty(String orderByProperty) {
+		this.orderByProperty = orderByProperty;
+	}
+
+	public Short getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Short payType) {
+		this.payType = payType;
+	}
+
+	public Short getOrderExtType() {
+		return orderExtType;
+	}
+
+	public void setOrderExtType(Short orderExtType) {
+		this.orderExtType = orderExtType;
+	}
+	
 }

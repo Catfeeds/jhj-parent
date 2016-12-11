@@ -35,9 +35,7 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			
-
-				<form:form modelAttribute="searchVo" method="GET" >
+				<form:form modelAttribute="searchVo"  method="GET" >
 					<div class="form-inline">
 						时间周期：
 						<form:select path="selectCycle">
@@ -76,9 +74,7 @@
 						<th>占比(%)</th>
 						<th>2000面值</th>
 						<th>占比(%)</th>
-						<th>5000面值</th>
-						<th>占比(%)</th>
-						<th>10000面值</th>
+						<th>3000面值</th>
 						<th>占比(%)</th>
 						<th>营业额小计(元)</th>
 						
@@ -93,10 +89,8 @@
 						<th>${item.一千面值占比}</th>
 						<th>${item.两千面值}</th>
 						<th>${item.两千面值占比}</th>
-						<th>${item.五千面值}</th>
-						<th>${item.五千面值占比}</th>
-						<th>${item.一万面值}</th>
-						<th>${item.一万面值占比}</th>
+						<th>${item.三千面值}</th>
+						<th>${item.三千面值占比}</th>
 						<th>${item.营业额小计}</th>
 					</tr>
 				</c:forEach>

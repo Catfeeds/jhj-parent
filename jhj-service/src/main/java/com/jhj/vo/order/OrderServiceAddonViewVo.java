@@ -13,6 +13,10 @@ import com.jhj.po.model.order.OrderServiceAddons;
 public class OrderServiceAddonViewVo extends OrderServiceAddons {
 	
 	private String serviceAddonName;
+	
+	private int defaultNum;
+	
+	private Double serviceHour;
 
 	public String getServiceAddonName() {
 		return serviceAddonName;
@@ -20,6 +24,22 @@ public class OrderServiceAddonViewVo extends OrderServiceAddons {
 
 	public void setServiceAddonName(String serviceAddonName) {
 		this.serviceAddonName = serviceAddonName;
+	}
+
+	public Double getServiceHour() {
+		return serviceHour;
+	}
+
+	public void setServiceHour(Double serviceHour) {
+		this.serviceHour = serviceHour;
+	}
+
+	public int getDefaultNum() {
+		return defaultNum;
+	}
+
+	public void setDefaultNum(int defaultNum) {
+		this.defaultNum = defaultNum;
 	}
 		
 }

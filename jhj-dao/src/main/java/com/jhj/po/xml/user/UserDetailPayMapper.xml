@@ -20,6 +20,27 @@
 		id, pay_account, user_id, mobile, order_type, order_id, order_no, order_money, order_pay,
 		trade_no, trade_status, pay_type, add_time
 	</sql>
+	<sql id="searchVo">
+		<if test="mobile != null and mobile !='' ">
+			and mobile = #{mobile,jdbcType=CHAR}
+		</if>
+		<if test="orderNo != null and orderNo !='' ">
+			and order_no = #{orderNo,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		
+		<if test="userIds!=null">
+			and user_id in
+			<foreach collection="userIds" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
@@ -41,26 +62,7 @@
 		<include refid="Base_Column_List" />
 		from user_detail_pay
 		where 1=1
-		<if test="mobile != null and mobile !='' ">
-			and mobile = #{mobile,jdbcType=CHAR}
-		</if>
-		<if test="orderNo != null and orderNo !='' ">
-			and order_no = #{orderNo,jdbcType=VARCHAR}
-		</if>
-		<if test="startTime !=null">
-			<![CDATA[ and add_time >= #{startTime}]]>
-		</if>
-		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		
-		<if test="userIdList != null">
-			and  user_id in
-			<foreach item="item" index="index" collection="userIdList" open="(" separator="," close=")">
-					#{userIdList[${index}]}
-			</foreach>
-		</if>
-		
+		<include refid="searchVo"/>
 		order by add_time desc
 	</select>
 	
@@ -242,4 +244,12 @@
 		add_time = #{addTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
+	
+	<!-- 统计消费明细总金额，充值总金额 -->
+	<select id="totolMoeny" resultType="java.util.Map" parameterType="com.jhj.vo.user.UserDetailSearchVo">
+		select sum(order_pay) as totalMoeny,(select sum(order_pay) from user_detail_pay where order_type='1' <include refid="searchVo"/>) as chargeMoney from user_detail_pay
+		<where>
+			<include refid="searchVo"/>
+		</where>
+	</select>
 </mapper>

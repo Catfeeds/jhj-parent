@@ -1,5 +1,6 @@
 package com.jhj.action.staff;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
@@ -31,6 +31,7 @@ import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.users.UserPushBindService;
 import com.jhj.vo.staff.OrgStaffCashSearchVo;
+import com.jhj.vo.staff.OrgStaffCashVo;
 import com.jhj.vo.user.UserPushBindSearchVo;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -74,17 +75,31 @@ public class OrgStaffCashController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request,
 				ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 		//分页
-		PageHelper.startPage(pageNo, pageSize);
+//		PageHelper.startPage(pageNo, pageSize);
 		
 		if(searchVo == null){
 			searchVo  = new OrgStaffCashSearchVo();
 		}
 		
-        List<OrgStaffCash> orgStaffCashList = orgStaffCashService.selectVoByListPage(searchVo,pageNo,pageSize);
-		
-		PageInfo result = new PageInfo(orgStaffCashList);	
-		
+		String staffName = searchVo.getStaffName();
+		if(staffName!=null){
+			try {
+				searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		PageInfo result = orgStaffCashService.selectByListPage(searchVo,pageNo,pageSize);
+        List<OrgStaffCash> staffCashlist = result.getList();
+        OrgStaffCash orgStaffCash=null;
+        for(int i=0;i<staffCashlist.size();i++){
+        	orgStaffCash = staffCashlist.get(i);
+        	OrgStaffCashVo vo = orgStaffCashService.transVo(orgStaffCash);
+        	staffCashlist.set(i,vo);
+        }
+        result = new PageInfo(staffCashlist);
 		model.addAttribute("contentModel", result);
+		model.addAttribute("oaOrderSearchVoModel",searchVo);
 		
 		return "staff/staffCashList";
 	}
@@ -125,6 +140,7 @@ public class OrgStaffCashController extends BaseController {
 		Long staffId = orgStaffCash.getStaffId();
 		OrgStaffs orgstaff = orgStaffsService.selectByPrimaryKey(staffId);
 		
+		//提现已打款，则需要在财务表操作
 		if (orgStaffCash.getOrderStatus().equals((short)3)) {
 			//写入员工的用户明细，
 			// 操作服务人员财务明细表 org_staff_detail_pay，插入一条 order_type = 5 提现 的记录
@@ -148,35 +164,6 @@ public class OrgStaffCashController extends BaseController {
 			orgStaffFinance.setTotalCash(orgStaffFinance.getTotalCash().add(orgStaffCash.getOrderMoney()));
 			orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 			orgStaffFinanceService.updateByPrimaryKey(orgStaffFinance);
-			
-			//给员工发送通知信息
-			//发送推送消息，告知欠款支付成功
-			UserPushBind userPushBind = null;
-			UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
-			searchVo.setUserId(staffId);
-			List<UserPushBind> list = bindService.selectBySearchVo(searchVo);
-			if (!list.isEmpty()) userPushBind = list.get(0);
-			
-			if (userPushBind != null) {
-				String clientId = userPushBind.getClientId();
-				//透传消息 参数 map
-				HashMap<String, String> paramsMap = new HashMap<String, String>();
-				
-				paramsMap.put("cid", clientId);
-				
-				HashMap<String, String> transMap = new HashMap<String, String>();
-				
-				transMap.put("is_show", "true");
-				transMap.put("action", "msg");
-				transMap.put("remind_title", "申请提现成功");
-				transMap.put("remind_content", "您好，您申请的提现金额" + orderMoneyStr + "已打款,请查收.");
-				
-				String jsonParams = GsonUtil.GsonString(transMap);
-				
-				paramsMap.put("transmissionContent", jsonParams);
-				
-				PushUtil.AndroidPushToSingle(paramsMap);
-			}
 			
 			//发送短信
 			String addTimeStr = TimeStampUtil.timeStampToDateStr(orgStaffCash.getAddTime() * 1000, "yyyy-MM-dd HH:mm");

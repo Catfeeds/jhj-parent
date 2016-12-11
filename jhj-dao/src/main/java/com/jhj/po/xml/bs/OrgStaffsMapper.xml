@@ -27,6 +27,7 @@
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 		<result column="parent_org_id" property="parentOrgId" jdbcType="NUMERIC" />
 		<result column="level" property="level" jdbcType="NUMERIC" />
+		<result column="staff_code" property="staffCode" jdbcType="VARCHAR"/>
 	</resultMap>
 
 	<resultMap id="UserTrailRealMap" type="com.jhj.po.model.user.UserTrailReal">
@@ -43,7 +44,7 @@
 		staff_id, province_id, city_id, region_id, org_id, staff_type, status, sex, name,
 		mobile, tel, addr, birth, work_year, card_id, nation, edu, astro,
 		blood_type, head_img,
-		intro, add_time, update_time, parent_org_id, level
+		intro, add_time, update_time, parent_org_id, level,staff_code
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -75,22 +76,22 @@
 		<if test="staffIds !=null and staffIds.size() > 0 ">
 			and staff_id in
 			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 
-		<if test="orgId !=null">
+		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
 
-		<if test="parentId !=null">
+		<if test="parentId !=null and parentId != 0">
 			and parent_org_id = #{parentId,jdbcType=NUMERIC}
 		</if>
 
 		<if test="cloudOrgList !=null and cloudOrgList.size() > 0 ">
 			and org_id in
 			<foreach item="item" index="index" collection="cloudOrgList" open="(" separator="," close=")">
-				#{item}
+				${item}
 			</foreach>
 		</if>
 
@@ -104,7 +105,7 @@
 			and sex = #{sex}
 		</if>
 		<if test="mobile !=null and mobile !='' ">
-			and mobile like '%${mobile}%'
+			and mobile like concat("%",#{mobile},"%")
 		</if>
 		<if test="amId !=null and amId !='' ">
 			and am_id like '%${amId}%'
@@ -117,6 +118,9 @@
 		<if test="status!=null">
 			and status =#{status,jdbcType=NUMERIC}
 		</if>
+		<if test="staffCode!=null">
+			and staff_code = #{staffCode,jdbcType=VARCHAR}
+		</if>
 		order by add_time desc
 	</sql>
 
@@ -125,6 +129,9 @@
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</delete>
 	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffs">
+	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="staffId">
+			SELECT LAST_INSERT_ID() AS staff_id
+		</selectKey>
 		insert into org_staffs (staff_id, province_id, city_id,
 		region_id, org_id, staff_type,
 		status, sex, name,
@@ -133,7 +140,7 @@
 		work_year, card_id, nation,
 		edu, astro, blood_type,
 		head_img, intro, add_time,
-		update_time, parent_org_id, level
+		update_time, parent_org_id, level,staff_code
 		)
 		values (#{staffId,jdbcType=NUMERIC},
 		#{provinceId,jdbcType=NUMERIC}, #{cityId,jdbcType=NUMERIC},
@@ -145,10 +152,14 @@
 		#{edu,jdbcType=VARCHAR},
 		#{astro,jdbcType=NUMERIC}, #{bloodType,jdbcType=VARCHAR},
 		#{headImg,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC},
-		#{updateTime,jdbcType=NUMERIC}, #{parentOrgId,jdbcType=NUMERIC}, #{level,jdbcType=NUMERIC}
+		#{updateTime,jdbcType=NUMERIC}, #{parentOrgId,jdbcType=NUMERIC}, #{level,jdbcType=NUMERIC},
+		#{staffCode,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffs">
+	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="staffId">
+			SELECT LAST_INSERT_ID() AS staff_id
+		</selectKey>
 		insert into org_staffs
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="staffId != null">
@@ -225,6 +236,9 @@
 			</if>
 			<if test="level != null">
 				level,
+			</if>
+			<if test="staffCode!=null">
+				staff_code,
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -303,10 +317,10 @@
 			<if test="level != null">
 				#{level,jdbcType=NUMERIC},
 			</if>
+			<if test="staffCode!=null">
+				#{staffCode,jdbcType=VARCHAR},
+			</if>
 		</trim>
-		<selectKey keyProperty="staffId" resultType="long">
-			select LAST_INSERT_ID()
-		</selectKey>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.OrgStaffs">
 		update org_staffs
@@ -383,6 +397,9 @@
 			<if test="level != null">
 				level = #{level,jdbcType=NUMERIC},
 			</if>
+			<if test="staffCode!=null">
+				staff_code = #{staffCode,jdbcType=VARCHAR}
+			</if>
 		</set>
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</update>
@@ -413,7 +430,8 @@
 		add_time = #{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},
 		parent_org_id = #{parentOrgId,jdbcType=NUMERIC},
-		level = #{level,jdbcType=NUMERIC}
+		level = #{level,jdbcType=NUMERIC},
+		staff_code = #{staffCode,jdbcType=VARCHAR}
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</update>
 </mapper>

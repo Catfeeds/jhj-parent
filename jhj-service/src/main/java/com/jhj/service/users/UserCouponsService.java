@@ -57,4 +57,6 @@ public interface UserCouponsService {
 	
 	//为对象
 	UserCoupons initUserCoupons(Long userId,DictCoupons coupons);
+	
+	List<UserCoupons> selectByUserCoupons(UserCoupons userCoupons);
 }

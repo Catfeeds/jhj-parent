@@ -6,6 +6,7 @@
 
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
+<%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="cloudOrgSelectTag" uri="/WEB-INF/tags/CloudOrgSelect.tld" %>
 <html>
 <head>
@@ -33,15 +34,38 @@
 				<h4>服务人员总欠款表</h4>
 				
 				<form:form class="form-inline" modelAttribute="orgStaffDetailPaySearchVoModel" action="staffPayDept-list" method="GET">
-                         <div class="form-group">	
-							选择云店: <form:select path="orgId">
-										<form:option value="">请选择云店</form:option>
-										<form:options items="${orgList}" itemValue="orgId" itemLabel="orgName" />
-									</form:select>
-							手机号码：<form:input path="mobile"/>
-						</div>
-						<button type="submit" class="btn btn-primary" >搜索</button>						
-                 </form:form> 
+                    
+                    <td>选择门店:</td>
+						<td><orgSelectTag:select selectId="${orgStaffDetailPaySearchVoModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
+						<td>选择云店:</td>
+						<td>
+						<select name="orgId" id="orgId" class="form-control">
+							<option value="0">全部</option>
+						</select>
+					</td>
+					手机号码：<form:input path="mobile" class="form-control"/>
+					员工名称：<form:input path="staffName" class="form-control"/>
+					<button type="submit" class="btn btn-primary" >搜索</button>						
+                </form:form>
+                 <br/>
+                 <table class="table table-hover table-bordered">
+                 	<thead>
+                 		<tr>
+                 			<th>总收入金额(元)</th>
+                 			<th>总欠款金额(元)</th>
+                 			<th>总提现金额(元)</th>
+                 			<th>总剩余金额(元)</th>
+                 		</tr>
+                 	</thead>
+                 	<tbody>
+                 		<tr>
+                 			<td>${totalIncoming }</td>
+                 			<td>${totalDept }</td>
+                 			<td>${totalCash }</td>
+                 			<td>${restMoney }</td>
+                 		</tr>
+                 	</tbody>
+                 </table>
 			</header>
 			
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
@@ -55,6 +79,7 @@
 						<th>总收入</th>
 						<th>总欠款</th>
 						<th>总提现</th>
+						<th>可提现</th>
 						<th>剩余金额</th>
 						<th>添加时间</th>
 						<th>更新时间</th>
@@ -71,6 +96,7 @@
 							<td>${ item.totalIncoming }</td>
 							<td>${ item.totalDept }</td>
 							<td>${ item.totalCash }</td>
+							<td>${ item.totalCashValid }</td>
 						    <td>${ item.restMoney }</td>
 							<td><timestampTag:timestamp patten="yyyy-MM-dd"
 									t="${item.addTime * 1000}" /></td>
@@ -86,7 +112,8 @@
 
 
 			</section>
-
+			<!--common script for all pages-->
+			<%@ include file="../shared/importJs.jsp"%>
 			<c:import url="../shared/paging.jsp">
 				<c:param name="pageModelName" value="contentModel" />
 				<c:param name="urlAddress" value="/staff/staffPayDept-list" />
@@ -98,13 +125,13 @@
 	</section>
 
 	<!-- js placed at the end of the document so the pages load faster -->
-	<!--common script for all pages-->
-	<%@ include file="../shared/importJs.jsp"%>
+	
 
 	<%-- <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
 	<!--script for this page-->
 	<script type="text/javascript"
 		src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 
 </body>
 </html>

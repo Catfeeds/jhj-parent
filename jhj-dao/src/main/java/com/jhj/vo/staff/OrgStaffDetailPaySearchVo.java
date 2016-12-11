@@ -31,6 +31,8 @@ public class OrgStaffDetailPaySearchVo {
 	
 	private String orderNo;
 	
+	private String staffName;
+	
 	public Long getOrgId() {
 		return orgId;
 	}
@@ -109,6 +111,14 @@ public class OrgStaffDetailPaySearchVo {
 
 	public void setSearchCloudOrgIdList(List<Long> searchCloudOrgIdList) {
 		this.searchCloudOrgIdList = searchCloudOrgIdList;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
 	}
 
 }

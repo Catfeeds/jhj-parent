@@ -1,62 +1,60 @@
 
-<!-- We don't need full layout here, because this page will be parsed with Ajax-->
-<!-- Top Navbar-->
-
-
-<div class="pages">
-	<!-- Page, data-page contains page name-->
-	<div data-page="order-jingpai-page" class="page"style="overflow:auto;background:#E5E5E5;">
-		<!-- Scrollable page content-->
-		<div class="page-content"style="margin:0;height:882px;">
-			<div class="neirong">
-				<img src="img/icons/richangjiashi1.png" alt="">
-				<span>日常家事</span>
-				<div class="jieshao">为您提供日常保洁,做饭,洗衣等家政服务按小时收取费用</div>
+<div class="pages navbar-through toolbar-through">
+	<div data-page="order-list" class="page">
+		<div id="indexPageContentDiv" class="page-content">
+			<div class="beijing-index" id="order-list-div">
+				
 			</div>
-			<div class="neirong">
-				<img src="img/icons/yingji1.png" alt="">
-				<span>应急</span>
-				<div class="jieshao">客厅、卫生间、厨房、开荒、擦玻璃等更加专业的保洁服务，根据服务项目收费</div>
-			</div>
-			<div class="neirong">
-				<img src="img/icons/paotui1.png" alt="">
-				<span>跑腿</span>
-				<div class="jieshao">客厅、卫生间、厨房、开荒、擦玻璃等更加专业的保洁服务，根据服务项目收费</div>
-			</div>
-			<div class="neirong">
-				<img src="img/icons/peiban1.png" alt="">
-				<span>陪伴</span>
-				<div class="jieshao">客厅、卫生间、厨房、开荒、擦玻璃等更加专业的保洁服务，根据服务项目收费</div>
-			</div>
-			<div class="neirong">
-				<img src="img/icons/lianjie1.png" alt="">
-				<span>其他</span>
-				<div class="jieshao">客厅、卫生间、厨房、开荒、擦玻璃等更加专业的保洁服务，根据服务项目收费</div>
+			<div class="all-button5" id="order-list-more" style="display:none">加载更多</div>
+			<input type="hidden" id="page" name="page" value="1" />
+		</div>
+		<div id="order-list-part" style="display: none">
+			<div class="dingdan-mokuai">
+				<p>订单明细</p>
+				<a href="#" onclick="orderView({orderType}, '{orderNo}')" class="special-color7">
+					<div class="order-dingdan">
+						<ul class="dingdan">
+							<li>订购项目：</li>
+							<li>{serviceTypeName}</li>
+						</ul>
+						<ul class="dingdan">
+							<li>订单状态：</li>
+							<li>{orderStatusStr}</li>
+						</ul>
+						<ul class="dingdan">
+							<li>服务时间：</li>
+							<li>{serviceDateStr}</li>
+						</ul>
+						<ul class="dingdan">
+							<li>上门地址：</li>
+							<li>{addrName}</li>
+						</ul>
+						<ul class="dingdan">
+							<li>订单金额：</li>
+							<li>{orderPayStr}</li>
+						</ul>
+						<ul class="dingdan">
+							<li>服务人员：</li>
+							<li>{staffNames}</li>
+						</ul>
+				</a>
+				<div class="all-button10" style="display: {doOrderPayStyle}" onclick="doOrderPay($$(this).parent())">
+					去支付
+				</div>
+				<div class="all-button3" style="display: {priceExtendStyle}" onclick="doOrderPayExt($$(this).parent())">补交差价</div>
+				<div class="all-button4" style="display: {orderRateStyle}" onclick="linkOrderRate($$(this).parent())">{orderRateStr}</div>
+				<div style="clear:both;"></div>
+				<input type="hidden" id="orderStatus" name="orderStatus" value="{orderStatus}" />
+				<input type="hidden" id="serviceTypeId" name="serviceTypeId" value="{serviceTypeId}" />
+				<input type="hidden" id="orderType" name="orderType" value="{orderType}" />
+				<input type="hidden" id="orderNo" name="orderNo" value="{orderNo}" />
+				<input type="hidden" id="orderId" name="orderId" value="{orderId}" />
+				<input type="hidden" id="orderPay" name="orderPay" value="{orderPay}" />
+				<input type="hidden" id="userCouponId" name="userCouponId" value="{userCouponId}" />
+				<input type="hidden" id="userCouponValue" name="userCouponValue" value="{userCouponValue}" />
+				<input type="hidden" id="staffNames" name="staffNames" value="{staffNames}" />
 			</div>
 		</div>
 	</div>
 </div>
-		
-<div id="order-list-part" style="display:none">
-	<li class="order-item" data-id="{id}"><a class="item-link"
-		href="order/order-view.html?user_id={user_id}&order_no={order_no}">
-			<div class="item-content">
-				<div class="item-media">
-					<!-- <img width="44" src="img/cats/2.png"> -->
-				</div>
-				<div class="item-inner">
-					<div class="item-title-row">
-						<div class="item-title">{service_type_name}</div>
-					</div>
-					<div class="item-subtitle">下单时间:{add_time}</div>
-				</div>
-			</div>
-	</a></li>
-</div>		
-		
-		
-	</div>
 </div>
-
-
-

@@ -10,14 +10,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.PageHelper;
 import com.jhj.common.Constants;
-import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -27,26 +28,30 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
+import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.order.OaOrderListNewVo;
+import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OaOrderListVo;
-import com.jhj.vo.order.OaOrderSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderDispatchVo;
 import com.jhj.vo.order.OrderSearchVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -100,8 +105,20 @@ public class OaOrderServiceImpl implements OaOrderService {
 	@Autowired
 	private OrgStaffsService staffService;
 	
+	@Autowired
+	private CooperateBusinessService cooperateBusinessService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerServiceTypeService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+	private OrderAppointService orderAppointService;
+	
 	@Override
-	public OaOrderListNewVo completeVo(Orders orders) {
+	public OaOrderListVo completeVo(Orders orders) {
 		OaOrderListVo oaOrderListVo = initVO();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(orders, oaOrderListVo);
@@ -112,10 +129,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 
 		// 助理预约单，存在 ，没有价格 的 一个过程
 		if (orderPrices != null) {
+			BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
+			BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
 			// 订单总金额
-			oaOrderListVo.setOrderMoney(orderPrices.getOrderMoney());
+			oaOrderListVo.setOrderMoney(orderMoney);
 			// 订单实际支付金额
-			oaOrderListVo.setOrderPay(orderPrices.getOrderPay());
+			oaOrderListVo.setOrderPay(orderPay);
 			// 支付方式
 			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
 			oaOrderListVo.setPayType(orderPrices.getPayType());
@@ -137,50 +156,94 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (orgs != null) {
 			oaOrderListVo.setOrgName(orgs.getOrgName());
 		}
-		/*
-		 * 通过 订单 Id，在 order_dispaths 中 找出 是否 有派工记录
-		 */
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderId(orders.getId());
-		List<OrderDispatchs> disTwo = orderDispatchsService.selectBySearchVo(searchVo);
-
-		// map 存放 <派工状态， 当前派工状态对应的 阿姨 >
-		// IdentityHashMap<Short, String> statuNameMap = new
-		// IdentityHashMap<Short, String>();
 
 		Map<String, String> statuNameMap = new Hashtable<String, String>();
-		if (disTwo.size() > 0) {
-
-			for (int j = 0; j < disTwo.size(); j++) {
-				OrderDispatchs od = disTwo.get(j);
-				statuNameMap.put(od.getDispatchStatus() + "," + j, od.getStaffName());
-				Short isApply = od.getIsApply();
-				if(isApply==1){
+		
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setOrderNo(orderNo);
+		searchVo1.setDispatchStatus((short) 1);
+		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo1);
+		
+		List<OrderDispatchVo> orderDispatchs = new ArrayList<OrderDispatchVo>();
+		String staffName = "";
+		String staffMobile = "";
+		String orgName = "";
+		String cloudName = "";
+		//如果有派工记录
+		for (OrderDispatchs item : list) {
+			
+			String tmpStaffName = item.getStaffName();
+			if (staffName.indexOf(tmpStaffName + ",") < 0) staffName+= tmpStaffName + ",";
+			
+			String tmpStaffMobile = item.getStaffMobile();
+			if (staffMobile.indexOf(tmpStaffMobile + ",") < 0) staffMobile+= tmpStaffMobile + ",";
+			
+			
+			Long tmpStaffId = item.getStaffId();
+			
+			OrgStaffs staffs = staffService.selectByPrimaryKey(tmpStaffId);
+			
+			Orgs cloudOrg = orgService.selectByPrimaryKey(staffs.getOrgId());
+			if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
+			
+			Orgs parentOrg = orgService.selectByPrimaryKey(staffs.getParentOrgId());
+			if (orgName.indexOf(parentOrg.getOrgName() + ",") < 0) orgName+= parentOrg.getOrgName() + ",";
+		
+			//是否接单状态;
+			Short isApply = item.getIsApply();
+			if (isApply.equals((short)1)) {
+				oaOrderListVo.setApplyStatus("是");
+			} else {
+				Long now = TimeStampUtil.getNowSecond();
+				Long dispatchTime = item.getAddTime();
+				Long lastTime = now - dispatchTime;
+				if ( lastTime > 60 * 30) {
+					oaOrderListVo.setApplyStatus("超");
+				} else {
 					oaOrderListVo.setApplyStatus("否");
-				}else {
-					Long now = TimeStampUtil.getNowSecond();
-					Long dispatchTime = od.getAddTime();
-					Long lastTime = now - dispatchTime;
-					if ( lastTime > 60 * 30) {
-						oaOrderListVo.setApplyStatus("超");
-					} else {
-						oaOrderListVo.setApplyStatus("否");
-					}
 				}
 			}
-
-		} else {
-			// 暂未派工,订单状态 < 4
-			statuNameMap.put(3 + ",0", "无");
+			
+			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
+			vo.setOrgName(cloudOrg.getOrgName());
+			vo.setParentOrgName(parentOrg.getOrgName());
+			
+			
+			//派工的标识。 1. 正常派工  2. 用户指定
+			vo.setDispatchActionStr("正常派工");
+			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+			orderDispatchSearchVo.setOrderId(item.getOrderId());
+			orderDispatchSearchVo.setStaffId(item.getStaffId());
+			List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
+			if (!orderAppoints.isEmpty()) vo.setDispatchActionStr("用户指定");
+			
+			
+			orderDispatchs.add(vo);
 		}
+		
+		if (!StringUtil.isEmpty(staffName) && staffName.substring(staffName.length()-1).equals(",")) {
+			staffName = staffName.substring(0, staffName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(staffMobile) && staffMobile.substring(staffMobile.length()-1).equals(",")) {
+			staffMobile = staffMobile.substring(0, staffMobile.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(orgName) && orgName.substring(orgName.length()-1).equals(",")) {
+			orgName = orgName.substring(0, orgName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(cloudName) && cloudName.substring(cloudName.length()-1).equals(",")) {
+			cloudName = cloudName.substring(0, cloudName.length()-1);
+		}
+		
+		oaOrderListVo.setStaffName(staffName);
+		oaOrderListVo.setStaffMobile(staffMobile);
+		oaOrderListVo.setCloudOrgName(cloudName);
+		oaOrderListVo.setOrgName(orgName);	
+		oaOrderListVo.setOrderDispatchs(orderDispatchs);
 
-		OaOrderListNewVo oaOrderListNewVo = new OaOrderListNewVo();
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(oaOrderListVo, oaOrderListNewVo);
-
-		oaOrderListNewVo.setStatusNameMap(statuNameMap);
-
-		return oaOrderListNewVo;
+		return oaOrderListVo;
 	}
 
 	/*
@@ -316,6 +379,18 @@ public class OaOrderServiceImpl implements OaOrderService {
 		
 		OaOrderListVo oaOrderListVo = completeVo(orders);
 		
+		//服务品类名称
+		oaOrderListVo.setServiceTypeName("");
+		oaOrderListVo.setIsAuto((short) 1);
+		oaOrderListVo.setIsMulti((short) 0);
+		Long serviceTypeId = orders.getServiceType();
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		if (serviceType != null) {
+			oaOrderListVo.setServiceTypeName(serviceType.getName());
+			oaOrderListVo.setIsAuto(serviceType.getIsAuto());
+			oaOrderListVo.setIsMulti(serviceType.getIsMulti());
+		}
+		
 		oaOrderListVo.setApplyStatus("-");
 		oaOrderListVo.setApplyTimeStr("");
 		Long addTime = orders.getAddTime();
@@ -359,15 +434,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setOrderAddress(userAddrs.getName()+""+userAddrs.getAddr());
 		}
 		
-		/*
-		 * 2016年3月23日19:05:58  jhj2.1     基础保洁类订单 新的基本派工逻辑
-		 */
-		List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orders.getId(),orders.getServiceDate());
-		
-		Long addrId = orders.getAddrId();
-		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
-		
-		
 		// 查找对应订单有效派工
 		
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
@@ -378,16 +444,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if(orderDisList.size() > 0){
 			
 			OrderDispatchs dispatchs = orderDisList.get(0);
-			
-			/*
-			 *  如果  派工逻辑 未找到可用 派工。
-			 * 
-			 *  但是 已经有派工记录
-			 */
-			if(staIdList.size() == 0){
-				staIdList.add(0, dispatchs.getStaffId());
-			}
-			
+						
 			//已经派工的员工id
 			oaOrderListVo.setStaffId(dispatchs.getStaffId());
 			
@@ -416,272 +473,30 @@ public class OaOrderServiceImpl implements OaOrderService {
 					oaOrderListVo.setApplyStatus("否");
 				}
 			}
-			
-			
-		}else{
-			
-			/*
-			 * 如果派工逻辑 未找到 可用派工 
-			 * 	
-			 * 也无 派工记录	
-			 */
-			if(staIdList.size() == 0){
-				staIdList.add(0,0L);
-			}
 		}
 		
-	    //可用 服务人员 VO
-		List<OrgStaffsNewVo> staVoList = newDisStaService.getTheNearestStaff(addrs.getLatitude(), addrs.getLongitude(), staIdList);
-		
-		if(staVoList.size() <= 0){
-			
-			OrgStaffsNewVo staffNewVo = staffService.initOrgStaffNewVo();
-			staVoList.add(staffNewVo);
-		}
-		
-		oaOrderListVo.setVoList(staVoList);
-		
-		return oaOrderListVo;
-	}
-	/**
-	 * 获取助理订单详情
-	 */
-	@Override
-	public OaOrderListVo getOrderVoDetailAm(String orderNo, Short disStatus,String poiLongitude,String poiLatitude) {
-
-		Orders orders = orderService.selectByOrderNo(orderNo);
-
-		OaOrderListVo oaOrderListVo = completeNewVo(orders);
-
-		Long addTime = orders.getAddTime();
-
-		String date = DateUtil.getDefaultDate(addTime * 1000);
-		// 下单时间
-		oaOrderListVo.setOrderDate(date);
-		// 订单状态名称
-		String orderStausName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orders.getOrderStatus());
-		oaOrderListVo.setOrderStatusName(orderStausName);
-		// 优惠券
-		OrderPrices orderPrices = orderPriceService.selectByOrderIds(orderNo);
-
-		if (orderPrices != null) {
-			Long couponId = orderPrices.getCouponId();
-			if (couponId > 0L) {
-				// 优惠券id
-				UserCoupons userCoupons = userCouponService.selectByPrimaryKey(couponId);
-				DictCoupons dictCoupon = dictCouponService.selectByPrimaryKey(userCoupons.getCouponId());
-
-				// 优惠券面值
-				if (userCoupons != null) {
-					oaOrderListVo.setCouponValue(dictCoupon.getValue());
-					oaOrderListVo.setCouponName(dictCoupon.getIntroduction());
-				}
-			}
-		}
-		// 姓名
-		Long userId = orders.getUserId();
-
-		Users users = userService.selectByPrimaryKey(userId);
-		if (users != null) {
-			oaOrderListVo.setUserName(users.getName());
-		}
-		// 获的用户地址
-	/*	UserAddrs userAddrs = userAddrService.selectByDefaultAddr(userId);
-		if (userAddrs != null) {
-			oaOrderListVo.setOrderAddress(userAddrs.getName()+""+userAddrs.getAddr());
-		}*/
-		
-		//5.用户常用地址列表显示
-		Map<String, String> userAddrMap = new HashMap<String, String>();
-		List<UserAddrs> userAddrsList = userAddrService.selectByUserId(userId);
-		if(userAddrsList!=null && userAddrsList.size()>0){
-			for (UserAddrs addr : userAddrsList) {
-				userAddrMap.put(addr.getName()+"="+addr.getAddr()+"="+addr.getLongitude()+"="+addr.getLatitude()
-					,addr.getName()+addr.getAddr());
-			}
-		}
-		oaOrderListVo.setUserAddrMap(userAddrMap);
-		
-		
-		/*
-		 * 2016年3月23日19:05:58  jhj2.1     助理类订单 新的基本派工逻辑
-		 */
-		List<Long> staIdList = newDisStaService.autoDispatchForBaseOrder(orders.getId(),orders.getServiceDate());
-		
-		Long addrId = orders.getAddrId();
-		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
-		
-		if(addrs != null){
-			
-		 	staIdList = newDisStaService.autoDispatchForAmOrder(addrs.getLatitude(), addrs.getLongitude(), orders.getServiceType());
-		}
-		/*
-		 * 设置一个 默认值。。解决 mybatis list参数size为0
-		 */
-		if(staIdList.size() == 0){
-			staIdList.add(0, 0L);
-		}
-	    //可用 服务人员 VO
-		List<OrgStaffsNewVo> staVoList = newDisStaService.getTheNearestStaff(addrs.getLatitude(), addrs.getLongitude(), staIdList);
-		
-		oaOrderListVo.setVoList(staVoList);
-		
-		return oaOrderListVo;
-	}
-	@Override
-	public OaOrderListVo getOrderVoDetailAm(String orderNo, Short disStatus) {
-		
-		Orders orders = orderService.selectByOrderNo(orderNo);
-		
-		OaOrderListVo oaOrderListVo = completeNewVo(orders);
-		
-		//1.显示下单时间
-		Long addTime = orders.getAddTime();
-		String date = DateUtil.getDefaultDate(addTime * 1000);
-		oaOrderListVo.setOrderDate(date);
-		
-		
-		Long serviceDate = orders.getServiceDate();
-		
-		
-		/*
-		 * 	2016年5月17日10:21:25
-		 *  服务时间， 针对 深度养护类 服务，需要 有 开始和 结束时间。   差值 [1,13] 
-		 */
-		//默认当前时间  (开始时间）
-		String date1  = DateUtil.getDefaultDate(TimeStampUtil.getNow());
-		
-		if(serviceDate > 0L){
-			date1 = DateUtil.getDefaultDate(serviceDate * 1000);
-		}
-		oaOrderListVo.setServiceDateStartStr(date1);
-		//服务结束时间。默认当前时间+ 1小时
-		oaOrderListVo.setServiceDateEndStr(DateUtil.getDefaultDate(TimeStampUtil.getNow()+3600*1000));
-		
-		
-		//2.显示订单状态名称
-		String orderStausName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orders.getOrderStatus());
-		oaOrderListVo.setOrderStatusName(orderStausName);
-		//3.显示优惠券
-		OrderPrices orderPrices = orderPriceService.selectByOrderIds(orderNo);
-		if (orderPrices != null) {
-			Long couponId = orderPrices.getCouponId();
-			if (couponId > 0L) {
-				// 优惠券id
-				UserCoupons userCoupons = userCouponService.selectByPrimaryKey(couponId);
-				DictCoupons dictCoupon = dictCouponService.selectByPrimaryKey(userCoupons.getCouponId());
-				// 优惠券面值
-				if (userCoupons != null) {
-					oaOrderListVo.setCouponValue(dictCoupon.getValue());
-					oaOrderListVo.setCouponName(dictCoupon.getIntroduction());
-				}
-			}
-		}
-		//4.显示用户姓名
-		Long userId = orders.getUserId();
-		Users users = userService.selectByPrimaryKey(userId);
-		if (users != null) {
-			oaOrderListVo.setUserName(users.getName());
-		}
-		//5.用户常用地址列表显示
-		Map<String, String> userAddrMap = new HashMap<String, String>();
-		List<UserAddrs> userAddrsList = userAddrService.selectByUserId(userId);
-		if(userAddrsList!=null && userAddrsList.size()>0){
-			for (UserAddrs addr : userAddrsList) {
-				userAddrMap.put(addr.getName()+"="+addr.getAddr()+"="+addr.getLongitude()+"="+addr.getLatitude()
-					,addr.getName()+addr.getAddr());
-			}
-		}
-		oaOrderListVo.setUserAddrMap(userAddrMap);
-		
-		/*
-		 * 2016年3月23日19:05:58  jhj2.1     助理类订单 新的基本派工逻辑
-		 */
-		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-		searchVo1.setOrderNo(orderNo);
-		searchVo1.setDispatchStatus((short) 1);
-		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo1);
-
-		List<Long> staIdList = new ArrayList<Long>();
-		
-		List<OrgStaffsNewVo> staVoList = new ArrayList<OrgStaffsNewVo>();
-		
-		if(list.size() > 0){
-			
-			OrderDispatchs dispatchs = list.get(0);
-			
-			/*
-			 * 2016年5月4日16:17:29  如果已经有派工，展示当前派工人员
-			 */
-			
-			OrgStaffs orgStaffs = staffService.selectByPrimaryKey(dispatchs.getStaffId());
-			
-			Long orgId = orgStaffs.getOrgId();
-			
-			Orgs orgs = orgService.selectByPrimaryKey(orgId);
-			
-			oaOrderListVo.setStaffName(orgs.getOrgName()+"--"+dispatchs.getStaffName());  
-			
-			
-			
-			staIdList =  newDisStaService.autoDispatchForAmOrder(
-							dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), orders.getServiceType());
-			
-			/*
-			 * 设置一个 默认值。。解决 mybatis list参数size为0
-			 */
-			if(staIdList.size() == 0){
-				staIdList.add(0, 0L);
-			}
-			
-		    //可用 服务人员 VO
-			staVoList = newDisStaService.getTheNearestStaff(dispatchs.getPickAddrLat(), dispatchs.getPickAddrLng(), staIdList);
-			
-			OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-			searchVo.setStartServiceTime(orders.getServiceDate());
-			searchVo.setEndServiceTime(orders.getServiceDate()+orders.getServiceHour()*3600);
-			for (OrgStaffsNewVo orgStaffsNewVo : staVoList) {
-
-					 searchVo.setStaffId(orgStaffsNewVo.getStaffId());
-					 
-					 //对应当前订单的日期。。该员工是否 有 派工单
-					 List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
-					 
-					 int disNum = 0;
-					 if (!orderDispatchs.isEmpty()) disNum = orderDispatchs.size();
-					 
-					 if(disNum > 0){
-						 orgStaffsNewVo.setDispathStaStr("不可派工");
-						 orgStaffsNewVo.setDispathStaFlag(0);
-					 }else{
-						 orgStaffsNewVo.setDispathStaStr("可派工");
-						 orgStaffsNewVo.setDispathStaFlag(1);
-					 }
-				}
-			
-		}
-		oaOrderListVo.setVoList(staVoList);
+		oaOrderListVo.setOrderOpFromName("");
+		Long orderOpFrom = orders.getOrderOpFrom();
+		if(orderOpFrom !=null && !orderOpFrom.equals(0L)){
+			if(orderOpFrom==1){
+				oaOrderListVo.setOrderOpFromName("来电订单");
+			}else{
+				CooperativeBusiness cooperativeBusiness  = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
 				
-		// 助理类订单的   服务 大类    床铺除螨--> 深度养护
-		
-		Long serviceType = orders.getServiceType();
-		
-		PartnerServiceType part = partnerService.selectByPrimaryKey(serviceType);
-		
-		/*
-		 *  具体服务 对应的  服务大类,  如果是 深度养护。可以修改  服务开始时间 （状态为 已预约）
-		 *   和 服务结束时间
-		 */
-		
-		
-		if(part != null){
-			// 兼容 历史 数据， 此处 做判空
-			oaOrderListVo.setParentServiceTypeId(part.getParentId());
+				if (cooperativeBusiness != null) {
+					oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+				}
+			}
 		}
 		
+
+		//是否有加时的标识
+		String overWorkStr = "";
+		overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
+		oaOrderListVo.setOverWorkStr(overWorkStr);
+				
 		return oaOrderListVo;
 	}
-	
 	
 	/**
 	 *	深度保洁订单详情
@@ -692,145 +507,108 @@ public class OaOrderServiceImpl implements OaOrderService {
 		Orders orders = orderService.selectByOrderNo(orderNo);
 
 		OaOrderListVo oaOrderListVo = completeVo(orders);
-
-		Long addTime = orders.getAddTime();
-
-		String date = DateUtil.getDefaultDate(addTime * 1000);
-		// 下单时间
-		oaOrderListVo.setOrderDate(date);
-
-		// 订单状态名称
-		String orderStausName = OneCareUtil.getJhjOrderStausName(orders.getOrderStatus());
-
-		oaOrderListVo.setOrderStatusName(orderStausName);
-
-		// 优惠券
-
-		OrderPrices orderPrices = orderPriceService.selectByOrderIds(orderNo);
-
-		if (orderPrices != null) {
-			Long couponId = orderPrices.getCouponId();
-			if (couponId > 0L) {
-				// 优惠券id
-				UserCoupons userCoupons = userCouponService.selectByPrimaryKey(couponId);
-				DictCoupons dictCoupon = dictCouponService.selectByPrimaryKey(userCoupons.getCouponId());
-
-				// 优惠券面值
-				if (userCoupons != null) {
-					oaOrderListVo.setCouponValue(dictCoupon.getValue());
-					oaOrderListVo.setCouponName(dictCoupon.getIntroduction());
-				}
-			}
-		}
-
-		// 姓名
-		Long userId = orders.getUserId();
-
-		Users users = userService.selectByPrimaryKey(userId);
-		if (users != null) {
-			oaOrderListVo.setUserName(users.getName());
-		}
-
-		/*
-		 * 可能 会有 多次换人，多条 无效记录 的情况，需要分别展示
-		 */
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderNo(orderNo);
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
-
-		// 有派工记录 的订单，则展示 当前 阿姨
-
-		for (OrderDispatchs orDis : orderDisList) {
-			oaOrderListVo.setStaffName(orDis.getStaffName());
-			oaOrderListVo.setStaffId(orDis.getStaffId());
-		}
-
-		return oaOrderListVo;
-	}
-	/**
-	 * 配送订单详情
-	 * 
-	 * @param orderNo
-	 * @param disStatus
-	 * @return
-	 */
-	@Override
-	public OaOrderListVo getOrderVoDetailDel(String orderNo, Short disStatus) {
-
-		Orders orders = orderService.selectByOrderNo(orderNo);
-
-		OaOrderListVo oaOrderListVo = completeVo(orders);
-
-		Long addTime = orders.getAddTime();
-
-		String date = DateUtil.getDefaultDate(addTime * 1000);
-		// 下单时间
-		oaOrderListVo.setOrderDate(date);
-		// 订单状态名称
-		String orderStausName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orders.getOrderStatus());
-		oaOrderListVo.setOrderStatusName(orderStausName);
-		// 优惠券
-		OrderPrices orderPrices = orderPriceService.selectByOrderIds(orderNo);
-		if (orderPrices != null) {
-			Long couponId = orderPrices.getCouponId();
-			if (couponId > 0L) {
-				// 优惠券id
-				UserCoupons userCoupons = userCouponService.selectByPrimaryKey(couponId);
-				DictCoupons dictCoupon = dictCouponService.selectByPrimaryKey(userCoupons.getCouponId());
-
-				// 优惠券面值
-				if (userCoupons != null) {
-					oaOrderListVo.setCouponValue(dictCoupon.getValue());
-					oaOrderListVo.setCouponName(dictCoupon.getIntroduction());
-				}
-			}
-		}
-
-		// 姓名
-		Long userId = orders.getUserId();
-
-		Users users = userService.selectByPrimaryKey(userId);
-		if (users != null) {
-			oaOrderListVo.setUserName(users.getName());
-		}
-		// 获取用户默认地址
-		UserAddrs userAddrs = userAddrService.selectByDefaultAddr(userId);
-		if (userAddrs != null) {
-			oaOrderListVo.setOrderAddress(userAddrs.getName()+""+userAddrs.getAddr());
+		
+		//服务品类名称
+		oaOrderListVo.setServiceTypeName("");
+		oaOrderListVo.setIsAuto((short) 1);
+		oaOrderListVo.setIsMulti((short) 0);
+		Long serviceTypeId = orders.getServiceType();
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		if (serviceType != null) {
+			oaOrderListVo.setServiceTypeName(serviceType.getName());
+			oaOrderListVo.setIsAuto(serviceType.getIsAuto());
+			oaOrderListVo.setIsMulti(serviceType.getIsMulti());
 		}
 		
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderNo(orderNo);
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDisList = orderDispatchsService.selectBySearchVo(searchVo);
 
-		// 有派工记录 的订单，则展示 当前 阿姨
-		for (OrderDispatchs orDis : orderDisList) {
-			oaOrderListVo.setStaffName(orDis.getStaffName());
-			oaOrderListVo.setStaffMobile(orDis.getStaffMobile());
-			oaOrderListVo.setStaffId(orDis.getStaffId());
-		}
-		Long startTime = orders.getServiceDate();
-		Long endTime = (startTime + orders.getServiceHour() * 3600);
+		Long addTime = orders.getAddTime();
 
-		// 订单状态=4(已支付),进行服务人员查找
-		if (orders.getOrderStatus() == 4) {
-			// 根据 派工逻辑 ，找出 这条 订单 的 符合条件的 阿姨
-			List<OrgStaffsNewVo> staffList = dispatchStaffFromOrderService.getNewBestStaffForDel(startTime, endTime, userAddrs.getId(), orders.getId());
-			// 保存可选的派工人员
-			oaOrderListVo.setVoList(staffList);
+		String date = DateUtil.getDefaultDate(addTime * 1000);
+		// 下单时间
+		oaOrderListVo.setOrderDate(date);
+		
+		//服务时间
+		Long serviceDate = orders.getServiceDate();
+		String date1 = DateUtil.getDefaultDate(serviceDate * 1000);
+		
+		oaOrderListVo.setServiceDateStr(date1);
+		
+		// 订单状态名称
+		String orderStausName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(),orders.getOrderStatus());
+		oaOrderListVo.setOrderStatusName(orderStausName);
+
+		// 优惠券
+		OrderPrices orderPrices = orderPriceService.selectByOrderIds(orderNo);
+
+		if (orderPrices != null) {
+			Long couponId = orderPrices.getCouponId();
+			if (couponId > 0L) {
+				// 优惠券id
+				UserCoupons userCoupons = userCouponService.selectByPrimaryKey(couponId);
+				DictCoupons dictCoupon = dictCouponService.selectByPrimaryKey(userCoupons.getCouponId());
+
+				// 优惠券面值
+				if (userCoupons != null) {
+					oaOrderListVo.setCouponValue(dictCoupon.getValue());
+					oaOrderListVo.setCouponName(dictCoupon.getIntroduction());
+				}
+			}
 		}
+
+		// 姓名
+		Long userId = orders.getUserId();
+
+		Users users = userService.selectByPrimaryKey(userId);
+		if (users != null) {
+			oaOrderListVo.setUserName(users.getName());
+		}
+		
+		oaOrderListVo.setOrderOpFromName("");
+		Long orderOpFrom = orders.getOrderOpFrom();
+		if(orderOpFrom !=null && !orderOpFrom.equals(0L)){
+			if(orderOpFrom==1){
+				oaOrderListVo.setOrderOpFromName("来电订单");
+			}else{
+				CooperativeBusiness cooperativeBusiness  = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+				oaOrderListVo.setOrderOpFromName(cooperativeBusiness.getBusinessName());
+			}
+		}
+		
+		// 助理预约单，存在 ，没有价格 的 一个过程
+		if (orderPrices != null) {
+			// 支付方式
+			if(orders.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_2){
+				String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
+				oaOrderListVo.setPayTypeName(payTypeName);
+			}else{
+				oaOrderListVo.setPayTypeName("-");
+			}
+			
+			oaOrderListVo.setPayType(orderPrices.getPayType());
+		}
+		
+		//是否有加时的标识
+		String overWorkStr = "";
+		overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
+		oaOrderListVo.setOverWorkStr(overWorkStr);
+
 
 		return oaOrderListVo;
 	}
-
+	
 	@Override
-	public OaOrderListNewVo completeNewVo(Orders orders) {
+	public OaOrderListVo completeNewVo(Orders orders) {
 		OaOrderListVo oaOrderListVo = initVO();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(orders, oaOrderListVo);
-
+		
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(orders.getServiceDate() * 1000, "MM-dd HH:mm");
+		oaOrderListVo.setServiceDateStr(serviceDateStr);
+		
+		
+		String orderStatusName = OneCareUtil.getJhjOrderStausNameFromOrderType(orders.getOrderType(), orders.getOrderStatus());
+		oaOrderListVo.setOrderStatusName(orderStatusName);
+		
 		String orderNo = orders.getOrderNo();
 
 		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orderNo);
@@ -838,13 +616,19 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 助理预约单，存在 ，没有价格 的 一个过程
 		if (orderPrices != null) {
 			// 订单总金额
-			oaOrderListVo.setOrderMoney(orderPrices.getOrderMoney());
+			BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
+			oaOrderListVo.setOrderMoney(orderMoney);
 			// 订单实际支付金额
-			oaOrderListVo.setOrderPay(orderPrices.getOrderPay());
+			BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
+			oaOrderListVo.setOrderPay(orderPay);
 			
 			// 支付方式
-			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
-			oaOrderListVo.setPayTypeName(payTypeName);
+			if(orders.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_2){
+				String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
+				oaOrderListVo.setPayTypeName(payTypeName);
+			}else{
+				oaOrderListVo.setPayTypeName("-");
+			}
 			
 			oaOrderListVo.setPayType(orderPrices.getPayType());
 		}
@@ -858,12 +642,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 				oaOrderListVo.setOrderAddress(userAddrs.getName()+ " " + userAddrs.getAddress());
 			}
 		}
-//		// 门店名称
-//		Orgs orgs = orgService.selectByPrimaryKey(oaOrderListVo.getOrgId());
-//
-//		if (orgs != null) {
-//			oaOrderListVo.setOrgName(orgs.getOrgName());
-//		}
+
 		// 查找出有效派工
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(orderNo);
@@ -893,95 +672,117 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setDisStatusName("暂未派工");
 			oaOrderListVo.setStaffName("无");
 		}
-		Map<String, String> statuNameMap = new Hashtable<String, String>();
-
-		statuNameMap.put(orders.getOrderStatus() + ",", "");
-
-		OaOrderListNewVo oaOrderListNewVo = new OaOrderListNewVo();
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(oaOrderListVo, oaOrderListNewVo);
-
-		oaOrderListNewVo.setStatusNameMap(statuNameMap);
-		
 		
 		/*
 		 *  2016年3月29日17:43:59   细节修改。添加字段
 		 *  
 		 *   云店名称、派工人员姓名(如果已派工)、 订单具体类型
 		 */
+		
+
+		oaOrderListVo.setApplyStatus("-");
+		
+		
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrderNo(orderNo);
 		searchVo1.setDispatchStatus((short) 1);
 		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo1);
 		
+		List<OrderDispatchVo> orderDispatchs = new ArrayList<OrderDispatchVo>();
+		String staffName = "";
+		String staffMobile = "";
+		String orgName = "";
+		String cloudName = "";
 		//如果有派工记录
-		if(list.size() >0){
+		for (OrderDispatchs item : list) {
 			
-			OrderDispatchs dispatchs = list.get(0);
-			//派工人员姓名
-			oaOrderListNewVo.setStaffName(dispatchs.getStaffName());
+			String tmpStaffName = item.getStaffName();
+			if (staffName.indexOf(tmpStaffName + ",") < 0) staffName+= tmpStaffName + ",";
 			
-			Long staffId = dispatchs.getStaffId();
+			String tmpStaffMobile = item.getStaffMobile();
+			if (staffMobile.indexOf(tmpStaffMobile + ",") < 0) staffMobile+= tmpStaffMobile + ",";
 			
-			OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
 			
-			if(staffs != null){
-				
-				Orgs orgs2 = orgService.selectByPrimaryKey(staffs.getOrgId());
-				
-				if(orgs2 != null){
-					
-					//云店名称
-					oaOrderListNewVo.setCloudOrgName(orgs2.getOrgName());
-					
-					Long parentId = orgs2.getParentId();
-					
-					//处理历史数据，  直接记录的是员工的  门店，而不是 jhj2.1的 云店
-					if(parentId != 0L){
-						//门店名称
-						Orgs orgs3 = orgService.selectByPrimaryKey(parentId);
-						oaOrderListNewVo.setOrgName(orgs3.getOrgName());
-					}
+			Long tmpStaffId = item.getStaffId();
+			
+			OrgStaffs staffs = staffService.selectByPrimaryKey(tmpStaffId);
+			
+			OrderDispatchVo vo = orderDispatchsService.changeToOrderDispatchVo(item);
+			if(staffs.getOrgId()!=null && staffs.getOrgId()!=0L){
+				Orgs cloudOrg = orgService.selectByPrimaryKey(staffs.getOrgId());
+				if(cloudOrg!=null){
+					if (cloudName.indexOf(cloudOrg.getOrgName() + ",") < 0) cloudName+= cloudOrg.getOrgName() + ",";
+					vo.setOrgName(cloudOrg.getOrgName());
 				}
-				
 			}
 			
+			Orgs parentOrg = orgService.selectByPrimaryKey(staffs.getParentOrgId());
+			if(parentOrg!=null){
+				if (orgName.indexOf(parentOrg.getOrgName() + ",") < 0) orgName+= parentOrg.getOrgName() + ",";
+				vo.setParentOrgName(parentOrg.getOrgName());
+			}
+			
+			orderDispatchs.add(vo);
+		
 			//是否接单状态;
-			Short isApply = dispatchs.getIsApply();
+			Short isApply = item.getIsApply();
 			if (isApply.equals((short)1)) {
-				oaOrderListNewVo.setApplyStatus("是");
+				oaOrderListVo.setApplyStatus("是");
 			} else {
 				Long now = TimeStampUtil.getNowSecond();
-				Long dispatchTime = dispatchs.getAddTime();
+				Long dispatchTime = item.getAddTime();
 				Long lastTime = now - dispatchTime;
 				if ( lastTime > 60 * 30) {
-					oaOrderListNewVo.setApplyStatus("超");
+					oaOrderListVo.setApplyStatus("超");
 				} else {
-					oaOrderListNewVo.setApplyStatus("否");
+					oaOrderListVo.setApplyStatus("否");
 				}
 			}
 			
-		}else{
-			oaOrderListNewVo.setStaffName("暂无");
 			
-			oaOrderListNewVo.setCloudOrgName("");
-			oaOrderListNewVo.setOrgName("");
-			oaOrderListNewVo.setApplyStatus("-");
 		}
 		
+		if (!StringUtil.isEmpty(staffName) && staffName.substring(staffName.length()-1).equals(",")) {
+			staffName = staffName.substring(0, staffName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(staffMobile) && staffMobile.substring(staffMobile.length()-1).equals(",")) {
+			staffMobile = staffMobile.substring(0, staffMobile.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(orgName) && orgName.substring(orgName.length()-1).equals(",")) {
+			orgName = orgName.substring(0, orgName.length()-1);
+		}
+		
+		if (!StringUtil.isEmpty(cloudName) && cloudName.substring(cloudName.length()-1).equals(",")) {
+			cloudName = cloudName.substring(0, cloudName.length()-1);
+		}
+		
+		oaOrderListVo.setStaffName(staffName);
+		oaOrderListVo.setStaffMobile(staffMobile);
+		oaOrderListVo.setCloudOrgName(cloudName);
+		oaOrderListVo.setOrgName(orgName);		
+		oaOrderListVo.setOrderDispatchs(orderDispatchs);
 		
 		
 		Long serviceType = orders.getServiceType();
 		PartnerServiceType type = partnerService.selectByPrimaryKey(serviceType);
 		//订单类型 具体名称 （具体到服务类型）, 如 钟点工-->金牌保洁初体验、金牌保洁深度体验。。。
 		if(type !=null){
-			oaOrderListNewVo.setOrderTypeName(type.getName());
+			oaOrderListVo.setOrderTypeName(type.getName());
 		}else{
-			oaOrderListNewVo.setOrderTypeName("");
+			oaOrderListVo.setOrderTypeName("");
 		}
 		
+		Short orderFrom = orders.getOrderFrom();
+		Long orderOpFrom = orders.getOrderOpFrom();
+		CooperativeBusiness cooperativeBusiness=null;
+		if(orderOpFrom!=null){
+			cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+		}
+		oaOrderListVo = OrderUtils.isOrderSrc(orderFrom,orderOpFrom,oaOrderListVo,cooperativeBusiness);
 		
-		return oaOrderListNewVo;
+		return oaOrderListVo;
 	}
 
 	@Override

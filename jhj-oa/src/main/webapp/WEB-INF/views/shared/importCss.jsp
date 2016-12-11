@@ -9,7 +9,7 @@
     <title>家和家-运营平台</title>
 
  	<!-- Bootstrap core CSS -->
-    <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.css" rel="stylesheet">
+     <link href="<c:url value='/css/bootstrap-3.3.0.css'/>" rel="stylesheet">
 	
 	<!--external css-->
 	<link href="<c:url value='/assets/font-awesome/css/font-awesome.min.css'/>" rel="stylesheet" type="text/css"/>

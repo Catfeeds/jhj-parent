@@ -1,4 +1,13 @@
 /**
+ * 只允许输入数字
+ */
+function inputNum(obj) {
+	var tmptxt=obj.val();
+	tmptxt = tmptxt.replace(/[^\d\.]/g,'');
+	obj.val(tmptxt);
+}
+
+/**
  * 判断是否是数字
  * @param value
  * @returns {Boolean}

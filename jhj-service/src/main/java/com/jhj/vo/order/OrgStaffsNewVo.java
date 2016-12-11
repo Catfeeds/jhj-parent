@@ -24,13 +24,18 @@ public class OrgStaffsNewVo extends OrgStaffs {
 
 	// 距离时间(文本描述)
 	private String durationText;
-
+	
+	// 云店距离(单位是米)
+	private int orgDistanceValue;
+	
+	// 线路距离(文本描述)
+	private String orgDistanceText;
 	
 	/*
 	 * 后台手动派工 时。展示的 冗余字段
 	 */
 	
-	private Long todayOrderNum; // 2016年3月23日19:13:05 该人员当天的 派工单量
+	private int todayOrderNum; // 2016年3月23日19:13:05 该人员当天的 派工单量
 
 	private String staffOrgName; // 2016年3月30日16:45:11  该服务人员，所在 门店 的名称
 	private String staffCloudOrgName; //2016年3月30日16:45:14   该服务人员 所在 云店名称
@@ -39,6 +44,8 @@ public class OrgStaffsNewVo extends OrgStaffs {
 	private String dispathStaStr;	//2016年5月4日17:31:30   该服务人员 派工情况描述
 
 	private int dispathStaFlag;	// 派工情况 标识
+	
+	private String reason;      //无法派工原因
 	
 	
 	public int getDispathStaFlag() {
@@ -74,11 +81,11 @@ public class OrgStaffsNewVo extends OrgStaffs {
 		this.staffCloudOrgName = staffCloudOrgName;
 	}
 
-	public Long getTodayOrderNum() {
+	public int getTodayOrderNum() {
 		return todayOrderNum;
 	}
 
-	public void setTodayOrderNum(Long todayOrderNum) {
+	public void setTodayOrderNum(int todayOrderNum) {
 		this.todayOrderNum = todayOrderNum;
 	}
 
@@ -136,6 +143,30 @@ public class OrgStaffsNewVo extends OrgStaffs {
 
 	public void setDurationText(String durationText) {
 		this.durationText = durationText;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public int getOrgDistanceValue() {
+		return orgDistanceValue;
+	}
+
+	public void setOrgDistanceValue(int orgDistanceValue) {
+		this.orgDistanceValue = orgDistanceValue;
+	}
+
+	public String getOrgDistanceText() {
+		return orgDistanceText;
+	}
+
+	public void setOrgDistanceText(String orgDistanceText) {
+		this.orgDistanceText = orgDistanceText;
 	}
 
 }

@@ -1,31 +1,46 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourDetailService;
 import com.jhj.service.order.OrderHourListService;
+import com.jhj.service.order.OrderPriceExtService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderHourViewVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.Week;
 
 /**
  *
@@ -41,9 +56,9 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 	@Autowired
 	private OrdersMapper orderMapper;
 	@Autowired
-	private OrderPricesMapper orderPricesMapper;
+	private OrderPricesService orderPriceService;
 	@Autowired
-	private OrderDispatchsMapper orderDisMapper;
+	private OrderDispatchsService orderDispatchService;
 	@Autowired
 	private UserAddrsMapper userAddrsMapper;
 	@Autowired
@@ -56,6 +71,9 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 	private UsersService usersService;
 	
 	@Autowired
+	private PartnerServiceTypeService partService;
+	
+	@Autowired
 	private UserCouponsService userCouponService;
 	
 	@Autowired
@@ -63,6 +81,9 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 	
 	@Autowired
 	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 	
 	
 	@Override
@@ -73,13 +94,23 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		Orders orders = orderMapper.selectByOrderNo(orderNo);
 		BeanUtilsExp.copyPropertiesIgnoreNull(orders, orderHourViewVo);
 		
+		//订单状态名称		
+		Short orderType = orders.getOrderType();
+		Long serviceType = orders.getServiceType();
+
+		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
+
+		if (type != null) {
+			orderHourViewVo.setServiceTypeName(type.getName());
+		} else {
+			orderHourViewVo.setServiceTypeName(OneCareUtil.getJhjOrderTypeName(orderType));
+		}
+		
 		//orderPrices相关字段    优惠券
-		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orders.getOrderNo());
+		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orders.getOrderNo());
 
 		Long couponId = orderPrices.getCouponId();
 		
-//		orderHourViewVo.setCouponValue(new BigDecimal(0));
-//		orderHourViewVo.setCouponName("");
 		if (couponId > 0L) {
 			//优惠券id
 			orderHourViewVo.setCouponId(couponId);
@@ -93,18 +124,12 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 			}
 		}
 		
-		orderHourViewVo.setOrderMoney(orderPrices.getOrderMoney());
+		BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
+		BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
+		orderHourViewVo.setOrderMoney(orderMoney);
 		//实际支付金额
-		orderHourViewVo.setOrderPay(orderPrices.getOrderPay());
-		
-		
-		//门店Id
-//		OrgStaffs orgStaffs = orgStaffsService.selectOrgIdByStaffId(orders.getAmId());
-//		Long orgId = orgStaffs.getOrgId();
-//		orderHourViewVo.setOrgId(orgId);
-		
-		
-		
+		orderHourViewVo.setOrderPay(orderPay);
+				
 		//userAddr  服务地址名称
 		Long addrId = orders.getAddrId();
 		
@@ -127,21 +152,53 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		}
 		
 		
-		//服务类型名称
+		//订单类型名称
 		String orderTypeName = OneCareUtil.getJhjOrderTypeName(orders.getOrderType());
 		orderHourViewVo.setOrderTypeName(orderTypeName);
 		
-		//订单状态名称
 		
-		//2016年2月20日15:57:49  更新为 二期新的 订单状态名称
-		
-		Short orderType = orders.getOrderType();
 		
 		Short orderStatus = orders.getOrderStatus();
 		
 		String orderStatusName = OneCareUtil.getJhjOrderStausNameFromOrderType(orderType, orderStatus);
 		
 		orderHourViewVo.setOrderStatusName(orderStatusName);
+		
+		//服务日期，格式为 yyy-MM-dd(周几) hh:mm
+		Long serviceDateTime = orders.getServiceDate();
+		
+		Long now = TimeStampUtil.getNowSecond();
+		if (serviceDateTime < now && orderStatus == 1) {
+			orderStatus = Constants.ORDER_HOUR_STATUS_0;
+			orderHourViewVo.setOrderStatus(Constants.ORDER_HOUR_STATUS_0);
+		}
+		
+		// 订单状态
+		orderHourViewVo.setOrderStatusName(OneCareUtil.getJhjOrderStausNameFromOrderType(orderType, orderStatus));
+
+		String serviceDatePart1 = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "yyyy-MM-dd");
+		String serviceDatePart2 = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "HH:mm");
+		Date serviceDate = TimeStampUtil.timeStampToDate(serviceDateTime * 1000);
+		Week w = DateUtil.getWeek(serviceDate);
+		
+		String serviceDateStr = serviceDatePart1 + "(" + w.getChineseName() + ")" + " " + serviceDatePart2;
+		orderHourViewVo.setServiceDateStr(serviceDateStr);
+		
+		
+		String overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
+		orderHourViewVo.setOverWorkStr(overWorkStr);
+		
+		//派工信息
+		List<OrderDispatchs> orderDispatchs = new ArrayList<OrderDispatchs>();
+		if (orderStatus >= Constants.ORDER_HOUR_STATUS_3) {
+			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+			orderDispatchSearchVo.setOrderId(orders.getId());
+			orderDispatchSearchVo.setDispatchStatus((short) 1);
+			
+			orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+		}
+		
+		orderHourViewVo.setOrderDispatchs(orderDispatchs);
 		
 		return orderHourViewVo;
 	}
@@ -167,7 +224,7 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		orderHourViewVo.setOrderMoney(new BigDecimal(0));
 		orderHourViewVo.setOrderPay(new BigDecimal(0));
 		//orderPrices相关字段    优惠券
-		OrderPrices orderPrices = orderPricesMapper.selectByOrderNo(orders.getOrderNo());
+		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orders.getOrderNo());
 		
 		if (orderPrices != null) {
 			Long couponId = orderPrices.getCouponId();
@@ -222,6 +279,8 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 		orderHourViewVo.setAddrName("");
 		orderHourViewVo.setOrderStatusName("");
 		orderHourViewVo.setOrderTypeName("");
+		orderHourViewVo.setServiceTypeName("");
+		orderHourViewVo.setServiceDateStr("");
 		
 		return orderHourViewVo;
 	}

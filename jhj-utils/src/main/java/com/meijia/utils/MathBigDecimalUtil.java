@@ -120,6 +120,34 @@ public class MathBigDecimalUtil {
     	return true;
     }
     
+    
+    /**
+     * 计算数值平均值，并且判断小数点，放入区间 0， 0.5 ， 1
+     * 1.   = 0 ， 则不变
+     * 2  > 0 && < 0.5 , 则为0.5
+     * 3. > 0.5 , 则为1
+     * @param args
+     */
+    public static double getValueStepHalf(double s , int size) {
+    	
+    	double r = s;
+    	double f  = s / size;
+		BigDecimal bg = new BigDecimal(f);
+        double f1 = bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+		
+        int decimal = (int) f1;
+		double fractional = f1 - decimal;
+
+		if (fractional > 0 && fractional <= 0.5) {
+			f = decimal + 0.5;
+		} else if (fractional > 0.5) {
+			f = decimal + 1;
+		}
+		
+		return f;
+    }
+    
+    
 	public static void main(String[] args) {
 //		BigDecimal pay = new BigDecimal(0.01);
 //		System.out.println("pay = " + pay.toString());
@@ -130,7 +158,11 @@ public class MathBigDecimalUtil {
 //		BigDecimal p3 = MathBigDeciamlUtil.round(p2, 0);
 //		System.out.println("pay乘以100 = " + p3.toString());
 		
-		decideIsMoneyNum(new BigDecimal(00002.1));
-		
+//		decideIsMoneyNum(new BigDecimal(00002.1));
+		double serviceHour  = 8.0;
+		serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 3);
+					
+		System.out.println(serviceHour);
+
 	}
 }

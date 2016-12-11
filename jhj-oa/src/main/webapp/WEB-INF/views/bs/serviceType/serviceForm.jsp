@@ -53,14 +53,103 @@
                               </div>
                            </div>
                            
+                            <div class="form-group required">
+                              <label  class="col-md-2 control-label">最小服务时长*</label>
+                              <div class="col-md-5">
+                                 <form:input path="serviceHour" class="form-control" placeholder="服务时长"/>
+                                 <form:errors path="serviceHour" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
                            
                            <div class="form-group required">
-                              <label  class="col-md-2 control-label">单价*</label>
+                              <label  class="col-md-2 control-label">非会员价*</label>
                               <div class="col-md-5">
-                                 <form:input path="price" class="form-control" placeholder="单价"/>
+                                 <form:input path="price" class="form-control" placeholder="非会员价"/>
                                  <form:errors path="price" class="field-has-error"/>
                               </div>
                            </div>
+                           
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">非会员套餐价格*</label>
+                              <div class="col-md-5">
+                                 <form:input path="pprice" class="form-control" placeholder="套餐价格"/>
+                                 <form:errors path="pprice" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">会员价*</label>
+                              <div class="col-md-5">
+                                 <form:input path="mprice" class="form-control" placeholder="会员价"/>
+                                 <form:errors path="mprice" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">会员套餐价格*</label>
+                              <div class="col-md-5">
+                                 <form:input path="mpprice" class="form-control" placeholder="套餐价格"/>
+                                 <form:errors path="mpprice" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           
+                           
+                           
+                           
+						   <div class="form-group">
+                              <label  class="col-md-2 control-label">自动派工</label>
+                              <div class="col-md-5">
+                              	 <form:radiobutton path="isAuto" value="1" label="是" />
+								 <form:radiobutton path="isAuto" value="0" label="否" />
+                              </div>
+                           </div>
+                           
+                           <div class="form-group">
+                              <label  class="col-md-2 control-label">一单多人</label>
+                              <div class="col-md-5">
+                              	 <form:radiobutton path="isMulti" value="1" label="是" />
+								 <form:radiobutton path="isMulti" value="0" label="否" />
+                              </div>
+                           </div>
+                           
+
+                           
+                           <div class="form-group ">
+							<label class="col-md-2 control-label">服务子项(没有可不填)</label>
+							<div class="col-md-8">
+								<table id="serviceAddonTable" class="table table-hover table-condensed controls">
+									<thead>
+										<tr>
+											<th>类别</th>
+											<th>单位</th>
+											<th>非会员价</th>
+											<th>会员价</th>
+											<th>起步数量</th>
+											<th>服务时长</th>
+											<th>#</th>
+										</tr>
+									</thead>
+									<c:forEach items="${serviceAddons}" var="item">
+										<tr class="odd gradeX">
+											<td><input type="hidden" name="serviceAddonIds" value="${item.serviceAddonId}"/>
+												<input type="text" name="serviceAddonName" value="${item.name}" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="itemUnit" value="${item.itemUnit}" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonPrice" value="${item.price}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonDisPrice" value="${item.disPrice}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="defaultNum" value="${item.defaultNum}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonServiceHour" value="${item.serviceHour}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><span class="input-group-btn">
+													<button class="btn btn-success btn-add" type="button">
+														<span class="glyphicon glyphicon-plus"></span>
+													</button>
+												</span></td>
+										</tr>
+									</c:forEach>
+								</table>
+							</div>
+						</div>                           
                            
                            
                            <div class="form-group required">
@@ -74,7 +163,7 @@
                            <div class="form-group required">
                               <label  class="col-md-2 control-label">服务内容</label>
                               <div class="col-md-5">
-                                 <form:textarea path="serviceContent" rows="5" cols="50"
+                                 <form:textarea path="serviceContent" class="form-control" rows="5" cols="50"
                                  		placeholder="不超过120字,助理类订单,该字段作为服务说明" maxlength="120"/>
                               </div>
                            </div>
@@ -107,14 +196,6 @@
                            </div>
                            
                            
-                           <%-- <div class="form-group">
-                              <label  class="col-md-2 control-label">服务类别</label>
-                              <div class="col-md-5">
-                              	 <form:radiobutton path="viewType" value="1" label="商品" />
-								 <form:radiobutton path="viewType" value="0" label="类别" />
-                              </div>
-                           </div> --%>
-                           
                            
                            <div class="form-group">
                               <label  class="col-md-2 control-label">是否可用</label>
@@ -123,8 +204,7 @@
 								 <form:radiobutton path="enable" value="0" label="不可用" />
                               </div>
                            </div>
-                           
-                           
+
                            <div class="form-group">
                               <label  class="col-md-2 control-label">列表排序</label>
                               <div class="col-md-5">
@@ -132,16 +212,14 @@
                                  <form:errors path="no" class="field-has-error"/>
                               </div>
                            </div>
-                           
-                           
+
 	                       <div class="form-group">
 								<label class="col-md-2 control-label">图片</label>
 								<div class="col-md-5">
 									<img src="${contentModelForm.serviceImgUrl }" style="display:block;width:100%;max-width:200px;max-height:200px;"/>
 								</div>
 							</div>
-							
-	
+
 							<div class="form-group">
 								<label class="col-md-2 control-label">服务类别图标</label>
 								<div class="col-md-5">
@@ -149,8 +227,7 @@
 										data-show-upload="false">
 								</div>
 							</div> 
-                           
-                           
+
                            <div class="form-group">
                               <label  class="col-md-2 control-label">隶属于&nbsp;*</label>
                               <div class="col-md-5">

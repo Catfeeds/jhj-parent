@@ -16,10 +16,12 @@ import com.google.gson.JsonParser;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderServiceAddonsService;
+import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.JsonServiceAddonsItemVo;
 
 /**
@@ -38,16 +40,24 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 	
 	@Autowired
 	private OrderServiceAddonsService orderServiceAddonsService;
+	
+	@Autowired
+	private UsersService userService;
 
 	/**
 	 * 获得深度保洁的总价
 	 */
 	@Override
-	public OrderPrices getOrderPriceOfOrderExpClean(Long serviceType, String serviceAddonsDatas) {
+	public OrderPrices getOrderPriceOfOrderExpClean(Long userId, Long serviceType, String serviceAddonsDatas) {
 		
 		OrderPrices orderPrices = orderPricesService.initOrderPrices();
-		
 
+		Users u = userService.selectByPrimaryKey(userId);
+		
+		int isVip = 0 ;
+		if (u != null) isVip = u.getIsVip();
+
+		
 		Gson gson = new Gson();
 
 		// 创建一个JsonParser
@@ -70,8 +80,13 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				JsonServiceAddonsItemVo = gson.fromJson(e,JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
+				
+				if (isVip == 1) {
+					price = dictServiceAddons.getDisPrice();
+				}
+				
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =orderMoney.add(price.multiply(itemNumBigDecimal));
 			}
@@ -83,18 +98,28 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 						jsonObj, JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
+				
+				if (isVip == 1) {
+					price = dictServiceAddons.getDisPrice();
+				}
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =price.multiply(itemNumBigDecimal);
 			}
 		}
 		orderPrices.setOrderMoney(orderMoney);
+		orderPrices.setOrderPay(orderMoney);
 		return orderPrices;
 	}
 
 	@Override
-	public List<OrderServiceAddons> updateOrderServiceAddons(Long serviceType, String serviceAddonsDatas) {
+	public List<OrderServiceAddons> updateOrderServiceAddons(Long userId, Long serviceType, String serviceAddonsDatas) {
+		
+		Users u = userService.selectByPrimaryKey(userId);
+		
+		int isVip = 0 ;
+		if (u != null) isVip = u.getIsVip();
 		
 		List<OrderServiceAddons> list   = new ArrayList<OrderServiceAddons>();
 
@@ -121,13 +146,20 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				JsonServiceAddonsItemVo = gson.fromJson(e,JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				
 				
 				//为附加服务赋值
 				orderServiceAddons.setItemNum(itemNum);
 				orderServiceAddons.setItemUnit(dictServiceAddons.getItemUnit());
-				orderServiceAddons.setPrice(dictServiceAddons.getPrice());
+				
+				BigDecimal price = dictServiceAddons.getPrice();
+				
+				if (isVip == 1) {
+					price = dictServiceAddons.getDisPrice();
+				}
+				
+				orderServiceAddons.setPrice(price);
 				orderServiceAddons.setServiceAddonId(serviceAddonId);
 				
 				list.add(orderServiceAddons);
@@ -142,12 +174,19 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 						jsonObj, JsonServiceAddonsItemVo.class);
 				Long serviceAddonId = JsonServiceAddonsItemVo.getServiceAddonId();
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
-				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				
 				//为附加服务赋值
 				orderServiceAddons.setItemNum(itemNum);
 				orderServiceAddons.setItemUnit(dictServiceAddons.getItemUnit());
-				orderServiceAddons.setPrice(dictServiceAddons.getPrice());
+				
+				BigDecimal price = dictServiceAddons.getPrice();
+				
+				if (isVip == 1) {
+					price = dictServiceAddons.getDisPrice();
+				}
+				
+				orderServiceAddons.setPrice(price);
 				orderServiceAddons.setServiceAddonId(serviceAddonId);
 				list.add(orderServiceAddons);
 				

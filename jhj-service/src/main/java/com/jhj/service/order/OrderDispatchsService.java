@@ -1,9 +1,15 @@
 package com.jhj.service.order;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.Orders;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderDispatchVo;
+import com.jhj.vo.order.OrgStaffsNewVo;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -32,5 +38,25 @@ public interface OrderDispatchsService {
 	Long totalStaffTodayOrders(Long staffId);
 
 	List<OrderDispatchs> selectByMatchTime(OrderDispatchSearchVo searchVo);
+
+	List<Map<String, Object>> totalByYearAndMonth(Map<String, Object> conditions);
+
+	List<HashMap> totalByStaff(OrderDispatchSearchVo searchVo);
+	
+	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
+
+	List<OrgStaffsNewVo> manualDispatchByOrg(Long orderId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
+
+	OrgStaffsNewVo initStaffsNew();
+
+	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
+
+	List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour, Long sessionOrgId);
+
+	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
+
+	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
+
+	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
    	
 }

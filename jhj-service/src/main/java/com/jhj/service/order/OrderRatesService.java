@@ -1,27 +1,43 @@
 package com.jhj.service.order;
 
+import java.util.HashMap;
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderRates;
+import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderRatesVo;
+import com.jhj.vo.order.OrderStaffRateVo;
+import com.jhj.vo.staff.OrgStaffRateVo;
 
 public interface OrderRatesService {
 
-	OrderRates selectByOrderId(Long orderId);
+	int deleteByPrimaryKey(Long id);
 
-	int deleteByOrderId(Long orderId);
+	int insertSelective(OrderRates record);
+
+	int insert(OrderRates record);
 
 	int updateByPrimaryKeySelective(OrderRates orderRates);
 
+	int updateByPrimaryKey(OrderRates record);
+
 	OrderRates initOrderRates();
 
-	int insertByOrderRates(OrderRates orderRates);
+	OrderRates selectByPrimaryKey(Long id);
 
-	//OrderRates getOrderRates(String rateDatas);
+	List<OrderRates> selectBySearchVo(OrderDispatchSearchVo searchVo);
 
-	OrderRates getOrderRates(Long orderId, String rateDatas);
+	PageInfo selectByListPage(OrderDispatchSearchVo searchVo, int pageNo, int pageSize,boolean isUseApp);
 
-	List<OrderRates> setlectListByOrderId(Long orderId);
+	HashMap totalByStaff(OrderDispatchSearchVo searchVo);
+	
+	OrderRatesVo transVo(OrderRates orderRate);
 
+	List<OrderStaffRateVo> changeToOrderStaffReteVo(List<OrderRates> list);
 
+	List<OrgStaffRateVo> changeToOrgStaffReteVo(List<OrderRates> list);
+	
+	OrderRatesVo transVoOa(OrderRates orderRate); 
 
 }

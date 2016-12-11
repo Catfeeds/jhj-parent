@@ -37,40 +37,28 @@ import="com.jhj.oa.common.UrlHelper"%>
                   <div class="col-lg-12">
                       <section class="panel">
                       	  
-                      	 <%--  <form:form modelAttribute="oaOrderSearchVoModel" action="order-list" method="GET">
+                      	  <form:form modelAttribute="oaOrderSearchVoModel" action="cash-list" method="get">
 	                         <header class="panel-heading">
 	                         	<h4>数据搜索</h4>
 	                         		<div>
-	                     					服务类型：
-	                     					<form:select path="orderType">
-	                     							<option value="">请选择订单类型</option>
-	                     							<form:option value="0">钟点工</form:option>
-	                     							<form:option value="1">深度保洁</form:option>
-	                     							<form:option value="2">助理预约单</form:option>
-	                     					</form:select>
+	                     					员工名称：
+	                     					<form:input path="staffName" />
+	                     					手机号码：
+	                     					<form:input path="mobile" />
 	                     					订单状态：
 	                     					<form:select path="orderStatus">
-	                     							<option value="">请选择订单状态</option>
-	                     							<form:option value="0">已取消</form:option>
-	                     							<form:option value="1">待确认</form:option>
-	                     							<form:option value="2">已确认</form:option>
-	                     							<form:option value="3">待支付</form:option>
-	                     							<form:option value="4">待服务</form:option>
-	                     							<form:option value="5">服务中</form:option>
-	                     							<form:option value="6">待评价</form:option>
-	                     							<form:option value="7">已完成</form:option>
-	                     							<form:option value="9">已关闭</form:option>
+	                     						<form:option value="">--请选择订单状态--</form:option>
+	                     						<form:option value="0">申请中</form:option>
+	                     						<form:option value="1">财务处理中</form:option>
+	                     						<form:option value="2">申请被驳回</form:option>
+	                     						<form:option value="3">已打款</form:option>
 	                     					</form:select>
 											
-										<c:if test="${loginOrgId == 0 }">
-											选择门店:
-											<orgSelectTag:select/>
-										</c:if>	
 									<input type="submit"  value="搜索"  >
 								</div>
 								</div>   
 	                         </header>
-                           </form:form>   --%> 
+                           </form:form>   
                            
                       	<hr style="width: 100%; color: black; height: 1px; background-color:black;" />  
                       	
@@ -83,7 +71,8 @@ import="com.jhj.oa.common.UrlHelper"%>
                           <table class="table table-striped table-advance table-hover" id="table2excel">
                               <thead>
                               <tr>	  
-                                	  <th >订单号 </th>
+                                	  <th>订单号 </th>
+                                	  <th>员工名称</th>
 		                              <th >手机号</th>
 		                              <th >申请提现金额</th>
 		                              <th >订单状态</th>
@@ -100,6 +89,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                               <tr>	
 							            
                                   	    <td>${ item.orderNo }</td>
+                                  	    <td>${item.staffName }</td>
                                   	    <td>${ item.mobile }</td>
                                   	    <td>${ item.orderMoney }</td>
                                   	     <td>
@@ -137,10 +127,11 @@ import="com.jhj.oa.common.UrlHelper"%>
 
                           
                       </section>
-                      
+                      <!--common script for all pages-->
+   					  <%@ include file="../shared/importJs.jsp"%>
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="contentModel"/>
-	        				<c:param name="urlAddress" value="/staff/staffCash-list"/>
+	        				<c:param name="urlAddress" value="/staff/cash-list"/>
 	       			  </c:import>
                   </div>
               </div>
@@ -155,8 +146,7 @@ import="com.jhj.oa.common.UrlHelper"%>
   </section>
 
     <!-- js placed at the end of the document so the pages load faster -->
-    <!--common script for all pages-->
-    <%@ include file="../shared/importJs.jsp"%>
+    
 
     <%-- <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
     <!--script for this page-->	

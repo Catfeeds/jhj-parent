@@ -22,7 +22,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.order.OaOrderDisVo;
+import com.jhj.vo.order.OrderDispatchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.TimeStampUtil;
@@ -71,9 +71,9 @@ public class OaOrderDisServiceImpl implements OaOrderDisService {
 	}
 
 	@Override
-	public OaOrderDisVo compleVo(OrderDispatchs dispatchs) {
+	public OrderDispatchVo compleVo(OrderDispatchs dispatchs) {
 
-		OaOrderDisVo orderDisVo = initVo();
+		OrderDispatchVo orderDisVo = initVo();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(dispatchs, orderDisVo);
 		// 用户名
@@ -111,10 +111,10 @@ public class OaOrderDisServiceImpl implements OaOrderDisService {
 	}
 
 	@Override
-	public OaOrderDisVo initVo() {
+	public OrderDispatchVo initVo() {
 		OrderDispatchs orderDispatchs = orderDispatchsService.initOrderDisp();
 
-		OaOrderDisVo orderDisVo = new OaOrderDisVo();
+		OrderDispatchVo orderDisVo = new OrderDispatchVo();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(orderDispatchs, orderDisVo);
 
@@ -128,7 +128,7 @@ public class OaOrderDisServiceImpl implements OaOrderDisService {
 	}
 
 	@Override
-	public List<OaOrderDisVo> getDisEveryDay(String day) {
+	public List<OrderDispatchVo> getDisEveryDay(String day) {
 		
 		
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
@@ -139,9 +139,9 @@ public class OaOrderDisServiceImpl implements OaOrderDisService {
 		searchVo.setEndServiceTime(endTime);
 		List<OrderDispatchs> list = orderDisMapper.selectBySearchVo(searchVo);
 
-		List<OaOrderDisVo> voList = new ArrayList<OaOrderDisVo>();
+		List<OrderDispatchVo> voList = new ArrayList<OrderDispatchVo>();
 		for (OrderDispatchs orderDispatchs : list) {
-			OaOrderDisVo oaOrderDisVo = compleVo(orderDispatchs);
+			OrderDispatchVo oaOrderDisVo = compleVo(orderDispatchs);
 			voList.add(oaOrderDisVo);
 		}
 

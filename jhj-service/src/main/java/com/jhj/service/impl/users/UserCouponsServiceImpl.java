@@ -3,6 +3,7 @@ package com.jhj.service.impl.users;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -17,15 +18,17 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.Gifts;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.GiftsService;
-import com.jhj.service.dict.CouponsTypeService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.user.UserCouponVo;
 import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -54,8 +57,11 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 	@Autowired
 	private OrderPricesService orderPricesService;
 	
+//	@Autowired
+//	private CouponsTypeService couponsTypeService;
+	
 	@Autowired
-	private CouponsTypeService couponsTypeService;
+	private PartnerServiceTypeService partnerServiceTypeService;
 
 	@Override
 	public UserCoupons initUserCoupons() {
@@ -172,7 +178,7 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 			record = list.get(i);
 			UserCouponVo vo = new UserCouponVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(record, vo);
-
+			vo.setCouponsTypeId("");
 			for (Gifts gift : gifts) {
 				if (gift.getGiftId().equals(vo.getGiftId())) {
 					vo.setGiftName(gift.getName());
@@ -181,7 +187,6 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 			}
 
 			for (DictCoupons dictCoupon : dictCoupons) {
-
 				if (dictCoupon.getId().equals(vo.getCouponId())) {
 					vo.setValue(dictCoupon.getValue());
 					vo.setMaxValue(dictCoupon.getMaxValue());
@@ -190,12 +195,18 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 					vo.setRangFrom(dictCoupon.getRangFrom());
 					vo.setIntroduction(dictCoupon.getIntroduction());
 					vo.setCouponsTypeId(String.valueOf(dictCoupon.getCouponsTypeId()));
-					vo.setCouponsTypeDesc(couponsTypeService.selectByPrimaryKey(dictCoupon.getCouponsTypeId()).getCouponsTypeDesc());
+//					couponsTypeService.selectByPrimaryKey(dictCoupon.getCouponsTypeId()).getCouponsTypeDesc()
+					vo.setCouponsTypeDesc("");
+					String serviceTypeId = dictCoupon.getServiceType();
+					if(serviceTypeId!=null && !serviceTypeId.equals("")){
+						PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(Long.parseLong(serviceTypeId));
+						vo.setServiceTypeName((serviceType!=null)?serviceType.getName():"");
+					}
 					String fromDateStr = DateUtil.formatDate(vo.getFromDate());
 					String toDateStr = DateUtil.formatDate(vo.getToDate());
-
 					vo.setFromDateStr(fromDateStr);
 					vo.setToDateStr(toDateStr);
+					break;
 				}
 			}
 			result.add(vo);
@@ -247,20 +258,25 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		}
 
 		// 4. 判断优惠劵的服务类型是否正确.
-		String orderType = order.getOrderType().toString();
-		if (!orderType.equals(userCoupon.getServiceType())) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.COUPON_IS_INVALID);
-			return result;
+		String serviceType = order.getServiceType().toString();
+		if (!userCoupon.getServiceType().equals("0")) {
+			if (!serviceType.equals(userCoupon.getServiceType())) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+				return result;
+			}
 		}
 
-		// 5. 判断优惠劵消费金额必须满多少可使用.
+
+		// 5. 判断优惠劵消费金额必须满多少可使用. 3.1版本不需要判断
 		BigDecimal orderMoney = orderPrice.getOrderMoney();
 		BigDecimal maxValue = userCouponVo.getMaxValue();
-		if (orderMoney.compareTo(maxValue) == -1) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.COUPON_IS_INVALID);
-			return result;
+		if (!maxValue.equals(BigDecimal.ZERO)) {
+			if (orderMoney.compareTo(maxValue) == -1) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+				return result;
+			}
 		}
 
 		// 6. 判断优惠劵是否属于该用户.
@@ -370,11 +386,17 @@ public class UserCouponsServiceImpl implements UserCouponsService {
     	uc.setValue(coupons.getValue());
     	uc.setGiftId(0L);
     	uc.setServiceType(String.valueOf(coupons.getServiceType()));
-    	uc.setFromDate(coupons.getFromDate());
-    	uc.setToDate(coupons.getToDate());
+    	uc.setFromDate(DateUtil.getNowOfDate());
+    	String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), coupons.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+    	uc.setToDate(DateUtil.parse(toDateStr));
     	uc.setIsUsed((short)0);
     	uc.setUsedTime(0L);
     	uc.setAddTime(TimeStampUtil.getNow() / 1000);
     	return uc;
     }
+
+	@Override
+	public List<UserCoupons> selectByUserCoupons(UserCoupons userCoupons) {
+		return userCouponsMapper.selectByUserCoupons(userCoupons);
+	}
 }

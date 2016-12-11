@@ -20,7 +20,7 @@ public class TestOrderQuerysController extends JUnitActionBase{
     public void testGetList() throws Exception {
 
 		String url = "/app/staff/order/get_list.json";
-		String params = "?user_id=60&&order_from=2";
+		String params = "?user_id=2&&order_from=0";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);
@@ -33,7 +33,21 @@ public class TestOrderQuerysController extends JUnitActionBase{
     public void testGetDetail() throws Exception {
 
 		String url = "/app/staff/order/get_detail.json";
-		String params = "?staff_id=29&&order_id=3188";
+		String params = "?staff_id=1&&order_id=44";
+		MockHttpServletRequestBuilder getRequest = get(url + params);
+
+	    ResultActions resultActions = this.mockMvc.perform(getRequest);
+	    resultActions.andExpect(content().contentType(this.mediaType));
+	    resultActions.andExpect(status().isOk());
+
+	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
+    }
+	
+	@Test
+    public void testGetRate() throws Exception {
+
+		String url = "/app/staff/order/get_rates.json";
+		String params = "?staff_id=1&&page=0";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);

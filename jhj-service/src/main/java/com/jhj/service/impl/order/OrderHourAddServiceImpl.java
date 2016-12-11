@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffTagsMapper;
 import com.jhj.po.dao.dict.DictServiceAddonsMapper;
 import com.jhj.po.dao.order.OrdersMapper;
@@ -23,6 +24,7 @@ import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -36,6 +38,8 @@ import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.ServiceAddonSearchVo;
+import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
@@ -138,7 +142,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		
 		
 		Long serviceDate = order.getServiceDate();
-		Short serviceHour = order.getServiceHour();
+		double serviceHour = order.getServiceHour();
 		
 			
 		//根据服务地址经纬度获得符合的门店
@@ -176,7 +180,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		}		
 		
 		//结束时间 = 服务开始秒值+ 服务时长秒值
-		Long serviceDateEnd = serviceDate + serviceHour * 3600 ;
+		Long serviceDateEnd = (long) (serviceDate + serviceHour * 3600) ;
 		
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrgId(orgId);
@@ -267,7 +271,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		Orgs item = null;
 		try {
 			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
-			List<BaiduPoiVo> baiduPoiVos = MapPoiUtil.getMinDest(destList);
+			List<BaiduPoiVo> baiduPoiVos = MapPoiUtil.getMinDest(destList, Constants.MAX_DISTANCE);
 			BaiduPoiVo baiduPoiVo = null;
 			
 			if (!baiduPoiVos.isEmpty()) {
@@ -357,7 +361,7 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 				//这里 的 附加服务 单价，从最新 的  dict_service_addons表中 取，
 				// order_service_addons 表中 的单价，可以视为“历史 单价”
 				
-				DictServiceAddons dictServiceAddons = dictServiceTypeService.selectByAddId(serviceAddonId);
+				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				
 				if(dictServiceAddons.getPrice()!=null){
 					realPrice =  dictServiceAddons.getPrice().add(realPrice);
@@ -429,10 +433,15 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		for (OrderServiceAddons item : orderServiceAddonList) {
 			serviceAddonIds.add(item.getServiceAddonId());
 		}
-		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectByServiceAddonIds(serviceAddonIds);
 		
-		//获得所有tags的名称.
-		List<Tags> tagList = tagService.selectAll();
+		ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+		searchVo1.setServiceAddonIds(serviceAddonIds);
+		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
+		
+		//获得所有阿姨tags的名称.
+		TagSearchVo searchVo3 = new TagSearchVo();
+		searchVo3.setTagType((short) 0);
+		List<Tags> tagList = tagService.selectBySearchVo(searchVo3);
 		
 		List<Long> tagIds = new ArrayList<Long>();
 		//tags名称与选择的服务类型进行比较.
@@ -481,22 +490,48 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 	 * 
 	 */
 	@Override
-	public OrderPrices getNewOrderPrice(Long serviceType) {
+	public OrderPrices getNewOrderPrice(Orders order, Long serviceType) {
 		
 		OrderPrices prices = orderPricesService.initOrderPrices();
 		
 		PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 		
-		// 单项服务的 价格
+		//非会员价 单价
 		BigDecimal price = type.getPrice();
 		
-		/*
-		 *  2016年4月1日14:49:48  
-		 *  
-		 * 	服务 都改为  次/元。。故不用 计算 时长的乘积了
-		 */
-		prices.setOrderMoney(price);
-		prices.setOrderPay(price);
+		//会员价单价
+		BigDecimal mprice = type.getMprice();
+		
+		//非会员价套餐价
+		BigDecimal pprice = type.getPprice();
+		
+		//会员价套餐价格
+		BigDecimal mpprice = type.getMpprice();
+		
+		
+		BigDecimal orderHourPay = price;
+		BigDecimal orderPay = pprice;
+		
+		Long userId = order.getUserId();
+		Users u = usersService.selectByPrimaryKey(userId);
+		
+		int isVip = u.getIsVip();
+		if (isVip == 1) {
+			orderHourPay = mprice;
+			orderPay = mpprice;
+		}
+		
+		int staffNums = order.getStaffNums();
+		double serviceHour = order.getServiceHour();
+		
+		if (staffNums > 1 || serviceHour > type.getServiceHour()) {
+			BigDecimal tmpPrice = orderHourPay.multiply(new BigDecimal(serviceHour));
+			tmpPrice = tmpPrice.multiply(new BigDecimal(staffNums));
+			orderPay = tmpPrice;
+		}
+		
+		prices.setOrderMoney(orderPay);
+		prices.setOrderPay(orderPay);
 		
 		return prices;
 	}

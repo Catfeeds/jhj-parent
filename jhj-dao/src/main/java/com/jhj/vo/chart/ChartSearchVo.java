@@ -4,7 +4,6 @@ import java.util.List;
 
 public class ChartSearchVo {
 	
-	
 	/*
 	 * 页面搜索条件
 	 */
@@ -23,7 +22,16 @@ public class ChartSearchVo {
 	private List<Long> userIds;
 	private Long orgId;
 	
+	//时间格式参数
+	private String formatParam;
 	
+	private String orderFrom;
+	
+	private String orderOpFrom;
+	
+	private String serviceType;
+	
+	private Short orderStatus;
 	
 	public List<Long> getUserIds() {
 		return userIds;
@@ -85,6 +93,35 @@ public class ChartSearchVo {
 	public void setOrgId(Long orgId) {
 		this.orgId = orgId;
 	}
-
+	public String getFormatParam() {
+		return formatParam;
+	}
+	public void setFormatParam(String formatParam) {
+		this.formatParam = formatParam;
+	}
+	public String getOrderFrom() {
+		return orderFrom;
+	}
+	public void setOrderFrom(String orderFrom) {
+		this.orderFrom = orderFrom;
+	}
+	public String getOrderOpFrom() {
+		return orderOpFrom;
+	}
+	public void setOrderOpFrom(String orderOpFrom) {
+		this.orderOpFrom = orderOpFrom;
+	}
+	public String getServiceType() {
+		return serviceType;
+	}
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+	public Short getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(Short orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 	
 }

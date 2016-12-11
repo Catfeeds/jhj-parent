@@ -1,7 +1,10 @@
 package com.jhj.action.staff;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,44 +52,37 @@ public class OrgStaffPayDeptController extends BaseController {
 	// 归还欠款列表
 	@AuthPassport
 	@RequestMapping(value = "/staffPayDept-list", method = RequestMethod.GET)
-	public String getStaffPayList(Model model, HttpServletRequest request, OrgStaffFinanceSearchVo searchVo) {
+	public String getStaffPayList(Model model, HttpServletRequest request, OrgStaffFinanceSearchVo searchVo) throws UnsupportedEncodingException {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
-		// 分页
-		PageHelper.startPage(pageNo, pageSize);
 
 		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
-
-		// 处理查询条件云店--------------------------------开始
-		// 1) 如果有查询条件云店org_id，则以查询条件的云店为准
-		// 2) 如果没有查询条件，则判断是否为店长，并且只能看店长所在门店下的所有云店.
+		if (sessionOrgId > 0L){
+			searchVo.setParentId(sessionOrgId);
+		}
+		if(searchVo.getStaffName()!=null){
+			String staffName = searchVo.getStaffName();
+			searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+		}
+		
+		String parentIdParam = request.getParameter("parentId");
+		if(parentIdParam!=null && parentIdParam!="" && Long.valueOf(parentIdParam)>0){
+			searchVo.setParentId(Long.valueOf(parentIdParam));
+		}
+		
 		String paramOrgId = request.getParameter("orgId");
-		List<Long> cloudIdList = new ArrayList<Long>();
-		if (!StringUtil.isEmpty(paramOrgId) && !paramOrgId.equals("0")) {
-			cloudIdList.add(Long.valueOf(paramOrgId));
-		} else {
-
-			if (sessionOrgId > 0L) {
-				OrgSearchVo searchVo1 = new OrgSearchVo();
-				searchVo1.setParentId(sessionOrgId);
-				searchVo1.setOrgStatus((short) 1);
-
-				List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
-
-				for (Orgs orgs : cloudList) {
-					cloudIdList.add(orgs.getOrgId());
-				}
-			}
-		}
-
-		if (!cloudIdList.isEmpty()) {
-			searchVo.setSearchCloudOrgIdList(cloudIdList);
-		}
-		// 处理查询条件云店--------------------------------结束
-
-		List<OrgStaffFinance> orgStaffFinanceList = orgStaffFinanceService.selectByListPage(searchVo, pageNo, pageSize);
+		if (!StringUtil.isEmpty(paramOrgId) && Long.valueOf(paramOrgId)>0L) {
+			searchVo.setOrgId(Long.valueOf(paramOrgId));
+		} 
+		PageInfo result = orgStaffFinanceService.selectByListPage(searchVo, pageNo, pageSize);
+		
+		//统计服务人员欠款
+		Map<String, Object> totalMoney = orgStaffFinanceService.totalMoney(searchVo);
+		model.addAllAttributes(totalMoney);
+		
+		List<OrgStaffFinance> orgStaffFinanceList = result.getList();
 
 		for (int i = 0; i < orgStaffFinanceList.size(); i++) {
 
@@ -94,7 +90,15 @@ public class OrgStaffPayDeptController extends BaseController {
 
 			OrgStaffFinance orgStaffFinance = orgStaffFinanceList.get(i);
 			BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffFinance, vo);
-
+			
+			BigDecimal totalIncoming = orgStaffFinance.getTotalIncoming();
+			BigDecimal totalCash = orgStaffFinance.getTotalCash();
+			BigDecimal totalDept = orgStaffFinance.getTotalDept();
+			BigDecimal totalRest = totalIncoming.subtract(totalCash).subtract(totalDept);
+			BigDecimal totalCashValid = totalIncoming.subtract(totalCash);
+			vo.setRestMoney(totalRest);
+			vo.setTotalCashValid(totalCashValid);
+			
 			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffFinance.getStaffId());
 			vo.setName(orgStaffs.getName());
 
@@ -120,8 +124,8 @@ public class OrgStaffPayDeptController extends BaseController {
 		
 		model.addAttribute("orgList", orgList);
 
-		PageInfo result = new PageInfo(orgStaffFinanceList);
-
+		result = new PageInfo(orgStaffFinanceList);
+		
 		model.addAttribute("contentModel", result);
 		model.addAttribute("orgStaffDetailPaySearchVoModel", searchVo);
 		return "staff/staffPayDeptList";

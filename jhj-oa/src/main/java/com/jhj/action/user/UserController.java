@@ -1,11 +1,13 @@
 package com.jhj.action.user;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -29,6 +32,7 @@ import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.dict.DictCardType;
+import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.user.FinanceRecharge;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.UserDetailPay;
@@ -45,6 +49,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.finance.FinanceSearchVo;
+import com.jhj.vo.order.OrderCardsVo;
 import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.user.FinanceRechargeVo;
 import com.jhj.vo.user.UserChargeVo;
@@ -124,8 +129,8 @@ public class UserController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		searchVo.setOrgIds(getCouldId(request));
-
-		PageInfo result = usersService.selectByListPage(searchVo, pageNo, pageSize);
+		searchVo.setIsVip((short) 1);
+		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", searchVo);
 
@@ -147,8 +152,8 @@ public class UserController extends BaseController {
 
 		List<UserCouponsVo> userCouponsVos = new ArrayList<UserCouponsVo>();
 		if (userCouponsList != null) {
-			for (Iterator iterator = userCouponsList.iterator(); iterator.hasNext();) {
-				UserCoupons userCoupons = (UserCoupons) iterator.next();
+			for (Iterator<UserCoupons> iterator = userCouponsList.iterator(); iterator.hasNext();) {
+				UserCoupons userCoupons = iterator.next();
 				UserCouponsVo vo = usersCounpsService.getUsersCounps(userCoupons);
 				userCouponsVos.add(vo);
 			}
@@ -209,6 +214,88 @@ public class UserController extends BaseController {
 		}
 
 		userSearchVo.setOrgIds(cloudIdList);
+		userSearchVo.setIsVip((short) 1);
+
+		/*
+		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
+		 */
+
+		// 在店长登录门店 下过单的 用户集合
+		List<Users> userList = usersService.selectBySearchVo(userSearchVo);
+		List<Long> userIdList = new ArrayList<Long>();
+		PageInfo<UserDetailPay> result=new PageInfo<UserDetailPay>(null);
+		if(userList!=null && userList.size()>0){
+			for (Users users : userList) {
+				userIdList.add(users.getId());
+			}
+			searchVo.setUserIds(userIdList);
+			
+			PageHelper.startPage(pageNo, pageSize);
+			
+			List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
+			
+			result = new PageInfo<UserDetailPay>(list);
+			Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
+			model.addAllAttributes(totolMoeny);
+		}
+
+		
+
+		model.addAttribute("userPayDetailSearchVoModel", searchVo);
+		model.addAttribute("userPayDetailList", result);
+		model.addAttribute("listUrl", "user-pay-detail");
+
+		return "user/userDetailPayList";
+	}
+
+	//普通用户消费明细列表
+	@AuthPassport
+	@RequestMapping(value = "/not-vip-user-pay-detail", method = { RequestMethod.GET })
+	public String noVipUserPayDetail(HttpServletRequest request, Model model, @ModelAttribute("userPayDetailSearchVoModel") UserDetailSearchVo searchVo)
+			throws ParseException {
+		
+		model.addAttribute("requestUrl", request.getServletPath());
+		model.addAttribute("requestQuery", request.getQueryString());
+
+		model.addAttribute("searchModel", searchVo);
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+
+		// 转换为数据库 参数字段
+		String startTimeStr = searchVo.getStartTimeStr();
+		if (!StringUtil.isEmpty(startTimeStr)) {
+			searchVo.setStartTime(DateUtil.getUnixTimeStamp(DateUtil.getBeginOfDay(startTimeStr)));
+		}
+
+		String endTimeStr = searchVo.getEndTimeStr();
+		if (!StringUtil.isEmpty(endTimeStr)) {
+			searchVo.setEndTime(DateUtil.getUnixTimeStamp(DateUtil.getEndOfDay(endTimeStr)));
+		}
+
+		// 得到 当前登录 的 门店id，并作为搜索条件
+		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
+
+		UserSearchVo userSearchVo = new UserSearchVo();
+
+		List<Long> cloudIdList = new ArrayList<Long>();
+
+		if (sessionOrgId > 0L) {
+
+			OrgSearchVo searchVo1 = new OrgSearchVo();
+			searchVo1.setParentId(sessionOrgId);
+			searchVo1.setOrgStatus((short) 1);
+			List<Orgs> cloudList = orgService.selectBySearchVo(searchVo1);
+
+			for (Orgs orgs : cloudList) {
+				cloudIdList.add(orgs.getOrgId());
+			}
+
+		} else {
+			cloudIdList.add(0L);
+		}
+
+		userSearchVo.setOrgIds(cloudIdList);
+		userSearchVo.setIsVip((short) 0);
 
 		/*
 		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
@@ -223,20 +310,26 @@ public class UserController extends BaseController {
 			userIdList.add(users.getId());
 		}
 
-		searchVo.setUserIdList(userIdList);
+		searchVo.setUserIds(userIdList);
 
 		PageHelper.startPage(pageNo, pageSize);
 
 		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
-
-		PageInfo result = new PageInfo(list);
+		
+		PageInfo<UserDetailPay> result = new PageInfo<UserDetailPay>(list);
+		
+		Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
+		model.addAllAttributes(totolMoeny);
 
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);
+		model.addAttribute("listUrl", "not-vip-user-pay-detail");
 
 		return "user/userDetailPayList";
+		
 	}
-
+	
+	
 	@RequestMapping(value = "/token-list", method = { RequestMethod.GET })
 	public String userTokenList(HttpServletRequest request, Model model, UsersSmsTokenVo usersSmsTokenVo) {
 
@@ -251,10 +344,10 @@ public class UserController extends BaseController {
 
 		List<UserSmsToken> lists = userSmsTokenService.selectByListPage(usersSmsTokenVo, pageNo, pageSize);
 
-		PageInfo result = new PageInfo(lists);
+		PageInfo<UserSmsToken> result = new PageInfo<UserSmsToken>(lists);
 		model.addAttribute("usersSmsTokenVo", usersSmsTokenVo);
 		model.addAttribute("userSmsTokenModel", result);
-
+		
 		return "user/userTokenList";
 	}
 
@@ -454,7 +547,7 @@ public class UserController extends BaseController {
 		userDetailPay.setUserId(user.getId());
 		userDetailPay.setMobile(user.getMobile());
 
-		userDetailPay.setOrderType(Constants.ORDER_TYPE_4);
+		userDetailPay.setOrderType(Constants.PAY_ORDER_TYPE_1);
 		/*
 		 * 运营平台的 会员充值， 是由 财务操作。
 		 * 
@@ -511,7 +604,7 @@ public class UserController extends BaseController {
 			list.set(i, financeVo);
 		}
 
-		PageInfo result = new PageInfo(list);
+		PageInfo<FinanceRecharge> result = new PageInfo<FinanceRecharge>(list);
 
 		model.addAttribute("financeListModel", result);
 
@@ -532,7 +625,7 @@ public class UserController extends BaseController {
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
-		PageInfo result = usersService.selectByListPage(searchVo, pageNo, pageSize);
+		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 
 		return "user/financeUserList";
@@ -580,5 +673,75 @@ public class UserController extends BaseController {
 		}
 
 		return cloudIdList;
+	}
+	
+	@RequestMapping(value="/getUser",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> selectByMobile(@RequestParam("mobile") String mobile){
+		Map<String,Object> map=new HashMap<String,Object>();
+		UserSearchVo searchVo=new UserSearchVo();
+		searchVo.setMobile(mobile);
+		List<Users> users = usersService.selectBySearchVo(searchVo);
+		if(users!=null && users.size()>0){
+			map.put("data", users.get(0));
+		}else{
+			map.put("data", false);
+		}
+		return map;
+	}
+	
+	
+	//用户充值列表
+	@AuthPassport
+	@RequestMapping(value="/user-charge-list",method=RequestMethod.GET)
+	public String userCharge(Model model,HttpServletRequest request,OrderCardsVo orderCardsVo) throws UnsupportedEncodingException{
+		
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+		UserSearchVo userVo=new UserSearchVo();
+		userVo.setIsVip((short) 1);
+		String mobile = orderCardsVo.getMobile();
+		if(mobile!=null && !mobile.equals("")){
+			userVo.setMobile(mobile);
+		}
+		List<Users> userList = usersService.selectBySearchVo(userVo);
+		if(userList!=null && userList.size()>0){
+			List<Long> userIds=new ArrayList<Long>();
+			for(int i=0;i<userList.size();i++){
+				Users users = userList.get(i);
+				userIds.add(users.getId());
+			}
+			orderCardsVo.setUserIds(userIds);
+		}
+		String staffName = orderCardsVo.getStaffName();
+		if(staffName!=null && !staffName.equals("")){
+			orderCardsVo.setStaffName(new String(staffName.getBytes("ISO-8859-1") ,"UTF-8"));
+		}
+		String addStartTimeStr = request.getParameter("addStartTimeStr");
+		if(addStartTimeStr!=null && !addStartTimeStr.equals("")){
+			orderCardsVo.setAddStartTime(TimeStampUtil.getMillisOfDayFull(addStartTimeStr+" 00:00:00")/1000);
+		}
+		String addEndTimeStr = request.getParameter("addEndTimeStr");
+		if(addEndTimeStr!=null && !addEndTimeStr.equals("")){
+			orderCardsVo.setAddEndTime(TimeStampUtil.getMillisOfDayFull(addEndTimeStr+" 23:59:59")/1000);
+		}
+		orderCardsVo.setOrderStatus((short)1);
+		PageInfo page = orderCardsService.selectByListPage(orderCardsVo,pageNo, pageSize);
+		List<OrderCards> orderCardsList = page.getList();
+		for(int i=0;i<orderCardsList.size();i++){
+			OrderCards orderCards = orderCardsList.get(i);
+			OrderCardsVo orderCard = orderCardsService.transVo(orderCards);
+			orderCardsList.set(i, orderCard);
+		}
+		page=new PageInfo(orderCardsList);
+		
+		//用户充值金额统计
+		Map<String, Double> chargeMoney = orderCardsService.countTotal(orderCardsVo);
+		model.addAllAttributes(chargeMoney);
+		model.addAttribute("pageList", page);
+		model.addAttribute("loginOrgId", sessionParentId);
+		model.addAttribute("orderCardsVo", orderCardsVo);
+		return "user/chargeList";
 	}
 }

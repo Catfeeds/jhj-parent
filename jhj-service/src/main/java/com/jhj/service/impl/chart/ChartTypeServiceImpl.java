@@ -2,6 +2,7 @@ package com.jhj.service.impl.chart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,32 +40,25 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		/*
 		 *    组装参数
 		 */
-		
 		if (timeSeries.isEmpty()) return chartDataVo;
-
+		
 		String statType = chartSearchVo.getStatType();
 		
 		//1. table 列名
 		List<String> legendAll = new ArrayList<String>();
 		legendAll.add("总单数");
-		legendAll.add("钟点工");
-		legendAll.add("钟点工占比");
-//		legendAll.add("深度保洁");
-//		legendAll.add("深度保洁占比");
-		legendAll.add("助理预约单");
-		legendAll.add("助理预约单占比");
-		
-		legendAll.add("提醒订单");
-		legendAll.add("提醒订单占比");
+		legendAll.add("基础服务");
+		legendAll.add("基础服务占比");
+		legendAll.add("深度服务");
+		legendAll.add("深度服务占比");
+		legendAll.add("母婴到家");
+		legendAll.add("母婴到家占比");
 		
 		//2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
-		legend.add("钟点工");
-//		legend.add("深度保洁");
-		legend.add("助理预约单");	
-		
-		legend.add("提醒订单");		
-		
+		legend.add("基础服务");
+		legend.add("深度服务");	
+		legend.add("母婴到家");		
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 		
 		//3. x轴 
@@ -72,7 +66,6 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (int i =1; i < timeSeries.size(); i++) {
 			xAxis.add(ChartUtil.getTimeSeriesName(statType, timeSeries.get(i)));
 		}
-		
 		chartDataVo.setxAxis(JSON.toJSONString(xAxis));
 
 		/*
@@ -112,17 +105,15 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			//处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
 				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-					//0代表 钟点工  1 = 深度保洁   2= 助理预约单  5= 提醒订单
+					//0代表 基础服务  1 = 深度保洁   2= 深度服务  5= 提醒订单
 					if (chartSqlData.getName().equals("0"))
-						tableDataItem.put("钟点工", String.valueOf(chartSqlData.getTotal()));
+						tableDataItem.put("基础服务", String.valueOf(chartSqlData.getTotal()));
 //					if (chartSqlData.getName().equals("1"))
 //						tableDataItem.put("深度保洁", String.valueOf(chartSqlData.getTotal()));
 					if (chartSqlData.getName().equals("2"))
-						tableDataItem.put("助理预约单", String.valueOf(chartSqlData.getTotal()));
-					
+						tableDataItem.put("深度服务", String.valueOf(chartSqlData.getTotal()));
 					if (chartSqlData.getName().equals("5"))
 						tableDataItem.put("提醒订单", String.valueOf(chartSqlData.getTotal()));
-					
 					//每行记录的总单数
 					Integer sumTotal = Integer.valueOf(tableDataItem.get("总单数"));
 					sumTotal = sumTotal + chartSqlData.getTotal();
@@ -133,42 +124,28 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		}
 		
 		//4-3. 计算各品类 占比
-		
-		String orderHourPercent = "0";	//钟点工占比
-//		String deepPercent = "0";		//深度保洁占比
-		String amPercent = "0";			//助理预约单占比
-		
+		String orderHourPercent = "0";	//基础服务占比
+//		String deepPercent = "0";		//深度服务占比
+		String amPercent = "0";			//母婴到家占比
 		String remindPercent = "0";		//提醒订单占比
 		for (Map<String, String> tableDataItem : tableDatas) {
-			
 			Integer sumTotal = Integer.valueOf(tableDataItem.get("总单数"));
-			
 			//每行记录，各类订单数量
-			Integer orderHour = Integer.valueOf(tableDataItem.get("钟点工"));
-//			Integer deepOrder = Integer.valueOf(tableDataItem.get("深度保洁"));
-			Integer amOrder = Integer.valueOf(tableDataItem.get("助理预约单"));
-			
-			Integer remindOrder = Integer.valueOf(tableDataItem.get("提醒订单"));
+			Integer orderHour = Integer.valueOf(tableDataItem.get("基础服务"));
+			Integer amOrder = Integer.valueOf(tableDataItem.get("深度服务"));
+			Integer remindOrder = Integer.valueOf(tableDataItem.get("母婴到家"));
 			
 			if(sumTotal > 0){
-				
 				orderHourPercent = MathDoubleUtil.getPercent(orderHour,sumTotal);
-				tableDataItem.put("钟点工占比", orderHourPercent);
-				
-//				deepPercent = MathDoubleUtil.getPercent(deepOrder, sumTotal);
-//				tableDataItem.put("深度保洁占比", deepPercent);
-				
+				tableDataItem.put("基础服务占比", orderHourPercent);
 				amPercent = MathDoubleUtil.getPercent(amOrder, sumTotal);
-				tableDataItem.put("助理预约单占比", amPercent);
-				
+				tableDataItem.put("深度服务占比", amPercent);
 				remindPercent = MathDoubleUtil.getPercent(remindOrder, sumTotal);
-				tableDataItem.put("提醒订单占比", remindPercent);
+				tableDataItem.put("母婴到家占比", remindPercent);
 			}else{
-				tableDataItem.put("钟点工占比","0.00%");
-//				tableDataItem.put("深度保洁占比","0.00%" );
-				tableDataItem.put("助理预约单占比","0.00%");
-				
-				tableDataItem.put("提醒订单占比", "0.00%");
+				tableDataItem.put("基础服务占比","0.00%");
+				tableDataItem.put("深度服务占比","0.00%");
+				tableDataItem.put("母婴到家占比", "0.00%");
 			}
 		}
 		
@@ -182,7 +159,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<Integer>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {
@@ -208,9 +185,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			
 			// 得到当前 series 的 开始时间和 结束时间
 			HashMap<String,Long> timeDuration = ChartUtil.getTimeDuration(statType, seriesName);
-			
 			tableDataItem.put("startTime", timeDuration.get("startTime").toString());
-			
 			tableDataItem.put("endTime", timeDuration.get("endTime").toString());
 			
 		}
@@ -239,22 +214,21 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		List<String> legendAll = new ArrayList<String>();
 		legendAll.add("总单数");
 		legendAll.add("总营业额");
-		legendAll.add("钟点工");
-		legendAll.add("钟点工营业额");
-		legendAll.add("钟点工营业额占比");
-//		legendAll.add("深度保洁");
-//		legendAll.add("深度保洁营业额");
-		legendAll.add("钟点工营业额占比");
-		legendAll.add("助理预约单");
-		legendAll.add("助理预约单营业额");
-		legendAll.add("助理预约单营业额占比");
+		legendAll.add("基础服务");
+		legendAll.add("基础服务营业额");
+		legendAll.add("基础服务营业额占比");
+		legendAll.add("深度服务");
+		legendAll.add("深度服务营业额");
+		legendAll.add("深度服务营业额占比");
+		legendAll.add("母婴到家");
+		legendAll.add("母婴到家营业额");
+		legendAll.add("母婴到家营业额占比");
 		
 		//2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
-		legend.add("钟点工");
-//		legend.add("深度保洁");
-		legend.add("助理预约单");	
-		
+		legend.add("基础服务");
+		legend.add("深度服务");
+		legend.add("母婴到家");
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 		
 		//3. x轴 
@@ -262,125 +236,128 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (int i =1; i < timeSeries.size(); i++) {
 			xAxis.add(ChartUtil.getTimeSeriesName(statType, timeSeries.get(i)));
 		}
-		
 		chartDataVo.setxAxis(JSON.toJSONString(xAxis));
 
 		/*
 		 * 4. 填充 tables
 		 */
 		List<HashMap<String, String>> tableDatas = new ArrayList<HashMap<String, String>>();
-		
 		HashMap<String, String> tableData = null;
 		for (int i =0; i < timeSeries.size(); i++) {
 			tableData = new HashMap<String, String>();
 			tableData.put("series", timeSeries.get(i));
-			
 			for (int j =0; j < legendAll.size(); j++) {
 				tableData.put(legendAll.get(j), "0");
 			}
 			tableDatas.add(tableData);
 		}
 		
-		
 		// 1. 查询SQL获得统计数据 -- 不同来源的订单数量
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		if (chartSearchVo.getStatType().equals("day") ) {
-			statDatas = orderMapper.chartTypeRevenueByDay(chartSearchVo);
+			chartSearchVo.setFormatParam("%c-%e");
+			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			statDatas = orderMapper.chartTypeRevenueByMonth(chartSearchVo);
+			chartSearchVo.setFormatParam("%c");
+			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}	
 		
 		if (chartSearchVo.getStatType().equals("quarter") ) {
-			statDatas = orderMapper.chartTypeRevenueByQuarter(chartSearchVo);
+			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}		
 		
-		BigDecimal hourMoney = new BigDecimal(0);
-		BigDecimal deepMoney = new BigDecimal(0);
-		BigDecimal amMoney = new BigDecimal(0);
+		Short[] shenduserviceType={34,35,36,50,51,52,53,54,55,56,60,61};
+		Short[] muyinserviceType={62,63,64,65};
+		String str=null,str1 = null;
 		
-		Integer hourNum = 0;
-		Integer deepNum = 0;
-		Integer amNum = 0;
-		
-		for (ChartMapVo chartSqlData : statDatas) {
+		for (Map<String, String> tableDataItem : tableDatas) {
+			Integer hourNum = 0;
+			Integer deepNum = 0;
+			Integer myNum = 0;
+			BigDecimal hourMoney = new BigDecimal(0);
+			BigDecimal deepMoney = new BigDecimal(0);
+			BigDecimal myMoney = new BigDecimal(0);
+			for (ChartMapVo chartSqlData : statDatas) {
 			//处理表格形式的数据.
-			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-					//0代表钟点工  1 = 深度保洁  2=助理预约单
+				if(chartSearchVo.getSelectCycle()==1){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==12){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
+					str = tableDataItem.get("series").split("-")[1];
+					if(chartSearchVo.getSearchType()==0){
+						str1 = chartSqlData.getSeries();
+					}
+					if(chartSearchVo.getSearchType()==1){
+						str1 = chartSqlData.getSeries().split("-")[1];
+					}
+				}
+				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
+					Integer total =0;
+					if(chartSqlData.getTotal()!=null){
+						total = chartSqlData.getTotal();
+					}
+					//0代表基础服务  1 = 深度服务 母婴到家  
 					if (chartSqlData.getName().equals("0")){
-						
-						hourNum =  chartSqlData.getTotal();
-						tableDataItem.put("钟点工", String.valueOf(hourNum));
-						
-						hourMoney =  chartSqlData.getTotalMoney();
-						if(hourMoney ==null){
-							hourMoney = new BigDecimal(0);
+						hourNum+=total;
+						tableDataItem.put("基础服务", String.valueOf(hourNum));
+						if(chartSqlData.getTotalMoney()!=null){
+							hourMoney=hourMoney.add(chartSqlData.getTotalMoney());
 						}
-						tableDataItem.put("钟点工营业额", MathBigDecimalUtil.round2(hourMoney));
+						tableDataItem.put("基础服务营业额", MathBigDecimalUtil.round2(hourMoney));
 					}
-						
-//					if (chartSqlData.getName().equals("1")){
-//						
-//						deepNum =  chartSqlData.getTotal();
-//						tableDataItem.put("深度保洁", String.valueOf(deepNum));
-//						
-//						deepMoney =  chartSqlData.getTotalMoney();
-//						if(deepMoney ==null){
-//							deepMoney = new BigDecimal(0);
-//						}
-//						tableDataItem.put("深度保洁营业额", MathBigDeciamlUtil.round2(deepMoney));
-//					}
-					
-					if (chartSqlData.getName().equals("2")){
-						
-						amNum =  chartSqlData.getTotal();
-						tableDataItem.put("助理预约单", String.valueOf(amNum));
-						
-						amMoney =  chartSqlData.getTotalMoney();
-						
-						if(amMoney ==null){
-							amMoney = new BigDecimal(0);
+					if(chartSqlData.getName().equals("1")){
+						if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+							deepNum+=total;
+							tableDataItem.put("深度服务", String.valueOf(deepNum));
+							if(chartSqlData.getTotalMoney()!=null){
+								deepMoney=deepMoney.add(chartSqlData.getTotalMoney());
+							}
+							tableDataItem.put("深度服务营业额", MathBigDecimalUtil.round2(deepMoney));
 						}
-						
-						tableDataItem.put("助理预约单营业额", MathBigDecimalUtil.round2(amMoney));
+						if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+							myNum+=total;
+							tableDataItem.put("母婴到家", String.valueOf(myNum));
+							
+							if(chartSqlData.getTotalMoney()!=null){
+								myMoney=myMoney.add(chartSqlData.getTotalMoney());
+							}
+							tableDataItem.put("母婴到家营业额", MathBigDecimalUtil.round2(myMoney));
+						}
 					}
-					
 				}
 			}
 		}
 		
 		for (Map<String, String> tableDataItem : tableDatas) {
 			
-			BigDecimal moneyHour = new BigDecimal(tableDataItem.get("钟点工营业额"));
-//			BigDecimal moneyDeep = new BigDecimal(tableDataItem.get("深度保洁营业额"));
-			BigDecimal moneyAm = new BigDecimal(tableDataItem.get("助理预约单营业额"));
+			BigDecimal moneyHour = new BigDecimal(tableDataItem.get("基础服务营业额"));
+			BigDecimal moneyAm = new BigDecimal(tableDataItem.get("深度服务营业额"));
+			BigDecimal muy = new BigDecimal(tableDataItem.get("母婴到家营业额"));
 			
-//			BigDecimal moneySum = moneyHour.add(moneyDeep).add(moneyAm);
-			
-			BigDecimal moneySum = moneyHour.add(moneyAm);
-			
+			BigDecimal moneySum = moneyHour.add(moneyAm).add(muy);
 			tableDataItem.put("总营业额", MathBigDecimalUtil.round2(moneySum));
 			
 			//intValue(), 效果 只取整数位，舍弃小数位  1.11  、 1.61  -->  1
 			if(moneySum.intValue() > 0 ){
-				tableDataItem.put("钟点工营业额占比", MathDoubleUtil.getPercent(moneyHour.intValue(),moneySum.intValue()));
-//				tableDataItem.put("深度保洁营业额占比", MathDoubleUtil.getPercent(moneyDeep.intValue(),moneySum.intValue()));
-				tableDataItem.put("助理预约单营业额占比", MathDoubleUtil.getPercent(moneyAm.intValue(),moneySum.intValue()));
+				tableDataItem.put("基础服务营业额占比", MathDoubleUtil.getPercent(moneyHour.intValue(),moneySum.intValue()));
+				tableDataItem.put("深度服务营业额占比", MathDoubleUtil.getPercent(moneyAm.intValue(),moneySum.intValue()));
+				tableDataItem.put("母婴到家营业额占比", MathDoubleUtil.getPercent(muy.intValue(),moneySum.intValue()));
 			}else{
-				tableDataItem.put("钟点工营业额占比","0.00%");
-//				tableDataItem.put("深度保洁营业额占比","0.00%" );
-				tableDataItem.put("助理预约单营业额占比","0.00%");
+				tableDataItem.put("基础服务营业额占比","0.00%");
+				tableDataItem.put("深度服务营业额占比","0.00%");
+				tableDataItem.put("母婴到家营业额占比","0.00%");
 			}
 			
+			Integer numHour = Integer.valueOf(tableDataItem.get("基础服务"));
+			Integer numAm = Integer.valueOf(tableDataItem.get("深度服务"));
+			Integer my = Integer.valueOf(tableDataItem.get("母婴到家"));
 			
-			Integer numHour = Integer.valueOf(tableDataItem.get("钟点工"));
-//			Integer numDeep = Integer.valueOf(tableDataItem.get("深度保洁"));
-			Integer numAm = Integer.valueOf(tableDataItem.get("助理预约单"));
-			
-//			tableDataItem.put("总单数", String.valueOf(numHour+numDeep+numAm));
-			tableDataItem.put("总单数", String.valueOf(numHour+numAm));
+			tableDataItem.put("总单数", String.valueOf(numHour+numAm+my));
 		}
 		
 		//5. 去掉第一个tableDataItem;
@@ -394,7 +371,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
-			chartDataItem.put("type", "line");
+			chartDataItem.put("type", "bar");
 			datas = new ArrayList<Integer>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {

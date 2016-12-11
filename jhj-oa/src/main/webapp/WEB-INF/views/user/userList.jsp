@@ -71,38 +71,35 @@
                               <thead>
                               <tr>
                                   	  <th >会员手机号</th>
-		                              <th >手机号归属地</th>
 		                              <th >会员姓名</th>
 		                              <th >会员余额</th>
 		                              <th >会员积分</th>
 		                              <th >会员类型</th>
 		                              <th >会员来源</th>
 		                              <th >添加时间</th>
+		                              <th>操作</th>
                               </tr>
                               </thead>
                               <tbody>
                               <c:forEach items="${userList.list}" var="item">
                               <tr>
-							            <td>${ item.mobile }</td>
-							            <td>${ item.provinceName }</td>
-							            <td>${ item.name }</td>
-
-							            <td>${ item.restMoney }</td>
-							            <td>
-											${ item.score }
-							            </td>
-							          
-							            <td>
-							            	<userTypeTag:userTypeId userTypeId="${ item.userType }"/>
-							            </td>
-							          
-							            <td>
-							            	<orderFromTag:orderfrom orderFrom="${item.addFrom }"/>
-							            </td>
-							            <td>
-							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
-							            </td>
-
+					            <td>${ item.mobile }</td>
+					            <td>${ item.name }</td>
+					            <td>${ item.restMoney }</td>
+					            <td>${ item.score }</td>
+					            <td>
+					            	<c:if test="${item.isVip==0 }">普通用户</c:if>
+					            	<c:if test="${item.isVip==1 }">金牌会员</c:if>
+					            	<%-- <userTypeTag:userTypeId userTypeId="${ item.userType }"/> --%>
+					            </td>
+					          
+					            <td>
+					            	<orderFromTag:orderfrom orderFrom="${item.addFrom }"/>
+					            </td>
+					            <td>
+					            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
+					            </td>
+					            <td><a href="user-pay-detail?mobile=${item.mobile }">消费明细</a></td>
                               </tr>
                               </c:forEach>
                               </tbody>

@@ -88,6 +88,7 @@
 		<include refid="Base_Column_List" />
 		from user_addrs
 		where user_id = #{userId,jdbcType=NUMERIC}
+		order by id desc
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from user_addrs

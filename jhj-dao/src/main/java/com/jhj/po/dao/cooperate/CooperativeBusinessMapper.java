@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 
 public interface CooperativeBusinessMapper {
 	int deleteByPrimaryKey(Long id);
@@ -25,4 +26,6 @@ public interface CooperativeBusinessMapper {
 	CooperativeBusiness selectByUsernameAndPassword(HashMap conditions);
 	
 	List<Long> getAllCoopId();
+	
+	List<CooperativeBusiness> selectCooperativeBusinessVo(CooperativeBusinessSearchVo vo);
 }

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>叮当到家</title>
+<link rel="stylesheet" href="../css/framework7.ios.min.css">
+<link rel="stylesheet" href="../css/mobiscroll.custom-2.16.1.min.css">
+<link rel="stylesheet" href="../css/my-app.css">
+
+   
+</head>
+<body>
+
+	<div class="views">
+
+		<div class="view view-main">
+
+			<div class="pages navbar-through toolbar-through">
+			
+				<div data-page="order-xiadan"  class="page">
+					
+					<div id="indexPageContentDiv" class="page-content">
+						
+						<div class="beijing-index">
+							<!-- <img src="../img/bujiaochajia/xian.png" alt="" class="all-img"> -->
+							<div class="dingdan-mokuai">
+								
+								<p>补交差价</p>
+								<ul class="order-dingdan-chajia">
+									<li>温馨提示：</li>
+									<li>补交差价是在服务超时，或者下单的平米数不符时需要补交差价时使用，请按照与服务员达成的金额填写支付。</li>
+								</ul>
+								<ul class="order-dingdan-chajia1">
+									<li>金额：</li>
+									<li style="width:45%;"><input type="num" value="199"></li>
+								</ul>
+								<ul class="order-dingdan-chajia1">
+									<li>服务员：</li>
+									<li>李久平</li>
+								</ul>
+								<div class="all-button1" style="background:#FDD855;margin-top:40px;">确认支付</div>
+								<!-- <img src="../img/bujiaochajia/xian.png" alt="" class="all-img"> -->
+								<div style="clear:both;height:15px;"></div>
+							</div>
+							
+						</div>
+						
+						
+					</div>
+				</div>
+
+
+
+
+			</div>
+		</div>
+			
+			<div class="toolbar tabbar tabbar-labels">
+			    <div class="toolbar-inner-jhj">
+			        <a href="#" id="toolbar-index" class="no-animation link active" onclick="toolBarHref('index.html', 'toolbar-index');" style="color:#000;">
+			            <i class="icon toolbar-icon-index"></i>
+			            <span class="tabbar-label">首页</span>
+			        </a>
+			        
+			        <a href="#" id="toolbar-am" onclick="toolBarHref('user/user-am-list.html', 'toolbar-am');"  class="no-animation link" style="color:#000;">
+			            <i class="icon toolbar-icon-order"></i>
+			            <span class="tabbar-label">订单</span>
+			        </a>
+			        			        
+			        <a href="#" id="toolbar-huodong" onclick="toolBarHref('huodong-list.html', 'toolbar-huodong')" class="no-animation link" style="color:#000;">
+			            <i class="icon toolbar-icon-zhuli"></i>
+			            <span class="tabbar-label">充值</span>
+			        </a>
+			        
+			        <a href="#" id="toolbar-youzan" onclick="toolBarHref('youzan.html', 'toolbar-youzan')" class="no-animation link" style="color:#000;">
+						<i class="icon toolbar-icon-my"></i>
+						<span class="tabbar-label">我的</span>
+					</a>
+		    	</div>
+			</div>
+
+		</div>
+	
+	
+	<script type="text/javascript" src="js/framework7.min.js"></script>
+	
+	<!-- 时间戳类库 -->
+	<script type="text/javascript" src="js/lib/moment-with-locales.min.js"></script>
+	<!-- 服务时间选择类库 -->
+	<script type="text/javascript" src="js/lib/appframework.min.js"></script>
+	<script type="text/javascript" src="js/lib/mobiscroll.custom-2.16.1.min.js"></script>
+
+
+	<!-- Path to your app js-->
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/login.js"></script>
+	<script type="text/javascript" src="js/require-data.js"></script>
+	<script type="text/javascript" src="js/utils.js"></script>
+	
+	<script type="text/javascript" src="js/index.js"></script>
+	<!-- 时间选择js-->
+	<script type="text/javascript" src="js/service-date-select.js"></script>
+	<script type="text/javascript" src="js/cook-date-select.js"></script>
+	
+	
+	<!-- 历史订单录入相关js -->	
+	<!-- <script type="text/javascript" src="js/history-service-date-select.js"></script> -->
+	
+		
+ 	<!-- 用户地址列表显示-->
+	<script type="text/javascript" src="js/user/mine.js"></script>  
+	<script type="text/javascript" src="js/user/mine-addr-list.js"></script>  
+	
+	<!-- 用户意见详情 -->
+	<script type="text/javascript"  src="js/user/mine-feed-back.js"></script> 
+	<!-- 更多详情 -->
+	<script type="text/javascript" src="js/user/more.js"></script>  
+	<!--我的信息  -->
+	<script type="text/javascript" src="js/user/user-wancheng.js"></script>  
+	<!-- 社区活动 -->
+	<script type="text/javascript" src="js/user/huodong-detail.js"></script>  
+	<script type="text/javascript" src="js/user/huodong-list.js"></script>  
+	
+	<!-- 用户添加地址 -->
+	<script type="text/javascript"  src="js/user/mine-add-addrs.js"></script>  
+	<!-- 用户，查看 助理页签 -->
+	<script type="text/javascript" src="js/user/user-am-list.js"></script>
+	<script type="text/javascript" src="js/user/user-am-detail.js"></script>
+	
+	<!-- 钟点工提交订单页面 js -->	
+	<script type="text/javascript" src="js/order/order-form-zhongdiangong.js"></script>
+	<!-- 钟点工支付页面 -->
+	<script type="text/javascript" src="js/order/order-form-zhongdiangong-pay.js"></script>
+	
+	<!-- 用户版，当前订单列表 -->
+	<script type="text/javascript" src="js/order/order-cal.js"></script>
+	<!-- 用户版，当前订单列表 -->
+	<script type="text/javascript" src="js/order/order-hour-now-list.js"></script>
+
+	<!-- 钟点工-订单详情 -->
+	<script type="text/javascript" src="js/order/order-view-0.js"></script>
+	<!-- 助理-跑腿订单 -->
+	<script type="text/javascript" src="js/order/order-view-2.js"></script>
+	<!-- 订单详情 -->
+	<script type="text/javascript" src="js/order/user-am-result.js"></script>
+	<!-- 用户预约订单 -->
+	<script type="text/javascript" src="js/order/order-am.js"></script>
+
+	<script type="text/javascript" src="js/order/order-am-faqiyuyue.js"></script>
+	
+	<script type="text/javascript" src="js/order/order-pay-success.js"></script>
+
+	<!-- 用户兑换优惠券 -->
+	<script type="text/javascript"  src="js/user/mine-coupon-list.js"></script>  
+	<!-- 用户充值列表 -->
+	<script type="text/javascript"  src="js/user/mine-charge-list.js"></script>  
+	<script type="text/javascript"  src="js/user/mine-charge-way.js"></script>  
+	<script type="text/javascript"  src="js/user/mine-charge-pay-success.js"></script> 
+	<!--用户助理时间 baidu.echarts-->
+
+
+	<!-- 深度保洁附加服务选择 -->
+	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojiezl.js"></script>  
+	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojie-yuyue.js"></script>  
+	<script type="text/javascript"  src="js/order/shendubaojie/order-list-shendubaojie-result.js"></script>  
+	<script type="text/javascript"  src="js/order/shendubaojie/order-view-1.js"></script>  
+	
+	<!-- 用户订单评价 -->
+	<script type="text/javascript"  src="js/order/order-rate.js"></script>
+	
+	<!-- 订单评价详情 -->
+    <script type="text/javascript" src="js/order/order-get-rate.js"></script>
+    
+    
+    <!--新增类型： 首页，提醒业务 -->
+	<script type="text/javascript" src="js/remind-date-select.js"></script>
+	<script type="text/javascript" src="js/order/remind/order-remind-tixing.js"></script>
+    <script type="text/javascript" src="js/order/remind/order-remind-list.js"></script>
+    <script type="text/javascript" src="js/order/remind/order-remind-detail.js"></script>
+    <script type="text/javascript" src="js/order/remind/order-remind-tixing-success.js"></script>
+    
+    <!-- 话费充值页面  -->
+    
+    <script type="text/javascript" src="js/user/serviceCharge/order-service-charge.js"></script>
+    <script type="text/javascript" src="js/user/serviceCharge/order-service-charge-success.js"></script>
+    
+    <!-- 历史订单录入 -->
+    <script type="text/javascript" src="js/order/history/historyUser.js"></script>
+    <script type="text/javascript" src="js/order/history/historyZhongdiangong.js"></script>
+    <script type="text/javascript" src="js/order/history/historyAm.js"></script>
+    <script type="text/javascript" src="js/order/history/order-jinpai.js"></script>
+    
+    <!-- 2015-12-22 14:46:08 问卷调查 -->
+    <script type="text/javascript" src="js/survey/survey-user.js"></script>
+    <script type="text/javascript" src="js/survey/survey-question.js"></script>
+    <script type="text/javascript" src="js/survey/survey-result.js"></script>
+    <script type="text/javascript" src="js/survey/survey-result-child.js"></script>
+    <script type="text/javascript" src="js/survey/survey-result-price.js"></script>
+    
+    
+    <script type="text/javascript" src="js/order/fiveservice/jinpaibaojie.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/cook.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/tiexinjiashi.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/quanniandingzhi.js"></script>
+    <script type="text/javascript" src="js/order/fiveservice/qiyefuwu.js"></script>
+    <!-- 我的 余额  消费明细 -->
+    <script type="text/javascript" src="js/user/mine-rest-money-detail.js"></script>
+</body>
+</html>

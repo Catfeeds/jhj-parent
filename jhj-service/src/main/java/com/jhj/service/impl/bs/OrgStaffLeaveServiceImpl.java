@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffs;
@@ -61,16 +62,6 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 	public int updateByPrimaryKeySelective(OrgStaffLeave record) {
 		return leaveMapper.updateByPrimaryKeySelective(record);
 	}
-
-	@Override
-	public List<OrgStaffLeave> selectByListPage(LeaveSearchVo searchVo,int pageNo,int pageSize) {
-		
-		PageHelper.startPage(pageNo, pageSize);
-		
-		List<OrgStaffLeave> list = leaveMapper.selectByListPage(searchVo);
-		
-		return list; 
-	}
 	
 	@Override
 	public LeaveStaffVo transToVO(OrgStaffLeave leave){
@@ -84,81 +75,78 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 			Long staffId = leave.getStaffId();
 			
 			OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
-			
-			//服务人员信息
-			leaveVo.setStaffName(staffs.getName());
-			leaveVo.setStaffMobile(staffs.getMobile());
-			
-			// 请假日期
-			Date leaveDate = leave.getLeaveDate();
-			
-			Short start = leave.getStart();
-			Short end = leave.getEnd();
-			
-			String leaveDateStr = DateUtil.format(leaveDate, "yyyy-MM-dd");
-			
-			//假期时间 展示
-			leaveVo.setLeaveDateStr(leaveDateStr +" "+start+"点~"+end+"点");
-			
-			
-			String startStr = leaveDateStr + " "+start + ":00:00";
-			String endStr = leaveDateStr +" "+end + ":00:00";
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
-			long startLong = 0L;
-			long endLong = 0L;
-			
-			try {
-				Date startDate = sdf.parse(startStr);
-				Date endDate = sdf.parse(endStr);
-				startLong = startDate.getTime()/1000;
-				endLong = endDate.getTime()/1000;
-			} catch (ParseException e) {
-				e.printStackTrace();
+			if(staffs!=null){
+				//服务人员信息
+				leaveVo.setStaffName(staffs.getName());
+				leaveVo.setStaffMobile(staffs.getMobile());
+				// 请假日期
+				Date leaveDate = leave.getLeaveDate();
+				
+//				Short start = leave.getStart();
+//				Short end = leave.getEnd();
+				
+				String startStr = DateUtil.format(leaveDate, "yyyy-MM-dd"); //+ " "+start + ":00:00";
+				
+				//假期时间 展示
+				leaveVo.setLeaveDateStr(startStr);// +" "+start+"点~"+end+"点");
+				
+				Date leaveDateEnd = leave.getLeaveDateEnd();
+				String endStr=null;
+				long endLong = 0L;
+				long startLong = 0L;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				if(leaveDateEnd!=null){
+					endStr =  DateUtil.format(leaveDateEnd, "yyyy-MM-dd");   ///+" "+end + ":00:00";
+					leaveVo.setLeaveDateEndStr(endStr);
+					try {
+						Date endDate = sdf.parse(endStr);
+						endLong = endDate.getTime()/1000;
+						Date startDate = sdf.parse(startStr);
+						startLong = startDate.getTime()/1000;
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				//跟当前时间比较
+//				Long nowSecond = TimeStampUtil.getNowSecond();
+				if(leaveVo.getLeaveStatus().equals("1") && leaveDateEnd!=null ){
+					if(DateUtil.compare(leaveVo.getLeaveDateEndStr(),DateUtil.getNow("yyyy-MM-dd"))){
+						leaveVo.setLeaveStatus("2");
+						leave.setLeaveStatus("2");
+					}
+					leaveMapper.updateByPrimaryKeySelective(leave);
+				}
+//				
+				Long adminId = leave.getAdminId();
+				
+				OrgStaffs orgStaffs = staffService.selectByPrimaryKey(adminId);
+				if(orgStaffs!=null){
+					//批复人
+					leaveVo.setExcuteStaffName(orgStaffs.getName());
+				}
+				
+				//请假时间段
+//				if(start == 8 && end == 12){
+//					leaveVo.setLeaveDuration((short)0);
+//				}
+//				
+//				if(start == 8 && end == 21){
+//					leaveVo.setLeaveDuration((short)1);
+//				}
+//				
+//				if(start == 12 && end == 21){
+//					leaveVo.setLeaveDuration((short)2);
+//				}
+				
+				Long orgId = leave.getOrgId();
+				
+				Orgs orgs = orgService.selectByPrimaryKey(orgId);
+				
+				leaveVo.setCloudOrgName(orgs.getOrgName());
 			}
-			
-			
-			//跟当前时间比较
-			Long nowSecond = TimeStampUtil.getNowSecond();
-			
-			// 当前状态：  假期未开始、假期中、假期结束
-			if(nowSecond < startLong){
-				leaveVo.setLeaveStatus((short)0);
-			}else if(nowSecond > startLong && nowSecond < endLong){
-				leaveVo.setLeaveStatus((short)1);
-			}else{
-				leaveVo.setLeaveStatus((short)2);
-			}
-			
-			Long adminId = leave.getAdminId();
-			
-			OrgStaffs orgStaffs = staffService.selectByPrimaryKey(adminId);
-			
-			//批复人
-			leaveVo.setExcuteStaffName(orgStaffs.getName());
-			
-			//请假时间段
-			if(start == 8 && end == 12){
-				leaveVo.setLeaveDuration((short)0);
-			}
-			
-			if(start == 8 && end == 21){
-				leaveVo.setLeaveDuration((short)1);
-			}
-			
-			if(start == 12 && end == 21){
-				leaveVo.setLeaveDuration((short)2);
-			}
-			
-			Long orgId = leave.getOrgId();
-			
-			Orgs orgs = orgService.selectByPrimaryKey(orgId);
-			
-			leaveVo.setCloudOrgName(orgs.getOrgName());
 			
 		}
-		
 		return leaveVo;
 	}
 	
@@ -181,6 +169,9 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 	    staffLeave.setRemarks("");
 	    staffLeave.setAdminId(0L);
 	    staffLeave.setAddTime(TimeStampUtil.getNowSecond());
+	    staffLeave.setLeaveDateEnd(date);
+	    staffLeave.setTotalDays(0);
+	    staffLeave.setLeaveStatus("1");
 		
 		return staffLeave;
 	}
@@ -194,7 +185,7 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 		
 		staffVo.setStaffName("");
 		staffVo.setStaffMobile("");
-		staffVo.setLeaveStatus((short)0);	// 请假状态的标识
+//		staffVo.setLeaveStatus((short)0);	// 请假状态的标识
 		staffVo.setExcuteStaffName("");
 		
 		staffVo.setLeaveDuration((short)0);	// 0= 8~12点  1=8~21点  2=12~21点
@@ -206,7 +197,15 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 	}
 	
 	@Override
-	public List<OrgStaffLeave> selectByLeaveSearchVo(LeaveSearchVo searchVo) {
-		return leaveMapper.selectByListPage(searchVo);
+	public List<OrgStaffLeave> selectBySearchVo(LeaveSearchVo searchVo) {
+		return leaveMapper.selectBySearchVo(searchVo);
+	}
+	
+	@Override
+	public PageInfo selectByListPage(LeaveSearchVo searchVo, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<OrgStaffLeave> list = leaveMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		return result;
 	}
 }

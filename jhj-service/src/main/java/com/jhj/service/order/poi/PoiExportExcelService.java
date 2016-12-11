@@ -3,7 +3,7 @@ package com.jhj.service.order.poi;
 import java.util.List;
 import java.util.Map;
 
-import com.jhj.vo.order.OaOrderListNewVo;
+import com.jhj.vo.order.OaOrderListVo;
 
 /**
  *
@@ -14,5 +14,5 @@ import com.jhj.vo.order.OaOrderListNewVo;
  */
 public interface PoiExportExcelService {
 	
-	List<Map<String,Object>>  createExcelRecord(List<OaOrderListNewVo> voList);
+	List<Map<String,Object>>  createExcelRecord(List<OaOrderListVo> voList);
 }

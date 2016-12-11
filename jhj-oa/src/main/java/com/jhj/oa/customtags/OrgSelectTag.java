@@ -41,7 +41,13 @@ public class OrgSelectTag extends SimpleTagSupport {
     	    
 			
 			OrgSearchVo searchVo = new OrgSearchVo();
-			searchVo.setParentId(sessionOrgId);
+			if (sessionOrgId.equals(0L)) {
+				searchVo.setIsParent(1);
+			} 
+			
+			if (sessionOrgId > 0L) {
+				searchVo.setOrgId(sessionOrgId);
+			}
 			searchVo.setOrgStatus((short) 1);
         	List<Orgs> orgList = orgService.selectBySearchVo(searchVo);
         	
@@ -53,7 +59,7 @@ public class OrgSelectTag extends SimpleTagSupport {
             orgSelect.append("<select id = \"parentId\" name=\"parentId\" class=\"form-control\">" );
 
             if (hasAll.equals("1")) {
-            	orgSelect.append("<option value='0' >请选择门店</option>");
+            	orgSelect.append("<option value='' >请选择门店</option>");
             }
 
             Orgs item = null;

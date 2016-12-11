@@ -21,4 +21,6 @@ public interface OrderServiceAddonsMapper {
     int updateByPrimaryKey(OrderServiceAddons record);
 
     List<OrderServiceAddons> selectByOrderNo(String orderNo);
+
+	List<OrderServiceAddons> selectByOrderId(Long orderId);
 }

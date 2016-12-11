@@ -3,11 +3,13 @@ package com.jhj.service.impl.newDispatch;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffSkill;
@@ -19,6 +21,7 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffBlackService;
+import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -37,6 +40,8 @@ import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
 
@@ -77,7 +82,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 	private OrderHourAddService orderHourAddService;
 	
 	@Autowired
-	private OrgStaffLeaveMapper leaveMapper;
+	private OrgStaffLeaveService orgStaffLeaveService;
 	
 	@Autowired
 	private PartnerServiceTypeService partService;
@@ -187,7 +192,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				searchVo1.setOrgId(orgId);
 				searchVo1.setDispatchStatus((short) 1);
 				searchVo1.setStartServiceTime(serviceDate-3600*2);
-				searchVo1.setEndServiceTime(serviceDate+order.getServiceHour()*3600);
+				searchVo1.setEndServiceTime((long) (serviceDate+order.getServiceHour()*3600));
 				List<OrderDispatchs> disList = orderDispatchsService.selectByMatchTime(searchVo1);
 				
 				for (OrderDispatchs orderDispatchs : disList) {
@@ -224,18 +229,15 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		 */
 		
 		LeaveSearchVo searchVo = new LeaveSearchVo();
+
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		searchVo.setLeaveDate(leaveDate);
 		
-		Short serviceHour = order.getServiceHour();
-		
-		Long orderServiceDateEnd = serviceDate + serviceHour*3600;
-		
-		//订单服务开始时间
-		searchVo.setOrderServiceDateStart(serviceDate);
-		//订单服务结束时间
-		searchVo.setOrderServiceDateEnd(orderServiceDateEnd);
+		searchVo.setLeaveStatus("1");
 		
 		// 服务时间内  ，同时也在  假期内的 员工
-		List<OrgStaffLeave> leaveList = leaveMapper.selectLeavingStaff(searchVo);
+		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo);
 		
 		List<Long> leaveStaffIdList = new ArrayList<Long>();
 		
@@ -296,7 +298,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			 *   临时决定调换成  20Km , 3小时
 			 */
 			
-			List<BaiduPoiVo> voList = MapPoiUtil.getMinDest(destList);
+			List<BaiduPoiVo> voList = MapPoiUtil.getMinDest(destList, Constants.MAX_DISTANCE);
 			
 			for (int i =0; i < cloudOrgList.size(); i++) {
 				item = cloudOrgList.get(i);
@@ -392,7 +394,7 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 				BeanUtilsExp.copyPropertiesIgnoreNull(staffs, staffsNewVo);
 				
 				staffsNewVo.setStaffId(item.getUserId());
-				staffsNewVo.setTodayOrderNum(numTodayOrder);
+				staffsNewVo.setTodayOrderNum(numTodayOrder.intValue());
 				
 				//服务人员所在 云店 id
 				Long orgId = staffs.getOrgId();
@@ -513,12 +515,15 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 		newVo.setDistanceText("");
 		newVo.setDurationValue(0);
 		newVo.setDurationText("");
-		newVo.setTodayOrderNum(0L);
+		newVo.setOrgDistanceText("");
+		newVo.setOrgDistanceValue(0);
+		newVo.setTodayOrderNum(0);
 		
 		newVo.setStaffOrgName("");
 		newVo.setStaffCloudOrgName("");
 		newVo.setDispathStaFlag(0);
 		newVo.setDispathStaStr("");
+		newVo.setReason("");
 		
 		return newVo;
 	}
@@ -586,19 +591,17 @@ public class NewDispatchStaffServiceImpl implements NewDispatchStaffService {
 			
  			LeaveSearchVo searchVo = new LeaveSearchVo();
  			
- 			Short serviceHour = order.getServiceHour();
- 			
  			Long serviceDate = order.getServiceDate();
  			
- 			Long orderServiceDateEnd = serviceDate + serviceHour*3600;
+ 			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+ 			Date leaveDate = DateUtil.parse(serviceDateStr);
+ 			searchVo.setLeaveDate(leaveDate);
  			
- 			//订单服务开始时间
- 			searchVo.setOrderServiceDateStart(serviceDate);
- 			//订单服务结束时间
- 			searchVo.setOrderServiceDateEnd(orderServiceDateEnd);
+ 			searchVo.setLeaveStatus("1");
+ 			
  			
  			// 服务时间内  ，同时也在  假期内的 员工
- 			List<OrgStaffLeave> leaveList = leaveMapper.selectLeavingStaff(searchVo);
+ 			List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo);
  			
  			for (OrgStaffLeave orgStaffLeave : leaveList) {
  				leaveStaffIdList.add(orgStaffLeave.getStaffId());
