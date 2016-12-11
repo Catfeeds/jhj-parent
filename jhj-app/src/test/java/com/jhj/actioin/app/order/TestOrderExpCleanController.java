@@ -23,44 +23,7 @@ import com.jhj.action.app.JUnitActionBase;
  */
 public class TestOrderExpCleanController extends JUnitActionBase{
 	
-	/**
-	 * 测试深度保洁订单提交接口
-	 * @throws Exception
-	 */
-	@Test
-    public void PostExpCleanOrder() throws Exception {
 
-		String url = "/app/order/post_exp_clean_order.json";
-
-     	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("user_id", "1");
-	    postRequest = postRequest.param("service_type", "2");
-	    postRequest = postRequest.param("service_date", "1438589520");
-	    postRequest = postRequest.param("order_from", "1");
-	    postRequest = postRequest.param("addr_id", "1");
-	    
-	    HashMap<String,String> item1 = new HashMap<String,String>();
-	    item1.put("serviceAddonId", "3"); 
-	    item1.put("itemNum", "2");
-	    HashMap<String,String> item2 = new HashMap<String,String>();
-	    item2.put("serviceAddonId", "4");
-	    item2.put("itemNum", "2");
-
-	    ObjectMapper mapper = new ObjectMapper();
-	    List<HashMap> sendDatas = new ArrayList<HashMap>();
-	    sendDatas.add(item1);
-	    sendDatas.add(item2);
-	    postRequest = postRequest.param("service_addons_datas", mapper.writeValueAsString(sendDatas));
-	    
-	    ResultActions resultActions = mockMvc.perform(postRequest);
-
-	    resultActions.andExpect(content().contentType(this.mediaType));
-	    resultActions.andExpect(status().isOk());
-
-
-	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
-
-    }
 	/**
 	 * 测试获取深度保洁订单详情接口
 	 * @throws Exception

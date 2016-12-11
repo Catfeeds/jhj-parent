@@ -21,17 +21,12 @@ public interface PartnerServiceTypeMapper {
 	    
 	    List<PartnerServiceType>  selectByListPage();
 	    
-//	    List<PartnerServiceType> selectAll();
-	    
 	    /*
 	     * 得到 所有的  一级 服务（parent_id为0）,如 钟点工、助理、快送等
 	     */
 	    List<PartnerServiceType> selectNoParentService(); 
-	    
-	    /*
-	     * 2016年3月10日11:57:53  根据 parentId得到 service
-	     */
-//	    List<PartnerServiceType> selectByParentId(Long id);
+
+	    List<PartnerServiceType> selectByIds(List<Long> ids);
 	    
 	    //得到所有的 子服务(最底层没有子服务 )
 	    List<PartnerServiceType> selectAllNoChildService();

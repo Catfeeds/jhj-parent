@@ -1,5 +1,6 @@
 package com.jhj.action.order;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -256,17 +257,20 @@ public class OrderController extends BaseController {
 		vo.setEnable((short) 1);
 		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
 				.selectCooperativeBusinessVo(vo);
-
-		PartnerServiceType serviceType = partService.selectByPrimaryKey(28L);
-		PartnerServiceType serviceType1 = partService.selectByPrimaryKey(29L);
-		Map<String,Object> serviceTypeList=new HashMap<String,Object>();
-		serviceTypeList.put("hour",serviceType);
-		serviceTypeList.put("cook",serviceType1);
-		
 		if (CooperativeBusinessList != null) {
 			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
 		}
-		model.addAllAttributes(serviceTypeList);
+		
+		List<PartnerServiceType> serviceTypeList = new ArrayList<PartnerServiceType>();
+		List<Long> serviceTypeIds = new ArrayList<Long>();
+		serviceTypeIds.add(28L);
+		serviceTypeIds.add(29L);
+		serviceTypeIds.add(68L);
+		serviceTypeIds.add(69L);
+		serviceTypeIds.add(70L);
+		serviceTypeList = partService.selectByIds(serviceTypeIds);
+		
+		model.addAttribute("serviceTypeList", serviceTypeList);
 		return "order/orderHourAdd";
 	}
 

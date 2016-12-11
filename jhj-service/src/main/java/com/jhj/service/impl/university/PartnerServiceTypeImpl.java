@@ -231,10 +231,10 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		return serviceVo;
 	}
 	
-//	@Override
-//	public List<PartnerServiceType> selectByParentId(Long id) {
-//		return partMapper.selectByParentId(id);
-//	}
+	@Override
+	public List<PartnerServiceType> selectByIds(List<Long> ids) {
+		return partMapper.selectByIds(ids);
+	}
 	
 	@Override
 	public List<Long> selectChildIdByParentId(Long id) {

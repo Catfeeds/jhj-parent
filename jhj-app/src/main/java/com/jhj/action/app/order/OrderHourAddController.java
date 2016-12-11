@@ -24,6 +24,7 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.ValidateService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.order.OrderAppointService;
@@ -41,8 +42,11 @@ import com.jhj.service.users.UsersService;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.order.OrderHourAddVo;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.Week;
 
 /**
  *
@@ -99,6 +103,9 @@ public class OrderHourAddController extends BaseController {
     @Autowired
     private OrderAppointService orderAppointService;
     
+    @Autowired
+	private ValidateService validateService;	
+    
 	@RequestMapping(value = "post_hour", method = RequestMethod.POST)
 	public AppResultData<Object> submitOrder(
 			@RequestParam("userId") Long userId,
@@ -117,6 +124,12 @@ public class OrderHourAddController extends BaseController {
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
+		AppResultData<Object> v = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		v = validateService.validateUser(userId);
+		if (v.getStatus() == Constants.ERROR_999) {
+			return v;
+		}
+		
 		Long addrId = 0L;
 		if (addrIdStr.equals("undefined")) {
 			//找出该用户是否有默认的地址，有则为他
@@ -128,53 +141,32 @@ public class OrderHourAddController extends BaseController {
 		} else if (!StringUtil.isEmpty(addrIdStr)) {
 			addrId = Long.valueOf(addrIdStr);
 		}
-		
-		if (addrId.equals(0L)) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg("地址选择错误，请重新选择.");
-			return result;
+				
+		//判断用户地址是否存在
+		v = validateService.validateUserAddr(userId, addrId);
+		if (v.getStatus() == Constants.ERROR_999) {
+			return v;
 		}
 		
-		//当前时间 的时间戳
-		Long nowTimeStamp =  new Date().getTime()/1000;
+		//判断服务时间不能为过去时间
+		v = validateService.validateServiceDate(serviceDate);
+		if (v.getStatus() == Constants.ERROR_999) {
+			return v;
+		}
 		
-		if(nowTimeStamp >= serviceDate){
-			
-			result.setStatus(Constants.ERROR_999);
-			
-			result.setMsg(ConstantMsg.OLD_TIME);
-			return result;
+		//如果为特惠日，需要判断是否为周一到周三.
+		if (serviceType.equals(69L) || serviceType.equals(70L)) {
+			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000);
+			Date sDate = DateUtil.parse(serviceDateStr);
+			Week sWeek = DateUtil.getWeek(sDate);
+			if (sWeek.getNumber() < 1 || sWeek.getNumber() > 3) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("只能限定周一到周三使用.");
+				return result;
+			}
 		}
 		
 		Users u = userService.selectByPrimaryKey(userId);
-
-		// 判断是否为注册用户，非注册用户返回 999
-		if (u == null) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
-			return result;
-		}
-		
-		//判断用户地址是否存在
-		if (addrId.equals(0L)) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
-			return result;
-		} else {
-			UserAddrs userAddr = userAddrService.selectByPrimaryKey(addrId);
-			
-			if (userAddr == null) {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
-				return result;
-			}
-			
-			if (!userAddr.getUserId().equals(userId)) {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg(ConstantMsg.USER_ADDR_NOT_EXIST_MG);
-				return result;
-			}
-		}
 		
 		// 调用公共订单号类，生成唯一订单号
 		String orderNo = String.valueOf(OrderNoUtil.genOrderNo());

@@ -65,17 +65,18 @@
 		)
 	</select>
 
-	<!-- 根据 parentId得到 service -->
-	<!-- <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	<select id="selectByIds" resultMap="BaseResultMap" >
 		select
 		<include refid="Base_Column_List" />
 		from
 		partner_service_type
 		where
-		parent_id = #{parentId,jdbcType=NUMERIC}
-
+		service_type_id IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			${item}
+		</foreach>
 		and enable = 1
-	</select> -->
+	</select> 
 
 	<select id="selectNoParentService" resultMap="BaseResultMap">
 		select
@@ -85,13 +86,6 @@
 		parent_id = 0
 		and enable = 1
 	</select>
-
-	<!-- 下拉选择类别 -->
-	<!-- <select id="selectAll" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from partner_service_type where enable = 1
-	</select> -->
 
 	<!-- 2015-12-2 16:21:38 运营平台 列表展示 -->
 	<select id="selectByListPage" resultMap="BaseResultMap">

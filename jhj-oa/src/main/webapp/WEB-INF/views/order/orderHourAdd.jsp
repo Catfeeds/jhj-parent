@@ -90,8 +90,10 @@
 												<input class="form-control" value="${serviceType.name }" readonly="readonly"> --%>
 												<select id="serviceType" name="serviceType" class="form-control" onchange="chageServiceType()">
 													<option value="">--请选择服务类型--</option>
-													<option value="${hour.serviceTypeId }">${hour.name  }</option>
-													<option value="${cook.serviceTypeId }">${cook.name  }</option>
+													
+													<c:forEach items="${serviceTypeList}" var="serviceType">
+														<option value="${serviceType.serviceTypeId }">${serviceType.name  }</option>
+													</c:forEach>
 												</select>
 											</div>
 										</div>
