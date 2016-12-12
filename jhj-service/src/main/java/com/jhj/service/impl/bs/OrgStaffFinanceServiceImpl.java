@@ -278,7 +278,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		}
 	}
 	
-	//订单补时，服务人员的财务信息操作
+	//订单补时，服务人员的财务信息操作，仅做判断更新欠款，是否需要加入黑名单
 	@Override
 	public void orderOverWork(Orders orders, OrderPriceExt orderPriceExt, OrgStaffs orgStaffs) {
 		Long orderId = orders.getId();
@@ -286,7 +286,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		Short orderExtType = 1;
 		BigDecimal orderPay = orderPriceExtService.getOrderExtPay(orderPriceExt, staffId, orderExtType);
-		BigDecimal orderIncoming = orderPriceExtService.getOrderOverWorkIncoming(orders, staffId);
+		BigDecimal orderIncoming = orderPriceExtService.getOrderOverWorkIncoming(orders, orderPriceExt, staffId);
 		
 		// 服务人员财务表
 		OrgStaffFinance orgStaffFinance = this.selectByStaffId(staffId);
@@ -295,18 +295,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			orgStaffFinance.setStaffId(staffId);
 		}
 		orgStaffFinance.setMobile(orgStaffs.getMobile());
-		// 总收入
-		BigDecimal totalIncoming = orgStaffFinance.getTotalIncoming();
-		// 最终总收入
-		BigDecimal totalIncomingend = totalIncoming.add(orderIncoming);
-		orgStaffFinance.setTotalIncoming(totalIncomingend);
-		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 
-		if (orgStaffFinance.getId() > 0L) {
-			this.updateByPrimaryKeySelective(orgStaffFinance);
-		} else {
-			this.insert(orgStaffFinance);
-		}
 		
 
 		// 新增服务人员交易明细表 org_staff_detail_pay
@@ -320,7 +309,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		orgStaffDetailPay.setOrderId(orderId);
 		orgStaffDetailPay.setOrderNo(orderPriceExt.getOrderNoExt());
 		orgStaffDetailPay.setOrderMoney(orderPay);
-		orgStaffDetailPay.setOrderPay(orderIncoming);
+		orgStaffDetailPay.setOrderPay(new BigDecimal(0));
 		orgStaffDetailPay.setOrderStatusStr("现金支付");
 		orgStaffDetailPay.setRemarks(orders.getRemarks());
 		orgStaffDetailPayService.insert(orgStaffDetailPay);
