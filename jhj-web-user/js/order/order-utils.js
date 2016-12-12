@@ -227,7 +227,10 @@ function orderRecomment(serviceTypeId){
 		{"serviceTypeId":"65","list":anjubao},
 		{"serviceTypeId":"29","list":jinpai},
 		{"serviceTypeId":"64","list":jiebaobao},
-		{"serviceTypeId":"67","list":jinpai}
+		{"serviceTypeId":"67","list":jinpai},
+		{"serviceTypeId":"68","list":jinpai},
+		{"serviceTypeId":"69","list":jinpai},
+		{"serviceTypeId":"70","list":jinpai}
 	]
 
 	for(var i=0;i<recoArr.length;i++){
