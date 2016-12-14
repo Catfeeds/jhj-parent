@@ -496,21 +496,6 @@ public class OrderController extends BaseController {
 		orderPriceExt.setOrderExtType(1);
 		
 		orderPriceExtService.insert(orderPriceExt);
-		
-		//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
-		
-		if (orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) || orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) {
-			
-			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-			orderDispatchSearchVo.setOrderId(orderId);
-			orderDispatchSearchVo.setDispatchStatus((short) 1);
-			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
-			for (OrderDispatchs item : orderDispatchs) {
-				OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(item.getStaffId());
-				orgStaffFinanceService.orderOverWork(order, orderPriceExt, orgStaffs);
-			}
-		}
-		
 
 		//更新用户明细表
 		UserDetailPay detailPay = new UserDetailPay();

@@ -140,65 +140,59 @@ public class OrderPriceExtServiceImpl implements OrderPriceExtService {
 	 * @return
 	 */
 	@Override
-	public BigDecimal getOrderOverWorkIncoming(Orders order, Long staffId) {
+	public BigDecimal getOrderOverWorkIncoming(Orders order, OrderPriceExt op, Long staffId) {
 		
 		BigDecimal incoming = new BigDecimal(0);
 		Long orderId = order.getId();
 		
-		OrderSearchVo osearchVo = new OrderSearchVo();
-		osearchVo.setOrderId(orderId);
-		osearchVo.setOrderExtType((short) 1);
-		List<OrderPriceExt> list = this.selectBySearchVo(osearchVo);
-		
-		for (OrderPriceExt op : list) {
-			BigDecimal orderPay = op.getOrderPay();
-		
-			//找出派工，是否为多个
-			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-			orderDispatchSearchVo.setOrderId(orderId);
-			orderDispatchSearchVo.setDispatchStatus((short) 1);
-			List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
-			
-			if (orderDispatchs.size() > 1) {
-				orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
-			}
-		
-			OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
-			Short level = staffs.getLevel();
-			String settingLevel = "-level-" + level.toString();
-			Short orderType = order.getOrderType();
-			String settingTypeStr = OrderUtils.getOrderSettingType(orderType) + settingLevel;
+		BigDecimal orderPay = op.getOrderPay();
 	
-			JhjSetting settingType = settingService.selectBySettingType(settingTypeStr);
+		//找出派工，是否为多个
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(orderId);
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+		
+		if (orderDispatchs.size() > 1) {
+			orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
+		}
 	
-			String settingTypeValue = "0.70";
-			if (settingType != null) settingTypeValue = settingType.getSettingValue();
-			//提出比例 
-			BigDecimal incomingPercent = new BigDecimal(settingTypeValue);
-			
-			Long userId = order.getUserId();
-			Users u = userService.selectByPrimaryKey(userId);
-			int isVip = u.getIsVip();
-			if (isVip == 1) incomingPercent = new BigDecimal(0.75);
-			
-			//判断是否为指定用户
-			OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-			searchVo.setOrderId(orderId);
-			List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(searchVo);
-			
-			if (!orderAppoints.isEmpty()) {
-				for (OrderAppoint oa : orderAppoints) {
-					if (oa.getStaffId().equals(staffId)) {
-						incomingPercent = new BigDecimal(0.78);
-					}
+		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
+		Short level = staffs.getLevel();
+		String settingLevel = "-level-" + level.toString();
+		Short orderType = order.getOrderType();
+		String settingTypeStr = OrderUtils.getOrderSettingType(orderType) + settingLevel;
+
+		JhjSetting settingType = settingService.selectBySettingType(settingTypeStr);
+
+		String settingTypeValue = "0.70";
+		if (settingType != null) settingTypeValue = settingType.getSettingValue();
+		//提出比例 
+		BigDecimal incomingPercent = new BigDecimal(settingTypeValue);
+		
+		Long userId = order.getUserId();
+		Users u = userService.selectByPrimaryKey(userId);
+		int isVip = u.getIsVip();
+		if (isVip == 1) incomingPercent = new BigDecimal(0.75);
+		
+		//判断是否为指定用户
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderId(orderId);
+		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(searchVo);
+		
+		if (!orderAppoints.isEmpty()) {
+			for (OrderAppoint oa : orderAppoints) {
+				if (oa.getStaffId().equals(staffId)) {
+					incomingPercent = new BigDecimal(0.78);
 				}
 			}
-		
-			orderPay = orderPay.multiply(incomingPercent);		
-			orderPay = MathBigDecimalUtil.round(orderPay, 2);
-			
-			incoming = incoming.add(orderPay);
 		}
+	
+		orderPay = orderPay.multiply(incomingPercent);		
+		orderPay = MathBigDecimalUtil.round(orderPay, 2);
+		
+		incoming = incoming.add(orderPay);
+		
 		return incoming;
 	}
 	

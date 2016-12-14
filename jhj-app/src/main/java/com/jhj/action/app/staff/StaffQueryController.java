@@ -26,6 +26,8 @@ import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffCashService;
@@ -33,8 +35,10 @@ import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderStatService;
+import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
@@ -46,6 +50,7 @@ import com.jhj.vo.staff.OrgStaffsVo;
 import com.jhj.vo.staff.StaffAuthSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -58,6 +63,9 @@ public class StaffQueryController extends BaseController {
 	
 	@Autowired
 	private OrgStaffAuthService orgStaffAuthService;
+	
+	@Autowired
+	private OrdersService ordersService;
 	
 	@Autowired
 	private OrderQueryService orderQueryService;
@@ -79,6 +87,9 @@ public class StaffQueryController extends BaseController {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
+	
+	@Autowired
+	private OrderPricesService orderPricesService;
 	
 	/**
 	 * 我的接口
@@ -272,4 +283,40 @@ public class StaffQueryController extends BaseController {
 		result.setData(skills);
 		return result;
 	}
+	
+	//计算服务人员的实际收入.
+	@RequestMapping(value = "get_staff_incoming.json",method = RequestMethod.GET)
+	public AppResultData<Object> getStaffIncoming(@RequestParam("staff_id") Long staffId){
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		
+		OrgStaffFinance orgStaffFinance = orgStaffFinanceService.selectByStaffId(staffId);
+		
+		BigDecimal staffInComing = orgStaffFinance.getTotalIncoming();
+		
+		//1. 找出服务人员的派工记录，对于的订单列表集合A。
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setStaffId(staffId);
+		searchVo.setDispatchStatus((short) 1);
+		searchVo.setStartAddTime(1476892800L);
+		
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		
+		if (orderDispatchs.isEmpty()) return result;
+		
+		BigDecimal totalIncoming = new BigDecimal(0);
+		
+		for (OrderDispatchs item : orderDispatchs) {
+			Long orderId = item.getOrderId();
+			Orders order = ordersService.selectByPrimaryKey(orderId);
+			BigDecimal orderIncoming = orderPricesService.getOrderIncoming(order, staffId);
+			totalIncoming = MathBigDecimalUtil.add(totalIncoming, orderIncoming);
+		}
+		
+		result.setData("staffInComing =" + MathBigDecimalUtil.round2(staffInComing) + "---- totalInComing = " + MathBigDecimalUtil.round2(totalIncoming));
+		return result;
+	}
+	
+	
 }
