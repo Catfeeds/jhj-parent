@@ -198,8 +198,8 @@ public class SmsUtil {
 //		System.out.println("token =" + token );
 //
 ////		String[] content = new String[]{token, "10"};
-//		
-		String[] content = new String[]{"1", "2"};
+		
+		String[] content = new String[]{""};
 		HashMap<String, String> result = SmsUtil.SendSms("13701187136", "65012", content);
 //
 //		System.out.println(result.get("statusCode"));

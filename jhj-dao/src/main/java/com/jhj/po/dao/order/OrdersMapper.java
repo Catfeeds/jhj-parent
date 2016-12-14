@@ -161,7 +161,6 @@ public interface OrdersMapper {
 
 	List<CoopUserOrderVo> totalUserAndOrder(List<Long> userIds);
 	
-	
 	//订单来源统计
 	List<ChartMapVo> getOrderSrc(ChartSearchVo chartSearchVo);
 	

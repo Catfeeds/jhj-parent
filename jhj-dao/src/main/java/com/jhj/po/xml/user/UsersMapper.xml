@@ -682,7 +682,7 @@
 	<select id="selectUsersByOrderMobile" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from users where user_id not in (select distinct user_id from orders)
+		from users where id not in (select distinct user_id from orders)
 	</select>
 
 	<select id="selectUserbyDay" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
