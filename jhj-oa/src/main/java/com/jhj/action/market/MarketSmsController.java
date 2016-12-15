@@ -194,7 +194,6 @@ public class MarketSmsController extends BaseController{
 			set.addAll(users);
 		}
 		
-		int totalNum = set.size();
 		String[] content = new String[]{""};
 		String smsTempId = String.valueOf(marketSms.getSmsTempId());
 		String str = request.getParameter("smsNum");
@@ -203,30 +202,37 @@ public class MarketSmsController extends BaseController{
 			smsNum = Integer.parseInt(str);
 		}
 		
+		Set<Long> userIdSet =new HashSet<Long>();
 		List<MarketSmsLog> marketSmsLogList = marketSmsLogService.selectByMarketSmsId(marketSmsId);
-		
-		List<Users> userList=new ArrayList<Users>(set);
-		for(int i=0;i<totalNum;i++){
-			if(totalNum>smsNum && i<=smsNum){
-				Users u = userList.get(i);
-				Long id = u.getId();
-				if(marketSmsLogList!=null && marketSmsLogList.size()>0){
-					for(int j=0,leng=marketSmsLogList.size();j<leng;j++){
-						Long userId = marketSmsLogList.get(j).getUserId();
-						if(id!= userId){
-							sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
-						}
-					}
-				}else{
-					sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
-				}
-				
+		if(marketSmsLogList!=null && marketSmsLogList.size()>0){
+			for(int j=0,leng=marketSmsLogList.size();j<leng;j++){
+				Long userId = marketSmsLogList.get(j).getUserId();
+				userIdSet.add(userId);
 			}
 		}
 		
-		marketSms.setTotalSend(sendMarketSmsService.successNum()+sendMarketSmsService.failNum());
-		marketSms.setTotalSended(sendMarketSmsService.successNum());
-		marketSms.setTotalFail(sendMarketSmsService.failNum());
+		List<Users> userList=new ArrayList<Users>(set);
+		for(int i=0;i<set.size();i++){
+			Users u = userList.get(i);
+			Long id = u.getId();
+			if(userIdSet.contains(id)){
+				set.remove(u);
+				continue;
+			}
+			if(smsNum==0){
+				sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
+			}
+			if(set.size()>smsNum && i<smsNum && smsNum!=0){
+				sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
+			}
+			if(set.size()<smsNum && smsNum!=0){
+				sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
+			}
+		}
+		
+		marketSms.setTotalSend(marketSms.getTotalSend()+sendMarketSmsService.successNum()+sendMarketSmsService.failNum());
+		marketSms.setTotalSended(marketSms.getTotalSended()+sendMarketSmsService.successNum());
+		marketSms.setTotalFail(marketSms.getTotalFail()+sendMarketSmsService.failNum());
 		marketSmsService.updateByPrimaryKeySelective(marketSms);
 		
 		return "redirect:get-list";

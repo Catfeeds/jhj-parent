@@ -2,7 +2,15 @@ myApp.onPageInit('twoyears-active-coupons', function (page) {
 	
 	$$("#get-active-coupons").on('click',function(){
 		var mobile = $$("#mobile").val();
-		
+		if(mobile == undefined || mobile == '') {
+        	myApp.alert("请填写手机号。");
+            return false;
+        }
+        var moblieStr = mobile.trim();
+        if(moblieStr.length != 11) {
+        	myApp.alert("请填写正确的手机号码");
+        	return false;
+        }
 		var couponsIdList = '4170,4171,4172,4173,4174';
 		var host = window.location.host;
 		var appName = "jhj-app";
