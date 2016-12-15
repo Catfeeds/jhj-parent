@@ -35,13 +35,13 @@ CREATE TABLE `market_sms` (
 -- Table structure for market_sms_fail
 -- ----------------------------
 DROP TABLE IF EXISTS `market_sms_log`;
-CREATE TABLE `market_sms_fail` (
+CREATE TABLE `market_sms_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `market_sms_id` int(11) NOT NULL COMMENT '会员营销ID',
   `user_id` int(11) NOT NULL COMMENT '用户Id',
   `mobile` char(11) NOT NULL COMMENT '用户手机号',
   `sms_result` varchar(20) NOT NULL COMMENT '发送返回',
-  `sms_msg` varchar(64) NOT NULL COMMENT '发送失败信息',
+  `sms_msg` varchar(200) NOT NULL COMMENT '发送失败信息',
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员营销表发送失败明细';

@@ -224,7 +224,7 @@ public class MarketSmsController extends BaseController{
 			}
 		}
 		
-		marketSms.setTotalSend(totalNum);
+		marketSms.setTotalSend(sendMarketSmsService.successNum()+sendMarketSmsService.failNum());
 		marketSms.setTotalSended(sendMarketSmsService.successNum());
 		marketSms.setTotalFail(sendMarketSmsService.failNum());
 		marketSmsService.updateByPrimaryKeySelective(marketSms);

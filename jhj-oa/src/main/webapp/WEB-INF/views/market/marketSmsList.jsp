@@ -53,7 +53,14 @@
                                     <td>${ item.userGroupType }</td>
                                     <td>${ item.totalSend }</td>
                                     <td>${ item.totalFail }</td>
-                                    <td>${ item.totalSended/item.totalSend*100 }%</td>
+                                    <td><c:if test="${item.totalSended==0 && item.totalSend==0}">
+                                    		0%
+                                        </c:if>
+                                        <c:if test="${item.totalSended!=null && item.totalSend!=null}">
+                                    		${ item.totalSended/item.totalSend*100 }%
+                                        </c:if>
+                                        
+                                    </td>
                                     <td><a href="add-marketsms?marketSmsId=${item.marketSmsId }">编辑</a></td>
                                 </tr>
                             </c:forEach>

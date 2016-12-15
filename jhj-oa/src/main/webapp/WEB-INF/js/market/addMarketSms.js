@@ -90,6 +90,7 @@ $("#sendSms").on('click',function(){
 //测试发送短信
 $("#testsendSms").on('click',function(){
 	var marketSmsId= $("#marketSmsId").val();
+	var smsNum = $("#smsNum").val();
 	if(confirm("请确认是否发送短信？")){
 		location.href="send-marketsms?marketSmsId="+marketSmsId+"&testuserGroupType=99"+"&smsNum="+smsNum;
 	}
