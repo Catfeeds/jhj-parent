@@ -64,6 +64,12 @@
     <include refid="Base_Column_List" />
     from dict_coupons
     where 1=1
+      <if test="couponsIdList!=null">
+      	and id in 
+      	<foreach collection="couponsIdList" item="item" open="(" separator="," close=")">
+      		${item}
+      	</foreach>
+      </if>
       <if test="cardNo != null" >
         and card_no like CONCAT('%','${cardNo}','%' )
       </if>

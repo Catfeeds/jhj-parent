@@ -2,7 +2,7 @@ package com.jhj.action.app.user;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,9 +26,6 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.user.UserCouponVo;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.StringUtil;
-import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.Week;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -221,11 +218,11 @@ public class UserCouponsController extends BaseController {
 
 		/*
 		 * 从http://www.jia-he-jia.com/h5/页面领取优惠券
-		 * 
+		 * 周年庆领取优惠券
 		 */
 		@RequestMapping(value = "receive_coupon.json", method = RequestMethod.POST)
 		public AppResultData<String> receiveCoupon(
-				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") List<Long> couponsIdList) {
+				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") String couponsId) {
 			
 			AppResultData<String> result = new AppResultData<String>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,"");
@@ -243,15 +240,29 @@ public class UserCouponsController extends BaseController {
 			validateCouponIds.add(4167L);
 			validateCouponIds.add(4168L);
 			validateCouponIds.add(4169L);
+			validateCouponIds.add(4170L);
+			validateCouponIds.add(4171L);
+//			validateCouponIds.add(4172L);
+//			validateCouponIds.add(4173L);
+//			validateCouponIds.add(4174L);
 			
-			if (!validateCouponIds.contains(couponsIdList)) {
+			String[] couponsIdList = couponsId.split(",");
+			List<Long> list=new ArrayList<Long>();
+			if(couponsIdList.length>0){
+				List<String> asList = Arrays.asList(couponsIdList);
+				for(String str:asList){
+					list.add(Long.valueOf(str));
+				}
+			}
+			
+			if (!validateCouponIds.containsAll(list)) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg("无效的优惠劵");
 				return result;
 			}
 			
 			CouponSearchVo couponSearchVo=new CouponSearchVo();
-			couponSearchVo.setCouponsIdList(couponsIdList);
+			couponSearchVo.setCouponsIdList(list);
 			List<DictCoupons> couponsList = dictCouponsService.selectBySearchVo(couponSearchVo);
 //			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsIdList);
 			

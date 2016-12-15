@@ -236,6 +236,7 @@ public class DictCouponsServiceImpl implements DictCouponsService {
 			conditions.put("endDate", TimeStampUtil.getMillisOfDay(endDate.trim())/1000);
 		}
 		conditions.put("couponType",couponSearchVo.getCoupontType());
+		conditions.put("couponsIdList", couponSearchVo.getCouponsIdList());
 		return dictCouponsMapper.selectByListPage(conditions);
 	}
 
