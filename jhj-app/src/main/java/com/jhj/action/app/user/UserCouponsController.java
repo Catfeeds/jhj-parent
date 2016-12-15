@@ -23,6 +23,7 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.user.UserCouponVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -224,7 +225,7 @@ public class UserCouponsController extends BaseController {
 		 */
 		@RequestMapping(value = "receive_coupon.json", method = RequestMethod.POST)
 		public AppResultData<String> receiveCoupon(
-				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") Long couponsId) {
+				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") List<Long> couponsIdList) {
 			
 			AppResultData<String> result = new AppResultData<String>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,"");
@@ -243,33 +244,41 @@ public class UserCouponsController extends BaseController {
 			validateCouponIds.add(4168L);
 			validateCouponIds.add(4169L);
 			
-			if (!validateCouponIds.contains(couponsId)) {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg("无效的优惠劵");
-				return result;
-			}
-				
-			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
-			
-			if (coupons == null) {
+			if (!validateCouponIds.contains(couponsIdList)) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg("无效的优惠劵");
 				return result;
 			}
 			
+			CouponSearchVo couponSearchVo=new CouponSearchVo();
+			couponSearchVo.setCouponsIdList(couponsIdList);
+			List<DictCoupons> couponsList = dictCouponsService.selectBySearchVo(couponSearchVo);
+//			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsIdList);
 			
-			UserCoupons uc = new UserCoupons();
-			uc.setUserId(u.getId());
-			uc.setCouponId(couponsId);
-			List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
-			if(couponList.isEmpty() ){
-				UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), coupons);
-				userCouponsService.insertSelective(userCoupons);
-			} else {
+			if (couponsList == null) {
 				result.setStatus(Constants.ERROR_999);
-				result.setMsg("你已经领取过此优惠劵");
+				result.setMsg("无效的优惠劵");
 				return result;
 			}
+			
+			
+			if(couponsList!=null && couponsList.size()>0){
+				UserCoupons uc = new UserCoupons();
+				uc.setUserId(u.getId());
+				for(int i=0,len=couponsList.size();i<len;i++){
+					uc.setCouponId(couponsList.get(i).getId());
+					List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
+					if(couponList.isEmpty() ){
+						UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), couponsList.get(i));
+						userCouponsService.insertSelective(userCoupons);
+					} else {
+						result.setStatus(Constants.ERROR_999);
+						result.setMsg("你已经领取过此优惠劵");
+						return result;
+					}
+				}
+			}
+			
 			
 			return result;
 		}
