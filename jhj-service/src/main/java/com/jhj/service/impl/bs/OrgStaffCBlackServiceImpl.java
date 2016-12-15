@@ -1,5 +1,6 @@
 package com.jhj.service.impl.bs;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,12 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.bs.OrgStaffBlackMapper;
 import com.jhj.po.model.bs.OrgStaffBlack;
+import com.jhj.po.model.bs.OrgStaffFinance;
+import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.service.bs.OrgStaffBlackService;
+import com.jhj.service.bs.OrgStaffFinanceService;
+import com.jhj.service.order.OrdersService;
+import com.jhj.service.orderReview.SettingService;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.meijia.utils.TimeStampUtil;
 
@@ -26,6 +32,15 @@ public class OrgStaffCBlackServiceImpl implements OrgStaffBlackService {
 
 	@Autowired
 	private OrgStaffBlackMapper orgStaffBlackMapper;
+	
+	@Autowired
+	private SettingService settingService;
+	
+	@Autowired
+	private OrgStaffFinanceService orgStaffFinanceService;
+	
+	@Autowired
+	private OrdersService ordersService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -119,5 +134,37 @@ public class OrgStaffCBlackServiceImpl implements OrgStaffBlackService {
 	@Override
 	public List<OrgStaffBlack> selectAllBadRateStaff() {
 		return orgStaffBlackMapper.selectAllBadRateStaff();
+	}
+	
+	//检测是否需要加入黑名单
+	@Override
+	public boolean checkStaffBlank(OrgStaffFinance orgStaffFinance) {
+		
+		Long staffId = orgStaffFinance.getStaffId();
+		String mobile = orgStaffFinance.getMobile();
+		BigDecimal totalDept = orgStaffFinance.getTotalDept();
+		
+		BigDecimal maxOrderDept = new BigDecimal(1000);
+		JhjSetting jhjSetting = settingService.selectBySettingType("total-dept-blank");
+		if (jhjSetting != null) {
+			maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
+		}
+
+		if (totalDept.compareTo(maxOrderDept) >= 0) {
+			OrgStaffBlack orgStaffBlack = this.initOrgStaffBlack();
+			orgStaffBlack.setStaffId(staffId);
+			orgStaffBlack.setMobile(mobile);
+			this.insertSelective(orgStaffBlack);
+
+			// 设置黑名单标识.
+			orgStaffFinance.setIsBlack((short) 1);
+			orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
+			orgStaffFinanceService.updateByPrimaryKey(orgStaffFinance);
+
+			// 欠款大于1000给服务人员发送加入黑名单的短信通知
+			ordersService.userJoinBlackSuccessTodo(mobile);
+		}
+		
+		return true;
 	}
 }

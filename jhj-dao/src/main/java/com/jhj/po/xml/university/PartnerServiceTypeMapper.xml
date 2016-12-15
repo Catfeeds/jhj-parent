@@ -22,11 +22,12 @@
 		<result column="is_auto" property="isAuto" jdbcType="NUMERIC" />
 		<result column="is_multi" property="isMulti" jdbcType="NUMERIC" />
 		<result column="service_hour" property="serviceHour" jdbcType="NUMERIC" />
-		
+
 	</resultMap>
 	<sql id="Base_Column_List">
 		service_type_id, name, parent_id, unit, default_num, price, mprice, pprice, mpprice, remarks, view_type, no,
-		service_img_url, enable, service_property, service_times, service_content, is_auto, is_multi,service_hour
+		service_img_url, enable,
+		service_property, service_times, service_content, is_auto, is_multi,service_hour
 	</sql>
 
 
@@ -65,7 +66,20 @@
 		)
 	</select>
 
-	<select id="selectByIds" resultMap="BaseResultMap" >
+	<!-- 根据 parentId得到 service -->
+	<!-- <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long"> select <include refid="Base_Column_List" /> from partner_service_type 
+		where parent_id = #{parentId,jdbcType=NUMERIC} and enable = 1 </select> -->
+
+	<select id="selectNoParentService" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from partner_service_type
+		where
+		parent_id = 0
+		and enable = 1
+	</select>
+
+	<select id="selectByIds" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from
@@ -76,15 +90,13 @@
 			${item}
 		</foreach>
 		and enable = 1
-	</select> 
+	</select>
 
-	<select id="selectNoParentService" resultMap="BaseResultMap">
+	<!-- 下拉选择类别 -->
+	<select id="selectAll" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from partner_service_type
-		where
-		parent_id = 0
-		and enable = 1
+		from partner_service_type where enable = 1
 	</select>
 
 	<!-- 2015-12-2 16:21:38 运营平台 列表展示 -->
@@ -105,24 +117,28 @@
 		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
 	</delete>
 	<insert id="insert" parameterType="com.jhj.po.model.university.PartnerServiceType">
-	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
 			SELECT LAST_INSERT_ID() AS service_type_id
 		</selectKey>
 		insert into partner_service_type (service_type_id, name, parent_id,
 		unit, default_num, price, mprice, pprice, mpprice,
 		remarks, view_type, no,
-		service_img_url, enable, service_property,
+		service_img_url,
+		enable, service_property,
 		service_times, service_content, is_auto, is_multi,service_hour)
-		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=NUMERIC},
-		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC}, 
+		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
+		#{parentId,jdbcType=NUMERIC},
+		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC},
 		#{price,jdbcType=DECIMAL}, #{mprice,jdbcType=DECIMAL}, #{pprice,jdbcType=DECIMAL}, #{mpprice,jdbcType=DECIMAL},
-		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC}, #{no,jdbcType=NUMERIC},
+		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC},
+		#{no,jdbcType=NUMERIC},
 		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
-		#{serviceTimes,jdbcType=NUMERIC}, #{serviceContent,jdbcType=VARCHAR}, 
+		#{serviceTimes,jdbcType=NUMERIC},
+		#{serviceContent,jdbcType=VARCHAR},
 		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC},#{serviceHour,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType">
-	    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
 			SELECT LAST_INSERT_ID() AS service_type_id
 		</selectKey>
 		insert into partner_service_type
@@ -181,7 +197,7 @@
 			<if test="isAuto != null">
 				is_auto,
 			</if>
-			
+
 			<if test="isMulti != null">
 				is_multi,
 			</if>
@@ -244,7 +260,7 @@
 			<if test="isAuto != null">
 				#{isAuto,jdbcType=NUMERIC},
 			</if>
-			
+
 			<if test="isMulti != null">
 				#{isMulti,jdbcType=NUMERIC},
 			</if>
@@ -307,7 +323,7 @@
 			<if test="isAuto != null">
 				is_auto = #{isAuto,jdbcType=NUMERIC},
 			</if>
-			
+
 			<if test="isMulti != null">
 				is_multi = #{isMulti,jdbcType=NUMERIC},
 			</if>
@@ -325,27 +341,33 @@
 		default_num = #{defaultNum,jdbcType=NUMERIC},
 		price = #{price,jdbcType=DECIMAL},
 		mprice = #{mprice,jdbcType=DECIMAL},
-		pprice = #{pprice,jdbcType=DECIMAL},
+		pprice =
+		#{pprice,jdbcType=DECIMAL},
 		mpprice = #{mpprice,jdbcType=DECIMAL},
 		remarks = #{remarks,jdbcType=VARCHAR},
 		view_type = #{viewType,jdbcType=NUMERIC},
-		no = #{no,jdbcType=NUMERIC},
+		no =
+		#{no,jdbcType=NUMERIC},
 		service_img_url = #{serviceImgUrl,jdbcType=VARCHAR},
 		enable = #{enable,jdbcType=NUMERIC},
-		service_property = #{serviceProperty,jdbcType=NUMERIC},
+		service_property =
+		#{serviceProperty,jdbcType=NUMERIC},
 		service_times = #{serviceTimes,jdbcType=NUMERIC},
 		service_content = #{serviceContent,jdbcType=VARCHAR},
-		is_auto = #{isAuto,jdbcType=NUMERIC},
+		is_auto =
+		#{isAuto,jdbcType=NUMERIC},
 		is_multi = #{isMulti,jdbcType=NUMERIC},
 		service_hour = #{serviceHour,jdbcType=NUMERIC}
-		where service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+		where service_type_id =
+		#{serviceTypeId,jdbcType=NUMERIC}
 	</update>
-	
+
 	<select id="selectByPartnerServiceTypeVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.PartnerServiceTypeVo">
-		select <include refid="Base_Column_List"/>
+		select
+		<include refid="Base_Column_List" />
 		from partner_service_type
 		<where>
-			<include refid="searchVo"/>
+			<include refid="searchVo" />
 		</where>
 	</select>
 	<sql id="searchVo">

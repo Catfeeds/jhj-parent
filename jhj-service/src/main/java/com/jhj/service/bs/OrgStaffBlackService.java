@@ -3,6 +3,7 @@ package com.jhj.service.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffBlack;
+import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 
 
@@ -44,4 +45,6 @@ public interface OrgStaffBlackService {
 	List<Long> selectAllBadRateStaffId();
 	
 	List<OrgStaffBlack> selectAllBadRateStaff();
+
+	boolean checkStaffBlank(OrgStaffFinance orgStaffFinance);
 }

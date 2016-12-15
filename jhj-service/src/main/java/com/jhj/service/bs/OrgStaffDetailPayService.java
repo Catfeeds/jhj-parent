@@ -1,9 +1,12 @@
 package com.jhj.service.bs;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffDetailPay;
+import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.Orders;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
@@ -42,5 +45,8 @@ public interface OrgStaffDetailPayService {
 	List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
 	
 	Map<String,Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo);
+
+	boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
+			String orderStatusStr, String remarks);
 
 }

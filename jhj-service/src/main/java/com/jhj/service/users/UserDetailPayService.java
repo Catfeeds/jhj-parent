@@ -51,4 +51,5 @@ public interface UserDetailPayService {
 	UserDetailPay addUserDetailPayForOrderPayExt(Users user, Orders order, OrderPriceExt orderPriceExt, String tradeStatus, String tradeNo, String payAccount);
 	
 	Map<String,BigDecimal> totolMoeny(UserDetailSearchVo userDetailSearchVo);
+
 }

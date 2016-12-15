@@ -12,10 +12,12 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffDetailPayMapper;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.service.bs.OrgStaffDetailPayService;
+import com.jhj.utils.OrderUtils;
 import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -110,42 +112,19 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(addTime, "MM-dd HH:mm"));
 		
 		
-
-		// 交易来源名称
-		if (orgStaffDetailPay.getOrderType() == 0
-				|| orgStaffDetailPay.getOrderType() == 1
-				|| orgStaffDetailPay.getOrderType() == 2
-				|| orgStaffDetailPay.getOrderType() == 3) {
-			BigDecimal orderMoney = orgStaffDetailPay.getOrderPay();
-			String orderMoneyStr = MathBigDecimalUtil.round2(orderMoney);
-			vo.setOrderTypeName("订单收入,订单金额:" + orderMoneyStr);
-		}
-		if (orgStaffDetailPay.getOrderType() == 4)
-			vo.setOrderTypeName("还款金额");
-		if (orgStaffDetailPay.getOrderType() == 5)
-			vo.setOrderTypeName("提现金额");
-		if (orgStaffDetailPay.getOrderType() == 6)
-			vo.setOrderTypeName("补贴金额");
-		if (orgStaffDetailPay.getOrderType() == 7)
-			vo.setOrderTypeName("利息金额");
-		if (orgStaffDetailPay.getOrderType() == 8)
-			vo.setOrderTypeName("各项核检");
-		if (orgStaffDetailPay.getOrderType() == 9)
-			vo.setOrderTypeName("订单补时");
+		String orderTypeName = OneCareUtil.getOrderTypeForStaffDetailPay(orgStaffDetailPay.getOrderType());
+		vo.setOrderTypeName(orderTypeName);
+		
 		// 订单金额
-		if (orgStaffDetailPay.getOrderType() == 0
-			|| orgStaffDetailPay.getOrderType() == 1
-			|| orgStaffDetailPay.getOrderType() == 2
-			|| orgStaffDetailPay.getOrderType() == 3
-			|| orgStaffDetailPay.getOrderType() == 6
-			|| orgStaffDetailPay.getOrderType() == 7
-			|| orgStaffDetailPay.getOrderType() == 9) {
+		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0
+			|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_1
+			|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_2
+			|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_3
+			|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_5) {
 			// +号
 			vo.setOrderPay("+" + orgStaffDetailPay.getOrderPay());
 		}
-		if (orgStaffDetailPay.getOrderType() == 4
-			|| orgStaffDetailPay.getOrderType() == 8
-			|| orgStaffDetailPay.getOrderType() == 5) {
+		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_4) {
 			// -号
 			vo.setOrderPay("-" + orgStaffDetailPay.getOrderPay());
 		}
@@ -171,6 +150,35 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	@Override
 	public Map<String, Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo) {
 		return orgStaffDetailPayMapper.selectTotalData(searchVo);
+	}
+	
+	@Override
+	public boolean setStaffDetailPay(Long staffId, 
+			String mobile, Short orderType, Long orderId, String orderNo, 
+			BigDecimal orderMoney , BigDecimal orderPay, String orderStatusStr, String remarks) {
+		
+		OrgStaffDetailPaySearchVo paySearchVo = new OrgStaffDetailPaySearchVo();
+		paySearchVo.setStaffId(staffId);
+		paySearchVo.setOrderId(orderId);
+		paySearchVo.setOrderType(orderType);
+		List<OrgStaffDetailPay> orgStaffDetailPays = this.selectBySearchVo(paySearchVo);
+		
+		if (!orgStaffDetailPays.isEmpty()) return false;
+		
+		OrgStaffDetailPay orgStaffDetailPay = this.initStaffDetailPay();
+		// 新增收入明细表 org_staff_detail_pay
+		orgStaffDetailPay.setStaffId(staffId);
+		orgStaffDetailPay.setMobile(mobile);
+		orgStaffDetailPay.setOrderType(orderType);
+		orgStaffDetailPay.setOrderId(orderId);
+		orgStaffDetailPay.setOrderNo(orderNo);
+		orgStaffDetailPay.setOrderMoney(orderMoney);
+		orgStaffDetailPay.setOrderPay(orderPay);
+		orgStaffDetailPay.setOrderStatusStr(orderStatusStr);
+		orgStaffDetailPay.setRemarks(remarks);
+		this.insert(orgStaffDetailPay);
+		
+		return true;
 	}
 
 }

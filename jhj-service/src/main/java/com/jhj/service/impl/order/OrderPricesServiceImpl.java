@@ -37,47 +37,46 @@ import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
-
 @Service
 public class OrderPricesServiceImpl implements OrderPricesService {
-	
-    @Autowired
-    private OrderPricesMapper orderPricesMapper;
-    
-    @Autowired
-    private  OrderServiceAddonsService  orderServiceAddonsService;
-    
-    @Autowired
-    private ServiceTypeService dictServiceTypeService;
-    
-    @Autowired
-    private OrdersService orderService;
-    
+
 	@Autowired
-	private UserCouponsService userCouponsService;	
-	
+	private OrderPricesMapper orderPricesMapper;
+
 	@Autowired
-	private DictCouponsService dictCouponsService;		
-    
+	private OrderServiceAddonsService orderServiceAddonsService;
+
+	@Autowired
+	private ServiceTypeService dictServiceTypeService;
+
+	@Autowired
+	private OrdersService orderService;
+
+	@Autowired
+	private UserCouponsService userCouponsService;
+
+	@Autowired
+	private DictCouponsService dictCouponsService;
+
 	@Autowired
 	private OrderPriceExtService orderPriceExtService;
-	
+
 	@Autowired
 	private OrderDispatchsService orderDispatchService;
-	
+
 	@Autowired
 	private UsersService userService;
-	
+
 	@Autowired
 	private OrderAppointService orderAppointService;
-	
+
 	@Autowired
 	private OrgStaffsService orgStaffsService;
-	
+
 	@Autowired
 	private SettingService settingService;
-	
-    @Override
+
+	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return orderPricesMapper.deleteByPrimaryKey(id);
 	}
@@ -92,11 +91,12 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		return orderPricesMapper.insertSelective(record);
 	}
 
-	/*@Override
-	public OrderPrices selectByOrderId(Long id) {
-		return orderPricesMapper.selectByOrderId(id);
-	}
-*/
+	/*
+	 * @Override
+	 * public OrderPrices selectByOrderId(Long id) {
+	 * return orderPricesMapper.selectByOrderId(id);
+	 * }
+	 */
 	@Override
 	public OrderPrices selectByPrimaryKey(Long id) {
 		return orderPricesMapper.selectByPrimaryKey(id);
@@ -111,7 +111,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 	public OrderPrices selectByOrderId(Long id) {
 		return orderPricesMapper.selectByOrderId(id);
 	}
-	
+
 	@Override
 	public int updateByPrimaryKeySelective(OrderPrices record) {
 		return orderPricesMapper.updateByPrimaryKeySelective(record);
@@ -119,41 +119,39 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 
 	@Override
 	public OrderPrices initOrderPrices() {
-		
+
 		OrderPrices record = new OrderPrices();
-		
+
 		record.setId(0L);
 		record.setUserId(0L);
 		record.setMobile("");
 		record.setOrderId(0L);
 		record.setOrderNo("");
-		record.setPayType((short)Constants.PAY_TYPE_0);
- 
-		record.setCouponId(0L); //优惠券字段，0 = 不使用    >0 使用
-		
+		record.setPayType((short) Constants.PAY_TYPE_0);
+
+		record.setCouponId(0L); // 优惠券字段，0 = 不使用 >0 使用
+
 		BigDecimal defaultValue = new BigDecimal(0);
 		record.setOrderMoney(defaultValue);
 
 		record.setOrderPay(defaultValue);
 		record.setOrderPayBack(defaultValue);
 		record.setOrderPayBackFee(defaultValue);
-		
+
 		record.setAddTime(TimeStampUtil.getNowSecond());
 		record.setUpdateTime(TimeStampUtil.getNowSecond());
 		return record;
 	}
-	
-	
-	
+
 	@Override
 	public List<OrderPrices> selectByOrderIds(List<Long> orderIds) {
-		
+
 		return orderPricesMapper.selectByOrderIds(orderIds);
 	}
 
 	@Override
 	public OrderPrices selectByOrderIds(String orderNo) {
-		
+
 		return orderPricesMapper.selectByOrderNo(orderNo);
 	}
 
@@ -162,45 +160,46 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		return orderPricesMapper.selectByOrderNo(orderNo);
 	}
 
-	
 	/**
 	 * 获取服务订单及优惠券等的金额，返回最终的订单支付金额
 	 */
 	@Override
 	public BigDecimal getPayByOrder(Long orderId, Long userCouponId) {
-		
+
 		BigDecimal orderPayNow = new BigDecimal(0);
 		Orders order = orderService.selectByPrimaryKey(orderId);
-		
-		if (order == null) return orderPayNow;
+
+		if (order == null)
+			return orderPayNow;
 		OrderPrices orderPrices = this.selectByOrderId(order.getId());
-		
-		if (BeanUtilsExp.isNullOrEmpty(orderPrices)) return orderPayNow;
-		
+
+		if (BeanUtilsExp.isNullOrEmpty(orderPrices))
+			return orderPayNow;
+
 		BigDecimal orderMoney = orderPrices.getOrderMoney();
-		
-		BigDecimal orderPay ;
-		
-		if(order.getOrderType() == 6){
+
+		BigDecimal orderPay;
+
+		if (order.getOrderType() == 6) {
 			/*
 			 * 对于话费充值类订单，实际支付金额在生成时 就是 实际支付金额
-			 * 		涉及到优惠金额，故而 实际支付金额，在生成订单时，就设置好
+			 * 涉及到优惠金额，故而 实际支付金额，在生成订单时，就设置好
 			 */
 			orderPay = orderPrices.getOrderPay();
-			
-		}else{
+
+		} else {
 			orderPay = orderPrices.getOrderMoney();
 		}
 
 		// 处理优惠券的情况
 		if (userCouponId > 0L && order.getOrderType() != 6) {
-			
+
 			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
 			DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(userCoupon.getCouponId());
 			BigDecimal couponValue = dictCoupons.getValue();
-			
+
 			orderPay = MathBigDecimalUtil.sub(orderMoney, couponValue);
-		}		
+		}
 
 		// 实际支付金额
 		BigDecimal p1 = new BigDecimal(100);
@@ -209,91 +208,200 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 
 		return orderPayNow;
 	}
-	
+
 	/**
-	 * 获取订单实际价格，需要计算是否有订单的补差价.
+	 * 获取订单总金额
+	 * 订单总金额 = 订单金额 + 订单优惠劵金额 + 订单差价 + 订单加时
+	 * 
 	 * @param orderPrice
 	 * @return
 	 */
 	@Override
-	public BigDecimal getOrderMoney(OrderPrices orderPrice) {
+	public BigDecimal getTotalOrderMoney(OrderPrices orderPrice) {
 		BigDecimal orderMoney = new BigDecimal(0);
-		
+
 		orderMoney = orderPrice.getOrderMoney();
-		
+
 		Long orderId = orderPrice.getOrderId();
-		
+
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setOrderId(orderId);
 		searchVo.setOrderStatus((short) 2);
 		List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(searchVo);
-		
-		if (list.isEmpty()) return orderMoney;
-		
+
+		if (list.isEmpty())
+			return orderMoney;
+
 		for (OrderPriceExt item : list) {
 			BigDecimal orderPayExt = item.getOrderPay();
 			orderMoney = MathBigDecimalUtil.add(orderMoney, orderPayExt);
 		}
-		
+
 		return orderMoney;
 	}
-	
+
 	/**
-	 * 获取订单实际价格，需要计算是否有订单的补差价.
+	 * 获取订单支付金额
+	 * 订单总金额 = 订单金额 + 订单优惠劵金额 + 订单差价 + 订单加时
+	 * 
 	 * @param orderPrice
 	 * @return
 	 */
 	@Override
-	public BigDecimal getOrderPay(OrderPrices orderPrice) {
+	public BigDecimal getTotalOrderPay(OrderPrices orderPrice) {
+
 		BigDecimal orderPay = new BigDecimal(0);
-		
+
 		orderPay = orderPrice.getOrderPay();
-		
+
 		Long orderId = orderPrice.getOrderId();
-		
+
 		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setOrderId(orderId);
 		searchVo.setOrderStatus((short) 2);
 		List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(searchVo);
-		
-		if (list.isEmpty()) return orderPay;
-		
+
+		if (list.isEmpty())
+			return orderPay;
+
 		for (OrderPriceExt item : list) {
 			BigDecimal orderPayExt = item.getOrderPay();
 			orderPay = MathBigDecimalUtil.add(orderPay, orderPayExt);
 		}
-		
+
 		return orderPay;
 	}
-	
-	
+
 	/**
-	 * 获得员工指定的订单的收入.
+	 * 获得订单的总收入.
 	 * 1. 普通会员 70%
 	 * 2. 金牌会员 75%
 	 * 3. 会员指定 78%
+	 * 订单收入 = 订单支付金额 * 折扣比例 + 订单优惠劵金额 * 折扣比例 + 订单差价金额 * 折扣比例 + 订单加时金额 * 折扣比例
+	 * 
 	 * @param orders
 	 * @params staffId
 	 * @return
 	 */
 	@Override
-	public BigDecimal getOrderIncoming(Orders order, Long staffId) {
+	public BigDecimal getTotalOrderIncoming(Orders order, Long staffId) {
 		Long orderId = order.getId();
-		
+
 		OrderPrices orderPrice = this.selectByOrderId(orderId);
-		
-		BigDecimal orderPay = this.getOrderPay(orderPrice);
-		
-		//找出派工，是否为多个
+
+		// 订单支付金额
+		BigDecimal orderPay = orderPrice.getOrderPay();
+
+		// 订单优惠劵金额
+		BigDecimal orderPayCoupon = new BigDecimal(0);
+		Long userCouponId = orderPrice.getCouponId();
+		if (userCouponId > 0L) {
+			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
+			Long couponId = userCoupon.getCouponId();
+			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
+			orderPayCoupon = dictCoupon.getValue();
+		}
+
+		// 订单补差价金额
+		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
+
+		// 订单加时金额
+		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
+
+		// 找出派工，是否为多个
 		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
 		orderDispatchSearchVo.setOrderId(orderId);
 		orderDispatchSearchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+
+		int staffNum = 1;
+		if (!orderDispatchs.isEmpty())
+			staffNum = orderDispatchs.size();
 		
-		if (orderDispatchs.size() > 1) {
-			orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
+		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
+		
+		// 订单金额的折扣比例,先平均在折扣
+		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
+		orderPay = orderPay.multiply(incomingPercent);
+
+		// 订单差价的折扣比例,先平均在折扣
+		orderPayExtDiff = MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
+		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
+
+		// 订单加时的折扣比例,先平均在折扣
+		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
+		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
+
+		// 订单优惠劵的金额，先平均在折扣
+		orderPayCoupon = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
+		BigDecimal couponPercent = new BigDecimal(0.5);
+		orderPayCoupon = orderPayCoupon.multiply(couponPercent);
+
+		// 总收入合计
+		BigDecimal totalOrderPay = new BigDecimal(0);
+		totalOrderPay = totalOrderPay.add(orderPay);
+		totalOrderPay = totalOrderPay.add(orderPayExtDiff);
+		totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
+		totalOrderPay = totalOrderPay.add(orderPayCoupon);
+		totalOrderPay = MathBigDecimalUtil.round(totalOrderPay, 2);
+		return totalOrderPay;
+	}
+
+	/**
+	 * 获得订单的总欠款
+	 * 订单总欠款 = 订单支付金额(如果为现金支付) + 订单加时金额 * 折扣比例
+	 * 
+	 * @param orders
+	 * @params staffId
+	 * @return
+	 */
+	@Override
+	public BigDecimal getTotalOrderDept(Orders order, Long staffId) {
+		Long orderId = order.getId();
+
+		OrderPrices orderPrice = this.selectByOrderId(orderId);
+
+		// 订单支付金额
+		BigDecimal orderPay = new BigDecimal(0);
+
+		if (orderPrice.getPayType().equals(Constants.PAY_TYPE_6)) {
+			orderPay = orderPrice.getOrderPay();
 		}
+
+		// 订单加时金额
+		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
+
+		// 找出派工，是否为多个
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderId(orderId);
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+
+		int staffNum = 1;
+		if (!orderDispatchs.isEmpty())
+			staffNum = orderDispatchs.size();
+
+		// 订单金额平均
+		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
+
+		// 订单加时平均
+		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
+
+		// 订单欠款合计
+		BigDecimal totalOrderDept = new BigDecimal(0);
+		totalOrderDept = totalOrderDept.add(orderPay);
+		totalOrderDept = totalOrderDept.add(orderPayExtOverWork);
+
+		totalOrderDept = MathBigDecimalUtil.round(totalOrderDept, 2);
+		return totalOrderDept;
+	}
+
+	// 获取员工折扣
+	@Override
+	public BigDecimal getOrderPercent(Orders order, Long staffId) {
 		
+		Long orderId = order.getId();
+		// 找出服务人员的折扣比例
 		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
 		Short level = staffs.getLevel();
 		String settingLevel = "-level-" + level.toString();
@@ -303,20 +411,22 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		JhjSetting settingType = settingService.selectBySettingType(settingTypeStr);
 
 		String settingTypeValue = "0.70";
-		if (settingType != null) settingTypeValue = settingType.getSettingValue();
-		//提出比例 
+		if (settingType != null)
+			settingTypeValue = settingType.getSettingValue();
+		// 提出比例
 		BigDecimal incomingPercent = new BigDecimal(settingTypeValue);
-		
+
 		Long userId = order.getUserId();
 		Users u = userService.selectByPrimaryKey(userId);
 		int isVip = u.getIsVip();
-		if (isVip == 1) incomingPercent = new BigDecimal(0.75);
-		
-		//判断是否为指定用户
+		if (isVip == 1)
+			incomingPercent = new BigDecimal(0.75);
+
+		// 判断是否为指定用户
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderId(orderId);
 		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(searchVo);
-		
+
 		if (!orderAppoints.isEmpty()) {
 			for (OrderAppoint oa : orderAppoints) {
 				if (oa.getStaffId().equals(staffId)) {
@@ -325,67 +435,70 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 			}
 		}
 		
-		orderPay = orderPay.multiply(incomingPercent);		
-		orderPay = MathBigDecimalUtil.round(orderPay, 2);
-		return orderPay;
+		return incomingPercent;
 	}
-	
-	
-	/**
-	 * 获得员工指定的订单的实际金额，如果是多个订单，则为平均数.
-	 * @param orders
-	 * @params staffId
-	 * @return
-	 */
-	@Override
-	public BigDecimal getOrderPayStaff(Orders order, Long staffId) {
-		Long orderId = order.getId();
-		
-		OrderPrices orderPrice = this.selectByOrderId(orderId);
-		
-		BigDecimal orderPay = this.getOrderPay(orderPrice);
-		
-		//找出派工，是否为多个
-		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-		orderDispatchSearchVo.setOrderId(orderId);
-		orderDispatchSearchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
-		
-		if (orderDispatchs.size() > 1) {
-			orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(orderDispatchs.size()));
-		}
-		
-		
-		orderPay = MathBigDecimalUtil.round(orderPay, 2);
-		return orderPay;
-	}
-	
-	/**
-	 * 获得员工指定的订单的实际金额，如果是多个订单，则为平均数.
-	 * @param orders
-	 * @params staffId
-	 * @return
-	 */
-	@Override
-	public BigDecimal getOrderMoneyStaff(Orders order, Long staffId) {
-		Long orderId = order.getId();
-		
-		OrderPrices orderPrice = this.selectByOrderId(orderId);
-		
-		BigDecimal orderMoney = this.getOrderMoney(orderPrice);
-		
-		//找出派工，是否为多个
-		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-		orderDispatchSearchVo.setOrderId(orderId);
-		orderDispatchSearchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
-		
-		if (orderDispatchs.size() > 1) {
-			orderMoney = MathBigDecimalUtil.div(orderMoney, new BigDecimal(orderDispatchs.size()));
-		}
-		
-		
-		orderMoney = MathBigDecimalUtil.round(orderMoney, 2);
-		return orderMoney;
-	}
+
+	// /**
+	// * 获得员工指定的订单的实际金额，如果是多个订单，则为平均数.
+	// * @param orders
+	// * @params staffId
+	// * @return
+	// */
+	// @Override
+	// public BigDecimal getOrderPayStaff(Orders order, Long staffId) {
+	// Long orderId = order.getId();
+	//
+	// OrderPrices orderPrice = this.selectByOrderId(orderId);
+	//
+	// BigDecimal orderPay = this.getOrderPay(orderPrice);
+	//
+	// //找出派工，是否为多个
+	// OrderDispatchSearchVo orderDispatchSearchVo = new
+	// OrderDispatchSearchVo();
+	// orderDispatchSearchVo.setOrderId(orderId);
+	// orderDispatchSearchVo.setDispatchStatus((short) 1);
+	// List<OrderDispatchs> orderDispatchs =
+	// orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+	//
+	// if (orderDispatchs.size() > 1) {
+	// orderPay = MathBigDecimalUtil.div(orderPay, new
+	// BigDecimal(orderDispatchs.size()));
+	// }
+	//
+	//
+	// orderPay = MathBigDecimalUtil.round(orderPay, 2);
+	// return orderPay;
+	// }
+	//
+	// /**
+	// * 获得员工指定的订单的实际金额，如果是多个订单，则为平均数.
+	// * @param orders
+	// * @params staffId
+	// * @return
+	// */
+	// @Override
+	// public BigDecimal getOrderMoneyStaff(Orders order, Long staffId) {
+	// Long orderId = order.getId();
+	//
+	// OrderPrices orderPrice = this.selectByOrderId(orderId);
+	//
+	// BigDecimal orderMoney = this.getOrderMoney(orderPrice);
+	//
+	// //找出派工，是否为多个
+	// OrderDispatchSearchVo orderDispatchSearchVo = new
+	// OrderDispatchSearchVo();
+	// orderDispatchSearchVo.setOrderId(orderId);
+	// orderDispatchSearchVo.setDispatchStatus((short) 1);
+	// List<OrderDispatchs> orderDispatchs =
+	// orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+	//
+	// if (orderDispatchs.size() > 1) {
+	// orderMoney = MathBigDecimalUtil.div(orderMoney, new
+	// BigDecimal(orderDispatchs.size()));
+	// }
+	//
+	//
+	// orderMoney = MathBigDecimalUtil.round(orderMoney, 2);
+	// return orderMoney;
+	// }
 }

@@ -191,46 +191,8 @@ public class OrderHourAddController extends BaseController {
 		String serviceName = partnerServiceType.getName();
 		
 		//如果有附加服务类型，需要存储到order_service_addons表.
-		if (!StringUtil.isEmpty(serviceAddons)) {
-			String[] serviceAddonArray = StringUtil.convertStrToArray(serviceAddons);
-			
-			List<Long> serviceAddonIds = new ArrayList<Long>();
-			for (int i = 0; i < serviceAddonArray.length; i++) {
-				if (!StringUtil.isEmpty(serviceAddonArray[i])) {
-					Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
-					serviceAddonIds.add(serviceAddonId);
-				}
-			}
-			
-			ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
-			searchVo1.setServiceAddonIds(serviceAddonIds);
-			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
-			
-			for (int i = 0; i < serviceAddonArray.length; i++) {	
-				Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
-				
-				OrderServiceAddons record = orderServiceAddonsService.initOrderServiceAddons();
-				
-				record.setOrderId(order.getId());
-				record.setOrderNo(order.getOrderNo());
-				record.setServiceAddonId(serviceAddonId);
-				record.setUserId(userId);
-				
-				
-				for (DictServiceAddons item : dictServiceAddons) {
-					if (item.getServiceAddonId().equals(serviceAddonId)) {
-						record.setItemNum(item.getDefaultNum());
-						record.setItemUnit(item.getItemUnit());
-						record.setPrice(item.getDisPrice());
-					}
-					serviceName += item.getName() +" ";
-				}
-				orderServiceAddonsService.insert(record);
-				order.setServiceContent(serviceName);
-			}
-		}else{
-			order.setServiceContent(serviceName);
-		}
+		
+		order.setServiceContent(serviceName);
 		
 		order.setRemarks(remarks);
 		

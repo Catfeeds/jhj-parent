@@ -37,4 +37,6 @@ public interface PartnerServiceTypeMapper {
 	    List<AmSkillVo> selectSkillNameAndParent(List<Long> childServiceIdList);
 	    
 	    List<PartnerServiceType> selectByPartnerServiceTypeVo(PartnerServiceTypeVo vo);
+
+		List<PartnerServiceType> selectAll();
 }

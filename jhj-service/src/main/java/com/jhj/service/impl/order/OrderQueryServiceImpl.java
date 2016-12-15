@@ -137,8 +137,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(vo.getId());
 		if (orderPrice != null) {
 			
-			BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrice);
-			BigDecimal orderPay = orderPricesService.getOrderPay(orderPrice);
+			BigDecimal orderMoney = orderPricesService.getTotalOrderMoney(orderPrice);
+			BigDecimal orderPay = orderPricesService.getTotalOrderPay(orderPrice);
 			vo.setPayType(orderPrice.getPayType());
 			vo.setOrderMoney(orderMoney);
 			vo.setOrderPay(orderPay);
@@ -537,10 +537,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setOrderIncoming(new BigDecimal(0));
 		vo.setOrderMoney(new BigDecimal(0));
 		if (orderPrice != null) {
-			BigDecimal orderPay = orderPricesService.getOrderPay(orderPrice);
+			BigDecimal orderPay = orderPricesService.getTotalOrderPay(orderPrice);
 			vo.setOrderMoney(orderPay);
 			
-			BigDecimal orderIncoming = orderPricesService.getOrderIncoming(item, staffId);
+			BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(item, staffId);
 			vo.setOrderIncoming(orderIncoming);
 
 		}

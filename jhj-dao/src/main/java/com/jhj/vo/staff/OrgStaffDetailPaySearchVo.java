@@ -15,6 +15,8 @@ public class OrgStaffDetailPaySearchVo {
 	
 	private String mobile;  //手机号
 	
+	private Short orderType;
+	
 	private String startTimeStr;
 	
 	private String endTimeStr;
@@ -119,6 +121,14 @@ public class OrgStaffDetailPaySearchVo {
 
 	public void setStaffName(String staffName) {
 		this.staffName = staffName;
+	}
+
+	public Short getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Short orderType) {
+		this.orderType = orderType;
 	}
 
 }

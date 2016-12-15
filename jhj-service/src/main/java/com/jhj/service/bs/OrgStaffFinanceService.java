@@ -10,6 +10,7 @@ import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -45,7 +46,5 @@ public interface OrgStaffFinanceService {
 	
 	//统计服务人员欠款
 	Map<String,Object> totalMoney(OrgStaffFinanceSearchVo searchVo);
-	
-	boolean cancleOrderDone(Orders orders);
 
 }

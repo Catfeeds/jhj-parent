@@ -31,6 +31,7 @@ import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
+import com.jhj.service.order.OrderCancelService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
@@ -43,6 +44,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -100,6 +102,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private OrgStaffFinanceService orgStaffFinanceService;
+	
+	@Autowired
+	private OrderCancelService orderCancelService;
 	
 	/*
 	 * 深度保洁派工----固定派工人员
@@ -238,7 +243,11 @@ public class OrderController extends BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
 //		int status = orderService.cancelByOrder(order);
-		boolean flg = orgStaffFinanceService.cancleOrderDone(order);
+		AppResultData<Object> result = orderCancelService.cancleOrderDone(order);
+		
+		Boolean flg = false;
+		if (result.getStatus() == 0) flg = true;
+		
 		if (flg) {
 			map.put("success", true);
 		} else {

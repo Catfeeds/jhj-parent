@@ -310,7 +310,7 @@ public class StaffQueryController extends BaseController {
 		for (OrderDispatchs item : orderDispatchs) {
 			Long orderId = item.getOrderId();
 			Orders order = ordersService.selectByPrimaryKey(orderId);
-			BigDecimal orderIncoming = orderPricesService.getOrderIncoming(order, staffId);
+			BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(order, staffId);
 			totalIncoming = MathBigDecimalUtil.add(totalIncoming, orderIncoming);
 		}
 		

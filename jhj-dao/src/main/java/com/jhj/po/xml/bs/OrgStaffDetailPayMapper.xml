@@ -24,6 +24,10 @@
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
 		
+		<if test="orderType !=null">
+			and order_type = #{orderType,jdbcType=NUMERIC}
+		</if>
+		
 		<if test="mobile !=null and mobile != ''">
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
