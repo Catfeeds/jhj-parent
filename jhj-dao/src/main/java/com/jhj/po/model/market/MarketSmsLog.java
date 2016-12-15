@@ -1,6 +1,6 @@
 package com.jhj.po.model.market;
 
-public class MarketSmsFail {
+public class MarketSmsLog {
     private Integer id;
 
     private Integer marketSmsId;

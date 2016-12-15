@@ -27,7 +27,7 @@ import com.jhj.po.model.market.MarketSms;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.async.SendMarketSmsService;
-import com.jhj.service.market.MarketSmsFailService;
+import com.jhj.service.market.MarketSmsLogService;
 import com.jhj.service.market.MarketSmsService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.users.UsersService;
@@ -45,7 +45,7 @@ public class MarketSmsController extends BaseController{
 	private MarketSmsService marketSmsService;
 	
 	@Autowired
-	private MarketSmsFailService marketSmsFailService;
+	private MarketSmsLogService marketSmsLogService;
 	
 	@Autowired
 	private SendMarketSmsService sendMarketSmsService;

@@ -34,7 +34,7 @@ CREATE TABLE `market_sms` (
 -- ----------------------------
 -- Table structure for market_sms_fail
 -- ----------------------------
-DROP TABLE IF EXISTS `market_sms_fail`;
+DROP TABLE IF EXISTS `market_sms_log`;
 CREATE TABLE `market_sms_fail` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `market_sms_id` int(11) NOT NULL COMMENT '会员营销ID',

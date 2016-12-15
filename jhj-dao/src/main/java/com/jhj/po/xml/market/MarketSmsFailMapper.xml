@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.market.MarketSmsFailMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.market.MarketSmsFail" >
+<mapper namespace="com.jhj.po.dao.market.MarketSmsLogMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.market.MarketSmsLog" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="market_sms_id" property="marketSmsId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="NUMERIC" />
@@ -16,23 +16,23 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from market_sms_fail
+    from market_sms_log
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from market_sms_fail
+    delete from market_sms_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.market.MarketSmsFail" >
-    insert into market_sms_fail (id, market_sms_id, user_id, 
+  <insert id="insert" parameterType="com.jhj.po.model.market.MarketSmsLog" >
+    insert into market_sms_log (id, market_sms_id, user_id, 
       mobile, sms_result, sms_msg, 
       add_time)
     values (#{id,jdbcType=INTEGER}, #{marketSmsId,jdbcType=INTEGER}, #{userId,jdbcType=NUMERIC}, 
       #{mobile,jdbcType=CHAR}, #{smsResult,jdbcType=VARCHAR}, #{smsMsg,jdbcType=VARCHAR}, 
       #{addTime,jdbcType=NUMERIC})
   </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.market.MarketSmsFail" >
-    insert into market_sms_fail
+  <insert id="insertSelective" parameterType="com.jhj.po.model.market.MarketSmsLog" >
+    insert into market_sms_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -80,8 +80,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.market.MarketSmsFail" >
-    update market_sms_fail
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.market.MarketSmsLog" >
+    update market_sms_log
     <set >
       <if test="marketSmsId != null" >
         market_sms_id = #{marketSmsId,jdbcType=INTEGER},
@@ -104,8 +104,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.market.MarketSmsFail" >
-    update market_sms_fail
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.market.MarketSmsLog" >
+    update market_sms_log
     set market_sms_id = #{marketSmsId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=NUMERIC},
       mobile = #{mobile,jdbcType=CHAR},

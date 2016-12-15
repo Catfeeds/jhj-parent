@@ -11,8 +11,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import com.jhj.po.dao.market.MarketSmsFailMapper;
-import com.jhj.po.model.market.MarketSmsFail;
+import com.jhj.po.dao.market.MarketSmsLogMapper;
+import com.jhj.po.model.market.MarketSmsLog;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.async.SendMarketSmsService;
 import com.meijia.utils.SmsUtil;
@@ -22,7 +22,7 @@ import com.meijia.utils.TimeStampUtil;
 public class SendMarketSmsServiceImpl implements SendMarketSmsService{
 	
 	@Autowired
-	private MarketSmsFailMapper marketSmsFailMapper;
+	private MarketSmsLogMapper marketSmsLogMapper;
 
 	private Set<String> successSet = Collections.synchronizedSet(new HashSet<String>());
 	private Set<String> failSet = Collections.synchronizedSet(new HashSet<String>());
@@ -36,14 +36,14 @@ public class SendMarketSmsServiceImpl implements SendMarketSmsService{
 		}
 		if(!result.get("statusCode").equals("000000")){
 			failSet.add(user.getMobile());
-			MarketSmsFail marketSmsFail=new MarketSmsFail();
+			MarketSmsLog marketSmsFail=new MarketSmsLog();
 			marketSmsFail.setMarketSmsId(marketSmsId);
 			marketSmsFail.setUserId(user.getId());
 			marketSmsFail.setMobile(user.getMobile());
 			marketSmsFail.setSmsResult(result.get("statusCode"));
 			marketSmsFail.setSmsMsg(result.get("msg"));
 			marketSmsFail.setAddTime(TimeStampUtil.getNowSecond());
-			marketSmsFailMapper.insert(marketSmsFail);
+			marketSmsLogMapper.insert(marketSmsFail);
 		}
 		System.out.println(result.get("statusCode")+"--"+result.get("msg")+"--"+user.getMobile()+"--"+SmsTempID);
 		
