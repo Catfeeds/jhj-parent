@@ -3,16 +3,16 @@ myApp.onPageInit('twoyears-active-coupons', function (page) {
 	$$("#get-active-coupons").on('click',function(){
 		var mobile = $$("#mobile").val();
 		
-		var couponsIdList = ['4171','4170','4169','4168','4167'];
+		var couponsIdList = '[4171,4169,4168,4167,4170]';
 		var host = window.location.host;
 		var appName = "jhj-app";
 		var localUrl = "http://" + host;
 		var siteAPIPath = localUrl + "/" + appName + "/app/";
 		
-		$.ajax({
+		$$.ajax({
 			type:"post",
 			url: siteAPIPath + "/user/receive_coupon.json",
-			data:{'mobile':mobile,'coupons_id':couponsIdList},
+			data:{"mobile":mobile,"coupons_id":couponsIdList},
 			success:function(data){
 				
 				var status = data.status;
@@ -21,7 +21,7 @@ myApp.onPageInit('twoyears-active-coupons', function (page) {
 					return false;
 				}
 				
-				location.href="order-coupons-get.html"
+				mainView.router.loadPage("active/twoyears-active-getCoupons.html");
 			}
 		});
 		
