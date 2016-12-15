@@ -253,9 +253,9 @@ public class UserCouponsController extends BaseController {
 			
 			//判断只有这三种优惠劵可用
 			List<Long> validateCouponIds = new ArrayList<Long>();
-			validateCouponIds.add(4167L);
-			validateCouponIds.add(4168L);
-			validateCouponIds.add(4169L);
+//			validateCouponIds.add(4167L);
+//			validateCouponIds.add(4168L);
+//			validateCouponIds.add(4169L);
 			validateCouponIds.add(4170L);
 			validateCouponIds.add(4171L);
 			validateCouponIds.add(4172L);
