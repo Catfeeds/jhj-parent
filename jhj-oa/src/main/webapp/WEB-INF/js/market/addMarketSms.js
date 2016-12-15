@@ -91,7 +91,7 @@ $("#sendSms").on('click',function(){
 $("#testsendSms").on('click',function(){
 	var marketSmsId= $("#marketSmsId").val();
 	if(confirm("请确认是否发送短信？")){
-		location.href="send-marketsms?marketSmsId="+marketSmsId+"&testuserGroupType=99";
+		location.href="send-marketsms?marketSmsId="+marketSmsId+"&testuserGroupType=99"+"&smsNum="+smsNum;
 	}
 	
 });

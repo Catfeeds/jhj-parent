@@ -197,11 +197,13 @@ public class MarketSmsController extends BaseController{
 		int totalNum = set.size();
 		String[] content = new String[]{""};
 		String smsTempId = String.valueOf(marketSms.getSmsTempId());
-		int smsNum = Integer.parseInt(request.getParameter("smsNum"));
+		String str = request.getParameter("smsNum");
+		int smsNum=0;
+		if(str!=null && !str.equals("")){
+			smsNum = Integer.parseInt(str);
+		}
 		
 		List<MarketSmsLog> marketSmsLogList = marketSmsLogService.selectByMarketSmsId(marketSmsId);
-		
-		
 		
 		List<Users> userList=new ArrayList<Users>(set);
 		for(int i=0;i<totalNum;i++){
