@@ -39,11 +39,11 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			}
 			
 			
-			if(parseFloat(orderMoney) < parseFloat(maxVlaue)){
+			if(parseFloat(sessionStorage.getItem('order_money')) < parseFloat(maxVlaue)){
 				myApp.alert("当前优惠劵不适用!");
 				return false;
 			}
-//			}
+
 			
 			//判断有效期
 			if(serviceDate<=fromDate || serviceDate>=toDate){
@@ -54,7 +54,8 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			sessionStorage.setItem("user_coupon_id", userCouponId);
 			sessionStorage.setItem("user_coupon_name", userCouponName);
 			sessionStorage.setItem("user_coupon_value", userCouponValue);
-
+			
+//			myApp.alert(sessionStorage.getItem('order_money'));
 			mainView.router.loadPage(backUrl);
 
 		});
