@@ -3,6 +3,7 @@ package com.jhj.action.app.user;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.user.UserCouponVo;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -190,14 +192,28 @@ public class UserCouponsController extends BaseController {
 			if(orderMoney!=null){
 				moeney=new BigDecimal(orderMoney);
 			}
+			
+//			Date serviceDateObj = TimeStampUtil.timeStampToDate(serviceDate);
+			
 			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
 				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
 				
+				
+				Date fromDate = userCouponVo.getFromDate();
+				String fromDateStr = DateUtil.formatDate(fromDate);
+				Long startTime = TimeStampUtil.getMillisOfDayFull(fromDateStr + " 00:00:00");
+				startTime = startTime / 1000;
+				
+				Date toDate = userCouponVo.getToDate();
+				String toDateStr = DateUtil.formatDate(toDate);
+				Long endTime = TimeStampUtil.getMillisOfDayFull(toDateStr + " 23:59:59");
+				endTime = endTime / 1000;
+				
 				//1. 判断优惠券的有效期
-				if(serviceDate * 1000 <= userCouponVo.getFromDate().getTime() && serviceDate*1000 >= userCouponVo.getToDate().getTime()){
+				if (serviceDate < startTime || serviceDate > endTime) {
 					listNew.add(userCouponVo);
 				}
-				
+
 				//2. 判断服务类型是否正确
 				if (!userCouponVo.getServiceType().equals("0") &&
 					!userCouponVo.getServiceType().toString().equals(serviceTypeId)) {

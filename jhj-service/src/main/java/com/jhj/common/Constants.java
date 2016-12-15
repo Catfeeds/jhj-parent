@@ -418,7 +418,7 @@ public class Constants {
 	 public static Short STAFF_DETAIL_ORDER_TYPE_22 = 22;  //订单补时收入取消
 	 public static Short STAFF_DETAIL_ORDER_TYPE_23 = 23;  //订单优惠劵补贴取消
 	 
-	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_0 = 20;  //订单欠款
+	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_0 = 0;  //订单欠款
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_1 = 1;  //订单欠款取消
 
 }
