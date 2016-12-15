@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 			
 			jsu : { 						
 				// 源文件路径
-				src : ['js/index.js', 'js/login.js', 'js/order/*.js', 'js/order/**/*.js', 'js/user/*.js','js/user/**/*.js', 'js/survey/*.js' ],
+				src : ['js/index.js', 'js/login.js', 'js/order/*.js', 'js/order/**/*.js', 'js/user/*.js','js/user/**/*.js', 'js/survey/*.js', 'js/action/*.js' ],
 				dest : 'js/u.js'
 			},
 			
