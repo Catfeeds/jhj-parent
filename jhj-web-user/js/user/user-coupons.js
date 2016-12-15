@@ -55,7 +55,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			sessionStorage.setItem("user_coupon_name", userCouponName);
 			sessionStorage.setItem("user_coupon_value", userCouponValue);
 			
-			myApp.alert(sessionStorage.getItem('order_money'));
+//			myApp.alert(sessionStorage.getItem('order_money'));
 			mainView.router.loadPage(backUrl);
 
 		});
