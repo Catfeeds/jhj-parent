@@ -1,6 +1,8 @@
 package com.jhj.service.impl.market;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,5 +52,9 @@ public class MarketSmsLogServiceImpl implements MarketSmsLogService{
 		return 0;
 	}
 
+	@Override
+	public List<MarketSmsLog> selectByMarketSmsId(int marketSmsId) {
+		return maketSmsLogMapper.selectByMarketSmsId(marketSmsId);
+	}
    
 }

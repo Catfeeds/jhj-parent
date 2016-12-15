@@ -114,4 +114,10 @@
       add_time = #{addTime,jdbcType=NUMERIC}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="selectByMarketSmsId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select <include refid="Base_Column_List"/> from market_sms_log
+  	where market_sms_id = #{marketSmsId,jdbcType=INTEGER}
+  </select>
+  
 </mapper>

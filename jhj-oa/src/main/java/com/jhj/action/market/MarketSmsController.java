@@ -24,6 +24,7 @@ import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.market.MarketSms;
+import com.jhj.po.model.market.MarketSmsLog;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.async.SendMarketSmsService;
@@ -171,7 +172,6 @@ public class MarketSmsController extends BaseController{
 		}
 		
 		//测试用户发短信
-		
 		if(parameter!=null && parameter.equals("99")){
 			String[] mobile= {"18612514665","18600018345","18734187116","15201023689","15600913197","18811043684","13811855734","13466512812","13488723862","15011489008","18405449076","15010069127"};
 			
@@ -195,12 +195,31 @@ public class MarketSmsController extends BaseController{
 		}
 		
 		int totalNum = set.size();
-		Iterator<Users> iterator = set.iterator();
 		String[] content = new String[]{""};
 		String smsTempId = String.valueOf(marketSms.getSmsTempId());
-		while (iterator.hasNext()) {
-			Users u = iterator.next();
-			sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
+		int smsNum = Integer.parseInt(request.getParameter("smsNum"));
+		
+		List<MarketSmsLog> marketSmsLogList = marketSmsLogService.selectByMarketSmsId(marketSmsId);
+		
+		
+		
+		List<Users> userList=new ArrayList<Users>(set);
+		for(int i=0;i<totalNum;i++){
+			if(totalNum>smsNum && i<=smsNum){
+				Users u = userList.get(i);
+				Long id = u.getId();
+				if(marketSmsLogList!=null && marketSmsLogList.size()>0){
+					for(int j=0,leng=marketSmsLogList.size();j<leng;j++){
+						Long userId = marketSmsLogList.get(j).getUserId();
+						if(id!= userId){
+							sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
+						}
+					}
+				}else{
+					sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
+				}
+				
+			}
 		}
 		
 		marketSms.setTotalSend(totalNum);

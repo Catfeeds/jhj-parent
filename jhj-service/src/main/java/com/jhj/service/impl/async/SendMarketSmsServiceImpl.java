@@ -31,20 +31,16 @@ public class SendMarketSmsServiceImpl implements SendMarketSmsService{
 	public Future<Boolean> allotSms(Users user,Integer marketSmsId,String SmsTempID,String[] content) {
 		
 		HashMap<String, String> result = SmsUtil.SendSms(user.getMobile(), SmsTempID,content);
-		if(result.get("statusCode").equals("000000")){
-			successSet.add(user.getMobile());
-		}
-		if(!result.get("statusCode").equals("000000")){
-			failSet.add(user.getMobile());
-			MarketSmsLog marketSmsFail=new MarketSmsLog();
-			marketSmsFail.setMarketSmsId(marketSmsId);
-			marketSmsFail.setUserId(user.getId());
-			marketSmsFail.setMobile(user.getMobile());
-			marketSmsFail.setSmsResult(result.get("statusCode"));
-			marketSmsFail.setSmsMsg(result.get("msg"));
-			marketSmsFail.setAddTime(TimeStampUtil.getNowSecond());
-			marketSmsLogMapper.insert(marketSmsFail);
-		}
+		successSet.add(user.getMobile());
+		MarketSmsLog marketSmsFail=new MarketSmsLog();
+		marketSmsFail.setMarketSmsId(marketSmsId);
+		marketSmsFail.setUserId(user.getId());
+		marketSmsFail.setMobile(user.getMobile());
+		marketSmsFail.setSmsResult(result.get("statusCode"));
+		marketSmsFail.setSmsMsg(result.get("msg"));
+		marketSmsFail.setAddTime(TimeStampUtil.getNowSecond());
+		marketSmsLogMapper.insert(marketSmsFail);
+		
 		System.out.println(result.get("statusCode")+"--"+result.get("msg")+"--"+user.getMobile()+"--"+SmsTempID);
 		
 		return  new AsyncResult<Boolean>(true);

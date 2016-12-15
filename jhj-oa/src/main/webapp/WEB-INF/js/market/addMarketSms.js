@@ -80,8 +80,9 @@ $(".other").on('click',function(){
 
 $("#sendSms").on('click',function(){
 	var marketSmsId= $("#marketSmsId").val();
+	var smsNum = $("#smsNum").val();
 	if(confirm("请确认是否发送短信？")){
-		location.href="send-marketsms?marketSmsId="+marketSmsId;
+		location.href="send-marketsms?marketSmsId="+marketSmsId+"&smsNum="+smsNum;
 	}
 	
 });

@@ -66,6 +66,15 @@
                                             <input type="checkbox" class="other" name="userGroupTypeList" value="6" <c:if test="${fn:contains(marketSms.userGroupTypeList,'6') }">checked</c:if>  />注册未使用用户
                                         </div>
                                     </div>
+                                    <c:if test="${marketSms.marketSmsId!= null }">
+                                     <div class="form-group">
+                                        <label class="col-md-2 control-label"><font
+                                                color="red"></font>发送条数</label>
+                                        <div class="col-md-5">
+                                            <input id="smsNum" name="smsNum"  class="form-control" />
+                                        </div>
+                                    </div>
+                                    </c:if>
                                     <div class="form-group">
                                     	<c:if test="${marketSms.marketSmsId==null }">
 	                                        <input type="submit" class="btn btn-primary" value="保存"/>

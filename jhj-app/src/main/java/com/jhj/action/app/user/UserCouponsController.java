@@ -242,9 +242,9 @@ public class UserCouponsController extends BaseController {
 			validateCouponIds.add(4169L);
 			validateCouponIds.add(4170L);
 			validateCouponIds.add(4171L);
-//			validateCouponIds.add(4172L);
-//			validateCouponIds.add(4173L);
-//			validateCouponIds.add(4174L);
+			validateCouponIds.add(4172L);
+			validateCouponIds.add(4173L);
+			validateCouponIds.add(4174L);
 			
 			String[] couponsIdList = couponsId.split(",");
 			List<Long> list=new ArrayList<Long>();
