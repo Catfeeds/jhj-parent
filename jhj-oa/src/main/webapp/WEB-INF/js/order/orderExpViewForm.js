@@ -385,17 +385,28 @@ var selectStaff = function() {
 }
 
 //取消订单
-$("#cancleOrder").on("click",function(){
-	var id=$("#id").val();
-	if(confirm("请确认取消订单吗？")){
+$("#cancleOrder").on("click", function() {
+	var id = $("#id").val();
+	if (confirm("请确认取消订单吗？")) {
+		console.log("asdfasdfasdf");
+		$("#cancleOrder").attr("disabled",false);
+		var params = {};
+		params.order_id = id;
 		$.ajax({
-			type:"GET",
-			url:"cancelOrder/"+id,
-			dataType:"json",
-			success:function(data){
-				if(data.success){
-					location.href="order-exp-list";
+			type : "POST",
+			url : "/jhj-oa/order/cancelOrder.json",
+			dataType : "json",
+			data:params,
+			success : function(data) {
+				$("#cancleOrder").attr("disabled",true);
+				var result = data.data;
+				if (result.status == 999) {
+					alert(result.msg);
+					return;
 				}
+				alert("订单取消成功.");
+				var rootPath = getRootPath();
+				window.location.replace(rootPath + "/order/order-exp-list");
 			}
 		});
 	}

@@ -314,8 +314,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		Long staffId = orgStaffs.getStaffId();
 
 		Short orderExtType = 1;
+		int staffNum = orders.getStaffNums();
 		BigDecimal orderPay = orderPriceExtService.getTotalOrderExtPay(orders, orderExtType);
-
+		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
 		// 服务人员财务表
 		OrgStaffFinance orgStaffFinance = this.selectByStaffId(staffId);
 		if (orgStaffFinance == null) {

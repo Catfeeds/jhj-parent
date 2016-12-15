@@ -91,6 +91,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		if (orderStatus.equals(Constants.ORDER_STATUS_0)) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("此订单已经取消过.");
+			return result;
 		}
 		
 		
@@ -102,6 +103,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		if (!list.isEmpty()) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("此订单已经取消过.");
+			return result;
 		}
 
 		// 如果订单状态 = 未支付，则更新订单状态为取消即可
@@ -148,7 +150,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		if (orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) || orderStatus.equals(Constants.ORDER_HOUR_STATUS_7)) {
 			this.cancelOrderForUserRestMoney(orders, orderPrice);
 			this.cancelOrderForUserCoupon(orderPrice);
-			this.cancelOrderForStaffDispatch(orders);
+			
 			
 			OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 			searchVo.setOrderId(orderId);
@@ -159,6 +161,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 				OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(item.getStaffId());
 				this.cancelOrderForStaffFinance(orders, orderPrice, orgStaff);
 			}
+			this.cancelOrderForStaffDispatch(orders);
 			this.cancelOrderForStatus(orders);
 		}
 
@@ -316,16 +319,16 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 			orgStaffFinance.setStaffId(staffId);
 		}
 		orgStaffFinance.setMobile(orgStaff.getMobile());
-		
+		BigDecimal totalIncomingend = orgStaffFinance.getTotalIncoming();
+		BigDecimal totalDept = orgStaffFinance.getTotalDept();
 		if (orderStaffDetailPay == true) {
-			BigDecimal totalIncomingend = orgStaffFinance.getTotalIncoming();
-			totalIncomingend.subtract(orderIncoming);
+			totalIncomingend = MathBigDecimalUtil.sub(totalIncomingend, orderIncoming);
 		}
 		
 		//3. 记录服务人员欠款明细
 		BigDecimal totalOrderDept = orderPricesService.getTotalOrderDept(order, staffId);
 		if (totalOrderDept.compareTo(BigDecimal.ZERO) == 1) {
-			BigDecimal totalDept = orgStaffFinance.getTotalDept();
+			
 			
 			OrgStaffDetailPaySearchVo orgStaffDetailPaySearchVo = new OrgStaffDetailPaySearchVo();
 			orgStaffDetailPaySearchVo.setOrderNo(order.getOrderNo());
@@ -350,9 +353,11 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 			}
 			
 			//4. 减去服务人员欠款金额.
-			totalDept.subtract(totalOrderDept);
+			totalDept = MathBigDecimalUtil.sub(totalDept, totalOrderDept);
 		}
 		
+		orgStaffFinance.setTotalIncoming(totalIncomingend);
+		orgStaffFinance.setTotalDept(totalDept);
 		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 		if (orgStaffFinance.getId() > 0L) {
 			orgStaffFinanceService.updateByPrimaryKeySelective(orgStaffFinance);

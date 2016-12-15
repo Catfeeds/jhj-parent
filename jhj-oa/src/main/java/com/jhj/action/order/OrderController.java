@@ -237,24 +237,16 @@ public class OrderController extends BaseController {
 	 * */
 	@AuthPassport
 	@ResponseBody
-	@RequestMapping(value = "/cancelOrder/{id}", method = RequestMethod.GET)
-	public Map<String,Object> cancelOrder(Model model, @PathVariable("id") Long orderId) {
+	@RequestMapping(value = "/cancelOrder.json", method = RequestMethod.POST)
+	public AppResultData<Object> cancelOrder(
+			@RequestParam("order_id") Long orderId) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
-//		int status = orderService.cancelByOrder(order);
+
 		AppResultData<Object> result = orderCancelService.cancleOrderDone(order);
 		
-		Boolean flg = false;
-		if (result.getStatus() == 0) flg = true;
-		
-		if (flg) {
-			map.put("success", true);
-		} else {
-			map.put("fail", false);
-		}
-		
-		return map;
+		return result;
 	}
 	
 	@AuthPassport

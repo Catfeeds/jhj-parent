@@ -274,7 +274,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 
 	@Override
 	public List<UserDetailPay> selectBySearchVo(UserDetailSearchVo searchVo) {
-		return userDetailPayMapper.selectByListPages(searchVo);
+		return userDetailPayMapper.selectBySearchVo(searchVo);
 	}
 
 	@Override

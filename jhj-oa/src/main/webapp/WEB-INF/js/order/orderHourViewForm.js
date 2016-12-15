@@ -1,4 +1,3 @@
-
 $('.form_datetime').datetimepicker({
 	format : "yyyy-mm-dd hh:ii",
 	language : "zh-CN",
@@ -9,19 +8,21 @@ $('.form_datetime').datetimepicker({
 
 $('.form_datetime').datetimepicker('setStartDate', new Date());
 
-$('#selectedStaffs').tagsinput({
-	  itemValue: 'id',
-	  itemText: 'label',
-	  tagClass: function(item) {
-		  var labelArray = ['label-primary', 'label-danger', 'label-success', 'label-default', 'label-warning'];
-		  var index = Math.floor((Math.random()*labelArray.length)); 
-		  var v = labelArray[index];
-		  return 'label ' + v;
-	  },
-});
+$('#selectedStaffs').tagsinput(
+		{
+			itemValue : 'id',
+			itemText : 'label',
+			tagClass : function(item) {
+				var labelArray = [ 'label-primary', 'label-danger', 'label-success',
+						'label-default', 'label-warning' ];
+				var index = Math.floor((Math.random() * labelArray.length));
+				var v = labelArray[index];
+				return 'label ' + v;
+			},
+		});
 
 $('#selectedStaffs').on('itemRemoved', function(event) {
-	  // event.item: contains the item
+	// event.item: contains the item
 	var staffId = event.item.id;
 	$("input[name='select-staff']").each(function(k, v) {
 		
@@ -34,7 +35,7 @@ $('#selectedStaffs').on('itemRemoved', function(event) {
 		if (selectStaffId == staffId) {
 			// 如果该行被选中
 			
-			$(this).removeAttr("checked");     
+			$(this).removeAttr("checked");
 			
 		}
 	});
@@ -42,7 +43,9 @@ $('#selectedStaffs').on('itemRemoved', function(event) {
 
 // 提交派工修改
 $("#submitForm").on('click', function() {
-	$('#submitForm').attr('disabled',"true");
+	console.log("submitForm click");
+	return false;
+	$('#submitForm').attr('disabled', "true");
 	var orderStatus = $("#orderStatus").val();
 	
 	// 只有 已支付 和 已派工 的订单，可以有 调整派工操作
@@ -50,11 +53,10 @@ $("#submitForm").on('click', function() {
 	if (orderStatus != 2 && orderStatus != 3) {
 		
 		alert("只有 已支付 或 已派工状态的 订单 ,可以进行调整 派工操作");
-		$('#submitForm').removeAttr("disabled"); 
+		$('#submitForm').removeAttr("disabled");
 		return false;
 	}
 	
-
 	var orderDate = $("#serviceDateStr").val();
 	var orderDateTimeStamp = new Date(orderDate).getTime();
 	// 服务时间戳
@@ -68,20 +70,18 @@ $("#submitForm").on('click', function() {
 	
 	var distanceValue = 0;
 	
-	
-	
 	var orderId = $("#id").val();
-		
+	
 	// 如果 未选择派工 。直接 返回列表页
 	if (selectStaffIds == undefined || selectStaffIds == "") {
 		
 		alert("没有选择派工人员.");
-		$('#submitForm').removeAttr("disabled"); 
+		$('#submitForm').removeAttr("disabled");
 		
 		return false;
 	}
 	
-	//判断派工人员个数是否一致，用于派工调整，涉及到金额
+	// 判断派工人员个数是否一致，用于派工调整，涉及到金额
 	if (orderStatus == 3) {
 		var staffNums = $("#staffNums").val();
 		if (staffNums != "" && staffNums != undefined && staffNums > 0) {
@@ -89,12 +89,11 @@ $("#submitForm").on('click', function() {
 			
 			if (staffAry.length != staffNums) {
 				alert("派工人数应为2人，请确认派工人数是否正确");
-				$('#submitForm').removeAttr("disabled"); 
+				$('#submitForm').removeAttr("disabled");
 				return false;
 			}
 		}
 	}
-	
 	
 	$.ajax({
 		type : 'post',
@@ -110,16 +109,16 @@ $("#submitForm").on('click', function() {
 			var status = data.status;
 			if (status == "999") {
 				alert(data.msg);
-				$('#submitForm').removeAttr("disabled"); 
+				$('#submitForm').removeAttr("disabled");
 				return false;
 			}
 			alert("保存成功");
-			$('#submitForm').removeAttr("disabled"); 
+			$('#submitForm').removeAttr("disabled");
 			var rootPath = getRootPath();
 			window.location.replace(rootPath + "/order/order-hour-list");
 		},
 		error : function() {
-			$('#submitForm').removeAttr("disabled"); 
+			$('#submitForm').removeAttr("disabled");
 			alert("网络错误");
 		}
 	})
@@ -152,29 +151,25 @@ var loadStaffDynamic = function(data, status, xhr) {
 		var item = data[i];
 		
 		var selectInput = "";
-		selectInput = "<input name='select-staff' type='checkbox' onclick='doSelectStaff("+item.staff_id+")' value=" + item.staff_id + ">";
-
+		selectInput = "<input name='select-staff' type='checkbox' onclick='doSelectStaff("
+				+ item.staff_id + ")' value=" + item.staff_id + ">";
 		
 		var htmlStr = "<tr>";
 		
-		htmlStr+= "<td>";
+		htmlStr += "<td>";
 		if (item.dispath_sta_flag == 1) {
-			htmlStr+= selectInput;
+			htmlStr += selectInput;
 		}
-		htmlStr+= "<input  type='hidden' id='selectStaffId' name='selectStaffId' value=" + item.staff_id+ ">"
-		+ "<input type='hidden' id='distanceValue' value=" + item.distance_value + ">" 
-		+ "<input type='hidden' id='selectStaffName' value=" + item.name + ">" 
-		+ "<td>" + item.staff_org_name + "</td>" 
-		+ "<td>" + item.staff_cloud_org_name + "</td>" 
-		+ "<td>" + item.org_distance_text + "</td>" 
-		+ "<td>" + item.name + "</td>" 
-		+ "<td>" + item.mobile + "</td>" 
-		+ "<td>" + item.distance_text + "</td>" 
-		+ "<td>" + item.today_order_num + "</td>"
-		+ "<td>" + item.dispath_sta_str + "</td>"
-		+ "<td>" + item.reason + "</td>";
+		htmlStr += "<input  type='hidden' id='selectStaffId' name='selectStaffId' value="
+				+ item.staff_id + ">" + "<input type='hidden' id='distanceValue' value="
+				+ item.distance_value + ">" + "<input type='hidden' id='selectStaffName' value="
+				+ item.name + ">" + "<td>" + item.staff_org_name + "</td>" + "<td>"
+				+ item.staff_cloud_org_name + "</td>" + "<td>" + item.org_distance_text + "</td>"
+				+ "<td>" + item.name + "</td>" + "<td>" + item.mobile + "</td>" + "<td>"
+				+ item.distance_text + "</td>" + "<td>" + item.today_order_num + "</td>" + "<td>"
+				+ item.dispath_sta_str + "</td>" + "<td>" + item.reason + "</td>";
 		
-		htmlStr+="</tr>";
+		htmlStr += "</tr>";
 		
 		tdHtml += htmlStr;
 		
@@ -230,18 +225,21 @@ function doSelectStaff(staffId) {
 		var distanceValue = $(this).parent().find("#distanceValue").val();
 		
 		if (selectStaffId == staffId) {
-			console.log("selectStaffName = "  + selectStaffName);
+			console.log("selectStaffName = " + selectStaffName);
 			// 如果该行被选中
 			if (this.checked) {
 				addSelectedStaffs(selectStaffId, selectStaffName, distanceValue);
 			} else {
-				$('#selectedStaffs').tagsinput('remove', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+				$('#selectedStaffs').tagsinput('remove', {
+					id : selectStaffId,
+					label : selectStaffName,
+					distanceValue : distanceValue
+				});
 			}
 		}
 		
-		
 	});
-
+	
 	console.log($('#selectedStaffs').val());
 }
 
@@ -269,7 +267,7 @@ function loadStaffs() {
 		return false;
 	}
 	
-	//获取当前选择的订单时间
+	// 获取当前选择的订单时间
 	var serviceDateStr = $("#serviceDateStr").val() + ":00";
 	var serviceDate = moment(serviceDateStr).unix();
 	
@@ -289,13 +287,9 @@ function loadStaffs() {
 	});
 }
 
-
-
-
-
 // 点击选择 调整派工方案
 $("input[name='disWay']").on("change", function() {
-
+	
 	var thisVal = $("input[name='disWay']:checked").val();
 	console.log("disway =" + thisVal);
 	if (thisVal == 0) {
@@ -329,7 +323,7 @@ var selectStaff = function() {
 		console.log("selectStaffId = " + selectStaffId);
 		console.log("staffId = " + staffId);
 	});
-		
+	
 	$("input[name='disWay']").trigger("change");
 	
 	var disWay = $("input[name='disWay']:checked").val();
@@ -337,11 +331,11 @@ var selectStaff = function() {
 	if (disWay == 0) {
 		var serviceDateStr = $("#serviceDateStr").val();
 		
-		if (serviceDateStr.length == 16) serviceDateStr+=":00";
+		if (serviceDateStr.length == 16) serviceDateStr += ":00";
 		
 		var newServiceDate = moment(serviceDateStr).unix();
 		
-//		newServiceDate = newServiceDate / 1000 - 8 * 3600;
+		// newServiceDate = newServiceDate / 1000 - 8 * 3600;
 		
 		console.log("newServiceDate =" + newServiceDate);
 		
@@ -354,18 +348,29 @@ var selectStaff = function() {
 	
 }
 
-//取消订单
-$("#cancleOrder").on("click",function(){
-	var id=$("#id").val();
-	if(confirm("请确认取消订单吗？")){
+// 取消订单
+$("#cancleOrder").on("click", function() {
+	var id = $("#id").val();
+	if (confirm("请确认取消订单吗？")) {
+		console.log("asdfasdfasdf");
+		$("#cancleOrder").attr("disabled",false);
+		var params = {};
+		params.order_id = id;
 		$.ajax({
-			type:"GET",
-			url:"cancelOrder/"+id,
-			dataType:"json",
-			success:function(data){
-				if(data.success){
-					location.href="order-hour-list"
+			type : "POST",
+			url : "/jhj-oa/order/cancelOrder.json",
+			dataType : "json",
+			data:params,
+			success : function(data) {
+				$("#cancleOrder").attr("disabled",true);
+				var result = data.data;
+				if (result.status == 999) {
+					alert(result.msg);
+					return;
 				}
+				alert("订单取消成功.");
+				var rootPath = getRootPath();
+				window.location.replace(rootPath + "/order/order-hour-list");
 			}
 		});
 	}
@@ -375,11 +380,15 @@ $("#cancleOrder").on("click",function(){
 function addSelectedStaffs(selectStaffId, selectStaffName, distanceValue) {
 	console.log("addSelectedStaffs");
 	var selectStaffIds = $("#selectedStaffs").val();
-	selectStaffIds+=",";
+	selectStaffIds += ",";
 	console.log("selectStaffIds = " + selectStaffIds);
-	if (selectStaffIds.indexOf(selectStaffId+",") >= 0) return false;
+	if (selectStaffIds.indexOf(selectStaffId + ",") >= 0) return false;
 	
-	$('#selectedStaffs').tagsinput('add', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+	$('#selectedStaffs').tagsinput('add', {
+		id : selectStaffId,
+		label : selectStaffName,
+		distanceValue : distanceValue
+	});
 }
 
 function remove(selectStaffId, selectStaffName, distanceValue) {
@@ -387,7 +396,11 @@ function remove(selectStaffId, selectStaffName, distanceValue) {
 	
 	if (selectStaffIds.indexOf(selectStaffId) >= 0) return false;
 	
-	$('#selectedStaffs').tagsinput('add', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+	$('#selectedStaffs').tagsinput('add', {
+		id : selectStaffId,
+		label : selectStaffName,
+		distanceValue : distanceValue
+	});
 }
 
 window.onload = selectStaff;

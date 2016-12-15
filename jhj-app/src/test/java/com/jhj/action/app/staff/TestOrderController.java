@@ -55,8 +55,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_done.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "50");
-	    postRequest = postRequest.param("order_id", "6533");
+	    postRequest = postRequest.param("staff_id", "5");
+	    postRequest = postRequest.param("order_id", "5");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));
@@ -71,10 +71,10 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_overwork.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "88");
-	    postRequest = postRequest.param("order_id", "6872");
-	    postRequest = postRequest.param("service_hour", "1");
-	    postRequest = postRequest.param("order_pay", "50");
+	    postRequest = postRequest.param("staff_id", "5");
+	    postRequest = postRequest.param("order_id", "5");
+	    postRequest = postRequest.param("service_hour", "2");
+	    postRequest = postRequest.param("order_pay", "100");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));

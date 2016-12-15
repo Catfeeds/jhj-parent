@@ -523,13 +523,13 @@ public class OneCareUtil {
 			orderTypeName = "订单支付";
 			break;
 		case 1:
-			orderTypeName = "充值卡支付";
+			orderTypeName = "账号充值";
 			break;
 		case 2:
 			orderTypeName = "手机充值卡支付";
 			break;
 		case 3:
-			orderTypeName = "订单补差价支付";
+			orderTypeName = "订单补差价";
 			break;
 		case 4:
 			orderTypeName = "订单加时";

@@ -212,16 +212,6 @@ public class OrderPriceExtServiceImpl implements OrderPriceExtService {
 			orderPayExt = orderPayExt.add(item.getOrderPay());
 		}
 		
-		//找出派工，是否为多个
-		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-		orderDispatchSearchVo.setOrderId(orderId);
-		orderDispatchSearchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
-		
-		if (orderDispatchs.size() > 1) {
-			orderPayExt = MathBigDecimalUtil.div(orderPayExt, new BigDecimal(orderDispatchs.size()));
-		}
-		
 		orderPayExt = MathBigDecimalUtil.round(orderPayExt, 2);
 		return orderPayExt;
 	}

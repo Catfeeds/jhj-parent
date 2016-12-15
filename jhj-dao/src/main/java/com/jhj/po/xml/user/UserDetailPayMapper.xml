@@ -21,6 +21,19 @@
 		trade_no, trade_status, pay_type, add_time
 	</sql>
 	<sql id="searchVo">
+	    
+	    <if test="userId !=null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		
+	    <if test="orderId !=null">
+			and order_id = #{orderId,jdbcType=NUMERIC}
+		</if>
+		
+	    <if test="orderType !=null">
+			and order_type = #{orderType,jdbcType=NUMERIC}
+		</if>
+	    
 		<if test="mobile != null and mobile !='' ">
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
@@ -66,6 +79,14 @@
 		order by add_time desc
 	</select>
 	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserDetailSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from user_detail_pay
+		where 1=1
+		<include refid="searchVo"/>
+		order by add_time desc
+	</select>
 	
 	<select id="selectByUserIdList" resultMap="BaseResultMap" parameterType="java.util.List">
 		select
