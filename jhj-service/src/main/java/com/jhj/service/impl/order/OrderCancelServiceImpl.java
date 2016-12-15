@@ -339,7 +339,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 				// 新增欠款明细表 org_staff_detail_dept
 				orgStaffDetailDept.setStaffId(staffId);
 				orgStaffDetailDept.setMobile(orgStaff.getMobile());
-				orgStaffDetailDept.setOrderType(Constants.STAFF_DETAIL_DEPT_ORDER_TYPE_0);
+				orgStaffDetailDept.setOrderType(Constants.STAFF_DETAIL_DEPT_ORDER_TYPE_1);
 				orgStaffDetailDept.setOrderId(orderId);
 				orgStaffDetailDept.setOrderNo(order.getOrderNo());
 				orgStaffDetailDept.setOrderMoney(totalOrderPay);
