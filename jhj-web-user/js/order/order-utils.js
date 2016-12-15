@@ -230,7 +230,8 @@ function orderRecomment(serviceTypeId){
 		{"serviceTypeId":"67","list":jinpai},
 		{"serviceTypeId":"68","list":jinpai},
 		{"serviceTypeId":"69","list":jinpai},
-		{"serviceTypeId":"70","list":jinpai}
+		{"serviceTypeId":"70","list":jinpai},
+		{"serviceTypeId":"71","list":youyanji}
 	]
 
 	for(var i=0;i<recoArr.length;i++){
