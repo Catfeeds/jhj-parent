@@ -72,6 +72,7 @@
                                         </c:if>
                                         <c:if test="${marketSms.marketSmsId!= null }">
 	                                        <input type="button" id="sendSms" class="btn btn-primary" value="发送短信"/>
+	                                        <input type="button" id="testsendSms" class="btn btn-primary" value="测试发送短信"/>
                                         </c:if>
                                     </div>
                                 </div>

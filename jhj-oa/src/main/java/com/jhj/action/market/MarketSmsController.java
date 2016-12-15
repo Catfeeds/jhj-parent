@@ -2,10 +2,11 @@ package com.jhj.action.market;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,13 +30,11 @@ import com.jhj.service.async.SendMarketSmsService;
 import com.jhj.service.market.MarketSmsFailService;
 import com.jhj.service.market.MarketSmsService;
 import com.jhj.service.order.OrderQueryService;
-import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.market.MarketSmsSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Controller
@@ -105,7 +104,7 @@ public class MarketSmsController extends BaseController{
 	
 	@AuthPassport
 	@RequestMapping(value="/send-marketsms",method=RequestMethod.GET)
-	public String sendMarketSms(HttpServletRequest request,Model model,@RequestParam("marketSmsId") Integer marketSmsId){
+	public String sendMarketSms(HttpServletRequest request,Model model,@RequestParam("marketSmsId") Integer marketSmsId) throws InterruptedException, ExecutionException{
 		
 		MarketSms marketSms = marketSmsService.selectByPrimaryKey(marketSmsId);
 		
@@ -115,56 +114,74 @@ public class MarketSmsController extends BaseController{
 		
 		List<String> userGroupTypeList = marketSms.getUserGroupTypeList();
 		
+		String parameter = request.getParameter("testuserGroupType");
+		
 		Set<Users> set = new HashSet<Users>();
 		
 		Set<Long> sets = new HashSet<Long>();
 		
 		UserSearchVo userVo=new UserSearchVo();
-		if(userGroupTypeList.contains("0")){
-			List<Users> userList = userService.selectBySearchVo(userVo);
-			set.addAll(userList);
-		}
-		if(userGroupTypeList.contains("1")){
-			userVo.setIsVip((short)1);
-			List<Users> userList = userService.selectBySearchVo(userVo);
-			set.addAll(userList);
-		}
-		if(userGroupTypeList.contains("2")){
-			userVo.setIsVip((short)0);
-			List<Users> userList = userService.selectBySearchVo(userVo);
-			set.addAll(userList);
-		}
-		if(userGroupTypeList.contains("3")){
-			OrderSearchVo searchVo = new OrderSearchVo();
-            searchVo.setStartServiceTime(DateUtil.curStartDate(0));
-            searchVo.setEndServiceTime(DateUtil.curLastDate(0));
-            List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-            for (Orders o : orders) {
-            	sets.add(o.getUserId());
-            }
-		}
-		if(userGroupTypeList.contains("4")){
-			 OrderSearchVo searchVo = new OrderSearchVo();
-             searchVo.setStartServiceTime(DateUtil.curStartDate(3));
-             searchVo.setEndServiceTime(DateUtil.curLastDate(1));
-             List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-             for (Orders o : orders) {
-            	 sets.add(o.getUserId());
-             }
-		}
-		if(userGroupTypeList.contains("5")){
-			 OrderSearchVo searchVo = new OrderSearchVo();
-			 searchVo.setStartServiceTime(DateUtil.curStartDate(9));
-             searchVo.setEndServiceTime(DateUtil.curLastDate(3));
-             List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-             for (Orders o : orders) {
-            	 sets.add(o.getUserId());
-             }
-		}
 		List<Users> users =null;
-		if(userGroupTypeList.contains("6")){
-			 // 找出未下过单的用户.
-            users = userService.selectUsersByOrderMobile();
+		if(parameter==null){
+			if(userGroupTypeList.contains("0")){
+				List<Users> userList = userService.selectBySearchVo(userVo);
+				set.addAll(userList);
+			}
+			if(userGroupTypeList.contains("1")){
+				userVo.setIsVip((short)1);
+				List<Users> userList = userService.selectBySearchVo(userVo);
+				set.addAll(userList);
+			}
+			if(userGroupTypeList.contains("2")){
+				userVo.setIsVip((short)0);
+				List<Users> userList = userService.selectBySearchVo(userVo);
+				set.addAll(userList);
+			}
+			if(userGroupTypeList.contains("3")){
+				OrderSearchVo searchVo = new OrderSearchVo();
+	            searchVo.setStartServiceTime(DateUtil.curStartDate(0));
+	            searchVo.setEndServiceTime(DateUtil.curLastDate(0));
+	            List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
+	            for (Orders o : orders) {
+	            	sets.add(o.getUserId());
+	            }
+			}
+			if(userGroupTypeList.contains("4")){
+				 OrderSearchVo searchVo = new OrderSearchVo();
+	             searchVo.setStartServiceTime(DateUtil.curStartDate(3));
+	             searchVo.setEndServiceTime(DateUtil.curLastDate(1));
+	             List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
+	             for (Orders o : orders) {
+	            	 sets.add(o.getUserId());
+	             }
+			}
+			if(userGroupTypeList.contains("5")){
+				 OrderSearchVo searchVo = new OrderSearchVo();
+				 searchVo.setStartServiceTime(DateUtil.curStartDate(9));
+	             searchVo.setEndServiceTime(DateUtil.curLastDate(3));
+	             List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
+	             for (Orders o : orders) {
+	            	 sets.add(o.getUserId());
+	             }
+			}
+			if(userGroupTypeList.contains("6")){
+				 // 找出未下过单的用户.
+	            users = userService.selectUsersByOrderMobile();
+			}
+		}
+		
+		//测试用户发短信
+		
+		if(parameter!=null && parameter.equals("99")){
+			String[] mobile= {"18612514665","18600018345","18734187116","15201023689","15600913197","18811043684","13811855734","13466512812","13488723862","15011489008","18405449076","15010069127"};
+			
+			for(int i=0;i<mobile.length;i++){
+				Users u=new Users();
+				Long id=(long) i;
+				u.setId(id);
+				u.setMobile(mobile[i]);
+				set.add(u);
+			}
 		}
 		
 		if(sets!=null && sets.size()>0){
@@ -177,7 +194,19 @@ public class MarketSmsController extends BaseController{
 			set.addAll(users);
 		}
 		
-		sendMarketSmsService.allotSms(set,marketSms.getMarketSmsId() ,marketSms.getSmsTempId());
+		int totalNum = set.size();
+		Iterator<Users> iterator = set.iterator();
+		String[] content = new String[]{""};
+		String smsTempId = String.valueOf(marketSms.getSmsTempId());
+		while (iterator.hasNext()) {
+			Users u = iterator.next();
+			sendMarketSmsService.allotSms(u,marketSms.getMarketSmsId() ,smsTempId,content);
+		}
+		
+		marketSms.setTotalSend(totalNum);
+		marketSms.setTotalSended(sendMarketSmsService.successNum());
+		marketSms.setTotalFail(sendMarketSmsService.failNum());
+		marketSmsService.updateByPrimaryKeySelective(marketSms);
 		
 		return "redirect:get-list";
 	}

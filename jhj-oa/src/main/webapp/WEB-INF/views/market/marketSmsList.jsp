@@ -39,8 +39,9 @@
                                 <th>发送时间</th>
                                 <th>短信ID</th>
                                 <th>用户类型</th>
-                                <th>发送数量</th>
-                                <th>发送状态</th>
+                                <th>发送数量(条)</th>
+                                <th>失败数量(条)</th>
+                                <th>成功率(%)</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -51,7 +52,8 @@
                                     <td>${ item.smsTempId }</td>
                                     <td>${ item.userGroupType }</td>
                                     <td>${ item.totalSend }</td>
-                                    <td>成功</td>
+                                    <td>${ item.totalFail }</td>
+                                    <td>${ item.totalSended/item.totalSend*100 }%</td>
                                     <td><a href="add-marketsms?marketSmsId=${item.marketSmsId }">编辑</a></td>
                                 </tr>
                             </c:forEach>

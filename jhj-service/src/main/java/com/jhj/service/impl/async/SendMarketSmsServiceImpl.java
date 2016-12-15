@@ -1,7 +1,8 @@
 package com.jhj.service.impl.async;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -10,7 +11,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
 import com.jhj.po.dao.market.MarketSmsFailMapper;
 import com.jhj.po.model.market.MarketSmsFail;
 import com.jhj.po.model.user.Users;
@@ -24,35 +24,38 @@ public class SendMarketSmsServiceImpl implements SendMarketSmsService{
 	@Autowired
 	private MarketSmsFailMapper marketSmsFailMapper;
 
-	@Async("allotSms")
-	public Future<Boolean> allotSms(Set<Users> set,int marketSmsId,int SmsTempID) {
-		
-		if(set == null) return null;
-		
-		Gson gson=new Gson();
-		String tempID = gson.toJson(SmsTempID);
-		
-		Iterator<Users> iterator = set.iterator();
+	private Set<String> successSet = Collections.synchronizedSet(new HashSet<String>());
+	private Set<String> failSet = Collections.synchronizedSet(new HashSet<String>());
 	
-		String[] content = new String[]{""};
-		while(iterator.hasNext()){
-			Users u = iterator.next();
-			String mobile = gson.toJson(u.getMobile());
-			HashMap<String, String> result = SmsUtil.SendSms(mobile, tempID,content);
-			if(!result.get("statusCode").equals("000000")){
-				MarketSmsFail marketSmsFail=new MarketSmsFail();
-				marketSmsFail.setMarketSmsId(marketSmsId);
-				marketSmsFail.setUserId(u.getId());
-				marketSmsFail.setMobile(u.getMobile());
-				marketSmsFail.setSmsResult(result.get("statusCode"));
-				marketSmsFail.setSmsMsg(result.get("msg"));
-				marketSmsFail.setAddTime(TimeStampUtil.getNowSecond());
-				marketSmsFailMapper.insert(marketSmsFail);
-			}
-			System.out.println(result.get("statusCode")+"-----"+result.get("msg"));
+	@Async
+	public Future<Boolean> allotSms(Users user,Integer marketSmsId,String SmsTempID,String[] content) {
+		
+		HashMap<String, String> result = SmsUtil.SendSms(user.getMobile(), SmsTempID,content);
+		if(result.get("statusCode").equals("000000")){
+			successSet.add(user.getMobile());
 		}
+		if(!result.get("statusCode").equals("000000")){
+			failSet.add(user.getMobile());
+			MarketSmsFail marketSmsFail=new MarketSmsFail();
+			marketSmsFail.setMarketSmsId(marketSmsId);
+			marketSmsFail.setUserId(user.getId());
+			marketSmsFail.setMobile(user.getMobile());
+			marketSmsFail.setSmsResult(result.get("statusCode"));
+			marketSmsFail.setSmsMsg(result.get("msg"));
+			marketSmsFail.setAddTime(TimeStampUtil.getNowSecond());
+			marketSmsFailMapper.insert(marketSmsFail);
+		}
+		System.out.println(result.get("statusCode")+"--"+result.get("msg")+"--"+user.getMobile()+"--"+SmsTempID);
 		
 		return  new AsyncResult<Boolean>(true);
+	}
+	
+	public int successNum() {
+		return successSet.size();
+	}
+	
+	public int failNum(){
+		return failSet.size();
 	}
 
 }
