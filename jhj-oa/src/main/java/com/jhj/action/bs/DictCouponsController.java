@@ -369,7 +369,7 @@ public class DictCouponsController extends BaseController {
             DictCoupons dictCoupon = couponService.selectByPrimaryKey(flag);
             dictCoupon.setServiceType(dictCoupons.getServiceType());
             dictCoupon.setValue(dictCoupons.getValue());
-//            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
+            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
 //            dictCoupon.setDescription(dictCoupons.getDescription());
 //            dictCoupon.setIntroduction(dictCoupons.getIntroduction());
             dictCoupon.setRangMonth(dictCoupons.getRangMonth());
@@ -383,13 +383,17 @@ public class DictCouponsController extends BaseController {
             dictCoupon.setCardPasswd(RandomUtil.randomCode(8));
             dictCoupon.setServiceType(dictCoupons.getServiceType());
             dictCoupon.setValue(dictCoupons.getValue());
-//            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
+            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
             PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
-            serviceTypeVo.setServiceTypeId(Long.parseLong(dictCoupons.getServiceType()));
-            serviceTypeVo.setEnable((short)1);
-            PartnerServiceType serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo).get(0);
+            if(Long.parseLong(dictCoupons.getServiceType())>0L){
+            	serviceTypeVo.setServiceTypeId(Long.parseLong(dictCoupons.getServiceType()));
+            	serviceTypeVo.setEnable((short)1);
+            	PartnerServiceType serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo).get(0);
+            	dictCoupon.setIntroduction(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
+            }else{
+            	dictCoupon.setIntroduction(dictCoupons.getValue()+"元全部品类券");
+            }
 //            dictCoupon.setDescription(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
-            dictCoupon.setIntroduction(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
             dictCoupon.setRangMonth(dictCoupons.getRangMonth());
             dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
             dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
