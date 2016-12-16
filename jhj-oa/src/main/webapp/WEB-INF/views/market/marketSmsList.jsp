@@ -39,7 +39,8 @@
                                 <th>发送时间</th>
                                 <th>短信ID</th>
                                 <th>用户类型</th>
-                                <th>发送数量(条)</th>
+                                <th>应发送数量(条)</th>
+                                <th>已发送数量(条)</th>
                                 <th>失败数量(条)</th>
                                 <th>成功率(%)</th>
                                 <th>操作</th>
@@ -52,12 +53,17 @@
                                     <td>${ item.smsTempId }</td>
                                     <td>${ item.userGroupType }</td>
                                     <td>${ item.totalSend }</td>
+                                    <td>${ item.totalSended }</td>
                                     <td>${ item.totalFail }</td>
-                                    <td><c:if test="${item.totalSended==0 && item.totalSend==0}">
-                                    		0%
+                                    <td>
+                                    	<c:if test="${item.totalSended==0 && item.totalFail==0}">
+                                    		-
                                         </c:if>
-                                        <c:if test="${item.totalSended!=0 && item.totalSend!=0}">
-                                    		${ item.totalSended/item.totalSend*100 }%
+                                        <c:if test="${item.totalSended > 0 && item.totalFail==0}">
+                                    		100%
+                                        </c:if>
+                                        <c:if test="${item.totalSended > 0 && item.totalFail > 0}">
+                                    		${ item.totalFail/item.totalSended*100 }%
                                         </c:if>
                                         
                                     </td>
