@@ -211,7 +211,7 @@ function saveFrom() {
 	params.order_op_from = $("#orderOpFrom").val();
 	params.serviceHour = $("#serviceHour").val();
 	var serviceDate = $("#serviceDate").val();
-	params.service_date = moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
+	params.service_date = moment(serviceDate + ":00", "YYYY-MM-DD HH:mm:ss").unix();
 	params.remarks = $("#remarks").val();
 	var orderPayType = $("#orderPayType").val();
 	params.service_addons_datas = $("#serviceAddonDatas").val();

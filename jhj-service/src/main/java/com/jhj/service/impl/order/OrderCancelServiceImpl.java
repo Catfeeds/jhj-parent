@@ -15,6 +15,7 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
@@ -28,6 +29,7 @@ import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
@@ -77,6 +79,9 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 	
 	@Autowired
 	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private SettingService settingService;
 
 	// 取消派工
 	@Override
@@ -358,6 +363,18 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		
 		orgStaffFinance.setTotalIncoming(totalIncomingend);
 		orgStaffFinance.setTotalDept(totalDept);
+		
+		//如果取消订单之后，欠款少于1000，则自动退出黑名单.
+		BigDecimal maxOrderDept = new BigDecimal(1000);
+		JhjSetting jhjSetting = settingService.selectBySettingType("total-dept-blank");
+		if (jhjSetting != null) {
+			maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
+		}
+		
+		if (maxOrderDept.compareTo(maxOrderDept) == 1) {
+			orgStaffFinance.setIsBlack((short) 1);
+		}
+		
 		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 		if (orgStaffFinance.getId() > 0L) {
 			orgStaffFinanceService.updateByPrimaryKeySelective(orgStaffFinance);

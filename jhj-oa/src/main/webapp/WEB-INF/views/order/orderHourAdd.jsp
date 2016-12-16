@@ -168,7 +168,8 @@
 										</div>
 										<div class="form-actions fluid">
 											<div class="col-md-offset-3 col-md-3">
-												<button type="button" class="btn btn-success" id="submitForm" onclick="saveFrom()">保存</button>
+												
+												<input type="button" class="btn btn-success" onclick="saveFrom()" value="保存"/>
 											</div>
 										</div>
 									</div>

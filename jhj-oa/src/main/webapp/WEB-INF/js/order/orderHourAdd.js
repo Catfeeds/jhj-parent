@@ -207,12 +207,19 @@ function saveFrom() {
 	params.orderPay = $("#orderPay").val();
 	params.orderFrom = $("#orderForm").val();
 	var serviceDate = $("#serviceDate").val();
-	params.serviceDate = moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
+//	console.log("serviceDate Str = " + serviceDate);
+	
+	
+	params.serviceDate = moment(serviceDate + ":00", "YYYY-MM-DD HH:mm:ss").unix();
 	params.serviceHour = $("input[name='serviceHour']").val();
 	params.staffNums = $("#staffNums").val();
 	params.orderOpFrom = $("select[name='orderOpFrom']").val();
 	params.remarks = $("#remarks").val();
 	var order_pay_type = $("#orderPayType").val();
+	
+//	console.log("servcieDate = " + serviceDate);
+//	console.log(params);
+//	return false;
 	if ($('#orderHourForm').validate().form()) {
 		$('#submitForm').attr('disabled', "true");
 		$.ajax({

@@ -43,6 +43,7 @@
                                 <th>已发送数量(条)</th>
                                 <th>失败数量(条)</th>
                                 <th>成功率(%)</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -67,6 +68,17 @@
                                         </c:if>
                                         
                                     </td>
+                                    <td>
+                                    	<c:if test="${item.totalSend == item.totalSended}">
+                                    		全部发送完成
+                                    	</c:if>
+                                    	
+                                    	<c:if test="${item.totalSend != item.totalSended}">
+                                    		发送中
+                                    	</c:if>
+                                    	
+                                    </td>	
+                                    
                                     <td><a href="add-marketsms?marketSmsId=${item.marketSmsId }">编辑</a></td>
                                 </tr>
                             </c:forEach>
