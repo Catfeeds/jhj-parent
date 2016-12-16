@@ -43,8 +43,7 @@ $('#selectedStaffs').on('itemRemoved', function(event) {
 
 // 提交派工修改
 $("#submitForm").on('click', function() {
-	console.log("submitForm click");
-	return false;
+
 	$('#submitForm').attr('disabled', "true");
 	var orderStatus = $("#orderStatus").val();
 	
