@@ -63,7 +63,7 @@
                                     		100%
                                         </c:if>
                                         <c:if test="${item.totalSended > 0 && item.totalFail > 0}">
-                                    		${ item.totalFail/item.totalSended*100 }%
+                                    		${ (item.totalSended - item.totalFail)/item.totalSended*100 }%
                                         </c:if>
                                         
                                     </td>
