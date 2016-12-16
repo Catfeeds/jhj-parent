@@ -36,6 +36,7 @@ import com.jhj.vo.market.MarketSmsSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Controller
@@ -158,7 +159,8 @@ public class MarketSmsController extends BaseController {
 			Long userId = u.getId();
 			if (sendedUserIds.contains(userId))
 				continue;
-
+			
+			if (StringUtil.isEmpty(u.getMobile())) continue;
 			sendMarketSmsService.allotSms(u, marketSms.getMarketSmsId(), smsTempId, content);
 
 			sendedNum++;
