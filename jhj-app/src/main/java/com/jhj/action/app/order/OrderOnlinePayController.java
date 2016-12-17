@@ -329,7 +329,7 @@ public class OrderOnlinePayController extends BaseController {
 		orderCardsService.updateOrderByOnlinePay(orderCards, tradeNo, tradeStatus, payAccount);
 		
 		//赠送相应的优惠劵到对于的用户账户
-		orderCardsService.sendCoupons(userId, orderCards.getId());
+		orderCardsService.sendCoupons(u.getId(), orderCards.getId());
 		
 		/*
 		 * 2016年4月15日17:06:44  新增短信
