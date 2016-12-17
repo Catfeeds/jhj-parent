@@ -50,7 +50,7 @@
         sParaTemp.put("seller_id", AlipayConfig.seller_id);
         sParaTemp.put("_input_charset", AlipayConfig.input_charset);
 		sParaTemp.put("payment_type", AlipayConfig.payment_type);
-		/* sParaTemp.put("notify_url", notifyUrl); */
+		sParaTemp.put("notify_url", notifyUrl);
 		sParaTemp.put("return_url", returnUrl);
 		sParaTemp.put("out_trade_no", out_trade_no);
 		sParaTemp.put("subject", subject);
