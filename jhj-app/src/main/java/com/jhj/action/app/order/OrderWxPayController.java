@@ -27,7 +27,6 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
-import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.wx.utils.MD5Util;
 import com.meijia.wx.utils.ServletUtil;
@@ -62,11 +61,9 @@ public class OrderWxPayController extends BaseController {
 	private OrderPriceExtService orderPriceExtService;
 
 	@RequestMapping(value = "wxpay", method = RequestMethod.GET)
-	public boolean jsPay(HttpServletRequest request, HttpServletResponse response,
+	public void jsPay(HttpServletRequest request, HttpServletResponse response,
 	// 微信认证code
 			@RequestParam(value = "code", required = false, defaultValue = "") String code,
-			
-//			@RequestParam("code") String code,
 
 			// 商务订单号
 			@RequestParam("orderId") Long orderId,
@@ -82,13 +79,6 @@ public class OrderWxPayController extends BaseController {
 
 		System.out.println("=====WX pay Start======");
 		System.out.println("code = " + code);
-		
-//		if (!StringUtil.isEmpty(code)) {
-//			System.out.println("微信code为空");
-//			return false;
-//		}
-		
-		
 		String orderNo = "";
 		Long userId = 0L;
 		
@@ -282,6 +272,5 @@ public class OrderWxPayController extends BaseController {
 			// request.setAttribute("tips", "微信验证失败,请重新支付!");
 			// ServletUtil.forward(request, response, errorUrl);
 		}
-		return true;
 	}
 }
