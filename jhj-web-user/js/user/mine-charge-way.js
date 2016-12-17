@@ -57,17 +57,15 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 			return;
 		}
 		var orderId = result.data.id;
-		var orderNo = result.data.order_no;
+		var orderNo = result.data.card_order_no;
 		var orderPay = result.data.card_pay;
 		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {
-			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_order_api.jsp";
+			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_card_order.jsp";
 			alipayUrl +="?orderNo="+orderNo;
 			alipayUrl +="&orderPay="+orderPay;
-			alipayUrl +="&userCouponId=0";
-			alipayUrl +="&orderType=4";
-			alipayUrl +="&serviceTypeId=0";
+			alipayUrl +="&orderType=0";
 			alipayUrl +="&payOrderType=1";
 			location.href = alipayUrl;
 		}
@@ -78,7 +76,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 			wxPayUrl +="?orderId="+orderId;
 			wxPayUrl +="&userCouponId=0";
 			wxPayUrl +="&orderType=4";
-			wxPayUrl +="&payOrderType=2";
+			wxPayUrl +="&payOrderType=1";
 			location.href = wxPayUrl;
 		}
 	};
@@ -88,7 +86,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 		var postdata = {};
 		postdata.user_id = userId;
 		postdata.card_type = cardId;
-		postdata.pay_type = 2;
+		postdata.pay_type = orderPayType;
 		postdata.staff_code=$$("#staffCode").val();
 
 		$$.ajax({

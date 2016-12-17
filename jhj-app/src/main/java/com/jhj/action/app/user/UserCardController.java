@@ -74,9 +74,12 @@ public class UserCardController extends BaseController {
 		if(staffCode!=null && !staffCode.equals("")){
 			StaffSearchVo vo=new StaffSearchVo();
 			vo.setStaffCode(staffCode);
-			OrgStaffs staff = orgStaffService.selectBySearchVo(vo).get(0);
-			record.setParentId(staff.getParentOrgId());
-			record.setOrgId(staff.getOrgId());
+			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(vo);
+			if(staffList!=null && staffList.size()>0){
+				OrgStaffs staff = staffList.get(0);
+				record.setParentId(staff.getParentOrgId());
+				record.setOrgId(staff.getOrgId());
+			}
 		}
 		record.setReferee(staffCode);
 		orderCardsService.insert(record);

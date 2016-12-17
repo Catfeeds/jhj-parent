@@ -1,5 +1,6 @@
 package com.jhj.action.app.order;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderPriceExtService;
@@ -28,6 +31,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -61,6 +65,9 @@ public class OrderOnlinePayController extends BaseController {
 
 	@Autowired
 	private UserCouponsService userCouponService;
+	
+	@Autowired
+	private OrderCardsService orderCardsService;
 
 	// 7. 订单在线支付成功同步接口
 	/**
@@ -267,4 +274,81 @@ public class OrderOnlinePayController extends BaseController {
 			return result;
 
 		}
+	
+	/*
+	 * 充值卡在線支付寶支付
+	 * 
+	 * */
+	@RequestMapping(value = "online_pay_cardOrder_notify", method = RequestMethod.POST)
+	public AppResultData<Object> OnlinePayCardOrder(@RequestParam(value = "user_id", defaultValue = "0") Long userId,
+			@RequestParam(value = "mobile", defaultValue = "0") String mobile, @RequestParam("order_no") String orderNo,
+			@RequestParam("pay_type") Short payType, @RequestParam(value = "pay_order_type", required = false, defaultValue = "1") int payOrderType,
+			@RequestParam("notify_id") String notifyId, @RequestParam("notify_time") String notifyTime, @RequestParam("trade_no") String tradeNo,
+			@RequestParam("trade_status") String tradeStatus, @RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount) {
+
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+		// 判断如果不是正确支付状态，则直接返回.
+		Boolean paySuccess = OneCareUtil.isPaySuccess(tradeStatus);
+		if (paySuccess == false) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ORDER_PAY_NOT_SUCCESS_MSG);
+			return result;
+		} else if (tradeStatus.equals("WAIT_BUYER_PAY")) {
+			result.setStatus(Constants.SUCCESS_0);
+			result.setMsg(ConstantMsg.ORDER_PAY_WAIT_MSG);
+			return result;
+		}
+
+		// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
+		OrderCards orderCards = orderCardsService.selectByOrderCardsNo(orderNo);
+
+		if (orderCards == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ORDER_PAY_NOT_SUCCESS_MSG);
+			return result;
+		}
+		if (orderCards != null && orderCards.getOrderStatus().equals(Constants.PAY_STATUS_1)) {
+			return result;
+		}
+
+		Users u = userService.selectByPrimaryKey(orderCards.getUserId());
+
+		// 判断是否为注册用户，非注册用户返回 999
+		if (u == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
+			return result;
+		}
+
+		Long updateTime = TimeStampUtil.getNow() / 1000;
+
+		orderCards.setOrderStatus(Constants.PAY_STATUS_1);
+		orderCards.setUpdateTime(updateTime);
+		// 更新orders,orderPrices,Users,插入消费明细UserDetailPay
+		orderCardsService.updateOrderByOnlinePay(orderCards, tradeNo, tradeStatus, payAccount);
+		
+		//赠送相应的优惠劵到对于的用户账户
+		orderCardsService.sendCoupons(userId, orderCards.getId());
+		
+		/*
+		 * 2016年4月15日17:06:44  新增短信
+		 * 
+		 * 充值成功短信通知
+		 * 
+		 */
+		//充值时间
+		
+		String serviceTime = TimeStampUtil.timeStampToDateStr(TimeStampUtil.getNow(), "MM月-dd日HH:mm");
+		
+		//充值金额
+		BigDecimal value = orderCards.getCardPay();
+		
+		String[] paySuccessForUser = new String[] {serviceTime,value.toString()};
+		
+		SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_CHARGE_PAY_SUCCESS, paySuccessForUser);
+
+		return result;
+
+	}
 }
