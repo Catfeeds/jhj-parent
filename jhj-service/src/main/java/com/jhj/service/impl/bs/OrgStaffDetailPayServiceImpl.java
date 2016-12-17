@@ -114,7 +114,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		
 		String orderTypeName = OneCareUtil.getOrderTypeForStaffDetailPay(orgStaffDetailPay.getOrderType());
 		vo.setOrderTypeName(orderTypeName);
-		
+		vo.setOrderPay("+" + orgStaffDetailPay.getOrderPay());
 		// 订单金额
 		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0
 			|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_1
