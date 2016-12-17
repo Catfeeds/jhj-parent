@@ -63,8 +63,10 @@ public class OrderWxPayController extends BaseController {
 
 	@RequestMapping(value = "wxpay", method = RequestMethod.GET)
 	public boolean jsPay(HttpServletRequest request, HttpServletResponse response,
-	// 微信认证code			
-			@RequestParam("code") String code,
+	// 微信认证code
+			@RequestParam(value = "code", required = false, defaultValue = "") String code,
+			
+//			@RequestParam("code") String code,
 
 			// 商务订单号
 			@RequestParam("orderId") Long orderId,
@@ -81,10 +83,10 @@ public class OrderWxPayController extends BaseController {
 		System.out.println("=====WX pay Start======");
 		System.out.println("code = " + code);
 		
-		if (!StringUtil.isEmpty(code)) {
-			System.out.println("微信code为空");
-			return false;
-		}
+//		if (!StringUtil.isEmpty(code)) {
+//			System.out.println("微信code为空");
+//			return false;
+//		}
 		
 		
 		String orderNo = "";
