@@ -8,6 +8,12 @@ public class OrderSearchVo {
 	
 	private Long staffId;
 	
+	private String staffName;
+	
+	private String staffMobile;
+	
+	private Long selectStaff;
+	
 	private Long userId;
 	
 	private String mobile;
@@ -56,6 +62,10 @@ public class OrderSearchVo {
 	private Long startTime;
 	
 	private Long endTime;
+	
+	private String startTimeStr;
+	
+	private String endTimeStr;
 	
 	private Long parentId;
 	
@@ -324,6 +334,46 @@ public class OrderSearchVo {
 
 	public void setOrderExtType(Short orderExtType) {
 		this.orderExtType = orderExtType;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public String getStaffMobile() {
+		return staffMobile;
+	}
+
+	public void setStaffMobile(String staffMobile) {
+		this.staffMobile = staffMobile;
+	}
+
+	public Long getSelectStaff() {
+		return selectStaff;
+	}
+
+	public void setSelectStaff(Long selectStaff) {
+		this.selectStaff = selectStaff;
+	}
+
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
 	}
 	
 }

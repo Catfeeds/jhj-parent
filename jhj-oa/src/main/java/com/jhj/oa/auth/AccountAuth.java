@@ -6,6 +6,8 @@ public class AccountAuth {
 	private String name;
 	private String username;
 	private AccountRole accountRole;
+	
+	private Long parentOrgId;
 
 	public AccountAuth(Long id, String name, String username){
 		this.id=id;
@@ -37,6 +39,14 @@ public class AccountAuth {
 	}
 	public AccountRole getAccountRole(){
 		return this.accountRole;
+	}
+
+	public Long getParentOrgId() {
+		return parentOrgId;
+	}
+
+	public void setParentOrgId(Long parentOrgId) {
+		this.parentOrgId = parentOrgId;
 	}
 
 }

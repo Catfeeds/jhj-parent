@@ -206,8 +206,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 		for (Long staffId : staffIds) {
 			staff = orgStaffService.selectByPrimaryKey(staffId);
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
+//			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+//					Constants.ALERT_STAFF_MSG);
 			
 			//发送短信
 			String[] smsContent = new String[] { timeStr };
@@ -329,8 +329,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 
 		if (doOrderDispatch.equals(true)) {
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
+//			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+//					Constants.ALERT_STAFF_MSG);
 			
 			//发送短信
 			String[] smsContent = new String[] { timeStr };

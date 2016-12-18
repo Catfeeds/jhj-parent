@@ -3,7 +3,7 @@ package com.jhj.service.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffDetailDept;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 
 
 /**
@@ -28,7 +28,7 @@ public interface OrgStaffDetailDeptService {
     
     OrgStaffDetailDept initOrgStaffDetailDept();
 
-	List<OrgStaffDetailDept> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
+	List<OrgStaffDetailDept> selectBySearchVo(OrderSearchVo searchVo);
 
 
 }

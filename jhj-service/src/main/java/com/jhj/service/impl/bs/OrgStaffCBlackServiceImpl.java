@@ -16,7 +16,7 @@ import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 
@@ -100,9 +100,9 @@ public class OrgStaffCBlackServiceImpl implements OrgStaffBlackService {
 	}
 
 	@Override
-	public List<OrgStaffBlack> selectByListPage(OrgStaffDetailPaySearchVo searchVo,int pageNo, int pageSize) {
+	public List<OrgStaffBlack> selectByListPage(OrderSearchVo searchVo,int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
-		List<OrgStaffBlack> list = orgStaffBlackMapper.selectVoByListPage(searchVo);
+		List<OrgStaffBlack> list = orgStaffBlackMapper.selectByListPage(searchVo);
 		
 		return list;
 		

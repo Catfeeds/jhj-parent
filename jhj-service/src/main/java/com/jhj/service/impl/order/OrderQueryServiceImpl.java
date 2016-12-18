@@ -764,6 +764,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			searchVo.setOrderFrom((short)1);
 			searchVo.setOrderOpFrom(null);
 		}
+		
+		//服务人员姓名选择
+		if (searchVo.getSelectStaff() != null && searchVo.getSelectStaff() > 0L) {
+			searchVo.setStaffId(searchVo.getSelectStaff());
+		}
+		
 		return searchVo;
 	}
 

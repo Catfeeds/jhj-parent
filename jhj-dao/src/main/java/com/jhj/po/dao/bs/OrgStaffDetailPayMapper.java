@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffDetailPay;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 
 public interface OrgStaffDetailPayMapper {
@@ -20,12 +20,9 @@ public interface OrgStaffDetailPayMapper {
 
     int updateByPrimaryKey(OrgStaffDetailPay record);
 
-	List<OrgStaffDetailPay> selectByStaffIdAndTimeListPage(
-			OrgStaffPaySearchVo searchVo);
+	List<OrgStaffDetailPay> selectByListPage(OrderSearchVo searchVo);
 
-	List<OrgStaffDetailPay> selectVoByListPage(OrgStaffDetailPaySearchVo searchVo);
-
-	List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
+	List<OrgStaffDetailPay> selectBySearchVo(OrderSearchVo searchVo);
 	
-	Map<String,Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo);
+	Map<String,Double> selectTotalData(OrderSearchVo searchVo);
 }

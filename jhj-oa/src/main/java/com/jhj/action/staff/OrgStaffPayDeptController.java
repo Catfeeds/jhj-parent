@@ -76,6 +76,13 @@ public class OrgStaffPayDeptController extends BaseController {
 		if (!StringUtil.isEmpty(paramOrgId) && Long.valueOf(paramOrgId)>0L) {
 			searchVo.setOrgId(Long.valueOf(paramOrgId));
 		} 
+		
+		String selectStaff = request.getParameter("selectStaff");
+		if (!StringUtil.isEmpty(selectStaff)) {
+			Long staffId = Long.valueOf(selectStaff);
+			searchVo.setStaffId(staffId);
+		}
+		
 		PageInfo result = orgStaffFinanceService.selectByListPage(searchVo, pageNo, pageSize);
 		
 		//统计服务人员欠款

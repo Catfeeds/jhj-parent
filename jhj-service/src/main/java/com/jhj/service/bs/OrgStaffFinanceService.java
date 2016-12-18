@@ -6,10 +6,12 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
+import com.jhj.vo.staff.OrgStaffIncomingVo;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -46,5 +48,7 @@ public interface OrgStaffFinanceService {
 	
 	//统计服务人员欠款
 	Map<String,Object> totalMoney(OrgStaffFinanceSearchVo searchVo);
+
+	OrgStaffIncomingVo getStaffInComingDetail(OrgStaffs orgStaff, Orders order, OrderDispatchs orderDispatch);
 
 }

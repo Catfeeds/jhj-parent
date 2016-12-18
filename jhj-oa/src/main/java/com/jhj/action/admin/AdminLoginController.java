@@ -189,20 +189,24 @@ public class AdminLoginController extends BaseController {
     		else
     			permissionMenus.add(new PermissionMenu(authority.getId(),authority.getName(),null,null,authority.getName(),authority.getMatchUrl(), authority.getUrl()));
     	}
-
-    	accountRole.setAuthorityMenus(authorityMenus);
+		
+		accountRole.setAuthorityMenus(authorityMenus);
     	accountRole.setPermissionMenus(permissionMenus);
-    	accountAuth.setAccountRole(accountRole);
-    	AuthHelper.setSessionAccountAuth(request, accountAuth);
-    	
+
     	//获得是否有相应的门店，此为店长的权限会有相应的限制
     	AdminRefOrg adminRefOrg = adminRefOrgService.selectByAdminId(userId);
     	AuthHelper.setSessionLoginOrg(request, 0L);
+    	accountAuth.setParentOrgId(0L);
 
     	if (adminRefOrg != null) {
     		AuthHelper.setSessionLoginOrg(request, adminRefOrg.getOrgId());
-
+    		accountAuth.setParentOrgId(adminRefOrg.getOrgId());
     	}
+    	
+    	
+    	accountAuth.setAccountRole(accountRole);
+    	
+    	AuthHelper.setSessionAccountAuth(request, accountAuth);
     	
         String returnUrl = ServletRequestUtils.getStringParameter(request, "returnUrl", null);
         if(returnUrl==null){

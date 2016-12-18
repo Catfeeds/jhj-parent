@@ -1,7 +1,12 @@
 package com.jhj.action.staff;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -9,12 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,13 +58,19 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceVo;
+import com.jhj.vo.staff.OrgStaffIncomingVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.ExcelUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.poi.ExcelTools;
+import com.meijia.utils.poi.HssExcelTools;
+import com.meijia.utils.poi.XssExcelTools;
 
 @Controller
 @RequestMapping(value = "/staff")
@@ -88,40 +105,61 @@ public class OrgStaffExportController extends BaseController {
 	//服务人员所有订单明细表
 	@AuthPassport
 	@RequestMapping(value = "/export-order", method = RequestMethod.GET)
-	public String exportOrder(Model model, HttpServletRequest request, Long staffId) throws Exception {
+	public String exportOrder(Model model, HttpServletRequest request, HttpServletResponse response, OrderSearchVo searchVo) throws Exception {
+		
+		Long staffId = 0L;
+		if (searchVo.getStaffId() != null) {
+			staffId = searchVo.getStaffId();
+		} else {
+			staffId = searchVo.getSelectStaff();
+		}
+		
+		String startTimeStr = searchVo.getStartTimeStr();
+		Long startServiceTime = 0L;
+		if (!StringUtil.isEmpty(startTimeStr)) {
+			startServiceTime = TimeStampUtil.getMillisOfDayFull(startTimeStr+" 00:00:00") / 1000;
+		}
+
+		Long endServiceTime = 0L;
+		String endTimeStr = searchVo.getEndTimeStr();
+		if (!StringUtil.isEmpty(endTimeStr)) {
+			endServiceTime = TimeStampUtil.getMillisOfDayFull(endTimeStr+" 23:59:59") / 1000;
+		}
+		
 		
 		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
 		if (orgStaff == null) return null;
 		
-		Long orgId = orgStaff.getOrgId();
-		Long parentId = orgStaff.getParentOrgId();
+		OrderDispatchSearchVo OrderDispatchSearchVo = new OrderDispatchSearchVo();
+		OrderDispatchSearchVo.setStaffId(staffId);
+		OrderDispatchSearchVo.setDispatchStatus((short) 1);
 		
-		Orgs org = orgService.selectByPrimaryKey(orgId);
-		Orgs parentOrg = orgService.selectByPrimaryKey(parentId);
+		if (startServiceTime > 0L) OrderDispatchSearchVo.setStartServiceTime(startServiceTime);
+		if (endServiceTime > 0L) OrderDispatchSearchVo.setEndServiceTime(endServiceTime);
 		
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setStaffId(staffId);
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(OrderDispatchSearchVo);
 		
 		if (orderDispatchs.isEmpty()) return null;
 		
-		List<PartnerServiceType> serviceTypes = partnerServiceTypeService.selectAll();
-		
+
 		String cpath = request.getSession().getServletContext().getRealPath("/WEB-INF") + "/attach/";
 		String templateName = "服务人员订单明细表.xlsx";
 		
-		InputStream in = new FileInputStream(cpath + templateName);
-
-		HSSFWorkbook wb = (HSSFWorkbook) ExcelUtil.loadWorkbook(templateName, in);
-		HSSFSheet sh = wb.getSheetAt(0);
-		int rows = sh.getPhysicalNumberOfRows();
+		XssExcelTools excel = new XssExcelTools(cpath + templateName, 0);
+		XSSFSheet sh = excel.getXssSheet();
+		
+		XSSFCellStyle contentStyle = excel.getContentStyle(excel.getXssWb());
 		
 		int rowNum = 1;
+		
+		//订单总金额合计
+		BigDecimal totalOrderMoneyAll = new BigDecimal(0);
+		//订单总收入合计
+		BigDecimal totalOrderIncomingAll = new BigDecimal(0);
 		for (int i = 0; i < orderDispatchs.size(); i++) {
+
 			OrderDispatchs item = orderDispatchs.get(i);
 			Long orderId = item.getOrderId();
-			String orderNo = item.getOrderNo();
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			
 			if (order == null) continue;
@@ -132,84 +170,176 @@ public class OrgStaffExportController extends BaseController {
 				 orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) 
 				continue;
 			
+			OrgStaffIncomingVo vo = orgStaffFinanceService.getStaffInComingDetail(orgStaff, order, item);
 			
-			HSSFRow rowData = sh.getRow(rowNum);
+			XSSFRow rowData = sh.createRow(rowNum);
+
+			for(int j = 0; j <= 26; j++) {
+				rowData.createCell(j);
+				XSSFCell c = rowData.getCell(j);
+				c.setCellStyle(contentStyle);
+			}
 			
 			//序号
-			HSSFCell cellNo = rowData.getCell(0);
+			
+			XSSFCell cellNo = rowData.getCell(0);
+			
 			cellNo.setCellValue(String.valueOf(rowNum));
 			
 			//门店
-			HSSFCell cellParentOrg = rowData.getCell(1);
-			cellParentOrg.setCellValue(parentOrg.getOrgName());
+			XSSFCell cellParentOrg = rowData.getCell(1);
+//			cellParentOrg.setCellStyle(contentStyle);
+			cellParentOrg.setCellValue(vo.getParentOrgName());
 			
 			//云店
-			HSSFCell cellOrg = rowData.getCell(2);
-			cellOrg.setCellValue(org.getOrgName());
+			XSSFCell cellOrg = rowData.getCell(2);
+//			cellOrg.setCellStyle(contentStyle);
+			cellOrg.setCellValue(vo.getOrgName());
 			
 			//服务人员
-			HSSFCell cellStaffName = rowData.getCell(3);
-			cellStaffName.setCellValue(orgStaff.getName());
+			XSSFCell cellStaffName = rowData.getCell(3);
+//			cellStaffName.setCellStyle(contentStyle);
+			cellStaffName.setCellValue(vo.getStaffName());
 			
 			//服务人员手机号
-			HSSFCell cellStaffMobile = rowData.getCell(4);
-			cellStaffMobile.setCellValue(orgStaff.getMobile());
+			XSSFCell cellStaffMobile = rowData.getCell(4);
 			
+			cellStaffMobile.setCellValue(vo.getStaffMobile());
+//			cellStaffMobile.setCellStyle(contentStyle);
 			//订单号
-			HSSFCell cellOrderNo = rowData.getCell(5);
-			cellOrderNo.setCellValue(item.getOrderNo());
+			XSSFCell cellOrderNo = rowData.getCell(5);
+//			cellOrderNo.setCellStyle(contentStyle);
+			cellOrderNo.setCellValue(vo.getOrderNo());
 			
 			//下单时间
-			Long addTime = order.getAddTime();
-			String addTimeStr = TimeStampUtil.timeStampToDateStr(addTime * 1000, "yyyy-MM-dd HH:mm");
-			HSSFCell cellOrderAddTime = rowData.getCell(6);
-			cellOrderAddTime.setCellValue(addTimeStr);
+			XSSFCell cellOrderAddTime = rowData.getCell(6);
+			cellOrderAddTime.setCellStyle(contentStyle);
+//			cellOrderAddTime.setCellValue(vo.getAddTimeStr());
 			
 			//服务类型
-			Long serviceTypeId = order.getServiceType();
-			PartnerServiceType serviceType = partnerServiceTypeService.findServiceType(serviceTypes, serviceTypeId);
-			String orderTypeName = "";
-			if (serviceType != null) orderTypeName = serviceType.getName();
-			HSSFCell cellOrderTypeName = rowData.getCell(7);
-			cellOrderTypeName.setCellValue(orderTypeName);
+			XSSFCell cellOrderTypeName = rowData.getCell(7);
+//			cellOrderTypeName.setCellStyle(contentStyle);
+			cellOrderTypeName.setCellValue(vo.getOrderTypeName());
 			
 			//服务日期
-			String serviceDateStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "yyyy-MM-dd HH:mm");
-			HSSFCell cellServiceDate = rowData.getCell(8);
-			cellServiceDate.setCellValue(serviceDateStr);
+			XSSFCell cellServiceDate = rowData.getCell(8);
+//			cellServiceDate.setCellStyle(contentStyle);
+			cellServiceDate.setCellValue(vo.getServiceDateStr());
 			
 			//服务时长
-			HSSFCell cellServiceHour = rowData.getCell(9);
-			cellServiceHour.setCellValue(String.valueOf(order.getServiceHour()));
+			XSSFCell cellServiceHour = rowData.getCell(9);
+//			cellServiceHour.setCellStyle(contentStyle);
+			cellServiceHour.setCellValue(String.valueOf(vo.getServiceHour()));
+			
 			
 			//派工人数
-			HSSFCell cellStaffNum = rowData.getCell(10);
-			cellStaffNum.setCellValue(String.valueOf(order.getStaffNums()));
+			XSSFCell cellStaffNum = rowData.getCell(10);
+//			cellStaffNum.setCellStyle(contentStyle);
+			cellStaffNum.setCellValue(String.valueOf(vo.getStaffNum()));
 			
 			//服务地址
-			Long addrId = order.getAddrId();
-			UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
-			String addr = "";
-			if (userAddrs != null) addr = userAddrs.getName()+""+userAddrs.getAddr();
-			HSSFCell cellAddr = rowData.getCell(11);
-			cellAddr.setCellValue(addr);
+			XSSFCell cellAddr = rowData.getCell(11);
+//			cellAddr.setCellStyle(contentStyle);
+			cellAddr.setCellValue(vo.getAddr());
 			
 			//用户手机号,是否为会员
-			Long userId = order.getUserId();
-			Users u = userService.selectByPrimaryKey(userId);
-			String mobile = "";
-			String isVipStr = "否";
-			if (u != null) {
-				mobile = u.getMobile();
-				if (u.getIsVip() == 1) isVipStr = "是";
-			}
-			HSSFCell cellMobile = rowData.getCell(12);
-			cellMobile.setCellValue(mobile);
+			XSSFCell cellMobile = rowData.getCell(12);
 			
-			HSSFCell cellIsVip = rowData.getCell(13);
-			cellIsVip.setCellValue(isVipStr);
+			cellMobile.setCellValue(vo.getUserMobile());
+//			cellMobile.setCellStyle(contentStyle);
+			
+			XSSFCell cellIsVip = rowData.getCell(13);
+//			cellIsVip.setCellStyle(contentStyle);
+			cellIsVip.setCellValue(vo.getIsVipStr());
+			
+			//支付方式
+			XSSFCell cellPayType = rowData.getCell(14);
+//			cellPayType.setCellStyle(contentStyle);
+			cellPayType.setCellValue(vo.getPayTypeName());
+			
+			//原价
+			XSSFCell cellOrderMoney = rowData.getCell(15);
+//			cellOrderMoney.setCellStyle(contentStyle);
+			cellOrderMoney.setCellValue(MathBigDecimalUtil.round2(vo.getOrderMoney()));
+			
+			//优惠劵
+			XSSFCell cellCouponName = rowData.getCell(16);
+//			cellCouponName.setCellStyle(contentStyle);
+			cellCouponName.setCellValue(vo.getCouponName());
+			
+			//补差价
+			XSSFCell cellOrderPayExtDiff = rowData.getCell(17);
+//			cellOrderPayExtDiff.setCellStyle(contentStyle);
+			cellOrderPayExtDiff.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtDiff()));
+			
+			//加时
+			XSSFCell cellOrderPayExtOverWork = rowData.getCell(18);
+			cellOrderPayExtOverWork.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtOverWork()));
+//			cellOrderPayExtOverWork.setCellStyle(contentStyle);
+			//收入
+			XSSFCell cellOrderIncoming = rowData.getCell(19);
+			cellOrderIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getOrderIncoming()));
+//			cellOrderIncoming.setCellStyle(contentStyle);
+			//订单补贴
+			XSSFCell cellOrderPayCouon = rowData.getCell(20);
+			cellOrderPayCouon.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayCoupon()));
+//			cellOrderPayCouon.setCellStyle(contentStyle);
+			//原价
+			XSSFCell cellOrderExtDiffIncoming = rowData.getCell(21);
+			cellOrderExtDiffIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtDiffIncoming()));
+//			cellOrderExtDiffIncoming.setCellStyle(contentStyle);
+			//加时收入
+			XSSFCell cellOrderPayOverwokIncoming = rowData.getCell(22);
+			cellOrderPayOverwokIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtOverWorkIncoming()));
+//			cellOrderPayOverwokIncoming.setCellStyle(contentStyle);
+			//订单产生欠款
+			XSSFCell cellTotalOrderDept = rowData.getCell(23);
+			cellTotalOrderDept.setCellValue(MathBigDecimalUtil.round2(vo.getTotalOrderDept()));
+//			cellTotalOrderDept.setCellStyle(contentStyle);
+			//订单总金额
+			XSSFCell cellTotalOrderMoney = rowData.getCell(24);
+			cellTotalOrderMoney.setCellValue(MathBigDecimalUtil.round2(vo.getTotalOrderMoney()));
+//			cellTotalOrderMoney.setCellStyle(contentStyle);
+			totalOrderMoneyAll = totalOrderMoneyAll.add(vo.getTotalOrderMoney());
+			
+			//订单总收入
+			XSSFCell cellTotalOrderIncoming = rowData.getCell(25);
+			cellTotalOrderIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getTotalOrderIncoming()));
+//			cellTotalOrderIncoming.setCellStyle(contentStyle);
+			totalOrderIncomingAll = totalOrderIncomingAll.add(vo.getTotalOrderIncoming());
+			//订单备注
+			XSSFCell cellRemarks = rowData.getCell(26);
+//			cellRemarks.setCellStyle(contentStyle);
+			cellRemarks.setCellValue(vo.getRemarks());
+
+			
+			
+			rowNum++;
 		}
 		
+		//写入合计
+		XSSFRow rowData = sh.createRow(rowNum);
+
+		for(int j = 0; j <= 26; j++) {
+			rowData.createCell(j);
+			
+			sh.autoSizeColumn((short)j);
+		}
+		
+		XSSFCell cellHeji = rowData.getCell(23);
+		cellHeji.setCellStyle(contentStyle);
+		cellHeji.setCellValue("合计:");
+		
+		XSSFCell cellTotalOrderMoneyAll = rowData.getCell(24);
+		cellTotalOrderMoneyAll.setCellValue(MathBigDecimalUtil.round2(totalOrderMoneyAll));
+		cellTotalOrderMoneyAll.setCellStyle(contentStyle);
+		XSSFCell cellTotalOrderIncomingAll = rowData.getCell(25);
+		cellTotalOrderIncomingAll.setCellValue(MathBigDecimalUtil.round2(totalOrderIncomingAll));
+		cellTotalOrderIncomingAll.setCellStyle(contentStyle);
+		
+
+		String fileName = orgStaff.getName() + "-订单收入明细表.xls";
+		excel.downloadExcel(response, fileName);
 		
 		return null;
 	}

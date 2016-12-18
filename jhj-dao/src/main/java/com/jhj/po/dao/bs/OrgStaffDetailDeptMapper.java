@@ -3,7 +3,7 @@ package com.jhj.po.dao.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffDetailDept;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 
 public interface OrgStaffDetailDeptMapper {
     int deleteByPrimaryKey(Long id);
@@ -18,5 +18,5 @@ public interface OrgStaffDetailDeptMapper {
 
     int updateByPrimaryKey(OrgStaffDetailDept record);
 
-	List<OrgStaffDetailDept> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
+	List<OrgStaffDetailDept> selectBySearchVo(OrderSearchVo searchVo);
 }

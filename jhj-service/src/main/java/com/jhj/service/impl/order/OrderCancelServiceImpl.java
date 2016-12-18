@@ -35,7 +35,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -335,7 +335,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		if (totalOrderDept.compareTo(BigDecimal.ZERO) == 1) {
 			
 			
-			OrgStaffDetailPaySearchVo orgStaffDetailPaySearchVo = new OrgStaffDetailPaySearchVo();
+			OrderSearchVo orgStaffDetailPaySearchVo = new OrderSearchVo();
 			orgStaffDetailPaySearchVo.setOrderNo(order.getOrderNo());
 			orgStaffDetailPaySearchVo.setStaffId(staffId);
 			orgStaffDetailPaySearchVo.setOrderType(Constants.STAFF_DETAIL_DEPT_ORDER_TYPE_1);

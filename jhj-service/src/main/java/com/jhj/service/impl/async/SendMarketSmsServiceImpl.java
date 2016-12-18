@@ -21,6 +21,7 @@ import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Service
+@Async 
 public class SendMarketSmsServiceImpl implements SendMarketSmsService{
 	
 	@Autowired

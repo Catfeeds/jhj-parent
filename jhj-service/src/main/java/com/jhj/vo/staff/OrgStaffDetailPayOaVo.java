@@ -5,9 +5,7 @@ import com.jhj.po.model.bs.OrgStaffDetailPay;
 
 public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	
-	//private Long staffId;
-	//交易来源 订单收入 = order_type = 0  1 2 3 还款金额 = order_type = 4 提现金额 = order_type = 5 
-	//补贴金额 = order_type = 6 利息金额 = order_type = 7 各项核减 = order_type = 8
+
 	private String orderTypeName;
 	//服务人员姓名
 	private String name;
@@ -20,6 +18,10 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 //	private String addTimeStr;
 	
 	private String payTypeName;
+	
+	private String userMobile;
+	
+	private String addr;
 	
 	public String getOrderTypeName() {
 		return orderTypeName;
@@ -43,6 +45,22 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 
 	public void setPayTypeName(String payTypeName) {
 		this.payTypeName = payTypeName;
+	}
+
+	public String getUserMobile() {
+		return userMobile;
+	}
+
+	public void setUserMobile(String userMobile) {
+		this.userMobile = userMobile;
+	}
+
+	public String getAddr() {
+		return addr;
+	}
+
+	public void setAddr(String addr) {
+		this.addr = addr;
 	}
 	
 }

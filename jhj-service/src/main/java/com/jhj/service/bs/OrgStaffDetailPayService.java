@@ -4,13 +4,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.Orders;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
-
 
 /**
  *
@@ -22,31 +23,29 @@ import com.jhj.vo.staff.OrgStaffPayVo;
 public interface OrgStaffDetailPayService {
 	int deleteByPrimaryKey(Long id);
 
-    int insert(OrgStaffDetailPay record);
+	int insert(OrgStaffDetailPay record);
 
-    int insertSelective(OrgStaffDetailPay record);
+	int insertSelective(OrgStaffDetailPay record);
 
-    OrgStaffDetailPay selectByPrimaryKey(Long id);
+	OrgStaffDetailPay selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(OrgStaffDetailPay record);
+	int updateByPrimaryKeySelective(OrgStaffDetailPay record);
 
-    int updateByPrimaryKey(OrgStaffDetailPay record);
-    
-    OrgStaffDetailPay initStaffDetailPay();
+	int updateByPrimaryKey(OrgStaffDetailPay record);
 
-	List<OrgStaffDetailPay> selectByStaffIdAndTimeListPage(
-			OrgStaffPaySearchVo searchVo, int pageNo, int pageSize);
+	OrgStaffDetailPay initStaffDetailPay();
 
 	OrgStaffPayVo getOrgStaffPayVo(OrgStaffDetailPay orgStaffDetailPay);
 
-	List<OrgStaffDetailPay> selectVoByListPage(
-			OrgStaffDetailPaySearchVo searchVo, int pageNo, int pageSize);
+	PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
 
-	List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo);
-	
-	Map<String,Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo);
+	List<OrgStaffDetailPay> selectBySearchVo(OrderSearchVo searchVo);
+
+	Map<String, Double> selectTotalData(OrderSearchVo searchVo);
 
 	boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
 			String orderStatusStr, String remarks);
+
+	OrgStaffDetailPayOaVo getOrgStaffPayOaVo(OrgStaffDetailPay orgStaffDetailPay);
 
 }

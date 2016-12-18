@@ -566,7 +566,7 @@ public class OneCareUtil {
 			orderTypeName = "金额提现";
 			break;	
 		case 20:
-			orderTypeName = "订单取消-订单收入";
+			orderTypeName = "订单取消";
 			break;
 		case 21:
 			orderTypeName = "订单取消-订单差价收入";
