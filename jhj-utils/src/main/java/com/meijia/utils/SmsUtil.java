@@ -69,28 +69,29 @@ public class SmsUtil {
 		//*则13800000000手机号收到的短信内容是：【云通讯】您使用的是云通讯短信模板，您的验证码是6532，请于5分钟内正确输入     *
 		//*********************************************************************************************************************
 		HashMap<String, Object> ccp = null;
-//		ccp = restAPI.sendTemplateSMS(mobile,templeId ,content);
-
+		
 		HashMap<String, String> result = new HashMap<String, String>();
+		
+		ccp = restAPI.sendTemplateSMS(mobile,templeId ,content);
 
-//		String statusCode = (String) ccp.get("statusCode");
-//
-//		if("000000".equals(statusCode)) {
-//			result.put("statusCode", statusCode);
-//			String msg = null;
-//			HashMap<String,Object> data = (HashMap<String, Object>) ccp.get("data");
-//			Set<String> keySet = data.keySet();
-//			for(String key:keySet){
-//				Object object = data.get(key);
-//				msg += key +" = "+object.toString();
-//			}
-//			result.put("msg", msg);
-//		} else {
-//			result.put("statusCode", statusCode);
-//			result.put("msg", (String) ccp.get("statusMsg"));
-//		}
-		result.put("statusCode", "000000");
-		result.put("msg", "");
+		String statusCode = (String) ccp.get("statusCode");
+
+		if("000000".equals(statusCode)) {
+			result.put("statusCode", statusCode);
+			String msg = null;
+			HashMap<String,Object> data = (HashMap<String, Object>) ccp.get("data");
+			Set<String> keySet = data.keySet();
+			for(String key:keySet){
+				Object object = data.get(key);
+				msg += key +" = "+object.toString();
+			}
+			result.put("msg", msg);
+		} else {
+			result.put("statusCode", statusCode);
+			result.put("msg", (String) ccp.get("statusMsg"));
+		}
+//		result.put("statusCode", "000000");
+//		result.put("msg", "");
 		return result;
 	}
 	

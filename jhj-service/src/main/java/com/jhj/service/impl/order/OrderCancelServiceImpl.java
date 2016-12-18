@@ -13,6 +13,7 @@ import com.jhj.po.model.bs.OrgStaffDetailDept;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
@@ -184,14 +185,36 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 	// 1.退还用户金额, 3.记录交易明细
 	private boolean cancelOrderForUserRestMoney(Orders order, OrderPrices orderPrice) {
 		
+		//只有余额支付的订单，需要退回用户余额
+		Short payType = orderPrice.getPayType();
+		
+		
+		
 		Long userId = order.getUserId();
 		Users user = userService.selectByPrimaryKey(userId);
 		
-		BigDecimal orderPay = orderPrice.getOrderPay();
+
+		BigDecimal cancelOrderPay = new BigDecimal(0);
+		if (payType.equals(Constants.PAY_TYPE_0) ){
+			cancelOrderPay = orderPrice.getOrderPay();
+		}
 		
-		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
+		Long orderId = order.getId();
+		BigDecimal orderPayExt = new BigDecimal(0);
+		OrderSearchVo orderSearchVo = new OrderSearchVo();
+		orderSearchVo.setOrderId(orderId);
+		orderSearchVo.setOrderExtType((short) 0);
+		List<OrderPriceExt> orderPriceExts = orderPriceExtService.selectBySearchVo(orderSearchVo);
 		
-		BigDecimal cancelOrderPay = orderPay.add(orderPayExtDiff);
+		if (!orderPriceExts.isEmpty()) {
+			for (OrderPriceExt item : orderPriceExts) {
+				if (item.getPayType().equals(Constants.PAY_TYPE_0)) {
+					cancelOrderPay = cancelOrderPay.add(item.getOrderPay());
+				}
+			}
+		}
+		
+		if (cancelOrderPay.compareTo(BigDecimal.ZERO) == 0) return true;
 		
 		UserDetailSearchVo searchVo = new UserDetailSearchVo();
 		searchVo.setUserId(userId);
