@@ -223,6 +223,7 @@ function saveFrom() {
 			url : "/jhj-app/app/order/post_exp.json",
 			data : params,
 			dataType : "json",
+			async:false,
 			success : function(data) {
 				console.log(data);
 				var orderNo = data.data.order_no;
@@ -253,6 +254,7 @@ function savePay(orderPayType, orderNo, userId,service_type) {
 			url : "/jhj-app/app/order/post_pay.json",
 			data : data,
 			dataType : "json",
+			async:false,
 			success : function(data) {
 				alert("订单添加成功！");
 				if(service_type==62 || service_type==63 ||service_type==64 || service_type==65){

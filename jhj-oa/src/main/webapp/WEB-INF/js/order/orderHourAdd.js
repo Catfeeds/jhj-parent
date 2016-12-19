@@ -139,6 +139,7 @@ function getAddrByMobile(addrId) {
 	
 	if (mobile == "" || mobile == undefined) return false;
 	
+	
 	$("#addrId").find(":nth-child(2)").remove();
 	var reg = /^1[3,4,5,6,7,8,9]\d{9}$/;
 	if (reg.test(mobile)) {
@@ -227,6 +228,7 @@ function saveFrom() {
 			url : "/jhj-app/app/order/post_hour.json",
 			data : params,
 			dataType : "json",
+			async:false,
 			success : function(data) {
 				var orderNo = data.data.order_no;
 				var userId = data.data.user_id;
@@ -254,6 +256,7 @@ function savePay(orderPayType, orderNo, userId) {
 			url : "/jhj-app/app/order/post_pay.json",
 			data : data,
 			dataType : "json",
+			async:false,
 			success : function(data) {
 				alert("订单添加成功！");
 				location.href = "order-hour-list";
