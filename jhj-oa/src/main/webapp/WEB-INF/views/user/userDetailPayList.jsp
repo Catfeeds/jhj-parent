@@ -52,6 +52,18 @@
                           				订单号:<form:input path="orderNo" class="form-control"  maxlength="18"/>
                           		</div>
                           		
+                          		<div class="form-group" >
+                          				支付方式:<form:select path="payType" class="form-control">
+                          					<form:option value="">--请选择支付方式--</form:option>
+                          					<form:option value="0">余额支付</form:option>
+                          					<form:option value="1">支付宝支付</form:option>
+                          					<form:option value="2">微信支付</form:option>
+                          					<form:option value="5">优惠券兑换</form:option>
+                          					<form:option value="6">现金支付</form:option>
+                          					<form:option value="7">第三方支付</form:option>
+                          				</form:select>
+                          		</div>
+                          		
                           		<div class="form-group">
 	                          		开始时间：
 									<form:input path="startTimeStr" class="form-control form_datetime"
@@ -85,10 +97,10 @@
                               <tr>
                             		  <th >订单号</th>
 		                              <th >会员手机号</th>
-		                              <th >订单类型</th>
+		                              <th >服务品类</th>
 		                              <th>充值金额</th>
-		                              <th >支付金额</th>
-		                              <th>付款类型</th>
+		                              <th >消费金额</th>
+		                              <th>支付方式</th>
 		                              <th >添加时间</th>
                               </tr>
                               </thead>

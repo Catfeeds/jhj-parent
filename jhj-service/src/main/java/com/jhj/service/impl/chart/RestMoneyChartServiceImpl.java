@@ -217,12 +217,12 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		legendAll.add("余额用户");
 		legendAll.add("余额总金额");
 		//legendAll.add("余额总数");
-		legendAll.add("余额不足200");
-		legendAll.add("余额不足200占比");
-		legendAll.add("余额小于1k");
-		legendAll.add("余额小于1k占比");
-		legendAll.add("1K<余额<3K");
-		legendAll.add("1K<余额<3K占比");
+		legendAll.add("余额<200");
+		legendAll.add("余额<200占比");
+		legendAll.add("余额200~1k");
+		legendAll.add("余额200~1k占比");
+		legendAll.add("1K~3K");
+		legendAll.add("1K~3K占比");
 		legendAll.add("余额>3k");
 		legendAll.add("余额>3k占比");
 
@@ -230,9 +230,9 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		List<String> legend = new ArrayList<String>();
 		legend.add("余额用户");
 		//legend.add("余额总金额");
-		legend.add("余额不足200");
-		legend.add("余额小于1k");
-		legend.add("1K<余额<3K");
+		legend.add("余额<200");
+		legend.add("余额200~1k");
+		legend.add("1K~3K");
 		legend.add("余额>3k");
 
 		chartDataVo.setLegend(JSON.toJSONString(legend));
@@ -258,7 +258,6 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 			tableDatas.add(tableData);
 		}
 
-		
 		/*
 		 * 	关于 余额用户数、 余额总金额
 		 * 	 二者是需要累加统计的 
@@ -271,20 +270,15 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 		 *  
 		 */
 		
-		
-		
 		// 4-1.查询SQL获得统计数据 -- 用户余额人数count(*)
 			List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 
 		
 		
 //			//(1) 余额用户数
-//			List<ChartMapVo> haveRestUserNum = new ArrayList<ChartMapVo>();
 			
 			if (chartSearchVo.getStatType().equals("day")) {
 					statDatas = usersMapper.userResyMoneyByDay(chartSearchVo);
-					
-					
 				}
 
 			if (chartSearchVo.getStatType().equals("month")) {
@@ -302,7 +296,14 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 				//处理表格形式的数据.
 				for (HashMap<String, String> tableDataItem : tableDatas) {
 					String str = tableDataItem.get("series").split("-")[1];
-					if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
+					String series = chartSqlData.getSeries();
+					if(chartSearchVo.getSelectCycle()==1){
+						series = series.split("-")[1];
+					}
+					if(chartSearchVo.getSelectCycle()==12){
+						series = series.split("-")[1];
+					}
+					if (Integer.parseInt(str)==Integer.parseInt(series)) {
 
 						tableDataItem.put("余额用户", String.valueOf(chartSqlData.getTotal()));
 					}
@@ -313,8 +314,6 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 			statDatas = new ArrayList<ChartMapVo>();
 
 			if (chartSearchVo.getStatType().equals("day")) {
-				
-				
 				statDatas = usersMapper.selectUserAllResyMoneyByDay(chartSearchVo);
 			}
 
@@ -331,15 +330,20 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 				
 				for (HashMap<String, String> tableDataItem : tableDatas) {
 					String str = tableDataItem.get("series").split("-")[1];
-					if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {
-					
+					String series = chartSqlData.getSeries();
+					if(chartSearchVo.getSelectCycle()==1){
+						series = series.split("-")[1];
+					}
+					if(chartSearchVo.getSelectCycle()==12){
+						series = series.split("-")[1];
+					}
+					if (Integer.parseInt(str)==Integer.parseInt(series)) {
 						allRestMoney =  chartSqlData.getTotalMoney();
 						tableDataItem.put("余额总金额", MathBigDecimalUtil.round2(allRestMoney));
-					
-				}	
+					}	
 				}
 			}
-			// 4-2.查询SQL获得统计数据 -- 余额不足200的 ，用户人数count(*)
+			// 4-2.查询SQL获得统计数据 -- 余额<200的 ，用户人数count(*)
 			statDatas = new ArrayList<ChartMapVo>();
 
 			if (chartSearchVo.getStatType().equals("day")) {
@@ -357,9 +361,16 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 				//处理表格形式的数据.
 				for (HashMap<String, String> tableDataItem : tableDatas) {
 					String str = tableDataItem.get("series").split("-")[1];
-					if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {	
+					String series = chartSqlData.getSeries();
+					if(chartSearchVo.getSelectCycle()==1){
+						series = series.split("-")[1];
+					}
+					if(chartSearchVo.getSelectCycle()==12){
+						series = series.split("-")[1];
+					}
+					if (Integer.parseInt(str)==Integer.parseInt(series)) {	
 
-						tableDataItem.put("余额不足200", String.valueOf(chartSqlData.getTotal()));
+						tableDataItem.put("余额<200", String.valueOf(chartSqlData.getTotal()));
 					}
 				}
 			}
@@ -381,12 +392,11 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 							//处理表格形式的数据.
 							for (HashMap<String, String> tableDataItem : tableDatas) {
 								if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {	
-
-									tableDataItem.put("余额小于1k", String.valueOf(chartSqlData.getTotal()));
+									tableDataItem.put("余额200~1k", String.valueOf(chartSqlData.getTotal()));
 								}
 							}
 						}
-						// 4-4.查询SQL获得统计数据 -- 1K<余额<3K ，用户人数count(*)
+						// 4-4.查询SQL获得统计数据 -- 1K~3K ，用户人数count(*)
 						statDatas = new ArrayList<ChartMapVo>();
 
 						if (chartSearchVo.getStatType().equals("day")) {
@@ -403,9 +413,16 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 						for (ChartMapVo chartSqlData : statDatas) {
 							//处理表格形式的数据.
 							for (HashMap<String, String> tableDataItem : tableDatas) {
-								if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {	
+								String series = chartSqlData.getSeries();
+								if(chartSearchVo.getSelectCycle()==1){
+									series = series.split("-")[1];
+								}
+								if(chartSearchVo.getSelectCycle()==12){
+									series = series.split("-")[1];
+								}
+								if (tableDataItem.get("series").toString().equals(series)) {	
 
-									tableDataItem.put("1K<余额<3K", String.valueOf(chartSqlData.getTotal()));
+									tableDataItem.put("1K~3K", String.valueOf(chartSqlData.getTotal()));
 								}
 							}
 						}
@@ -427,7 +444,14 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 							//处理表格形式的数据.
 							for (HashMap<String, String> tableDataItem : tableDatas) {
 								String str = tableDataItem.get("series").split("-")[1];
-								if (Integer.parseInt(str)==Integer.parseInt(chartSqlData.getSeries())) {	
+								String series = chartSqlData.getSeries();
+								if(chartSearchVo.getSelectCycle()==1){
+									series = series.split("-")[1];
+								}
+								if(chartSearchVo.getSelectCycle()==12){
+									series = series.split("-")[1];
+								}
+								if (Integer.parseInt(str)==Integer.parseInt(series)) {	
 
 									tableDataItem.put("余额>3k", String.valueOf(chartSqlData.getTotal()));
 								}
@@ -446,28 +470,28 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 							Integer countTotal = Integer.valueOf(tableDataItem.get("余额用户"));
 							
 							//每行记录各种余额数量
-							Integer lessTwo = Integer.valueOf(tableDataItem.get("余额不足200"));
-							Integer lessThousand = Integer.valueOf(tableDataItem.get("余额小于1k"));
-							Integer lessBetween = Integer.valueOf(tableDataItem.get("1K<余额<3K"));
+							Integer lessTwo = Integer.valueOf(tableDataItem.get("余额<200"));
+							Integer lessThousand = Integer.valueOf(tableDataItem.get("余额200~1k"));
+							Integer lessBetween = Integer.valueOf(tableDataItem.get("1K~3K"));
 							Integer MoreThousand = Integer.valueOf(tableDataItem.get("余额>3k"));
 							if (countTotal > 0) {
 								
 								lessTwoPercent = MathDoubleUtil.getPercent(lessTwo, countTotal);
-								tableDataItem.put("余额不足200占比", lessTwoPercent);
+								tableDataItem.put("余额<200占比", lessTwoPercent);
 								
 								lessThousandPercent = MathDoubleUtil.getPercent(lessThousand, countTotal);
-								tableDataItem.put("余额小于1k占比", lessThousandPercent);
+								tableDataItem.put("余额200~1k占比", lessThousandPercent);
 								
 								lessBetweenPercent = MathDoubleUtil.getPercent(lessBetween, countTotal);
-								tableDataItem.put("1K<余额<3K占比", lessBetweenPercent);
+								tableDataItem.put("1K~3K占比", lessBetweenPercent);
 								
 								MoreThousandPercent = MathDoubleUtil.getPercent(MoreThousand, countTotal);
 								tableDataItem.put("余额>3k占比", MoreThousandPercent);
 								
 							}else {
-								tableDataItem.put("余额不足200占比", "0.00%");
-								tableDataItem.put("余额小于1k占比", "0.00%");
-								tableDataItem.put("1K<余额<3K占比", "0.00%");
+								tableDataItem.put("余额<200占比", "0.00%");
+								tableDataItem.put("余额200~1k占比", "0.00%");
+								tableDataItem.put("1K~3K占比", "0.00%");
 								tableDataItem.put("余额>3k占比", "0.00%");
 							}
 						}
@@ -489,17 +513,9 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 							for (int j =1; j < timeSeries.size(); j++) {
 								for (HashMap<String, String> tableDataItem : tableDatas) {
 									if (timeSeries.get(j).equals(tableDataItem.get("series").toString())) {
-										
 										String valueStr = tableDataItem.get(legend.get(i)).toString();
 										Integer v = Integer.valueOf(valueStr);
 										datas.add(v);
-										
-										/*String valueStr = tableDataItem.get(legend.get(i)).toString();
-										//Integer v = Integer.valueOf(valueStr);
-										datas.add(valueStr);*/
-										/*String valueStr = tableDataItem.get(legend.get(i)).toString();
-										//Integer v = Integer.valueOf(valueStr);
-										datas.add(valueStr);*/
 									}
 								}
 							}
@@ -519,6 +535,6 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 
 						return chartDataVo;		
 
-	}
+		}
 
 	}

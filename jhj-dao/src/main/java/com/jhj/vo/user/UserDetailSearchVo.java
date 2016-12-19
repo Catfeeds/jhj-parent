@@ -28,6 +28,9 @@ public class UserDetailSearchVo extends UserDetailPay{
 	// 在店长对应 云店下过单的 用户
 	private List<Long> userIds;
 	
+	//支付方式
+	private Short payType;
+	
 	public List<Long> getUserIds() {
 		return userIds;
 	}
@@ -84,5 +87,12 @@ public class UserDetailSearchVo extends UserDetailPay{
 		this.orderNo = orderNo;
 	}
 
+	public Short getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Short payType) {
+		this.payType = payType;
+	}
 
 }

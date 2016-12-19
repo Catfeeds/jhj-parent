@@ -33,6 +33,7 @@ public class TestOrderWxPayController extends JUnitActionBase  {
 
     }
 	
+	//充值支付宝支付
 	@Test
     public void testZhifubaoPay() throws Exception {
 

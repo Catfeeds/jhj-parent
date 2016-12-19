@@ -74,12 +74,12 @@
 						<th>时间</th>
 						<th>余额用户</th>
 						<th>余额总金额</th>
-						<th>余额不足200</th>
-						<th>余额不足200占比</th>
-						<th>余额小于1k</th>
-						<th>余额小于1k占比</th>
-						<th>1K<余额<3K</th>
-						<th>1K<余额<3K占比</th>
+						<th>余额&lt;200</th>
+						<th>余额&lt;200占比</th>
+						<th>余额200~1k</th>
+						<th>余额200~1k占比</th>
+						<th>1K~3K</th>
+						<th>1K~3K占比</th>
 						<th>余额>3k</th>
 						<th>余额>3k占比</th>
 						
@@ -92,12 +92,12 @@
 						<th>${item.series}</th>
 						<th>${item.余额用户}</th>
 						<th>${item.余额总金额}</th>
-						<th>${item.余额不足200}</th>
-						<th>${item.余额不足200占比}</th>
-						<th>${item.余额小于1k}</th>
-						<th>${item.余额小于1k占比}</th>
-						<th>${item["1K<余额<3K"]}</th>
-						<th>${item["1K<余额<3K占比"]}</th>
+						<th>${item["余额<200"]}</th>
+						<th>${item["余额<200占比"]}</th>
+						<th>${item["余额200~1k"]}</th>
+						<th>${item["余额200~1k占比"]}</th>
+						<th>${item["1K~3K"]}</th>
+						<th>${item["1K~3K占比"]}</th>
 						<th>${item["余额>3k"]}</th>
 						<th>${item["余额>3k占比"]}</th>
 					</tr>

@@ -88,60 +88,72 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day") ) {
-			statDatas = orderMapper.chartTypeByDay(chartSearchVo);
+			chartSearchVo.setFormatParam("%c-%e");
+			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			statDatas = orderMapper.chartTypeByMonth(chartSearchVo);
+			chartSearchVo.setFormatParam("%c");
+			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}	
 		
 		if (chartSearchVo.getStatType().equals("quarter") ) {
-			statDatas = orderMapper.chartTypeByQuarter(chartSearchVo);
-		}
+			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
+		}		
 		
+		Short[] shenduserviceType={34,35,36,50,51,52,53,54,55,56,60,61};
+		Short[] muyinserviceType={62,63,64,65};
+		String str=null,str1=null;
 		//4-2.真实数据填充（table表格），计算每行总计，以及各品类占比
-		
-		for (ChartMapVo chartSqlData : statDatas) {
-			//处理表格形式的数据.
-			for (Map<String, String> tableDataItem : tableDatas) {
-				if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-					//0代表 基础服务  1 = 深度保洁   2= 深度服务  5= 提醒订单
-					if (chartSqlData.getName().equals("0"))
-						tableDataItem.put("基础服务", String.valueOf(chartSqlData.getTotal()));
-//					if (chartSqlData.getName().equals("1"))
-//						tableDataItem.put("深度保洁", String.valueOf(chartSqlData.getTotal()));
-					if (chartSqlData.getName().equals("2"))
-						tableDataItem.put("深度服务", String.valueOf(chartSqlData.getTotal()));
-					if (chartSqlData.getName().equals("5"))
-						tableDataItem.put("提醒订单", String.valueOf(chartSqlData.getTotal()));
-					//每行记录的总单数
-					Integer sumTotal = Integer.valueOf(tableDataItem.get("总单数"));
-					sumTotal = sumTotal + chartSqlData.getTotal();
-					
-					tableDataItem.put("总单数", sumTotal.toString());
+		for (Map<String, String> tableDataItem : tableDatas) {
+			Integer hourNum = 0;
+			Integer deepNum = 0;
+			Integer myNum = 0;
+			for (ChartMapVo chartSqlData : statDatas) {
+				//处理表格形式的数据.
+				if(chartSearchVo.getSelectCycle()==1){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==12){
+					str = tableDataItem.get("series").split("-")[1];
+					str1 = chartSqlData.getSeries().split("-")[1];
+				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
+					str = tableDataItem.get("series").split("-")[1];
+					if(chartSearchVo.getSearchType()==0){
+						str1 = chartSqlData.getSeries();
+					}
+					if(chartSearchVo.getSearchType()==1){
+						str1 = chartSqlData.getSeries().split("-")[1];
+					}
+				}
+				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
+					Integer total =0;
+					if(chartSqlData.getTotal()!=null){
+						total = chartSqlData.getTotal();
+					}
+					//0代表基础服务  1 = 深度服务 母婴到家  
+					if (chartSqlData.getName().equals("0")){
+						hourNum+=total;
+					}
+					if(chartSqlData.getName().equals("1")){
+						if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+							deepNum+=total;
+						}
+						if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+							myNum+=total;
+						}
+					}
 				}
 			}
-		}
-		
-		//4-3. 计算各品类 占比
-		String orderHourPercent = "0";	//基础服务占比
-//		String deepPercent = "0";		//深度服务占比
-		String amPercent = "0";			//母婴到家占比
-		String remindPercent = "0";		//提醒订单占比
-		for (Map<String, String> tableDataItem : tableDatas) {
-			Integer sumTotal = Integer.valueOf(tableDataItem.get("总单数"));
-			//每行记录，各类订单数量
-			Integer orderHour = Integer.valueOf(tableDataItem.get("基础服务"));
-			Integer amOrder = Integer.valueOf(tableDataItem.get("深度服务"));
-			Integer remindOrder = Integer.valueOf(tableDataItem.get("母婴到家"));
-			
-			if(sumTotal > 0){
-				orderHourPercent = MathDoubleUtil.getPercent(orderHour,sumTotal);
-				tableDataItem.put("基础服务占比", orderHourPercent);
-				amPercent = MathDoubleUtil.getPercent(amOrder, sumTotal);
-				tableDataItem.put("深度服务占比", amPercent);
-				remindPercent = MathDoubleUtil.getPercent(remindOrder, sumTotal);
-				tableDataItem.put("母婴到家占比", remindPercent);
+			tableDataItem.put("基础服务", String.valueOf(hourNum));
+			tableDataItem.put("深度服务", String.valueOf(deepNum));
+			tableDataItem.put("母婴到家", String.valueOf(myNum));
+			int totalNum=hourNum+deepNum+myNum;
+			tableDataItem.put("总单数", String.valueOf(totalNum));
+			if(totalNum>0){
+				tableDataItem.put("基础服务占比", String.valueOf(MathDoubleUtil.getPercent(hourNum,totalNum)));
+				tableDataItem.put("深度服务占比", String.valueOf(MathDoubleUtil.getPercent(deepNum,totalNum)));
+				tableDataItem.put("母婴到家占比", String.valueOf(MathDoubleUtil.getPercent(myNum,totalNum)));
 			}else{
 				tableDataItem.put("基础服务占比","0.00%");
 				tableDataItem.put("深度服务占比","0.00%");

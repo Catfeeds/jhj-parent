@@ -178,6 +178,7 @@ public class OrderChartController extends BaseController {
 		}
 		
 		if (chartSearchVo.getSearchType() == 1) {
+			chartSearchVo.setSelectCycle(1);
 			startTimeStr = chartSearchVo.getStartTimeStr();
 			endTimeStr = chartSearchVo.getEndTimeStr();
 			statType = ChartUtil.getStatTypeByTime(startTimeStr, endTimeStr);
@@ -202,8 +203,7 @@ public class OrderChartController extends BaseController {
 		}	
 		
 		
-//		ChartDataVo chartDataVo = orderChartService.getOrderRevenue(chartSearchVo, timeSeries);
-		ChartDataVo chartDatas = orderChartService.getOrderSrc(chartSearchVo, timeSeries);
+		ChartDataVo chartDatas = orderChartService.getOrderRevenue(chartSearchVo, timeSeries);
 		
 		model.addAttribute("chartDatas", chartDatas);
 		

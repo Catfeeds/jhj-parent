@@ -35,7 +35,7 @@
 		</if>
 	    
 		<if test="mobile != null and mobile !='' ">
-			and mobile = #{mobile,jdbcType=CHAR}
+			and mobile like concat ('%',#{mobile,jdbcType=CHAR},'%')
 		</if>
 		<if test="orderNo != null and orderNo !='' ">
 			and order_no = #{orderNo,jdbcType=VARCHAR}
@@ -52,6 +52,10 @@
 			<foreach collection="userIds" item="item" open="(" separator="," close=")">
 				${item}
 			</foreach>
+		</if>
+		
+		<if test="payType!=null">
+			and pay_type = #{payType,jdbcType=NUMERIC}
 		</if>
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
