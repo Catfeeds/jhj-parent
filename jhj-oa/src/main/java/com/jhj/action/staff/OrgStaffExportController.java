@@ -177,143 +177,95 @@ public class OrgStaffExportController extends BaseController {
 			for(int j = 0; j <= 26; j++) {
 				rowData.createCell(j);
 				XSSFCell c = rowData.getCell(j);
-				c.setCellStyle(contentStyle);
+				c.setCellType(XSSFCell.CELL_TYPE_STRING);
+//				c.setCellValue("");  
+//				c.setCellStyle(contentStyle);
 			}
 			
 			//序号
-			
-			XSSFCell cellNo = rowData.getCell(0);
-			
-			cellNo.setCellValue(String.valueOf(rowNum));
+			this.setCellValueForString(rowData, 0, String.valueOf(rowNum));
 			
 			//门店
-			XSSFCell cellParentOrg = rowData.getCell(1);
-//			cellParentOrg.setCellStyle(contentStyle);
-			cellParentOrg.setCellValue(vo.getParentOrgName());
+			this.setCellValueForString(rowData, 1, vo.getParentOrgName());
 			
 			//云店
-			XSSFCell cellOrg = rowData.getCell(2);
-//			cellOrg.setCellStyle(contentStyle);
-			cellOrg.setCellValue(vo.getOrgName());
+			this.setCellValueForString(rowData, 2, vo.getOrgName());
 			
 			//服务人员
-			XSSFCell cellStaffName = rowData.getCell(3);
-//			cellStaffName.setCellStyle(contentStyle);
-			cellStaffName.setCellValue(vo.getStaffName());
+			this.setCellValueForString(rowData, 3, vo.getStaffName());
 			
 			//服务人员手机号
-			XSSFCell cellStaffMobile = rowData.getCell(4);
+			this.setCellValueForDouble(rowData, 4, Double.valueOf(vo.getStaffMobile()));
 			
-			cellStaffMobile.setCellValue(vo.getStaffMobile());
-//			cellStaffMobile.setCellStyle(contentStyle);
 			//订单号
-			XSSFCell cellOrderNo = rowData.getCell(5);
-//			cellOrderNo.setCellStyle(contentStyle);
-			cellOrderNo.setCellValue(vo.getOrderNo());
+			this.setCellValueForString(rowData, 5, vo.getOrderNo());
 			
 			//下单时间
-			XSSFCell cellOrderAddTime = rowData.getCell(6);
-			cellOrderAddTime.setCellStyle(contentStyle);
-//			cellOrderAddTime.setCellValue(vo.getAddTimeStr());
+			this.setCellValueForString(rowData, 6, vo.getAddTimeStr());
 			
 			//服务类型
-			XSSFCell cellOrderTypeName = rowData.getCell(7);
-//			cellOrderTypeName.setCellStyle(contentStyle);
-			cellOrderTypeName.setCellValue(vo.getOrderTypeName());
-			
+			this.setCellValueForString(rowData, 7, vo.getOrderTypeName());
+
 			//服务日期
-			XSSFCell cellServiceDate = rowData.getCell(8);
-//			cellServiceDate.setCellStyle(contentStyle);
-			cellServiceDate.setCellValue(vo.getServiceDateStr());
-			
+			this.setCellValueForString(rowData, 8, vo.getServiceDateStr());
+
 			//服务时长
-			XSSFCell cellServiceHour = rowData.getCell(9);
-//			cellServiceHour.setCellStyle(contentStyle);
-			cellServiceHour.setCellValue(String.valueOf(vo.getServiceHour()));
-			
+			this.setCellValueForDouble(rowData, 9, vo.getServiceHour());
 			
 			//派工人数
-			XSSFCell cellStaffNum = rowData.getCell(10);
-//			cellStaffNum.setCellStyle(contentStyle);
-			cellStaffNum.setCellValue(String.valueOf(vo.getStaffNum()));
+			this.setCellValueForDouble(rowData, 10, Double.valueOf(vo.getStaffNum()));
 			
 			//服务地址
-			XSSFCell cellAddr = rowData.getCell(11);
-//			cellAddr.setCellStyle(contentStyle);
-			cellAddr.setCellValue(vo.getAddr());
+			this.setCellValueForString(rowData, 11, vo.getAddr());
+
+			//用户手机号
+			this.setCellValueForDouble(rowData, 12, Double.valueOf(vo.getUserMobile()));
 			
-			//用户手机号,是否为会员
-			XSSFCell cellMobile = rowData.getCell(12);
-			
-			cellMobile.setCellValue(vo.getUserMobile());
-//			cellMobile.setCellStyle(contentStyle);
-			
-			XSSFCell cellIsVip = rowData.getCell(13);
-//			cellIsVip.setCellStyle(contentStyle);
-			cellIsVip.setCellValue(vo.getIsVipStr());
+			//是否为会员
+			this.setCellValueForString(rowData, 13, vo.getIsVipStr());
 			
 			//支付方式
-			XSSFCell cellPayType = rowData.getCell(14);
-//			cellPayType.setCellStyle(contentStyle);
-			cellPayType.setCellValue(vo.getPayTypeName());
-			
+			this.setCellValueForString(rowData, 14, vo.getPayTypeName());
+
 			//原价
-			XSSFCell cellOrderMoney = rowData.getCell(15);
-//			cellOrderMoney.setCellStyle(contentStyle);
-			cellOrderMoney.setCellValue(MathBigDecimalUtil.round2(vo.getOrderMoney()));
+			this.setCellValueForDouble(rowData, 15, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderMoney())));
 			
 			//优惠劵
-			XSSFCell cellCouponName = rowData.getCell(16);
-//			cellCouponName.setCellStyle(contentStyle);
-			cellCouponName.setCellValue(vo.getCouponName());
+			this.setCellValueForString(rowData, 16, vo.getCouponName());
 			
 			//补差价
-			XSSFCell cellOrderPayExtDiff = rowData.getCell(17);
-//			cellOrderPayExtDiff.setCellStyle(contentStyle);
-			cellOrderPayExtDiff.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtDiff()));
-			
+			this.setCellValueForDouble(rowData, 17, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtDiff())));
+
 			//加时
-			XSSFCell cellOrderPayExtOverWork = rowData.getCell(18);
-			cellOrderPayExtOverWork.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtOverWork()));
-//			cellOrderPayExtOverWork.setCellStyle(contentStyle);
+			this.setCellValueForDouble(rowData, 18, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtOverWork())));
+
 			//收入
-			XSSFCell cellOrderIncoming = rowData.getCell(19);
-			cellOrderIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getOrderIncoming()));
-//			cellOrderIncoming.setCellStyle(contentStyle);
+			this.setCellValueForDouble(rowData, 19, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderIncoming())));
+
 			//订单补贴
-			XSSFCell cellOrderPayCouon = rowData.getCell(20);
-			cellOrderPayCouon.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayCoupon()));
-//			cellOrderPayCouon.setCellStyle(contentStyle);
-			//原价
-			XSSFCell cellOrderExtDiffIncoming = rowData.getCell(21);
-			cellOrderExtDiffIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtDiffIncoming()));
-//			cellOrderExtDiffIncoming.setCellStyle(contentStyle);
+			this.setCellValueForDouble(rowData, 20, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCoupon())));
+
+			//补差价收入
+			this.setCellValueForDouble(rowData, 21, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtDiffIncoming())));
+
 			//加时收入
-			XSSFCell cellOrderPayOverwokIncoming = rowData.getCell(22);
-			cellOrderPayOverwokIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getOrderPayExtOverWorkIncoming()));
-//			cellOrderPayOverwokIncoming.setCellStyle(contentStyle);
+			this.setCellValueForDouble(rowData, 22, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtOverWorkIncoming())));
+
 			//订单产生欠款
-			XSSFCell cellTotalOrderDept = rowData.getCell(23);
-			cellTotalOrderDept.setCellValue(MathBigDecimalUtil.round2(vo.getTotalOrderDept()));
-//			cellTotalOrderDept.setCellStyle(contentStyle);
+			this.setCellValueForDouble(rowData, 23, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderDept())));
+
 			//订单总金额
-			XSSFCell cellTotalOrderMoney = rowData.getCell(24);
-			cellTotalOrderMoney.setCellValue(MathBigDecimalUtil.round2(vo.getTotalOrderMoney()));
-//			cellTotalOrderMoney.setCellStyle(contentStyle);
+			this.setCellValueForDouble(rowData, 24, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderMoney())));
+
 			totalOrderMoneyAll = totalOrderMoneyAll.add(vo.getTotalOrderMoney());
 			
 			//订单总收入
-			XSSFCell cellTotalOrderIncoming = rowData.getCell(25);
-			cellTotalOrderIncoming.setCellValue(MathBigDecimalUtil.round2(vo.getTotalOrderIncoming()));
-//			cellTotalOrderIncoming.setCellStyle(contentStyle);
+			this.setCellValueForDouble(rowData, 25, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderIncoming())));
+
 			totalOrderIncomingAll = totalOrderIncomingAll.add(vo.getTotalOrderIncoming());
 			//订单备注
-			XSSFCell cellRemarks = rowData.getCell(26);
-//			cellRemarks.setCellStyle(contentStyle);
-			cellRemarks.setCellValue(vo.getRemarks());
+			this.setCellValueForString(rowData, 26, vo.getRemarks());
 
-			
-			
 			rowNum++;
 		}
 		
@@ -321,27 +273,42 @@ public class OrgStaffExportController extends BaseController {
 		XSSFRow rowData = sh.createRow(rowNum);
 
 		for(int j = 0; j <= 26; j++) {
-			rowData.createCell(j);
-			
-			sh.autoSizeColumn((short)j);
+			XSSFCell c = rowData.createCell(j);
+//			c.setCellStyle(contentStyle);
+//			sh.autoSizeColumn((short)j);
 		}
-		
-		XSSFCell cellHeji = rowData.getCell(23);
-		cellHeji.setCellStyle(contentStyle);
-		cellHeji.setCellValue("合计:");
-		
-		XSSFCell cellTotalOrderMoneyAll = rowData.getCell(24);
-		cellTotalOrderMoneyAll.setCellValue(MathBigDecimalUtil.round2(totalOrderMoneyAll));
-		cellTotalOrderMoneyAll.setCellStyle(contentStyle);
-		XSSFCell cellTotalOrderIncomingAll = rowData.getCell(25);
-		cellTotalOrderIncomingAll.setCellValue(MathBigDecimalUtil.round2(totalOrderIncomingAll));
-		cellTotalOrderIncomingAll.setCellStyle(contentStyle);
-		
+		this.setCellValueForString(rowData, 23, "合计:");
 
+		this.setCellValueForDouble(rowData, 24, Double.valueOf(MathBigDecimalUtil.round2(totalOrderMoneyAll)));
+		
+		this.setCellValueForDouble(rowData, 25, Double.valueOf(MathBigDecimalUtil.round2(totalOrderIncomingAll)));
+
+		//自动调整列宽
+//		for(int j = 0; j <= 26; j++) {
+//
+//			sh.autoSizeColumn((short)j);
+//		}
+		
 		String fileName = orgStaff.getName() + "-订单收入明细表.xls";
 		excel.downloadExcel(response, fileName);
 		
+		
+		
+		
 		return null;
+	}
+	
+	
+	private  void setCellValueForString(XSSFRow rowData, int rowNum, String v) {
+		XSSFCell c = rowData.getCell(rowNum);
+		c.setCellType(XSSFCell.CELL_TYPE_STRING);
+		c.setCellValue(v);
+	}
+	
+	private  void setCellValueForDouble(XSSFRow rowData, int cellNum, Double v) {
+		XSSFCell c = rowData.getCell(cellNum);
+		c.setCellType(XSSFCell.CELL_TYPE_NUMERIC);
+		c.setCellValue(v);
 	}
 
 }
