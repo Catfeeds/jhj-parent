@@ -619,7 +619,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 			BigDecimal orderMoney = orderPriceService.getTotalOrderMoney(orderPrices);
 			oaOrderListVo.setOrderMoney(orderMoney);
 			// 订单实际支付金额
-			BigDecimal orderPay = orderPriceService.getTotalOrderMoney(orderPrices);
+			BigDecimal orderPay = orderPriceService.getTotalOrderPay(orderPrices);
 			oaOrderListVo.setOrderPay(orderPay);
 			
 			// 支付方式
