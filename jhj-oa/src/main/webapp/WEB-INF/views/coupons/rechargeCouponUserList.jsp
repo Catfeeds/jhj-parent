@@ -68,7 +68,7 @@
                       
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="contentModel"/>
-	        				<c:param name="urlAddress" value="/bs/coupon-list"/>
+	        				<c:param name="urlAddress" value="/bs/toRechargeCouponUserList"/>
 	       			  </c:import>
                   </div>
               </div>

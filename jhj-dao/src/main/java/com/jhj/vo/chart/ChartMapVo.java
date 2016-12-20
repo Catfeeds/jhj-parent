@@ -37,6 +37,8 @@ public class ChartMapVo {
 	
 	private Short orderStatus;
 	
+	private Short orderType;
+	
 	public Long getUserId() {
 		return userId;
 	}
@@ -141,6 +143,12 @@ public class ChartMapVo {
 	}
 	public void setOrderStatus(Short orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+	public Short getOrderType() {
+		return orderType;
+	}
+	public void setOrderType(Short orderType) {
+		this.orderType = orderType;
 	}
 	
 	

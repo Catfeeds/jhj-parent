@@ -3,6 +3,7 @@ package com.jhj.service.impl.chart;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,9 @@ public class OrderChartServiceImpl implements OrderChartService {
 			}
 			tableDatas.add(tableData);
 		}
+		
+		Short[] status={7,8,9};
+		chartSearchVo.setStatus(Arrays.asList(status));
 		
 		//查询SQL获得统计数据 -- 订单总数
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
@@ -270,45 +274,72 @@ public class OrderChartServiceImpl implements OrderChartService {
 			}
 			tableDatas.add(tableData);
 		}
+		Short[] status={7,8,9};
+		chartSearchVo.setStatus(Arrays.asList(status));
 		
 		// 1. 查询SQL获得统计数据 -- 不同来源的订单数量
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
 			statDatas = orderMapper.orderRevenueByDay(chartSearchVo);
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			chartSearchVo.setFormatParam("%c");
-			statDatas = orderMapper.orderRevenueByDay(chartSearchVo);
+			statDatas = orderMapper.orderRevenueByMonth(chartSearchVo);
 		}	
 		
 		if (chartSearchVo.getStatType().equals("quarter") ) {
-			statDatas = orderMapper.orderRevenueByDay(chartSearchVo);
+			statDatas = orderMapper.orderRevenueByQuarter(chartSearchVo);
 		}		
 		
+		String[] deepServiceType = {"34","35","36","50","51","52","53","54","55","56","60","61","71"};
+		String[] myServiceType = {"62","63","64","65"};
 		//1-1. 替换表格数据   App来源和微网站来源(数量)
 		String str=null,str1 = null;
-		for (ChartMapVo chartSqlData : statDatas) {
-			//处理表格形式的数据.
-			for (Map<String, String> tableDataItem : tableDatas) {
-				if(chartSearchVo.getSelectCycle()==1){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
-					str = tableDataItem.get("series").split("-")[1];
-					if(chartSearchVo.getSearchType()==0){
-						str1 = chartSqlData.getSeries();
-					}
-					if(chartSearchVo.getSearchType()==1){
-						str1 = chartSqlData.getSeries().split("-")[1];
-					}
-				}
+		for (Map<String, String> tableDataItem : tableDatas) {
+			int jpTotal=0;
+			int jcTotoal=0;
+			int sdTotal=0;
+			int myTotal=0;
+			
+			BigDecimal jpTotalMoney = new BigDecimal(0);
+			BigDecimal jcTotoalMoney = new BigDecimal(0);
+			BigDecimal sdTotalMoney = new BigDecimal(0);
+			BigDecimal myTotalMoney = new BigDecimal(0);
+			
+			for (ChartMapVo chartSqlData : statDatas) {
+			
+				str = tableDataItem.get("series").split("-")[1];
+				str1 = chartSqlData.getSeries().split("-")[1];
+				
 				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
 					
+					//表格数据
+					if(chartSqlData.getOrderType()==0){
+						if(chartSqlData.getServiceType()==28){
+							jpTotal+=chartSqlData.getTotal();
+							jpTotalMoney = jpTotalMoney.add(chartSqlData.getTotalMoney());
+							
+						}
+						if(chartSqlData.getServiceType()==68){
+							jcTotoal+=chartSqlData.getTotal();
+							jcTotoalMoney = jcTotoalMoney.add(chartSqlData.getTotalMoney());
+							
+						}
+					}
+					if(chartSqlData.getOrderType()==1){
+						if(Arrays.asList(deepServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+							sdTotal+=chartSqlData.getTotal();
+							sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
+							
+						}
+						if(Arrays.asList(myServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+							myTotal+=chartSqlData.getTotal();
+							myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
+							
+						}
+					}
+					
+					//图标数据
 					if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
 						tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
 						tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
@@ -328,6 +359,14 @@ public class OrderChartServiceImpl implements OrderChartService {
 					}
 				}
 			}
+			tableDataItem.put("金牌保洁订单数", String.valueOf(jpTotal));
+			tableDataItem.put("金牌保洁总金额", String.valueOf(jpTotalMoney));
+			tableDataItem.put("基础保洁订单数", String.valueOf(jcTotoal));
+			tableDataItem.put("基础保洁总金额", String.valueOf(jcTotoalMoney));
+			tableDataItem.put("深度养护订单数", String.valueOf(sdTotal));
+			tableDataItem.put("深度养护总金额", String.valueOf(sdTotalMoney));
+			tableDataItem.put("母婴到家订单数", String.valueOf(myTotal));
+			tableDataItem.put("母婴到家总金额", String.valueOf(myTotalMoney));
 		}
 		
 		//5. 去掉第一个tableDataItem;
@@ -416,6 +455,8 @@ public class OrderChartServiceImpl implements OrderChartService {
 			}
 			tableDatas.add(tableData);
 		}
+		Short[] status={7,8,9};
+		chartSearchVo.setStatus(Arrays.asList(status));
 		
 		// 1. 查询SQL获得统计数据 -- 不同来源的订单数量
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();

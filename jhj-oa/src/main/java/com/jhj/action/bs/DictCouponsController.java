@@ -591,62 +591,101 @@ public class DictCouponsController extends BaseController {
         Long id = dictCoupons.getId();
         List<Integer> condtion = dictCoupons.getSendCouponsCondtion();
         DictCoupons coupon = couponService.selectByPrimaryKey(id);
-        List<UserCoupons> userCouponsList0 = new ArrayList<UserCoupons>();
         Map<String, String> hashMap = new HashMap<String, String>();
-        List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>();
-        Set<Long> setIds = new HashSet<Long>();
+      
+        Set<Long> userIdSet = new HashSet<Long>();
         if (condtion != null && condtion.size() > 0) {
+        	UserSearchVo searchVo = new UserSearchVo();
+        	//全部用户
             if (condtion.contains(0)) {
-                // 找出未下过单的用户.
-                List<Users> users = usersService.selectUsersByOrderMobile();
-                if (users != null) {
-                    for (Users u : users) {
-                        UserCoupons uc = userCouponsService.initUserCoupons(
-                                u.getId(), coupon);
-                        userCouponsList0.add(uc);
-                    }
-                    if (userCouponsList0 != null) {
-                        userCouponsService.insertByList(userCouponsList0);
-                    }
-                }
+               List<Users> userList = usersService.selectBySearchVo(searchVo);
+               if(userList!=null && userList.size()>0){
+            	   for(int i =0,len=userList.size();i<len;i++){
+            		   userIdSet.add(userList.get(i).getId());
+            	   }
+               }
             }
+            
+            //会员用户
             if (condtion.contains(1)) {
-                OrderSearchVo searchVo = new OrderSearchVo();
-                searchVo.setStartServiceTime(DateUtil.curStartDate(0));
-                searchVo.setEndServiceTime(DateUtil.curLastDate(0));
-                List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-                for (Orders o : orders) {
-                    setIds.add(o.getUserId());
+            	searchVo.setIsVip((short)1);
+            	List<Users> userList = usersService.selectBySearchVo(searchVo);
+            	if(userList!=null && userList.size()>0){
+             	   for(int i =0,len=userList.size();i<len;i++){
+             		   userIdSet.add(userList.get(i).getId());
+             	   }
                 }
             }
+            
+            //非会员用户
             if (condtion.contains(2)) {
-                OrderSearchVo searchVo = new OrderSearchVo();
-                searchVo.setStartServiceTime(DateUtil.curStartDate(2));
-                searchVo.setEndServiceTime(DateUtil.curLastDate(1));
-                List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-                for (Orders o : orders) {
-                    setIds.add(o.getUserId());
+            	searchVo.setIsVip((short)0);
+            	List<Users> userList = usersService.selectBySearchVo(searchVo);
+            	if(userList!=null && userList.size()>0){
+             	   for(int i =0,len=userList.size();i<len;i++){
+             		   userIdSet.add(userList.get(i).getId());
+             	   }
                 }
             }
+            
+            //注册未使用用户
             if (condtion.contains(3)) {
-                OrderSearchVo searchVo = new OrderSearchVo();
-                searchVo.setEndServiceTime(DateUtil.curLastDate(3));
-                List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-                for (Orders o : orders) {
-                    setIds.add(o.getUserId());
+            	 // 找出未下过单的用户.
+                List<Users> userList = usersService.selectUsersByOrderMobile();
+                if (userList != null) {
+                	if(userList!=null && userList.size()>0){
+                  	   for(int i =0,len=userList.size();i<len;i++){
+                  		   userIdSet.add(userList.get(i).getId());
+                  	   }
+                     }
                 }
             }
+            
+            //一个月内下过单用户
+            if(condtion.contains(4)){
+            	 OrderSearchVo orderSearchVo = new OrderSearchVo();
+                 orderSearchVo.setStartServiceTime(DateUtil.curStartDate(0));
+                 orderSearchVo.setEndServiceTime(DateUtil.curLastDate(0));
+                 List<Orders> orders = orderQueryService.selectBySearchVo(orderSearchVo);
+                 for (Orders o : orders) {
+                     userIdSet.add(o.getUserId());
+                 }
+            }
+            
+            //三个月内下过单的用户
+			if(condtion.contains(5)){
+				OrderSearchVo orderSearchVo = new OrderSearchVo();
+                orderSearchVo.setStartServiceTime(DateUtil.curStartDate(2));
+                orderSearchVo.setEndServiceTime(DateUtil.curLastDate(1));
+                List<Orders> orders = orderQueryService.selectBySearchVo(orderSearchVo);
+                for (Orders o : orders) {
+                    userIdSet.add(o.getUserId());
+                }   	
+			}
+			
+			//六个月内下过单的用户
+			if(condtion.contains(6)){
+				OrderSearchVo orderSearchVo = new OrderSearchVo();
+				orderSearchVo.setStartServiceTime(DateUtil.curStartDate(6));
+                orderSearchVo.setEndServiceTime(DateUtil.curLastDate(3));
+                List<Orders> orders = orderQueryService.selectBySearchVo(orderSearchVo);
+                for (Orders o : orders) {
+                    userIdSet.add(o.getUserId());
+                }
+			}
 
         }
-        Iterator<Long> iterator = setIds.iterator();
-        while (iterator.hasNext()) {
-            UserCoupons uc = userCouponsService.initUserCoupons(iterator.next(), coupon);
-            userCouponsList.add(uc);
+        Iterator<Long> iterator = userIdSet.iterator();
+        List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>(1);
+        List<Long> list=new ArrayList<Long>(userIdSet);
+        for(int i=0;i<list.size();i++){
+        	 UserCoupons uc = userCouponsService.initUserCoupons(list.get(i), coupon);
+             List<UserCoupons> userCoupons = userCouponsService.selectByCouponIdAndUserId(coupon.getId(), iterator.next());
+             if(userCoupons.size()==0){
+             	userCouponsList.add(uc);
+             }
         }
         userCouponsService.insertByList(userCouponsList);
-        // 发送优惠之后，优惠券变成无效状态
-        coupon.setIsValid("0");
-        dictCouponsService.updateByPrimaryKeySelective(coupon);
         hashMap.put("success", "200");
         return hashMap;
     }

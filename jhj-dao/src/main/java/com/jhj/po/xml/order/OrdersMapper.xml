@@ -837,16 +837,11 @@
 	<!-- **************************** 订单收入图表 ***************************** -->
 
 	<select id="orderRevenueByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, 
-		<if test="selectCycle==12">
-			FROM_UNIXTIME(T4.add_time, #{formatParam}) AS series,
-		</if>
-		<if test="selectCycle!=12">
-			concat(year(FROM_UNIXTIME(T4.add_time)),"-",quarter(FROM_UNIXTIME(T4.add_time))) AS series,
-		</if>
+		SELECT orderFrom, 
+		FROM_UNIXTIME(T4.add_time, "%c-%e") AS series,
 		T4.order_op_from as orderOpFrom,T4.order_type as orderType,T4.service_type as serviceType, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(
-		SELECT order_from AS name,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
+		SELECT order_from AS orderFrom,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
 		FROM
 		(
 		SELECT T1.order_from,T1.order_op_from,T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
@@ -860,41 +855,21 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name,orderOpFrom, series ORDER BY series ASC
-
-		<!-- SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_from AS name,
-		FROM_UNIXTIME(add_time, "%c-%e") AS series,
-		order_money
-		FROM
-		(
-		SELECT T1.order_from, T1.add_time, T2.order_money FROM
-		(SELECT
-		id, order_from, add_time
-		FROM orders
-		WHERE 1=1
-		<include refid="chartSearchVo"/>
-		) AS T1
-		LEFT JOIN order_prices AS T2
-		ON T1.id = T2. order_id
-		) AS T3
-		) AS T4
-		GROUP BY name, series ORDER BY series ASC -->
+		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
 
 	</select>
 
 	<select id="orderRevenueByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		SELECT orderFrom, 
+		FROM_UNIXTIME(T4.add_time, "%Y-%m") AS series,
+		T4.order_op_from as orderOpFrom,T4.order_type as orderType,T4.service_type as serviceType, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(
-		SELECT order_from AS name,
-		FROM_UNIXTIME(add_time, "%Y-%m") AS series,
-		order_money
+		SELECT order_from AS orderFrom,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
 		FROM
 		(
-		SELECT T1.order_from, T1.add_time, T2.order_money FROM
+		SELECT T1.order_from,T1.order_op_from,T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
 		(SELECT
-		id, order_from, add_time
+		id, order_from,order_op_from,order_type,service_type, add_time
 		FROM orders
 		WHERE 1=1
 		<include refid="chartSearchVo"/>
@@ -903,21 +878,22 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
+		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
+		
 	</select>
 
 	<select id="orderRevenueByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_from AS name,
+		SELECT orderFrom, 
 		CONCAT(year(FROM_UNIXTIME( add_time)), "-",
 		quarter(FROM_UNIXTIME( add_time)) ) as series,
-		order_money
+		T4.order_op_from as orderOpFrom,T4.order_type as orderType,T4.service_type as serviceType, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		(
+		SELECT order_from AS orderFrom,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
 		FROM
 		(
-		SELECT T1.order_from, T1.add_time, T2.order_money FROM
+		SELECT T1.order_from,T1.order_op_from,T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
 		(SELECT
-		id, order_from, add_time
+		id, order_from,order_op_from,order_type,service_type, add_time
 		FROM orders
 		WHERE 1=1
 		<include refid="chartSearchVo"/>
@@ -926,8 +902,8 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
-
+		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
+		
 	</select>
 
 	<!-- **************************** 市场品类图表 ***************************** -->

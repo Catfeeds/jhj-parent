@@ -98,6 +98,50 @@ $('#recharge-coupon-form').validate({
 				}
 		    }
 		});
+		
+//选择发送优惠券的对象,互斥事件
+function selectOne(){
+	var userGroupTypeList = $("input[name='sendCouponsCondtion']");
+	var checked = document.getElementById("isAll").checked; 
+	for(var i=1;i<userGroupTypeList.length;i++){
+		if(checked){
+			userGroupTypeList[i].checked=false;
+		}
+	}
+}
+
+$(".isVip").on('click',function(){
+	var chk = $(".isVip");
+	var chkOther = $(".other");
+	for(var i=0;i<chk.length;i++){
+		if(chk[i].checked){
+			document.getElementById("isAll").checked=false;
+		
+		}
+	}
+	for(var i=0;i<chkOther.length;i++){
+		if(chkOther[i].checked){
+			chkOther[i].checked=false;
+		}
+	}
+});
+
+$(".other").on('click',function(){
+	var chk = $(".other");
+	var chkIsVip = $(".isVip");
+	for(var i=0;i<chk.length;i++){
+		if(chk[i].checked){
+			document.getElementById("isAll").checked=false;
+		}
+	}
+	for(var i=0;i<chkIsVip.length;i++){
+		if(chkIsVip[i].checked){
+			chkIsVip[i].checked=false;
+		}
+	}
+});
+		
+		
 //发送优惠券功能		
 $("#from2-btn").click(function(){
 	var form=$("#form2").serialize();
