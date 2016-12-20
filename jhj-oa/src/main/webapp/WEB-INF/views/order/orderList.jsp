@@ -149,6 +149,10 @@
 										</tr>
 										
 										<tr>
+											<td width="10%">服务人员姓名：</td>
+											<td width="23%">
+												<form:input path="staffName" class="form-control" placeholder="请输入手机号"/>
+											</td>
 											<td colspan="6">
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
@@ -177,8 +181,6 @@
 										<th>是否接单</th>
 										<th>订单来源</th>
 										<th>订单状态</th>
-										
-										
 										<th>支付方式</th>
 										<th>支付金额</th>
 										<th>操作</th>

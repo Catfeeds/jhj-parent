@@ -770,6 +770,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			searchVo.setStaffId(searchVo.getSelectStaff());
 		}
 		
+		if(searchVo.getStaffName()!=null && !searchVo.getStaffName().equals("")){
+			String staffName = searchVo.getStaffName();
+			try {
+				searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return searchVo;
 	}
 
