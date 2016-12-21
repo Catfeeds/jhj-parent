@@ -129,14 +129,6 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		OrderCards orderCard = orderCardsMapper.selectByPrimaryKey(orderId);
 		DictCardType dictCardType = dictCardTypeMapper.selectByPrimaryKey(orderCard.getCardType());
 		
-		//充值500，如果如果没有发送过优惠券，就发送一张36元的金牌保洁优惠券，如果发送过，就不在发送了
-		BigDecimal cmp=new BigDecimal(500);
-		if(dictCardType.getCardValue().compareTo(cmp)==0){
-			List<UserCoupons> userCoupons = userCouponService.selectByCouponIdAndUserId(dictCardType.getId(), userId);
-			if(userCoupons.size()>0){
-				return true;
-			}
-		}
 		Long giftId = dictCardType.getGiftId();
 		if (giftId <= 0L) return true;
 		
@@ -148,6 +140,14 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		GiftCouponVo item = null;
 		for (int i = 0; i < giftCoupons.size(); i++) {
 			item = giftCoupons.get(i);
+			//充值500，如果如果没有发送过优惠券，就发送一张36元的金牌保洁优惠券，如果发送过，就不在发送了
+			BigDecimal cmp=new BigDecimal(500);
+			if(dictCardType.getCardValue().compareTo(cmp)==0){
+				List<UserCoupons> userCoupons = userCouponService.selectByCouponIdAndUserId(item.getCouponId(), userId);
+				if(userCoupons.size()>0){
+					continue;
+				}
+			}
 			UserCoupons record = userCouponService.initUserCoupons();
 			record.setUserId(userId);
 			record.setCouponId(item.getCouponId());
