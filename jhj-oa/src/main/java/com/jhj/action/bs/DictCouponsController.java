@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -675,15 +674,15 @@ public class DictCouponsController extends BaseController {
 			}
 
         }
-        Iterator<Long> iterator = userIdSet.iterator();
+//        Iterator<Long> iterator = userIdSet.iterator();
         List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>(1);
         List<Long> list=new ArrayList<Long>(userIdSet);
         for(int i=0;i<list.size();i++){
-        	 UserCoupons uc = userCouponsService.initUserCoupons(list.get(i), coupon);
-             List<UserCoupons> userCoupons = userCouponsService.selectByCouponIdAndUserId(coupon.getId(), iterator.next());
-             if(userCoupons.size()==0){
-             	userCouponsList.add(uc);
-             }
+    	   UserCoupons uc = userCouponsService.initUserCoupons(list.get(i), coupon);
+//             List<UserCoupons> userCoupons = userCouponsService.selectByCouponIdAndUserId(coupon.getId(), iterator.next());
+//             if(userCoupons.size()==0){
+         	userCouponsList.add(uc);
+//             }
         }
         userCouponsService.insertByList(userCouponsList);
         hashMap.put("success", "200");
