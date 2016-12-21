@@ -300,7 +300,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 				// 更新欠款总表
 				BigDecimal totalDept = orgStaffFinance.getTotalDept();
-				totalDept = totalDept.add(orderPay);
+				totalDept = totalDept.add(totalOrderDept);
 				orgStaffFinance.setTotalDept(totalDept);
 				orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 				this.updateByPrimaryKeySelective(orgStaffFinance);
