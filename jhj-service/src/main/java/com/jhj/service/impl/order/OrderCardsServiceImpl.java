@@ -131,8 +131,8 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		
 		//充值500，如果如果没有发送过优惠券，就发送一张36元的金牌保洁优惠券，如果发送过，就不在发送了
 		BigDecimal cmp=new BigDecimal(500);
-		if(dictCardType.getCardValue()==cmp){
-			List<UserCoupons> userCoupons = userCouponService.selectByCouponIdAndUserId(orderCard.getCardType(), userId);
+		if(dictCardType.getCardValue().compareTo(cmp)==0){
+			List<UserCoupons> userCoupons = userCouponService.selectByCouponIdAndUserId(dictCardType.getId(), userId);
 			if(userCoupons.size()>0){
 				return true;
 			}
