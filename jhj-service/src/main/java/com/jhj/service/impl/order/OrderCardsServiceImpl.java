@@ -115,7 +115,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		}
 		
 		String formatDate = DateUtil.formatDate(new Date());
-		boolean compare = DateUtil.compare("2016-12-24",formatDate);
+		boolean compare = DateUtil.compare("2016-12-21",formatDate);
 		boolean compare2 = DateUtil.compare(formatDate, "2017-01-02");
 		
 		if(cardMoney.compareTo(new BigDecimal(500))>=0 && compare && compare2){
