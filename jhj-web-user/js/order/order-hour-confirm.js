@@ -103,39 +103,36 @@ myApp.onPageBeforeInit('order-hour-confirm', function(page) {
 		      type : "GET",
 		      url: siteAPIPath+"user/get_validate_coupons.json",
 		      dataType: "json",
-		      cache : true,
+		      cache : false,
 		      data : params,
 		      async : true,
 		      success: function(data) {
-		    	  var couponList = data.data;
+		    	  var resultData = data.data;
 		    	  var nums = 0;
-		    	  if (couponList == undefined || couponList == "") {
+		    	  var userCoupon = "";
+		    	  if (resultData == undefined || resultData == "") {
 		    		  nums = 0;
 		    	  } else {
-		    		  nums = couponList.length;
+		    		  nums = resultData.total;
+		    		  userCoupon = resultData.coupon;
 		    	  }
+		    	  var userCouponNameStr = nums + "张可用";
 		    	  
 		    	  //如果有优惠劵，则默认选择最大面值的优惠劵.
 		    	  var userCouponValue = 0;
 	    		  var userCouponId = 0;
 	    		  var userCouponName = "";
 	    		  
-		    	  if (nums > 0) {
-		    		 
-		    		  $$.each(couponList, function(i, item) {
-		    			  if (item.value > userCouponValue) {
-		    				  userCouponValue = item.value;
-		    				  userCouponId = item.id;
-		    				  userCouponName = "￥" + userCouponValue;
-		    			  }
-		    		  });
-		    		  
-		    		  sessionStorage.setItem("user_coupon_id", userCouponId);
+	    		  if (userCoupon != undefined && userCoupon != "") {
+	    			  userCouponValue = userCoupon.value;
+	    			  userCouponId = userCoupon.id;
+	    			  userCouponName = "￥" + userCouponValue;
+	    			  
+	    			  sessionStorage.setItem("user_coupon_id", userCouponId);
 	    			  sessionStorage.setItem("user_coupon_name", userCouponName);
 	    			  sessionStorage.setItem("user_coupon_value", userCouponValue);
-		    	  }
-		    	  
-		    	  var userCouponNameStr = nums + "张可用";
+	    		  }
+
 		    	  if (userCouponId != 0 && userCouponValue != 0) {
 		    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
 					  if (orderPayStr < 0) orderPayStr = 0;
