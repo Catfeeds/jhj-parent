@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.SimpleFormatter;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +111,14 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		users.setRestMoney(restMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
 		if(cardMoney.compareTo(new BigDecimal(1000))>=0){
+			users.setIsVip(1);
+		}
+		
+		String formatDate = DateUtil.formatDate(new Date());
+		boolean compare = DateUtil.compare("2016-12-24",formatDate);
+		boolean compare2 = DateUtil.compare(formatDate, "2017-01-02");
+		
+		if(cardMoney.compareTo(new BigDecimal(500))>=0 && compare && compare2){
 			users.setIsVip(1);
 		}
 		usersService.updateByPrimaryKeySelective(users);
