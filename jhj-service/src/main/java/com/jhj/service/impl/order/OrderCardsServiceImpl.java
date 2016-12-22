@@ -316,9 +316,11 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			StaffSearchVo staffsVo =new StaffSearchVo();
 			staffsVo.setStaffCode(orderCards.getReferee());
 			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffsVo);
-			OrgStaffs staff = staffList.get(0);
-			if(staff!=null){
-				orderCoardVo.setStaffName(staff.getName());
+			if(staffList.size()>0){
+				OrgStaffs staff = staffList.get(0);
+				if(staff!=null){
+					orderCoardVo.setStaffName(staff.getName());
+				}
 			}else{
 				orderCoardVo.setStaffName(orderCards.getReferee());
 			}
