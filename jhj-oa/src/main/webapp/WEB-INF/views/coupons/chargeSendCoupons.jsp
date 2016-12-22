@@ -89,8 +89,24 @@
 							<label class="col-sm-2 col-sm-2 control-label">日&nbsp;期&nbsp;范&nbsp;围*</label>
 							<div class="col-md-5">
 								<form:select path="rangMonth" class="form-control">
+									<form:option value="0">--请选择日期范围--</form:option>
 									<form:options items="${selectDataSource}" />
 								</form:select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 col-sm-2 control-label">有效日期*</label>
+							<div class="col-md-5">
+								<fmt:formatDate var='formattedDate1' value='${dictCoupons.fromDate}' type='both' pattern="yyyy-MM-dd" />
+								<form:input id="fromDate" path="fromDate"  class="form-control select-time" value="${formattedDate1 }" readonly="true"/>
+							</div>
+							
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 col-sm-2 control-label"></label>
+							<div class="col-md-5">
+								<fmt:formatDate var='formattedDate2' value='${dictCoupons.toDate}' type='both' pattern="yyyy-MM-dd" />
+								<form:input id="toDate" path="toDate" class="form-control select-time" value="${formattedDate2 }" readonly="true"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -145,7 +161,8 @@
 	<!--common script for all pages-->
 	<%@ include file="../shared/importJs.jsp"%>
 
-
+	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
 	<!--script for this page-->
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"
 		type="text/javascript"></script>

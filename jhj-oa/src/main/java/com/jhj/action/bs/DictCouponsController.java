@@ -362,27 +362,35 @@ public class DictCouponsController extends BaseController {
 
         Map<String, String> hashMap = new HashMap<String, String>();
         Long flag = Long.valueOf(request.getParameter("id"));
+        
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
         // 更新或者新增
         if (flag != null && flag > 0) {
             // 更新充值后赠送优惠券
-            DictCoupons dictCoupon = couponService.selectByPrimaryKey(flag);
-            dictCoupon.setServiceType(dictCoupons.getServiceType());
-            dictCoupon.setValue(dictCoupons.getValue());
+        	DictCoupons dictCoupon = couponService.selectByPrimaryKey(flag);
+        	dictCoupon.setValue(dictCoupons.getValue());
             dictCoupon.setMaxValue(dictCoupons.getMaxValue());
-//            dictCoupon.setDescription(dictCoupons.getDescription());
-//            dictCoupon.setIntroduction(dictCoupons.getIntroduction());
+            dictCoupon.setServiceType(dictCoupons.getServiceType());
+            if(dictCoupons.getRangMonth()==0){
+            	if(fromDate!=null){
+            		dictCoupon.setFromDate(DateUtil.parse(fromDate));
+            	}
+            	if(toDate!=null){
+            		dictCoupon.setToDate(DateUtil.parse(toDate));
+            	}
+            }
+            if(dictCoupons.getRangMonth()>0){
+            	dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
+            }
             dictCoupon.setRangMonth(dictCoupons.getRangMonth());
-//            dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
             dictCoupon.setIsValid(dictCoupons.getIsValid());
             couponService.updateByPrimaryKeySelective(dictCoupon);
         } else {
             // 新增充值后赠送优惠券
-            DictCoupons dictCoupon = couponService.initRechargeCoupon();
+        	DictCoupons dictCoupon = couponService.initRechargeCoupon();
             dictCoupon.setCardNo(RandomUtil.randomNumber(6));
             dictCoupon.setCardPasswd(RandomUtil.randomCode(8));
-            dictCoupon.setServiceType(dictCoupons.getServiceType());
-            dictCoupon.setValue(dictCoupons.getValue());
-            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
             PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
             if(Long.parseLong(dictCoupons.getServiceType())>0L){
             	serviceTypeVo.setServiceTypeId(Long.parseLong(dictCoupons.getServiceType()));
@@ -392,10 +400,22 @@ public class DictCouponsController extends BaseController {
             }else{
             	dictCoupon.setIntroduction(dictCoupons.getValue()+"元全部品类券");
             }
-//            dictCoupon.setDescription(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
-            dictCoupon.setRangMonth(dictCoupons.getRangMonth());
-            dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
             dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
+            dictCoupon.setValue(dictCoupons.getValue());
+            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
+            dictCoupon.setServiceType(dictCoupons.getServiceType());
+            if(dictCoupons.getRangMonth()==0){
+            	if(fromDate!=null){
+            		dictCoupon.setFromDate(DateUtil.parse(fromDate));
+            	}
+            	if(toDate!=null){
+            		dictCoupon.setToDate(DateUtil.parse(toDate));
+            	}
+            }
+            if(dictCoupons.getRangMonth()>0){
+            	dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
+            }
+            dictCoupon.setRangMonth(dictCoupons.getRangMonth());
             dictCoupon.setIsValid(dictCoupons.getIsValid());
             couponService.insertSelective(dictCoupon);
         }
@@ -678,6 +698,10 @@ public class DictCouponsController extends BaseController {
         List<Long> list=new ArrayList<Long>(userIdSet);
         for(int i=0;i<list.size();i++){
     	   UserCoupons uc = userCouponsService.initUserCoupons(list.get(i), coupon);
+    	   if(coupon.getRangMonth()==0){
+    		   uc.setFromDate(coupon.getFromDate());
+    		   uc.setToDate(coupon.getToDate());
+    	   }
          	userCouponsList.add(uc);
         }
         userCouponsService.insertByList(userCouponsList);

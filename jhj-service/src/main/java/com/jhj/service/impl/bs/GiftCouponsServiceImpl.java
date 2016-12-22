@@ -104,6 +104,8 @@ public class GiftCouponsServiceImpl implements GiftCouponsService {
 					vo.setValue(item.getValue());
 					vo.setRangMonth(item.getRangMonth());
 					vo.setServiceType(item.getServiceType());
+					vo.setFromDate(item.getFromDate());
+					vo.setToDate(item.getToDate());
 				}
 			}
 			

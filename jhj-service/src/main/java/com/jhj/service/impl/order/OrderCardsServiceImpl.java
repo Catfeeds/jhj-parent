@@ -164,13 +164,17 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			record.setGiftId(item.getGiftId());
 			record.setServiceType(item.getServiceType());
 			
-			Date fromDate = DateUtil.getNowOfDate();
-			record.setFromDate(fromDate);
-			
-			
-			String toDateStr = DateUtil.addDay(fromDate, item.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
-			Date toDate = DateUtil.parse(toDateStr);
-			record.setToDate(toDate);
+			if(item.getRangMonth()==0){
+				record.setFromDate(item.getFromDate());
+				record.setToDate(item.getToDate());
+			}
+			if(item.getRangMonth()>0){
+				Date fromDate = DateUtil.getNowOfDate();
+				record.setFromDate(fromDate);
+				String toDateStr = DateUtil.addDay(fromDate, item.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+				Date toDate = DateUtil.parse(toDateStr);
+				record.setToDate(toDate);
+			}
 			
 			int num = item.getNum().intValue();
 			if (num > 0) {

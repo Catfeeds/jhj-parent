@@ -98,6 +98,14 @@ $('#recharge-coupon-form').validate({
 				}
 		    }
 		});
+
+$('.select-time').datepicker({
+	format: "yyyy-mm-dd",
+	language: "zh-CN",
+	autoclose: true,
+	startView: 0
+});
+		
 		
 //选择发送优惠券的对象,互斥事件
 function selectOne(){
