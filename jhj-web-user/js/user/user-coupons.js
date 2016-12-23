@@ -56,7 +56,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			}
 			$$("#coupons-list").html(html);
 		}
-	})
+	});
 	
 	
 
