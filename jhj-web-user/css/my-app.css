@@ -2954,48 +2954,54 @@ i.toolbar-icon-tixing {
 /*优惠券*/
 .youhuiquan{
   width:47%;
-  height:150px;
+  height:200px;
   margin-top: 15px;
   float: left;
   margin-left: 2%;
   background: #4EAFD8;
   border-radius: 5px;
 }
-.youhuiquan span{
-  line-height: 40px;
-  margin-top: 15px;
-  background: #2883BF;
+.youhuiquan b{
+  line-height: 30px;
+  margin:0;
+  margin-top: -30px;
   color:#fff;
+  width:50%;
+  height:30px;
   font-size: 14px;
+  float:right;
+  margin-right:5px;
 }
 .youhuiquan1{
   width:45%;
   float: left;
-  height:40px;
+  height:30px;
   padding-left:5%;
-  line-height: 40px;
+  line-height: 30px;
   color:#fff;
   font-size: 24px;
-  font-weight:bold;
 }
 .youhuiquan2{
-  float: left;
   height:60px;
   line-height: 60px;
   width:35%;
   padding-left: 15%;
   font-size: 40px;
-  font-weight:bold;
   color:#fff;
-  margin-top: -15px;
+  margin-top: -20px;
 }
 .youhuiquan p{
   margin:0;
   text-align: left;
-  line-height: 30px;
+  line-height: 24px;
   color:#fff;
   font-weight: bold;
   font-size: 14px;
+  width:50%;
+  height:60px;
+  float:right;
+  margin-right:5px;
+  text-overflow: ellipsis;
 }
 .youhuiquan3{
   width:95%;
@@ -3005,8 +3011,8 @@ i.toolbar-icon-tixing {
   color: #4EAFD8;
   text-align: center;
   line-height: 40px;
-  font-size: 14px;
-  margin-top: 15px;
+  font-size: 12px;
+  margin-top: 10px;
   clear:both;
 }
 .youhuiquan4{
@@ -3110,7 +3116,15 @@ i.toolbar-icon-tixing {
   margin-top: 15px;
   color:#F96269;
 }
-
+.youhuiquan8{
+	width:100%;
+	clear:both;
+	height:28px;
+	font-size:14px;
+	text-align:center;
+	line-height:28px;
+	color:#fff;
+}
 
 
 /*用户登录页面*/
