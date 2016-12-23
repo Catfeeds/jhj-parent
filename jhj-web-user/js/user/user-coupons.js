@@ -112,20 +112,3 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 	}
 });
 
-//列获取优惠券列表
-//myApp.template7Data['page:mine-coupons-list'] = function(){
-//	var result="";
-//	var userId = localStorage.getItem("user_id");
-//	var serviceTypeId = sessionStorage.getItem('service_type_id');
-//	$$.ajax({
-//		type : "GET",
-//		url  : siteAPIPath+"user/get_coupon.json?user_id="+userId,
-//		dataType: "json",
-//		cache : true,
-//		async : false,
-//		success: function(data){
-//			result = data;
-//		}
-//	})
-//	return result;
-//}
