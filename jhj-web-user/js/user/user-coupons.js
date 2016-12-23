@@ -39,9 +39,9 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 					temp=temp.replace(new RegExp('{service_type_name}','gm'),"仅限于："+coupons.service_type_name);
 				}
 				if(parseFloat(coupons.max_value)>0){
-					temp=temp.replace(new RegExp('{max_value}','gm'),"满"+coupons.max_value+"元可用");
+					temp=temp.replace(new RegExp('{maxvalue}','gm'),"满"+coupons.max_value+"元可用");
 				}else{
-					temp=temp.replace(new RegExp('{max_value}','gm'),"");
+					temp=temp.replace(new RegExp('{maxvalue}','gm'),"");
 				}
 				
 				temp=temp.replace(new RegExp('{from_date_str}','gm'),coupons.from_date_str);
