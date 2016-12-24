@@ -130,13 +130,15 @@ public class OrderOnlinePayController extends BaseController {
 			return result;
 		}
 
-		if (order != null && order.getOrderStatus().equals(Constants.ORDER_STATUS_4)) {
-			// 更新付款用户账号名
-			if (payAccount != null && !payAccount.equals("")) {
-				userDetailPayService.updateByPayAccount(tradeNo, payAccount);
+		if (order != null ) {
+			if ( !order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)) {
+				// 更新付款用户账号名
+				if (payAccount != null && !payAccount.equals("")) {
+					userDetailPayService.updateByPayAccount(tradeNo, payAccount);
+				}
+	
+				return result;// 订单已支付
 			}
-
-			return result;// 订单已支付
 		}
 
 		Long updateTime = TimeStampUtil.getNow() / 1000;
