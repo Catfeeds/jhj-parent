@@ -401,7 +401,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			});
 
 			for (int i = 0; i < staffNums; i++) {
-				dispatchStaffIds.add(list.get(i).getStaffId());
+				if(list.size()>0){
+					OrgStaffsNewVo orgStaffsNewVo = list.get(i);
+					if(orgStaffsNewVo!=null){
+						dispatchStaffIds.add(orgStaffsNewVo.getStaffId());
+					}
+				}
 			}
 		}
 
