@@ -72,7 +72,6 @@
 			<table class="table table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
 					<tr>
-						<th>时间</th>
 						<th>总单数</th>
 						<th>总营业额(元)</th>
 						<th>基础服务(单)</th>
@@ -87,34 +86,34 @@
 					</tr>
 				</thead>
 				<tbody>
-				<c:forEach items="${chartDatas.tableDatas}" var="item">
+			<%-- 	<c:forEach items="${chartDatas.tableMap}" var="item"> --%>
 					<tr>
-						<td>${item.series}</td>
-						<td style="text-align: right;">${item.总单数}</td>
-						<td style="text-align: right;">${item.总营业额}</td>
+						<%-- <td>${item.series}</td> --%>
+						<td style="text-align: right;">${chartDatas.tableMap.总单数}</td>
+						<td style="text-align: right;">${chartDatas.tableMap.总营业额}</td>
 						<td style="text-align: right;">
-							<a href="../order/order-hour-list?startTime=${item.startTime }&endTime=${item.endTime}">
-								${item.基础服务}
+							<a href="../order/order-hour-list">
+								${chartDatas.tableMap.基础服务}
 							</a>
 						</td>
-						<td style="text-align: right;">${item.基础服务营业额}</td>
-						<td style="text-align: right;">${item.基础服务营业额占比}</td>
+						<td style="text-align: right;">${chartDatas.tableMap.基础服务营业额}</td>
+						<td style="text-align: right;">${chartDatas.tableMap.基础服务营业额占比}</td>
 						<td style="text-align: right;">
-							<a href="../order/order-exp-list?startTime=${item.startTime }&endTime=${item.endTime}">
-								${item.深度服务}
+							<a href="../order/order-exp-list">
+								${chartDatas.tableMap.深度服务}
 							</a>
 						</th>
-						<td style="text-align: right;">${item.深度服务营业额}</td>
-						<td style="text-align: right;">${item.深度服务营业额占比}</td>
+						<td style="text-align: right;">${chartDatas.tableMap.深度服务营业额}</td>
+						<td style="text-align: right;">${chartDatas.tableMap.深度服务营业额占比}</td>
 						<td style="text-align: right;">
-							<a href="../order/order-exp-baby-list?startTime=${item.startTime }&endTime=${item.endTime}">
-								${item.母婴到家}
+							<a href="../order/order-exp-baby-list">
+								${chartDatas.tableMap.母婴到家}
 							</a>
 						</td>
-						<td style="text-align: right;">${item.母婴到家营业额}</td>
-						<td style="text-align: right;">${item.母婴到家营业额占比}</td>
+						<td style="text-align: right;">${chartDatas.tableMap.母婴到家营业额}</td>
+						<td style="text-align: right;">${chartDatas.tableMap.母婴到家营业额占比}</td>
 					</tr>
-				</c:forEach>
+				<%-- </c:forEach> --%>
 				</tbody>
 			</table>
 

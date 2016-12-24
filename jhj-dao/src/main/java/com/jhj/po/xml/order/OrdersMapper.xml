@@ -258,7 +258,7 @@
 			and order_no in (select order_no from order_prices where pay_type = #{payType,jdbcType=NUMERIC})
 		</if>
 		
-		<if test="staffName!=null">
+		<if test="staffName!=null and staffName!=''">
 			and id in (select order_id from order_dispatchs where staff_name like  CONCAT('%',#{staffName},'%')  and dispatch_status = 1)
 		</if>
 	</sql>
