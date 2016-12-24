@@ -115,6 +115,7 @@ public class MarketSmsController extends BaseController {
 		marketSms.setUserGroupTypeList(Arrays.asList(userGroupType.split(",")));
 
 		UserSearchVo userVo = new UserSearchVo();
+		userVo.setIsVip((short) 0);
 		List<Users> userAll = new ArrayList<Users>();
 		if (parameter == null) {
 			userAll = userService.selectBySearchVo(userVo);
