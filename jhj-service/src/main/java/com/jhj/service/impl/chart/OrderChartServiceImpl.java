@@ -88,8 +88,8 @@ public class OrderChartServiceImpl implements OrderChartService {
 			tableDatas.add(tableData);
 		}
 		
-		Short[] status={7,8,9};
-		chartSearchVo.setStatus(Arrays.asList(status));
+//		Short[] status={7,8,9};
+//		chartSearchVo.setStatus(Arrays.asList(status));
 		
 		//查询SQL获得统计数据 -- 订单总数
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
