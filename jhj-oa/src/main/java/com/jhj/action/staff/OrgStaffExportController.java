@@ -167,7 +167,7 @@ public class OrgStaffExportController extends BaseController {
 			//导出的是完成服务和评价后的订单。
 			Short orderStatus = order.getOrderStatus();
 			if (!orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) && 
-				 orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) 
+				!orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) 
 				continue;
 			
 			OrgStaffIncomingVo vo = orgStaffFinanceService.getStaffInComingDetail(orgStaff, order, item);
