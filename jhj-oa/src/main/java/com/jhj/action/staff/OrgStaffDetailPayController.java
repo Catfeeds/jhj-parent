@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,9 @@ import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.TimeStampUtil;
 
 @Controller
 @RequestMapping(value = "/staff")
@@ -91,6 +94,14 @@ public class OrgStaffDetailPayController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
 		
+//		if(searchVo.getStartTimeStr()!=null){
+//			String startTimeStr = searchVo.getStartTimeStr()+" 00:00:00";
+//			searchVo.setStartTime(DateUtil.parseFull(startTimeStr).getTime()/1000);
+//		}
+//		if(searchVo.getEndTimeStr()!=null){
+//			String endTimeStr = searchVo.getEndTimeStr()+" 23:59:59";
+//			searchVo.setEndTime(DateUtil.parseFull(endTimeStr).getTime()/1000);
+//		}
 
 		PageInfo plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
 		List<OrgStaffDetailPay> orgStaffdetailPayList = plist.getList();
