@@ -445,6 +445,8 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		int staffNum = order.getStaffNums();
 		vo.setStaffNum(staffNum);
 		BigDecimal totalOrderMoney = orderPricesService.getTotalOrderMoney(orderPrices);
+		totalOrderMoney = MathBigDecimalUtil.div(totalOrderMoney, new BigDecimal(staffNum));
+		
 		BigDecimal incomingPercent = orderPricesService.getOrderPercent(order, staffId);
 		// 1.订单支付金额
 		BigDecimal orderIncoming = orderPrices.getOrderPay();

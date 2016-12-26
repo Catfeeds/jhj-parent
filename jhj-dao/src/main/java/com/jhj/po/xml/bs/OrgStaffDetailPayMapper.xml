@@ -53,11 +53,11 @@
 			and order_no = #{orderNo,jdbcType=VARCHAR}
 		</if>
 
-		<if test="startTime !=null and startTime!='' ">
-			<![CDATA[ and add_time >= #{startTime}]]>
+		<if test="startAddTime !=null and startAddTime!='' ">
+			<![CDATA[ and add_time >= #{startAddTime, jdbcType=NUMERIC}]]>
 		</if>
-		<if test="endTime !=null and endTime !='' ">
-			<![CDATA[ and add_time <= #{endTime}]]>
+		<if test="endAddTime !=null and endAddTime !='' ">
+			<![CDATA[ and add_time <= #{endAddTime, jdbcType=NUMERIC}]]>
 		</if>
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">

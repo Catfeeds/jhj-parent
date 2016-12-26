@@ -94,14 +94,14 @@ public class OrgStaffDetailPayController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
 		
-		if(searchVo.getStartTimeStr()!=null){
-			String startTimeStr = searchVo.getStartTimeStr()+" 00:00:00";
-			searchVo.setStartTime(DateUtil.parseFull(startTimeStr).getTime()/1000);
-		}
-		if(searchVo.getEndTimeStr()!=null){
-			String endTimeStr = searchVo.getEndTimeStr()+" 23:59:59";
-			searchVo.setEndTime(DateUtil.parseFull(endTimeStr).getTime()/1000);
-		}
+//		if(searchVo.getStartTimeStr()!=null){
+//			String startTimeStr = searchVo.getStartTimeStr()+" 00:00:00";
+//			searchVo.setStartTime(DateUtil.parseFull(startTimeStr).getTime()/1000);
+//		}
+//		if(searchVo.getEndTimeStr()!=null){
+//			String endTimeStr = searchVo.getEndTimeStr()+" 23:59:59";
+//			searchVo.setEndTime(DateUtil.parseFull(endTimeStr).getTime()/1000);
+//		}
 
 		PageInfo plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
 		List<OrgStaffDetailPay> orgStaffdetailPayList = plist.getList();
