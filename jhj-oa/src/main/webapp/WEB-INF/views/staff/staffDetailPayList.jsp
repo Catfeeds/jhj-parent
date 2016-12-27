@@ -37,12 +37,12 @@
 				</td>
 				<div class="form-group">
 					开始时间：
-					<form:input path="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="serviceStartTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
 				</div>
 				<div class="form-group">
 					结束时间：
-					<form:input path="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="serviceEndTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
 				</div>
 				
@@ -57,25 +57,27 @@
 				<thead>
 					<tr>
 						<td>订单总金额（元）</td>
+						<td>订单支付金额（元）</td>
+						<td>使用优惠劵金额（元）</td>
 						<td>订单收入（元）</td>
 						<td>余额支付（元）</td>
 						<td>支付宝（元）</td>
 						<td>微信（元）</td>
+						<td>现金支付（元）</td>
 						<td>平台已支付（元）</td>
-						<td>现金收入（元）</td>
-						<td>还款金额（元）</td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>${totalMoney }</td>
-						<td>${orderPayMoney }</td>
-						<td>${spareMoney }</td>
-						<td>${alipayMoney }</td>
-						<td>${wechatMoney }</td>
-						<td>${platformMoney }</td>
-						<td>${cashMoney }</td>
-						<td>${refundMoney }</td>
+						<td>${totalOrderMoney }</td>
+						<td>${totalOrderPay }</td>
+						<td>${totalOrderCoupon }</td>
+						<td>${totalOrderIncoming }</td>
+						<td>${totalOrderPayType0 }</td>
+						<td>${totalOrderPayType1 }</td>
+						<td>${totalOrderPayType2 }</td>
+						<td>${totalOrderPayType6 }</td>
+						<td>${totalOrderPayType7 }</td>
 					</tr>
 				</tbody>
 			</table>

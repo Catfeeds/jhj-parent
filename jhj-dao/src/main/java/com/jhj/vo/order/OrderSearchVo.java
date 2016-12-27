@@ -67,6 +67,10 @@ public class OrderSearchVo {
 	
 	private String endTimeStr;
 	
+	private String serviceStartTimeStr;
+	
+	private String serviceEndTimeStr;
+	
 	private Long parentId;
 	
 	private Long orgId;
@@ -374,6 +378,22 @@ public class OrderSearchVo {
 
 	public void setEndTimeStr(String endTimeStr) {
 		this.endTimeStr = endTimeStr;
+	}
+
+	public String getServiceStartTimeStr() {
+		return serviceStartTimeStr;
+	}
+
+	public void setServiceStartTimeStr(String serviceStartTimeStr) {
+		this.serviceStartTimeStr = serviceStartTimeStr;
+	}
+
+	public String getServiceEndTimeStr() {
+		return serviceEndTimeStr;
+	}
+
+	public void setServiceEndTimeStr(String serviceEndTimeStr) {
+		this.serviceEndTimeStr = serviceEndTimeStr;
 	}
 	
 }
