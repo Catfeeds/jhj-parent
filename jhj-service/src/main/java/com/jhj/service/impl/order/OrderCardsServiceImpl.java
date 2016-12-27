@@ -295,6 +295,11 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		PageInfo<OrderCards> page =new PageInfo<OrderCards>(orderCardsList);
 		return page;
 	}
+	
+	@Override
+	public List<OrderCards> selectBySearchVo(OrderCardsVo vo) {		
+		return orderCardsMapper.selectBySearchVo(vo);
+	}
 
 	@Override
 	public OrderCardsVo transVo(OrderCards orderCards) {

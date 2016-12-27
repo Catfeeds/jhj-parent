@@ -22,24 +22,21 @@
 		card_pay, pay_type, order_status,
 		add_time, update_time,referee,parent_id,org_id
 	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Long">
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from order_cards
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
 
-	<select id="selectByOrderCardsNo" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+	<select id="selectByOrderCardsNo" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from order_cards
 		where card_order_no = #{cardOrderNo,jdbcType=VARCHAR}
 	</select>
 	<!-- 查询用户所有未使用的充值卡列表 -->
-	<select id="selectNoPayByUserId" resultMap="BaseResultMap"
-		parameterType="java.lang.Long">
+	<select id="selectNoPayByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from order_cards
@@ -54,39 +51,32 @@
 	</resultMap>
 	<!-- *****************充值卡销售图表 start **************** -->
 	<sql id="chartSearchVo">
-		 <if test="startTime !=null">
+		<if test="startTime !=null">
 			<![CDATA[ and add_time >= #{startTime}]]>
 		</if>
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-		<!-- <if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if> -->
+		<!-- <if test="status != null"> and order_status in <foreach item="item" index="index" collection="status" open="(" separator="," close=")"> #{item} </foreach> 
+			</if> -->
 		and order_status='1'
-		GROUP BY name, series ORDER BY series ASC 
+		GROUP BY name, series ORDER BY series ASC
 	</sql>
-<!-- <select id="saleCardByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
- SELECT card_type AS name,FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(card_money) AS totalMoney FROM
- order_cards where 1 = 1  
- <include refid="chartSearchVo"/>
-</select> -->
-<select id="saleCardByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-   SELECT card_type AS name,FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(card_money) AS totalMoney FROM
-   order_cards where 1 = 1  
-   <include refid="chartSearchVo"/>
-</select>
-<select id="saleCardByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-   SELECT card_type AS name,
-   CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
-   SUM(card_money) AS totalMoney FROM
-   order_cards where 1 = 1  
-   <include refid="chartSearchVo"/>
-</select>
-<!-- *****************充值卡销售图表 end **************** -->
+	<!-- <select id="saleCardByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo"> SELECT card_type AS name,FROM_UNIXTIME(add_time, #{formatParam}) 
+		AS series, SUM(card_money) AS totalMoney FROM order_cards where 1 = 1 <include refid="chartSearchVo"/> </select> -->
+	<select id="saleCardByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT card_type AS name,FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(card_money) AS totalMoney FROM
+		order_cards where 1 = 1
+		<include refid="chartSearchVo" />
+	</select>
+	<select id="saleCardByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT card_type AS name,
+		CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		SUM(card_money) AS totalMoney FROM
+		order_cards where 1 = 1
+		<include refid="chartSearchVo" />
+	</select>
+	<!-- *****************充值卡销售图表 end **************** -->
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
@@ -94,15 +84,15 @@
 		where id = #{id,jdbcType=NUMERIC}
 	</delete>
 	<insert id="insert" parameterType="com.jhj.po.model.order.OrderCards">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() AS id
 		</selectKey>
 		insert into order_cards (id, user_id, mobile,
 		card_order_no, card_type,
 		card_money,
 		card_pay, pay_type, order_status,
-		add_time, update_time,referee,parent_id,org_id)
+		add_time,
+		update_time,referee,parent_id,org_id)
 		values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC},
 		#{mobile,jdbcType=CHAR},
 		#{cardOrderNo,jdbcType=VARCHAR},
@@ -116,8 +106,7 @@
 		#{orgId,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderCards">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() AS id
 		</selectKey>
 		insert into order_cards
@@ -278,27 +267,42 @@
 		referee = #{referee,jdbcType=VARCHAR},
 		parent_id = #{parentId,jdbcType=NUMERIC},
 		org_id = #{orgId,jdbcType=NUMERIC}
-		where id = #{id,jdbcType=NUMERIC}
+		where id =
+		#{id,jdbcType=NUMERIC}
 	</update>
-	
+
 	<select id="selectByVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderCardsVo">
-		select <include refid="Base_Column_List"/> from order_cards
+		select
+		<include refid="Base_Column_List" />
+		from order_cards
 		<where>
-			<include refid="searchVo"/>
+			<include refid="searchVo" />
 		</where>
 	</select>
-	
+
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderCardsVo">
-		select <include refid="Base_Column_List"/> from order_cards
+		select
+		<include refid="Base_Column_List" />
+		from order_cards
 		<where>
-			<include refid="searchVo"/>
+			<include refid="searchVo" />
 		</where>
 		order by add_time desc
 	</select>
-	
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderCardsVo">
+		select
+		<include refid="Base_Column_List" />
+		from order_cards
+		<where>
+			<include refid="searchVo" />
+		</where>
+		order by add_time desc
+	</select>
+
 	<sql id="searchVo">
 		<if test="mobile!=null and mobile!=''">
-			and mobile like concat('%',#{mobile,jdbcType=CHAR},'%') 
+			and mobile like concat('%',#{mobile,jdbcType=CHAR},'%')
 		</if>
 		<if test="cardType!=null">
 			and card_pay = #{cardType,jdbcType=NUMERIC}
@@ -331,11 +335,11 @@
 			and referee in (select staff_code from org_staffs where name like concat('%',#{staffName},'%'))
 		</if>
 	</sql>
-	
+
 	<select id="countTotal" resultType="java.util.HashMap" parameterType="com.jhj.vo.order.OrderCardsVo">
 		SELECT SUM(card_pay) as chargeMoney from order_cards
 		<where>
-			<include refid="searchVo"/>
+			<include refid="searchVo" />
 		</where>
 	</select>
 </mapper>

@@ -510,7 +510,7 @@
 		score = #{score,jdbcType=NUMERIC},
 		user_type = #{userType,jdbcType=NUMERIC},
 		remarks =
-		#{remarks,jdbcType=VARCHAR}
+		#{remarks,jdbcType=VARCHAR},
 		add_from = #{addFrom,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},

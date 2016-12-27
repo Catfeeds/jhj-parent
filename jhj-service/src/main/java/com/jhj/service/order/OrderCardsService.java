@@ -45,4 +45,6 @@ public interface OrderCardsService {
 	OrderCardsVo transVo(OrderCards orderCards);
 	
 	Map<String,Double> countTotal(OrderCardsVo orderCardsVo);
+
+	List<OrderCards> selectBySearchVo(OrderCardsVo vo);
 }
