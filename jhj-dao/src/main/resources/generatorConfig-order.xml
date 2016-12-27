@@ -167,8 +167,37 @@
 			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
 		</table>
 
-
-
+<!-- 派工表金额表 -->
+		<table schema="jhj3.0" tableName="order_dispatch_prices" enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<generatedKey column="id" sqlStatement="mysql" identity="true" />
+			<columnOverride column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_id" property="orderId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="addr_id" property="addrId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="order_time" property="orderTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="service_date" property="serviceDate" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="parent_id" property="parentId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="org_id" property="orgId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="staff_id" property="staffId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="coupon_id" property="couponId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="update_time" property="updateTime" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			<columnOverride column="service_type_id" property="serviceTypeId" javaType="java.lang.Long" jdbcType="NUMERIC" />
+			
+			<columnOverride column="is_vip" property="isVip" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="dispatch_status" property="dispatchStatus" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="pay_type" property="payType" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="order_type" property="orderType" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			<columnOverride column="order_status" property="orderStatus" javaType="java.lang.Short" jdbcType="NUMERIC" />
+			
+		</table>
 
 
 	</context>
