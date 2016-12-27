@@ -7,6 +7,8 @@
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
 <%@ taglib prefix="orderTypeTag" uri="/WEB-INF/tags/orderTypeName.tld" %>
 <%@ taglib prefix="payTypeTag" uri="/WEB-INF/tags/payTypeName.tld" %>
+<%@ taglib prefix="userDetailPayStatus" uri="/WEB-INF/tags/userDetailPayStatusTag.tld" %>
+
 <html>
   <head>
 	
@@ -94,15 +96,16 @@
 
                           <table class="table table-striped table-advance table-hover">
                               <thead>
-                              <tr>
+	                              <tr>
                             		  <th >订单号</th>
 		                              <th >会员手机号</th>
 		                              <th >服务品类</th>
 		                              <th>充值金额</th>
 		                              <th >消费金额</th>
 		                              <th>支付方式</th>
+		                              <th>状态</th>
 		                              <th >添加时间</th>
-                              </tr>
+	                              </tr>
                               </thead>
                               <tbody>
                               <c:forEach items="${userPayDetailList.list}" var="item">
@@ -118,9 +121,16 @@
 					            	 	￥${ item.orderMoney }
 					            	</c:if>
 					            </td>
-					            <td align="center" >￥ ${ item.orderPay } </td>
+					            <td align="center" >
+					            	<c:if test="${item.orderType!=1 }">
+					            	 	￥${ item.orderMoney }
+					            	</c:if>
+					            </td>
 					            <td>
 									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
+					            </td>
+					            <td>
+					            	<userDetailPayStatus:status orderId="${item.orderId }" orderType="${item.orderType }" orderNo="${item.orderNo }"/>
 					            </td>
 					            <td>
 					            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>
