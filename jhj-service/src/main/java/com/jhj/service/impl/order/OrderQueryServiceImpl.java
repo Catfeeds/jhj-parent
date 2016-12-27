@@ -680,7 +680,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 2. 如果为店长，则只能看当前门店和已派工到该门店的人员.
 		
 		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
-		searchVo.setOrderType(orderType);
+		if (orderType != null) {
+			searchVo.setOrderType(orderType);
+		}
+		
 		if (sessionParentId > 0L)
 			searchVo.setParentId(sessionParentId);
 		// 处理查询条件云店--------------------------------开始
@@ -720,11 +723,17 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 服务开始时间
 		String serviceStartTime = request.getParameter("serviceStartTimeStr");
 		if (!StringUtil.isEmpty(serviceStartTime)) {
+			
+			if (serviceStartTime.length() == 10) serviceStartTime = serviceStartTime + " 00:00";
+			
 			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDayFull(serviceStartTime+":00") / 1000);
 		}
 		// 服务结束时间
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
+			
+			if (serviceEndTimeStr.length() == 10) serviceEndTimeStr = serviceEndTimeStr + " 00:00";
+			
 			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":00") / 1000);
 		}
 		// 处理查询时间条件--------------------------------结束

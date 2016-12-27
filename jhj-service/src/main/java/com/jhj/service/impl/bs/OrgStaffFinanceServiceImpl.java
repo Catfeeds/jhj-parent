@@ -223,6 +223,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			Long couponId = userCoupon.getCouponId();
 			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
 			orderPayCoupon = dictCoupon.getValue();
+			orderPayCoupon =  MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
 			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
 			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
 		}

@@ -1,0 +1,79 @@
+SELECT count(*) FROM `orders` WHERE add_time >= 1482595200 and add_time <= 1482681599
+
+
+SELECT count(*) FROM `orders` WHERE add_time >= 1482508800 and add_time <= 1482595199
+
+1482595199
+
+
+我的思路是这样的
+
+1.  先根据库里所有的充值记录，生成用户的总余额
+
+2.  再循环库里的订单明细，如果有余额支付的，就减掉用户的余额，并生成消费明细信息
+
+
+
+update `users` set rest_money = 0;
+Truncate user_detail_pay;
+
+
+select * from orders where order_type > 1 and order_status >= 3 and user_id in
+(select id from user_id where rest_money > 0)
+
+
+select from_unixtime(min(add_time)), from_unixtime(max(add_time)) from orders where order_type > 1 and order_status >= 3 and user_id in (select id from users where rest_money > 0)
+
+select * from users where mobile = '15001008009'
+
+select order_pay, from_unixtime(add_time) from order_prices where order_id in (select id from orders where mobile = '15001008009' and order_status >= 2)
+
+
+select * from users where mobile = '13466330824'
+
+select order_pay, from_unixtime(add_time) from order_prices where order_id in (select id from orders where mobile = '13466330824' and order_status >= 2)
+
+select * from users where mobile = '18610562626'
+
+select order_pay, from_unixtime(add_time) from order_prices where order_id in (select id from orders where mobile = '18610562626' and order_status >= 2)
+
+
+//验证订单总金额的SQL
+select from_unixtime(service_date,'%Y%-%m-%d') from orders limit 1;
+
+select sum(order_money) from
+(
+	select sum(order_money) as order_money from order_prices where order_id in (
+	select id from orders where order_status >=2 and service_date >= 1480521600  and service_date <= 1483113600  and order_status in (2,3,5,7,8) )
+	union all
+	select sum(order_pay) as order_money from order_price_ext where order_id in (
+	select id from orders where order_status >=2 and service_date >= 1480521600  and service_date <= 1483113600 and order_status in (2,3,5,7,8) ) and order_status = 2
+) as T
+
+//订单总支付金额
+select sum(order_money) from
+(
+	select sum(order_pay) as order_money from order_prices where order_id in (
+	select id from orders where order_status >=2 and service_date >= 1480521600  and service_date <= 1483113600  and order_status in (2,3,5,7,8) )
+	union all
+	select sum(order_pay) as order_money from order_price_ext where order_id in (
+	select id from orders where order_status >=2 and service_date >= 1480521600  and service_date <= 1483113600 and order_status in (2,3,5,7,8) ) and order_status = 2
+) as T
+
+//优惠劵金额
+select sum(value) from user_coupons where id in (
+select coupon_id as order_money from order_prices where order_id in (
+	select id from orders where order_status >=2 and service_date >= 1480521600  and service_date <= 1483113600  and order_status in (2,3,5,7,8) )
+)
+
+//余额支付
+select sum(order_money) from
+(
+	select sum(order_pay) as order_money from order_prices where order_id in (
+	select id from orders where order_status >=2 and service_date >= 1480521600  and service_date <= 1483113600  and order_status in (2,3,5,7,8) ) and pay_type = 0
+	union all
+	select sum(order_pay) as order_money from order_price_ext where order_id in (
+	select id from orders where order_status >=2 and service_date >= 1480521600  and service_date <= 1483113600 and order_status in (2,3,5,7,8) ) and order_status = 2 and pay_type = 0
+) as T
+
+
