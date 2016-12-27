@@ -35,11 +35,13 @@ import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrderStatService;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -63,6 +65,9 @@ public class OrgStaffDetailPayController extends BaseController {
 	
 	@Autowired
 	private OrderQueryService orderQueryService;
+	
+	@Autowired
+	private OrderStatService orderStatService;
 
 	/**
 	 * 服务人员财务明细
@@ -92,20 +97,21 @@ public class OrgStaffDetailPayController extends BaseController {
 		if (staffId > 0L) searchVo.setStaffId(staffId);
 		
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
-		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, Constants.ORDER_TYPE_0, sessionParentId);
+		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, null, sessionParentId);
 		
-//		if(searchVo.getStartTimeStr()!=null){
-//			String startTimeStr = searchVo.getStartTimeStr()+" 00:00:00";
-//			searchVo.setStartTime(DateUtil.parseFull(startTimeStr).getTime()/1000);
-//		}
-//		if(searchVo.getEndTimeStr()!=null){
-//			String endTimeStr = searchVo.getEndTimeStr()+" 23:59:59";
-//			searchVo.setEndTime(DateUtil.parseFull(endTimeStr).getTime()/1000);
-//		}
+		List<OrgStaffDetailPay> orgStaffdetailPayList = new ArrayList<OrgStaffDetailPay>();
+		//目前仅支持查询某一个时间段，不支持查询全部的.
+		if (searchVo.getStartServiceTime() == null) {
+			PageInfo resultDefault = new PageInfo(orgStaffdetailPayList);
 
+			model.addAttribute("contentModel", resultDefault);
+			model.addAttribute("searchModel", searchVo);
+			model.addAttribute("totalOrderMoney", 0);
+			return "staff/staffDetailPayList";
+		}
+	
 		PageInfo plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
-		List<OrgStaffDetailPay> orgStaffdetailPayList = plist.getList();
-		
+		orgStaffdetailPayList = plist.getList();
 		
 		List<OrgStaffDetailPayOaVo> orgStaffPayVoList = new ArrayList<OrgStaffDetailPayOaVo>();
 		for (int i = 0; i < orgStaffdetailPayList.size(); i++) {
@@ -119,8 +125,34 @@ public class OrgStaffDetailPayController extends BaseController {
 		model.addAttribute("searchModel", searchVo);
 		
 		//统计查询
-		Map<String, Double> statisticalData = orgStaffDetailPayService.selectTotalData(searchVo);
-		model.addAllAttributes(statisticalData);
+//		Map<String, Double> statisticalData = orgStaffDetailPayService.selectTotalData(searchVo);
+//		model.addAllAttributes(statisticalData);
+		
+		//1. 订单总金额
+		searchVo = new OrderSearchVo();
+		if (staffId > 0L) searchVo.setStaffId(staffId);
+		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, null, sessionParentId);
+		
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_2);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
+		orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
+		searchVo.setOrderStatusList(orderStatusList);
+		
+		Map<String ,String> orderStats = orderStatService.getTotalOrderMoneyMultiStat(searchVo);
+
+		model.addAttribute("totalOrderMoney", orderStats.get("totalOrderMoney").toString());
+		model.addAttribute("totalOrderPay", orderStats.get("totalOrderPay").toString());
+		model.addAttribute("totalOrderCoupon", orderStats.get("totalOrderCoupon").toString());
+		model.addAttribute("totalOrderIncoming", orderStats.get("totalOrderIncoming").toString());
+		model.addAttribute("totalOrderPayType0", orderStats.get("totalOrderPayType0").toString());
+		model.addAttribute("totalOrderPayType1", orderStats.get("totalOrderPayType1").toString());
+		model.addAttribute("totalOrderPayType2", orderStats.get("totalOrderPayType2").toString());
+		model.addAttribute("totalOrderPayType6", orderStats.get("totalOrderPayType6").toString());
+		model.addAttribute("totalOrderPayType7", orderStats.get("totalOrderPayType7").toString());
+		
 		
 		return "staff/staffDetailPayList";
 	}

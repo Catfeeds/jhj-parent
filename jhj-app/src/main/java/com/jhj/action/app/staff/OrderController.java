@@ -145,12 +145,12 @@ public class OrderController extends BaseController {
 		Long totalOrder = orderStatService.getTotalOrderCount(searchVo);
 		vo.setTotalOrder(totalOrder);
 		
-		// 订单总金额
+		// 订单支付金额
 		searchVo = new OrderSearchVo();
 		searchVo.setStaffId(staffId);
 		searchVo.setStartServiceTime(startTime);
 		searchVo.setEndServiceTime(endTime);
-		BigDecimal totalOrderMoney = orderStatService.getTotalOrderMoney(searchVo);
+		BigDecimal totalOrderMoney = orderStatService.getTotalOrderPay(searchVo);
 		vo.setTotalOrderMoney(totalOrderMoney);
 		
 		// 订单收入总金额
