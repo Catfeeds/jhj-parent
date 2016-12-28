@@ -732,9 +732,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
 			
-			if (serviceEndTimeStr.length() == 10) serviceEndTimeStr = serviceEndTimeStr + " 00:00";
+			if (serviceEndTimeStr.length() == 10) serviceEndTimeStr = serviceEndTimeStr + " 23:59";
 			
-			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":00") / 1000);
+			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":59") / 1000);
 		}
 		// 处理查询时间条件--------------------------------结束
 

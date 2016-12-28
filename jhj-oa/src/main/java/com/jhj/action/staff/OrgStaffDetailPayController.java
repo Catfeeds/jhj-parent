@@ -43,6 +43,7 @@ import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Controller
@@ -99,6 +100,22 @@ public class OrgStaffDetailPayController extends BaseController {
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, null, sessionParentId);
 		
+		// 服务开始时间
+		String serviceStartTime = request.getParameter("serviceStartTimeStr");
+		if (!StringUtil.isEmpty(serviceStartTime)) {
+
+			searchVo.setStartAddTime(TimeStampUtil.getMillisOfDayFull(serviceStartTime+" 00:00:00") / 1000);
+		}
+		// 服务结束时间
+		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
+		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
+			
+
+			
+			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+" 23:59:59") / 1000);
+		}
+		
+		
 		List<OrgStaffDetailPay> orgStaffdetailPayList = new ArrayList<OrgStaffDetailPay>();
 		//目前仅支持查询某一个时间段，不支持查询全部的.
 		if (searchVo.getStartServiceTime() == null) {
@@ -129,9 +146,9 @@ public class OrgStaffDetailPayController extends BaseController {
 //		model.addAllAttributes(statisticalData);
 		
 		//1. 订单总金额
-		searchVo = new OrderSearchVo();
+		OrderSearchVo statSearchVo = new OrderSearchVo();
 		if (staffId > 0L) searchVo.setStaffId(staffId);
-		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, null, sessionParentId);
+		statSearchVo = orderQueryService.getOrderSearchVo(request, statSearchVo, null, sessionParentId);
 		
 		List<Short> orderStatusList = new ArrayList<Short>();
 		orderStatusList.add(Constants.ORDER_HOUR_STATUS_2);
@@ -139,9 +156,9 @@ public class OrgStaffDetailPayController extends BaseController {
 		orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
 		orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
 		orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
-		searchVo.setOrderStatusList(orderStatusList);
+		statSearchVo.setOrderStatusList(orderStatusList);
 		
-		Map<String ,String> orderStats = orderStatService.getTotalOrderMoneyMultiStat(searchVo);
+		Map<String ,String> orderStats = orderStatService.getTotalOrderMoneyMultiStat(statSearchVo);
 
 		model.addAttribute("totalOrderMoney", orderStats.get("totalOrderMoney").toString());
 		model.addAttribute("totalOrderPay", orderStats.get("totalOrderPay").toString());
