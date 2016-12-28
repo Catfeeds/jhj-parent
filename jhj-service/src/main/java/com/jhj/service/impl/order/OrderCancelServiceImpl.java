@@ -337,7 +337,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 
 		//1. 记录服务人员消费明细
 		String orderStatusStr = "取消订单";
-		Boolean orderStaffDetailPay = orgStaffDetailPayService.setStaffDetailPay(staffId, orgStaff.getMobile(), Constants.STAFF_DETAIL_ORDER_TYPE_20, orderId, order.getOrderNo(), totalOrderPay, orderIncoming, orderStatusStr, remarks);
+		Boolean orderStaffDetailPay = orgStaffDetailPayService.setStaffDetailPay(staffId, orgStaff.getMobile(), Constants.STAFF_DETAIL_ORDER_TYPE_20, orderId, order.getOrderNo(), totalOrderPay, orderIncoming, orderStatusStr, remarks, 0L);
 		
 		
 		//2. 扣除用户收入

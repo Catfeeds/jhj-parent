@@ -228,7 +228,8 @@ public class StaffPayController extends BaseController {
 		}
 		BigDecimal totalDept = orgStaffFinance.getTotalDept();
 		//更新服务人财务表
-		orgStaffFinance.setTotalDept(new BigDecimal(0));
+		totalDept = totalDept.subtract(orgstaffPayDept.getOrderMoney());
+		orgStaffFinance.setTotalDept(totalDept);
 		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 		orgStaffFinanceService.updateByPrimaryKey(orgStaffFinance);
 		
@@ -239,8 +240,8 @@ public class StaffPayController extends BaseController {
 		orgStaffDetailPay.setOrderType((short) 4);
 		orgStaffDetailPay.setOrderId(orgstaffPayDept.getOrderId());
 		orgStaffDetailPay.setOrderNo(orderNo);
-		orgStaffDetailPay.setOrderMoney(totalDept);
-		orgStaffDetailPay.setOrderPay(totalDept);
+		orgStaffDetailPay.setOrderMoney(orgstaffPayDept.getOrderMoney());
+		orgStaffDetailPay.setOrderPay(orgstaffPayDept.getOrderMoney());
 		orgStaffDetailPay.setOrderStatusStr("完成支付");
 		orgStaffDetailPayService.insert(orgStaffDetailPay);
 

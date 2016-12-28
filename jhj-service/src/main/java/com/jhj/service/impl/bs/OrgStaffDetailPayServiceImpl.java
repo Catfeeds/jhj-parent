@@ -238,7 +238,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 
 	@Override
 	public boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
-			String orderStatusStr, String remarks) {
+			String orderStatusStr, String remarks, Long addTime) {
 
 		OrderSearchVo paySearchVo = new OrderSearchVo();
 		paySearchVo.setStaffId(staffId);
@@ -260,6 +260,14 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		orgStaffDetailPay.setOrderPay(orderPay);
 		orgStaffDetailPay.setOrderStatusStr(orderStatusStr);
 		orgStaffDetailPay.setRemarks(remarks);
+		
+		if (addTime.equals(0L)) {
+			orgStaffDetailPay.setAddTime(TimeStampUtil.getNowSecond());
+		} else {
+			orgStaffDetailPay.setAddTime(addTime);
+		}
+
+		
 		this.insert(orgStaffDetailPay);
 
 		return true;

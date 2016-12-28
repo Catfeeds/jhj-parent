@@ -43,9 +43,9 @@ public interface OrgStaffDetailPayService {
 
 	Map<String, Double> selectTotalData(OrderSearchVo searchVo);
 
-	boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
-			String orderStatusStr, String remarks);
-
 	OrgStaffDetailPayOaVo getOrgStaffPayOaVo(OrgStaffDetailPay orgStaffDetailPay);
+
+	boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
+			String orderStatusStr, String remarks, Long addTime);
 
 }

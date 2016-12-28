@@ -4,6 +4,7 @@ package com.jhj.service.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffPayDept;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 
 
@@ -33,5 +34,7 @@ public interface OrgStaffPayDeptService {
 
 	List<OrgStaffPayDept> selectByListPage(OrgStaffFinanceSearchVo searchVo,
 			int pageNo, int pageSize);
+
+	List<OrgStaffPayDept> selectBySearchVo(OrderSearchVo searchVo);
 
 }

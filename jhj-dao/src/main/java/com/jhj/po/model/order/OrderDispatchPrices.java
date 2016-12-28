@@ -31,7 +31,7 @@ public class OrderDispatchPrices {
 
     private Double serviceHours;
 
-    private Short staffNum;
+    private int staffNum;
 
     private Long orgId;
 
@@ -191,11 +191,11 @@ public class OrderDispatchPrices {
         this.serviceHours = serviceHours;
     }
 
-    public Short getStaffNum() {
+    public int getStaffNum() {
         return staffNum;
     }
 
-    public void setStaffNum(Short staffNum) {
+    public void setStaffNum(int staffNum) {
         this.staffNum = staffNum;
     }
 

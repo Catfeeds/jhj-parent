@@ -257,7 +257,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		// 新增服务人员交易明细表 org_staff_detail_pay
 		String orderStatusStr = OrderUtils.getOrderStatusName(orders.getOrderType(), orders.getOrderStatus());
 		Boolean orderStaffDetailPay = orgStaffDetailPayService.setStaffDetailPay(staffId, orgStaffs.getMobile(), Constants.STAFF_DETAIL_ORDER_TYPE_0, orderId,
-				orders.getOrderNo(), totalOrderPay, orderIncoming, orderStatusStr, remarks);
+				orders.getOrderNo(), totalOrderPay, orderIncoming, orderStatusStr, remarks, 0L);
 
 		if (orderStaffDetailPay == true) {
 			// 总收入
@@ -428,11 +428,14 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 		Long userId = order.getUserId();
 		Users u = userService.selectByPrimaryKey(userId);
-
+		
+		vo.setIsVip((short) 0);
 		String isVipStr = "否";
 		if (u != null) {
-			if (u.getIsVip() == 1)
+			if (u.getIsVip() == 1) {
+				vo.setIsVip((short) 1);
 				isVipStr = "是";
+			}
 		}
 		vo.setIsVipStr(isVipStr);
 
@@ -447,6 +450,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		vo.setStaffNum(staffNum);
 		BigDecimal totalOrderMoney = orderPricesService.getTotalOrderMoney(orderPrices);
 		totalOrderMoney = MathBigDecimalUtil.div(totalOrderMoney, new BigDecimal(staffNum));
+		
+		BigDecimal totalOrderPay = orderPricesService.getTotalOrderPay(orderPrices);
+		totalOrderPay = MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
 		
 		BigDecimal incomingPercent = orderPricesService.getOrderPercent(order, staffId);
 		// 1.订单支付金额
@@ -496,6 +502,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		totalOrderIncoming = MathBigDecimalUtil.round(totalOrderIncoming, 2);
 		
 		vo.setTotalOrderMoney(totalOrderMoney);
+		vo.setTotalOrderPay(totalOrderPay);
 		vo.setOrderMoney(orderPrices.getOrderMoney());
 		vo.setOrderPayExtDiff(orderPayExtDiff);
 		vo.setOrderPayExtOverWork(orderPayExtOverWork);
@@ -510,7 +517,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		BigDecimal totalOrderDept = orderPricesService.getTotalOrderDept(order, staffId);
 		vo.setTotalOrderDept(totalOrderDept);
 		vo.setRemarks(remarks);
-
+		vo.setIncomingPercent(incomingPercent);
 		return vo;
 	}
 
