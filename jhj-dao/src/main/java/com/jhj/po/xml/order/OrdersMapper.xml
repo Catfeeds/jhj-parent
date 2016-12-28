@@ -157,7 +157,7 @@
 			and id = #{orderId,jdbcType=NUMERIC}
 		</if>
 
-		<if test="orderNo != null">
+		<if test="orderNo != null and orderNo !=''">
 			and order_no like CONCAT('%','${orderNo}','%' )
 		</if>
 
