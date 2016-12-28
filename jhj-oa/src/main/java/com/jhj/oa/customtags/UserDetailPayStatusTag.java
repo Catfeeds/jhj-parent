@@ -66,7 +66,7 @@ public class UserDetailPayStatusTag extends SimpleTagSupport{
 		
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(((PageContext) getJspContext()).getServletContext());
 		
-		if(orderType==0 || orderType==5 || orderType==3){
+		if(orderType==0 || orderType==5 || orderType==3 || orderType==4){
 			OrdersService orderService = wac.getBean(OrdersService.class);
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			if(order!=null){

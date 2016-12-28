@@ -98,7 +98,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		userDetailPay.setPayType(orderPrice.getPayType());
 		userDetailPay.setOrderMoney(orderPrice.getOrderMoney());
 		userDetailPay.setOrderPay(orderPrice.getOrderPay());
-
+		userDetailPay.setRestMoney(user.getRestMoney());
 		// trade_no
 		userDetailPay.setPayAccount(payAccount);
 		userDetailPay.setTradeNo(tradeNo);
@@ -127,7 +127,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		userDetailPay.setPayType(orderPriceExt.getPayType());
 		userDetailPay.setOrderMoney(orderPriceExt.getOrderPay());
 		userDetailPay.setOrderPay(orderPriceExt.getOrderPay());
-
+		userDetailPay.setRestMoney(user.getRestMoney());
 		// trade_no
 		userDetailPay.setPayAccount(payAccount);
 		userDetailPay.setTradeNo(tradeNo);
@@ -174,7 +174,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		userDetailPay.setPayType(orderCard.getPayType());
 		userDetailPay.setOrderMoney(orderCard.getCardMoney());
 		userDetailPay.setOrderPay(orderCard.getCardPay());
-
+		userDetailPay.setRestMoney(user.getRestMoney());
 		// trade_no
 		userDetailPay.setPayAccount(payAccount);
 		userDetailPay.setTradeNo(tradeNo);
@@ -264,6 +264,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		detailPay.setOrderNo("");
 		detailPay.setOrderMoney(new BigDecimal(0));
 		detailPay.setOrderPay(new BigDecimal(0));
+		detailPay.setRestMoney(new BigDecimal(0));
 		detailPay.setTradeNo("");
 		detailPay.setTradeStatus("");
 		detailPay.setPayType((short) 0);

@@ -51,7 +51,13 @@
 		<include refid="Base_Column_List" />
 		from orders
 		<include refid="bySearchVo" />
-		order by add_time desc
+		order by 
+		<if test="orderByProperty!=null">
+			${orderByProperty}
+		</if>
+		<if test="orderByProperty==null or orderByProperty==''">
+			add_time desc
+		</if>
 	</select>
 
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">

@@ -17,7 +17,7 @@ public class TestCleanupUserController extends JUnitActionBase{
 	@Test
     public void testCleanupUserOrderCards() throws Exception {
 
-		String url = "/app/job/cleanup/user-order-card.json";
+		String url = "/app/job/cleanup/user.json";
 		MockHttpServletRequestBuilder getRequest = get(url);
 
 	  

@@ -25,7 +25,7 @@ public class CleanupUserController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "user-order-card", method = RequestMethod.GET)
+	@RequestMapping(value = "user", method = RequestMethod.GET)
 	public AppResultData<Object> cleanupUserOrderCard(HttpServletRequest request) {
 
 		AppResultData<Object> result = new AppResultData<Object>(
@@ -37,6 +37,9 @@ public class CleanupUserController extends BaseController {
 		// 限定只有localhost能访问
 		if (reqHost.equals("localhost") || reqHost.equals("127.0.0.1")) {
 			cleanupUserService.reBuildOrderCards();
+			cleanupUserService.rebuildOrder();
+			cleanupUserService.rebuildOrderPayExt();
+			cleanupUserService.rebuildOrderCancel();
 		}
 		return result;
 	}

@@ -12,6 +12,10 @@ public interface CleanupUserService {
 	void reBuildOrderCards();
 
 	void rebuildOrder();
+
+	void rebuildOrderPayExt();
+
+	void rebuildOrderCancel();
 	
 
 		
