@@ -137,7 +137,7 @@ public class OrderPayController extends BaseController {
 		}
 		Long orderId = order.getId();
 		
-		if(order.getOrderStatus() >= 4){
+		if(!order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)){
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.HAVE_PAY);
 			return result;
