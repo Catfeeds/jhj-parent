@@ -136,7 +136,7 @@
 																	name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
 															</td>
 															<td width="10%" style="border-top-width:0;border-bottom-width:0;">服务日期：</td>
-															<td width="40%" style="border-top-width:0;border-bottom-width:0;border-right-width:0;">
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
 																<input id="serviceStartTimeStr" name="serviceStartTimeStr" value="${serviceStartTimeStr }"
 																class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span>
 																<input id="serviceEndTimeStr" name="serviceEndTimeStr" value="${serviceEndTimeStr }" class="form-control form-datetime"
@@ -151,7 +151,11 @@
 										<tr>
 											<td width="10%">服务人员姓名：</td>
 											<td width="23%">
-												<form:input path="staffName" class="form-control" placeholder="请输入手机号"/>
+												<form:input path="staffName" class="form-control" placeholder="请输入服务人员名称"/>
+											</td>
+											<td width="10%">订单号：</td>
+											<td width="23%">
+												<form:input path="orderNo" class="form-control" placeholder="请输入订单号"/>
 											</td>
 											<td colspan="6">
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
