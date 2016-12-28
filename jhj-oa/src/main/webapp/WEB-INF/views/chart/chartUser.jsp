@@ -35,7 +35,6 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			
 
 				<form:form modelAttribute="searchVo" method="GET" >
 					<div class="form-inline">
@@ -72,20 +71,28 @@
 				<thead>
 					<tr>
 						<th>时间</th>
-						<!-- <th>新增订单小计</th> -->
-						<th>增长率</th>
-						<!-- <th>微网站来源</th>
-						<th>App来源</th> -->
 						<th>新增用户小计</th>
-						<th>已转换用户小计</th>
-						<th>客户转换率</th>
+						<th>增长率</th>
+						<th>会员用户小计</th>
+						<th>会员转化率</th>
+						<th>复购用户小计</th>
+						<th>复购率</th>
 					</tr>
 				</thead>
 				<tbody>
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<th>${item.series}</th>
-						<%-- <th>${item.新增订单小计}</th> --%>
+						<th>
+							<c:if test="${item.新增用户小计==0}">
+								${item.新增用户小计}
+							</c:if>
+							<c:if test="${item.新增用户小计>0}">
+								<a href="../user/user-list?startTime=${item.startTime}&endTime=${item.endTime}">
+									${item.新增用户小计}
+								</a>
+							</c:if>
+						</th>
 						<th>
 							<c:if test="${item.增长率=='.00%'}">
 								0.00%
@@ -94,37 +101,10 @@
 								${item.增长率}
 							</c:if>
 						</th>
-						<%-- <th>
-						<c:if test="${item.微网站来源==0}">
-							${item.微网站来源}
-						</c:if>
-						<c:if test="${item.微网站来源>0}">
-							<a href="../user/user-list?addFrom=1&startTime=${item.startTime}&endTime=${item.endTime}">${item.微网站来源}</a>
-						</c:if>
-						</th> --%>
-						<%-- <th>
-						<c:if test="${item.App来源==0}">
-							${item.App来源}
-						</c:if>
-						<c:if test="${item.App来源>0}">
-							<a href="../user/user-list?addFrom=0&startTime=${item.startTime}&endTime=${item.endTime}">
-								${item.App来源}
-							</a>
-						</c:if>
-						</th> --%>
-						<th>
-						<c:if test="${item.新增用户小计==0}">
-							${item.新增用户小计}
-						</c:if>
-						<c:if test="${item.新增用户小计>0}">
-							<a href="../user/user-list?startTime=${item.startTime}&endTime=${item.endTime}">
-								${item.新增用户小计}
-							</a>
-						</c:if>
-						</th>
-						
-						<th>${item.已转换用户小计}</th>
-						<th>${item.客户转换率}</th>
+						<th>${item.会员用户小计}</th>
+						<th>${item.会员转化率}</th>
+						<th>${item.复购用户小计}</th>
+						<th>${item.复购率}</th>
 					</tr>
 				</c:forEach>
 				</tbody>
@@ -153,7 +133,6 @@
 		var seriesDatas = ${chartDatas.series};
 		loadOrderChart(legend, xAxis, seriesDatas);
 	</script>
-	
 	
 </body>
 </html>

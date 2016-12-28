@@ -1317,4 +1317,18 @@
 		GROUP BY o.order_from,o.order_op_from,series
 	</select>
 	
+	<select id="totalByRate" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) as total,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time,#{formatParam}) as series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
+		</if>
+		from users WHERE id in 
+		(SELECT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>2) 
+		<include refid="chartSearchVo"/>
+		GROUP BY series
+	</select>
+	
 </mapper>

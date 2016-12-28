@@ -230,7 +230,7 @@
 		<result column="name" property="name" />
 		<result column="series" property="series" />
 		<result column="total" property="total" />
-
+		<result column="totalVip" property="totalVip"/>
 		<result column="totalMoney" property="totalMoney" />
 	</resultMap>
 	<resultMap id="ChartMap2" type="com.jhj.vo.chart.ChartMapVo">
@@ -240,9 +240,14 @@
 	
 	<!--市场用户图表-按天统计 -->
 	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total FROM
-		(SELECT add_from AS name,
-		FROM_UNIXTIME(add_time, #{formatParam}) AS series
+		SELECT name, series, COUNT(*) AS total,COUNT(CASE is_vip=1 when 1 THEN 0 END) as totalVip FROM
+		(SELECT add_from AS name,is_vip,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, #{formatParam}) AS series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
+		</if>
 		FROM users
 		WHERE 1=1
 		<include refid="charSearchVo"/>
@@ -250,6 +255,12 @@
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 	<!-- 统计新增用户id按天统计 -->
+	<!-- SELECT series , count(*) AS total,COUNT(CASE is_vip=1 when 1 THEN 0 END) as totalIsVip FROM
+		(SELECT FROM_UNIXTIME(add_time, "%Y-%m-%d") AS series,is_vip
+		FROM users
+		WHERE 1=1
+		) as T
+		GROUP BY series ORDER BY series ASC -->
 	<select id="statUserIdsByDay" resultMap="ChartMap2" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT series , count(*) AS total FROM
 		(SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series
@@ -299,8 +310,8 @@
 	</select>
 	<!-- 市场用户图表-按季度统计 -->
 	<select id="statByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total FROM
-		(SELECT add_from AS name,
+		SELECT name, series, COUNT(*) AS total,COUNT(CASE is_vip=1 when 1 THEN 0 END) as totalVip FROM
+		(SELECT add_from AS name,is_vip,
 		CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) AS series
 		FROM users
 		WHERE 1=1
