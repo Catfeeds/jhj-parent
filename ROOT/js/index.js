@@ -6,7 +6,7 @@ $(function(){
 	var daohangTop2=$(".index-shouye6")[0];
 	var bodyHeight= document.documentElement.clientHeight;
 	bjIndex.style.height=bodyHeight+"px";
-	mobile.style.top=(bodyHeight-542)/2+"px";
+	mobile.style.top=(bodyHeight-592)/2+"px";
 	daohangTop.style.top=(bodyHeight-592)+"px";
 	daohangTop1.style.top=(bodyHeight-442)+"px";
 	daohangTop2.style.top=(bodyHeight-202)+"px";
