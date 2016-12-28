@@ -31,3 +31,73 @@ where a.user_id = b.user_id a.add_time > b.add_time
 
 //余额为负数的，清0
 update users set rest_money = 0 where rest_money < 0
+
+
+
+//增加数据库脚本
+ALTER TABLE `user_detail_pay` ADD `rest_money` DECIMAL(9,2) NOT NULL DEFAULT '0' COMMENT '余额' AFTER `order_pay`;
+
+
+CREATE TABLE `order_dispatch_prices` (
+  `id` int(11) UNSIGNED NOT NULL COMMENT '主键',
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `mobile` char(11) NOT NULL COMMENT '用户手机号',
+  `is_vip` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否会员',
+  `order_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '订单ID',
+  `order_no` varchar(32) NOT NULL COMMENT '订单号',
+  `order_type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '订单类型',
+  `service_type_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务类型',
+  `order_status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '订单状态',
+  `addr_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '地址ID',
+  `addr` varchar(255) NOT NULL COMMENT '详细地址',
+  `order_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '下单时间',
+  `service_date` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务日期',
+  `service_hours` double NOT NULL DEFAULT '0' COMMENT '服务小时',
+  `staff_num` smallint(4) UNSIGNED NOT NULL DEFAULT '0' COMMENT '派工人数',
+  `org_id` int(11) UNSIGNED DEFAULT '0' COMMENT '云店ID',
+  `parent_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '门店ID',
+  `staff_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '工作人员ID,默认为0',
+  `staff_name` varchar(20) NOT NULL COMMENT '工作人员姓名',
+  `staff_mobile` char(11) NOT NULL COMMENT '工作人员手机号',
+  `dispatch_status` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '派工状态  1 = 有效  0 = 无效',
+  `user_addr_distance` mediumint(8) UNSIGNED NOT NULL COMMENT '服务人员距离用户地址多远',
+  `pay_type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '支付方式',
+  `order_money` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '订单总金额',
+  `order_pay` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '订单支付金额',
+  `order_pay_incoming` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '订单支付金额收入',
+  `coupon_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '优惠劵ID',
+  `order_pay_coupon` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '优惠劵金额',
+  `order_pay_coupon_incoming` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '优惠劵补贴',
+  `order_pay_ext_diff` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '补差价收入',
+  `order_pay_ext_diff_incoming` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '补差价收入',
+  `order_pay_ext_overwork` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '补时收入',
+  `order_pay_ext_overwork_incoming` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '订单加时收入',
+  `incoming_percent` decimal(2,2) NOT NULL DEFAULT '0.00' COMMENT '回扣比例',
+  `total_order_incoming` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '订单收入',
+  `total_order_dept` decimal(9,2) NOT NULL DEFAULT '0.00' COMMENT '订单欠款',
+  `add_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '添加时间戳',
+  `update_time` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新时间戳'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `order_dispatch_prices`
+--
+ALTER TABLE `order_dispatch_prices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `mobile` (`mobile`),
+  ADD KEY `order_no` (`order_no`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `order_dispatch_prices`
+--
+ALTER TABLE `order_dispatch_prices`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
