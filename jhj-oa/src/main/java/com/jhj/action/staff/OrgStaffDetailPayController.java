@@ -151,9 +151,6 @@ public class OrgStaffDetailPayController extends BaseController {
 		statSearchVo = orderQueryService.getOrderSearchVo(request, statSearchVo, null, sessionParentId);
 		
 		List<Short> orderStatusList = new ArrayList<Short>();
-		orderStatusList.add(Constants.ORDER_HOUR_STATUS_2);
-		orderStatusList.add(Constants.ORDER_HOUR_STATUS_3);
-		orderStatusList.add(Constants.ORDER_HOUR_STATUS_5);
 		orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
 		orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
 		statSearchVo.setOrderStatusList(orderStatusList);
