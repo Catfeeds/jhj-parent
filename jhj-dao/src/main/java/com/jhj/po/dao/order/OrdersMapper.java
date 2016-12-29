@@ -164,7 +164,10 @@ public interface OrdersMapper {
 	//订单来源统计
 	List<ChartMapVo> getOrderSrc(ChartSearchVo chartSearchVo);
 	
-	//统计订单复购率
+	//统计复购率
 	List<ChartMapVo> totalByRate(ChartSearchVo chartSearchVo);
+	
+	//订单复购率
+	List<ChartMapVo> totalByRateOrder(ChartSearchVo chartSearchVo);
 	
 }

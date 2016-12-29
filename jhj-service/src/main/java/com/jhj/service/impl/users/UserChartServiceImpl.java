@@ -1,6 +1,7 @@
 package com.jhj.service.impl.users;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +50,7 @@ public class UserChartServiceImpl implements UserChartService {
 
 		if (timeSeries.isEmpty())
 			return chartDataVo;
-
+		
 		String statType = chartSearchVo.getStatType();
 		// 确认legend;
 		List<String> legendAll = new ArrayList<String>();
@@ -59,6 +60,7 @@ public class UserChartServiceImpl implements UserChartService {
 		legendAll.add("复购用户小计");
 		legendAll.add("会员转化率");
 		legendAll.add("复购率");
+		legendAll.add("总人数");
 
 		List<String> legend = new ArrayList<String>();
 		legend.add("新增用户小计");
@@ -71,7 +73,7 @@ public class UserChartServiceImpl implements UserChartService {
 		for (int i = 1; i < timeSeries.size(); i++) {
 			xAxis.add(ChartUtil.getTimeSeriesName(statType, timeSeries.get(i)));
 		}
-
+		
 		// 设置chart的xAxis
 		chartDataVo.setxAxis(JSON.toJSONString(xAxis));
 
@@ -88,32 +90,68 @@ public class UserChartServiceImpl implements UserChartService {
 			}
 			tableDatas.add(tableData);
 		}
-
+		
 		// 查询SQL获得统计数据 -- 用户总数，vip用户总数
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
+		
+		// 3. 会员转化率中添加的复购率
+		List<ChartMapVo> chartMapVos  = new ArrayList<ChartMapVo>();
+		
+		//复购率
+		List<ChartMapVo> chartMapVoRate= new ArrayList<ChartMapVo>();
 
 		if (chartSearchVo.getStatType().equals("day")) {
 			chartSearchVo.setFormatParam("%c-%e");
 			statDatas = usersMapper.statByDay(chartSearchVo);
+			chartMapVos = orderMapper.totalByRate(chartSearchVo);
+			chartMapVoRate = orderMapper.totalByRateOrder(chartSearchVo);
 		}
 
 		if (chartSearchVo.getStatType().equals("month")) {
 			chartSearchVo.setFormatParam("%y-%m");
 			statDatas = usersMapper.statByDay(chartSearchVo);
+			chartMapVos = orderMapper.totalByRate(chartSearchVo);
+			chartMapVoRate = orderMapper.totalByRateOrder(chartSearchVo);
 		}
 
 		if (chartSearchVo.getStatType().equals("quarter")) {
 			statDatas = usersMapper.statByQuarter(chartSearchVo);
+			chartMapVos = orderMapper.totalByRate(chartSearchVo);
+			chartMapVoRate = orderMapper.totalByRateOrder(chartSearchVo);
+		}
+		
+		List<ChartMapVo> totalNum  = new ArrayList<ChartMapVo>();
+		ChartSearchVo vo=new ChartSearchVo();
+		vo.setEndTime(chartSearchVo.getEndTime());
+		if (chartSearchVo.getStatType().equals("day")) {
+			vo.setFormatParam("%c-%e");
+			totalNum = usersMapper.totalNum(vo);
 		}
 
+		if (chartSearchVo.getStatType().equals("month")) {
+			vo.setFormatParam("%y-%m");
+			totalNum = usersMapper.totalNum(vo);
+		}
+
+		if (chartSearchVo.getStatType().equals("quarter")) {
+			vo.setSelectCycle(12);
+			totalNum = usersMapper.totalNum(vo);
+		}
+		
+		
 		// 循环统计数据，完成表格数据替换
 		for (Map<String, String> tableDataItem : tableDatas) {
 			Integer total=0;
 			Integer totalVip=0;
+			//处理vip用户数据
 			for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
 				String str = tableDataItem.get("series").split("-")[1];
 				String str1 = chartSqlData.getSeries().split("-")[1];
+				if(chartSearchVo.getSelectCycle()==12){
+					str = tableDataItem.get("series");
+					str1 = chartSqlData.getSeries();
+				}
 				if (str.equals(str1)) {
 					// 新增订单小计
 					total = total + chartSqlData.getTotal();
@@ -123,6 +161,63 @@ public class UserChartServiceImpl implements UserChartService {
 					}
 				}
 			}
+			
+			//会员中需要添加的复购率数据
+			Integer totalRate=0;
+			for (ChartMapVo chartSqlData : chartMapVos) {
+				String str = tableDataItem.get("series").split("-")[1];
+				String str1 = chartSqlData.getSeries().split("-")[1];
+				if(chartSearchVo.getSelectCycle()==12){
+					str = tableDataItem.get("series");
+					str1 = chartSqlData.getSeries();
+				}
+				if (str.equals(str1)) {
+					totalRate = totalRate + chartSqlData.getTotal();
+				}
+			}
+			
+			//复购率
+			Integer totalRateOrder=0;
+			for (ChartMapVo chartSqlData : chartMapVoRate) {
+				String str = tableDataItem.get("series").split("-")[1];
+				String str1 = chartSqlData.getSeries().split("-")[1];
+				if(chartSearchVo.getSelectCycle()==12){
+					str = tableDataItem.get("series");
+					str1 = chartSqlData.getSeries();
+				}
+				if (str.equals(str1)) {
+					totalRateOrder = totalRateOrder + chartSqlData.getTotal();
+				}
+			}
+			
+			Integer num=0;
+			for (ChartMapVo chartSqlData : totalNum) {
+				String str = tableDataItem.get("series").split("-")[1];
+				String str1 = chartSqlData.getSeries().split("-")[1];
+				if(chartSearchVo.getSelectCycle()==12){
+					String[] str2 = tableDataItem.get("series").split("-");
+					String[] str3 = chartSqlData.getSeries().split("-");
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) ||Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+						num = num + chartSqlData.getTotal();
+					}
+				}else{
+					if (Integer.valueOf(str1)<=Integer.valueOf(str)) {
+						num = num + chartSqlData.getTotal();
+					}
+				}
+			}
+			
+			tableDataItem.put("复购用户小计", totalRateOrder.toString());
+			tableDataItem.put("总人数", num.toString());
+			
+			if(total>0){
+				tableDataItem.put("复购率", MathDoubleUtil.getPercent(totalRateOrder, num));
+			}else{
+				tableDataItem.put("复购率", "0.00%");
+			}
+			
+			totalVip = totalVip+totalRate;
+			
 			tableDataItem.put("新增用户小计", total.toString());
 			tableDataItem.put("会员用户小计", totalVip.toString());
 			if(total>0){
@@ -132,7 +227,6 @@ public class UserChartServiceImpl implements UserChartService {
 			}
 		}
 		
-
 		// 2. 计算增长率
 		Integer tmpSubTotal = 0;
 		Integer subTotal = 0;
@@ -154,41 +248,7 @@ public class UserChartServiceImpl implements UserChartService {
 			}
 			tmpSubTotal = Integer.valueOf(tableDataItem.get("新增用户小计"));
 		}
-		// 3. 计算用户转换率
-		List<ChartMapVo> chartMapVos  = new ArrayList<ChartMapVo>();
-		//按天统计
-		if (chartSearchVo.getStatType().equals("day")) {
-			chartSearchVo.setFormatParam("%c-%e");
-			chartMapVos = orderMapper.totalByRate(chartSearchVo);
-		}
-		//按月统计
-		if (chartSearchVo.getStatType().equals("month")) {
-			chartSearchVo.setFormatParam("%y-%m");
-			chartMapVos = orderMapper.totalByRate(chartSearchVo);
-		}
-		//按季度统计
-		if (chartSearchVo.getStatType().equals("quarter")) {
-			chartMapVos = orderMapper.totalByRate(chartSearchVo);
-		}
 		
-		for (Map<String, String> tableDataItem : tableDatas) {
-			Integer totalRate=0;
-			for (ChartMapVo chartSqlData : chartMapVos) {
-				String str = tableDataItem.get("series").split("-")[1];
-				String str1 = chartSqlData.getSeries().split("-")[1];
-				if (str.equals(str1)) {
-					totalRate = totalRate + chartSqlData.getTotal();
-				}
-			}
-			tableDataItem.put("复购用户小计", totalRate.toString());
-			String orderNum = tableDataItem.get("新增用户小计");
-			if(Integer.valueOf(orderNum)>0){
-				tableDataItem.put("复购率", MathDoubleUtil.getPercent(totalRate, Integer.valueOf(orderNum)));
-			}else{
-				tableDataItem.put("复购率", "0.00%");
-			}
-			
-		}
 	
 		// 4. 去掉第一个tableDataItem;
 		if (tableDatas.size() > 0)

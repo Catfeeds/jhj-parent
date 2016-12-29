@@ -130,6 +130,7 @@ public class UserController extends BaseController {
 
 		searchVo.setOrgIds(getCouldId(request));
 		searchVo.setIsVip((short) 1);
+		searchVo.setOrderNum("2");
 		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", searchVo);
@@ -214,32 +215,20 @@ public class UserController extends BaseController {
 		}
 
 		userSearchVo.setOrgIds(cloudIdList);
-		userSearchVo.setIsVip((short) 1);
 
 		/*
 		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
 		 */
 
 		// 在店长登录门店 下过单的 用户集合
-		List<Users> userList = usersService.selectBySearchVo(userSearchVo);
-		List<Long> userIdList = new ArrayList<Long>();
-		PageInfo<UserDetailPay> result=new PageInfo<UserDetailPay>(null);
-		if(userList!=null && userList.size()>0){
-			for (Users users : userList) {
-				userIdList.add(users.getId());
-			}
-			searchVo.setUserIds(userIdList);
 			
-			PageHelper.startPage(pageNo, pageSize);
-			
-			List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
-			
-			result = new PageInfo<UserDetailPay>(list);
-			Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
-			model.addAllAttributes(totolMoeny);
-		}
-
+		PageHelper.startPage(pageNo, pageSize);
+		searchVo.setIsVip((short)1);
+		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
 		
+		PageInfo<UserDetailPay> result = new PageInfo<UserDetailPay>(list);
+		Map<String, BigDecimal> totolMoeny = userDetailPayService.totolMoeny(searchVo);
+		model.addAllAttributes(totolMoeny);
 
 		model.addAttribute("userPayDetailSearchVoModel", searchVo);
 		model.addAttribute("userPayDetailList", result);
@@ -275,8 +264,6 @@ public class UserController extends BaseController {
 		// 得到 当前登录 的 门店id，并作为搜索条件
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
-		UserSearchVo userSearchVo = new UserSearchVo();
-
 		List<Long> cloudIdList = new ArrayList<Long>();
 
 		if (sessionOrgId > 0L) {
@@ -294,26 +281,15 @@ public class UserController extends BaseController {
 			cloudIdList.add(0L);
 		}
 
-		userSearchVo.setOrgIds(cloudIdList);
-		userSearchVo.setIsVip((short) 0);
+//		userSearchVo.setOrgIds(cloudIdList);
+//
+//		/*
+//		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
+//		 */
+//
 
-		/*
-		 * 根据 在 本门店 下过 订单的 用户 id 集合（先分页） ，得到对应的 消费明细
-		 */
-
-		// 在店长登录门店 下过单的 用户集合
-		List<Users> userList = usersService.selectBySearchVo(userSearchVo);
-
-		List<Long> userIdList = new ArrayList<Long>();
-
-		for (Users users : userList) {
-			userIdList.add(users.getId());
-		}
-
-		searchVo.setUserIds(userIdList);
-
+		searchVo.setIsVip((short)0);
 		PageHelper.startPage(pageNo, pageSize);
-
 		List<UserDetailPay> list = userDetailPayService.selectBySearchVo(searchVo);
 		
 		PageInfo<UserDetailPay> result = new PageInfo<UserDetailPay>(list);
