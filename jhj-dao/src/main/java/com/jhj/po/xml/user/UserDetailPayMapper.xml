@@ -58,6 +58,10 @@
 		<if test="payType!=null">
 			and pay_type = #{payType,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="isVip!=null">
+			and user_id in (select id from users where is_vip = #{isVip})
+		</if>
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select

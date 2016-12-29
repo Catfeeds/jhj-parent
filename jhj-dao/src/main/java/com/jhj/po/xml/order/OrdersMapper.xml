@@ -1332,9 +1332,30 @@
 			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
 		</if>
 		from users WHERE id in 
-		(SELECT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>2) 
+		(SELECT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) 
 		<include refid="chartSearchVo"/>
 		GROUP BY series
 	</select>
 	
+	<select id="totalByRateOrder" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) as total,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(t.add_time,#{formatParam}) as series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(t.add_time)),"-",quarter(FROM_UNIXTIME(t.add_time))) AS series
+		</if>
+		from (SELECT o.user_id,u.add_time from orders o LEFT JOIN users u on u.id = o.user_id 
+		<where>
+			<if test="startTime !=null">
+				<![CDATA[ and u.add_time >= #{startTime}]]>
+			</if>
+			<if test="endTime !=null">
+				<![CDATA[ and u.add_time <= #{endTime}]]>
+			</if>
+		</where>
+		) as t 
+		GROUP BY t.user_id HAVING COUNT(t.user_id)>=2
+		
+	</select>
 </mapper>

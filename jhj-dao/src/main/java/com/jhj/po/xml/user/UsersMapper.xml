@@ -99,6 +99,10 @@
 		<if test="isVip!=null">
 			and is_vip = #{isVip,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="orderNum!=null and orderNum!=''">
+			or id in (SELECT DISTINCT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) and is_vip=0 
+		</if>
 	</sql>
 
 	<!-- 展示 只在 当前门店 下过单的 客户 -->
@@ -713,5 +717,19 @@
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 	</sql>
+	
+	<select id="totalNum" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) AS total,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, '${formatParam}') AS series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
+		</if>
+		FROM users
+		WHERE 1=1
+		<include refid="charSearchVo"/>
+		GROUP BY series ORDER BY series ASC
+	</select>
 
 </mapper>
