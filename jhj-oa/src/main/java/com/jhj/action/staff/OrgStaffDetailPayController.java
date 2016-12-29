@@ -30,8 +30,10 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.service.bs.OrgStaffDetailPayService;
+import com.jhj.service.bs.OrgStaffPayDeptService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
@@ -70,6 +72,11 @@ public class OrgStaffDetailPayController extends BaseController {
 	@Autowired
 	private OrderStatService orderStatService;
 
+	@Autowired
+	private OrderDispatchPriceService orderDispatchPriceService;
+	
+	@Autowired
+	private OrgStaffPayDeptService orgStaffPayDeptService;
 	/**
 	 * 服务人员财务明细
 	 * 
@@ -109,23 +116,13 @@ public class OrgStaffDetailPayController extends BaseController {
 		// 服务结束时间
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
-			
 
-			
 			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+" 23:59:59") / 1000);
 		}
 		
 		
 		List<OrgStaffDetailPay> orgStaffdetailPayList = new ArrayList<OrgStaffDetailPay>();
-		//目前仅支持查询某一个时间段，不支持查询全部的.
-		if (searchVo.getStartServiceTime() == null) {
-			PageInfo resultDefault = new PageInfo(orgStaffdetailPayList);
 
-			model.addAttribute("contentModel", resultDefault);
-			model.addAttribute("searchModel", searchVo);
-			model.addAttribute("totalOrderMoney", 0);
-			return "staff/staffDetailPayList";
-		}
 	
 		PageInfo plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
 		orgStaffdetailPayList = plist.getList();
@@ -141,21 +138,7 @@ public class OrgStaffDetailPayController extends BaseController {
 		model.addAttribute("contentModel", result);
 		model.addAttribute("searchModel", searchVo);
 		
-		//统计查询
-//		Map<String, Double> statisticalData = orgStaffDetailPayService.selectTotalData(searchVo);
-//		model.addAllAttributes(statisticalData);
-		
-		//1. 订单总金额
-		OrderSearchVo statSearchVo = new OrderSearchVo();
-		if (staffId > 0L) searchVo.setStaffId(staffId);
-		statSearchVo = orderQueryService.getOrderSearchVo(request, statSearchVo, null, sessionParentId);
-		
-		List<Short> orderStatusList = new ArrayList<Short>();
-		orderStatusList.add(Constants.ORDER_HOUR_STATUS_7);
-		orderStatusList.add(Constants.ORDER_HOUR_STATUS_8);
-		statSearchVo.setOrderStatusList(orderStatusList);
-		
-		Map<String ,String> orderStats = orderStatService.getTotalOrderMoneyMultiStat(statSearchVo);
+		Map<String ,String> orderStats = orderDispatchPriceService.getTotalOrderMoneyMultiStat(searchVo);
 
 		model.addAttribute("totalOrderMoney", orderStats.get("totalOrderMoney").toString());
 		model.addAttribute("totalOrderPay", orderStats.get("totalOrderPay").toString());
@@ -167,6 +150,10 @@ public class OrgStaffDetailPayController extends BaseController {
 		model.addAttribute("totalOrderPayType6", orderStats.get("totalOrderPayType6").toString());
 		model.addAttribute("totalOrderPayType7", orderStats.get("totalOrderPayType7").toString());
 		
+		//还款金额
+		BigDecimal totalPayDept = orgStaffPayDeptService.totalBySearchVo(searchVo);
+		if (totalPayDept == null) totalPayDept = new BigDecimal(0);
+		model.addAttribute("totalPayDept", MathBigDecimalUtil.round2(totalPayDept));
 		
 		return "staff/staffDetailPayList";
 	}

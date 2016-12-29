@@ -1,6 +1,7 @@
 package com.jhj.service.order;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.order.OrderDispatchPrices;
@@ -35,5 +36,7 @@ public interface OrderDispatchPriceService {
 	PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
 
 	boolean doOrderDispatchPrice(Orders order, OrderDispatchs orderDispatch);
+
+	Map<String, String> getTotalOrderMoneyMultiStat(OrderSearchVo searchVo);
 
 }

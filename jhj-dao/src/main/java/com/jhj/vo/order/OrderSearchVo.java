@@ -83,6 +83,8 @@ public class OrderSearchVo {
 	private String orderByProperty;
 	
 	private Short payType; // 支付方式
+	
+	private Short dispatchStatus;
 
 	public String getMobile() {
 		return mobile;
@@ -394,6 +396,14 @@ public class OrderSearchVo {
 
 	public void setServiceEndTimeStr(String serviceEndTimeStr) {
 		this.serviceEndTimeStr = serviceEndTimeStr;
+	}
+
+	public Short getDispatchStatus() {
+		return dispatchStatus;
+	}
+
+	public void setDispatchStatus(Short dispatchStatus) {
+		this.dispatchStatus = dispatchStatus;
 	}
 	
 }

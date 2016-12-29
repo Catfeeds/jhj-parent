@@ -34,6 +34,8 @@ public interface OrderQueryService {
 
 	OrderDetailVo getOrderDetailVo(Orders item, Long staffId);
 	
-	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
+	BigDecimal getTotalOrderPay(OrderSearchVo vo);
+
+	BigDecimal getTotalOrderPayExt(OrderSearchVo vo);
 	
 }

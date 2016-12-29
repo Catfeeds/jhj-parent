@@ -134,9 +134,9 @@ public interface OrdersMapper {
 	
 	BigDecimal getTotalOrderMoneyExt(OrderSearchVo vo);
 
-	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
+	BigDecimal getTotalOrderPay(OrderSearchVo vo);
 	
-	BigDecimal getTotalOrderIncomeMoneyExt(OrderSearchVo vo);
+	BigDecimal getTotalOrderPayExt(OrderSearchVo vo);
 
 	Long getTotalOrderCount(OrderSearchVo vo);
 

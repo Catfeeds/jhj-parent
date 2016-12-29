@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="com.jhj.oa.common.UrlHelper"%>
+<%@ page import="com.jhj.common.Constants"%>	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ include file="../shared/taglib.jsp"%>
 <!-- taglib for this page -->
@@ -31,18 +32,20 @@
 						<option value="0">全部</option>
 					</select></td>
 				<td>姓名:</td>
-				<td><select name="selectStaff" id="selectStaff" class="form-control">
+				<td>
+					<input type="hidden" id="staffSelectedId" value="${searchModel.staffId }"/>
+					<select name="selectStaff" id="selectStaff" class="form-control">
 						<option value="0">全部</option>
 					</select>
 				</td>
 				<div class="form-group">
 					开始时间：
-					<form:input path="serviceStartTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
 				</div>
 				<div class="form-group">
 					结束时间：
-					<form:input path="serviceEndTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
 				</div>
 				
@@ -56,28 +59,30 @@
 			<table class="table table-striped table-advance table-hover">
 				<thead>
 					<tr>
-						<td>订单总金额（元）</td>
+						<!-- <td>订单总金额（元）</td> -->
 						<td>订单支付金额（元）</td>
-						<td>使用优惠劵金额（元）</td>
+						<!-- <td>使用优惠劵金额（元）</td> -->
 						<td>订单收入（元）</td>
 						<td>余额支付（元）</td>
 						<td>支付宝（元）</td>
 						<td>微信（元）</td>
 						<td>现金支付（元）</td>
 						<td>平台已支付（元）</td>
+						<td>还款金额</td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>${totalOrderMoney }</td>
+						<%-- <td>${totalOrderMoney }</td> --%>
 						<td>${totalOrderPay }</td>
-						<td>${totalOrderCoupon }</td>
+						<%-- <td>${totalOrderCoupon }</td> --%>
 						<td>${totalOrderIncoming }</td>
 						<td>${totalOrderPayType0 }</td>
 						<td>${totalOrderPayType1 }</td>
 						<td>${totalOrderPayType2 }</td>
 						<td>${totalOrderPayType6 }</td>
 						<td>${totalOrderPayType7 }</td>
+						<td>${totalPayDept }</td>
 					</tr>
 				</tbody>
 			</table>
@@ -89,6 +94,7 @@
 						<th>员工姓名</th>
 						<th>员工手机号</th>
 						<th>订单类型</th>
+						<th>订单号</th>
 						<th>客户手机号</th>
 						<th>服务地址</th>
 						<th>订单金额</th>
@@ -105,6 +111,16 @@
 							<td style="width: 8%">${ item.name }</td>
 							<td style="width: 10%">${ item.mobile }</td>
 							<td style="width: 8%">${ item.orderTypeName }</td>
+							<c:choose>
+								<c:when test="${item.orderListLink != '' }">
+									<td style="width: 8%"><a href="${item.orderListLink}" target="_blank">${ item.orderNo }</a></td>
+								</c:when>
+								
+								<c:otherwise>
+									<td style="width: 8%">${ item.orderNo }</td>
+								</c:otherwise>
+							</c:choose>
+							
 							<td style="width: 8%">${ item.userMobile }</td>
 							<td style="width: 15%">${ item.addr }</td>
 							<td style="width: 6%">${ item.orderMoney }</td>
@@ -118,6 +134,7 @@
 				</tbody>
 			</table>
 			</section>
+			<%@ include file="../shared/importJs.jsp"%>
 			<c:import url="../shared/paging.jsp">
 				<c:param name="pageModelName" value="contentModel" />
 				<c:param name="urlAddress" value="/staff/staffPay-list" />
@@ -128,7 +145,7 @@
 	<!--footer end--> </section>
 	<!-- js placed at the end of the document so the pages load faster -->
 	<!--common script for all pages-->
-	<%@ include file="../shared/importJs.jsp"%>
+	
 	<%-- <script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
 	<!--script for this page-->
 	<script type="text/javascript" src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>"></script>

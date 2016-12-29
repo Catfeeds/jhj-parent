@@ -100,7 +100,7 @@
 
 	</select>
 	
-	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+	<select id="getTotalOrderPay" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select sum(order_pay)from order_prices where order_id in
 		(
 			select id from orders
@@ -108,11 +108,12 @@
 		)
 	</select>
 	
-	<select id="getTotalOrderIncomeMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+	<select id="getTotalOrderPayExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select sum(order_pay)from order_price_ext where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />
+			and order_status = 2
 		)
 	</select>
 	

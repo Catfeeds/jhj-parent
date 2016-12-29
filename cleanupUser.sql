@@ -17,7 +17,7 @@ select distinct user_id from order_cards where add_time >= 1476892800 and order_
 //找出10.29之后充值的用户，之前有充值记录的
 select * from order_cards where order_status = 1 and add_time < 1476892800  and user_id in (select distinct user_id from order_cards where add_time >= 1476892800 and order_status = 1) 
 
-
+//--------------------------用户明细整理sql
 //清空用户余额，清空用户消费明细
 update users set rest_money = 0;
 truncate user_detail_pay;
@@ -27,16 +27,64 @@ update
 (SELECT * FROM `user_detail_pay` where order_type = 1 ) as a,
 user_detail_pay as b 
 set b.rest_money = 0
-where a.user_id = b.user_id a.add_time > b.add_time
+where a.user_id = b.user_id and a.add_time > b.add_time
 
 //余额为负数的，清0
 update users set rest_money = 0 where rest_money < 0
 
 
+//-------------------------服务人员明细整理
+update org_staff_finance set total_incoming = 0, total_dept = 0, total_cash = 0, rest_money = 0, is_black = 0;
 
-//增加数据库脚本
+truncate org_staff_detail_pay;
+truncate org_staff_detail_dept;
+truncate order_dispatch_prices;
+
+update org_staff_finance set is_black = 1 where total_dept >= 1000;
+update org_staff_finance set rest_money = total_incoming - total_cash;
+
+
+//验证数据sql
+
+select sum(totalOrderPay) from
+(
+
+	select sum(order_pay) as totalOrderPay from order_prices where order_id in 
+	(
+	select id from orders where order_status in (7,8) and update_time >=1480521600 and update_time <= 1483199999
+	)
+	union all
+	select sum(order_pay) as totalOrderPay from order_price_ext where order_id in 
+	(
+	select id from orders where order_status in (7,8) and update_time >=1480521600 and update_time <= 1483199999
+	) and order_status = 2
+) as T
+
+select sum(order_pay) as totalOrderPay from order_dispatch_prices where order_id in 
+	(
+	select id from orders where order_status in (7,8) and update_time >=1480521600 and update_time <= 1483199999
+	)
+
+
+//
+
+
+//增加数据库更新脚本
 ALTER TABLE `user_detail_pay` ADD `rest_money` DECIMAL(9,2) NOT NULL DEFAULT '0' COMMENT '余额' AFTER `order_pay`;
 
+UPDATE `admin_authority` SET `position` = '0' WHERE `admin_authority`.`id` = 20;
+UPDATE `admin_authority` SET `position` = '1' WHERE `admin_authority`.`id` = 74;
+UPDATE `admin_authority` SET `position` = '2' WHERE `admin_authority`.`id` = 75;
+UPDATE `admin_authority` SET `position` = '3' WHERE `admin_authority`.`id` = 83;
+UPDATE `admin_authority` SET `position` = '4' WHERE `admin_authority`.`id` = 94;
+UPDATE `admin_authority` SET `position` = '5' WHERE `admin_authority`.`id` = 68;
+UPDATE `admin_authority` SET `name` = '服务人员财务总表' WHERE `admin_authority`.`id` = 68;
+UPDATE `admin_authority` SET `position` = '6' WHERE `admin_authority`.`id` = 66;
+UPDATE `admin_authority` SET `position` = '7' WHERE `admin_authority`.`id` = 65;
+UPDATE `admin_authority` SET `position` = '8' WHERE `admin_authority`.`id` = 67;
+UPDATE `admin_authority` SET `position` = '9' WHERE `admin_authority`.`id` = 21;
+UPDATE `admin_authority` SET `position` = '10' WHERE `admin_authority`.`id` = 22;
+UPDATE `admin_authority` SET `position` = '11' WHERE `admin_authority`.`id` = 49;
 
 CREATE TABLE `order_dispatch_prices` (
   `id` int(11) UNSIGNED NOT NULL COMMENT '主键',

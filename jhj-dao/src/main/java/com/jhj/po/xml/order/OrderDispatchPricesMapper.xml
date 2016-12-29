@@ -80,6 +80,19 @@
 			add_time desc
 		</if>
 	</select>
+	
+	<select id="getTotalOrderMoneyMultiStat" resultType="java.util.HashMap"  parameterType="com.jhj.vo.order.OrderSearchVo">
+		select 
+		sum(order_money) as totalOrderMoney, sum(order_pay) as totalOrderPay,
+		sum(order_pay_coupon) as totalOrderCoupon, sum(total_order_incoming) as totalOrderIncoming,
+		sum(case when pay_type = 0 then order_pay end ) as totalOrderPayType0,
+		sum(case when pay_type = 1 then order_pay end ) as totalOrderPayType1,
+		sum(case when pay_type = 2 then order_pay end ) as totalOrderPayType2,
+		sum(case when pay_type = 6 then order_pay end ) as totalOrderPayType6,
+		sum(case when pay_type = 7 then order_pay end ) as totalOrderPayType7
+		from order_dispatch_prices
+		<include refid="bySearchVo" />
+	</select>
 
 	<sql id="bySearchVo">
 
@@ -159,11 +172,11 @@
 		</if>
 
 		<if test="startAddTime !=null">
-			<![CDATA[ and order_time >= #{startAddTime}]]>
+			<![CDATA[ and add_time >= #{startAddTime}]]>
 		</if>
 
 		<if test="endAddTime !=null">
-			<![CDATA[ and order_time <= #{endAddTime}]]>
+			<![CDATA[ and add_time <= #{endAddTime}]]>
 		</if>
 
 		<if test="parentId !=null">
@@ -184,6 +197,10 @@
 
 		<if test="staffName!=null and staffName!=''">
 			and staff_name like CONCAT('%',#{staffName},'%')
+		</if>
+		
+		<if test="dispatchStatus != null">
+			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
 		</if>
 	</sql>
 

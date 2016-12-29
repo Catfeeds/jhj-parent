@@ -100,6 +100,11 @@ public class OrgStaffPayDeptServiceImpl implements OrgStaffPayDeptService {
 	public List<OrgStaffPayDept> selectBySearchVo(OrderSearchVo searchVo) {
 		return orgStaffPayDeptMapper.selectBySearchVo(searchVo);
 	}
+	
+	@Override
+	public BigDecimal totalBySearchVo(OrderSearchVo searchVo) {
+		return orgStaffPayDeptMapper.totalBySearchVo(searchVo);
+	}
 
 
 }

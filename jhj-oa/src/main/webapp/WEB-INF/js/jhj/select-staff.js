@@ -19,16 +19,16 @@ function onChangeStaff() {
 		data:params,
 		success:function($result){
 			if(0 == $result.status){
-				var citySelectedId = 0;
+				var staffSelectedId = 0;
 				if ( $("#staffSelectedId").length >0 ) { 
-					citySelectedId = $('#staffSelectedId').val();
+					staffSelectedId = $('#staffSelectedId').val();
 				}		
 				
 
 				$staffOptions = '<option value="0">请选择服务人员</option>';
 				//$optionList = "";
 				$.each($result.data, function(i, obj) {
-					if (obj.staff_id == citySelectedId) {
+					if (obj.staff_id == staffSelectedId) {
 						$staffOptions += '<option value="'+obj.staff_id+'" selected>' + obj.name + "</option>";
 					} else {
 						$staffOptions += '<option value="'+obj.staff_id+'">' + obj.name + "</option>";

@@ -1,6 +1,7 @@
 package com.jhj.service.bs;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffPayDept;
@@ -36,5 +37,7 @@ public interface OrgStaffPayDeptService {
 			int pageNo, int pageSize);
 
 	List<OrgStaffPayDept> selectBySearchVo(OrderSearchVo searchVo);
+
+	BigDecimal totalBySearchVo(OrderSearchVo searchVo);
 
 }

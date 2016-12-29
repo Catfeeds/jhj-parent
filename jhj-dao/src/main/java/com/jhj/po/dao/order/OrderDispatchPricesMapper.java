@@ -1,6 +1,7 @@
 package com.jhj.po.dao.order;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchPrices;
 import com.jhj.vo.order.OrderSearchVo;
@@ -21,5 +22,7 @@ public interface OrderDispatchPricesMapper {
     List<OrderDispatchPrices> selectByListPage(OrderSearchVo searchVo);
     
     List<OrderDispatchPrices> selectBySearchVo(OrderSearchVo searchVo);
+
+	Map<String, Object> getTotalOrderMoneyMultiStat(OrderSearchVo searchVo);
     
 }

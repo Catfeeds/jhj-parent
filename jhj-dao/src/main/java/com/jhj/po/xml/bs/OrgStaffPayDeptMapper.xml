@@ -51,6 +51,12 @@
 		order by add_time desc
 	</select>
 	
+	<select id="totalBySearchVo" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select sum(order_money) as totalOrderMoney
+		from org_staff_pay_dept
+		<include refid="bySearchVo"/>
+	</select>
+	
 	<sql id ="bySearchVo">
 		where 1 = 1
 		
@@ -79,6 +85,14 @@
 			<foreach item="item" collection="orderStatusList" open="(" separator="," close=")">
 				${item}
 			</foreach>
+		</if>
+		
+		<if test="startAddTime !=null">
+			<![CDATA[ and add_time >= #{startAddTime}]]>
+		</if>
+
+		<if test="endAddTime !=null">
+			<![CDATA[ and add_time <= #{endAddTime}]]>
 		</if>
 		
 	</sql>

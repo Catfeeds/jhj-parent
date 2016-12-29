@@ -1,8 +1,11 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,7 @@ import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffIncomingVo;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Service
@@ -218,5 +222,74 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		
 		return true;
 	}
+	
+	@Override
+	public Map<String, String> getTotalOrderMoneyMultiStat(OrderSearchVo searchVo) {
+		
+		BigDecimal totalOrderMoney = new BigDecimal(0);
+		BigDecimal totalOrderPay = new BigDecimal(0);
+		BigDecimal totalOrderCoupon = new BigDecimal(0);
+		BigDecimal totalOrderIncoming = new BigDecimal(0);
+		BigDecimal totalOrderPayType0 = new BigDecimal(0);
+		BigDecimal totalOrderPayType1 = new BigDecimal(0);
+		BigDecimal totalOrderPayType2 = new BigDecimal(0);
+		BigDecimal totalOrderPayType6 = new BigDecimal(0);
+		BigDecimal totalOrderPayType7 = new BigDecimal(0);
+		
+		Map<String, String> statResult = new HashMap<String, String>();
+		searchVo.setDispatchStatus((short) 1);
+		Map<String, Object> stats =  orderDispatchPriceMapper.getTotalOrderMoneyMultiStat(searchVo);
+		
+		if (stats.get("totalOrderMoney") != null) {
+			totalOrderMoney =  (BigDecimal) stats.get("totalOrderMoney");
+		}
+		
+		if (stats.get("totalOrderPay") != null) {
+			totalOrderPay =  (BigDecimal) stats.get("totalOrderPay");
+		}
+		
+		if (stats.get("totalOrderCoupon") != null) {
+			totalOrderCoupon =  (BigDecimal) stats.get("totalOrderCoupon");
+		}
+		
+		if (stats.get("totalOrderIncoming") != null) {
+			totalOrderIncoming =  (BigDecimal) stats.get("totalOrderIncoming");
+		}
+		
+		if (stats.get("totalOrderPayType0") != null) {
+			totalOrderPayType0 =  (BigDecimal) stats.get("totalOrderPayType0");
+		}
+		
+		if (stats.get("totalOrderPayType1") != null) {
+			totalOrderPayType1 =  (BigDecimal) stats.get("totalOrderPayType1");
+		}
+		
+		if (stats.get("totalOrderPayType2") != null) {
+			totalOrderPayType2 =  (BigDecimal) stats.get("totalOrderPayType2");
+		}
+		
+		if (stats.get("totalOrderPayType6") != null) {
+			totalOrderPayType6 =  (BigDecimal) stats.get("totalOrderPayType6");
+		}
+		
+		if (stats.get("totalOrderPayType7") != null) {
+			totalOrderPayType7 =  (BigDecimal) stats.get("totalOrderPayType7");
+		}
+		
+		statResult.put("totalOrderMoney", MathBigDecimalUtil.round2(totalOrderMoney));
+		statResult.put("totalOrderPay", MathBigDecimalUtil.round2(totalOrderPay));
+		statResult.put("totalOrderCoupon", MathBigDecimalUtil.round2(totalOrderCoupon));
+		statResult.put("totalOrderIncoming", MathBigDecimalUtil.round2(totalOrderIncoming));
+		statResult.put("totalOrderPayType0", MathBigDecimalUtil.round2(totalOrderPayType0));
+		statResult.put("totalOrderPayType1", MathBigDecimalUtil.round2(totalOrderPayType1));
+		statResult.put("totalOrderPayType2", MathBigDecimalUtil.round2(totalOrderPayType2));
+		statResult.put("totalOrderPayType6", MathBigDecimalUtil.round2(totalOrderPayType6));
+		statResult.put("totalOrderPayType7", MathBigDecimalUtil.round2(totalOrderPayType7));		
+		
+		
+			
+		return statResult;
+	}
+	
 
 }

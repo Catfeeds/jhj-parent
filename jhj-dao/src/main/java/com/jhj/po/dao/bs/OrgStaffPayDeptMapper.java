@@ -1,5 +1,6 @@
 package com.jhj.po.dao.bs;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffPayDept;
@@ -24,4 +25,6 @@ public interface OrgStaffPayDeptMapper {
 	List<OrgStaffPayDept> selectVoByListPage(OrgStaffFinanceSearchVo searchVo);
 
 	List<OrgStaffPayDept> selectBySearchVo(OrderSearchVo searchVo);
+
+	BigDecimal totalBySearchVo(OrderSearchVo searchVo);
 }

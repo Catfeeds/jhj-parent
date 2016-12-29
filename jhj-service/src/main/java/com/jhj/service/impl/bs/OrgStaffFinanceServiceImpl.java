@@ -415,7 +415,6 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		vo.setServiceDateStr(serviceDateStr);
 
 		vo.setServiceHour(order.getServiceHour());
-		vo.setServiceHour(order.getServiceHour());
 
 		Long addrId = order.getAddrId();
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
@@ -455,6 +454,13 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		totalOrderPay = MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
 		
 		BigDecimal incomingPercent = orderPricesService.getOrderPercent(order, staffId);
+		
+		//10.20 -  11.21 号完成服务的订单， 服务人员收入 = (订单支付金额/派工人数) *  0.7
+		if (order.getAddTime() >= 1476892800L && order.getAddTime() < 1479657600) {
+			incomingPercent = new BigDecimal(0.7);
+		}
+		
+		
 		// 1.订单支付金额
 		BigDecimal orderIncoming = orderPrices.getOrderPay();
 		orderIncoming = MathBigDecimalUtil.div(orderIncoming, new BigDecimal(staffNum));
@@ -465,15 +471,20 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		BigDecimal orderPayCoupon = new BigDecimal(0);
 		Long userCouponId = orderPrices.getCouponId();
 		vo.setCouponName("");
-		if (userCouponId > 0L) {
+		
+		//11.21- 12.16号的完成服务的订单， 服务人员收入 =  (订单支付金额/派工人数) *  服务人员回扣比例（是否为会员，是否为用户指派人员）
+		//12.16号之后的，按照全部的公式比例来计算收入
+		if (userCouponId > 0L && order.getAddTime() >= 1481904000L) {
 			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
-			Long couponId = userCoupon.getCouponId();
-			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
-			orderPayCoupon = dictCoupon.getValue();
-			
-			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
-			vo.setCouponName(dictCoupon.getDescription());
-			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
+			if (userCoupon != null) {
+				Long couponId = userCoupon.getCouponId();
+				DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
+				orderPayCoupon = dictCoupon.getValue();
+				
+				String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
+				vo.setCouponName(dictCoupon.getDescription());
+				remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
+			}
 		}
 
 		// 3.订单补差价金额

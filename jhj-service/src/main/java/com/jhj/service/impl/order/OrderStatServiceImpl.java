@@ -287,7 +287,6 @@ public class OrderStatServiceImpl implements OrderStatService {
 		statResult.put("totalOrderPayType6", "0");
 		statResult.put("totalOrderPayType7", "0");
 		
-		
 		List<Orders> list = orderQueryService.selectBySearchVo(searchVo);
 		
 		if (list.isEmpty()) return statResult;
