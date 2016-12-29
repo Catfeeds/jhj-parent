@@ -231,7 +231,7 @@ public class OrgStaffExportController extends BaseController {
 			this.setCellValueForDouble(rowData, 15, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderMoney())));
 			
 			//优惠劵
-			this.setCellValueForString(rowData, 16, vo.getCouponName());
+			this.setCellValueForDouble(rowData, 16,  Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCoupon())));
 			
 			//补差价
 			this.setCellValueForDouble(rowData, 17, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtDiff())));
@@ -243,7 +243,7 @@ public class OrgStaffExportController extends BaseController {
 			this.setCellValueForDouble(rowData, 19, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderIncoming())));
 
 			//订单补贴
-			this.setCellValueForDouble(rowData, 20, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCoupon())));
+			this.setCellValueForDouble(rowData, 20, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCouponIncoming())));
 
 			//补差价收入
 			this.setCellValueForDouble(rowData, 21, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtDiffIncoming())));

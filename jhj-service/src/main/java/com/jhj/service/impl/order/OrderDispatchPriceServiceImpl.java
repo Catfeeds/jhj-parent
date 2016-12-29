@@ -207,7 +207,7 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		record.setOrderPayIncoming(vo.getOrderIncoming());
 		record.setCouponId(orderPrice.getCouponId());
 		record.setOrderPayCoupon(vo.getOrderPayCoupon());
-		record.setOrderPayCouponIncoming(vo.getOrderPayExtDiffIncoming());
+		record.setOrderPayCouponIncoming(vo.getOrderPayCouponIncoming());
 		record.setOrderPayExtDiff(vo.getOrderPayExtDiff());
 		record.setOrderPayExtDiffIncoming(vo.getOrderPayExtDiffIncoming());
 		record.setOrderPayExtOverwork(vo.getOrderPayExtOverWork());

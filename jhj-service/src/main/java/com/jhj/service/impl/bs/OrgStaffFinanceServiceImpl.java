@@ -228,6 +228,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
 			orderPayCoupon = dictCoupon.getValue();
 			orderPayCoupon =  MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
+			orderPayCoupon = orderPayCoupon.multiply(new BigDecimal(0.5));
 			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
 			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
 		}
@@ -484,6 +485,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		remarks = "订单收入:" + orderPayStr;
 		// 2.订单优惠劵金额
 		BigDecimal orderPayCoupon = new BigDecimal(0);
+		BigDecimal orderPayCouponIncoming = new BigDecimal(0);
 		Long userCouponId = orderPrices.getCouponId();
 		vo.setCouponName("");
 		
@@ -495,7 +497,8 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 				Long couponId = userCoupon.getCouponId();
 				DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
 				orderPayCoupon = dictCoupon.getValue();
-				
+				orderPayCouponIncoming = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
+				orderPayCouponIncoming = orderPayCouponIncoming.multiply(new BigDecimal(0.5));
 				String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
 				vo.setCouponName(dictCoupon.getDescription());
 				remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
@@ -522,19 +525,21 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		BigDecimal totalOrderIncoming = new BigDecimal(0);
 		totalOrderIncoming = totalOrderIncoming.add(orderIncoming);
-		totalOrderIncoming = totalOrderIncoming.add(orderPayExtDiff);
-		totalOrderIncoming = totalOrderIncoming.add(orderPayExtOverWork);
-		totalOrderIncoming = totalOrderIncoming.add(orderPayCoupon);
+		totalOrderIncoming = totalOrderIncoming.add(orderPayExtDiffIncoming);
+		totalOrderIncoming = totalOrderIncoming.add(orderPayExtOverWorkIncoming);
+		totalOrderIncoming = totalOrderIncoming.add(orderPayCouponIncoming);
 		totalOrderIncoming = MathBigDecimalUtil.round(totalOrderIncoming, 2);
 		
 		vo.setTotalOrderMoney(totalOrderMoney);
 		vo.setTotalOrderPay(totalOrderPay);
+		
 		vo.setOrderMoney(orderPrices.getOrderMoney());
 		vo.setOrderPayExtDiff(orderPayExtDiff);
 		vo.setOrderPayExtOverWork(orderPayExtOverWork);
 		
 		vo.setOrderIncoming(orderIncoming);
 		vo.setOrderPayCoupon(orderPayCoupon);
+		vo.setOrderPayCouponIncoming(orderPayCouponIncoming);
 		vo.setOrderPayExtDiffIncoming(orderPayExtDiffIncoming);
 		vo.setOrderPayExtOverWorkIncoming(orderPayExtOverWorkIncoming);
 		

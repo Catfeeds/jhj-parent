@@ -146,7 +146,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 			this.cancelOrderForUserRestMoney(orders, orderPrice);
 			this.cancelOrderForUserCoupon(orderPrice);
 			this.cancelOrderForStaffDispatch(orders);
-			this.cancelOrderForStaffDispatchPrices(orders);
+			
 			this.cancelOrderForStatus(orders);
 			
 		}
@@ -175,6 +175,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 				this.cancelOrderForStaffFinance(orders, orderPrice, orgStaff);
 			}
 			this.cancelOrderForStaffDispatch(orders);
+			this.cancelOrderForStaffDispatchPrices(orders);
 			this.cancelOrderForStatus(orders);
 		}
 
@@ -347,6 +348,8 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 			Long couponId = userCoupon.getCouponId();
 			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
 			orderPayCoupon = dictCoupon.getValue();
+			orderPayCoupon = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
+			orderPayCoupon = orderPayCoupon.multiply(new BigDecimal(0.5));
 			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
 			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
 		}

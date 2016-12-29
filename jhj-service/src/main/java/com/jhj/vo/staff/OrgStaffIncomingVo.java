@@ -55,6 +55,8 @@ public class OrgStaffIncomingVo {
 	
 	private BigDecimal orderPayCoupon;
 	
+	private BigDecimal orderPayCouponIncoming;
+	
 	private BigDecimal orderPayExtDiff;
 	
 	private BigDecimal orderPayExtDiffIncoming;
@@ -333,5 +335,13 @@ public class OrgStaffIncomingVo {
 
 	public void setIncomingPercent(BigDecimal incomingPercent) {
 		this.incomingPercent = incomingPercent;
+	}
+
+	public BigDecimal getOrderPayCouponIncoming() {
+		return orderPayCouponIncoming;
+	}
+
+	public void setOrderPayCouponIncoming(BigDecimal orderPayCouponIncoming) {
+		this.orderPayCouponIncoming = orderPayCouponIncoming;
 	}
 }
