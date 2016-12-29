@@ -35,6 +35,7 @@ import com.jhj.service.bs.OrgStaffDetailDeptService;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
@@ -112,6 +113,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 	@Autowired
 	private UserAddrsService userAddrService;
+	
+	@Autowired
+	private OrderDispatchPriceService orderDispatchPriceService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -319,6 +323,17 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 					this.orderOverWork(orders, ope, orgStaffs);
 				}
 			}
+		}
+		
+		//记录详细的服务人员消费表
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderId(orderId);
+		searchVo.setDispatchStatus((short) 1);
+		searchVo.setStaffId(staffId);
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo);
+		if (!orderDispatchs.isEmpty()) {
+			OrderDispatchs orderDispatch = orderDispatchs.get(0);
+			orderDispatchPriceService.doOrderDispatchPrice(orders, orderDispatch);
 		}
 	}
 
