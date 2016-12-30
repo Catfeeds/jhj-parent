@@ -103,6 +103,7 @@
 		                              <th>充值金额</th>
 		                              <th >消费金额</th>
 		                              <th>支付方式</th>
+		                              <th>用户余额</th>
 		                              <th>状态</th>
 		                              <th >添加时间</th>
 	                              </tr>
@@ -118,17 +119,18 @@
 					            </td>
 					            <td align="center">
 					            	<c:if test="${item.orderType==1 }">
-					            	 	￥${ item.orderMoney }
+					            	 	￥${ item.orderPay }
 					            	</c:if>
 					            </td>
 					            <td align="center" >
 					            	<c:if test="${item.orderType!=1 }">
-					            	 	￥${ item.orderMoney }
+					            	 	￥${ item.orderPay }
 					            	</c:if>
 					            </td>
 					            <td>
 									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
 					            </td>
+					             <td>${ item.restMoney }</td>
 					            <td>
 					            	<userDetailPayStatus:status orderId="${item.orderId }" orderType="${item.orderType }" orderNo="${item.orderNo }"/>
 					            </td>

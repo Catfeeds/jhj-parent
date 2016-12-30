@@ -162,9 +162,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 
 	@Override
 	public OrgStaffDetailPayOaVo getOrgStaffPayOaVo(OrgStaffDetailPay orgStaffDetailPay) {
-		
-		
-		
+
 		OrgStaffPayVo vo = this.getOrgStaffPayVo(orgStaffDetailPay);
 		
 		OrgStaffDetailPayOaVo oaVo = new OrgStaffDetailPayOaVo();
@@ -179,6 +177,9 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		
 		oaVo.setUserMobile("");
 		oaVo.setAddr("");
+		
+		
+		
 		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0 
 				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_1
 				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_2
@@ -186,7 +187,6 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 			// +号
 			Long orderId = orgStaffDetailPay.getOrderId();
 			Orders order = orderService.selectByPrimaryKey(orderId);
-			
 			oaVo.setUserMobile(order.getMobile());
 			
 			Long addrId = order.getAddrId();
@@ -195,10 +195,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 				oaVo.setAddr(userAddr.getName() + userAddr.getAddr());
 			}
 		}
-		
-		
-		
-		
+
 		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orgStaffDetailPay.getOrderNo());
 		
 		oaVo.setPayTypeName("");
@@ -213,7 +210,31 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 				oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPriceExt.getPayType()));
 			}
 		}
-
+		
+		//跳转链接
+		String orderListLink = "";
+		if (oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_0) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_1) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_2) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_3) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_20) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_21) || 
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_21) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_22) ) {
+			
+			Long orderId = orgStaffDetailPay.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+			if (order != null) {
+				if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+					orderListLink = "/jhj-oa/order/order-hour-list?orderNo="+order.getOrderNo();
+				}
+				
+				if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+					orderListLink = "/jhj-oa/order/order-exp-list?orderNo="+order.getOrderNo();
+				}
+			}
+		}
+		oaVo.setOrderListLink(orderListLink);
 		return oaVo;
 	}
 
@@ -238,7 +259,7 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 
 	@Override
 	public boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
-			String orderStatusStr, String remarks) {
+			String orderStatusStr, String remarks, Long addTime) {
 
 		OrderSearchVo paySearchVo = new OrderSearchVo();
 		paySearchVo.setStaffId(staffId);
@@ -260,6 +281,14 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		orgStaffDetailPay.setOrderPay(orderPay);
 		orgStaffDetailPay.setOrderStatusStr(orderStatusStr);
 		orgStaffDetailPay.setRemarks(remarks);
+		
+		if (addTime.equals(0L)) {
+			orgStaffDetailPay.setAddTime(TimeStampUtil.getNowSecond());
+		} else {
+			orgStaffDetailPay.setAddTime(addTime);
+		}
+
+		
 		this.insert(orgStaffDetailPay);
 
 		return true;

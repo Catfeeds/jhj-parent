@@ -111,25 +111,7 @@ public class OrgStaffPayDeptController extends BaseController {
 
 			orgStaffFinanceList.set(i, vo);
 		}
-		//云店下拉框选项
-		List<Orgs> orgList = new ArrayList<Orgs>();
 		
-		if (sessionOrgId > 0L) {
-			//如果登录的是店长
-			
-			OrgSearchVo searchVo1 = new OrgSearchVo();
-			searchVo1.setParentId(sessionOrgId);
-			searchVo1.setOrgStatus((short) 1);
-			orgList = orgService.selectBySearchVo(searchVo1);
-		}else{
-			//如果登录的是 运营人员
-			OrgSearchVo searchVo2 = new OrgSearchVo();
-			searchVo2.setIsCloud((short) 1);
-			searchVo2.setOrgStatus((short) 1);
-			orgList = orgService.selectBySearchVo(searchVo2);
-		}
-		
-		model.addAttribute("orgList", orgList);
 
 		result = new PageInfo(orgStaffFinanceList);
 		

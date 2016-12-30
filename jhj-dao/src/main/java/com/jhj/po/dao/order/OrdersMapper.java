@@ -134,9 +134,9 @@ public interface OrdersMapper {
 	
 	BigDecimal getTotalOrderMoneyExt(OrderSearchVo vo);
 
-	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
+	BigDecimal getTotalOrderPay(OrderSearchVo vo);
 	
-	BigDecimal getTotalOrderIncomeMoneyExt(OrderSearchVo vo);
+	BigDecimal getTotalOrderPayExt(OrderSearchVo vo);
 
 	Long getTotalOrderCount(OrderSearchVo vo);
 
@@ -163,5 +163,11 @@ public interface OrdersMapper {
 	
 	//订单来源统计
 	List<ChartMapVo> getOrderSrc(ChartSearchVo chartSearchVo);
+	
+	//统计复购率
+	List<ChartMapVo> totalByRate(ChartSearchVo chartSearchVo);
+	
+	//订单复购率
+	List<ChartMapVo> totalByRateOrder(ChartSearchVo chartSearchVo);
 	
 }

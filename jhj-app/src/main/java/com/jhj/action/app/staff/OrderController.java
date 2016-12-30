@@ -27,6 +27,7 @@ import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
@@ -43,6 +44,7 @@ import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.users.UserDetailPayService;
+import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -103,6 +105,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private UserDetailPayService userDetailPayService;
+	
+	@Autowired
+	private UsersService userService;
 
 	/**
 	 * 当日统计数接口
@@ -496,7 +501,9 @@ public class OrderController extends BaseController {
 		orderPriceExt.setOrderExtType(1);
 		
 		orderPriceExtService.insert(orderPriceExt);
-
+		
+		Long userId = order.getUserId();
+		Users user = userService.selectByPrimaryKey(userId);
 		//更新用户明细表
 		UserDetailPay detailPay = new UserDetailPay();
 		detailPay.setId(0L);
@@ -510,6 +517,7 @@ public class OrderController extends BaseController {
 	    detailPay.setOrderNo(orderNoExt);
 	    detailPay.setOrderMoney(orderPay);
 	    detailPay.setOrderPay(orderPay);
+	    detailPay.setRestMoney(user.getRestMoney());
 	    detailPay.setTradeNo("");
 	    detailPay.setTradeStatus("");
 	    detailPay.setPayType((short)6);

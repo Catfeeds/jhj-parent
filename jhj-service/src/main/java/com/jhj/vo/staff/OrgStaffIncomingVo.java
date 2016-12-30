@@ -36,12 +36,16 @@ public class OrgStaffIncomingVo {
 	private String addr;
 	
 	private String userMobile;
+	
+	private Short isVip;
 		
 	private String isVipStr;
 	
 	private String payTypeName;
 	
 	private BigDecimal totalOrderMoney;
+	
+	private BigDecimal totalOrderPay;
 	
 	private BigDecimal orderMoney;
 	
@@ -50,6 +54,8 @@ public class OrgStaffIncomingVo {
 	private BigDecimal orderIncoming;
 	
 	private BigDecimal orderPayCoupon;
+	
+	private BigDecimal orderPayCouponIncoming;
 	
 	private BigDecimal orderPayExtDiff;
 	
@@ -62,6 +68,8 @@ public class OrgStaffIncomingVo {
 	private BigDecimal totalOrderIncoming;
 	
 	private BigDecimal totalOrderDept;
+	
+	private BigDecimal incomingPercent;
 	
 	private String remarks;
 
@@ -303,5 +311,37 @@ public class OrgStaffIncomingVo {
 
 	public void setOrderPayExtOverWorkIncoming(BigDecimal orderPayExtOverWorkIncoming) {
 		this.orderPayExtOverWorkIncoming = orderPayExtOverWorkIncoming;
+	}
+
+	public Short getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(Short isVip) {
+		this.isVip = isVip;
+	}
+
+	public BigDecimal getTotalOrderPay() {
+		return totalOrderPay;
+	}
+
+	public void setTotalOrderPay(BigDecimal totalOrderPay) {
+		this.totalOrderPay = totalOrderPay;
+	}
+
+	public BigDecimal getIncomingPercent() {
+		return incomingPercent;
+	}
+
+	public void setIncomingPercent(BigDecimal incomingPercent) {
+		this.incomingPercent = incomingPercent;
+	}
+
+	public BigDecimal getOrderPayCouponIncoming() {
+		return orderPayCouponIncoming;
+	}
+
+	public void setOrderPayCouponIncoming(BigDecimal orderPayCouponIncoming) {
+		this.orderPayCouponIncoming = orderPayCouponIncoming;
 	}
 }

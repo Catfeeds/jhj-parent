@@ -130,14 +130,14 @@ public class OrgStaffExportController extends BaseController {
 		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
 		if (orgStaff == null) return null;
 		
-		OrderDispatchSearchVo OrderDispatchSearchVo = new OrderDispatchSearchVo();
-		OrderDispatchSearchVo.setStaffId(staffId);
-		OrderDispatchSearchVo.setDispatchStatus((short) 1);
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setStaffId(staffId);
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
 		
-		if (startServiceTime > 0L) OrderDispatchSearchVo.setStartServiceTime(startServiceTime);
-		if (endServiceTime > 0L) OrderDispatchSearchVo.setEndServiceTime(endServiceTime);
+		if (startServiceTime > 0L) orderDispatchSearchVo.setStartServiceTime(startServiceTime);
+		if (endServiceTime > 0L) orderDispatchSearchVo.setEndServiceTime(endServiceTime);
 		
-		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(OrderDispatchSearchVo);
+		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
 		
 		if (orderDispatchs.isEmpty()) return null;
 		
@@ -231,7 +231,7 @@ public class OrgStaffExportController extends BaseController {
 			this.setCellValueForDouble(rowData, 15, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderMoney())));
 			
 			//优惠劵
-			this.setCellValueForString(rowData, 16, vo.getCouponName());
+			this.setCellValueForDouble(rowData, 16,  Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCoupon())));
 			
 			//补差价
 			this.setCellValueForDouble(rowData, 17, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtDiff())));
@@ -243,7 +243,7 @@ public class OrgStaffExportController extends BaseController {
 			this.setCellValueForDouble(rowData, 19, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderIncoming())));
 
 			//订单补贴
-			this.setCellValueForDouble(rowData, 20, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCoupon())));
+			this.setCellValueForDouble(rowData, 20, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCouponIncoming())));
 
 			//补差价收入
 			this.setCellValueForDouble(rowData, 21, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtDiffIncoming())));
@@ -255,7 +255,7 @@ public class OrgStaffExportController extends BaseController {
 			this.setCellValueForDouble(rowData, 23, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderDept())));
 
 			//订单总金额
-			this.setCellValueForDouble(rowData, 24, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderMoney())));
+			this.setCellValueForDouble(rowData, 24, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderPay())));
 
 			totalOrderMoneyAll = totalOrderMoneyAll.add(vo.getTotalOrderMoney());
 			

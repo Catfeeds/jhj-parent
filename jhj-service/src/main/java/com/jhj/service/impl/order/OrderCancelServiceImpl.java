@@ -12,6 +12,7 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchPrices;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
@@ -26,6 +27,7 @@ import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderCancelService;
+import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
@@ -83,6 +85,9 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 	
 	@Autowired
 	private SettingService settingService;
+	
+	@Autowired
+	private OrderDispatchPriceService orderDispatchPriceService;
 
 	// 取消派工
 	@Override
@@ -141,7 +146,9 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 			this.cancelOrderForUserRestMoney(orders, orderPrice);
 			this.cancelOrderForUserCoupon(orderPrice);
 			this.cancelOrderForStaffDispatch(orders);
+			
 			this.cancelOrderForStatus(orders);
+			
 		}
 
 		// 如果订单状态 = 已完成或者已评价
@@ -168,6 +175,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 				this.cancelOrderForStaffFinance(orders, orderPrice, orgStaff);
 			}
 			this.cancelOrderForStaffDispatch(orders);
+			this.cancelOrderForStaffDispatchPrices(orders);
 			this.cancelOrderForStatus(orders);
 		}
 
@@ -284,6 +292,33 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		}
 		return true;
 	}
+	
+	// 4.服务人员已派工状态改为不可用
+	private boolean cancelOrderForStaffDispatchPrices(Orders order) {
+
+		Long orderId = order.getId();
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderId(orderId);
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo);
+
+		if (orderDispatchs.isEmpty())
+			return true;
+
+		for (OrderDispatchs item : orderDispatchs) {
+			OrderSearchVo s = new OrderSearchVo();
+			s.setOrderId(orderId);
+			s.setStaffId(item.getStaffId());
+			List<OrderDispatchPrices> list = orderDispatchPriceService.selectBySearchVo(s);
+			if (!list.isEmpty()) {
+				OrderDispatchPrices odp = list.get(0);
+				odp.setOrderStatus((short) 0);
+				odp.setUpdateTime(TimeStampUtil.getNowSecond());
+				orderDispatchPriceService.updateByPrimaryKey(odp);
+			}
+		}
+		return true;
+	}
 
 	// 5.服务人员收入减少 7.记录服务人员订单取消金额.
 	private boolean cancelOrderForStaffFinance(Orders order, OrderPrices orderPrice, OrgStaffs orgStaff) {
@@ -313,6 +348,8 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 			Long couponId = userCoupon.getCouponId();
 			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
 			orderPayCoupon = dictCoupon.getValue();
+			orderPayCoupon = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
+			orderPayCoupon = orderPayCoupon.multiply(new BigDecimal(0.5));
 			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
 			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
 		}
@@ -337,7 +374,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 
 		//1. 记录服务人员消费明细
 		String orderStatusStr = "取消订单";
-		Boolean orderStaffDetailPay = orgStaffDetailPayService.setStaffDetailPay(staffId, orgStaff.getMobile(), Constants.STAFF_DETAIL_ORDER_TYPE_20, orderId, order.getOrderNo(), totalOrderPay, orderIncoming, orderStatusStr, remarks);
+		Boolean orderStaffDetailPay = orgStaffDetailPayService.setStaffDetailPay(staffId, orgStaff.getMobile(), Constants.STAFF_DETAIL_ORDER_TYPE_20, orderId, order.getOrderNo(), totalOrderPay, orderIncoming, orderStatusStr, remarks, 0L);
 		
 		
 		//2. 扣除用户收入

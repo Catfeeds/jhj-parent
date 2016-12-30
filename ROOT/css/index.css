@@ -43,11 +43,12 @@ body{
 }
 .index-shouye3{
     position: absolute;
-    left:180px;
+    left:200px;
     background: url(../img/mobile1.png) no-repeat center;
     width:330px;
-    height:451px;
-    padding:80px 77px 60px 77px;
+    height:421px;
+    padding:60px 27px 140px 57px;
+    overflow:hidden;
 }
 .index-shouye3-1{
     width:100%;

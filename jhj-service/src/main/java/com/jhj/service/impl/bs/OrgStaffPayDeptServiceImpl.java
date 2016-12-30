@@ -10,6 +10,7 @@ import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.bs.OrgStaffPayDeptMapper;
 import com.jhj.po.model.bs.OrgStaffPayDept;
 import com.jhj.service.bs.OrgStaffPayDeptService;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
@@ -93,6 +94,16 @@ public class OrgStaffPayDeptServiceImpl implements OrgStaffPayDeptService {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrgStaffPayDept> list = orgStaffPayDeptMapper.selectVoByListPage(searchVo);
 		return list;
+	}
+	
+	@Override
+	public List<OrgStaffPayDept> selectBySearchVo(OrderSearchVo searchVo) {
+		return orgStaffPayDeptMapper.selectBySearchVo(searchVo);
+	}
+	
+	@Override
+	public BigDecimal totalBySearchVo(OrderSearchVo searchVo) {
+		return orgStaffPayDeptMapper.totalBySearchVo(searchVo);
 	}
 
 

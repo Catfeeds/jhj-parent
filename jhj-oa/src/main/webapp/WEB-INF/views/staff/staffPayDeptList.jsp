@@ -19,7 +19,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<section class="panel"> <header class="panel-heading">
-			<h4>服务人员总欠款表</h4>
+			<h4>服务人员财务总表</h4>
 			<form:form class="form-inline" modelAttribute="orgStaffDetailPaySearchVoModel" action="staffPayDept-list"
 				method="GET">
 				<td>门店:</td>
@@ -29,7 +29,9 @@
 						<option value="0">全部</option>
 					</select></td>
 				<td>姓名:</td>
-				<td><select name="selectStaff" id="selectStaff" class="form-control">
+				<td>
+					<input type="hidden" id="staffSelectedId" value="${orgStaffDetailPaySearchVoModel.staffId }"/>
+					<select name="selectStaff" id="selectStaff" class="form-control">
 						<option value="0">全部</option>
 					</select></td>
 				<button type="submit" class="btn btn-primary">搜索</button>
@@ -82,7 +84,7 @@
 							<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}" /></td>
 							<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.updateTime * 1000}" /></td>
 							<td>
-								<button id="btn_view" onClick="btn_update('staff/staffPay-list?staff_id=${ item.staffId }')"
+								<button id="btn_view" onClick="btn_update('staff/staffPay-list?staffId=${ item.staffId }')"
 									class="btn btn-danger btn-xs" title="查看交易明细">
 									<i class="icon-search "></i>
 								</button>

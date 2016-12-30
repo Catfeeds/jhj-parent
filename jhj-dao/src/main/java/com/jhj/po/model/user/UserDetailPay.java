@@ -20,6 +20,8 @@ public class UserDetailPay {
     private BigDecimal orderMoney;
 
     private BigDecimal orderPay;
+    
+    private BigDecimal restMoney;
 
     private String tradeNo;
 
@@ -132,4 +134,12 @@ public class UserDetailPay {
     public void setAddTime(Long addTime) {
         this.addTime = addTime;
     }
+
+	public BigDecimal getRestMoney() {
+		return restMoney;
+	}
+
+	public void setRestMoney(BigDecimal restMoney) {
+		this.restMoney = restMoney;
+	}
 }

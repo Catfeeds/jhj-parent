@@ -9,31 +9,32 @@
 		<result column="order_type" property="orderType" jdbcType="NUMERIC" />
 		<result column="order_id" property="orderId" jdbcType="NUMERIC" />
 		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
-		<result column="order_money" property="orderMoney" jdbcType="NUMERIC" />
-		<result column="order_pay" property="orderPay" jdbcType="NUMERIC" />
+		<result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
+		<result column="order_pay" property="orderPay" jdbcType="DECIMAL" />
+		<result column="rest_money" property="restMoney" jdbcType="DECIMAL" />
 		<result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
 		<result column="trade_status" property="tradeStatus" jdbcType="VARCHAR" />
 		<result column="pay_type" property="payType" jdbcType="NUMERIC" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, pay_account, user_id, mobile, order_type, order_id, order_no, order_money, order_pay,
+		id, pay_account, user_id, mobile, order_type, order_id, order_no, order_money, order_pay, rest_money,
 		trade_no, trade_status, pay_type, add_time
 	</sql>
 	<sql id="searchVo">
-	    
-	    <if test="userId !=null">
+
+		<if test="userId !=null">
 			and user_id = #{userId,jdbcType=NUMERIC}
 		</if>
-		
-	    <if test="orderId !=null">
+
+		<if test="orderId !=null">
 			and order_id = #{orderId,jdbcType=NUMERIC}
 		</if>
-		
-	    <if test="orderType !=null">
+
+		<if test="orderType !=null">
 			and order_type = #{orderType,jdbcType=NUMERIC}
 		</if>
-	    
+
 		<if test="mobile != null and mobile !='' ">
 			and mobile like concat ('%',#{mobile,jdbcType=CHAR},'%')
 		</if>
@@ -46,16 +47,20 @@
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
-		
+
 		<if test="userIds!=null">
 			and user_id in
 			<foreach collection="userIds" item="item" open="(" separator="," close=")">
 				${item}
 			</foreach>
 		</if>
-		
+
 		<if test="payType!=null">
 			and pay_type = #{payType,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="isVip!=null">
+			and user_id in (select id from users where is_vip = #{isVip})
 		</if>
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -79,19 +84,19 @@
 		<include refid="Base_Column_List" />
 		from user_detail_pay
 		where 1=1
-		<include refid="searchVo"/>
+		<include refid="searchVo" />
 		order by add_time desc
 	</select>
-	
+
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserDetailSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from user_detail_pay
 		where 1=1
-		<include refid="searchVo"/>
+		<include refid="searchVo" />
 		order by add_time desc
 	</select>
-	
+
 	<select id="selectByUserIdList" resultMap="BaseResultMap" parameterType="java.util.List">
 		select
 		<include refid="Base_Column_List" />
@@ -101,7 +106,7 @@
 			#{item}
 		</foreach>
 	</select>
-	
+
 	<select id="selectByTradeNo" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
@@ -117,12 +122,14 @@
 	<insert id="insert" parameterType="com.jhj.po.model.user.UserDetailPay">
 		insert into user_detail_pay (id, pay_account, user_id,
 		mobile, order_type, order_id,
-		order_no, order_money, order_pay,
+		order_no, order_money, order_pay, rest_money,
 		trade_no, trade_status, pay_type,
 		add_time)
 		values (#{id,jdbcType=NUMERIC}, #{payAccount,jdbcType=VARCHAR}, #{userId,jdbcType=NUMERIC},
-		#{mobile,jdbcType=CHAR}, #{orderType,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC},
-		#{orderNo,jdbcType=VARCHAR}, #{orderMoney,jdbcType=NUMERIC}, #{orderPay,jdbcType=NUMERIC},
+		#{mobile,jdbcType=CHAR},
+		#{orderType,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC},
+		#{orderNo,jdbcType=VARCHAR}, #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL},
+		#{restMoney,jdbcType=DECIMAL},
 		#{tradeNo,jdbcType=VARCHAR}, #{tradeStatus,jdbcType=VARCHAR}, #{payType,jdbcType=NUMERIC},
 		#{addTime,jdbcType=NUMERIC})
 	</insert>
@@ -155,6 +162,9 @@
 			</if>
 			<if test="orderPay != null">
 				order_pay,
+			</if>
+			<if test="restMoney != null">
+				rest_money,
 			</if>
 			<if test="tradeNo != null">
 				trade_no,
@@ -192,10 +202,13 @@
 				#{orderNo,jdbcType=VARCHAR},
 			</if>
 			<if test="orderMoney != null">
-				#{orderMoney,jdbcType=NUMERIC},
+				#{orderMoney,jdbcType=DECIMAL},
 			</if>
 			<if test="orderPay != null">
-				#{orderPay,jdbcType=NUMERIC},
+				#{orderPay,jdbcType=DECIMAL},
+			</if>
+			<if test="restMoney != null">
+				#{restMoney,jdbcType=DECIMAL},
 			</if>
 			<if test="tradeNo != null">
 				#{tradeNo,jdbcType=VARCHAR},
@@ -238,6 +251,9 @@
 			<if test="orderPay != null">
 				order_pay = #{orderPay,jdbcType=NUMERIC},
 			</if>
+			<if test="restMoney != null">
+				rest_money = #{restMoney,jdbcType=DECIMAL},
+			</if>
 			<if test="tradeNo != null">
 				trade_no = #{tradeNo,jdbcType=VARCHAR},
 			</if>
@@ -256,25 +272,30 @@
 	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.UserDetailPay">
 		update user_detail_pay
 		set pay_account = #{payAccount,jdbcType=VARCHAR},
-		user_id = #{userId,jdbcType=NUMERIC},
+		user_id =
+		#{userId,jdbcType=NUMERIC},
 		mobile = #{mobile,jdbcType=CHAR},
 		order_type = #{orderType,jdbcType=NUMERIC},
 		order_id = #{orderId,jdbcType=NUMERIC},
-		order_no = #{orderNo,jdbcType=VARCHAR},
+		order_no =
+		#{orderNo,jdbcType=VARCHAR},
 		order_money = #{orderMoney,jdbcType=NUMERIC},
 		order_pay = #{orderPay,jdbcType=NUMERIC},
+		rest_money = #{restMoney,jdbcType=DECIMAL},
 		trade_no = #{tradeNo,jdbcType=VARCHAR},
 		trade_status = #{tradeStatus,jdbcType=VARCHAR},
 		pay_type = #{payType,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
-	
+
 	<!-- 统计消费明细总金额，充值总金额 -->
 	<select id="totolMoeny" resultType="java.util.Map" parameterType="com.jhj.vo.user.UserDetailSearchVo">
-		select sum(order_pay) as totalMoeny,(select sum(order_pay) from user_detail_pay where order_type='1' <include refid="searchVo"/>) as chargeMoney from user_detail_pay
+		select sum(case when order_type in (0, 3,4) then order_pay end) as totalMoeny,(select sum(order_pay) from user_detail_pay where order_type='1'
+		<include refid="searchVo" />
+		) as chargeMoney from user_detail_pay
 		<where>
-			<include refid="searchVo"/>
+			<include refid="searchVo" />
 		</where>
 	</select>
 </mapper>

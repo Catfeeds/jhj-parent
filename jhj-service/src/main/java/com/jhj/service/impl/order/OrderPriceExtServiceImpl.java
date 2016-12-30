@@ -204,6 +204,7 @@ public class OrderPriceExtServiceImpl implements OrderPriceExtService {
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setOrderId(orderId);
 		orderSearchVo.setOrderExtType(orderExtType);
+		orderSearchVo.setOrderStatus((short) 2);
 		List<OrderPriceExt> orderPriceExts = this.selectBySearchVo(orderSearchVo);
 		
 		if (orderPriceExts.isEmpty()) return orderPayExt;

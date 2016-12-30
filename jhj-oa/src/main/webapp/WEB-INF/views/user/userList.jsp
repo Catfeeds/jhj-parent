@@ -88,9 +88,8 @@
 					            <td>${ item.restMoney }</td>
 					            <td>${ item.score }</td>
 					            <td>
-					            	<c:if test="${item.isVip==0 }">普通用户</c:if>
+					            	<c:if test="${item.isVip==0 }">银牌会员</c:if>
 					            	<c:if test="${item.isVip==1 }">金牌会员</c:if>
-					            	<%-- <userTypeTag:userTypeId userTypeId="${ item.userType }"/> --%>
 					            </td>
 					          
 					            <td>
@@ -99,7 +98,14 @@
 					            <td>
 					            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 					            </td>
-					            <td><a href="user-pay-detail?mobile=${item.mobile }">消费明细</a></td>
+					            <td>
+					            	<c:if test="${item.isVip==1}">
+						            	<a href="user-pay-detail?mobile=${item.mobile }">消费明细</a>
+					            	</c:if>
+					            	<c:if test="${item.isVip==0}">
+						            	<a href="not-vip-user-pay-detail?mobile=${item.mobile }">消费明细</a>
+					            	</c:if>
+					            </td>
                               </tr>
                               </c:forEach>
                               </tbody>

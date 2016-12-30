@@ -788,17 +788,33 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 		}
 		
+		String orderNo = request.getParameter("orderNo");
+		if (!StringUtil.isEmpty(orderNo)) {
+			searchVo.setOrderNo(orderNo);
+		}
+		
 		return searchVo;
 	}
 
-	//订单总收入
+	//订单支付金额
 	@Override
-	public BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo) {
-		List<Short> orderStatusList=new ArrayList<Short>();
-		orderStatusList.add((short)7);
-		orderStatusList.add((short)8);
-		orderStatusList.add((short)9);
-		vo.setOrderStatusList(orderStatusList);
-		return ordersMapper.getTotalOrderIncomeMoney(vo);
+	public BigDecimal getTotalOrderPay(OrderSearchVo vo) {
+//		List<Short> orderStatusList=new ArrayList<Short>();
+//		orderStatusList.add((short)7);
+//		orderStatusList.add((short)8);
+//		orderStatusList.add((short)9);
+//		vo.setOrderStatusList(orderStatusList);
+		return ordersMapper.getTotalOrderPay(vo);
+	}
+	
+	//订单补差价 + 订单加时金额
+	@Override
+	public BigDecimal getTotalOrderPayExt(OrderSearchVo vo) {
+//		List<Short> orderStatusList=new ArrayList<Short>();
+//		orderStatusList.add((short)7);
+//		orderStatusList.add((short)8);
+//		orderStatusList.add((short)9);
+//		vo.setOrderStatusList(orderStatusList);
+		return ordersMapper.getTotalOrderPayExt(vo);
 	}
 }

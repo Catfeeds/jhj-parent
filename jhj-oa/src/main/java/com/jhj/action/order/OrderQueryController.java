@@ -58,6 +58,7 @@ import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.poi.POIUtils;
@@ -157,7 +158,12 @@ public class OrderQueryController extends BaseController {
 		
 		result = new PageInfo(orderList);
 		
-		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		BigDecimal totalOrderPay = orderQueryService.getTotalOrderPay(searchVo);
+		BigDecimal totalOrderPayExt = orderQueryService.getTotalOrderPayExt(searchVo);
+		if (totalOrderPay == null) totalOrderPay = new BigDecimal(0);
+		if (totalOrderPayExt == null) totalOrderPayExt = new BigDecimal(0);
+		BigDecimal totalMoney = MathBigDecimalUtil.add(totalOrderPay, totalOrderPayExt);
+		
 		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))
@@ -281,7 +287,14 @@ public class OrderQueryController extends BaseController {
 		}
 
 		result = new PageInfo(orderList);
-		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		
+		BigDecimal totalOrderPay = orderQueryService.getTotalOrderPay(searchVo);
+		BigDecimal totalOrderPayExt = orderQueryService.getTotalOrderPayExt(searchVo);
+		if (totalOrderPay == null) totalOrderPay = new BigDecimal(0);
+		if (totalOrderPayExt == null) totalOrderPayExt = new BigDecimal(0);
+		BigDecimal totalMoney = MathBigDecimalUtil.add(totalOrderPay, totalOrderPayExt);
+		
+		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))
 			model.addAttribute("startTimeStr", startTimeStr);
@@ -360,7 +373,11 @@ public class OrderQueryController extends BaseController {
 		}
 
 		result = new PageInfo(orderList);
-		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		BigDecimal totalOrderPay = orderQueryService.getTotalOrderPay(searchVo);
+		BigDecimal totalOrderPayExt = orderQueryService.getTotalOrderPayExt(searchVo);
+		if (totalOrderPay == null) totalOrderPay = new BigDecimal(0);
+		if (totalOrderPayExt == null) totalOrderPayExt = new BigDecimal(0);
+		BigDecimal totalMoney = MathBigDecimalUtil.add(totalOrderPay, totalOrderPayExt);
 		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))

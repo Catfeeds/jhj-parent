@@ -51,7 +51,13 @@
 		<include refid="Base_Column_List" />
 		from orders
 		<include refid="bySearchVo" />
-		order by add_time desc
+		order by 
+		<if test="orderByProperty!=null">
+			${orderByProperty}
+		</if>
+		<if test="orderByProperty==null or orderByProperty==''">
+			add_time desc
+		</if>
 	</select>
 
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
@@ -94,7 +100,7 @@
 
 	</select>
 	
-	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+	<select id="getTotalOrderPay" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select sum(order_pay)from order_prices where order_id in
 		(
 			select id from orders
@@ -102,11 +108,12 @@
 		)
 	</select>
 	
-	<select id="getTotalOrderIncomeMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+	<select id="getTotalOrderPayExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select sum(order_pay)from order_price_ext where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />
+			and order_status = 2
 		)
 	</select>
 	
@@ -1317,4 +1324,39 @@
 		GROUP BY o.order_from,o.order_op_from,series
 	</select>
 	
+	<select id="totalByRate" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) as total,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time,#{formatParam}) as series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
+		</if>
+		from users WHERE id in 
+		(SELECT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) 
+		<include refid="chartSearchVo"/>
+		GROUP BY series
+	</select>
+	
+	<select id="totalByRateOrder" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) as total,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(t.add_time,#{formatParam}) as series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(t.add_time)),"-",quarter(FROM_UNIXTIME(t.add_time))) AS series
+		</if>
+		from (SELECT o.user_id,o.add_time from orders o 
+		<where>
+			<!-- <if test="startTime !=null">
+				<![CDATA[ and o.add_time >= #{startTime}]]>
+			</if> -->
+			<if test="endTime !=null">
+				<![CDATA[ and o.add_time <= #{endTime}]]>
+			</if>
+		</where>
+		) as t 
+		GROUP BY series,t.user_id HAVING COUNT(t.user_id)>=2
+		
+	</select>
 </mapper>

@@ -34,7 +34,7 @@
 		<include refid="Base_Column_List" />
 		from order_price_ext
 		<include refid="bySearchVo" />
-		order by add_time desc
+		order by add_time asc
 	</select>
 	
 	<sql id="bySearchVo">

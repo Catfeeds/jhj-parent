@@ -99,6 +99,10 @@
 		<if test="isVip!=null">
 			and is_vip = #{isVip,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="orderNum!=null and orderNum!=''">
+			or id in (SELECT DISTINCT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) and is_vip=0 
+		</if>
 	</sql>
 
 	<!-- 展示 只在 当前门店 下过单的 客户 -->
@@ -230,7 +234,7 @@
 		<result column="name" property="name" />
 		<result column="series" property="series" />
 		<result column="total" property="total" />
-
+		<result column="totalVip" property="totalVip"/>
 		<result column="totalMoney" property="totalMoney" />
 	</resultMap>
 	<resultMap id="ChartMap2" type="com.jhj.vo.chart.ChartMapVo">
@@ -240,9 +244,14 @@
 	
 	<!--市场用户图表-按天统计 -->
 	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total FROM
-		(SELECT add_from AS name,
-		FROM_UNIXTIME(add_time, #{formatParam}) AS series
+		SELECT name, series, COUNT(*) AS total,COUNT(CASE is_vip=1 when 1 THEN 0 END) as totalVip FROM
+		(SELECT add_from AS name,is_vip,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, #{formatParam}) AS series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
+		</if>
 		FROM users
 		WHERE 1=1
 		<include refid="charSearchVo"/>
@@ -250,6 +259,12 @@
 		GROUP BY name, series ORDER BY series ASC
 	</select>
 	<!-- 统计新增用户id按天统计 -->
+	<!-- SELECT series , count(*) AS total,COUNT(CASE is_vip=1 when 1 THEN 0 END) as totalIsVip FROM
+		(SELECT FROM_UNIXTIME(add_time, "%Y-%m-%d") AS series,is_vip
+		FROM users
+		WHERE 1=1
+		) as T
+		GROUP BY series ORDER BY series ASC -->
 	<select id="statUserIdsByDay" resultMap="ChartMap2" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT series , count(*) AS total FROM
 		(SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series
@@ -299,8 +314,8 @@
 	</select>
 	<!-- 市场用户图表-按季度统计 -->
 	<select id="statByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total FROM
-		(SELECT add_from AS name,
+		SELECT name, series, COUNT(*) AS total,COUNT(CASE is_vip=1 when 1 THEN 0 END) as totalVip FROM
+		(SELECT add_from AS name,is_vip,
 		CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) AS series
 		FROM users
 		WHERE 1=1
@@ -510,7 +525,7 @@
 		score = #{score,jdbcType=NUMERIC},
 		user_type = #{userType,jdbcType=NUMERIC},
 		remarks =
-		#{remarks,jdbcType=VARCHAR}
+		#{remarks,jdbcType=VARCHAR},
 		add_from = #{addFrom,jdbcType=NUMERIC},
 		add_time = #{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},
@@ -702,5 +717,21 @@
 			<![CDATA[ and add_time <= #{endTime}]]>
 		</if>
 	</sql>
+	
+	<select id="totalNum" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) AS total,
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, '${formatParam}') AS series
+		</if>
+		<if test="selectCycle==12">
+			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
+		</if>
+		FROM users
+		WHERE 1=1
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		GROUP BY series ORDER BY series ASC
+	</select>
 
 </mapper>
