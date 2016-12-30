@@ -2,6 +2,7 @@ package com.jhj.service.impl.users;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -108,7 +109,7 @@ public class UserChartServiceImpl implements UserChartService {
 		}
 
 		if (chartSearchVo.getStatType().equals("month")) {
-			chartSearchVo.setFormatParam("%y-%m");
+			chartSearchVo.setFormatParam("%Y-%m");
 			statDatas = usersMapper.statByDay(chartSearchVo);
 			chartMapVos = orderMapper.totalByRate(chartSearchVo);
 			chartMapVoRate = orderMapper.totalByRateOrder(chartSearchVo);
@@ -124,7 +125,7 @@ public class UserChartServiceImpl implements UserChartService {
 		ChartSearchVo vo=new ChartSearchVo();
 		vo.setEndTime(chartSearchVo.getEndTime());
 		if (chartSearchVo.getStatType().equals("day")) {
-			vo.setFormatParam("%c-%e");
+			vo.setFormatParam("%Y-%m-%e");
 			totalNum = usersMapper.totalNum(vo);
 		}
 
@@ -179,34 +180,33 @@ public class UserChartServiceImpl implements UserChartService {
 			//复购率
 			Integer totalRateOrder=0;
 			for (ChartMapVo chartSqlData : chartMapVoRate) {
-				String str = tableDataItem.get("series").split("-")[1];
-				String str1 = chartSqlData.getSeries().split("-")[1];
-				if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series");
-					str1 = chartSqlData.getSeries();
-				}
+				String str = tableDataItem.get("series");
+				String str1 = chartSqlData.getSeries();
+//				if(chartSearchVo.getSelectCycle()==12){
+//					str = tableDataItem.get("series");
+//					str1 = chartSqlData.getSeries();
+//				}
 				if (str.equals(str1)) {
 					totalRateOrder = totalRateOrder + chartSqlData.getTotal();
 				}
 			}
 			
 			Integer num=0;
+			
 			for (ChartMapVo chartSqlData : totalNum) {
-//				String str = tableDataItem.get("series");
-//				String str1 = chartSqlData.getSeries();
-//				if(chartSearchVo.getSelectCycle()==12){
+				if(chartSearchVo.getSelectCycle()==1){
+					String str2 = tableDataItem.get("series");
+					String str3 = chartSqlData.getSeries();
+					if(str2.equals(str3)){
+						num = num + chartSqlData.getTotal();
+					}
+				}else{
 					String[] str2 = tableDataItem.get("series").split("-");
 					String[] str3 = chartSqlData.getSeries().split("-");
 					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
 						num = num + chartSqlData.getTotal();
 					}
-//				}else{
-//					String[] str2 = tableDataItem.get("series").split("-");
-//					String[] str3 = chartSqlData.getSeries().split("-");
-//					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
-//						num = num + chartSqlData.getTotal();
-//					}
-//				}
+				}
 			}
 			
 			tableDataItem.put("复购用户小计", totalRateOrder.toString());
@@ -235,7 +235,7 @@ public class UserChartServiceImpl implements UserChartService {
 		for (Map<String, String> tableDataItem : tableDatas) {
 
 			if (tmpSubTotal.equals(0)) {
-				tmpSubTotal = Integer.valueOf(tableDataItem.get("新增用户小计"));
+				tmpSubTotal = Integer.valueOf(tableDataItem.get("总人数"));
 				tableDataItem.put("增长率", "-");
 				continue;
 			}
@@ -243,12 +243,14 @@ public class UserChartServiceImpl implements UserChartService {
 			subTotal = Integer.valueOf(tableDataItem.get("新增用户小计"));
 
 			if (!subTotal.equals(0)) {
-				String incrPercent = MathDoubleUtil.getRiseRate(subTotal, tmpSubTotal);
+//				String incrPercent = MathDoubleUtil.getRiseRate(subTotal, tmpSubTotal);
+				//新增用户小计/上个月总人数
+				String incrPercent = MathDoubleUtil.getPercent(subTotal, tmpSubTotal);
 				tableDataItem.put("增长率", incrPercent);
 			} else {
 				tableDataItem.put("增长率", "-");
 			}
-			tmpSubTotal = Integer.valueOf(tableDataItem.get("新增用户小计"));
+			tmpSubTotal = Integer.valueOf(tableDataItem.get("总人数"));
 		}
 		
 	
