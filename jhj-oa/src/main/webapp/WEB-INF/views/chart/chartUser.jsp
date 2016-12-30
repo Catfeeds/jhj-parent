@@ -71,6 +71,7 @@
 				<thead>
 					<tr>
 						<th>时间</th>
+						<th>总人数</th>
 						<th>新增用户小计</th>
 						<th>增长率</th>
 						<th>会员用户小计</th>
@@ -83,6 +84,7 @@
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<th>${item.series}</th>
+						<th>${item.总人数}</th>
 						<th>
 							<c:if test="${item.新增用户小计==0}">
 								${item.新增用户小计}
