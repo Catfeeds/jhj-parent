@@ -129,7 +129,7 @@ public class UserChartServiceImpl implements UserChartService {
 		}
 
 		if (chartSearchVo.getStatType().equals("month")) {
-			vo.setFormatParam("%y-%m");
+			vo.setFormatParam("%Y-%m");
 			totalNum = usersMapper.totalNum(vo);
 		}
 
@@ -192,19 +192,21 @@ public class UserChartServiceImpl implements UserChartService {
 			
 			Integer num=0;
 			for (ChartMapVo chartSqlData : totalNum) {
-				String str = tableDataItem.get("series").split("-")[1];
-				String str1 = chartSqlData.getSeries().split("-")[1];
-				if(chartSearchVo.getSelectCycle()==12){
+//				String str = tableDataItem.get("series");
+//				String str1 = chartSqlData.getSeries();
+//				if(chartSearchVo.getSelectCycle()==12){
 					String[] str2 = tableDataItem.get("series").split("-");
 					String[] str3 = chartSqlData.getSeries().split("-");
-					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) ||Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
 						num = num + chartSqlData.getTotal();
 					}
-				}else{
-					if (Integer.valueOf(str1)<=Integer.valueOf(str)) {
-						num = num + chartSqlData.getTotal();
-					}
-				}
+//				}else{
+//					String[] str2 = tableDataItem.get("series").split("-");
+//					String[] str3 = chartSqlData.getSeries().split("-");
+//					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+//						num = num + chartSqlData.getTotal();
+//					}
+//				}
 			}
 			
 			tableDataItem.put("复购用户小计", totalRateOrder.toString());

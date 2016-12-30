@@ -728,7 +728,9 @@
 		</if>
 		FROM users
 		WHERE 1=1
-		<include refid="charSearchVo"/>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
 		GROUP BY series ORDER BY series ASC
 	</select>
 

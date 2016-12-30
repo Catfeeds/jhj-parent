@@ -1346,11 +1346,11 @@
 		<if test="selectCycle==12">
 			concat(year(FROM_UNIXTIME(t.add_time)),"-",quarter(FROM_UNIXTIME(t.add_time))) AS series
 		</if>
-		from (SELECT o.user_id,o.add_time from orders o LEFT JOIN users u on u.id = o.user_id 
+		from (SELECT o.user_id,o.add_time from orders o 
 		<where>
-			<if test="startTime !=null">
+			<!-- <if test="startTime !=null">
 				<![CDATA[ and o.add_time >= #{startTime}]]>
-			</if>
+			</if> -->
 			<if test="endTime !=null">
 				<![CDATA[ and o.add_time <= #{endTime}]]>
 			</if>
