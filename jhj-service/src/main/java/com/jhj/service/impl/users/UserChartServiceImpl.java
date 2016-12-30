@@ -21,6 +21,7 @@ import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.meijia.utils.ChartUtil;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathDoubleUtil;
 import com.meijia.utils.StringUtil;
 
@@ -184,7 +185,7 @@ public class UserChartServiceImpl implements UserChartService {
 				String str1 = chartSqlData.getSeries();
 //				if(chartSearchVo.getSelectCycle()==12){
 //					str = tableDataItem.get("series");
-//					str1 = chartSqlData.getSeries();
+//					
 //				}
 				if (str.equals(str1)) {
 					totalRateOrder = totalRateOrder + chartSqlData.getTotal();
@@ -192,12 +193,12 @@ public class UserChartServiceImpl implements UserChartService {
 			}
 			
 			Integer num=0;
-			
+			int year = DateUtil.getYear();
 			for (ChartMapVo chartSqlData : totalNum) {
 				if(chartSearchVo.getSelectCycle()==1){
-					String str2 = tableDataItem.get("series");
+					String str2 =year+"-"+tableDataItem.get("series");
 					String str3 = chartSqlData.getSeries();
-					if(str2.equals(str3)){
+					if(DateUtil.compareDateStr(str3,str2)>0){
 						num = num + chartSqlData.getTotal();
 					}
 				}else{
@@ -213,7 +214,13 @@ public class UserChartServiceImpl implements UserChartService {
 			tableDataItem.put("总人数", num.toString());
 			
 			if(total>0){
-				tableDataItem.put("复购率", MathDoubleUtil.getPercent(totalRateOrder, num));
+				if(chartSearchVo.getStatType().equals("quarter")){
+					tableDataItem.put("复购用户小计", Integer.valueOf(Math.round(totalRateOrder/2)).toString());
+					tableDataItem.put("复购率", MathDoubleUtil.getPercent(Math.round(totalRateOrder/2), num));
+				}else{
+					tableDataItem.put("复购用户小计", totalRateOrder.toString());
+					tableDataItem.put("复购率", MathDoubleUtil.getPercent(totalRateOrder, num));
+				}
 			}else{
 				tableDataItem.put("复购率", "0.00%");
 			}
