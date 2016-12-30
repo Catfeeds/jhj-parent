@@ -103,6 +103,7 @@ public class OrgStaffPayDeptServiceImpl implements OrgStaffPayDeptService {
 	
 	@Override
 	public BigDecimal totalBySearchVo(OrderSearchVo searchVo) {
+		searchVo.setOrderStatus((short) 2);
 		return orgStaffPayDeptMapper.totalBySearchVo(searchVo);
 	}
 

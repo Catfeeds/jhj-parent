@@ -33,6 +33,57 @@ where a.user_id = b.user_id and a.add_time > b.add_time
 update users set rest_money = 0 where rest_money < 0
 
 
+CREATE TABLE `user_once` (
+  `mobile` varchar(11) DEFAULT NULL,
+  `rest_money` decimal(9,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `user_once`
+--
+
+INSERT INTO `user_once` (`mobile`, `rest_money`) VALUES
+('13466330824', '365.00'),
+('15001008009', '3260.00'),
+('13906009127', '420.00'),
+('15110271031', '1057.00'),
+('13522229973', '886.00'),
+('13810265737', '0.00'),
+('13810815398', '700.00'),
+('18910318907', '200.00'),
+('18910010912', '0.00'),
+('13801112336', '55.00'),
+('13521172999', '1632.00'),
+('15010569668', '16.00'),
+('13683544156', '1907.00'),
+('18610505099', '606.00'),
+('18611911129', '1746.00'),
+('18301185152', '0.00'),
+('13641165288', '1306.00'),
+('13501006327', '1055.00'),
+('18600248405', '0.00'),
+('18610562626', '463.00'),
+('13699106584', '463.50');
+
+
+select a.mobile, a.rest_money, b.rest_money as rest_money_excel, 
+(case when a.rest_money > b.rest_money then b.rest_money else a.rest_money end) as rest_money_new
+
+from users as a , user_once as b where a.mobile = b.mobile
+
+
+update users as a , user_once as b set a.rest_money = b.rest_money where a.mobile = b.mobile and a.rest_money > b.rest_money
+
+
+
+
+
+
+
+
+
+
+
 //-------------------------服务人员明细整理
 update org_staff_finance set total_incoming = 0, total_dept = 0, total_cash = 0, rest_money = 0, is_black = 0;
 
@@ -66,7 +117,16 @@ select sum(order_pay) as totalOrderPay from order_dispatch_prices where order_id
 	)
 
 
-//
+//验证收入是否正确
+select a.staff_id, a.total_incoming, b.total_incoming  from 
+jhj_new.org_staff_finance as a, jhj.org_staff_finance  as b
+where a.staff_id = b.staff_id and a.total_incoming <> b.total_incoming;
+
+select sum(order_pay) from order_prices where order_id in (
+
+select id from orders where order_id in (select order_id from order_dispatchs where staff_id = 73 and dispatch_status = 1) and order_status in (7,8) and add_time >= 1476892800
+)
+
 
 
 //增加数据库更新脚本
