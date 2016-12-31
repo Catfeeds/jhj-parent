@@ -15,6 +15,7 @@ import com.jhj.po.dao.order.OrderDispatchPricesMapper;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchPrices;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffFinanceService;
@@ -24,6 +25,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchPriceService;
+import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
@@ -54,6 +56,9 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 
 	@Autowired
 	private OrderPricesService orderPriceService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
 	
 	@Autowired
 	private OrgStaffSkillService orgStaffSkillService;
@@ -137,10 +142,13 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		record.setOrderPayCoupon(new BigDecimal(0));
 		record.setOrderPayCouponIncoming(new BigDecimal(0));
 		record.setOrderPayExtDiff(new BigDecimal(0));
+		record.setOrderPayExtDiffPayType((short) 0);
 		record.setOrderPayExtDiffIncoming(new BigDecimal(0));
 		record.setOrderPayExtOverwork(new BigDecimal(0));
 		record.setOrderPayExtOverworkIncoming(new BigDecimal(0));
 		record.setIncomingPercent(new BigDecimal(0));
+		record.setTotalOrderMoney(new BigDecimal(0));
+		record.setTotalOrderPay(new BigDecimal(0));
 		record.setTotalOrderIncoming(new BigDecimal(0));
 		record.setTotalOrderDept(new BigDecimal(0));
 		record.setAddTime(TimeStampUtil.getNowSecond());
@@ -203,16 +211,32 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		record.setUserAddrDistance(orderDispatch.getUserAddrDistance());
 		record.setPayType(orderPrice.getPayType());
 		record.setOrderMoney(vo.getOrderMoney());
-		record.setOrderPay(vo.getTotalOrderPay());
+		record.setOrderPay(vo.getOrderPay());
 		record.setOrderPayIncoming(vo.getOrderIncoming());
 		record.setCouponId(orderPrice.getCouponId());
 		record.setOrderPayCoupon(vo.getOrderPayCoupon());
 		record.setOrderPayCouponIncoming(vo.getOrderPayCouponIncoming());
 		record.setOrderPayExtDiff(vo.getOrderPayExtDiff());
+		
+		//找出订单补差价的支付方式
+		record.setOrderPayExtDiffPayType((short) 0);
+		OrderSearchVo orderSearchVo = new OrderSearchVo();
+		orderSearchVo.setOrderId(orderId);
+		orderSearchVo.setOrderExtType((short) 0);
+		orderSearchVo.setOrderStatus((short) 2);
+		List<OrderPriceExt> orderPriceExts = orderPriceExtService.selectBySearchVo(orderSearchVo);
+		if (!orderPriceExts.isEmpty()) {
+			for (OrderPriceExt ope : orderPriceExts) {
+				record.setOrderPayExtDiffPayType(ope.getPayType());
+			}
+		}
+		
 		record.setOrderPayExtDiffIncoming(vo.getOrderPayExtDiffIncoming());
 		record.setOrderPayExtOverwork(vo.getOrderPayExtOverWork());
 		record.setOrderPayExtOverworkIncoming(vo.getOrderPayExtOverWorkIncoming());
 		record.setIncomingPercent(vo.getIncomingPercent());
+		record.setTotalOrderMoney(vo.getTotalOrderMoney());
+		record.setTotalOrderPay(vo.getTotalOrderPay());
 		record.setTotalOrderIncoming(vo.getTotalOrderIncoming());
 		record.setTotalOrderDept(vo.getTotalOrderDept());
 		record.setAddTime(order.getUpdateTime());
@@ -235,10 +259,29 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		BigDecimal totalOrderPayType2 = new BigDecimal(0);
 		BigDecimal totalOrderPayType6 = new BigDecimal(0);
 		BigDecimal totalOrderPayType7 = new BigDecimal(0);
+		BigDecimal totalOrderPayExtDiffPayType0 = new BigDecimal(0);
+		BigDecimal totalOrderPayExtDiffPayType1 = new BigDecimal(0);
+		BigDecimal totalOrderPayExtDiffPayType2 = new BigDecimal(0);
+		BigDecimal totalOrderPayExtOrderWork = new BigDecimal(0);
 		
 		Map<String, String> statResult = new HashMap<String, String>();
+		
+		
+		statResult.put("totalOrderMoney", "0");
+		statResult.put("totalOrderPay", "0");
+		statResult.put("totalOrderCoupon", "0");
+		statResult.put("totalOrderIncoming", "0");
+		statResult.put("totalOrderPayType0", "0");
+		statResult.put("totalOrderPayType1", "0");
+		statResult.put("totalOrderPayType2", "0");
+		statResult.put("totalOrderPayType6", "0");
+		statResult.put("totalOrderPayType7", "0");
+		
+		
 		searchVo.setDispatchStatus((short) 1);
 		Map<String, Object> stats =  orderDispatchPriceMapper.getTotalOrderMoneyMultiStat(searchVo);
+		
+		if (stats == null) return statResult;
 		
 		if (stats.get("totalOrderMoney") != null) {
 			totalOrderMoney =  (BigDecimal) stats.get("totalOrderMoney");
@@ -260,12 +303,24 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 			totalOrderPayType0 =  (BigDecimal) stats.get("totalOrderPayType0");
 		}
 		
+		if (stats.get("totalOrderPayExtDiffPayType0") != null) {
+			totalOrderPayExtDiffPayType0 =  (BigDecimal) stats.get("totalOrderPayExtDiffPayType0");
+		}
+		
 		if (stats.get("totalOrderPayType1") != null) {
 			totalOrderPayType1 =  (BigDecimal) stats.get("totalOrderPayType1");
 		}
 		
+		if (stats.get("totalOrderPayExtDiffPayType1") != null) {
+			totalOrderPayExtDiffPayType1 =  (BigDecimal) stats.get("totalOrderPayExtDiffPayType1");
+		}
+		
 		if (stats.get("totalOrderPayType2") != null) {
 			totalOrderPayType2 =  (BigDecimal) stats.get("totalOrderPayType2");
+		}
+		
+		if (stats.get("totalOrderPayExtDiffPayType2") != null) {
+			totalOrderPayExtDiffPayType2 =  (BigDecimal) stats.get("totalOrderPayExtDiffPayType2");
 		}
 		
 		if (stats.get("totalOrderPayType6") != null) {
@@ -275,6 +330,22 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		if (stats.get("totalOrderPayType7") != null) {
 			totalOrderPayType7 =  (BigDecimal) stats.get("totalOrderPayType7");
 		}
+		
+		if (stats.get("totalOrderPayExtOrderWork") != null) {
+			totalOrderPayExtOrderWork =  (BigDecimal) stats.get("totalOrderPayExtOrderWork");
+		}
+		
+		//余额支付 = 订单支付 + 订单补差价
+		totalOrderPayType0 = totalOrderPayType0.add(totalOrderPayExtDiffPayType0);
+		
+		//支付宝支付 = 订单支付 + 订单补差价
+		totalOrderPayType1 = totalOrderPayType1.add(totalOrderPayExtDiffPayType1);
+		
+		//微信支付 = 订单支付 + 订单补差价
+		totalOrderPayType2 = totalOrderPayType2.add(totalOrderPayExtDiffPayType2);
+		
+		//现金支付 = 订单支付金额 + 订单加时金额
+		totalOrderPayType6 = totalOrderPayType6.add(totalOrderPayExtOrderWork);
 		
 		statResult.put("totalOrderMoney", MathBigDecimalUtil.round2(totalOrderMoney));
 		statResult.put("totalOrderPay", MathBigDecimalUtil.round2(totalOrderPay));

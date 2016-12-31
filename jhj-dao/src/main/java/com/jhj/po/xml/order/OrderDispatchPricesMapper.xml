@@ -32,10 +32,13 @@
 		<result column="order_pay_coupon" property="orderPayCoupon" jdbcType="DECIMAL" />
 		<result column="order_pay_coupon_incoming" property="orderPayCouponIncoming" jdbcType="DECIMAL" />
 		<result column="order_pay_ext_diff" property="orderPayExtDiff" jdbcType="DECIMAL" />
+		<result column="order_pay_ext_diff_pay_type" property="orderPayExtDiffPayType" jdbcType="NUMERIC" />
 		<result column="order_pay_ext_diff_incoming" property="orderPayExtDiffIncoming" jdbcType="DECIMAL" />
 		<result column="order_pay_ext_overwork" property="orderPayExtOverwork" jdbcType="DECIMAL" />
 		<result column="order_pay_ext_overwork_incoming" property="orderPayExtOverworkIncoming" jdbcType="DECIMAL" />
 		<result column="incoming_percent" property="incomingPercent" jdbcType="DECIMAL" />
+		<result column="total_order_money" property="totalOrderMoney" jdbcType="DECIMAL" />
+		<result column="total_order_pay" property="totalOrderPay" jdbcType="DECIMAL" />
 		<result column="total_order_incoming" property="totalOrderIncoming" jdbcType="DECIMAL" />
 		<result column="total_order_dept" property="totalOrderDept" jdbcType="DECIMAL" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
@@ -48,9 +51,9 @@
 		staff_id, staff_name, staff_mobile, dispatch_status, user_addr_distance, pay_type,
 		order_money, order_pay, order_pay_incoming,
 		coupon_id, order_pay_coupon, order_pay_coupon_incoming,
-		order_pay_ext_diff, order_pay_ext_diff_incoming, order_pay_ext_overwork,
+		order_pay_ext_diff, order_pay_ext_diff_pay_type, order_pay_ext_diff_incoming, order_pay_ext_overwork,
 		order_pay_ext_overwork_incoming,
-		incoming_percent, total_order_incoming, total_order_dept, add_time, update_time
+		incoming_percent, total_order_money, total_order_pay, total_order_incoming, total_order_dept, add_time, update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
@@ -83,13 +86,17 @@
 	
 	<select id="getTotalOrderMoneyMultiStat" resultType="java.util.HashMap"  parameterType="com.jhj.vo.order.OrderSearchVo">
 		select 
-		sum(order_money) as totalOrderMoney, sum(order_pay) as totalOrderPay,
+		sum(total_order_money) as totalOrderMoney, sum(total_order_pay) as totalOrderPay,
 		sum(order_pay_coupon) as totalOrderCoupon, sum(total_order_incoming) as totalOrderIncoming,
 		sum(case when pay_type = 0 then order_pay end ) as totalOrderPayType0,
 		sum(case when pay_type = 1 then order_pay end ) as totalOrderPayType1,
 		sum(case when pay_type = 2 then order_pay end ) as totalOrderPayType2,
-		sum(case when pay_type = 6 then order_pay + order_pay_ext_overwork end ) as totalOrderPayType6,
-		sum(case when pay_type = 7 then order_pay end ) as totalOrderPayType7
+		sum(case when pay_type = 6 then order_pay end ) as totalOrderPayType6,
+		sum(case when pay_type = 7 then order_pay end ) as totalOrderPayType7,
+		sum(case when order_pay_ext_diff_pay_type = 0 then order_pay_ext_diff end) as totalOrderPayExtDiffPayType0,
+		sum(case when order_pay_ext_diff_pay_type = 1 then order_pay_ext_diff end) as totalOrderPayExtDiffPayType1,
+		sum(case when order_pay_ext_diff_pay_type = 2 then order_pay_ext_diff end) as totalOrderPayExtDiffPayType2,
+		sum(order_pay_ext_overwork) as totalOrderPayExtOrderWork
 		from order_dispatch_prices
 		<include refid="bySearchVo" />
 	</select>
@@ -223,9 +230,10 @@
 		pay_type, order_money,
 		order_pay,
 		order_pay_incoming, coupon_id, order_pay_coupon,
-		order_pay_coupon_incoming, order_pay_ext_diff,
+		order_pay_coupon_incoming, order_pay_ext_diff, order_pay_ext_diff_pay_type,
 		order_pay_ext_diff_incoming, order_pay_ext_overwork,
-		order_pay_ext_overwork_incoming, incoming_percent,
+		order_pay_ext_overwork_incoming, incoming_percent, 
+		total_order_money, total_order_pay,
 		total_order_incoming, total_order_dept, add_time,
 		update_time)
 		values (#{userId,jdbcType=NUMERIC},
@@ -242,9 +250,10 @@
 		#{payType,jdbcType=NUMERIC}, #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL},
 		#{orderPayIncoming,jdbcType=DECIMAL}, #{couponId,jdbcType=NUMERIC}, #{orderPayCoupon,jdbcType=DECIMAL},
 		#{orderPayCouponIncoming,jdbcType=DECIMAL},
-		#{orderPayExtDiff,jdbcType=DECIMAL},
+		#{orderPayExtDiff,jdbcType=DECIMAL}, #{orderPayExtDiffPayType,jdbcType=NUMERIC},
 		#{orderPayExtDiffIncoming,jdbcType=DECIMAL}, #{orderPayExtOverwork,jdbcType=DECIMAL},
 		#{orderPayExtOverworkIncoming,jdbcType=DECIMAL}, #{incomingPercent,jdbcType=DECIMAL},
+		#{totalOrderMoney,jdbcType=DECIMAL}, #{totalOrderPay,jdbcType=DECIMAL},
 		#{totalOrderIncoming,jdbcType=DECIMAL},
 		#{totalOrderDept,jdbcType=DECIMAL}, #{addTime,jdbcType=NUMERIC},
 		#{updateTime,jdbcType=NUMERIC})
@@ -342,6 +351,9 @@
 			<if test="orderPayExtDiff != null">
 				order_pay_ext_diff,
 			</if>
+			<if test="orderPayExtDiffPayType != null">
+				order_pay_ext_diff_pay_type,
+			</if>
 			<if test="orderPayExtDiffIncoming != null">
 				order_pay_ext_diff_incoming,
 			</if>
@@ -353,6 +365,12 @@
 			</if>
 			<if test="incomingPercent != null">
 				incoming_percent,
+			</if>
+			<if test="totalOrderMoney != null">
+				total_order_money,
+			</if>
+			<if test="totalOrderPay != null">
+				total_order_pay,
 			</if>
 			<if test="totalOrderIncoming != null">
 				total_order_incoming,
@@ -455,6 +473,9 @@
 			<if test="orderPayExtDiff != null">
 				#{orderPayExtDiff,jdbcType=DECIMAL},
 			</if>
+			<if test="orderPayExtDiffPayType != null">
+				#{orderPayExtDiffPayType,jdbcType=DECIMAL},
+			</if>
 			<if test="orderPayExtDiffIncoming != null">
 				#{orderPayExtDiffIncoming,jdbcType=DECIMAL},
 			</if>
@@ -466,6 +487,12 @@
 			</if>
 			<if test="incomingPercent != null">
 				#{incomingPercent,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderMoney != null">
+				#{totalOrderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderPay != null">
+				#{totalOrderPay,jdbcType=DECIMAL},
 			</if>
 			<if test="totalOrderIncoming != null">
 				#{totalOrderIncoming,jdbcType=DECIMAL},
@@ -571,6 +598,9 @@
 			<if test="orderPayExtDiff != null">
 				order_pay_ext_diff = #{orderPayExtDiff,jdbcType=DECIMAL},
 			</if>
+			<if test="orderPayExtDiffPayType != null">
+				order_pay_ext_diff_pay_type = #{orderPayExtDiffPayType,jdbcType=DECIMAL},
+			</if>
 			<if test="orderPayExtDiffIncoming != null">
 				order_pay_ext_diff_incoming = #{orderPayExtDiffIncoming,jdbcType=DECIMAL},
 			</if>
@@ -582,6 +612,12 @@
 			</if>
 			<if test="incomingPercent != null">
 				incoming_percent = #{incomingPercent,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderMoney != null">
+				total_order_money = #{totalOrderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderPay != null">
+				total_order_pay = #{totalOrderPay,jdbcType=DECIMAL},
 			</if>
 			<if test="totalOrderIncoming != null">
 				total_order_incoming = #{totalOrderIncoming,jdbcType=DECIMAL},
@@ -632,6 +668,7 @@
 		coupon_id =
 		#{couponId,jdbcType=NUMERIC},
 		order_pay_coupon = #{orderPayCoupon,jdbcType=DECIMAL},
+		order_pay_ext_diff_pay_type = #{orderPayExtDiffPayType,jdbcType=DECIMAL},
 		order_pay_coupon_incoming = #{orderPayCouponIncoming,jdbcType=DECIMAL},
 		order_pay_ext_diff = #{orderPayExtDiff,jdbcType=DECIMAL},
 		order_pay_ext_diff_incoming = #{orderPayExtDiffIncoming,jdbcType=DECIMAL},
@@ -640,6 +677,8 @@
 		order_pay_ext_overwork_incoming = #{orderPayExtOverworkIncoming,jdbcType=DECIMAL},
 		incoming_percent =
 		#{incomingPercent,jdbcType=DECIMAL},
+		total_order_money = #{totalOrderMoney,jdbcType=DECIMAL},
+		total_order_pay = #{totalOrderPay,jdbcType=DECIMAL},
 		total_order_incoming = #{totalOrderIncoming,jdbcType=DECIMAL},
 		total_order_dept = #{totalOrderDept,jdbcType=DECIMAL},
 		add_time = #{addTime,jdbcType=NUMERIC},

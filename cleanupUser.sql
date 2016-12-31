@@ -209,3 +209,31 @@ ALTER TABLE `order_dispatch_prices`
 --
 ALTER TABLE `order_dispatch_prices`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
+
+
+
+ALTER TABLE `order_dispatch_prices` ADD `total_order_money` DECIMAL(9,2) NOT NULL DEFAULT '0' COMMENT '订单总金额' AFTER `incoming_percent`;
+
+
+ALTER TABLE `order_dispatch_prices` ADD `total_order_pay` DECIMAL(9,2) NOT NULL DEFAULT '0' COMMENT '订单总支付金额' AFTER `total_order_money`;
+
+ALTER TABLE `order_dispatch_prices` ADD `order_pay_ext_diff_pay_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '补差价支付方式' AFTER `order_pay_ext_diff`;
+
+update order_dispatch_prices set total_order_pay = order_pay, total_order_money = order_pay + order_pay_coupon;
+
+update order_dispatch_prices set total_order_pay =  ROUND(total_order_pay / staff_num, 2);
+
+update order_dispatch_prices as a, order_prices as b set a.order_pay = b.order_pay where a.order_id = b.order_id;
+
+update order_dispatch_prices set order_pay = ROUND(order_pay / staff_num, 2);
+
+update order_dispatch_prices as a, order_price_ext as b set a.order_pay_ext_diff_pay_type = b.pay_type where a.order_id = b.order_id and b.order_ext_type = 0 and b.order_status = 1
+
+
+
+
+//验证sql
+
+select order_pay, order_pay_ext_diff, order_pay_ext_overwork, total_order_pay, 
+ROUND( (order_pay  +  order_pay_ext_diff + order_pay_ext_overwork) / staff_num ,2) as avg from order_dispatch_prices where  ROUND( (order_pay  +  order_pay_ext_diff + order_pay_ext_overwork) / staff_num ,2) <> total_order_pay 
+
