@@ -62,6 +62,8 @@ public class OrderDispatchPrices {
     private BigDecimal orderPayCouponIncoming;
 
     private BigDecimal orderPayExtDiff;
+    
+    private Short orderPayExtDiffPayType;
 
     private BigDecimal orderPayExtDiffIncoming;
 
@@ -70,7 +72,11 @@ public class OrderDispatchPrices {
     private BigDecimal orderPayExtOverworkIncoming;
 
     private BigDecimal incomingPercent;
-
+    
+    private BigDecimal totalOrderMoney;
+    
+    private BigDecimal totalOrderPay;
+    
     private BigDecimal totalOrderIncoming;
 
     private BigDecimal totalOrderDept;
@@ -382,4 +388,28 @@ public class OrderDispatchPrices {
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
+
+	public BigDecimal getTotalOrderMoney() {
+		return totalOrderMoney;
+	}
+
+	public void setTotalOrderMoney(BigDecimal totalOrderMoney) {
+		this.totalOrderMoney = totalOrderMoney;
+	}
+
+	public BigDecimal getTotalOrderPay() {
+		return totalOrderPay;
+	}
+
+	public void setTotalOrderPay(BigDecimal totalOrderPay) {
+		this.totalOrderPay = totalOrderPay;
+	}
+
+	public Short getOrderPayExtDiffPayType() {
+		return orderPayExtDiffPayType;
+	}
+
+	public void setOrderPayExtDiffPayType(Short orderPayExtDiffPayType) {
+		this.orderPayExtDiffPayType = orderPayExtDiffPayType;
+	}
 }

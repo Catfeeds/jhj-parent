@@ -49,6 +49,8 @@ public class OrgStaffIncomingVo {
 	
 	private BigDecimal orderMoney;
 	
+	private BigDecimal orderPay;
+	
 	private String couponName;
 	
 	private BigDecimal orderIncoming;
@@ -343,5 +345,13 @@ public class OrgStaffIncomingVo {
 
 	public void setOrderPayCouponIncoming(BigDecimal orderPayCouponIncoming) {
 		this.orderPayCouponIncoming = orderPayCouponIncoming;
+	}
+
+	public BigDecimal getOrderPay() {
+		return orderPay;
+	}
+
+	public void setOrderPay(BigDecimal orderPay) {
+		this.orderPay = orderPay;
 	}
 }

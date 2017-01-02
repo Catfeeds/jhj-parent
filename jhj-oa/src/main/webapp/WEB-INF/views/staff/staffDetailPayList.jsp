@@ -49,9 +49,12 @@
 						readonly="true" />
 				</div>
 				
-				<button type="submit" class="btn btn-primary">搜索</button>
 				
+				<input type="button" id="searchBtn" class="btn btn-primary" onclick="searchSubmit()" value="搜索"/>
+				<br>
+				<br>
 				<input type="button" id="exportOrder" class="btn btn-warning" onclick="exportStaffOrder()" value="导出财务明细"/>
+				<input type="button" id="exportPayDept" class="btn btn-warning" onclick="exportStaffPayDept()" value="导出还款明细"/>
 			</form:form> 
 			</header>
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />

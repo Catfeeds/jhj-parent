@@ -170,7 +170,7 @@
 	<!-- 用户有余额的总钱数 -->
 	<select id="selectUserAllResyMoneyByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT
-		FROM_UNIXTIME(add_time, "%c-%e") AS series, SUM(rest_money) AS totalMoney
+		FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(rest_money) AS totalMoney
 		FROM
 		users where 1 = 1
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
@@ -187,7 +187,7 @@
 	</select>
 
 	<select id="selectUserAllResyMoneyByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c") AS series, SUM(rest_money) AS totalMoney FROM
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(rest_money) AS totalMoney FROM
 		users where 1 = 1
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
@@ -565,7 +565,7 @@
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money &gt; 0
@@ -590,18 +590,18 @@
 	<!-- 用户余额不足200的人数 -->
 
 	<select id="userResyMoneyLessTwoByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt; 0 and rest_money &lt; 200
+		WHERE rest_money &gt; 0 and rest_money &lt;= 200
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessTwoByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt; 0 and rest_money &lt; 200
+		WHERE rest_money &gt; 0 and rest_money &lt;= 200
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -609,25 +609,25 @@
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt; 0 and rest_money &lt; 200
+		WHERE rest_money &gt; 0 and rest_money &lt;= 200
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<!-- 用户余额不足1000的人数 -->
 
 	<select id="userResyMoneyLessThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt;0 and rest_money &lt; 1000
+		WHERE rest_money >200 and rest_money &lt;= 1000
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt;0 and rest_money &lt; 1000
+		WHERE rest_money >200 and rest_money &lt;= 1000
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -635,7 +635,7 @@
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt;0 and rest_money &lt; 1000
+		WHERE rest_money >200 and rest_money &lt;= 1000
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -643,7 +643,7 @@
 	<!-- 用户余额大于3000的人数 -->
 
 	<select id="userResyMoneyThreeThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money > 3000
@@ -651,7 +651,7 @@
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyThreeThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money > 3000
@@ -670,18 +670,18 @@
 	<!-- 用户余额在1000和3000之间的人数 -->
 
 	<select id="userResyMoneyBetweenByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
+		WHERE rest_money > 1000 and rest_money &lt;= 3000
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyBetweenByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
+		WHERE rest_money > 1000 and rest_money &lt;= 3000
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -689,7 +689,7 @@
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
 		COUNT(*) AS total
 		FROM users
-		WHERE rest_money &gt;= 1000 and rest_money &lt;= 3000
+		WHERE rest_money > 1000 and rest_money &lt;= 3000
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>

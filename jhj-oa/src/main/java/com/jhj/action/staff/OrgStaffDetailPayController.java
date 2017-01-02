@@ -106,21 +106,7 @@ public class OrgStaffDetailPayController extends BaseController {
 		
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, null, sessionParentId);
-		
-		// 服务开始时间
-		String serviceStartTime = request.getParameter("serviceStartTimeStr");
-		if (!StringUtil.isEmpty(serviceStartTime)) {
-
-			searchVo.setStartAddTime(TimeStampUtil.getMillisOfDayFull(serviceStartTime+" 00:00:00") / 1000);
-		}
-		// 服务结束时间
-		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
-		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
-
-			searchVo.setEndAddTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+" 23:59:59") / 1000);
-		}
-		
-		
+				
 		List<OrgStaffDetailPay> orgStaffdetailPayList = new ArrayList<OrgStaffDetailPay>();
 
 	

@@ -41,6 +41,7 @@ import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffFinance;
+import com.jhj.po.model.bs.OrgStaffPayDept;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
@@ -66,6 +67,7 @@ import com.jhj.vo.staff.OrgStaffIncomingVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.ExcelUtil;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.poi.ExcelTools;
@@ -139,8 +141,6 @@ public class OrgStaffExportController extends BaseController {
 		
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
 		
-		if (orderDispatchs.isEmpty()) return null;
-		
 
 		String cpath = request.getSession().getServletContext().getRealPath("/WEB-INF") + "/attach/";
 		String templateName = "服务人员订单明细表.xlsx";
@@ -152,10 +152,13 @@ public class OrgStaffExportController extends BaseController {
 		
 		int rowNum = 1;
 		
-		//订单总金额合计
+		//订单支付金额合计
 		BigDecimal totalOrderMoneyAll = new BigDecimal(0);
 		//订单总收入合计
 		BigDecimal totalOrderIncomingAll = new BigDecimal(0);
+		//订单欠款合计
+		BigDecimal totalDeptAll = new BigDecimal(0);
+		
 		for (int i = 0; i < orderDispatchs.size(); i++) {
 
 			OrderDispatchs item = orderDispatchs.get(i);
@@ -169,6 +172,12 @@ public class OrgStaffExportController extends BaseController {
 			if (!orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) && 
 				!orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) 
 				continue;
+			
+			//订单完成时间是否在查询条件范围之内
+			Long orderUpdateTime = order.getUpdateTime();
+			if (orderUpdateTime < startServiceTime || orderUpdateTime > endServiceTime) {
+				continue;
+			}
 			
 			OrgStaffIncomingVo vo = orgStaffFinanceService.getStaffInComingDetail(orgStaff, order, item);
 			
@@ -253,11 +262,12 @@ public class OrgStaffExportController extends BaseController {
 
 			//订单产生欠款
 			this.setCellValueForDouble(rowData, 23, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderDept())));
-
+			
+			totalDeptAll = totalDeptAll.add(vo.getTotalOrderDept());
 			//订单总金额
 			this.setCellValueForDouble(rowData, 24, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderPay())));
 
-			totalOrderMoneyAll = totalOrderMoneyAll.add(vo.getTotalOrderMoney());
+			totalOrderMoneyAll = totalOrderMoneyAll.add(vo.getTotalOrderPay());
 			
 			//订单总收入
 			this.setCellValueForDouble(rowData, 25, Double.valueOf(MathBigDecimalUtil.round2(vo.getTotalOrderIncoming())));
@@ -277,7 +287,9 @@ public class OrgStaffExportController extends BaseController {
 //			c.setCellStyle(contentStyle);
 //			sh.autoSizeColumn((short)j);
 		}
-		this.setCellValueForString(rowData, 23, "合计:");
+		this.setCellValueForString(rowData, 22, "合计:");
+		
+		this.setCellValueForDouble(rowData, 23, Double.valueOf(MathBigDecimalUtil.round2(totalDeptAll)));
 
 		this.setCellValueForDouble(rowData, 24, Double.valueOf(MathBigDecimalUtil.round2(totalOrderMoneyAll)));
 		
@@ -294,6 +306,121 @@ public class OrgStaffExportController extends BaseController {
 		
 		
 		
+		
+		return null;
+	}
+	
+	
+	//服务人员所有订单明细表
+	@AuthPassport
+	@RequestMapping(value = "/export-pay-dept", method = RequestMethod.GET)
+	public String exportPayDept(Model model, HttpServletRequest request, HttpServletResponse response, OrderSearchVo searchVo) throws Exception {
+		
+		Long staffId = 0L;
+		if (searchVo.getStaffId() != null) {
+			staffId = searchVo.getStaffId();
+		} else {
+			staffId = searchVo.getSelectStaff();
+		}
+				
+		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
+		if (orgStaff == null) return null;
+		
+		searchVo.setStaffId(staffId);
+		
+		Long parentId = orgStaff.getParentOrgId();
+		Orgs parentOrg = orgService.selectByPrimaryKey(parentId);
+		String parentOrgName = parentOrg.getOrgName();
+
+		Long orgId = orgStaff.getOrgId();
+		Orgs org = orgService.selectByPrimaryKey(orgId);
+		String orgName = org.getOrgName();
+		
+		
+		searchVo.setOrderStatus((short) 2);
+		
+		List<OrgStaffPayDept> list = orgStaffPayDeptService.selectBySearchVo(searchVo);
+		
+		String cpath = request.getSession().getServletContext().getRealPath("/WEB-INF") + "/attach/";
+		String templateName = "服务人员还款明细表.xlsx";
+		
+		XssExcelTools excel = new XssExcelTools(cpath + templateName, 0);
+		XSSFSheet sh = excel.getXssSheet();
+		
+		XSSFCellStyle contentStyle = excel.getContentStyle(excel.getXssWb());
+		
+		int rowNum = 1;
+		
+		BigDecimal totalPayDept = new BigDecimal(0);
+		for (int i = 0; i < list.size(); i++) {
+
+			OrgStaffPayDept item = list.get(i);
+
+			XSSFRow rowData = sh.createRow(rowNum);
+
+			for(int j = 0; j <= 10; j++) {
+				rowData.createCell(j);
+				XSSFCell c = rowData.getCell(j);
+				c.setCellType(XSSFCell.CELL_TYPE_STRING);
+//				c.setCellValue("");  
+//				c.setCellStyle(contentStyle);
+			}
+			
+			//序号
+			this.setCellValueForString(rowData, 0, String.valueOf(rowNum));
+			
+			//门店
+			this.setCellValueForString(rowData, 1, parentOrgName);
+			
+			//云店
+			this.setCellValueForString(rowData, 2, orgName);
+			
+			//服务人员
+			this.setCellValueForString(rowData, 3, orgStaff.getName());
+			
+			//服务人员手机号
+			this.setCellValueForDouble(rowData, 4, Double.valueOf(orgStaff.getMobile()));
+			
+			//还款时间
+			Long addTime = item.getAddTime();
+			String addTimeStr = TimeStampUtil.timeStampToDateStr(addTime * 1000,  "yyyy-MM-dd HH:mm:ss");
+			this.setCellValueForString(rowData, 5, addTimeStr);
+			
+			//订单号
+			this.setCellValueForString(rowData, 6, item.getOrderNo());
+			
+			//支付方式
+			String payTypeName = OneCareUtil.getPayTypeName(item.getPayType());
+			this.setCellValueForString(rowData, 7, payTypeName);
+			
+			//还款金额
+			this.setCellValueForDouble(rowData, 8, Double.valueOf(MathBigDecimalUtil.round2(item.getOrderMoney())));
+			
+			//还款账号
+			this.setCellValueForString(rowData, 9, item.getPayAccount());
+			
+			//交易流水号
+			this.setCellValueForString(rowData, 10, item.getTradeId());
+		
+			totalPayDept = totalPayDept.add(item.getOrderMoney());
+			rowNum++;
+			
+		}
+		
+		//写入合计
+		XSSFRow rowData = sh.createRow(rowNum);
+
+		for(int j = 0; j <= 10; j++) {
+			XSSFCell c = rowData.createCell(j);
+//					c.setCellStyle(contentStyle);
+//					sh.autoSizeColumn((short)j);
+		}
+		this.setCellValueForString(rowData, 7, "合计:");
+
+		this.setCellValueForDouble(rowData, 8, Double.valueOf(MathBigDecimalUtil.round2(totalPayDept)));
+		
+		String fileName = orgStaff.getName() + "-还款明细表.xls";
+		excel.downloadExcel(response, fileName);
 		
 		return null;
 	}

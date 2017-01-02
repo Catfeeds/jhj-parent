@@ -1326,10 +1326,10 @@
 	
 	<select id="totalByRate" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT COUNT(*) as total,
-		<if test="selectCycle!=12">
+		<if test="statType!='quarter'">
 			FROM_UNIXTIME(add_time,#{formatParam}) as series
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType=='quarter'">
 			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
 		</if>
 		from users WHERE id in 
@@ -1340,10 +1340,10 @@
 	
 	<select id="totalByRateOrder" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT COUNT(*) as total,
-		<if test="selectCycle!=12">
+		<if test="statType!='quarter'">
 			FROM_UNIXTIME(t.add_time,#{formatParam}) as series
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType=='quarter'">
 			concat(year(FROM_UNIXTIME(t.add_time)),"-",quarter(FROM_UNIXTIME(t.add_time))) AS series
 		</if>
 		from (SELECT o.user_id,o.add_time from orders o 
