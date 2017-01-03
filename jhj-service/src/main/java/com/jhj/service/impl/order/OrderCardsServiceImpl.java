@@ -110,17 +110,17 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 //		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
 		users.setRestMoney(restMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
-		if(cardMoney.compareTo(new BigDecimal(1000))>=0){
+		if(cardMoney.compareTo(new BigDecimal(500))>=0){
 			users.setIsVip(1);
 		}
 		
-		String formatDate = DateUtil.formatDate(new Date());
-		boolean compare = DateUtil.compare("2016-12-21",formatDate);
-		boolean compare2 = DateUtil.compare(formatDate, "2017-01-02");
-		
-		if(cardMoney.compareTo(new BigDecimal(500))>=0 && compare && compare2){
-			users.setIsVip(1);
-		}
+//		String formatDate = DateUtil.formatDate(new Date());
+//		boolean compare = DateUtil.compare("2016-12-21",formatDate);
+//		boolean compare2 = DateUtil.compare(formatDate, "2017-01-02");
+//		
+//		if(cardMoney.compareTo(new BigDecimal(500))>=0 && compare && compare2){
+//			users.setIsVip(1);
+//		}
 		usersService.updateByPrimaryKeySelective(users);
 
 		orderCardsMapper.updateByPrimaryKeySelective(orderCards);
