@@ -215,6 +215,9 @@ function saveFrom() {
 	params.remarks = $("#remarks").val();
 	var orderPayType = $("#orderPayType").val();
 	params.service_addons_datas = $("#serviceAddonDatas").val();
+	
+	var couponsId = $("input[name='couponsId']:checked").val();
+	params.coupons_id = couponsId;
 
 	if ($('#orderExpForm').validate().form()) {
 		$('#submitForm').attr('disabled',"true");
@@ -231,7 +234,7 @@ function saveFrom() {
 				var service_type=data.data.service_type;
 				
 				if (data.status == 0) {
-					savePay(orderPayType, orderNo, userId,service_type);
+					savePay(orderPayType, orderNo, userId,service_type,couponsId);
 				}
 				if (data.status == 999) {
 					alert(data.msg);
@@ -248,6 +251,7 @@ function savePay(orderPayType, orderNo, userId,service_type) {
 	data.order_pay_type = orderPayType;
 	data.order_no = orderNo;
 	data.user_id = userId;
+	data.coupon_id = couponsId;
 	if (orderNo != null && userId != null) {
 		$.ajax({
 			type : "post",

@@ -116,6 +116,22 @@
 										</div>
 										
 										<div class="form-group">
+											<label class="col-md-2 control-label">
+												优惠券
+											</label>
+											<div class="col-md-5">
+												<input type="radio" name="couponsId" value="4176" /><span>3元</span>
+												<input type="radio" name="couponsId" value="4177" /><span>5元</span>
+												<input type="radio" name="couponsId" value="4178" /><span>10元</span>
+												<input type="radio" name="couponsId" value="4179" /><span>15元</span>
+												<input type="radio" name="couponsId" value="4180" /><span>20元</span>
+												<input type="radio" name="couponsId" value="4181" /><span>20元</span>
+												<input type="radio" name="couponsId" value="4182" /><span>50元</span>
+												<input type="radio" name="couponsId" value="4183" /><span>100元</span>
+											</div>
+										</div>
+										
+										<div class="form-group">
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>订单来源</label>
 											<div class="col-md-5">
