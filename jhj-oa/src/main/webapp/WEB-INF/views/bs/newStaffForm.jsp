@@ -350,7 +350,9 @@
 						<br />
 						<div class="form-actions fluid">
 							<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
+								<c:if test="${accountAuth.accountRole.id != 12}">
 								<button type="submit"  id="orgStaffForm_btn" class="btn btn-success">保存</button>
+								</c:if>
 							</div>
 						</div>
 					</div>
