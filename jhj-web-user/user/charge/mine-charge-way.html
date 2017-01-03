@@ -9,9 +9,11 @@
                 </p>
                 <p>推荐人号码：<sapn><input type="tel" name="staffCode" style="padding-left:8px;" id="staffCode"  placeholder="请输入4位推荐码"/></span></p>
             </div>
+             {{#js_compare "this.card_pay>500"}}
             <div class="chongzhi1">
                 <p>赠送优惠券</p>
             </div>
+            {{/js_compare}}
             {{#js_compare "this.card_pay==1000"}}
             <div class="chongzhi2">
                 <img src="img/youhuiquan/1.png" alt="">
