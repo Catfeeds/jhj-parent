@@ -148,7 +148,7 @@ function getAddrByMobile(addrId) {
 					var userId = data.data.id;
 					$("#userId").data("userId", userId)
 					$("#mobile").data("mobile", mobile);
-					$("#userId").text(userId);
+					$("#userId").val(userId);
 					var isVip = data.data.isVip;
 					$("#isVip").val(isVip);
 					console.log(data.data);
@@ -202,7 +202,7 @@ function saveFrom() {
 	}	
 	
 	var params = {};
-	params.user_id = $("#userId").text();
+	params.user_id = $("#userId").val();
 	params.mobile = $("#mobile").val();
 	params.addr_id = $("#addrId").val();
 	params.service_type = $("#serviceType").val();
@@ -286,7 +286,7 @@ function regUser(mobile) {
 			},
 			dataType : "json",
 			success : function(data) {
-				$("#userId").text(data.data);
+				$("#userId").val(data.data);
 				$("#userId").data("userId", data.data)
 				$("#mobile").data("mobile", $("#mobile").val());
 			}
