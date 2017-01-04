@@ -25,10 +25,15 @@ $("#parentId").on('change', function(){
 			if(0 == $result.status){
 				
 				//针对门店的下拉联动
-
+				var selectedOrgId = $("#selectedOrgId").val();
 				$cloudOptions = '<option value="0">全部</option>';
 				$.each($result.data, function(i, obj) {
-					$cloudOptions += '<option value="'+obj.org_id+'">' + obj.org_name + "</option>";
+					if (obj.org_id == selectedOrgId) {
+						$cloudOptions += '<option value="'+obj.org_id+'" selected>' + obj.org_name + "</option>";
+					} else {
+						$cloudOptions += '<option value="'+obj.org_id+'">' + obj.org_name + "</option>";
+					}
+					
 				});
 				
 				$("#orgId").html($cloudOptions);

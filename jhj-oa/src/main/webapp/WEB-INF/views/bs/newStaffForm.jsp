@@ -72,14 +72,12 @@
 						<div class="form-group required">
 							<label class="col-md-2 control-label">选择云店*</label>
 							<div class="col-md-5">
-								
+								<input type="hidden" id="selectedOrgId" value="${newStaffFormVoModel.orgId }"/>
 								<select name="orgId" id="orgId" class="form-control">
 									<c:if test="${newStaffFormVoModel.orgId==0 }">
 										<option value="0">全部</option>
 									</c:if>
-									<c:if test="${newStaffFormVoModel.orgId!=0 }">
-										<option value="${org.orgId }" selected="selected">${org.orgName}</option>
-									</c:if>
+									
 								</select>
 							</div>
 						</div>
@@ -180,8 +178,13 @@
 								</div>
 						</div>
 				
-				
-						<div class="form-group">
+						
+							<div class="form-group" 
+								<c:if test="${accountAuth.accountRole.id == 12}">
+								style="display:none"
+								</c:if>
+							>
+
                                 <label class="col-sm-2 col-sm-2 control-label">技能</label>
                                 <div class="col-sm-5">
 	                                   <div class="portlet-body">
@@ -350,9 +353,8 @@
 						<br />
 						<div class="form-actions fluid">
 							<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
-								<c:if test="${accountAuth.accountRole.id != 12}">
+								
 								<button type="submit"  id="orgStaffForm_btn" class="btn btn-success">保存</button>
-								</c:if>
 							</div>
 						</div>
 					</div>
