@@ -246,7 +246,7 @@ function saveFrom() {
 }
 
 //订单的支付方式
-function savePay(orderPayType, orderNo, userId,service_type) {
+function savePay(orderPayType, orderNo, userId,service_type,couponsId) {
 	var data = {};
 	data.order_pay_type = orderPayType;
 	data.order_no = orderNo;
