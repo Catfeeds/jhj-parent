@@ -71,6 +71,10 @@ public class OrderSearchVo {
 	
 	private String serviceEndTimeStr;
 	
+	private String startUpdateTimeStr;
+	
+	private String endUpdateTimeStr;
+	
 	private Long parentId;
 	
 	private Long orgId;
@@ -404,6 +408,22 @@ public class OrderSearchVo {
 
 	public void setDispatchStatus(Short dispatchStatus) {
 		this.dispatchStatus = dispatchStatus;
+	}
+
+	public String getStartUpdateTimeStr() {
+		return startUpdateTimeStr;
+	}
+
+	public void setStartUpdateTimeStr(String startUpdateTimeStr) {
+		this.startUpdateTimeStr = startUpdateTimeStr;
+	}
+
+	public String getEndUpdateTimeStr() {
+		return endUpdateTimeStr;
+	}
+
+	public void setEndUpdateTimeStr(String endUpdateTimeStr) {
+		this.endUpdateTimeStr = endUpdateTimeStr;
 	}
 	
 }

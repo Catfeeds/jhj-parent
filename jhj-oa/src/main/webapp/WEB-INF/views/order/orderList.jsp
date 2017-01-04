@@ -149,6 +149,28 @@
 										</tr>
 										
 										<tr>
+											<td width="100%" colspan="6" style="padding:0;border:0">
+												<table width="100%" style="border:0" cellspacing="0" cellpadding="0" class="table-bordered table-condensed">
+													<tbody>
+														<tr>
+															<td width="10%" style="border:0;border-bottom-width:0;border-left-width:0">服务完成时间：</td>
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
+																<input id="startUpdateTimeStr" name="startUpdateTimeStr" value="${startUpdateTimeStr }" class="form-control form_datetime"
+																	style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> 
+																<input id="endUpdateTimeStr"
+																	name="endUpdateTimeStr" value="${endUpdateTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
+															</td>
+															<td width="10%" style="border-top-width:0;border-bottom-width:0;"></td>
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
+																
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											 </td>
+										</tr>
+										
+										<tr>
 											<td width="10%">服务人员姓名：</td>
 											<td width="23%">
 												<form:input path="staffName" class="form-control" placeholder="请输入服务人员名称"/>
