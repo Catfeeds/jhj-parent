@@ -216,7 +216,7 @@ function saveFrom() {
 	var orderPayType = $("#orderPayType").val();
 	params.service_addons_datas = $("#serviceAddonDatas").val();
 	
-	var couponsId = $("input[name='couponsId']:checked").val();
+	var couponsId = $("input[name='couponsId']:selected").val();
 	params.coupons_id = couponsId;
 
 	if ($('#orderExpForm').validate().form()) {
@@ -393,7 +393,7 @@ function serviceTypeChange() {
 
 serviceTypeChange();
 
-function changePrice() {
+function changePrice(couponsValue) {
 	$("#orderPay").val(0);
 	$("#serviceHour").val(0);
 	$("#serviceAddonDatas").val("");
@@ -449,14 +449,16 @@ function changePrice() {
 		}
 	});
 	
+	if(couponsValue==undefined || couponsValue==null || couponsValue=='') couponsValue=0;
+	
 	if (totalOrderPay != undefined && totalOrderPay != "" && totalOrderPay != 0) {
 		totalOrderPay = totalOrderPay.toFixed(2);
-		$("#orderPay").val(totalOrderPay);
+		$("#orderPay").val(totalOrderPay-couponsValue);
 	}
 	
 	if (totalServiceHour != undefined && totalServiceHour != "" && totalServiceHour != 0) {
 		totalServiceHour = Math.round(totalServiceHour)
-		$("#serviceHour").val(totalServiceHour);
+		$("#serviceHour").val(totalServiceHour-couponsValue);
 	}
 	
 //	console.log(JSON.stringify(serviceAddonsJson));
@@ -465,5 +467,12 @@ function changePrice() {
 		$("#serviceAddonDatas").val(JSON.stringify(serviceAddonsJson) );
 	}
 	
-	
 }
+
+//选择优惠券
+function selectCoupons(){
+	var couponsValue = $("#couponsId").find(":selected").text();
+	var value = parseInt(couponsValue);
+	changePrice(value);
+}
+

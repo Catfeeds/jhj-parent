@@ -120,14 +120,17 @@
 												优惠券
 											</label>
 											<div class="col-md-5">
-												<input type="radio" name="couponsId" value="4176" /><span>3元</span>
-												<input type="radio" name="couponsId" value="4177" /><span>5元</span>
-												<input type="radio" name="couponsId" value="4178" /><span>10元</span>
-												<input type="radio" name="couponsId" value="4179" /><span>15元</span>
-												<input type="radio" name="couponsId" value="4180" /><span>20元</span>
-												<input type="radio" name="couponsId" value="4181" /><span>30元</span>
-												<input type="radio" name="couponsId" value="4182" /><span>50元</span>
-												<input type="radio" name="couponsId" value="4183" /><span>100元</span>
+												<select name="couponsId" id="couponsId" class="form-control" onchange="selectCoupons()">
+													<option value="">0元</option>
+													<option value="4176">3元</option>
+													<option value="4177">5元</option>
+													<option value="4178">10元</option>
+													<option value="4179">15元</option>
+													<option value="4180">20元</option>
+													<option value="4181">30元</option>
+													<option value="4182">50元</option>
+													<option value="4183">100元</option>
+												</select>
 											</div>
 										</div>
 										

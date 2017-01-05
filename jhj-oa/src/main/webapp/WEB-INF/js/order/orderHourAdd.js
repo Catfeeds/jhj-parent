@@ -216,7 +216,7 @@ function saveFrom() {
 	params.remarks = $("#remarks").val();
 	var order_pay_type = $("#orderPayType").val();
 	
-	var couponsId = $("input[name='couponsId']:checked").val();
+	var couponsId = $("input[name='couponsId']:selected").val();
 	params.coupons_id = couponsId;
 	
 	if ($('#orderHourForm').validate().form()) {
@@ -372,7 +372,7 @@ function chageServiceType(){
 	
 }
 
-function changePrice() {
+function changePrice(couponsValue) {
 	var serviceHours = $("#serviceHour").val();
 	serviceHours = serviceHours.replace(/\D|^0/g,'');
 	var staffNums = $("#staffNums").val();
@@ -402,13 +402,23 @@ function changePrice() {
 		orderHourPrice = mprice;
 	}
 	
+	if(couponsValue==undefined || couponsValue==null || couponsValue=='') couponsValue=0;
+	
+	
 	if (staffNums == 1 && serviceHours == minServiceHour) {
-		$("#orderPay").val(orderHourPay);
+		$("#orderPay").val(orderHourPay-couponsValue);
 	}
 	if (staffNums > 1 || serviceHours > minServiceHour) {
-		orderPay = orderHourPrice * serviceHours * staffNums;
+		orderPay = orderHourPrice * serviceHours * staffNums-couponsValue;
 		$("#orderPay").val(orderPay);
 	}
 }
 
 chageServiceType();
+
+//选择优惠券
+function selectCoupons(){
+	var couponsValue = $("#couponsId").find(":selected").text();
+	var value = parseInt(couponsValue);
+	changePrice(value);
+}
