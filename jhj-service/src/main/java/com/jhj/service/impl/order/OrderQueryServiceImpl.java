@@ -736,6 +736,27 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			
 			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":59") / 1000);
 		}
+		
+		
+		// 服务完成开始时间
+		String startUpdateTimeStr = request.getParameter("startUpdateTimeStr");
+		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+			
+			if (startUpdateTimeStr.length() == 10) startUpdateTimeStr = startUpdateTimeStr + " 00:00";
+			
+			searchVo.setStartUpdateTime(TimeStampUtil.getMillisOfDayFull(startUpdateTimeStr+":00") / 1000);
+			
+		}
+		
+		
+		String endUpdateTimeStr = request.getParameter("endUpdateTimeStr");
+		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+			
+			if (endUpdateTimeStr.length() == 10) endUpdateTimeStr = endUpdateTimeStr + " 23:59";
+			
+			searchVo.setEndUpdateTime(TimeStampUtil.getMillisOfDayFull(endUpdateTimeStr+":59") / 1000);
+		}
+		
 		// 处理查询时间条件--------------------------------结束
 
 		// 处理查询状态条件--------------------------------开始
