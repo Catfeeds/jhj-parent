@@ -112,6 +112,7 @@
 												</select>
 											</div>
 										</div>
+										
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务时间
@@ -120,6 +121,7 @@
 												<input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" />
 											</div>
 										</div>
+										
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务时长
@@ -138,6 +140,24 @@
 											</div>
 										</div>
 										
+										<div class="form-group">
+											<label class="col-md-2 control-label">
+												优惠券
+											</label>
+											<div class="col-md-5">
+												<select name="couponsId" id="couponsId" class="form-control" onchange="selectCoupons()">
+													<option value="">0元</option>
+													<option value="4176">3元</option>
+													<option value="4177">5元</option>
+													<option value="4178">10元</option>
+													<option value="4179">15元</option>
+													<option value="4180">20元</option>
+													<option value="4181">30元</option>
+													<option value="4182">50元</option>
+													<option value="4183">100元</option>
+												</select>
+											</div>
+										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>价格

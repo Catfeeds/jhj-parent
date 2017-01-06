@@ -150,7 +150,7 @@ public class OrderQueryController extends BaseController {
 			orders = orderList.get(i);
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			BigDecimal orderPay = completeVo.getOrderPay();
-			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_8){
 				pageMoney = pageMoney.add(orderPay);
 			}
 			orderList.set(i, completeVo);
@@ -280,7 +280,7 @@ public class OrderQueryController extends BaseController {
 			Long serviceType2 = orders.getServiceType();
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			BigDecimal orderPay = completeVo.getOrderPay();
-			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_8){
 				pageMoney = pageMoney.add(orderPay);
 			}
 			orderList.set(i, completeVo);
@@ -366,7 +366,7 @@ public class OrderQueryController extends BaseController {
 			orders = orderList.get(i);
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			BigDecimal orderPay = completeVo.getOrderPay();
-			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_8){
 				pageMoney = pageMoney.add(orderPay);
 			}
 			orderList.set(i, completeVo);

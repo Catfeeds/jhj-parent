@@ -118,7 +118,8 @@ public class OrderPayController extends BaseController {
 			@RequestParam("user_id") Long userId, 
 			@RequestParam("order_no") String orderNo, 
 			@RequestParam("order_pay_type") Short orderPayType,
-			@RequestParam(value = "user_coupon_id", required = false, defaultValue="0") Long userCouponId) {
+			@RequestParam(value = "user_coupon_id", required = false, defaultValue="0") Long userCouponId,
+			@RequestParam(value = "coupon_id", required = false, defaultValue="0") Long couponId) {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
@@ -170,7 +171,19 @@ public class OrderPayController extends BaseController {
 		
 		//此时 orderPay 和 orderMoney 值是相等的
 		BigDecimal orderPay = orderPrice.getOrderMoney();
-		BigDecimal orderMoney = orderPrice.getOrderMoney();		
+		BigDecimal orderMoney = orderPrice.getOrderMoney();
+		
+		if(couponId!=null && couponId>0){
+			UserCoupons userCoupons =new UserCoupons();
+			userCoupons.setIsUsed((short)0);
+			userCoupons.setUserId(userId);
+			userCoupons.setCouponId(couponId);
+			List<UserCoupons> coupons = userCouponsService.selectByUserCoupons(userCoupons);
+			if(coupons.size()>0){
+				userCouponId = coupons.get(0).getId();
+			}
+			
+		}
 		
 		//处理优惠劵，判断优惠劵是否有效的问题
 		if (userCouponId > 0L) {

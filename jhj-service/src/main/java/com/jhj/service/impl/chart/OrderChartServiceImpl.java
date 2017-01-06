@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.jhj.common.Constants;
 import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
@@ -53,8 +54,9 @@ public class OrderChartServiceImpl implements OrderChartService {
 		String statType = chartSearchVo.getStatType();
 		//确认legend;
 		List<String> legendAll = new ArrayList<String>();
+		legendAll.add("订单总数");
 		legendAll.add("新增订单小计");
-		legendAll.add("增长率");
+		legendAll.add("环比增长率");
 		legendAll.add("微网站来源");
 		legendAll.add("App来源");
 		legendAll.add("平台来源");
@@ -100,7 +102,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			chartSearchVo.setFormatParam("%c");
+			chartSearchVo.setFormatParam("%Y-%m");
 			statDatas = orderMapper.statByDay(chartSearchVo);
 		}	
 		
@@ -117,24 +119,12 @@ public class OrderChartServiceImpl implements OrderChartService {
 			int thrNum=0;
 			int cancleNum=0;
 			Integer subTotal =1;
+			int totalNum=0;
 			for (ChartMapVo chartSqlData : statDatas) {
 			//处理表格形式的数据.
-				if(chartSearchVo.getSelectCycle()==1){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
-					str = tableDataItem.get("series").split("-")[1];
-					if(chartSearchVo.getSearchType()==0){
-						str1 = chartSqlData.getSeries();
-					}
-					if(chartSearchVo.getSearchType()==1){
-						str1 = chartSqlData.getSeries().split("-")[1];
-					}
-				}
-				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
+				str = tableDataItem.get("series");
+				str1 = chartSqlData.getSeries();
+				if (str.equals(str1)) {
 					//0代表APP  1 = 微网站来源  2平台来源
 					if (chartSqlData.getName().equals("0")){
 						if(chartSqlData.getTotal()!=null){
@@ -173,6 +163,51 @@ public class OrderChartServiceImpl implements OrderChartService {
 			}
 		}
 		
+		//查询每个月之前所有的订单总数
+		List<ChartMapVo> statData = new ArrayList<ChartMapVo>();
+		
+		if (chartSearchVo.getStatType().equals("day") ) {
+			chartSearchVo.setFormatParam("%c-%e");
+			statData = orderMapper.statByTotal(chartSearchVo);
+		}
+		
+		if (chartSearchVo.getStatType().equals("month") ) {
+			chartSearchVo.setFormatParam("%Y-%m");
+			statData = orderMapper.statByTotal(chartSearchVo);
+		}	
+		
+		if (chartSearchVo.getStatType().equals("quarter") ) {
+			statData = orderMapper.statByTotal(chartSearchVo);
+		}			
+		
+		for (Map<String, String> tableDataItem : tableDatas) {
+			int totalNum=0;
+			String[] str2 = tableDataItem.get("series").split("-");
+			for (ChartMapVo chartSqlData : statData) {
+				String[] str3 = chartSqlData.getSeries().split("-");
+				if (Integer.valueOf(str3[0])<Integer.valueOf(str2[0]) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])){
+					totalNum = totalNum + chartSqlData.getTotal();
+				}
+			}
+			tableDataItem.put("订单总数", String.valueOf(totalNum));
+		}
+		
+		
+		Integer total =0;
+		Integer nextTotal=0;
+		for(int i=0,len=tableDatas.size();i<len;i++){
+			HashMap<String, String> map = tableDatas.get(i);
+			
+			if(nextTotal==0){
+				total = Integer.valueOf(map.get("新增订单小计"));
+			}
+			nextTotal = Integer.valueOf(map.get("新增订单小计"));
+			
+			String percent = MathDoubleUtil.getRiseRate(nextTotal,total);
+			map.put("环比增长率", percent);
+			total = Integer.valueOf(map.get("新增订单小计"));
+			
+		}
 		
 		//5. 去掉第一个tableDataItem;
 		if (tableDatas.size() > 0) tableDatas.remove(0);

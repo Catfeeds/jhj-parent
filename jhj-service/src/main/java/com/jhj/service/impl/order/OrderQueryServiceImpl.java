@@ -736,6 +736,27 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			
 			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":59") / 1000);
 		}
+		
+		
+		// 服务完成开始时间
+		String startUpdateTimeStr = request.getParameter("startUpdateTimeStr");
+		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+			
+			if (startUpdateTimeStr.length() == 10) startUpdateTimeStr = startUpdateTimeStr + " 00:00";
+			
+			searchVo.setStartUpdateTime(TimeStampUtil.getMillisOfDayFull(startUpdateTimeStr+":00") / 1000);
+			
+		}
+		
+		
+		String endUpdateTimeStr = request.getParameter("endUpdateTimeStr");
+		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+			
+			if (endUpdateTimeStr.length() == 10) endUpdateTimeStr = endUpdateTimeStr + " 23:59";
+			
+			searchVo.setEndUpdateTime(TimeStampUtil.getMillisOfDayFull(endUpdateTimeStr+":59") / 1000);
+		}
+		
 		// 处理查询时间条件--------------------------------结束
 
 		// 处理查询状态条件--------------------------------开始
@@ -799,9 +820,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	//订单支付金额
 	@Override
 	public BigDecimal getTotalOrderPay(OrderSearchVo vo) {
-//		List<Short> orderStatusList=new ArrayList<Short>();
-//		orderStatusList.add((short)7);
-//		orderStatusList.add((short)8);
+		List<Short> orderStatusList=new ArrayList<Short>();
+		orderStatusList.add((short)7);
+		orderStatusList.add((short)8);
 //		orderStatusList.add((short)9);
 //		vo.setOrderStatusList(orderStatusList);
 		return ordersMapper.getTotalOrderPay(vo);
@@ -810,9 +831,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	//订单补差价 + 订单加时金额
 	@Override
 	public BigDecimal getTotalOrderPayExt(OrderSearchVo vo) {
-//		List<Short> orderStatusList=new ArrayList<Short>();
-//		orderStatusList.add((short)7);
-//		orderStatusList.add((short)8);
+		List<Short> orderStatusList=new ArrayList<Short>();
+		orderStatusList.add((short)7);
+		orderStatusList.add((short)8);
 //		orderStatusList.add((short)9);
 //		vo.setOrderStatusList(orderStatusList);
 		return ordersMapper.getTotalOrderPayExt(vo);

@@ -148,7 +148,7 @@ function getAddrByMobile(addrId) {
 					var userId = data.data.id;
 					$("#userId").data("userId", userId)
 					$("#mobile").data("mobile", mobile);
-					$("#userId").text(userId);
+					$("#userId").val(userId);
 					var isVip = data.data.isVip;
 					$("#isVip").val(isVip);
 					console.log(data.data);
@@ -202,7 +202,7 @@ function saveFrom() {
 	}	
 	
 	var params = {};
-	params.user_id = $("#userId").text();
+	params.user_id = $("#userId").val();
 	params.mobile = $("#mobile").val();
 	params.addr_id = $("#addrId").val();
 	params.service_type = $("#serviceType").val();
@@ -215,6 +215,9 @@ function saveFrom() {
 	params.remarks = $("#remarks").val();
 	var orderPayType = $("#orderPayType").val();
 	params.service_addons_datas = $("#serviceAddonDatas").val();
+	
+	var couponsId = $("input[name='couponsId']:selected").val();
+	params.coupons_id = couponsId;
 
 	if ($('#orderExpForm').validate().form()) {
 		$('#submitForm').attr('disabled',"true");
@@ -231,7 +234,7 @@ function saveFrom() {
 				var service_type=data.data.service_type;
 				
 				if (data.status == 0) {
-					savePay(orderPayType, orderNo, userId,service_type);
+					savePay(orderPayType, orderNo, userId,service_type,couponsId);
 				}
 				if (data.status == 999) {
 					alert(data.msg);
@@ -243,11 +246,12 @@ function saveFrom() {
 }
 
 //订单的支付方式
-function savePay(orderPayType, orderNo, userId,service_type) {
+function savePay(orderPayType, orderNo, userId,service_type,couponsId) {
 	var data = {};
 	data.order_pay_type = orderPayType;
 	data.order_no = orderNo;
 	data.user_id = userId;
+	data.coupon_id = couponsId;
 	if (orderNo != null && userId != null) {
 		$.ajax({
 			type : "post",
@@ -282,7 +286,7 @@ function regUser(mobile) {
 			},
 			dataType : "json",
 			success : function(data) {
-				$("#userId").text(data.data);
+				$("#userId").val(data.data);
 				$("#userId").data("userId", data.data)
 				$("#mobile").data("mobile", $("#mobile").val());
 			}
@@ -389,7 +393,7 @@ function serviceTypeChange() {
 
 serviceTypeChange();
 
-function changePrice() {
+function changePrice(couponsValue) {
 	$("#orderPay").val(0);
 	$("#serviceHour").val(0);
 	$("#serviceAddonDatas").val("");
@@ -445,14 +449,19 @@ function changePrice() {
 		}
 	});
 	
+	if(couponsValue==undefined || couponsValue==null || couponsValue==''){
+		var val = $("#couponsId").find(":selected").text();
+		couponsValue = parseInt(val);
+	}
+	
 	if (totalOrderPay != undefined && totalOrderPay != "" && totalOrderPay != 0) {
 		totalOrderPay = totalOrderPay.toFixed(2);
-		$("#orderPay").val(totalOrderPay);
+		$("#orderPay").val(totalOrderPay-couponsValue);
 	}
 	
 	if (totalServiceHour != undefined && totalServiceHour != "" && totalServiceHour != 0) {
 		totalServiceHour = Math.round(totalServiceHour)
-		$("#serviceHour").val(totalServiceHour);
+		$("#serviceHour").val(totalServiceHour-couponsValue);
 	}
 	
 //	console.log(JSON.stringify(serviceAddonsJson));
@@ -461,5 +470,12 @@ function changePrice() {
 		$("#serviceAddonDatas").val(JSON.stringify(serviceAddonsJson) );
 	}
 	
-	
 }
+
+//选择优惠券
+function selectCoupons(){
+	var couponsValue = $("#couponsId").find(":selected").text();
+	var value = parseInt(couponsValue);
+	changePrice(value);
+}
+

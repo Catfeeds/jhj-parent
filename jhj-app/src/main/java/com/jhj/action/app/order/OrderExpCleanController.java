@@ -110,7 +110,8 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom,
 			@RequestParam(value = "order_pay", required = false, defaultValue = "0") BigDecimal orderPay,
 			@RequestParam(value = "order_op_from", required = false) Long orderOpFrom,
-			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId)
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId,
+			@RequestParam(value ="coupons_id",required =false) Long couponsId)
 			throws Exception {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -203,8 +204,16 @@ public class OrderExpCleanController extends BaseController {
 		 * 插入订单日志表  order_log
 		 */
 		OrderLog orderLog = orderLogService.initOrderLog(order);
-		
 		orderLogService.insert(orderLog);
+		
+		/* CouponsId,新增参数，判断用户下单时候有使用优惠，如果有使用优惠券，则在user_conpos表中插入该用户对应得优惠券信息
+		 * 
+		 * */
+		if(couponsId!=null && couponsId>0){
+			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
+			UserCoupons userCoupons = userCouponsService.initUserCoupons(userId, coupons);
+			userCouponsService.insert(userCoupons);
+		}
 		
 		result.setData(order);
 		return result;
