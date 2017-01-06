@@ -449,7 +449,10 @@ function changePrice(couponsValue) {
 		}
 	});
 	
-	if(couponsValue==undefined || couponsValue==null || couponsValue=='') couponsValue=0;
+	if(couponsValue==undefined || couponsValue==null || couponsValue==''){
+		var val = $("#couponsId").find(":selected").text();
+		couponsValue = parseInt(val);
+	}
 	
 	if (totalOrderPay != undefined && totalOrderPay != "" && totalOrderPay != 0) {
 		totalOrderPay = totalOrderPay.toFixed(2);

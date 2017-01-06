@@ -402,8 +402,10 @@ function changePrice(couponsValue) {
 		orderHourPrice = mprice;
 	}
 	
-	if(couponsValue==undefined || couponsValue==null || couponsValue=='') couponsValue=0;
-	
+	if(couponsValue==undefined || couponsValue==null || couponsValue==''){
+		var val = $("#couponsId").find(":selected").text();
+		couponsValue = parseInt(val);
+	}
 	
 	if (staffNums == 1 && serviceHours == minServiceHour) {
 		$("#orderPay").val(orderHourPay-couponsValue);

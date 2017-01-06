@@ -170,4 +170,5 @@ public interface OrdersMapper {
 	//订单复购率
 	List<ChartMapVo> totalByRateOrder(ChartSearchVo chartSearchVo);
 	
+	List<ChartMapVo> statByTotal(ChartSearchVo chartSearchVo);
 }

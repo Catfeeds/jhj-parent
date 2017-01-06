@@ -1359,4 +1359,21 @@
 		GROUP BY series,t.user_id HAVING COUNT(t.user_id)>=2
 		
 	</select>
+	
+	<select id="statByTotal" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT 
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		</if>
+		<if test="selectCycle==12">
+			CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		</if>
+		COUNT(*) AS total
+		FROM orders
+		WHERE 1=1
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		GROUP BY series ORDER BY series ASC
+	</select>
 </mapper>

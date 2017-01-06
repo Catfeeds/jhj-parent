@@ -204,7 +204,7 @@ public class UserChartServiceImpl implements UserChartService {
 				}else{
 					String[] str2 = tableDataItem.get("series").split("-");
 					String[] str3 = chartSqlData.getSeries().split("-");
-					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
 						num = num + chartSqlData.getTotal();
 					}
 				}
