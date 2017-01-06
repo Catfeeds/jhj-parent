@@ -39,6 +39,21 @@
 					</select>
 				</td>
 				<div class="form-group">
+					订单号：
+					<form:input path="orderNo" class="form-control" />
+				</div>
+					<div class="form-group">
+					支付方式：
+					<form:select path="payType" class="form-control" >
+						<form:option value="">--请选择支付方式--</form:option>
+						<form:option value="0">余额支付</form:option>
+						<form:option value="1">支付宝支付</form:option>
+						<form:option value="2">微信支付</form:option>
+						<form:option value="6">现金支付</form:option>
+						<form:option value="7">平台已支付</form:option>
+					</form:select>
+				</div>
+				<div class="form-group">
 					开始时间：
 					<form:input path="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
@@ -46,11 +61,11 @@
 				<div class="form-group">
 					结束时间：
 					<form:input path="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
-						readonly="true" />
+						readonly="true" /> 
 				</div>
 				
-				
 				<input type="button" id="searchBtn" class="btn btn-primary" onclick="searchSubmit()" value="搜索"/>
+				<input type="button" id="cleanBtn" class="btn btn-primary"  value="清空"/>
 				<br>
 				<br>
 				<input type="button" id="exportOrder" class="btn btn-warning" onclick="exportStaffOrder()" value="导出财务明细"/>
