@@ -49,8 +49,8 @@
 			and order_id = #{orderId,jdbcType=NUMERIC}
 		</if>
 
-		<if test="orderNo !=null">
-			and order_no = #{orderNo,jdbcType=VARCHAR}
+		<if test="orderNo !=null and orderNo !=''">
+			and order_no like concat('%',#{orderNo,jdbcType=VARCHAR},'%')
 		</if>
 
 		<if test="startAddTime !=null and startAddTime!='' ">
@@ -58,6 +58,10 @@
 		</if>
 		<if test="endAddTime !=null and endAddTime !='' ">
 			<![CDATA[ and add_time <= #{endAddTime, jdbcType=NUMERIC}]]>
+		</if>
+		
+		<if test="payType !=null">
+			and order_no in (select order_no from order_prices where pay_type = #{payType})
 		</if>
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">

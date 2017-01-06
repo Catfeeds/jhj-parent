@@ -68,3 +68,7 @@ function exportStaffPayDept() {
 	$("#searchForm").attr("action", exportUrl);
 	$("#searchForm").submit();
 }
+
+$("#cleanBtn").on('click',function(){
+	$("form :input").not(":button, :submit, :reset, :hidden,:selected").val("");
+});

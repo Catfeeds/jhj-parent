@@ -113,8 +113,8 @@
 		(
 			select id from orders
 			<include refid="bySearchVo" />
-			and order_status = 2
 		)
+	    and order_status = 2
 	</select>
 	
 	<!-- 钟点工订单0订单总金额 -->
