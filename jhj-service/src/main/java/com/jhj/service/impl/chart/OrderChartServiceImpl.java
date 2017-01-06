@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.jhj.common.Constants;
 import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
