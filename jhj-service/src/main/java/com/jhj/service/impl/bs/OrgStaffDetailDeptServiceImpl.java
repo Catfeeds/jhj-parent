@@ -10,7 +10,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffDetailDeptMapper;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -82,7 +82,7 @@ public class OrgStaffDetailDeptServiceImpl implements OrgStaffDetailDeptService 
 	}
 	
 	@Override
-	public List<OrgStaffDetailDept> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo) {		
+	public List<OrgStaffDetailDept> selectBySearchVo(OrderSearchVo searchVo) {		
 		return orgStaffDetailDeptMapper.selectBySearchVo(searchVo);
 	}
 

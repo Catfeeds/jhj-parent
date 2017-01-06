@@ -5,6 +5,10 @@ import java.util.List;
 import com.jhj.po.model.user.UserDetailPay;
 
 
+/**
+ * @author hulj
+ *
+ */
 public class UserDetailSearchVo extends UserDetailPay{
 
     private String mobile;
@@ -27,6 +31,11 @@ public class UserDetailSearchVo extends UserDetailPay{
 	
 	// 在店长对应 云店下过单的 用户
 	private List<Long> userIds;
+	
+	//支付方式
+	private Short payType;
+	
+	private Short isVip;
 	
 	public List<Long> getUserIds() {
 		return userIds;
@@ -84,5 +93,20 @@ public class UserDetailSearchVo extends UserDetailPay{
 		this.orderNo = orderNo;
 	}
 
+	public Short getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Short payType) {
+		this.payType = payType;
+	}
+
+	public Short getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(Short isVip) {
+		this.isVip = isVip;
+	}
 
 }

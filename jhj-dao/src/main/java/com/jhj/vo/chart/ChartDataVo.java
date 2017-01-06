@@ -2,6 +2,7 @@ package com.jhj.vo.chart;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChartDataVo {
 	
@@ -13,6 +14,8 @@ public class ChartDataVo {
 	private String series;
 	
 	private List<HashMap<String, String>> tableDatas;
+	
+	private Map<String,String> tableMap;
 
 
 	public String getLegend() {
@@ -47,8 +50,13 @@ public class ChartDataVo {
 		this.tableDatas = tableDatas;
 	}
 
+	public Map<String, String> getTableMap() {
+		return tableMap;
+	}
 
-
+	public void setTableMap(Map<String, String> tableMap) {
+		this.tableMap = tableMap;
+	}
 
 	
 }

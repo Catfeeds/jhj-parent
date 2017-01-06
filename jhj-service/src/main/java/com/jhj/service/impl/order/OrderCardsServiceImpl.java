@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.SimpleFormatter;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,9 +110,17 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 //		BigDecimal lastRestMoney = restMoney.add(dictCardType.getSendMoney());
 		users.setRestMoney(restMoney);
 		users.setUpdateTime(TimeStampUtil.getNowSecond());
-		if(cardMoney.compareTo(new BigDecimal(1000))>=0){
+		if(cardMoney.compareTo(new BigDecimal(500))>=0){
 			users.setIsVip(1);
 		}
+		
+//		String formatDate = DateUtil.formatDate(new Date());
+//		boolean compare = DateUtil.compare("2016-12-21",formatDate);
+//		boolean compare2 = DateUtil.compare(formatDate, "2017-01-02");
+//		
+//		if(cardMoney.compareTo(new BigDecimal(500))>=0 && compare && compare2){
+//			users.setIsVip(1);
+//		}
 		usersService.updateByPrimaryKeySelective(users);
 
 		orderCardsMapper.updateByPrimaryKeySelective(orderCards);
@@ -128,6 +137,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 
 		OrderCards orderCard = orderCardsMapper.selectByPrimaryKey(orderId);
 		DictCardType dictCardType = dictCardTypeMapper.selectByPrimaryKey(orderCard.getCardType());
+		
 		Long giftId = dictCardType.getGiftId();
 		if (giftId <= 0L) return true;
 		
@@ -139,6 +149,14 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		GiftCouponVo item = null;
 		for (int i = 0; i < giftCoupons.size(); i++) {
 			item = giftCoupons.get(i);
+			//充值500，如果如果没有发送过优惠券，就发送一张36元的金牌保洁优惠券，如果发送过，就不在发送了
+			BigDecimal cmp=new BigDecimal(500);
+			if(dictCardType.getCardValue().compareTo(cmp)==0){
+				List<UserCoupons> userCoupons = userCouponService.selectByCouponIdAndUserId(item.getCouponId(), userId);
+				if(userCoupons.size()>0){
+					continue;
+				}
+			}
 			UserCoupons record = userCouponService.initUserCoupons();
 			record.setUserId(userId);
 			record.setCouponId(item.getCouponId());
@@ -146,13 +164,17 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			record.setGiftId(item.getGiftId());
 			record.setServiceType(item.getServiceType());
 			
-			Date fromDate = DateUtil.getNowOfDate();
-			record.setFromDate(fromDate);
-			
-			
-			String toDateStr = DateUtil.addDay(fromDate, item.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
-			Date toDate = DateUtil.parse(toDateStr);
-			record.setToDate(toDate);
+			if(item.getRangMonth()==0){
+				record.setFromDate(item.getFromDate());
+				record.setToDate(item.getToDate());
+			}
+			if(item.getRangMonth()>0){
+				Date fromDate = DateUtil.getNowOfDate();
+				record.setFromDate(fromDate);
+				String toDateStr = DateUtil.addDay(fromDate, item.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+				Date toDate = DateUtil.parse(toDateStr);
+				record.setToDate(toDate);
+			}
 			
 			int num = item.getNum().intValue();
 			if (num > 0) {
@@ -273,6 +295,11 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 		PageInfo<OrderCards> page =new PageInfo<OrderCards>(orderCardsList);
 		return page;
 	}
+	
+	@Override
+	public List<OrderCards> selectBySearchVo(OrderCardsVo vo) {		
+		return orderCardsMapper.selectBySearchVo(vo);
+	}
 
 	@Override
 	public OrderCardsVo transVo(OrderCards orderCards) {
@@ -294,9 +321,11 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			StaffSearchVo staffsVo =new StaffSearchVo();
 			staffsVo.setStaffCode(orderCards.getReferee());
 			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffsVo);
-			OrgStaffs staff = staffList.get(0);
-			if(staff!=null){
-				orderCoardVo.setStaffName(staff.getName());
+			if(staffList.size()>0){
+				OrgStaffs staff = staffList.get(0);
+				if(staff!=null){
+					orderCoardVo.setStaffName(staff.getName());
+				}
 			}else{
 				orderCoardVo.setStaffName(orderCards.getReferee());
 			}

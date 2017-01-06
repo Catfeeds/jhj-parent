@@ -170,6 +170,7 @@ public class RestMoneyChartController extends BaseController{
 			
 		}
 		if (chartSearchVo.getSearchType() == 1) {
+			chartSearchVo.setSelectCycle(1);
 			startTimeStr = chartSearchVo.getStartTimeStr();
 			endTimeStr = chartSearchVo.getEndTimeStr();
 			statType = ChartUtil.getStatTypeByTime(startTimeStr, endTimeStr);

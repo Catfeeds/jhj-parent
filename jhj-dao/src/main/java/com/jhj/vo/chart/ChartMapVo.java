@@ -12,6 +12,8 @@ public class ChartMapVo {
 	private String series;
 	
 	private Integer total;
+	
+	private Integer totalVip;
 /*	//当月登陆人数总计
 	private Integer logintal;
 	//截至当前登陆的总人数
@@ -36,6 +38,8 @@ public class ChartMapVo {
 	private Short serviceType;
 	
 	private Short orderStatus;
+	
+	private Short orderType;
 	
 	public Long getUserId() {
 		return userId;
@@ -105,19 +109,14 @@ public class ChartMapVo {
 	public void setTotal(Integer total) {
 		this.total = total;
 	}
-/*	public Integer getLogintal() {
-		return logintal;
+	
+	public Integer getTotalVip() {
+		return totalVip;
 	}
-	public void setLogintal(Integer logintal) {
-		this.logintal = logintal;
+	public void setTotalVip(Integer totalVip) {
+		this.totalVip = totalVip;
 	}
-	public Integer getAllLoginTal() {
-		return allLoginTal;
-	}
-	public void setAllLoginTal(Integer allLoginTal) {
-		this.allLoginTal = allLoginTal;
-	}
-	*/
+	
 	public String getOrderFrom() {
 		return orderFrom;
 	}
@@ -141,6 +140,12 @@ public class ChartMapVo {
 	}
 	public void setOrderStatus(Short orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+	public Short getOrderType() {
+		return orderType;
+	}
+	public void setOrderType(Short orderType) {
+		this.orderType = orderType;
 	}
 	
 	

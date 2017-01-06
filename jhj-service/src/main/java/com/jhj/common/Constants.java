@@ -396,7 +396,31 @@ public class Constants {
 	 //派工服务前2小时占位
 	 public static Long SERVICE_PRE_TIME = (long) (119 * 60);
 	
-	
+	 
+	 //用户消费明细类型
+	 public static Short USER_DETAIL_ORDER_TYPE_0 = 0;  //订单支付 
+	 public static Short USER_DETAIL_ORDER_TYPE_1 = 1;  //充值卡支付
+	 public static Short USER_DETAIL_ORDER_TYPE_2 = 2;  //手机充值卡支付
+	 public static Short USER_DETAIL_ORDER_TYPE_3 = 3;  //订单补差价支付
+	 public static Short USER_DETAIL_ORDER_TYPE_4 = 4;  //订单加时 
+	 public static Short USER_DETAIL_ORDER_TYPE_5 = 5;  //订单取消
+	 
+	 //服务人员消费明细类型
+	 public static Short STAFF_DETAIL_ORDER_TYPE_0 = 0;  //订单收入
+	 public static Short STAFF_DETAIL_ORDER_TYPE_1 = 1;  //订单差价收入
+	 public static Short STAFF_DETAIL_ORDER_TYPE_2 = 2;  //订单补时收入
+	 public static Short STAFF_DETAIL_ORDER_TYPE_3 = 3;  //订单优惠劵补贴
+	 public static Short STAFF_DETAIL_ORDER_TYPE_4 = 4;  //还款金额 
+	 public static Short STAFF_DETAIL_ORDER_TYPE_5 = 5;  //提现
+	 
+	 public static Short STAFF_DETAIL_ORDER_TYPE_20 = 20;  //订单收入取消
+	 public static Short STAFF_DETAIL_ORDER_TYPE_21 = 21;  //订单差价收入取消
+	 public static Short STAFF_DETAIL_ORDER_TYPE_22 = 22;  //订单补时收入取消
+	 public static Short STAFF_DETAIL_ORDER_TYPE_23 = 23;  //订单优惠劵补贴取消
+	 
+	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_0 = 0;  //订单欠款
+	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_1 = 1;  //订单欠款取消
+
 }
 
 

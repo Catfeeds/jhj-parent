@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.market.MarketSmsMapper" >
+  <resultMap id="BaseResultMap" type="com.jhj.po.model.market.MarketSms" >
+    <id column="market_sms_id" property="marketSmsId" jdbcType="INTEGER" />
+    <result column="sms_temp_id" property="smsTempId" jdbcType="INTEGER" />
+    <result column="user_group_type" property="userGroupType" jdbcType="VARCHAR" />
+    <result column="total_send" property="totalSend" jdbcType="INTEGER" />
+    <result column="total_sended" property="totalSended" jdbcType="INTEGER" />
+    <result column="total_fail" property="totalFail" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    market_sms_id, sms_temp_id, user_group_type, total_send, total_sended, total_fail, 
+    add_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from market_sms
+    where market_sms_id = #{marketSmsId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from market_sms
+    where market_sms_id = #{marketSmsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jhj.po.model.market.MarketSms" >
+    insert into market_sms (market_sms_id, sms_temp_id, user_group_type, 
+      total_send, total_sended, total_fail, 
+      add_time, update_time)
+    values (#{marketSmsId,jdbcType=INTEGER}, #{smsTempId,jdbcType=INTEGER}, #{userGroupType,jdbcType=VARCHAR}, 
+      #{totalSend,jdbcType=INTEGER}, #{totalSended,jdbcType=INTEGER}, #{totalFail,jdbcType=INTEGER}, 
+      #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jhj.po.model.market.MarketSms" >
+    insert into market_sms
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="marketSmsId != null" >
+        market_sms_id,
+      </if>
+      <if test="smsTempId != null" >
+        sms_temp_id,
+      </if>
+      <if test="userGroupType != null" >
+        user_group_type,
+      </if>
+      <if test="totalSend != null" >
+        total_send,
+      </if>
+      <if test="totalSended != null" >
+        total_sended,
+      </if>
+      <if test="totalFail != null" >
+        total_fail,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="marketSmsId != null" >
+        #{marketSmsId,jdbcType=INTEGER},
+      </if>
+      <if test="smsTempId != null" >
+        #{smsTempId,jdbcType=INTEGER},
+      </if>
+      <if test="userGroupType != null" >
+        #{userGroupType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalSend != null" >
+        #{totalSend,jdbcType=INTEGER},
+      </if>
+      <if test="totalSended != null" >
+        #{totalSended,jdbcType=INTEGER},
+      </if>
+      <if test="totalFail != null" >
+        #{totalFail,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.market.MarketSms" >
+    update market_sms
+    <set >
+      <if test="smsTempId != null" >
+        sms_temp_id = #{smsTempId,jdbcType=INTEGER},
+      </if>
+      <if test="userGroupType != null" >
+        user_group_type = #{userGroupType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalSend != null" >
+        total_send = #{totalSend,jdbcType=INTEGER},
+      </if>
+      <if test="totalSended != null" >
+        total_sended = #{totalSended,jdbcType=INTEGER},
+      </if>
+      <if test="totalFail != null" >
+        total_fail = #{totalFail,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=NUMERIC},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where market_sms_id = #{marketSmsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.market.MarketSms" >
+    update market_sms
+    set sms_temp_id = #{smsTempId,jdbcType=INTEGER},
+      user_group_type = #{userGroupType,jdbcType=VARCHAR},
+      total_send = #{totalSend,jdbcType=INTEGER},
+      total_sended = #{totalSended,jdbcType=INTEGER},
+      total_fail = #{totalFail,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=NUMERIC},
+      update_time = #{updateTime,jdbcType=NUMERIC}
+    where market_sms_id = #{marketSmsId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.market.MarketSmsSearchVo">
+  	select <include refid="Base_Column_List"/>
+  	from market_sms
+  	<include refid="searchVo"/>
+  </select>
+  
+  <select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.market.MarketSmsSearchVo">
+  	select <include refid="Base_Column_List"/>
+  	from market_sms
+  	<include refid="searchVo"/>
+  </select>
+  
+  <sql id="searchVo">
+  	<where>
+  	  <if test="smsTempId != null" >
+        and sms_temp_id = #{smsTempId,jdbcType=INTEGER}
+      </if>
+      <if test="userGroupType != null" >
+        and user_group_type = #{userGroupType,jdbcType=VARCHAR}
+      </if>
+      <if test="addTime != null" >
+        and add_time = #{addTime,jdbcType=NUMERIC}
+      </if>
+  	</where>
+  </sql>
+  
+</mapper>

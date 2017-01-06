@@ -8,6 +8,12 @@ public class OrderSearchVo {
 	
 	private Long staffId;
 	
+	private String staffName;
+	
+	private String staffMobile;
+	
+	private Long selectStaff;
+	
 	private Long userId;
 	
 	private String mobile;
@@ -57,6 +63,18 @@ public class OrderSearchVo {
 	
 	private Long endTime;
 	
+	private String startTimeStr;
+	
+	private String endTimeStr;
+	
+	private String serviceStartTimeStr;
+	
+	private String serviceEndTimeStr;
+	
+	private String startUpdateTimeStr;
+	
+	private String endUpdateTimeStr;
+	
 	private Long parentId;
 	
 	private Long orgId;
@@ -69,6 +87,8 @@ public class OrderSearchVo {
 	private String orderByProperty;
 	
 	private Short payType; // 支付方式
+	
+	private Short dispatchStatus;
 
 	public String getMobile() {
 		return mobile;
@@ -324,6 +344,86 @@ public class OrderSearchVo {
 
 	public void setOrderExtType(Short orderExtType) {
 		this.orderExtType = orderExtType;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public String getStaffMobile() {
+		return staffMobile;
+	}
+
+	public void setStaffMobile(String staffMobile) {
+		this.staffMobile = staffMobile;
+	}
+
+	public Long getSelectStaff() {
+		return selectStaff;
+	}
+
+	public void setSelectStaff(Long selectStaff) {
+		this.selectStaff = selectStaff;
+	}
+
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
+	}
+
+	public String getServiceStartTimeStr() {
+		return serviceStartTimeStr;
+	}
+
+	public void setServiceStartTimeStr(String serviceStartTimeStr) {
+		this.serviceStartTimeStr = serviceStartTimeStr;
+	}
+
+	public String getServiceEndTimeStr() {
+		return serviceEndTimeStr;
+	}
+
+	public void setServiceEndTimeStr(String serviceEndTimeStr) {
+		this.serviceEndTimeStr = serviceEndTimeStr;
+	}
+
+	public Short getDispatchStatus() {
+		return dispatchStatus;
+	}
+
+	public void setDispatchStatus(Short dispatchStatus) {
+		this.dispatchStatus = dispatchStatus;
+	}
+
+	public String getStartUpdateTimeStr() {
+		return startUpdateTimeStr;
+	}
+
+	public void setStartUpdateTimeStr(String startUpdateTimeStr) {
+		this.startUpdateTimeStr = startUpdateTimeStr;
+	}
+
+	public String getEndUpdateTimeStr() {
+		return endUpdateTimeStr;
+	}
+
+	public void setEndUpdateTimeStr(String endUpdateTimeStr) {
+		this.endUpdateTimeStr = endUpdateTimeStr;
 	}
 	
 }

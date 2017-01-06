@@ -2446,6 +2446,7 @@ i.toolbar-icon-tixing {
   text-align: center;
   line-height: 50px;
   font-size: 16px;
+  color:#000;
 }
 
 .rilikongjian4{
@@ -2954,48 +2955,54 @@ i.toolbar-icon-tixing {
 /*优惠券*/
 .youhuiquan{
   width:47%;
-  height:150px;
+  height:200px;
   margin-top: 15px;
   float: left;
   margin-left: 2%;
   background: #4EAFD8;
   border-radius: 5px;
 }
-.youhuiquan span{
-  line-height: 40px;
-  margin-top: 15px;
-  background: #2883BF;
+.youhuiquan b{
+  line-height: 30px;
+  margin:0;
+  margin-top: -30px;
   color:#fff;
+  width:50%;
+  height:30px;
   font-size: 14px;
+  float:right;
+  margin-right:5px;
 }
 .youhuiquan1{
   width:45%;
   float: left;
-  height:40px;
+  height:30px;
   padding-left:5%;
-  line-height: 40px;
+  line-height: 30px;
   color:#fff;
   font-size: 24px;
-  font-weight:bold;
 }
 .youhuiquan2{
-  float: left;
   height:60px;
   line-height: 60px;
   width:35%;
   padding-left: 15%;
   font-size: 40px;
-  font-weight:bold;
   color:#fff;
-  margin-top: -15px;
+  margin-top: -20px;
 }
 .youhuiquan p{
   margin:0;
   text-align: left;
-  line-height: 30px;
+  line-height: 24px;
   color:#fff;
   font-weight: bold;
   font-size: 14px;
+  width:50%;
+  height:60px;
+  float:right;
+  margin-right:5px;
+  text-overflow: ellipsis;
 }
 .youhuiquan3{
   width:95%;
@@ -3005,8 +3012,8 @@ i.toolbar-icon-tixing {
   color: #4EAFD8;
   text-align: center;
   line-height: 40px;
-  font-size: 14px;
-  margin-top: 15px;
+  font-size: 12px;
+  margin-top: 10px;
   clear:both;
 }
 .youhuiquan4{
@@ -3110,7 +3117,15 @@ i.toolbar-icon-tixing {
   margin-top: 15px;
   color:#F96269;
 }
-
+.youhuiquan8{
+	width:100%;
+	clear:both;
+	height:28px;
+	font-size:14px;
+	text-align:center;
+	line-height:28px;
+	color:#fff;
+}
 
 
 /*用户登录页面*/
@@ -4316,12 +4331,12 @@ i.toolbar-icon-tixing {
 }
 .chongzhi5{
   width:100%;
-  height:330px;
+  height:440px;
   background: #fff;
   margin:0;
 
 }
-.chongzhi5-1{
+.chongzhi5-4{
   width:95%;
   margin-left: 2.5%;
   border-radius: 5px;
@@ -4329,7 +4344,7 @@ i.toolbar-icon-tixing {
   box-shadow: 3px 3px 3px 3px #eee  ;
   overflow: hidden;
 }
-.chongzhi5-1-1{
+.chongzhi5-4-1{
   background: #7DC0FF;
   width:30%;
   height:90px;
@@ -4340,24 +4355,24 @@ i.toolbar-icon-tixing {
   float: left;
   color:#fff;
 }
-.chongzhi5-1-2{
+.chongzhi5-4-2{
   width:50%;
   float: left;
   height:90px;
 }
-.chongzhi5-1-2 li{
+.chongzhi5-4-2 li{
   width:100%;
   height:30px;
   text-align: center;line-height: 30px;
   font-size: 14px;
   color:#7DC0FF;
 }
-.chongzhi5-1-3{
+.chongzhi5-4-3{
   width:20%;
   height:90px;
   float: right;
 }
-.chongzhi5-1-3-1{
+.chongzhi5-4-3-1{
   width:100%;
   height:30px;
   margin-top: 30px;
@@ -4479,6 +4494,57 @@ i.toolbar-icon-tixing {
   text-align: center;
   line-height: 30px;
   background: #FFDD64;
+  color:#fff;
+  font-size: 14px;
+  border-radius: 15px;
+}
+
+
+
+
+.chongzhi5-1{
+  width:95%;
+  margin-left: 2.5%;
+  border-radius: 5px;
+  height:90px;
+  box-shadow: 3px 3px 3px 3px #eee  ;
+  overflow: hidden;
+}
+.chongzhi5-1-1{
+  background: #FF0012;
+  width:30%;
+  height:90px;
+  text-align: center;
+  line-height: 90px;
+  font-size: 24px;
+  font-weight: bold;
+  float: left;
+  color:#fff;
+}
+.chongzhi5-1-2{
+  width:50%;
+  float: left;
+  height:90px;
+}
+.chongzhi5-1-2 li{
+  width:100%;
+  height:30px;
+  text-align: center;line-height: 30px;
+  font-size: 14px;
+  color:#FF0012;
+}
+.chongzhi5-1-3{
+  width:20%;
+  height:90px;
+  float: right;
+}
+.chongzhi5-1-3-1{
+  width:100%;
+  height:30px;
+  margin-top: 30px;
+  text-align: center;
+  line-height: 30px;
+  background: #FF0012;
   color:#fff;
   font-size: 14px;
   border-radius: 15px;

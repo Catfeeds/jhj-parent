@@ -18,42 +18,46 @@
 		id, staff_id, mobile, order_type, order_id, order_no, order_money, order_pay, order_status_str,
 		remarks, add_time
 	</sql>
-	
+
 	<sql id="searchVo">
+	    
+	    <if test="parentId !=null">
+			and id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC} and dispatch_status = 1)
+		</if>
+
+		<if test="orgId !=null and orgId != 0">
+			and id in (select order_id from order_dispatchs where org_id = #{orgId,jdbcType=NUMERIC} and dispatch_status = 1)
+		</if>
+	    
 		<if test="staffId !=null">
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
-		
+
+		<if test="orderType !=null">
+			and order_type = #{orderType,jdbcType=NUMERIC}
+		</if>
+
 		<if test="mobile !=null and mobile != ''">
 			and mobile = #{mobile,jdbcType=CHAR}
 		</if>
-		
+
 		<if test="staffName !=null and staffName != ''">
 			and staff_id in (select staff_id from org_staffs where name like concat('%', #{staffName},'%'))
 		</if>
-		
-		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
-		   	 and staff_id in (
-			   	 		select staff_id from org_staffs where org_id in 
-					   	 <foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">  
-			      			${item}  
-			   			</foreach>
-		   	 )
-		</if>
-		
+
 		<if test="orderId !=null">
 			and order_id = #{orderId,jdbcType=NUMERIC}
 		</if>
-		
+
 		<if test="orderNo !=null">
 			and order_no = #{orderNo,jdbcType=VARCHAR}
 		</if>
-		
-		<if test="startTime !=null and startTime!='' ">
-			<![CDATA[ and add_time >= #{startTime}]]>
+
+		<if test="startAddTime !=null and startAddTime!='' ">
+			<![CDATA[ and add_time >= #{startAddTime, jdbcType=NUMERIC}]]>
 		</if>
-		<if test="endTime !=null and endTime !='' ">
-			<![CDATA[ and add_time <= #{endTime}]]>
+		<if test="endAddTime !=null and endAddTime !='' ">
+			<![CDATA[ and add_time <= #{endAddTime, jdbcType=NUMERIC}]]>
 		</if>
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -62,47 +66,62 @@
 		from org_staff_detail_pay
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
-	<select id="selectVoByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM org_staff_detail_pay
+		WHERE 1=1
+		<include refid="searchVo" />
+		order by add_time desc
+
+	</select>
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 
 		SELECT
 		<include refid="Base_Column_List" />
 		FROM org_staff_detail_pay
 		WHERE 1=1
-		<include refid="searchVo"/>
+		<include refid="searchVo" />
 		order by add_time desc
 
 	</select>
-
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
-
+	
+	<select id="selectTotalData" resultType="java.util.HashMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 		SELECT
-		<include refid="Base_Column_List" />
-		FROM org_staff_detail_pay
-		WHERE 1=1
-		<include refid="searchVo"/>
-		order by add_time desc
-
+		(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_type not in('4','5')
+		<include refid="searchVo" />
+		) as totalMoney,
+		(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_type not in('4','5')
+		<include refid="searchVo" />
+		) as orderPayMoney,
+		(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='0')
+		<include refid="searchVo" />
+		) as spareMoney,
+		(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='1')
+		<include refid="searchVo" />
+		) as alipayMoney,
+		(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='2')
+		<include refid="searchVo" />
+		) as wechatMoney,
+		(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='6')
+		<include refid="searchVo" />
+		) as cashMoney,
+		(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='7')
+		<include refid="searchVo" />
+		) as platformMoney,
+		(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_type='4'
+		<include refid="searchVo" />
+		) as refundMoney
 	</select>
-
-
-	<select id="selectByStaffIdAndTimeListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffPaySearchVo">
-		select
-		<include refid="Base_Column_List" />
-		from org_staff_detail_pay
-		where staff_id =#{staffId,jdbcType=NUMERIC}
-		<if test="startTime != null">
-				<![CDATA[	and add_time >= ${startTime} ]]>
-		</if>
-		<if test="endTime != null">
-				<![CDATA[	and add_time <= ${endTime} ]]>
-		</if>
-		order by add_time desc
-	</select>
+	
+	
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from org_staff_detail_pay
 		where id = #{id,jdbcType=NUMERIC}
 	</delete>
+	
 	<insert id="insert" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay">
 		insert into org_staff_detail_pay (id, staff_id, mobile,
 		order_type, order_id, order_no,
@@ -115,6 +134,7 @@
 		#{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL}, #{orderStatusStr,jdbcType=VARCHAR},
 		#{remarks,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC})
 	</insert>
+	
 	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.OrgStaffDetailPay">
 		insert into org_staff_detail_pay
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -240,17 +260,7 @@
 		add_time = #{addTime,jdbcType=NUMERIC}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
+
 	
-	<select id="selectTotalData" resultType="java.util.HashMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
-		SELECT 
-			(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_type not in('4','5') <include refid="searchVo"/>) as totalMoney,
-			(SELECT SUM(order_pay) from org_staff_detail_pay WHERE order_type not in('4','5') <include refid="searchVo"/>) as orderPayMoney,
-			(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='0') <include refid="searchVo"/>) as spareMoney,
-			(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='1') <include refid="searchVo"/>) as alipayMoney,
-			(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='2') <include refid="searchVo"/>) as wechatMoney,
-			(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='6') <include refid="searchVo"/>) as cashMoney,
-			(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_no in (SELECT order_no from order_prices WHERE pay_type='7') <include refid="searchVo"/>) as platformMoney,
-			(SELECT SUM(order_money) from org_staff_detail_pay WHERE order_type='4' <include refid="searchVo"/>) as refundMoney	
-	</select>
-	
+
 </mapper>

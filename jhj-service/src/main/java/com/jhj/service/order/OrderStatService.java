@@ -25,8 +25,12 @@ public interface OrderStatService {
 
 	Long getTotalOrderCount(OrderSearchVo vo);
 
+	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
+
+	BigDecimal getTotalOrderPay(OrderSearchVo vo);
+
 	BigDecimal getTotalOrderMoney(OrderSearchVo vo);
 
-	BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo);
+	Map<String, String> getTotalOrderMoneyMultiStat(OrderSearchVo vo);
 
 }

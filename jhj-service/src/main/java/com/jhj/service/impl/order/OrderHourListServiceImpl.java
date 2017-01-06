@@ -230,7 +230,7 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			
 			OrderPrices orderPrice = orderPriceService.selectByOrderId(orders.getId());
 			if (orderPrice != null) {
-				BigDecimal orderPay = orderPriceService.getOrderPay(orderPrice);
+				BigDecimal orderPay = orderPriceService.getTotalOrderPay(orderPrice);
 				orderHourListVo.setOrderPay(orderPay);
 				orderHourListVo.setPayType(orderPrice.getPayType());
 				orderHourListVo.setCouponId(orderPrice.getCouponId());

@@ -1,5 +1,7 @@
 package com.jhj.vo.dict;
 
+import java.util.List;
+
 
 public class CouponSearchVo {
 
@@ -13,6 +15,7 @@ public class CouponSearchVo {
 	
 	private Short coupontType;//0 = 兑换码优惠券 ；1 = 充值赠送优惠券 
 	
+	private List<Long> couponsIdList;
 	
 	public Short getCoupontType() {
 		return coupontType;
@@ -54,11 +57,13 @@ public class CouponSearchVo {
 		this.cardPasswd = cardPasswd;
 	}
 
+	public List<Long> getCouponsIdList() {
+		return couponsIdList;
+	}
 
-
-
-
-
+	public void setCouponsIdList(List<Long> couponsIdList) {
+		this.couponsIdList = couponsIdList;
+	}
 
 
 }

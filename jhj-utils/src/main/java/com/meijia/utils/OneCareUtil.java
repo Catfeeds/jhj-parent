@@ -523,16 +523,62 @@ public class OneCareUtil {
 			orderTypeName = "订单支付";
 			break;
 		case 1:
-			orderTypeName = "充值卡支付";
+			orderTypeName = "账号充值";
 			break;
 		case 2:
 			orderTypeName = "手机充值卡支付";
 			break;
 		case 3:
-			orderTypeName = "订单补差价支付";
+			orderTypeName = "订单补差价";
 			break;
 		case 4:
 			orderTypeName = "订单加时";
+			break;
+		case 5:
+			orderTypeName = "订单退款";
+			break;
+		case 9:
+			orderTypeName = "补交差价";
+			break;
+		default:
+			orderTypeName = "";
+		}
+		return orderTypeName;
+	}
+	
+	
+	public static String getOrderTypeForStaffDetailPay(Short orderType) {
+		String orderTypeName = "";
+		switch (orderType) {
+		case 0:
+			orderTypeName = "订单支付";
+			break;
+		case 1:
+			orderTypeName = "订单差价收入";
+			break;
+		case 2:
+			orderTypeName = "订单补时收入";
+			break;
+		case 3:
+			orderTypeName = "订单优惠劵补贴";
+			break;
+		case 4:
+			orderTypeName = "还款金额";
+			break;
+		case 5:
+			orderTypeName = "金额提现";
+			break;	
+		case 20:
+			orderTypeName = "订单取消";
+			break;
+		case 21:
+			orderTypeName = "订单取消-订单差价收入";
+			break;
+		case 22:
+			orderTypeName = "订单取消-订单补时收入";
+			break;
+		case 23:
+			orderTypeName = "订单取消-订单优惠劵补贴";
 			break;
 		default:
 			orderTypeName = "";

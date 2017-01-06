@@ -8,14 +8,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffDetailPayMapper;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
+import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderPriceExt;
+import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffDetailPayService;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderPriceExtService;
+import com.jhj.service.order.OrderPricesService;
+import com.jhj.service.order.OrdersService;
+import com.jhj.service.users.UserAddrsService;
+import com.jhj.utils.OrderUtils;
+import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -30,6 +45,21 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 
 	@Autowired
 	private OrgStaffDetailPayMapper orgStaffDetailPayMapper;
+	
+	@Autowired
+	private OrgStaffsService orgStaffsService;
+	
+	@Autowired
+	private OrdersService orderService;
+	
+	@Autowired
+	private OrderPricesService orderPriceService;
+	
+	@Autowired
+	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+	private UserAddrsService userAddrsService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -88,18 +118,6 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	}
 
 	@Override
-	public List<OrgStaffDetailPay> selectByStaffIdAndTimeListPage(
-			OrgStaffPaySearchVo searchVo, int pageNo, int pageSize) {
-
-		PageHelper.startPage(pageNo, pageSize);
-
-		List<OrgStaffDetailPay> list = orgStaffDetailPayMapper
-				.selectByStaffIdAndTimeListPage(searchVo);
-
-		return list;
-	}
-
-	@Override
 	public OrgStaffPayVo getOrgStaffPayVo(OrgStaffDetailPay orgStaffDetailPay) {
 		OrgStaffPayVo vo = new OrgStaffPayVo();
 		vo.setStaffId(orgStaffDetailPay.getStaffId());
@@ -108,69 +126,172 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		// 发生时间
 		Long addTime = orgStaffDetailPay.getAddTime() * 1000;
 		vo.setAddTimeStr(TimeStampUtil.timeStampToDateStr(addTime, "MM-dd HH:mm"));
-		
-		
 
-		// 交易来源名称
-		if (orgStaffDetailPay.getOrderType() == 0
-				|| orgStaffDetailPay.getOrderType() == 1
-				|| orgStaffDetailPay.getOrderType() == 2
-				|| orgStaffDetailPay.getOrderType() == 3) {
-			BigDecimal orderMoney = orgStaffDetailPay.getOrderPay();
-			String orderMoneyStr = MathBigDecimalUtil.round2(orderMoney);
-			vo.setOrderTypeName("订单收入,订单金额:" + orderMoneyStr);
+		String orderTypeName = OneCareUtil.getOrderTypeForStaffDetailPay(orgStaffDetailPay.getOrderType());
+		vo.setOrderTypeName(orderTypeName);
+		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0 
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_1
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_2
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_3) {
+			// +号
+			Long orderId = orgStaffDetailPay.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+			
+			orderTypeName = OneCareUtil.getJhjOrderTypeName(order.getOrderType());
+			vo.setOrderTypeName(orderTypeName);
+			
 		}
-		if (orgStaffDetailPay.getOrderType() == 4)
-			vo.setOrderTypeName("还款金额");
-		if (orgStaffDetailPay.getOrderType() == 5)
-			vo.setOrderTypeName("提现金额");
-		if (orgStaffDetailPay.getOrderType() == 6)
-			vo.setOrderTypeName("补贴金额");
-		if (orgStaffDetailPay.getOrderType() == 7)
-			vo.setOrderTypeName("利息金额");
-		if (orgStaffDetailPay.getOrderType() == 8)
-			vo.setOrderTypeName("各项核检");
-		if (orgStaffDetailPay.getOrderType() == 9)
-			vo.setOrderTypeName("订单补时");
+
+		vo.setOrderPay("+" + orgStaffDetailPay.getOrderPay());
 		// 订单金额
-		if (orgStaffDetailPay.getOrderType() == 0
-			|| orgStaffDetailPay.getOrderType() == 1
-			|| orgStaffDetailPay.getOrderType() == 2
-			|| orgStaffDetailPay.getOrderType() == 3
-			|| orgStaffDetailPay.getOrderType() == 6
-			|| orgStaffDetailPay.getOrderType() == 7
-			|| orgStaffDetailPay.getOrderType() == 9) {
+		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0 
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_1
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_2
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_3
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_5) {
 			// +号
 			vo.setOrderPay("+" + orgStaffDetailPay.getOrderPay());
 		}
-		if (orgStaffDetailPay.getOrderType() == 4
-			|| orgStaffDetailPay.getOrderType() == 8
-			|| orgStaffDetailPay.getOrderType() == 5) {
+		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_4) {
 			// -号
 			vo.setOrderPay("-" + orgStaffDetailPay.getOrderPay());
 		}
-		
+
 		return vo;
 	}
 
 	@Override
-	public List<OrgStaffDetailPay> selectVoByListPage(
-			OrgStaffDetailPaySearchVo searchVo, int pageNo, int pageSize) {
-		PageHelper.startPage(pageNo, pageSize);
-		List<OrgStaffDetailPay> list = orgStaffDetailPayMapper.selectVoByListPage(searchVo);
-	
-		return list;
-				 
+	public OrgStaffDetailPayOaVo getOrgStaffPayOaVo(OrgStaffDetailPay orgStaffDetailPay) {
+
+		OrgStaffPayVo vo = this.getOrgStaffPayVo(orgStaffDetailPay);
+		
+		OrgStaffDetailPayOaVo oaVo = new OrgStaffDetailPayOaVo();
+
+		BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffDetailPay, oaVo);
+		
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffDetailPay.getStaffId());
+
+		oaVo.setName(orgStaffs.getName());
+		oaVo.setOrderTypeName(vo.getOrderTypeName());
+		oaVo.setOrderPay(new BigDecimal(vo.getOrderPay()));
+		
+		oaVo.setUserMobile("");
+		oaVo.setAddr("");
+		
+		
+		
+		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0 
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_1
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_2
+				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_3) {
+			// +号
+			Long orderId = orgStaffDetailPay.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+			oaVo.setUserMobile(order.getMobile());
+			
+			Long addrId = order.getAddrId();
+			UserAddrs userAddr = userAddrsService.selectByPrimaryKey(addrId);
+			if (userAddr != null) {
+				oaVo.setAddr(userAddr.getName() + userAddr.getAddr());
+			}
+		}
+
+		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orgStaffDetailPay.getOrderNo());
+		
+		oaVo.setPayTypeName("");
+		if (orderPrices != null && orderPrices.getPayType() != null) {
+			oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPrices.getPayType()));
+		}
+		
+		if (oaVo.getOrderType().equals((short)9)) {
+			OrderPriceExt orderPriceExt = orderPriceExtService.selectByOrderNoExt(oaVo.getOrderNo());
+			
+			if (orderPriceExt != null) {
+				oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPriceExt.getPayType()));
+			}
+		}
+		
+		//跳转链接
+		String orderListLink = "";
+		if (oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_0) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_1) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_2) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_3) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_20) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_21) || 
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_21) ||
+			oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_22) ) {
+			
+			Long orderId = orgStaffDetailPay.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+			if (order != null) {
+				if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+					orderListLink = "/jhj-oa/order/order-hour-list?orderNo="+order.getOrderNo();
+				}
+				
+				if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+					orderListLink = "/jhj-oa/order/order-exp-list?orderNo="+order.getOrderNo();
+				}
+			}
+		}
+		oaVo.setOrderListLink(orderListLink);
+		return oaVo;
 	}
-	
+
 	@Override
-	public List<OrgStaffDetailPay> selectBySearchVo(OrgStaffDetailPaySearchVo searchVo) {		
+	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<OrgStaffDetailPay> list = orgStaffDetailPayMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		return result;
+
+	}
+
+	@Override
+	public List<OrgStaffDetailPay> selectBySearchVo(OrderSearchVo searchVo) {
 		return orgStaffDetailPayMapper.selectBySearchVo(searchVo);
 	}
 
 	@Override
-	public Map<String, Double> selectTotalData(OrgStaffDetailPaySearchVo searchVo) {
+	public Map<String, Double> selectTotalData(OrderSearchVo searchVo) {
 		return orgStaffDetailPayMapper.selectTotalData(searchVo);
+	}
+
+	@Override
+	public boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
+			String orderStatusStr, String remarks, Long addTime) {
+
+		OrderSearchVo paySearchVo = new OrderSearchVo();
+		paySearchVo.setStaffId(staffId);
+		paySearchVo.setOrderId(orderId);
+		paySearchVo.setOrderType(orderType);
+		List<OrgStaffDetailPay> orgStaffDetailPays = this.selectBySearchVo(paySearchVo);
+
+		if (!orgStaffDetailPays.isEmpty())
+			return false;
+
+		OrgStaffDetailPay orgStaffDetailPay = this.initStaffDetailPay();
+		// 新增收入明细表 org_staff_detail_pay
+		orgStaffDetailPay.setStaffId(staffId);
+		orgStaffDetailPay.setMobile(mobile);
+		orgStaffDetailPay.setOrderType(orderType);
+		orgStaffDetailPay.setOrderId(orderId);
+		orgStaffDetailPay.setOrderNo(orderNo);
+		orgStaffDetailPay.setOrderMoney(orderMoney);
+		orgStaffDetailPay.setOrderPay(orderPay);
+		orgStaffDetailPay.setOrderStatusStr(orderStatusStr);
+		orgStaffDetailPay.setRemarks(remarks);
+		
+		if (addTime.equals(0L)) {
+			orgStaffDetailPay.setAddTime(TimeStampUtil.getNowSecond());
+		} else {
+			orgStaffDetailPay.setAddTime(addTime);
+		}
+
+		
+		this.insert(orgStaffDetailPay);
+
+		return true;
 	}
 
 }

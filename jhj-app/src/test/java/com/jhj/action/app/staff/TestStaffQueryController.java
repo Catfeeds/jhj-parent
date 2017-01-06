@@ -60,4 +60,18 @@ public class TestStaffQueryController extends JUnitActionBase{
 	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
     }
 	
+	@Test
+    public void getStaffIncoming() throws Exception {
+
+		String url = "/app/staff/get_staff_incoming.json";
+		String params = "?staff_id=24";
+		MockHttpServletRequestBuilder getRequest = get(url + params);
+
+	    ResultActions resultActions = this.mockMvc.perform(getRequest);
+	    resultActions.andExpect(content().contentType(this.mediaType));
+	    resultActions.andExpect(status().isOk());
+
+	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
+    }
+	
 }

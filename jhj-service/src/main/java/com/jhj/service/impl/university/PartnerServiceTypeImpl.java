@@ -97,10 +97,10 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		return type;
 	}
 
-//	@Override
-//	public List<PartnerServiceType> selectAll() {
-//		return partMapper.selectAll();
-//	}
+	@Override
+	public List<PartnerServiceType> selectAll() {
+		return partMapper.selectAll();
+	}
 
 	@Override
 	public OaPartnerServiceTypeVo completeVo(PartnerServiceType partner) {
@@ -263,5 +263,19 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 	public List<PartnerServiceType> selectByPartnerServiceTypeVo(
 			PartnerServiceTypeVo vo) {
 		return partMapper.selectByPartnerServiceTypeVo(vo);
+	}
+	
+	@Override
+	public PartnerServiceType findServiceType(List<PartnerServiceType> list, Long serviceTypeId) {
+		PartnerServiceType serviceType = null;
+		
+		for (PartnerServiceType item : list) {
+			if (item.getServiceTypeId().equals(serviceTypeId)) {
+				serviceType = item;
+				break;
+			}
+		}
+		
+		return serviceType;
 	}
 }

@@ -7,6 +7,8 @@
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld" %>
 <%@ taglib prefix="orderTypeTag" uri="/WEB-INF/tags/orderTypeName.tld" %>
 <%@ taglib prefix="payTypeTag" uri="/WEB-INF/tags/payTypeName.tld" %>
+<%@ taglib prefix="userDetailPayStatus" uri="/WEB-INF/tags/userDetailPayStatusTag.tld" %>
+
 <html>
   <head>
 	
@@ -52,6 +54,18 @@
                           				订单号:<form:input path="orderNo" class="form-control"  maxlength="18"/>
                           		</div>
                           		
+                          		<div class="form-group" >
+                          				支付方式:<form:select path="payType" class="form-control">
+                          					<form:option value="">--请选择支付方式--</form:option>
+                          					<form:option value="0">余额支付</form:option>
+                          					<form:option value="1">支付宝支付</form:option>
+                          					<form:option value="2">微信支付</form:option>
+                          					<form:option value="5">优惠券兑换</form:option>
+                          					<form:option value="6">现金支付</form:option>
+                          					<form:option value="7">第三方支付</form:option>
+                          				</form:select>
+                          		</div>
+                          		
                           		<div class="form-group">
 	                          		开始时间：
 									<form:input path="startTimeStr" class="form-control form_datetime"
@@ -82,15 +96,17 @@
 
                           <table class="table table-striped table-advance table-hover">
                               <thead>
-                              <tr>
+	                              <tr>
                             		  <th >订单号</th>
 		                              <th >会员手机号</th>
-		                              <th >订单类型</th>
+		                              <th >服务品类</th>
 		                              <th>充值金额</th>
-		                              <th >支付金额</th>
-		                              <th>付款类型</th>
+		                              <th >消费金额</th>
+		                              <th>支付方式</th>
+		                              <th>用户余额</th>
+		                              <th>状态</th>
 		                              <th >添加时间</th>
-                              </tr>
+	                              </tr>
                               </thead>
                               <tbody>
                               <c:forEach items="${userPayDetailList.list}" var="item">
@@ -103,12 +119,20 @@
 					            </td>
 					            <td align="center">
 					            	<c:if test="${item.orderType==1 }">
-					            	 	￥${ item.orderMoney }
+					            	 	￥${ item.orderPay }
 					            	</c:if>
 					            </td>
-					            <td align="center" >￥ ${ item.orderPay } </td>
+					            <td align="center" >
+					            	<c:if test="${item.orderType!=1 }">
+					            	 	￥${ item.orderPay }
+					            	</c:if>
+					            </td>
 					            <td>
 									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
+					            </td>
+					             <td>${ item.restMoney }</td>
+					            <td>
+					            	<userDetailPayStatus:status orderId="${item.orderId }" orderType="${item.orderType }" orderNo="${item.orderNo }"/>
 					            </td>
 					            <td>
 					            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>

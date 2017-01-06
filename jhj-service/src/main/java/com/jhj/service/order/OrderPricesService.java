@@ -35,14 +35,21 @@ public interface OrderPricesService {
 
 	BigDecimal getPayByOrder(Long orderId, Long userCouponId);
 
-	BigDecimal getOrderPay(OrderPrices orderPrice);
+	BigDecimal getTotalOrderMoney(OrderPrices orderPrice);
 
-	BigDecimal getOrderMoney(OrderPrices orderPrice);
+	BigDecimal getTotalOrderPay(OrderPrices orderPrice);
+	
+	BigDecimal getTotalOrderIncoming(Orders order, Long staffId);	
+	
+	BigDecimal getTotalOrderDept(Orders order, Long staffId);
 
-	BigDecimal getOrderIncoming(Orders order, Long staffId);
+	BigDecimal getOrderPercent(Orders order, Long staffId);
+	
+//	BigDecimal getOrderMoneyStaff(Orders order, Long staffId);
+//
+//	BigDecimal getOrderPayStaff(Orders order, Long staffId);
 
-	BigDecimal getOrderMoneyStaff(Orders order, Long staffId);
+	
 
-	BigDecimal getOrderPayStaff(Orders order, Long staffId);
 	
 }

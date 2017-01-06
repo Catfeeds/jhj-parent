@@ -73,8 +73,9 @@
 				<thead>
 					<tr>
 						<th>时间</th>
+						<th>总订单数</th>
 						<th>新增订单小计</th>
-						<!-- <th>增长率</th> -->
+						<th>环比增长率</th>
 						<th>微网站来源</th>
 						<th>App来源</th>
 						<th>平台来源</th>
@@ -86,8 +87,9 @@
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<td>${item.series}</td>
+						<td>${item.订单总数}</td>
 						<td>${item.新增订单小计}</td>
-						<%-- <td>${item.增长率}</td> --%>
+						<td>${item.环比增长率}</td>
 						<td>${item.微网站来源}</td>
 						<td>${item.App来源}</td>
 						<td>${item.平台来源}</td>

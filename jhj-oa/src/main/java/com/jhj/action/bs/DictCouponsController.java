@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -363,36 +362,60 @@ public class DictCouponsController extends BaseController {
 
         Map<String, String> hashMap = new HashMap<String, String>();
         Long flag = Long.valueOf(request.getParameter("id"));
+        
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
         // 更新或者新增
         if (flag != null && flag > 0) {
             // 更新充值后赠送优惠券
-            DictCoupons dictCoupon = couponService.selectByPrimaryKey(flag);
+        	DictCoupons dictCoupon = couponService.selectByPrimaryKey(flag);
+        	dictCoupon.setValue(dictCoupons.getValue());
+            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
             dictCoupon.setServiceType(dictCoupons.getServiceType());
-            dictCoupon.setValue(dictCoupons.getValue());
-//            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
-//            dictCoupon.setDescription(dictCoupons.getDescription());
-//            dictCoupon.setIntroduction(dictCoupons.getIntroduction());
+            if(dictCoupons.getRangMonth()==0){
+            	if(fromDate!=null){
+            		dictCoupon.setFromDate(DateUtil.parse(fromDate));
+            	}
+            	if(toDate!=null){
+            		dictCoupon.setToDate(DateUtil.parse(toDate));
+            	}
+            }
+            if(dictCoupons.getRangMonth()>0){
+            	dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
+            }
             dictCoupon.setRangMonth(dictCoupons.getRangMonth());
-//            dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
             dictCoupon.setIsValid(dictCoupons.getIsValid());
             couponService.updateByPrimaryKeySelective(dictCoupon);
         } else {
             // 新增充值后赠送优惠券
-            DictCoupons dictCoupon = couponService.initRechargeCoupon();
+        	DictCoupons dictCoupon = couponService.initRechargeCoupon();
             dictCoupon.setCardNo(RandomUtil.randomNumber(6));
             dictCoupon.setCardPasswd(RandomUtil.randomCode(8));
-            dictCoupon.setServiceType(dictCoupons.getServiceType());
-            dictCoupon.setValue(dictCoupons.getValue());
-//            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
             PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
-            serviceTypeVo.setServiceTypeId(Long.parseLong(dictCoupons.getServiceType()));
-            serviceTypeVo.setEnable((short)1);
-            PartnerServiceType serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo).get(0);
-//            dictCoupon.setDescription(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
-            dictCoupon.setIntroduction(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
-            dictCoupon.setRangMonth(dictCoupons.getRangMonth());
-            dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
+            if(Long.parseLong(dictCoupons.getServiceType())>0L){
+            	serviceTypeVo.setServiceTypeId(Long.parseLong(dictCoupons.getServiceType()));
+            	serviceTypeVo.setEnable((short)1);
+            	PartnerServiceType serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo).get(0);
+            	dictCoupon.setIntroduction(dictCoupons.getValue()+"元"+serviceType.getName()+"券");
+            }else{
+            	dictCoupon.setIntroduction(dictCoupons.getValue()+"元全部品类券");
+            }
             dictCoupon.setCouponsTypeId(dictCoupons.getCouponsTypeId());
+            dictCoupon.setValue(dictCoupons.getValue());
+            dictCoupon.setMaxValue(dictCoupons.getMaxValue());
+            dictCoupon.setServiceType(dictCoupons.getServiceType());
+            if(dictCoupons.getRangMonth()==0){
+            	if(fromDate!=null){
+            		dictCoupon.setFromDate(DateUtil.parse(fromDate));
+            	}
+            	if(toDate!=null){
+            		dictCoupon.setToDate(DateUtil.parse(toDate));
+            	}
+            }
+            if(dictCoupons.getRangMonth()>0){
+            	dictCoupon.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
+            }
+            dictCoupon.setRangMonth(dictCoupons.getRangMonth());
             dictCoupon.setIsValid(dictCoupons.getIsValid());
             couponService.insertSelective(dictCoupon);
         }
@@ -587,62 +610,101 @@ public class DictCouponsController extends BaseController {
         Long id = dictCoupons.getId();
         List<Integer> condtion = dictCoupons.getSendCouponsCondtion();
         DictCoupons coupon = couponService.selectByPrimaryKey(id);
-        List<UserCoupons> userCouponsList0 = new ArrayList<UserCoupons>();
         Map<String, String> hashMap = new HashMap<String, String>();
-        List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>();
-        Set<Long> setIds = new HashSet<Long>();
+      
+        Set<Long> userIdSet = new HashSet<Long>();
         if (condtion != null && condtion.size() > 0) {
+        	UserSearchVo searchVo = new UserSearchVo();
+        	//全部用户
             if (condtion.contains(0)) {
-                // 找出未下过单的用户.
-                List<Users> users = usersService.selectUsersByOrderMobile();
-                if (users != null) {
-                    for (Users u : users) {
-                        UserCoupons uc = userCouponsService.initUserCoupons(
-                                u.getId(), coupon);
-                        userCouponsList0.add(uc);
-                    }
-                    if (userCouponsList0 != null) {
-                        userCouponsService.insertByList(userCouponsList0);
-                    }
-                }
+               List<Users> userList = usersService.selectBySearchVo(searchVo);
+               if(userList!=null && userList.size()>0){
+            	   for(int i =0,len=userList.size();i<len;i++){
+            		   userIdSet.add(userList.get(i).getId());
+            	   }
+               }
             }
+            
+            //会员用户
             if (condtion.contains(1)) {
-                OrderSearchVo searchVo = new OrderSearchVo();
-                searchVo.setStartServiceTime(DateUtil.curStartDate(0));
-                searchVo.setEndServiceTime(DateUtil.curLastDate(0));
-                List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-                for (Orders o : orders) {
-                    setIds.add(o.getUserId());
+            	searchVo.setIsVip((short)1);
+            	List<Users> userList = usersService.selectBySearchVo(searchVo);
+            	if(userList!=null && userList.size()>0){
+             	   for(int i =0,len=userList.size();i<len;i++){
+             		   userIdSet.add(userList.get(i).getId());
+             	   }
                 }
             }
+            
+            //非会员用户
             if (condtion.contains(2)) {
-                OrderSearchVo searchVo = new OrderSearchVo();
-                searchVo.setStartServiceTime(DateUtil.curStartDate(2));
-                searchVo.setEndServiceTime(DateUtil.curLastDate(1));
-                List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-                for (Orders o : orders) {
-                    setIds.add(o.getUserId());
+            	searchVo.setIsVip((short)0);
+            	List<Users> userList = usersService.selectBySearchVo(searchVo);
+            	if(userList!=null && userList.size()>0){
+             	   for(int i =0,len=userList.size();i<len;i++){
+             		   userIdSet.add(userList.get(i).getId());
+             	   }
                 }
             }
+            
+            //注册未使用用户
             if (condtion.contains(3)) {
-                OrderSearchVo searchVo = new OrderSearchVo();
-                searchVo.setEndServiceTime(DateUtil.curLastDate(3));
-                List<Orders> orders = orderQueryService.selectBySearchVo(searchVo);
-                for (Orders o : orders) {
-                    setIds.add(o.getUserId());
+            	 // 找出未下过单的用户.
+                List<Users> userList = usersService.selectUsersByOrderMobile();
+                if (userList != null) {
+                	if(userList!=null && userList.size()>0){
+                  	   for(int i =0,len=userList.size();i<len;i++){
+                  		   userIdSet.add(userList.get(i).getId());
+                  	   }
+                     }
                 }
             }
+            
+            //一个月内下过单用户
+            if(condtion.contains(4)){
+            	 OrderSearchVo orderSearchVo = new OrderSearchVo();
+                 orderSearchVo.setStartServiceTime(DateUtil.curStartDate(0));
+                 orderSearchVo.setEndServiceTime(DateUtil.curLastDate(0));
+                 List<Orders> orders = orderQueryService.selectBySearchVo(orderSearchVo);
+                 for (Orders o : orders) {
+                     userIdSet.add(o.getUserId());
+                 }
+            }
+            
+            //三个月内下过单的用户
+			if(condtion.contains(5)){
+				OrderSearchVo orderSearchVo = new OrderSearchVo();
+                orderSearchVo.setStartServiceTime(DateUtil.curStartDate(2));
+                orderSearchVo.setEndServiceTime(DateUtil.curLastDate(1));
+                List<Orders> orders = orderQueryService.selectBySearchVo(orderSearchVo);
+                for (Orders o : orders) {
+                    userIdSet.add(o.getUserId());
+                }   	
+			}
+			
+			//六个月内下过单的用户
+			if(condtion.contains(6)){
+				OrderSearchVo orderSearchVo = new OrderSearchVo();
+				orderSearchVo.setStartServiceTime(DateUtil.curStartDate(6));
+                orderSearchVo.setEndServiceTime(DateUtil.curLastDate(3));
+                List<Orders> orders = orderQueryService.selectBySearchVo(orderSearchVo);
+                for (Orders o : orders) {
+                    userIdSet.add(o.getUserId());
+                }
+			}
 
         }
-        Iterator<Long> iterator = setIds.iterator();
-        while (iterator.hasNext()) {
-            UserCoupons uc = userCouponsService.initUserCoupons(iterator.next(), coupon);
-            userCouponsList.add(uc);
+        List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>(1);
+        List<Long> list=new ArrayList<Long>(userIdSet);
+        for(int i=0;i<list.size();i++){
+    	   UserCoupons uc = userCouponsService.initUserCoupons(list.get(i), coupon);
+    	   if(coupon.getRangMonth()==0){
+    		   uc.setFromDate(coupon.getFromDate());
+    		   uc.setToDate(coupon.getToDate());
+    	   }
+         	userCouponsList.add(uc);
         }
         userCouponsService.insertByList(userCouponsList);
-        // 发送优惠之后，优惠券变成无效状态
-        coupon.setIsValid("0");
-        dictCouponsService.updateByPrimaryKeySelective(coupon);
         hashMap.put("success", "200");
         return hashMap;
     }

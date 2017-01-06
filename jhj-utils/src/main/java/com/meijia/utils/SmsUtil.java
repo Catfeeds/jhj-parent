@@ -69,9 +69,10 @@ public class SmsUtil {
 		//*则13800000000手机号收到的短信内容是：【云通讯】您使用的是云通讯短信模板，您的验证码是6532，请于5分钟内正确输入     *
 		//*********************************************************************************************************************
 		HashMap<String, Object> ccp = null;
-		ccp = restAPI.sendTemplateSMS(mobile,templeId ,content);
-
+		
 		HashMap<String, String> result = new HashMap<String, String>();
+		
+		ccp = restAPI.sendTemplateSMS(mobile,templeId ,content);
 
 		String statusCode = (String) ccp.get("statusCode");
 
@@ -89,6 +90,8 @@ public class SmsUtil {
 			result.put("statusCode", statusCode);
 			result.put("msg", (String) ccp.get("statusMsg"));
 		}
+//		result.put("statusCode", "000000");
+//		result.put("msg", "");
 		return result;
 	}
 	
@@ -198,8 +201,8 @@ public class SmsUtil {
 //		System.out.println("token =" + token );
 //
 ////		String[] content = new String[]{token, "10"};
-//		
-		String[] content = new String[]{"1", "2"};
+		
+		String[] content = new String[]{""};
 		HashMap<String, String> result = SmsUtil.SendSms("13701187136", "65012", content);
 //
 //		System.out.println(result.get("statusCode"));

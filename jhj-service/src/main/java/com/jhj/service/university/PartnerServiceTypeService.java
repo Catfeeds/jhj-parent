@@ -66,5 +66,9 @@ public interface PartnerServiceTypeService {
     
     List<PartnerServiceType> selectByPartnerServiceTypeVo(PartnerServiceTypeVo vo);
 
+	PartnerServiceType findServiceType(List<PartnerServiceType> list, Long serviceTypeId);
+
+	List<PartnerServiceType> selectAll();
+	
 	List<PartnerServiceType> selectByIds(List<Long> ids);
 }

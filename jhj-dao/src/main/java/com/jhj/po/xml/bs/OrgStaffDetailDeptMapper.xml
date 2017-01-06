@@ -25,7 +25,7 @@
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
 	
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 
 		SELECT
 		<include refid="Base_Column_List" />

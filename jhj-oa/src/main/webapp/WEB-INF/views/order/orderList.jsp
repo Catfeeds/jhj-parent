@@ -81,7 +81,7 @@
 										</tr>
 										
 										<tr>
-											<td width="10%">手机号：</td>
+											<td width="10%">用户手机号：</td>
 											<td width="23%"><form:input path="mobile" class="form-control" placeholder="请输入手机号" /></td>
 											<td width="10%">服务地址：</td>
 											<td width="23%"><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
@@ -94,21 +94,49 @@
 												</form:select>
 											</td>
 										</tr>
-										
+										<tr>
+											<td  width="10%">服务人员手机号：</td>
+											<td width="23%">
+												<form:input path="staffMobile" class="form-control" placeholder="请输入手机号" />
+											</td>
+											<td  width="10%">订单来源：</td>
+											<td >
+												<form:select path="orderOpFrom" class="form-control">
+													<form:option value="">--请选择订单来源--</form:option>
+													<form:option value="1">来电订单</form:option>
+													<form:option value="11">微网站</form:option>
+													<c:forEach items="${businessList }" var="business">
+														<form:option value="${business.id}">${business.businessName }</form:option>
+													</c:forEach>
+												</form:select>
+											</td>
+											<td  width="10%">支付方式</td>
+											<td>
+												<form:select path="payType" class="form-control">
+													<form:option value="">--请选择支付方式--</form:option>
+													<form:option value="0">余额支付</form:option>
+													<form:option value="1">支付宝</form:option>
+													<form:option value="2">微信</form:option>
+													<form:option value="6">现金支付</form:option>
+													<form:option value="7">第三方支付</form:option>
+												</form:select>
+											</td>
+														
+										</tr>
 										<tr>
 											<td width="100%" colspan="6" style="padding:0;border:0">
 												<table width="100%" style="border:0" cellspacing="0" cellpadding="0" class="table-bordered table-condensed">
 													<tbody>
 														<tr>
-															<td width="11%">下单时间：</td>
-															<td width="39%">
+															<td width="10%" style="border:0;border-bottom-width:0;border-left-width:0">下单时间：</td>
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
 																<input id="startTimeStr" name="startTimeStr" value="${startTimeStr }" class="form-control form_datetime"
 																	style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> 
 																<input id="endTimeStr"
 																	name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
 															</td>
-															<td width="11%">服务日期：</td>
-															<td width="39%">
+															<td width="10%" style="border-top-width:0;border-bottom-width:0;">服务日期：</td>
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
 																<input id="serviceStartTimeStr" name="serviceStartTimeStr" value="${serviceStartTimeStr }"
 																class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span>
 																<input id="serviceEndTimeStr" name="serviceEndTimeStr" value="${serviceEndTimeStr }" class="form-control form-datetime"
@@ -121,33 +149,41 @@
 										</tr>
 										
 										<tr>
-											<td>订单来源：</td>
-											<td>
-												<form:select path="orderOpFrom" class="form-control">
-													<form:option value="">--请选择订单来源--</form:option>
-													<form:option value="1">来电订单</form:option>
-													<form:option value="11">微网站</form:option>
-													<c:forEach items="${businessList }" var="business">
-														<form:option value="${business.id}">${business.businessName }</form:option>
-													</c:forEach>
-												</form:select>
+											<td width="100%" colspan="6" style="padding:0;border:0">
+												<table width="100%" style="border:0" cellspacing="0" cellpadding="0" class="table-bordered table-condensed">
+													<tbody>
+														<tr>
+															<td width="10%" style="border:0;border-bottom-width:0;border-left-width:0">服务完成时间：</td>
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
+																<input id="startUpdateTimeStr" name="startUpdateTimeStr" value="${startUpdateTimeStr }" class="form-control form_datetime"
+																	style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> 
+																<input id="endUpdateTimeStr"
+																	name="endUpdateTimeStr" value="${endUpdateTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
+															</td>
+															<td width="10%" style="border-top-width:0;border-bottom-width:0;"></td>
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
+																
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											 </td>
+										</tr>
+										
+										<tr>
+											<td width="10%">服务人员姓名：</td>
+											<td width="23%">
+												<form:input path="staffName" class="form-control" placeholder="请输入服务人员名称"/>
 											</td>
-											<td>支付方式</td>
-											<td>
-												<form:select path="payType" class="form-control">
-													<form:option value="">--请选择支付方式--</form:option>
-													<form:option value="0">余额支付</form:option>
-													<form:option value="1">支付宝</form:option>
-													<form:option value="2">微信</form:option>
-													<form:option value="6">现金支付</form:option>
-													<form:option value="7">第三方支付</form:option>
-												</form:select>
+											<td width="10%">订单号：</td>
+											<td width="23%">
+												<form:input path="orderNo" class="form-control" placeholder="请输入订单号"/>
 											</td>
 											<td colspan="6">
 												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
 												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
 												<button type="button" class="btn btn-primary" onclick="cleanForm()">清空</button>
-											</td>					
+											</td>		
 										</tr>
 									</table>
 								</form:form>
@@ -171,8 +207,6 @@
 										<th>是否接单</th>
 										<th>订单来源</th>
 										<th>订单状态</th>
-										
-										
 										<th>支付方式</th>
 										<th>支付金额</th>
 										<th>操作</th>

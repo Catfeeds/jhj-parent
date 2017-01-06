@@ -27,6 +27,7 @@ import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
@@ -43,6 +44,7 @@ import com.jhj.service.order.OrderStatService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.users.UserDetailPayService;
+import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -103,6 +105,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private UserDetailPayService userDetailPayService;
+	
+	@Autowired
+	private UsersService userService;
 
 	/**
 	 * 当日统计数接口
@@ -145,12 +150,12 @@ public class OrderController extends BaseController {
 		Long totalOrder = orderStatService.getTotalOrderCount(searchVo);
 		vo.setTotalOrder(totalOrder);
 		
-		// 订单总金额
+		// 订单支付金额
 		searchVo = new OrderSearchVo();
 		searchVo.setStaffId(staffId);
 		searchVo.setStartServiceTime(startTime);
 		searchVo.setEndServiceTime(endTime);
-		BigDecimal totalOrderMoney = orderStatService.getTotalOrderMoney(searchVo);
+		BigDecimal totalOrderMoney = orderStatService.getTotalOrderPay(searchVo);
 		vo.setTotalOrderMoney(totalOrderMoney);
 		
 		// 订单收入总金额
@@ -497,21 +502,8 @@ public class OrderController extends BaseController {
 		
 		orderPriceExtService.insert(orderPriceExt);
 		
-		//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
-		
-		if (orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) || orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) {
-			
-			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-			orderDispatchSearchVo.setOrderId(orderId);
-			orderDispatchSearchVo.setDispatchStatus((short) 1);
-			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
-			for (OrderDispatchs item : orderDispatchs) {
-				OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(item.getStaffId());
-				orgStaffFinanceService.orderOverWork(order, orderPriceExt, orgStaffs);
-			}
-		}
-		
-
+		Long userId = order.getUserId();
+		Users user = userService.selectByPrimaryKey(userId);
 		//更新用户明细表
 		UserDetailPay detailPay = new UserDetailPay();
 		detailPay.setId(0L);
@@ -525,6 +517,7 @@ public class OrderController extends BaseController {
 	    detailPay.setOrderNo(orderNoExt);
 	    detailPay.setOrderMoney(orderPay);
 	    detailPay.setOrderPay(orderPay);
+	    detailPay.setRestMoney(user.getRestMoney());
 	    detailPay.setTradeNo("");
 	    detailPay.setTradeStatus("");
 	    detailPay.setPayType((short)6);

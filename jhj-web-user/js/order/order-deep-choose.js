@@ -81,6 +81,19 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				myApp.alert("请选择地址.");
 				return false;	
 		 }
+		//特殊情况：油烟机套餐折扣，仅限一套
+		if (sessionStorage.getItem("service_type_id") == 71) {
+			
+			var itemNum71 = 0;
+			$$("input[name = itemNum]").each(function(key, index) {
+				itemNum71 = $$(this).val();
+			})
+			
+			if (itemNum71 > 1) {
+				myApp.alert("油烟机套装清洗5折优惠(仅限一套)");
+				return false;
+			}
+		} 
 		 var url = "order/order-lib-cal.html?next_url=order/order-deep-confirm.html"
 			 
 	     var staffId = sessionStorage.getItem("staff_id");
@@ -101,6 +114,16 @@ function onItemNumKeyUp(obj) {
 	tmptxt = tmptxt.replace(/\D/g,'');
 	itemNumObj.val(tmptxt);
 	
+	//特殊情况：油烟机套餐折扣，仅限一套
+	console.log("onDeepAddItemNum serviceTYpe_id = " + sessionStorage.getItem("service_type_id"));
+	if (sessionStorage.getItem("service_type_id") == 71) {
+		if (tmptxt > 1) {
+			myApp.alert("油烟机套装清洗5折优惠(仅限一套)");
+			itemNumObj.val(1);
+			return false;
+		}
+	}
+	
 	setDeepTotal();
 }
 
@@ -113,6 +136,17 @@ function onDeepAddItemNum(obj) {
 	} else {
 		v = parseInt(v) + 1;
 	}
+	
+	//特殊情况：油烟机套餐折扣，仅限一套
+	console.log("onDeepAddItemNum serviceTYpe_id = " + sessionStorage.getItem("service_type_id"));
+	if (sessionStorage.getItem("service_type_id") == 71) {
+		if (v > 1) {
+			myApp.alert("油烟机套装清洗5折优惠(仅限一套)");
+			itemNumObj.val(1);
+			return false;
+		}
+	}
+	
 	itemNumObj.val(v);
 	
 	var validateMsg = setDeepTotal();

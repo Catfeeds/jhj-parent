@@ -51,7 +51,13 @@
 		<include refid="Base_Column_List" />
 		from orders
 		<include refid="bySearchVo" />
-		order by add_time desc
+		order by 
+		<if test="orderByProperty!=null">
+			${orderByProperty}
+		</if>
+		<if test="orderByProperty==null or orderByProperty==''">
+			add_time desc
+		</if>
 	</select>
 
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
@@ -94,7 +100,7 @@
 
 	</select>
 	
-	<select id="getTotalOrderIncomeMoney" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+	<select id="getTotalOrderPay" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select sum(order_pay)from order_prices where order_id in
 		(
 			select id from orders
@@ -102,11 +108,12 @@
 		)
 	</select>
 	
-	<select id="getTotalOrderIncomeMoneyExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
+	<select id="getTotalOrderPayExt" resultType="java.math.BigDecimal" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select sum(order_pay)from order_price_ext where order_id in
 		(
 			select id from orders
 			<include refid="bySearchVo" />
+			and order_status = 2
 		)
 	</select>
 	
@@ -145,6 +152,10 @@
 			and mobile like  CONCAT('%',#{mobile},'%')
 		</if>
 		
+		<if test="staffMobile !=null and staffMobile !='' ">
+			and id in (select order_id from order_dispatchs where staff_mobile like  CONCAT('%',#{staffMobile},'%')  and dispatch_status = 1)
+		</if>
+		
 		<if test="staffId != null">
 			and id in (select order_id from order_dispatchs where staff_id = #{staffId,jdbcType=NUMERIC}  and dispatch_status = 1)
 		</if>
@@ -153,7 +164,7 @@
 			and id = #{orderId,jdbcType=NUMERIC}
 		</if>
 
-		<if test="orderNo != null">
+		<if test="orderNo != null and orderNo !=''">
 			and order_no like CONCAT('%','${orderNo}','%' )
 		</if>
 
@@ -252,6 +263,10 @@
 		
 		<if test="payType!=null">
 			and order_no in (select order_no from order_prices where pay_type = #{payType,jdbcType=NUMERIC})
+		</if>
+		
+		<if test="staffName!=null and staffName!=''">
+			and id in (select order_id from order_dispatchs where staff_name like  CONCAT('%',#{staffName},'%')  and dispatch_status = 1)
 		</if>
 	</sql>
 
@@ -833,17 +848,16 @@
 	<!-- **************************** 订单收入图表 ***************************** -->
 
 	<select id="orderRevenueByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		SELECT orderFrom, 
+		FROM_UNIXTIME(T4.add_time, "%c-%e") AS series,
+		T4.order_op_from as orderOpFrom,T4.order_type as orderType,T4.service_type as serviceType, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(
-		SELECT order_from AS name,
-		FROM_UNIXTIME(add_time, "%c-%e") AS series,
-		order_money
+		SELECT order_from AS orderFrom,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
 		FROM
 		(
-		SELECT T1.order_from, T1.add_time, T2.order_money FROM
+		SELECT T1.order_from,T1.order_op_from,T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
 		(SELECT
-		id, order_from, add_time
+		id, order_from,order_op_from,order_type,service_type, add_time
 		FROM orders
 		WHERE 1=1
 		<include refid="chartSearchVo"/>
@@ -852,21 +866,21 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
+		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
 
 	</select>
 
 	<select id="orderRevenueByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		SELECT orderFrom, 
+		FROM_UNIXTIME(T4.add_time, "%Y-%m") AS series,
+		T4.order_op_from as orderOpFrom,T4.order_type as orderType,T4.service_type as serviceType, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(
-		SELECT order_from AS name,
-		FROM_UNIXTIME(add_time, "%Y-%m") AS series,
-		order_money
+		SELECT order_from AS orderFrom,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
 		FROM
 		(
-		SELECT T1.order_from, T1.add_time, T2.order_money FROM
+		SELECT T1.order_from,T1.order_op_from,T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
 		(SELECT
-		id, order_from, add_time
+		id, order_from,order_op_from,order_type,service_type, add_time
 		FROM orders
 		WHERE 1=1
 		<include refid="chartSearchVo"/>
@@ -875,21 +889,22 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
+		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
+		
 	</select>
 
 	<select id="orderRevenueByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT name, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
-		(
-		SELECT order_from AS name,
+		SELECT orderFrom, 
 		CONCAT(year(FROM_UNIXTIME( add_time)), "-",
 		quarter(FROM_UNIXTIME( add_time)) ) as series,
-		order_money
+		T4.order_op_from as orderOpFrom,T4.order_type as orderType,T4.service_type as serviceType, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
+		(
+		SELECT order_from AS orderFrom,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
 		FROM
 		(
-		SELECT T1.order_from, T1.add_time, T2.order_money FROM
+		SELECT T1.order_from,T1.order_op_from,T1.order_type,T1.service_type, T1.add_time, T2.order_money FROM
 		(SELECT
-		id, order_from, add_time
+		id, order_from,order_op_from,order_type,service_type, add_time
 		FROM orders
 		WHERE 1=1
 		<include refid="chartSearchVo"/>
@@ -898,8 +913,8 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY name, series ORDER BY series ASC
-
+		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
+		
 	</select>
 
 	<!-- **************************** 市场品类图表 ***************************** -->
@@ -1309,4 +1324,56 @@
 		GROUP BY o.order_from,o.order_op_from,series
 	</select>
 	
+	<select id="totalByRate" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) as total,
+		<if test="statType!='quarter'">
+			FROM_UNIXTIME(add_time,#{formatParam}) as series
+		</if>
+		<if test="statType=='quarter'">
+			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
+		</if>
+		from users WHERE id in 
+		(SELECT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) 
+		<include refid="chartSearchVo"/>
+		GROUP BY series
+	</select>
+	
+	<select id="totalByRateOrder" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT COUNT(*) as total,
+		<if test="statType!='quarter'">
+			FROM_UNIXTIME(t.add_time,#{formatParam}) as series
+		</if>
+		<if test="statType=='quarter'">
+			concat(year(FROM_UNIXTIME(t.add_time)),"-",quarter(FROM_UNIXTIME(t.add_time))) AS series
+		</if>
+		from (SELECT o.user_id,o.add_time from orders o 
+		<where>
+			<!-- <if test="startTime !=null">
+				<![CDATA[ and o.add_time >= #{startTime}]]>
+			</if> -->
+			<if test="endTime !=null">
+				<![CDATA[ and o.add_time <= #{endTime}]]>
+			</if>
+		</where>
+		) as t 
+		GROUP BY series,t.user_id HAVING COUNT(t.user_id)>=2
+		
+	</select>
+	
+	<select id="statByTotal" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT 
+		<if test="selectCycle!=12">
+			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		</if>
+		<if test="selectCycle==12">
+			CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		</if>
+		COUNT(*) AS total
+		FROM orders
+		WHERE 1=1
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		GROUP BY series ORDER BY series ASC
+	</select>
 </mapper>

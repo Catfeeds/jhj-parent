@@ -65,7 +65,7 @@ public class TestUserCouponsController extends JUnitActionBase {
     public void testGetValidateCoupons() throws Exception {
 
 		String url = "/app/user/get_validate_coupons.json";
-		String params = "?user_id=3620&service_type=0&service_date=1476467510000&order_money=149";
+		String params = "?user_id=1&service_type=28&service_date=1473778800&order_money=900";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);

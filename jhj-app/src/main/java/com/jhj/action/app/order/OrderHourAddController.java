@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderLog;
@@ -23,8 +24,10 @@ import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.ValidateService;
+import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.order.OrderAppointService;
@@ -104,8 +107,16 @@ public class OrderHourAddController extends BaseController {
     private OrderAppointService orderAppointService;
     
     @Autowired
-	private ValidateService validateService;	
+	private ValidateService validateService;
     
+    @Autowired
+    private DictCouponsService dictCouponsService;
+    
+    /**
+     * 
+     * @param couponsId 优惠券ID
+     * 
+     * */
 	@RequestMapping(value = "post_hour", method = RequestMethod.POST)
 	public AppResultData<Object> submitOrder(
 			@RequestParam("userId") Long userId,
@@ -120,7 +131,9 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam(value = "orderFrom", required = false, defaultValue = "1") Short orderFrom,
 			@RequestParam(value = "orderPay", required = false, defaultValue = "0") BigDecimal orderPay,
 			@RequestParam(value = "orderOpFrom", required = false, defaultValue = "0") Long orderOpFrom,
-			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId) throws Exception{
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId,
+			@RequestParam(value ="coupons_id",required =false) Long couponsId
+			) throws Exception{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
@@ -191,46 +204,8 @@ public class OrderHourAddController extends BaseController {
 		String serviceName = partnerServiceType.getName();
 		
 		//如果有附加服务类型，需要存储到order_service_addons表.
-		if (!StringUtil.isEmpty(serviceAddons)) {
-			String[] serviceAddonArray = StringUtil.convertStrToArray(serviceAddons);
-			
-			List<Long> serviceAddonIds = new ArrayList<Long>();
-			for (int i = 0; i < serviceAddonArray.length; i++) {
-				if (!StringUtil.isEmpty(serviceAddonArray[i])) {
-					Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
-					serviceAddonIds.add(serviceAddonId);
-				}
-			}
-			
-			ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
-			searchVo1.setServiceAddonIds(serviceAddonIds);
-			List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
-			
-			for (int i = 0; i < serviceAddonArray.length; i++) {	
-				Long serviceAddonId = Long.valueOf(serviceAddonArray[i]);
-				
-				OrderServiceAddons record = orderServiceAddonsService.initOrderServiceAddons();
-				
-				record.setOrderId(order.getId());
-				record.setOrderNo(order.getOrderNo());
-				record.setServiceAddonId(serviceAddonId);
-				record.setUserId(userId);
-				
-				
-				for (DictServiceAddons item : dictServiceAddons) {
-					if (item.getServiceAddonId().equals(serviceAddonId)) {
-						record.setItemNum(item.getDefaultNum());
-						record.setItemUnit(item.getItemUnit());
-						record.setPrice(item.getDisPrice());
-					}
-					serviceName += item.getName() +" ";
-				}
-				orderServiceAddonsService.insert(record);
-				order.setServiceContent(serviceName);
-			}
-		}else{
-			order.setServiceContent(serviceName);
-		}
+		
+		order.setServiceContent(serviceName);
 		
 		order.setRemarks(remarks);
 		
@@ -269,6 +244,16 @@ public class OrderHourAddController extends BaseController {
 		
 		orderLogService.insert(orderLog);
 		
+		
+		/*
+		 * CouponsId,新增参数，判断用户下单时候有使用优惠，如果有使用优惠券，则在user_conpos表中插入该用户对应得优惠券信息
+		 * 
+		 * */
+		if(couponsId!=null && couponsId>0){
+			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
+			UserCoupons userCoupons = userCoupService.initUserCoupons(userId, coupons);
+			userCoupService.insert(userCoupons);
+		}
 		result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, order);
 		
 		return result;

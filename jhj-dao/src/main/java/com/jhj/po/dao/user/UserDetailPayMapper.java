@@ -23,7 +23,9 @@ public interface UserDetailPayMapper {
 	List<UserDetailPay> selectByListPage(Map<String,Object> conditions);
 	
 	List<UserDetailPay> selectByListPages(UserDetailSearchVo userDetailSearchVo);
-
+	
+	List<UserDetailPay> selectBySearchVo(UserDetailSearchVo userDetailSearchVo);
+	
 	UserDetailPay selectByTradeNo(String tradeNo);
 	
 	Map<String,BigDecimal> totolMoeny(UserDetailSearchVo userDetailSearchVo);

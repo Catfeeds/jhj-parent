@@ -84,7 +84,6 @@
                               <thead>
                               <tr>
                                   <th >会员手机号</th>
-	                              <th >会员姓名</th>
 	                              <th>充值金额</th>
 	                              <th >会员余额</th>
 	                              <th >会员积分</th>
@@ -99,7 +98,6 @@
                               <c:forEach items="${pageList.list}" var="item">
                               <tr>
 					            <td>${ item.mobile }</td>
-					            <td>${ item.userName }</td>
 					            <td>${item.cardMoney }</td>
 					            <td>${ item.userRestMoney }</td>
 					            <td>${ item.score }</td>

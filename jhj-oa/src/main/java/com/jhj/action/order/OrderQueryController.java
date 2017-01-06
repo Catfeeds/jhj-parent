@@ -58,6 +58,7 @@ import com.jhj.vo.order.OrderListVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.poi.POIUtils;
@@ -149,7 +150,7 @@ public class OrderQueryController extends BaseController {
 			orders = orderList.get(i);
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			BigDecimal orderPay = completeVo.getOrderPay();
-			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_8){
 				pageMoney = pageMoney.add(orderPay);
 			}
 			orderList.set(i, completeVo);
@@ -157,7 +158,12 @@ public class OrderQueryController extends BaseController {
 		
 		result = new PageInfo(orderList);
 		
-		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		BigDecimal totalOrderPay = orderQueryService.getTotalOrderPay(searchVo);
+		BigDecimal totalOrderPayExt = orderQueryService.getTotalOrderPayExt(searchVo);
+		if (totalOrderPay == null) totalOrderPay = new BigDecimal(0);
+		if (totalOrderPayExt == null) totalOrderPayExt = new BigDecimal(0);
+		BigDecimal totalMoney = MathBigDecimalUtil.add(totalOrderPay, totalOrderPayExt);
+		
 		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))
@@ -274,14 +280,21 @@ public class OrderQueryController extends BaseController {
 			Long serviceType2 = orders.getServiceType();
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			BigDecimal orderPay = completeVo.getOrderPay();
-			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_8){
 				pageMoney = pageMoney.add(orderPay);
 			}
 			orderList.set(i, completeVo);
 		}
 
 		result = new PageInfo(orderList);
-		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		
+		BigDecimal totalOrderPay = orderQueryService.getTotalOrderPay(searchVo);
+		BigDecimal totalOrderPayExt = orderQueryService.getTotalOrderPayExt(searchVo);
+		if (totalOrderPay == null) totalOrderPay = new BigDecimal(0);
+		if (totalOrderPayExt == null) totalOrderPayExt = new BigDecimal(0);
+		BigDecimal totalMoney = MathBigDecimalUtil.add(totalOrderPay, totalOrderPayExt);
+		
+		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))
 			model.addAttribute("startTimeStr", startTimeStr);
@@ -353,14 +366,18 @@ public class OrderQueryController extends BaseController {
 			orders = orderList.get(i);
 			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
 			BigDecimal orderPay = completeVo.getOrderPay();
-			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_9){
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_8){
 				pageMoney = pageMoney.add(orderPay);
 			}
 			orderList.set(i, completeVo);
 		}
 
 		result = new PageInfo(orderList);
-		BigDecimal totalMoney = orderQueryService.getTotalOrderIncomeMoney(searchVo);
+		BigDecimal totalOrderPay = orderQueryService.getTotalOrderPay(searchVo);
+		BigDecimal totalOrderPayExt = orderQueryService.getTotalOrderPayExt(searchVo);
+		if (totalOrderPay == null) totalOrderPay = new BigDecimal(0);
+		if (totalOrderPayExt == null) totalOrderPayExt = new BigDecimal(0);
+		BigDecimal totalMoney = MathBigDecimalUtil.add(totalOrderPay, totalOrderPayExt);
 		
 		String startTimeStr = request.getParameter("startTimeStr");
 		if (!StringUtil.isEmpty(startTimeStr))

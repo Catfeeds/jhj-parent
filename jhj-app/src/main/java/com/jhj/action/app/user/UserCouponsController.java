@@ -2,9 +2,14 @@ package com.jhj.action.app.user;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,11 +28,10 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.user.UserCouponVo;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.Week;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -149,14 +153,13 @@ public class UserCouponsController extends BaseController {
 		}
 		
 		@RequestMapping(value = "get_validate_coupons",method = RequestMethod.GET)
-		public AppResultData<List<UserCouponVo>> getValidateCoupons(
+		public AppResultData<Object> getValidateCoupons(
 				@RequestParam("user_id") Long userId,
 				@RequestParam(value="service_date") Long serviceDate,
 				@RequestParam(value="order_money",required=false) Float orderMoney,
 				@RequestParam("service_type") String serviceTypeId){
 
-			AppResultData<List<UserCouponVo>> result = new AppResultData<List<UserCouponVo>>(
-					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,new ArrayList<UserCouponVo>());
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 			Users u = userService.selectByPrimaryKey(userId);
 
 			// 判断是否为注册用户，非注册用户返回 999
@@ -174,57 +177,118 @@ public class UserCouponsController extends BaseController {
 			
 			//有效的优惠劵列表
 			List<UserCouponVo> listNew = new ArrayList<UserCouponVo>();
-
-			if(list.isEmpty()) return result;
+			
+			Map<String, Object> resultData = new HashMap<String, Object>();
+			resultData.put("total", 0);
+			resultData.put("coupon", "");
+			if(list.isEmpty()) {
+				result.setData(resultData);
+				return result;
+			}
 
 			List<UserCouponVo> listUserCouponVo = userCouponsService.changeToUserCouponVos(list);
 			
-			//此为判断是否在周一到周三使用.
-//			boolean falg=false;
-//			if(serviceDate!=null){
-//				Date date = TimeStampUtil.timeStampToDate(serviceDate);
-//				int weekNumber = DateUtil.getWeek(date).getNumber();
-//				if(weekNumber==Week.MONDAY.getNumber() ||weekNumber==Week.TUESDAY.getNumber() || weekNumber==Week.WEDNESDAY.getNumber()){
-//					falg=true;
-//				}
-//			}
 			BigDecimal moeney=new BigDecimal(0);
 			if(orderMoney!=null){
 				moeney=new BigDecimal(orderMoney);
 			}
-			for (Iterator<UserCouponVo> iterator = listUserCouponVo.iterator(); iterator.hasNext();) {
-				UserCouponVo userCouponVo = (UserCouponVo) iterator.next();
+			
+			for (UserCouponVo userCouponVo : listUserCouponVo) {	
+				Date fromDate = userCouponVo.getFromDate();
+				String fromDateStr = DateUtil.formatDate(fromDate);
+				Long startTime = TimeStampUtil.getMillisOfDayFull(fromDateStr + " 00:00:00");
+				startTime = startTime / 1000;
+				
+				Date toDate = userCouponVo.getToDate();
+				String toDateStr = DateUtil.formatDate(toDate);
+				Long endTime = TimeStampUtil.getMillisOfDayFull(toDateStr + " 23:59:59");
+				endTime = endTime / 1000;
 				
 				//1. 判断优惠券的有效期
-				if(serviceDate * 1000 <= userCouponVo.getFromDate().getTime() && serviceDate*1000 >= userCouponVo.getToDate().getTime()){
+				if (serviceDate < startTime || serviceDate > endTime) {
 					listNew.add(userCouponVo);
+					continue;
 				}
-				
+
 				//2. 判断服务类型是否正确
 				if (!userCouponVo.getServiceType().equals("0") &&
 					!userCouponVo.getServiceType().toString().equals(serviceTypeId)) {
 					listNew.add(userCouponVo);
+					continue;
 				}
 				
-				if (!userCouponVo.getMaxValue().equals(BigDecimal.ZERO)) {
-					BigDecimal maxValue = userCouponVo.getMaxValue();
+				BigDecimal maxValue = new BigDecimal(0);
+				if (userCouponVo.getMaxValue() != null) maxValue = userCouponVo.getMaxValue();
+				if (!maxValue.equals(BigDecimal.ZERO)) {
 					if (moeney.compareTo(maxValue) < 0) {
 						listNew.add(userCouponVo);
+						continue;
 					}
 				}
 			}
+			
 			listUserCouponVo.removeAll(listNew);
-			result.setData(listUserCouponVo);
+			if (listUserCouponVo.isEmpty() || listUserCouponVo.size() == 0)  {
+				result.setData(resultData);
+				return result;
+			}
+			
+			
+			
+			if (listUserCouponVo.size() == 1) {
+				resultData.put("total", listUserCouponVo.size());
+				resultData.put("coupon", listUserCouponVo.get(0));
+				
+				result.setData(resultData);
+				return result;
+			}
+			//找出最符合要求的优惠劵
+			//1. 过期时间最早的优惠劵
+			//2. 过期时间相同的优惠劵，金额最大的为优先
+			
+			//1. 找出时间最早的优惠劵
+			Collections.sort(listUserCouponVo, new Comparator<UserCouponVo>() {
+			    @Override
+				public int compare(UserCouponVo s1, UserCouponVo s2) {
+			    	Long d1 = TimeStampUtil.getMillisOfDate(s1.getToDate()) /1000;
+			    	Long d2 = TimeStampUtil.getMillisOfDate(s2.getToDate()) / 1000;
+			    	if (d1 > d2) return 1;
+			    	if (d1 < d2) return -1;
+			    	if (d1 == d2) return 0;
+			        return 0;
+			    }
+			});
+			
+			UserCouponVo firstVo = listUserCouponVo.get(0);
+			Date fistToDate = firstVo.getToDate();
+			List<UserCouponVo> matchUserCoupons = new ArrayList<UserCouponVo>();
+			for (UserCouponVo userCouponVo : listUserCouponVo) {	
+				if (userCouponVo.getToDate().equals(fistToDate)) {
+					matchUserCoupons.add(userCouponVo);
+				}
+			}
+			
+			//1. 找出时间最早的优惠劵
+			Collections.sort(matchUserCoupons, new Comparator<UserCouponVo>() {
+			    @Override
+				public int compare(UserCouponVo s1, UserCouponVo s2) {
+			    	return s2.getValue().compareTo(s1.getValue());
+			    }
+			});
+			
+			resultData.put("total", matchUserCoupons.size());
+			resultData.put("coupon", matchUserCoupons.get(0));
+			result.setData(resultData);
 			return result;
 		}
 
 		/*
 		 * 从http://www.jia-he-jia.com/h5/页面领取优惠券
-		 * 
+		 * 周年庆领取优惠券
 		 */
 		@RequestMapping(value = "receive_coupon.json", method = RequestMethod.POST)
 		public AppResultData<String> receiveCoupon(
-				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") Long couponsId) {
+				@RequestParam("mobile") String mobile,@RequestParam("coupons_id") String couponsId) {
 			
 			AppResultData<String> result = new AppResultData<String>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,"");
@@ -239,37 +303,59 @@ public class UserCouponsController extends BaseController {
 			
 			//判断只有这三种优惠劵可用
 			List<Long> validateCouponIds = new ArrayList<Long>();
-			validateCouponIds.add(4167L);
-			validateCouponIds.add(4168L);
-			validateCouponIds.add(4169L);
+//			validateCouponIds.add(4167L);
+//			validateCouponIds.add(4168L);
+//			validateCouponIds.add(4169L);
+			validateCouponIds.add(4170L);
+			validateCouponIds.add(4171L);
+			validateCouponIds.add(4172L);
+			validateCouponIds.add(4173L);
+			validateCouponIds.add(4174L);
 			
-			if (!validateCouponIds.contains(couponsId)) {
+			String[] couponsIdList = couponsId.split(",");
+			List<Long> list=new ArrayList<Long>();
+			if(couponsIdList.length>0){
+				List<String> asList = Arrays.asList(couponsIdList);
+				for(String str:asList){
+					list.add(Long.valueOf(str));
+				}
+			}
+			
+			if (!validateCouponIds.containsAll(list)) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg("无效的优惠劵");
 				return result;
 			}
-				
-			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
 			
-			if (coupons == null) {
+			CouponSearchVo couponSearchVo=new CouponSearchVo();
+			couponSearchVo.setCouponsIdList(list);
+			List<DictCoupons> couponsList = dictCouponsService.selectBySearchVo(couponSearchVo);
+//			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsIdList);
+			
+			if (couponsList == null) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg("无效的优惠劵");
 				return result;
 			}
 			
 			
-			UserCoupons uc = new UserCoupons();
-			uc.setUserId(u.getId());
-			uc.setCouponId(couponsId);
-			List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
-			if(couponList.isEmpty() ){
-				UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), coupons);
-				userCouponsService.insertSelective(userCoupons);
-			} else {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg("你已经领取过此优惠劵");
-				return result;
+			if(couponsList!=null && couponsList.size()>0){
+				UserCoupons uc = new UserCoupons();
+				uc.setUserId(u.getId());
+				for(int i=0,len=couponsList.size();i<len;i++){
+					uc.setCouponId(couponsList.get(i).getId());
+					List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
+					if(couponList.isEmpty() ){
+						UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), couponsList.get(i));
+						userCouponsService.insertSelective(userCoupons);
+					} else {
+						result.setStatus(Constants.ERROR_999);
+						result.setMsg("你已经领取过此优惠劵");
+						return result;
+					}
+				}
 			}
+			
 			
 			return result;
 		}

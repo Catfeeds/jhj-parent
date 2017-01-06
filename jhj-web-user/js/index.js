@@ -1,3 +1,8 @@
+myApp.onPageInit('index', function(page) {
+	removeSessionData();
+})
+
+
 function getUserInfo() {
 	
 	var userId = localStorage['user_id'];

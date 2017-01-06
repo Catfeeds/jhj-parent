@@ -30,8 +30,8 @@ public interface OrderPriceExtService {
 
 	String getOverWorkStr(Long orderId);
 
-	BigDecimal getOrderOverWorkIncoming(Orders order, Long staffId);
+	BigDecimal getOrderOverWorkIncoming(Orders order, OrderPriceExt op, Long staffId);
 
-	BigDecimal getOrderExtPay(OrderPriceExt orderPriceExt, Long staffId, Short orderExtType);
+	BigDecimal getTotalOrderExtPay(Orders order, Short orderExtType);
 
 }

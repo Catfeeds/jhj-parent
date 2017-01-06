@@ -3,7 +3,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 	var userId = localStorage.getItem("user_id");
 	var cardId = page.query.card_id;
 //	var cardPay = page.query.card_pay;
-	var orderPayType = 2;
+	
 	localStorage.removeItem("pay_card_id");
 //	localStorage.setItem("pay_card_id",cardId);
 	if (userId == undefined || userId == '' || userId == 0) {
@@ -38,7 +38,16 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 //			}
 //		});
 //	}
-
+	
+	//m默认支付方式
+	var orderPayType = 2;
+	var isWx = isWeiXin();
+	if(isWx){
+		$$("#zhifubao-pay").css("display","none");
+	}else{
+		$$("#wexin-pay").css("display","none");
+		orderPayType = 1;
+	}
 
 	var postCardBuySuccess =function(data, textStatus, jqXHR) {
 
@@ -48,6 +57,19 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 			return;
 		}
 		var orderId = result.data.id;
+		var orderNo = result.data.card_order_no;
+		var orderPay = result.data.card_pay;
+		
+		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
+		if (orderPayType == 1) {
+			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_card_order.jsp";
+			alipayUrl +="?orderNo="+orderNo;
+			alipayUrl +="&orderPay="+orderPay;
+			alipayUrl +="&orderType=0";
+			alipayUrl +="&payOrderType=1";
+			location.href = alipayUrl;
+		}
+		
 		//如果为微信支付，则需要跳转到微信支付页面.
 		if (orderPayType == 2) {
 			var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
@@ -64,7 +86,7 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 		var postdata = {};
 		postdata.user_id = userId;
 		postdata.card_type = cardId;
-		postdata.pay_type = 2;
+		postdata.pay_type = orderPayType;
 		postdata.staff_code=$$("#staffCode").val();
 
 		$$.ajax({

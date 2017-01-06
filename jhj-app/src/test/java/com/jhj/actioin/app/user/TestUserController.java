@@ -5,11 +5,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import com.jhj.action.app.JUnitActionBase;
+import com.jhj.po.model.user.Users;
+import com.jhj.service.users.UsersService;
+import com.jhj.vo.user.UserSearchVo;
+import com.meijia.utils.SmsUtil;
 
 public class TestUserController extends JUnitActionBase {
 	
@@ -69,6 +77,33 @@ public class TestUserController extends JUnitActionBase {
 	    resultActions.andExpect(status().isOk());
 
 	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
+    }
+	
+	@Autowired
+	UsersService userService;
+	
+	@Test
+    public void testSendSms() throws Exception {
+		
+		
+		UserSearchVo userVo=new UserSearchVo();
+		List<Users> userList = userService.selectBySearchVo(userVo);
+		String[] content = new String[]{""};
+		for(int i=0;i<userList.size();i++){
+			HashMap<String, String> sendSms = SmsUtil.SendSms(userList.get(i).getMobile(), "138121", content);
+			System.out.println(sendSms.get("statusCode")+"="+sendSms.get("msg"));
+		}
+		
+		
+//		String url = "/app/user/get_userinfo.json";
+//		String params = "?user_id=4791";
+//		MockHttpServletRequestBuilder getRequest = get(url + params);
+//
+//	    ResultActions resultActions = this.mockMvc.perform(getRequest);
+//	    resultActions.andExpect(content().contentType(this.mediaType));
+//	    resultActions.andExpect(status().isOk());
+//
+//	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
     }
 
 }

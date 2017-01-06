@@ -10,7 +10,7 @@ body{
 
 
 .index-shouye{
-    background:url(../img/bj-banner.png) no-repeat center;
+    background:url(../img/bj-banner.jpg) no-repeat center;
     background-size: 100% 100%;
     width:100%;
     position: relative;
@@ -21,7 +21,7 @@ body{
     height:60px;
 }
 .index-shouye1 img{
-    height:80px;
+    height:80px;；
     margin-top: 10px;
     margin-left: 10px;
 }
@@ -34,7 +34,7 @@ body{
     float: left;
     line-height: 150px;
     padding-left: 30px;
-    color: #89BFF4;
+    color: #f29949;
 }
 .index-shouye2 img{
     height:30px;
@@ -43,11 +43,12 @@ body{
 }
 .index-shouye3{
     position: absolute;
-    left:180px;
-    background: url(../img/mobile1.png) no-repeat center;
-    width:330px;
-    height:451px;
-    padding:80px 77px 60px 77px;
+    left:200px;
+    background: url(../img/mobile4.png) no-repeat center;
+    width:250px;
+    height:471px;
+    padding:58px 68px 65px 56px;
+    overflow:hidden;
 }
 .index-shouye3-1{
     width:100%;
@@ -59,8 +60,10 @@ body{
     height:40px;
     background: #fff;
     position:absolute;
-    right:250px;
+    right:220px;
     border-radius: 5px;
+    top:100px;
+    box-shadow: 3px 3px 3px 3px #ddd;
 }
 .index-shouye4 li{
     width:150px;
@@ -107,6 +110,10 @@ body{
     text-align: center;
     line-height:40px;font-weight: bold;color: #000;
     float: left;
+}
+.index-shouye7-1 li:hover{
+    color:#f29949;
+    text-decoration: underline;
 }
 .index-shouye7-2{
     width:100%;

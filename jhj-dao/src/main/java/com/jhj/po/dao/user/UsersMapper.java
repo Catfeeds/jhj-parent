@@ -75,14 +75,14 @@ public interface UsersMapper {
 
 	List<ChartMapVo> userResyMoneyByQuarter(ChartSearchVo chartSearchVo);
 
-	// 用户余额不足200的人数
+	// 用户余额大于0不足200的人数
 	List<ChartMapVo> userResyMoneyLessTwoByDay(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> userResyMoneyLessTwoByMonth(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> userResyMoneyLessTwoByQuarter(ChartSearchVo chartSearchVo);
 
-	// 余额小于1000的人数
+	// 余额大于200小于1000的人数
 	List<ChartMapVo> userResyMoneyLessThousandByDay(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> userResyMoneyLessThousandByMonth(ChartSearchVo chartSearchVo);
@@ -122,4 +122,6 @@ public interface UsersMapper {
 	List<ChartMapVo> getRestUserAndMoneyByMonth(ChartSearchVo chartSearchVo);
 
 	List<ChartMapVo> getRestUserAndMoneyByQuarter(ChartSearchVo chartSearchVo);
+	
+	List<ChartMapVo> totalNum(ChartSearchVo chartSearchVo);
 }

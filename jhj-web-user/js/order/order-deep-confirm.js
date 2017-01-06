@@ -106,29 +106,32 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		      data : params,
 		      async : true,
 		      success: function(data) {
-		    	  var couponList = data.data;
+		    	  var resultData = data.data;
 		    	  var nums = 0;
-		    	  if (couponList == undefined || couponList == "") {
+		    	  var userCoupon = "";
+		    	  if (resultData == undefined || resultData == "") {
 		    		  nums = 0;
 		    	  } else {
-		    		  nums = couponList.length;
+		    		  nums = resultData.total;
+		    		  userCoupon = resultData.coupon;
 		    	  }
+		    	  var userCouponNameStr = nums + "张可用";
+		    	  
+		    	  //如果有优惠劵，则默认选择最大面值的优惠劵.
 		    	  var userCouponValue = 0;
 	    		  var userCouponId = 0;
 	    		  var userCouponName = "";
-		    	  if(nums>0){
-		    		  $$.each(couponList,function(i,item){
-		    			  if(item.value>userCouponValue){
-		    				  userCouponValue = item.value;
-		    				  userCouponId = item.id;
-		    				  userCouponName = "￥" + userCouponValue;
-		    			  }
-		    		  });
-		    		  sessionStorage.setItem("user_coupon_id", userCouponId);
+	    		  
+	    		  if (userCoupon != undefined && userCoupon != "") {
+	    			  userCouponValue = userCoupon.value;
+	    			  userCouponId = userCoupon.id;
+	    			  userCouponName = "￥" + userCouponValue;
+	    			  
+	    			  sessionStorage.setItem("user_coupon_id", userCouponId);
 	    			  sessionStorage.setItem("user_coupon_name", userCouponName);
 	    			  sessionStorage.setItem("user_coupon_value", userCouponValue);
-		    	  }
-		    	  var userCouponNameStr = nums + "张可用";
+	    		  }
+
 		    	  if (userCouponId != 0 && userCouponValue != 0) {
 		    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
 					  if (orderPayStr < 0) orderPayStr = 0;
@@ -138,9 +141,7 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		    	  
 		    	  console.log("order_pay = " + sessionStorage.getItem("order_pay"));
 		    	  $$("#userCouponName").html(userCouponNameStr);
-		    	  $$("#orderPayStr").html(sessionStorage.getItem("order_pay") + "元");
-		    	  
-//		    	  $$("#userCouponName").html(nums + "张可用")
+		    	  $$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
 		      }
 		});
 	}

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.pagehelper.PageInfo;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
@@ -30,6 +31,7 @@ import com.jhj.service.bs.OrgStaffPayDeptService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.users.UserPushBindService;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffPayDeptVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
@@ -93,12 +95,15 @@ public class StaffPayController extends BaseController {
 		Long startTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
 		Long endTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
 
-		OrgStaffPaySearchVo searchVo = new OrgStaffPaySearchVo();
+		OrderSearchVo searchVo = new OrderSearchVo();
 		searchVo.setStaffId(staffId);
 		searchVo.setStartTime(startTime);
 		searchVo.setEndTime(endTime);
 
-		List<OrgStaffDetailPay> payList = orgStaffDetailPayService.selectByStaffIdAndTimeListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
+		
+		PageInfo plist = orgStaffDetailPayService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
+		
+		List<OrgStaffDetailPay> payList =  plist.getList();
 		List<OrgStaffPayVo> orgStaffPayVoList = new ArrayList<OrgStaffPayVo>();
 		for (int i = 0; i < payList.size(); i++) {
 			OrgStaffDetailPay orgStaffDetailPay = payList.get(i);
@@ -223,7 +228,8 @@ public class StaffPayController extends BaseController {
 		}
 		BigDecimal totalDept = orgStaffFinance.getTotalDept();
 		//更新服务人财务表
-		orgStaffFinance.setTotalDept(new BigDecimal(0));
+		totalDept = totalDept.subtract(orgstaffPayDept.getOrderMoney());
+		orgStaffFinance.setTotalDept(totalDept);
 		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
 		orgStaffFinanceService.updateByPrimaryKey(orgStaffFinance);
 		
@@ -234,8 +240,8 @@ public class StaffPayController extends BaseController {
 		orgStaffDetailPay.setOrderType((short) 4);
 		orgStaffDetailPay.setOrderId(orgstaffPayDept.getOrderId());
 		orgStaffDetailPay.setOrderNo(orderNo);
-		orgStaffDetailPay.setOrderMoney(totalDept);
-		orgStaffDetailPay.setOrderPay(totalDept);
+		orgStaffDetailPay.setOrderMoney(orgstaffPayDept.getOrderMoney());
+		orgStaffDetailPay.setOrderPay(orgstaffPayDept.getOrderMoney());
 		orgStaffDetailPay.setOrderStatusStr("完成支付");
 		orgStaffDetailPayService.insert(orgStaffDetailPay);
 

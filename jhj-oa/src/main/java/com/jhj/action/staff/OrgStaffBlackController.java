@@ -22,8 +22,8 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffBlackVo;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -83,7 +83,7 @@ public class OrgStaffBlackController extends BaseController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@AuthPassport
 	@RequestMapping(value = "/black-log", method = RequestMethod.GET)
-	public String blackLog(Model model, HttpServletRequest request, OrgStaffDetailPaySearchVo searchVo) {
+	public String blackLog(Model model, HttpServletRequest request, OrderSearchVo searchVo) {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);

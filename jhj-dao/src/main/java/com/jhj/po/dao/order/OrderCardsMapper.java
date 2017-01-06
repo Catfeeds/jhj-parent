@@ -40,6 +40,7 @@ public interface OrderCardsMapper {
 	
 	List<OrderCards> selectByListPage(OrderCardsVo vo);
 	
+	List<OrderCards> selectBySearchVo(OrderCardsVo vo);
 	//统计充值总金额
 	Map<String,Double> countTotal(OrderCardsVo orderCardsVo);
 }

@@ -116,7 +116,7 @@ public class OrderTypeChartController extends BaseController {
 			chartSearchVo.setOrgId(sessionOrgId);
 		}	
 		
-		ChartDataVo chartDataVo = chartTypeService.chartTypeRevenueData(chartSearchVo, timeSeries);
+		ChartDataVo chartDataVo = chartTypeService.getChartTypeData(chartSearchVo, timeSeries);
 		
 		model.addAttribute("chartDatas", chartDataVo);
 		

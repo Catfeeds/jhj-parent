@@ -40,6 +40,9 @@ public class UserSearchVo {
 	
 	private Short isVip;
 	
+	//设置下单超过2单的用户
+	private String orderNum;
+	
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}
@@ -160,4 +163,13 @@ public class UserSearchVo {
 		this.isVip = isVip;
 	}
 
+	public String getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	
 }

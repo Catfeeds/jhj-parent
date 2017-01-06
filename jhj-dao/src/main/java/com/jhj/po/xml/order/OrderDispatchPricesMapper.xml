@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.order.OrderDispatchPricesMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.order.OrderDispatchPrices">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="is_vip" property="isVip" jdbcType="NUMERIC" />
+		<result column="order_id" property="orderId" jdbcType="NUMERIC" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="order_type" property="orderType" jdbcType="NUMERIC" />
+		<result column="service_type_id" property="serviceTypeId" jdbcType="NUMERIC" />
+		<result column="order_status" property="orderStatus" jdbcType="NUMERIC" />
+		<result column="addr_id" property="addrId" jdbcType="NUMERIC" />
+		<result column="addr" property="addr" jdbcType="VARCHAR" />
+		<result column="order_time" property="orderTime" jdbcType="NUMERIC" />
+		<result column="service_date" property="serviceDate" jdbcType="NUMERIC" />
+		<result column="service_hours" property="serviceHours" jdbcType="DOUBLE" />
+		<result column="staff_num" property="staffNum" jdbcType="SMALLINT" />
+		<result column="org_id" property="orgId" jdbcType="NUMERIC" />
+		<result column="parent_id" property="parentId" jdbcType="NUMERIC" />
+		<result column="staff_id" property="staffId" jdbcType="NUMERIC" />
+		<result column="staff_name" property="staffName" jdbcType="VARCHAR" />
+		<result column="staff_mobile" property="staffMobile" jdbcType="CHAR" />
+		<result column="dispatch_status" property="dispatchStatus" jdbcType="NUMERIC" />
+		<result column="user_addr_distance" property="userAddrDistance" jdbcType="INTEGER" />
+		<result column="pay_type" property="payType" jdbcType="NUMERIC" />
+		<result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
+		<result column="order_pay" property="orderPay" jdbcType="DECIMAL" />
+		<result column="order_pay_incoming" property="orderPayIncoming" jdbcType="DECIMAL" />
+		<result column="coupon_id" property="couponId" jdbcType="NUMERIC" />
+		<result column="order_pay_coupon" property="orderPayCoupon" jdbcType="DECIMAL" />
+		<result column="order_pay_coupon_incoming" property="orderPayCouponIncoming" jdbcType="DECIMAL" />
+		<result column="order_pay_ext_diff" property="orderPayExtDiff" jdbcType="DECIMAL" />
+		<result column="order_pay_ext_diff_pay_type" property="orderPayExtDiffPayType" jdbcType="NUMERIC" />
+		<result column="order_pay_ext_diff_incoming" property="orderPayExtDiffIncoming" jdbcType="DECIMAL" />
+		<result column="order_pay_ext_overwork" property="orderPayExtOverwork" jdbcType="DECIMAL" />
+		<result column="order_pay_ext_overwork_incoming" property="orderPayExtOverworkIncoming" jdbcType="DECIMAL" />
+		<result column="incoming_percent" property="incomingPercent" jdbcType="DECIMAL" />
+		<result column="total_order_money" property="totalOrderMoney" jdbcType="DECIMAL" />
+		<result column="total_order_pay" property="totalOrderPay" jdbcType="DECIMAL" />
+		<result column="total_order_incoming" property="totalOrderIncoming" jdbcType="DECIMAL" />
+		<result column="total_order_dept" property="totalOrderDept" jdbcType="DECIMAL" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, mobile, is_vip, order_id, order_no, order_type, service_type_id, order_status,
+		addr_id, addr, order_time, service_date, service_hours,
+		staff_num, org_id, parent_id,
+		staff_id, staff_name, staff_mobile, dispatch_status, user_addr_distance, pay_type,
+		order_money, order_pay, order_pay_incoming,
+		coupon_id, order_pay_coupon, order_pay_coupon_incoming,
+		order_pay_ext_diff, order_pay_ext_diff_pay_type, order_pay_ext_diff_incoming, order_pay_ext_overwork,
+		order_pay_ext_overwork_incoming,
+		incoming_percent, total_order_money, total_order_pay, total_order_incoming, total_order_dept, add_time, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from order_dispatch_prices
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from order_dispatch_prices
+		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
+
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from order_dispatch_prices
+		<include refid="bySearchVo" />
+		order by
+		<if test="orderByProperty!=null">
+			${orderByProperty}
+		</if>
+		<if test="orderByProperty==null or orderByProperty==''">
+			add_time desc
+		</if>
+	</select>
+	
+	<select id="getTotalOrderMoneyMultiStat" resultType="java.util.HashMap"  parameterType="com.jhj.vo.order.OrderSearchVo">
+		select 
+		sum(total_order_money) as totalOrderMoney, sum(total_order_pay) as totalOrderPay,
+		sum(order_pay_coupon) as totalOrderCoupon, sum(total_order_incoming) as totalOrderIncoming,
+		sum(case when pay_type = 0 then order_pay end ) as totalOrderPayType0,
+		sum(case when pay_type = 1 then order_pay end ) as totalOrderPayType1,
+		sum(case when pay_type = 2 then order_pay end ) as totalOrderPayType2,
+		sum(case when pay_type = 6 then order_pay end ) as totalOrderPayType6,
+		sum(case when pay_type = 7 then order_pay end ) as totalOrderPayType7,
+		sum(case when order_pay_ext_diff_pay_type = 0 then order_pay_ext_diff end) as totalOrderPayExtDiffPayType0,
+		sum(case when order_pay_ext_diff_pay_type = 1 then order_pay_ext_diff end) as totalOrderPayExtDiffPayType1,
+		sum(case when order_pay_ext_diff_pay_type = 2 then order_pay_ext_diff end) as totalOrderPayExtDiffPayType2,
+		sum(order_pay_ext_overwork) as totalOrderPayExtOrderWork
+		from order_dispatch_prices
+		<include refid="bySearchVo" />
+	</select>
+
+	<sql id="bySearchVo">
+
+		where 1=1
+
+		<if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="mobile !=null and mobile !='' ">
+			and mobile like CONCAT('%',#{mobile},'%')
+		</if>
+
+		<if test="staffMobile !=null and staffMobile !='' ">
+			and staff_mobile like CONCAT('%',#{staffMobile},'%')
+		</if>
+
+		<if test="staffId != null">
+			and staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orderId != null">
+			and order_id = #{orderId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orderNo != null">
+			and order_no like CONCAT('%','${orderNo}','%' )
+		</if>
+
+		<if test="orderType != null">
+			and order_type = #{orderType,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orderTypes != null">
+			and order_type in
+			<foreach item="item" index="index" collection="orderTypes" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+
+		<if test="orderStatus != null">
+			and order_status = #{orderStatus,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orderStatusList != null">
+			and order_status in
+			<foreach item="item" collection="orderStatusList" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+
+		<if test="serviceType != null">
+			and service_type_id = #{serviceType,jdbcType=NUMERIC}
+		</if>
+
+		<if test="serviceTypes != null">
+			and service_type in
+			<foreach item="item" index="index" collection="serviceTypes" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+
+		<if test="startServiceTime !=null">
+			<![CDATA[ and service_date >= #{startServiceTime}]]>
+		</if>
+
+		<if test="endServiceTime !=null">
+			<![CDATA[ and service_date <= #{endServiceTime}]]>
+		</if>
+
+		<if test="startServiceHourTime !=null">
+			<![CDATA[ and (service_date + service_hour *3600) >= #{startServiceHourTime}]]>
+		</if>
+
+		<if test="endServiceHourTime !=null">
+			<![CDATA[ and (service_date + service_hour *3600) <= #{endServiceHourTime}]]>
+		</if>
+
+		<if test="startAddTime !=null">
+			<![CDATA[ and add_time >= #{startAddTime}]]>
+		</if>
+
+		<if test="endAddTime !=null">
+			<![CDATA[ and add_time <= #{endAddTime}]]>
+		</if>
+
+		<if test="parentId !=null">
+			and parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="orgId !=null and orgId != 0">
+			and org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="addrName !=null and addrName !=''">
+			and MATCH(addr) AGAINST ('${addrName}' IN BOOLEAN MODE)
+		</if>
+
+		<if test="payType!=null">
+			and pay_type = #{payType,jdbcType=NUMERIC}
+		</if>
+
+		<if test="staffName!=null and staffName!=''">
+			and staff_name like CONCAT('%',#{staffName},'%')
+		</if>
+		
+		<if test="dispatchStatus != null">
+			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
+		</if>
+	</sql>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from order_dispatch_prices
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.order.OrderDispatchPrices">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into order_dispatch_prices (user_id, mobile, is_vip,
+		order_id, order_no, order_type,
+		service_type_id, order_status, addr_id,
+		addr, order_time,
+		service_date,
+		service_hours, staff_num, org_id,
+		parent_id, staff_id, staff_name,
+		staff_mobile, dispatch_status, user_addr_distance,
+		pay_type, order_money,
+		order_pay,
+		order_pay_incoming, coupon_id, order_pay_coupon,
+		order_pay_coupon_incoming, order_pay_ext_diff, order_pay_ext_diff_pay_type,
+		order_pay_ext_diff_incoming, order_pay_ext_overwork,
+		order_pay_ext_overwork_incoming, incoming_percent, 
+		total_order_money, total_order_pay,
+		total_order_incoming, total_order_dept, add_time,
+		update_time)
+		values (#{userId,jdbcType=NUMERIC},
+		#{mobile,jdbcType=CHAR}, #{isVip,jdbcType=NUMERIC},
+		#{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=NUMERIC},
+		#{serviceTypeId,jdbcType=NUMERIC}, #{orderStatus,jdbcType=NUMERIC}, #{addrId,jdbcType=NUMERIC},
+		#{addr,jdbcType=VARCHAR}, #{orderTime,jdbcType=NUMERIC},
+		#{serviceDate,jdbcType=NUMERIC},
+		#{serviceHours,jdbcType=DOUBLE}, #{staffNum,jdbcType=SMALLINT}, #{orgId,jdbcType=NUMERIC},
+		#{parentId,jdbcType=NUMERIC},
+		#{staffId,jdbcType=NUMERIC}, #{staffName,jdbcType=VARCHAR},
+		#{staffMobile,jdbcType=CHAR}, #{dispatchStatus,jdbcType=NUMERIC},
+		#{userAddrDistance,jdbcType=INTEGER},
+		#{payType,jdbcType=NUMERIC}, #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL},
+		#{orderPayIncoming,jdbcType=DECIMAL}, #{couponId,jdbcType=NUMERIC}, #{orderPayCoupon,jdbcType=DECIMAL},
+		#{orderPayCouponIncoming,jdbcType=DECIMAL},
+		#{orderPayExtDiff,jdbcType=DECIMAL}, #{orderPayExtDiffPayType,jdbcType=NUMERIC},
+		#{orderPayExtDiffIncoming,jdbcType=DECIMAL}, #{orderPayExtOverwork,jdbcType=DECIMAL},
+		#{orderPayExtOverworkIncoming,jdbcType=DECIMAL}, #{incomingPercent,jdbcType=DECIMAL},
+		#{totalOrderMoney,jdbcType=DECIMAL}, #{totalOrderPay,jdbcType=DECIMAL},
+		#{totalOrderIncoming,jdbcType=DECIMAL},
+		#{totalOrderDept,jdbcType=DECIMAL}, #{addTime,jdbcType=NUMERIC},
+		#{updateTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderDispatchPrices">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into order_dispatch_prices
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="isVip != null">
+				is_vip,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="orderType != null">
+				order_type,
+			</if>
+			<if test="serviceTypeId != null">
+				service_type_id,
+			</if>
+			<if test="orderStatus != null">
+				order_status,
+			</if>
+			<if test="addrId != null">
+				addr_id,
+			</if>
+			<if test="addr != null">
+				addr,
+			</if>
+			<if test="orderTime != null">
+				order_time,
+			</if>
+			<if test="serviceDate != null">
+				service_date,
+			</if>
+			<if test="serviceHours != null">
+				service_hours,
+			</if>
+			<if test="staffNum != null">
+				staff_num,
+			</if>
+			<if test="orgId != null">
+				org_id,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="staffId != null">
+				staff_id,
+			</if>
+			<if test="staffName != null">
+				staff_name,
+			</if>
+			<if test="staffMobile != null">
+				staff_mobile,
+			</if>
+			<if test="dispatchStatus != null">
+				dispatch_status,
+			</if>
+			<if test="userAddrDistance != null">
+				user_addr_distance,
+			</if>
+			<if test="payType != null">
+				pay_type,
+			</if>
+			<if test="orderMoney != null">
+				order_money,
+			</if>
+			<if test="orderPay != null">
+				order_pay,
+			</if>
+			<if test="orderPayIncoming != null">
+				order_pay_incoming,
+			</if>
+			<if test="couponId != null">
+				coupon_id,
+			</if>
+			<if test="orderPayCoupon != null">
+				order_pay_coupon,
+			</if>
+			<if test="orderPayCouponIncoming != null">
+				order_pay_coupon_incoming,
+			</if>
+			<if test="orderPayExtDiff != null">
+				order_pay_ext_diff,
+			</if>
+			<if test="orderPayExtDiffPayType != null">
+				order_pay_ext_diff_pay_type,
+			</if>
+			<if test="orderPayExtDiffIncoming != null">
+				order_pay_ext_diff_incoming,
+			</if>
+			<if test="orderPayExtOverwork != null">
+				order_pay_ext_overwork,
+			</if>
+			<if test="orderPayExtOverworkIncoming != null">
+				order_pay_ext_overwork_incoming,
+			</if>
+			<if test="incomingPercent != null">
+				incoming_percent,
+			</if>
+			<if test="totalOrderMoney != null">
+				total_order_money,
+			</if>
+			<if test="totalOrderPay != null">
+				total_order_pay,
+			</if>
+			<if test="totalOrderIncoming != null">
+				total_order_incoming,
+			</if>
+			<if test="totalOrderDept != null">
+				total_order_dept,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=CHAR},
+			</if>
+			<if test="isVip != null">
+				#{isVip,jdbcType=NUMERIC},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orderType != null">
+				#{orderType,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceTypeId != null">
+				#{serviceTypeId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderStatus != null">
+				#{orderStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addrId != null">
+				#{addrId,jdbcType=NUMERIC},
+			</if>
+			<if test="addr != null">
+				#{addr,jdbcType=VARCHAR},
+			</if>
+			<if test="orderTime != null">
+				#{orderTime,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceDate != null">
+				#{serviceDate,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceHours != null">
+				#{serviceHours,jdbcType=DOUBLE},
+			</if>
+			<if test="staffNum != null">
+				#{staffNum,jdbcType=SMALLINT},
+			</if>
+			<if test="orgId != null">
+				#{orgId,jdbcType=NUMERIC},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				#{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffName != null">
+				#{staffName,jdbcType=VARCHAR},
+			</if>
+			<if test="staffMobile != null">
+				#{staffMobile,jdbcType=CHAR},
+			</if>
+			<if test="dispatchStatus != null">
+				#{dispatchStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="userAddrDistance != null">
+				#{userAddrDistance,jdbcType=INTEGER},
+			</if>
+			<if test="payType != null">
+				#{payType,jdbcType=NUMERIC},
+			</if>
+			<if test="orderMoney != null">
+				#{orderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPay != null">
+				#{orderPay,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayIncoming != null">
+				#{orderPayIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="couponId != null">
+				#{couponId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderPayCoupon != null">
+				#{orderPayCoupon,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayCouponIncoming != null">
+				#{orderPayCouponIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtDiff != null">
+				#{orderPayExtDiff,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtDiffPayType != null">
+				#{orderPayExtDiffPayType,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtDiffIncoming != null">
+				#{orderPayExtDiffIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtOverwork != null">
+				#{orderPayExtOverwork,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtOverworkIncoming != null">
+				#{orderPayExtOverworkIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="incomingPercent != null">
+				#{incomingPercent,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderMoney != null">
+				#{totalOrderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderPay != null">
+				#{totalOrderPay,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderIncoming != null">
+				#{totalOrderIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderDept != null">
+				#{totalOrderDept,jdbcType=DECIMAL},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.order.OrderDispatchPrices">
+		update order_dispatch_prices
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=CHAR},
+			</if>
+			<if test="isVip != null">
+				is_vip = #{isVip,jdbcType=NUMERIC},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orderType != null">
+				order_type = #{orderType,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceTypeId != null">
+				service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="addrId != null">
+				addr_id = #{addrId,jdbcType=NUMERIC},
+			</if>
+			<if test="addr != null">
+				addr = #{addr,jdbcType=VARCHAR},
+			</if>
+			<if test="orderTime != null">
+				order_time = #{orderTime,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceDate != null">
+				service_date = #{serviceDate,jdbcType=NUMERIC},
+			</if>
+			<if test="serviceHours != null">
+				service_hours = #{serviceHours,jdbcType=DOUBLE},
+			</if>
+			<if test="staffNum != null">
+				staff_num = #{staffNum,jdbcType=SMALLINT},
+			</if>
+			<if test="orgId != null">
+				org_id = #{orgId,jdbcType=NUMERIC},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffId != null">
+				staff_id = #{staffId,jdbcType=NUMERIC},
+			</if>
+			<if test="staffName != null">
+				staff_name = #{staffName,jdbcType=VARCHAR},
+			</if>
+			<if test="staffMobile != null">
+				staff_mobile = #{staffMobile,jdbcType=CHAR},
+			</if>
+			<if test="dispatchStatus != null">
+				dispatch_status = #{dispatchStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="userAddrDistance != null">
+				user_addr_distance = #{userAddrDistance,jdbcType=INTEGER},
+			</if>
+			<if test="payType != null">
+				pay_type = #{payType,jdbcType=NUMERIC},
+			</if>
+			<if test="orderMoney != null">
+				order_money = #{orderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPay != null">
+				order_pay = #{orderPay,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayIncoming != null">
+				order_pay_incoming = #{orderPayIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="couponId != null">
+				coupon_id = #{couponId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderPayCoupon != null">
+				order_pay_coupon = #{orderPayCoupon,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayCouponIncoming != null">
+				order_pay_coupon_incoming = #{orderPayCouponIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtDiff != null">
+				order_pay_ext_diff = #{orderPayExtDiff,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtDiffPayType != null">
+				order_pay_ext_diff_pay_type = #{orderPayExtDiffPayType,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtDiffIncoming != null">
+				order_pay_ext_diff_incoming = #{orderPayExtDiffIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtOverwork != null">
+				order_pay_ext_overwork = #{orderPayExtOverwork,jdbcType=DECIMAL},
+			</if>
+			<if test="orderPayExtOverworkIncoming != null">
+				order_pay_ext_overwork_incoming = #{orderPayExtOverworkIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="incomingPercent != null">
+				incoming_percent = #{incomingPercent,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderMoney != null">
+				total_order_money = #{totalOrderMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderPay != null">
+				total_order_pay = #{totalOrderPay,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderIncoming != null">
+				total_order_incoming = #{totalOrderIncoming,jdbcType=DECIMAL},
+			</if>
+			<if test="totalOrderDept != null">
+				total_order_dept = #{totalOrderDept,jdbcType=DECIMAL},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.order.OrderDispatchPrices">
+		update order_dispatch_prices
+		set user_id = #{userId,jdbcType=NUMERIC},
+		mobile = #{mobile,jdbcType=CHAR},
+		is_vip = #{isVip,jdbcType=NUMERIC},
+		order_id = #{orderId,jdbcType=NUMERIC},
+		order_no = #{orderNo,jdbcType=VARCHAR},
+		order_type = #{orderType,jdbcType=NUMERIC},
+		service_type_id = #{serviceTypeId,jdbcType=NUMERIC},
+		order_status = #{orderStatus,jdbcType=NUMERIC},
+		addr_id = #{addrId,jdbcType=NUMERIC},
+		addr =
+		#{addr,jdbcType=VARCHAR},
+		order_time = #{orderTime,jdbcType=NUMERIC},
+		service_date = #{serviceDate,jdbcType=NUMERIC},
+		service_hours =
+		#{serviceHours,jdbcType=DOUBLE},
+		staff_num = #{staffNum,jdbcType=SMALLINT},
+		org_id = #{orgId,jdbcType=NUMERIC},
+		parent_id = #{parentId,jdbcType=NUMERIC},
+		staff_id = #{staffId,jdbcType=NUMERIC},
+		staff_name = #{staffName,jdbcType=VARCHAR},
+		staff_mobile = #{staffMobile,jdbcType=CHAR},
+		dispatch_status =
+		#{dispatchStatus,jdbcType=NUMERIC},
+		user_addr_distance = #{userAddrDistance,jdbcType=INTEGER},
+		pay_type = #{payType,jdbcType=NUMERIC},
+		order_money =
+		#{orderMoney,jdbcType=DECIMAL},
+		order_pay = #{orderPay,jdbcType=DECIMAL},
+		order_pay_incoming = #{orderPayIncoming,jdbcType=DECIMAL},
+		coupon_id =
+		#{couponId,jdbcType=NUMERIC},
+		order_pay_coupon = #{orderPayCoupon,jdbcType=DECIMAL},
+		order_pay_ext_diff_pay_type = #{orderPayExtDiffPayType,jdbcType=DECIMAL},
+		order_pay_coupon_incoming = #{orderPayCouponIncoming,jdbcType=DECIMAL},
+		order_pay_ext_diff = #{orderPayExtDiff,jdbcType=DECIMAL},
+		order_pay_ext_diff_incoming = #{orderPayExtDiffIncoming,jdbcType=DECIMAL},
+		order_pay_ext_overwork =
+		#{orderPayExtOverwork,jdbcType=DECIMAL},
+		order_pay_ext_overwork_incoming = #{orderPayExtOverworkIncoming,jdbcType=DECIMAL},
+		incoming_percent =
+		#{incomingPercent,jdbcType=DECIMAL},
+		total_order_money = #{totalOrderMoney,jdbcType=DECIMAL},
+		total_order_pay = #{totalOrderPay,jdbcType=DECIMAL},
+		total_order_incoming = #{totalOrderIncoming,jdbcType=DECIMAL},
+		total_order_dept = #{totalOrderDept,jdbcType=DECIMAL},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+</mapper>

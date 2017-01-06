@@ -129,8 +129,8 @@ public class OaOrderServiceImpl implements OaOrderService {
 
 		// 助理预约单，存在 ，没有价格 的 一个过程
 		if (orderPrices != null) {
-			BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
-			BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
+			BigDecimal orderMoney = orderPriceService.getTotalOrderMoney(orderPrices);
+			BigDecimal orderPay = orderPriceService.getTotalOrderPay(orderPrices);
 			// 订单总金额
 			oaOrderListVo.setOrderMoney(orderMoney);
 			// 订单实际支付金额
@@ -616,10 +616,10 @@ public class OaOrderServiceImpl implements OaOrderService {
 		// 助理预约单，存在 ，没有价格 的 一个过程
 		if (orderPrices != null) {
 			// 订单总金额
-			BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
+			BigDecimal orderMoney = orderPriceService.getTotalOrderMoney(orderPrices);
 			oaOrderListVo.setOrderMoney(orderMoney);
 			// 订单实际支付金额
-			BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
+			BigDecimal orderPay = orderPriceService.getTotalOrderPay(orderPrices);
 			oaOrderListVo.setOrderPay(orderPay);
 			
 			// 支付方式

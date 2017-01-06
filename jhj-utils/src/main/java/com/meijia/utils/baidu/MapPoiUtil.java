@@ -95,8 +95,15 @@ public class MapPoiUtil {
 		Integer poiDistance = 0;
 		Double dlng1 = Double.valueOf(lng1);
 		Double dlat1 = Double.valueOf(lat1);
-		Double dlng2 = Double.valueOf(lng2);
-		Double dlat2 = Double.valueOf(lat2);
+		Double dlng2=0.0,dlat2=0.0;
+		if(lng2!=null && !lng2.equals("")){
+			dlng2 = Double.valueOf(lng2);
+		}
+//		System.out.println(lng2+"--------------------------------------------------");
+		if(lat2!=null && !lat2.equals("")){
+			dlat2 = Double.valueOf(lat2);
+		}
+		
 		Double d = Distance(dlng1, dlat1, dlng2, dlat2);
 		
 		poiDistance = d.intValue();

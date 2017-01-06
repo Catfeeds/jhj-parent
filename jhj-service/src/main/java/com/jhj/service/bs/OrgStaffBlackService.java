@@ -3,7 +3,8 @@ package com.jhj.service.bs;
 import java.util.List;
 
 import com.jhj.po.model.bs.OrgStaffBlack;
-import com.jhj.vo.staff.OrgStaffDetailPaySearchVo;
+import com.jhj.po.model.bs.OrgStaffFinance;
+import com.jhj.vo.order.OrderSearchVo;
 
 
 /**
@@ -30,7 +31,7 @@ public interface OrgStaffBlackService {
 
 	OrgStaffBlack selectByStaffId(Long userId);
 
-	List<OrgStaffBlack> selectByListPage(OrgStaffDetailPaySearchVo searchVo, int pageNo, int pageSize);
+	List<OrgStaffBlack> selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
 
 	List<OrgStaffBlack> selectByStaffIdAndType(Long staffId);
 
@@ -44,4 +45,6 @@ public interface OrgStaffBlackService {
 	List<Long> selectAllBadRateStaffId();
 	
 	List<OrgStaffBlack> selectAllBadRateStaff();
+
+	boolean checkStaffBlank(OrgStaffFinance orgStaffFinance);
 }

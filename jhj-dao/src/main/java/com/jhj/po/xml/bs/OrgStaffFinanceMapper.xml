@@ -30,14 +30,14 @@
 		where staff_id = #{staffId,jdbcType=NUMERIC}
 	</select>
 	
-	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 		SELECT <include refid="Base_Column_List" />
 		FROM org_staff_finance WHERE 1=1
 		<include refid="bySearchVo" />
 		order by add_time desc
 	</select>
 
-	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 		SELECT <include refid="Base_Column_List" />
 		FROM org_staff_finance WHERE 1=1
 		<include refid="bySearchVo" />
@@ -64,15 +64,6 @@
 			</foreach>
 		</if>
 
-		<if test="searchCloudOrgIdList!=null and searchCloudOrgIdList.size()>0">
-			and staff_id in (
-			select staff_id from org_staffs where org_id in
-			<foreach item="item" collection="searchCloudOrgIdList" separator="," open="(" close=")" index="">
-				${item}
-			</foreach>
-			)
-		</if>
-		
 		<if test="parentId!=null">
 			and staff_id in (select staff_id from org_staffs where parent_org_id = #{parentId})
 		</if>
@@ -226,7 +217,7 @@
 		id = #{id,jdbcType=NUMERIC}
 	</update>
 	
-	<select id="totalMoney" resultType="java.util.Map" parameterType="com.jhj.vo.staff.OrgStaffDetailPaySearchVo">
+	<select id="totalMoney" resultType="java.util.Map" parameterType="com.jhj.vo.order.OrderSearchVo">
 		SELECT sum(total_incoming) as totalIncoming,sum(total_dept) as totalDept,sum(total_cash) as totalCash,sum(rest_money) as restMoney 
 		from org_staff_finance
 		<where>

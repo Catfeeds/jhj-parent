@@ -139,6 +139,7 @@ function getAddrByMobile(addrId) {
 	
 	if (mobile == "" || mobile == undefined) return false;
 	
+	
 	$("#addrId").find(":nth-child(2)").remove();
 	var reg = /^1[3,4,5,6,7,8,9]\d{9}$/;
 	if (reg.test(mobile)) {
@@ -155,7 +156,7 @@ function getAddrByMobile(addrId) {
 					var userId = data.data.id;
 					$("#userId").data("userId", userId)
 					$("#mobile").data("mobile", mobile);
-					$("#userId").text(userId);
+					$("#userId").val(userId);
 					
 					var isVip = data.data.isVip;
 					$("#isVip").val(isVip);
@@ -200,19 +201,24 @@ getAddrByMobile(0);
 function saveFrom() {
 	
 	var params = {};
-	params.userId = $("#userId").text();
+	params.userId = $("#userId").val();
 	params.mobile = $("#mobile").val();
 	params.addrId = $("#addrId").val();
 	params.serviceType = $("#serviceType").val();
 	params.orderPay = $("#orderPay").val();
 	params.orderFrom = $("#orderForm").val();
 	var serviceDate = $("#serviceDate").val();
-	params.serviceDate = moment(serviceDate + ":00", "yyyy-MM-DD HH:mm:ss").unix();
+	
+	params.serviceDate = moment(serviceDate + ":00", "YYYY-MM-DD HH:mm:ss").unix();
 	params.serviceHour = $("input[name='serviceHour']").val();
 	params.staffNums = $("#staffNums").val();
 	params.orderOpFrom = $("select[name='orderOpFrom']").val();
 	params.remarks = $("#remarks").val();
 	var order_pay_type = $("#orderPayType").val();
+	
+	var couponsId = $("input[name='couponsId']:selected").val();
+	params.coupons_id = couponsId;
+	
 	if ($('#orderHourForm').validate().form()) {
 		$('#submitForm').attr('disabled', "true");
 		$.ajax({
@@ -220,11 +226,12 @@ function saveFrom() {
 			url : "/jhj-app/app/order/post_hour.json",
 			data : params,
 			dataType : "json",
+			async:false,
 			success : function(data) {
 				var orderNo = data.data.order_no;
 				var userId = data.data.user_id;
 				if (data.status == 0) {
-					savePay(order_pay_type, orderNo, userId);
+					savePay(order_pay_type, orderNo, userId,couponsId);
 				}
 				if (data.status == 999) {
 					alert(data.msg);
@@ -236,17 +243,19 @@ function saveFrom() {
 }
 
 // 订单的支付方式
-function savePay(orderPayType, orderNo, userId) {
+function savePay(orderPayType, orderNo, userId,couponsId) {
 	var data = {};
 	data.order_pay_type = orderPayType;
 	data.order_no = orderNo;
 	data.user_id = userId;
+	data.coupon_id = couponsId;
 	if (orderNo != null && userId != null) {
 		$.ajax({
 			type : "post",
 			url : "/jhj-app/app/order/post_pay.json",
 			data : data,
 			dataType : "json",
+			async:false,
 			success : function(data) {
 				alert("订单添加成功！");
 				location.href = "order-hour-list";
@@ -270,7 +279,7 @@ function regUser(mobile) {
 			},
 			dataType : "json",
 			success : function(data) {
-				$("#userId").text(data.data);
+				$("#userId").val(data.data);
 				$("#userId").data("userId", data.data)
 				$("#mobile").data("mobile", $("#mobile").val());
 			}
@@ -350,7 +359,10 @@ function chageServiceType(){
 			$("#minServiceHour").val(serviceType.service_hour);
 			$("#staffNums").val(1);
 	    	
-	    	changePrice();
+			changePrice();
+			
+			
+			
 		}
 	});
 	
@@ -360,7 +372,7 @@ function chageServiceType(){
 	
 }
 
-function changePrice() {
+function changePrice(couponsValue) {
 	var serviceHours = $("#serviceHour").val();
 	serviceHours = serviceHours.replace(/\D|^0/g,'');
 	var staffNums = $("#staffNums").val();
@@ -390,13 +402,25 @@ function changePrice() {
 		orderHourPrice = mprice;
 	}
 	
+	if(couponsValue==undefined || couponsValue==null || couponsValue==''){
+		var val = $("#couponsId").find(":selected").text();
+		couponsValue = parseInt(val);
+	}
+	
 	if (staffNums == 1 && serviceHours == minServiceHour) {
-		$("#orderPay").val(orderHourPay);
+		$("#orderPay").val(orderHourPay-couponsValue);
 	}
 	if (staffNums > 1 || serviceHours > minServiceHour) {
-		orderPay = orderHourPrice * serviceHours * staffNums;
+		orderPay = orderHourPrice * serviceHours * staffNums-couponsValue;
 		$("#orderPay").val(orderPay);
 	}
 }
 
 chageServiceType();
+
+//选择优惠券
+function selectCoupons(){
+	var couponsValue = $("#couponsId").find(":selected").text();
+	var value = parseInt(couponsValue);
+	changePrice(value);
+}

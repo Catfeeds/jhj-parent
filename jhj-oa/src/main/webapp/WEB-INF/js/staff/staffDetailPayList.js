@@ -23,3 +23,48 @@ function checkEndTime(){
     }  
     return true;  
 } 
+
+function searchSubmit() {
+	var actionUrl = "/jhj-oa/staff/staffPay-list";
+	$("#searchForm").attr("action", actionUrl);
+	$("#searchForm").submit();
+}
+
+function exportStaffOrder() {
+	var selectStaff = $("#selectStaff").val();
+	console.log("selectStaff = "+ selectStaff); 
+	if (selectStaff == undefined || selectStaff == "" || selectStaff == 0) {
+		alert("请选择服务人员.");
+		return false;
+	}
+
+	var startTimeStr = $("#startTimeStr").val();
+	if (startTimeStr == undefined || startTimeStr == "") {
+		alert("请选择开始时间.");
+		return false;
+	}
+	
+	var endTimeStr = $("#endTimeStr").val();
+	if (endTimeStr == undefined || endTimeStr == "") {
+		alert("请选择结束时间.");
+		return false;
+	}
+	
+	var exportUrl = "/jhj-oa/staff/export-order";
+	$("#searchForm").attr("action", exportUrl);
+	$("#searchForm").submit();
+}
+
+
+function exportStaffPayDept() {
+	var selectStaff = $("#selectStaff").val();
+	console.log("selectStaff = "+ selectStaff); 
+	if (selectStaff == undefined || selectStaff == "" || selectStaff == 0) {
+		alert("请选择服务人员.");
+		return false;
+	}
+	
+	var exportUrl = "/jhj-oa/staff/export-pay-dept";
+	$("#searchForm").attr("action", exportUrl);
+	$("#searchForm").submit();
+}

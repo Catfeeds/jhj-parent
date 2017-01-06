@@ -92,19 +92,19 @@
 								${item.基础服务}
 							</a>
 						</td>
-						<td>${item.基础服务营业额占比}</td>
+						<td>${item.基础服务占比}</td>
 						<td>
 							<a href="../order/order-exp-list?startTime=${item.startTime }&endTime=${item.endTime}">
 								${item.深度服务}
 							</a>
 						</td>
-						<td>${item.深度服务营业额占比}</td>
+						<td>${item.深度服务占比}</td>
 						<td>
 							<a href="../order/order-exp-baby-list?startTime=${item.startTime }&endTime=${item.endTime}">
 								${item.母婴到家 }
 							</a>
 						</td>
-						<td>${item.母婴到家营业额占比 }</td>
+						<td>${item.母婴到家占比 }</td>
 					</tr>
 				</c:forEach>
 				</tbody>

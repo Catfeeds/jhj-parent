@@ -124,8 +124,8 @@ public class OrderHourDetailServiceImpl implements OrderHourDetailService {
 			}
 		}
 		
-		BigDecimal orderMoney = orderPriceService.getOrderMoney(orderPrices);
-		BigDecimal orderPay = orderPriceService.getOrderPay(orderPrices);
+		BigDecimal orderMoney = orderPriceService.getTotalOrderMoney(orderPrices);
+		BigDecimal orderPay = orderPriceService.getTotalOrderPay(orderPrices);
 		orderHourViewVo.setOrderMoney(orderMoney);
 		//实际支付金额
 		orderHourViewVo.setOrderPay(orderPay);

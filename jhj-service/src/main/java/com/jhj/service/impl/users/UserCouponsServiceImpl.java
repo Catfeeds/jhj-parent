@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -250,8 +251,18 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		}
 
 		// 3. 判断优惠劵是否在有效期内,包括开始时间和结束时间
-		if (userCoupon.getFromDate().after(DateUtil.getNowOfDate())
-				|| userCoupon.getToDate().before(DateUtil.getNowOfDate())) {
+		Long serviceDate = order.getServiceDate();
+		Date fromDate = userCouponVo.getFromDate();
+		String fromDateStr = DateUtil.formatDate(fromDate);
+		Long startTime = TimeStampUtil.getMillisOfDayFull(fromDateStr + " 00:00:00");
+		startTime = startTime / 1000;
+		
+		Date toDate = userCouponVo.getToDate();
+		String toDateStr = DateUtil.formatDate(toDate);
+		Long endTime = TimeStampUtil.getMillisOfDayFull(toDateStr + " 23:59:59");
+		endTime = endTime / 1000;
+		
+		if (serviceDate < startTime || serviceDate > endTime) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg(ConstantMsg.COUPON_IS_INVALID);
 			return result;

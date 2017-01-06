@@ -19,3 +19,7 @@ target
 *thumbs.db
 /jhj-app/*.gitignore
 /jhj-app/bin/*.gitignore
+
+# ignore node files
+/jhj-web-user/node_modules/
+/jhj-web-user/npm-debug.log

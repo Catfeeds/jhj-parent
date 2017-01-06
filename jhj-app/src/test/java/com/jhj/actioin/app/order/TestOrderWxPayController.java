@@ -32,4 +32,22 @@ public class TestOrderWxPayController extends JUnitActionBase  {
 	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
 
     }
+	
+	//充值支付宝支付
+	@Test
+    public void testZhifubaoPay() throws Exception {
+
+		String url = "/app/order/online_pay_cardOrder_notify.json";
+		String params = "?trade_no=2016121721001004990231104133&notify_time=2016-12-1717:47:47&pay_type=1&notify_id=604b305db8f7436450b291d12b7dfe4nn2&order_no=810058855336644608&trade_status=TRADE_SUCCESS&pay_order_type=1&pay_account=15201023689";
+		MockHttpServletRequestBuilder getRequest = post(url + params);
+
+	    ResultActions resultActions = this.mockMvc.perform(getRequest);
+	    resultActions.andExpect(content().contentType(this.mediaType));
+	    resultActions.andExpect(status().isOk());
+
+	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
+
+
+    }
+	
 }

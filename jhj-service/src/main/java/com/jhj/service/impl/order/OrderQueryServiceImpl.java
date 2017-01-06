@@ -137,8 +137,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(vo.getId());
 		if (orderPrice != null) {
 			
-			BigDecimal orderMoney = orderPricesService.getOrderMoney(orderPrice);
-			BigDecimal orderPay = orderPricesService.getOrderPay(orderPrice);
+			BigDecimal orderMoney = orderPricesService.getTotalOrderMoney(orderPrice);
+			BigDecimal orderPay = orderPricesService.getTotalOrderPay(orderPrice);
 			vo.setPayType(orderPrice.getPayType());
 			vo.setOrderMoney(orderMoney);
 			vo.setOrderPay(orderPay);
@@ -537,10 +537,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setOrderIncoming(new BigDecimal(0));
 		vo.setOrderMoney(new BigDecimal(0));
 		if (orderPrice != null) {
-			BigDecimal orderPay = orderPricesService.getOrderPay(orderPrice);
+			BigDecimal orderPay = orderPricesService.getTotalOrderPay(orderPrice);
 			vo.setOrderMoney(orderPay);
 			
-			BigDecimal orderIncoming = orderPricesService.getOrderIncoming(item, staffId);
+			BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(item, staffId);
 			vo.setOrderIncoming(orderIncoming);
 
 		}
@@ -680,7 +680,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 2. 如果为店长，则只能看当前门店和已派工到该门店的人员.
 		
 		// 判断是否为店长登陆，如果org > 0L ，则为某个店长，否则为运营人员.
-		searchVo.setOrderType(orderType);
+		if (orderType != null) {
+			searchVo.setOrderType(orderType);
+		}
+		
 		if (sessionParentId > 0L)
 			searchVo.setParentId(sessionParentId);
 		// 处理查询条件云店--------------------------------开始
@@ -720,13 +723,40 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		// 服务开始时间
 		String serviceStartTime = request.getParameter("serviceStartTimeStr");
 		if (!StringUtil.isEmpty(serviceStartTime)) {
+			
+			if (serviceStartTime.length() == 10) serviceStartTime = serviceStartTime + " 00:00";
+			
 			searchVo.setStartServiceTime(TimeStampUtil.getMillisOfDayFull(serviceStartTime+":00") / 1000);
 		}
 		// 服务结束时间
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr)) {
-			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":00") / 1000);
+			
+			if (serviceEndTimeStr.length() == 10) serviceEndTimeStr = serviceEndTimeStr + " 23:59";
+			
+			searchVo.setEndServiceTime(TimeStampUtil.getMillisOfDayFull(serviceEndTimeStr+":59") / 1000);
 		}
+		
+		
+		// 服务完成开始时间
+		String startUpdateTimeStr = request.getParameter("startUpdateTimeStr");
+		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+			
+			if (startUpdateTimeStr.length() == 10) startUpdateTimeStr = startUpdateTimeStr + " 00:00";
+			
+			searchVo.setStartUpdateTime(TimeStampUtil.getMillisOfDayFull(startUpdateTimeStr+":00") / 1000);
+			
+		}
+		
+		
+		String endUpdateTimeStr = request.getParameter("endUpdateTimeStr");
+		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+			
+			if (endUpdateTimeStr.length() == 10) endUpdateTimeStr = endUpdateTimeStr + " 23:59";
+			
+			searchVo.setEndUpdateTime(TimeStampUtil.getMillisOfDayFull(endUpdateTimeStr+":59") / 1000);
+		}
+		
 		// 处理查询时间条件--------------------------------结束
 
 		// 处理查询状态条件--------------------------------开始
@@ -764,17 +794,48 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			searchVo.setOrderFrom((short)1);
 			searchVo.setOrderOpFrom(null);
 		}
+		
+		//服务人员姓名选择
+		if (searchVo.getSelectStaff() != null && searchVo.getSelectStaff() > 0L) {
+			searchVo.setStaffId(searchVo.getSelectStaff());
+		}
+		
+		if(searchVo.getStaffName()!=null && !searchVo.getStaffName().equals("")){
+			String staffName = searchVo.getStaffName();
+			try {
+				searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		String orderNo = request.getParameter("orderNo");
+		if (!StringUtil.isEmpty(orderNo)) {
+			searchVo.setOrderNo(orderNo);
+		}
+		
 		return searchVo;
 	}
 
-	//订单总收入
+	//订单支付金额
 	@Override
-	public BigDecimal getTotalOrderIncomeMoney(OrderSearchVo vo) {
+	public BigDecimal getTotalOrderPay(OrderSearchVo vo) {
 		List<Short> orderStatusList=new ArrayList<Short>();
 		orderStatusList.add((short)7);
 		orderStatusList.add((short)8);
-		orderStatusList.add((short)9);
-		vo.setOrderStatusList(orderStatusList);
-		return ordersMapper.getTotalOrderIncomeMoney(vo);
+//		orderStatusList.add((short)9);
+//		vo.setOrderStatusList(orderStatusList);
+		return ordersMapper.getTotalOrderPay(vo);
+	}
+	
+	//订单补差价 + 订单加时金额
+	@Override
+	public BigDecimal getTotalOrderPayExt(OrderSearchVo vo) {
+		List<Short> orderStatusList=new ArrayList<Short>();
+		orderStatusList.add((short)7);
+		orderStatusList.add((short)8);
+//		orderStatusList.add((short)9);
+//		vo.setOrderStatusList(orderStatusList);
+		return ordersMapper.getTotalOrderPayExt(vo);
 	}
 }
