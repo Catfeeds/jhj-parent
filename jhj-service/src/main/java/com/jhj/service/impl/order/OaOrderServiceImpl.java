@@ -782,6 +782,26 @@ public class OaOrderServiceImpl implements OaOrderService {
 		}
 		oaOrderListVo = OrderUtils.isOrderSrc(orderFrom,orderOpFrom,oaOrderListVo,cooperativeBusiness);
 		
+		//获取补时或补差价的金额和类型
+		OrderSearchVo vo = new OrderSearchVo();
+		vo.setOrderId(orders.getId());
+		vo.setOrderStatus((short) 2);
+		List<OrderPriceExt> orderPriceExtList = orderPriceExtService.selectBySearchVo(vo);
+		BigDecimal spreadMoeny = new BigDecimal(0);
+		if(orderPriceExtList.size()>0){
+			int orderExtType=-1;
+			short payTypeExt=-1;
+			for (OrderPriceExt item : orderPriceExtList) {
+				BigDecimal orderPayExt = item.getOrderPay();
+				spreadMoeny = MathBigDecimalUtil.add(spreadMoeny, orderPayExt);
+				orderExtType = item.getOrderExtType();
+				payTypeExt = item.getPayType();
+			}
+			oaOrderListVo.setOrderExtType(orderExtType);
+			oaOrderListVo.setPayTypeExt(payTypeExt);
+		}
+		oaOrderListVo.setSpreadMoeny(spreadMoeny);
+		
 		return oaOrderListVo;
 	}
 

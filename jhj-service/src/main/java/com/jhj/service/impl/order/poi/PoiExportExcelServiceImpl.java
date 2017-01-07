@@ -1,5 +1,6 @@
 package com.jhj.service.impl.order.poi;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +57,23 @@ public class PoiExportExcelServiceImpl implements PoiExportExcelService {
 			mapValue.put("orderOpFromName", vo.getOrderOpFromName());
 //			mapValue.put("orderMoney", vo.getOrderMoney());
 			mapValue.put("orderPay", vo.getOrderPay());
+			BigDecimal spreadMoeny = vo.getSpreadMoeny();
+			BigDecimal comp=new BigDecimal(0);
+			if(spreadMoeny.compareTo(comp)>0){
+				StringBuffer sb=new StringBuffer();
+				short payTypeExt = vo.getPayTypeExt();
+				String payTypeName = OneCareUtil.getPayTypeName(payTypeExt);
+				
+				if(vo.getOrderExtType()==0){
+					sb.append("补差价：").append(payTypeName);
+					mapValue.put("spreadMoeny", vo.getSpreadMoeny());
+				}
+				if(vo.getOrderExtType()==1){
+					sb.append("补时：").append(payTypeName);
+					mapValue.put("spreadMoeny", vo.getSpreadMoeny());
+				}
+				mapValue.put("orderExtType", sb.toString());
+			}
 
 			listmap.add(mapValue);
 		}
