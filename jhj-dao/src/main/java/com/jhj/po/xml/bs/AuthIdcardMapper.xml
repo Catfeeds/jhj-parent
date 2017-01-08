@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.bs.AuthIdcardMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.bs.AuthIdcard">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="id_card" property="idCard" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, name, id_card, content, add_time, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from auth_idcard
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.AuthIdCardSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from auth_idcard
+		<include refid="bySearchVo"/>
+		order by add_time desc
+	</select>
+	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.AuthIdCardSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from auth_idcard
+		<include refid="bySearchVo"/>
+		order by add_time desc
+	</select>
+	
+	<sql id="bySearchVo">
+	    where 1 = 1
+	    <if test="name != null">
+			and name = #{name,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="idCard != null">
+			and id_card = #{idCard,jdbcType=VARCHAR}
+		</if>
+	</sql>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from auth_idcard
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.bs.AuthIdcard">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into auth_idcard (name, id_card, content,
+		add_time, update_time)
+		values (#{name,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.bs.AuthIdcard">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into auth_idcard
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="idCard != null">
+				id_card,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="idCard != null">
+				#{idCard,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.bs.AuthIdcard">
+		update auth_idcard
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="idCard != null">
+				id_card = #{idCard,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.bs.AuthIdcard">
+		update auth_idcard
+		set name = #{name,jdbcType=VARCHAR},
+		id_card = #{idCard,jdbcType=VARCHAR},
+		content = #{content,jdbcType=VARCHAR},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+</mapper>

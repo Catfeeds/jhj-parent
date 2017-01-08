@@ -78,13 +78,13 @@
 								<thead>
 									<tr>
 										<th>员工头像</th>
-										<th>门店名称</th>
-										<th>云店名称</th>
-										<th>服务人员姓名</th>
+										<th>门店</th>
+										<th>姓名</th>
 										<th>性别</th>
 										<th>出生日期</th>
 										<th>籍贯</th>
 										<th>身份证号</th>
+										<th>实名认证</th>
 										<th>电话号码</th>
 										<th>是否可用</th>
 										<th>操作</th>
@@ -95,8 +95,7 @@
 										<tr>
 											<td><img id="head_img" src="${ orgStaff.headImg }" width="60px" height="60px"
 													onerror="this.onerror=null;this.src='/jhj-oa/upload/headImg/default-head-img.png'"></td>
-											<td>${ orgStaff.parentOrgName }</td>
-											<td>${ orgStaff.orgName }</td>
+											<td>${ orgStaff.parentOrgName } - ${ orgStaff.orgName }</td>
 											<td>${ orgStaff.name }</td>
 											<td><c:choose>
 													<c:when test="${ orgStaff.sex == 0}">
@@ -109,6 +108,15 @@
 											<td><fmt:formatDate value="${ orgStaff.birth}" pattern="yyyy-MM-dd" /></td>
 											<td>${ orgStaff.nativePlace }</td>
 											<td>${ orgStaff.cardId }</td>
+											<td>
+												<c:if test="${orgStaff.isAuthIdCard == 0 }">
+													<font color="red">未认证</font>
+												</c:if>
+												
+												<c:if test="${orgStaff.isAuthIdCard == 1 }">
+													<font color="green">已认证</font>
+												</c:if>
+											</td>
 											<td>${ orgStaff.mobile }</td>
 											<td><c:choose>
 													<c:when test="${ orgStaff.status == 0}">
