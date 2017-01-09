@@ -359,6 +359,7 @@ function chageServiceType(){
 			$("#minServiceHour").val(serviceType.service_hour);
 			$("#staffNums").val(1);
 	    	
+			sessionStorage.removeItem("totalOrderPay");
 			changePrice();
 			
 			
@@ -410,15 +411,19 @@ function changePrice(couponsValue) {
 	
 	
 	if (staffNums == 1 && serviceHours == minServiceHour) {
-		$("#orderPay").val(orderHourPay);
-		var totalPrice = $("#orderPay").val();
-		$("#orderPay").val(totalPrice-couponsValue);
+		var val = sessionStorage.getItem("totalOrderPay");
+		if(parseFloat(val)>0){
+			totalOrderPay = val;
+		}
+		$("#orderPay").val(totalOrderPay-couponsValue);
 	}
 	if (staffNums > 1 || serviceHours > minServiceHour) {
 		orderPay = orderHourPrice * serviceHours * staffNums-couponsValue;
-		$("#orderPay").val(orderPay);
-		var totalPrice = $("#orderPay").val();
-		$("#orderPay").val(totalPrice-couponsValue);
+		var val = sessionStorage.getItem("totalOrderPay");
+		if(parseFloat(val)>0){
+			orderPay = val;
+		}
+		$("#orderPay").val(orderPay-couponsValue);
 	}
 }
 
@@ -429,4 +434,9 @@ function selectCoupons(){
 	var couponsValue = $("#couponsId").find(":selected").text();
 	var value = parseInt(couponsValue);
 	changePrice(value);
+}
+
+function setValue(){
+	var orderPay = $("#orderPay").val();
+	sessionStorage.setItem("totalOrderPay",orderPay);
 }

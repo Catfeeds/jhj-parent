@@ -145,7 +145,7 @@
 												<font color="red">*</font>价格
 											</label>
 											<div class="col-md-5">
-												<input type="text" id="orderPay" name="orderPay" class="form-control" value="">
+												<input type="text" id="orderPay" name="orderPay" class="form-control" value="" oninput="setValue()"/>
 												<input type="hidden" id="hour-price" value="${hour.price }"/>
 												<input type="hidden" id='cook-price' value="${cook.price }"/>
 											</div>
