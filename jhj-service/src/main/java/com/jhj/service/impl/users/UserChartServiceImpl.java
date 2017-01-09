@@ -103,7 +103,7 @@ public class UserChartServiceImpl implements UserChartService {
 		List<ChartMapVo> chartMapVoRate= new ArrayList<ChartMapVo>();
 
 		if (chartSearchVo.getStatType().equals("day")) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statDatas = usersMapper.statByDay(chartSearchVo);
 			chartMapVos = orderMapper.totalByRate(chartSearchVo);
 			chartMapVoRate = orderMapper.totalByRateOrder(chartSearchVo);
@@ -148,18 +148,14 @@ public class UserChartServiceImpl implements UserChartService {
 			//处理vip用户数据
 			for (ChartMapVo chartSqlData : statDatas) {
 			// 处理表格形式的数据.
-				String str = tableDataItem.get("series").split("-")[1];
-				String str1 = chartSqlData.getSeries().split("-")[1];
-				if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series");
-					str1 = chartSqlData.getSeries();
-				}
+				String str = tableDataItem.get("series");
+				String str1 = chartSqlData.getSeries();
 				if (str.equals(str1)) {
 					// 新增订单小计
 					total = total + chartSqlData.getTotal();
 					
 					if(chartSqlData.getTotalVip()!=null){
-						totalVip = totalVip + chartSqlData.getTotalVip();
+						totalVip = totalVip + chartSqlData.getTotalVip(); 
 					}
 				}
 			}
@@ -167,12 +163,8 @@ public class UserChartServiceImpl implements UserChartService {
 			//会员中需要添加的复购率数据
 			Integer totalRate=0;
 			for (ChartMapVo chartSqlData : chartMapVos) {
-				String str = tableDataItem.get("series").split("-")[1];
-				String str1 = chartSqlData.getSeries().split("-")[1];
-				if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series");
-					str1 = chartSqlData.getSeries();
-				}
+				String str = tableDataItem.get("series");
+				String str1 = chartSqlData.getSeries();
 				if (str.equals(str1)) {
 					totalRate = totalRate + chartSqlData.getTotal();
 				}
@@ -183,22 +175,17 @@ public class UserChartServiceImpl implements UserChartService {
 			for (ChartMapVo chartSqlData : chartMapVoRate) {
 				String str = tableDataItem.get("series");
 				String str1 = chartSqlData.getSeries();
-//				if(chartSearchVo.getSelectCycle()==12){
-//					str = tableDataItem.get("series");
-//					
-//				}
 				if (str.equals(str1)) {
 					totalRateOrder = totalRateOrder + chartSqlData.getTotal();
 				}
 			}
 			
 			Integer num=0;
-			int year = DateUtil.getYear();
 			for (ChartMapVo chartSqlData : totalNum) {
 				if(chartSearchVo.getSelectCycle()==1){
-					String str2 =year+"-"+tableDataItem.get("series");
+					String str2 =tableDataItem.get("series");
 					String str3 = chartSqlData.getSeries();
-					if(DateUtil.compareDateStr(str3,str2)>0){
+					if(DateUtil.compareDateStr(str3,str2)>=0){
 						num = num + chartSqlData.getTotal();
 					}
 				}else{

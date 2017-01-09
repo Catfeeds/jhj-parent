@@ -22,6 +22,7 @@ import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.meijia.utils.ChartUtil;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.MathDoubleUtil;
 
@@ -97,7 +98,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statDatas = orderMapper.statByDay(chartSearchVo);
 		}
 		
@@ -167,7 +168,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		List<ChartMapVo> statData = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statData = orderMapper.statByTotal(chartSearchVo);
 		}
 		
@@ -182,12 +183,21 @@ public class OrderChartServiceImpl implements OrderChartService {
 		
 		for (Map<String, String> tableDataItem : tableDatas) {
 			int totalNum=0;
-			String[] str2 = tableDataItem.get("series").split("-");
+			String series = tableDataItem.get("series");
+			String[] str2 = series.split("-");
 			for (ChartMapVo chartSqlData : statData) {
-				String[] str3 = chartSqlData.getSeries().split("-");
-				if (Integer.valueOf(str3[0])<Integer.valueOf(str2[0]) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])){
-					totalNum = totalNum + chartSqlData.getTotal();
+				String seriesSql = chartSqlData.getSeries();
+				String[] str3 = seriesSql.split("-");
+				if(chartSearchVo.getSelectCycle()!=1){
+					if (Integer.valueOf(str3[0])<Integer.valueOf(str2[0]) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])){
+						totalNum = totalNum + chartSqlData.getTotal();
+					}
+				}else{
+					if(DateUtil.parse(series).compareTo(DateUtil.parse(seriesSql))>=0){
+						totalNum = totalNum + chartSqlData.getTotal();
+					}
 				}
+			
 			}
 			tableDataItem.put("订单总数", String.valueOf(totalNum));
 		}
