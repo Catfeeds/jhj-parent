@@ -1,8 +1,6 @@
 package com.jhj.service.impl.users;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -150,12 +148,21 @@ public class UserChartServiceImpl implements UserChartService {
 			// 处理表格形式的数据.
 				String str = tableDataItem.get("series");
 				String str1 = chartSqlData.getSeries();
-				if (str.equals(str1)) {
-					// 新增订单小计
-					total = total + chartSqlData.getTotal();
-					
-					if(chartSqlData.getTotalVip()!=null){
-						totalVip = totalVip + chartSqlData.getTotalVip(); 
+				if(chartSearchVo.getStatType().equals("day")){
+					if(DateUtil.compareDateStr(str1, str)==0){
+						total = total + chartSqlData.getTotal();
+						if(chartSqlData.getTotalVip()!=null){
+							totalVip = totalVip + chartSqlData.getTotalVip(); 
+						}
+					}
+				}else{
+					if (str.equals(str1)) {
+						// 新增订单小计
+						total = total + chartSqlData.getTotal();
+						
+						if(chartSqlData.getTotalVip()!=null){
+							totalVip = totalVip + chartSqlData.getTotalVip(); 
+						}
 					}
 				}
 			}
@@ -165,8 +172,14 @@ public class UserChartServiceImpl implements UserChartService {
 			for (ChartMapVo chartSqlData : chartMapVos) {
 				String str = tableDataItem.get("series");
 				String str1 = chartSqlData.getSeries();
-				if (str.equals(str1)) {
-					totalRate = totalRate + chartSqlData.getTotal();
+				if(chartSearchVo.getStatType().equals("day")){
+					if(DateUtil.compareDateStr(str1, str)==0){
+						totalRate = totalRate + chartSqlData.getTotal();
+					}
+				}else{
+					if (str.equals(str1)) {
+						totalRate = totalRate + chartSqlData.getTotal();
+					}
 				}
 			}
 			
@@ -175,14 +188,20 @@ public class UserChartServiceImpl implements UserChartService {
 			for (ChartMapVo chartSqlData : chartMapVoRate) {
 				String str = tableDataItem.get("series");
 				String str1 = chartSqlData.getSeries();
-				if (str.equals(str1)) {
-					totalRateOrder = totalRateOrder + chartSqlData.getTotal();
+				if(chartSearchVo.getStatType().equals("day")){
+					if(DateUtil.compareDateStr(str1, str)==0){
+						totalRateOrder = totalRateOrder + chartSqlData.getTotal();
+					}
+				}else{
+					if (str.equals(str1)) {
+						totalRateOrder = totalRateOrder + chartSqlData.getTotal();
+					}
 				}
 			}
 			
 			Integer num=0;
 			for (ChartMapVo chartSqlData : totalNum) {
-				if(chartSearchVo.getSelectCycle()==1){
+				if(chartSearchVo.getStatType().equals("day")){
 					String str2 =tableDataItem.get("series");
 					String str3 = chartSqlData.getSeries();
 					if(DateUtil.compareDateStr(str3,str2)>=0){
