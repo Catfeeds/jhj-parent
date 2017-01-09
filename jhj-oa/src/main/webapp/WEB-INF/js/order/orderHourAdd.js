@@ -431,5 +431,5 @@ function selectCoupons(){
 	var couponsValue = $("#couponsId").find(":selected").text();
 	var value = parseInt(couponsValue);
 	var totalPrice = $("#orderPay").val();
-	changePrice(value);
+	changePrice(value,totalPrice);
 }
