@@ -372,7 +372,7 @@ function chageServiceType(){
 	
 }
 
-function changePrice(couponsValue,totalPrice) {
+function changePrice(couponsValue) {
 	var serviceHours = $("#serviceHour").val();
 	serviceHours = serviceHours.replace(/\D|^0/g,'');
 	var staffNums = $("#staffNums").val();
@@ -410,17 +410,15 @@ function changePrice(couponsValue,totalPrice) {
 	
 	
 	if (staffNums == 1 && serviceHours == minServiceHour) {
-		if(parseFloat(totalPrice)>0){
-			orderHourPay = totalPrice;
-		}
-		$("#orderPay").val(orderHourPay-couponsValue);
+		$("#orderPay").val(orderHourPay);
+		var totalPrice = $("#orderPay").val();
+		$("#orderPay").val(totalPrice-couponsValue);
 	}
 	if (staffNums > 1 || serviceHours > minServiceHour) {
 		orderPay = orderHourPrice * serviceHours * staffNums-couponsValue;
-		if(parseFloat(totalPrice)>0){
-			orderPay = totalPrice;
-		}
 		$("#orderPay").val(orderPay);
+		var totalPrice = $("#orderPay").val();
+		$("#orderPay").val(totalPrice-couponsValue);
 	}
 }
 
@@ -430,6 +428,5 @@ chageServiceType();
 function selectCoupons(){
 	var couponsValue = $("#couponsId").find(":selected").text();
 	var value = parseInt(couponsValue);
-	var totalPrice = $("#orderPay").val();
-	changePrice(value,totalPrice);
+	changePrice(value);
 }

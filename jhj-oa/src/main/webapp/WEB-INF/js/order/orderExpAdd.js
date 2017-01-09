@@ -393,7 +393,7 @@ function serviceTypeChange() {
 
 serviceTypeChange();
 
-function changePrice(couponsValue,totalPrice) {
+function changePrice(couponsValue) {
 	$("#orderPay").val(0);
 	$("#serviceHour").val(0);
 	$("#serviceAddonDatas").val("");
@@ -456,10 +456,9 @@ function changePrice(couponsValue,totalPrice) {
 	
 	if (totalOrderPay != undefined && totalOrderPay != "" && totalOrderPay != 0) {
 		totalOrderPay = totalOrderPay.toFixed(2);
-		if(parseFloat(totalPrice)>0){
-			totalOrderPay = totalPrice;
-		}
-		$("#orderPay").val(totalOrderPay-couponsValue);
+		$("#orderPay").val(totalOrderPay);
+		var totalPrice = $("#orderPay").val();
+		$("#orderPay").val(totalPrice-couponsValue);
 	}
 	
 	if (totalServiceHour != undefined && totalServiceHour != "" && totalServiceHour != 0) {
@@ -478,8 +477,7 @@ function changePrice(couponsValue,totalPrice) {
 //选择优惠券
 function selectCoupons(){
 	var couponsValue = $("#couponsId").find(":selected").text();
-	var totalPrice = $("#orderPay").val();
 	var value = parseInt(couponsValue);
-	changePrice(value,totalPrice);
+	changePrice(value);
 }
 
