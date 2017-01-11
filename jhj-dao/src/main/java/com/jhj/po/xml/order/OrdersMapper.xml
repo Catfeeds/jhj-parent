@@ -113,8 +113,8 @@
 		(
 			select id from orders
 			<include refid="bySearchVo" />
-			and order_status = 2
 		)
+	    and order_status = 2
 	</select>
 	
 	<!-- 钟点工订单0订单总金额 -->
@@ -790,10 +790,10 @@
 	<!-- 市场订单图表-按天统计 -->
 	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT order_from AS name,order_status as orderStatus,
-		<if test="selectCycle!=12">
+		<if test="statType != 'quarter'">
 			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType == 'quarter'">
 			CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
 		</if>
 		COUNT(*) AS total
@@ -1362,10 +1362,10 @@
 	
 	<select id="statByTotal" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT 
-		<if test="selectCycle!=12">
+		<if test="statType != 'quarter'">
 			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType == 'quarter'">
 			CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
 		</if>
 		COUNT(*) AS total

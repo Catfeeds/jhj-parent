@@ -142,6 +142,17 @@
 										
 										<div class="form-group">
 											<label class="col-md-2 control-label">
+												<font color="red">*</font>价格
+											</label>
+											<div class="col-md-5">
+												<input type="text" id="orderPay" name="orderPay" class="form-control" value="" oninput="setValue()"/>
+												<input type="hidden" id="hour-price" value="${hour.price }"/>
+												<input type="hidden" id='cook-price' value="${cook.price }"/>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-md-2 control-label">
 												优惠券
 											</label>
 											<div class="col-md-5">
@@ -158,16 +169,7 @@
 												</select>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>价格
-											</label>
-											<div class="col-md-5">
-												<input type="text" id="orderPay" name="orderPay" class="form-control" value="">
-												<input type="hidden" id="hour-price" value="${hour.price }"/>
-												<input type="hidden" id='cook-price' value="${cook.price }"/>
-											</div>
-										</div>
+										
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>支付方式

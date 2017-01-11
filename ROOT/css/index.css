@@ -34,7 +34,7 @@ body{
     float: left;
     line-height: 150px;
     padding-left: 30px;
-    color: #f29949;
+    color: #FFAE00;
 }
 .index-shouye2 img{
     height:30px;
@@ -112,7 +112,7 @@ body{
     float: left;
 }
 .index-shouye7-1 li:hover{
-    color:#f29949;
+    color:#FFAE00;
     text-decoration: underline;
 }
 .index-shouye7-2{
@@ -1509,4 +1509,7 @@ body{
 }
 .special-color2{
     color:#f29949;
+}
+.special-color3{
+    color:#FFAE00;
 }

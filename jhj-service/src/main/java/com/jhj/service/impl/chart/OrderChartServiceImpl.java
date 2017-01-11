@@ -22,6 +22,7 @@ import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.meijia.utils.ChartUtil;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.MathDoubleUtil;
 
@@ -97,7 +98,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statDatas = orderMapper.statByDay(chartSearchVo);
 		}
 		
@@ -124,41 +125,80 @@ public class OrderChartServiceImpl implements OrderChartService {
 			//处理表格形式的数据.
 				str = tableDataItem.get("series");
 				str1 = chartSqlData.getSeries();
-				if (str.equals(str1)) {
-					//0代表APP  1 = 微网站来源  2平台来源
-					if (chartSqlData.getName().equals("0")){
-						if(chartSqlData.getTotal()!=null){
-							appNum+=chartSqlData.getTotal();
+				if(!chartSearchVo.getStatType().equals("day")){
+					if (str.equals(str1)) {
+						//0代表APP  1 = 微网站来源  2平台来源
+						if (chartSqlData.getName().equals("0")){
+							if(chartSqlData.getTotal()!=null){
+								appNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("App来源", String.valueOf(appNum));
 						}
-						tableDataItem.put("App来源", String.valueOf(appNum));
-					}
-					if(chartSqlData.getName().equals("1")){
-						if(chartSqlData.getTotal()!=null){
-							webNum+=chartSqlData.getTotal();
+						if(chartSqlData.getName().equals("1")){
+							if(chartSqlData.getTotal()!=null){
+								webNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("微网站来源", String.valueOf(webNum));
 						}
-						tableDataItem.put("微网站来源", String.valueOf(webNum));
-					}
-					if(chartSqlData.getName().equals("2")){
-						if(chartSqlData.getTotal()!=null){
-							thrNum+=chartSqlData.getTotal();
+						if(chartSqlData.getName().equals("2")){
+							if(chartSqlData.getTotal()!=null){
+								thrNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("平台来源", String.valueOf(thrNum));
 						}
-						tableDataItem.put("平台来源", String.valueOf(thrNum));
-					}
-					if(chartSqlData.getOrderStatus()==0){
-						if(chartSqlData.getTotal()!=null){
-							cancleNum+=chartSqlData.getTotal();
+						if(chartSqlData.getOrderStatus()==0){
+							if(chartSqlData.getTotal()!=null){
+								cancleNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("退单数", String.valueOf(cancleNum));
 						}
-						tableDataItem.put("退单数", String.valueOf(cancleNum));
+						//新增订单小计 
+						subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
+						subTotal = subTotal + chartSqlData.getTotal();
+						tableDataItem.put("新增订单小计", subTotal.toString());
+						NumberFormat nf=NumberFormat.getPercentInstance(); 
+						nf.setMaximumFractionDigits(2);
+						float s =(float)cancleNum/(float)subTotal;
+						
+						tableDataItem.put("退单率", String.valueOf(nf.format(s)));
 					}
-					//新增订单小计 
-					subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
-					subTotal = subTotal + chartSqlData.getTotal();
-					tableDataItem.put("新增订单小计", subTotal.toString());
-					NumberFormat nf=NumberFormat.getPercentInstance(); 
-					nf.setMaximumFractionDigits(2);
-					float s =(float)cancleNum/(float)subTotal;
-					
-					tableDataItem.put("退单率", String.valueOf(nf.format(s)));
+				}else{
+					if(DateUtil.compareDateStr(str1, str)==0){
+						//0代表APP  1 = 微网站来源  2平台来源
+						if (chartSqlData.getName().equals("0")){
+							if(chartSqlData.getTotal()!=null){
+								appNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("App来源", String.valueOf(appNum));
+						}
+						if(chartSqlData.getName().equals("1")){
+							if(chartSqlData.getTotal()!=null){
+								webNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("微网站来源", String.valueOf(webNum));
+						}
+						if(chartSqlData.getName().equals("2")){
+							if(chartSqlData.getTotal()!=null){
+								thrNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("平台来源", String.valueOf(thrNum));
+						}
+						if(chartSqlData.getOrderStatus()==0){
+							if(chartSqlData.getTotal()!=null){
+								cancleNum+=chartSqlData.getTotal();
+							}
+							tableDataItem.put("退单数", String.valueOf(cancleNum));
+						}
+						//新增订单小计 
+						subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
+						subTotal = subTotal + chartSqlData.getTotal();
+						tableDataItem.put("新增订单小计", subTotal.toString());
+						NumberFormat nf=NumberFormat.getPercentInstance(); 
+						nf.setMaximumFractionDigits(2);
+						float s =(float)cancleNum/(float)subTotal;
+						
+						tableDataItem.put("退单率", String.valueOf(nf.format(s)));
+					}
 				}
 			}
 		}
@@ -167,7 +207,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		List<ChartMapVo> statData = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statData = orderMapper.statByTotal(chartSearchVo);
 		}
 		
@@ -182,12 +222,21 @@ public class OrderChartServiceImpl implements OrderChartService {
 		
 		for (Map<String, String> tableDataItem : tableDatas) {
 			int totalNum=0;
-			String[] str2 = tableDataItem.get("series").split("-");
+			String series = tableDataItem.get("series");
+			String[] str2 = series.split("-");
 			for (ChartMapVo chartSqlData : statData) {
-				String[] str3 = chartSqlData.getSeries().split("-");
-				if (Integer.valueOf(str3[0])<Integer.valueOf(str2[0]) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])){
-					totalNum = totalNum + chartSqlData.getTotal();
+				String seriesSql = chartSqlData.getSeries();
+				String[] str3 = seriesSql.split("-");
+				if(chartSearchVo.getSelectCycle()!=1){
+					if (Integer.valueOf(str3[0])<Integer.valueOf(str2[0]) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])){
+						totalNum = totalNum + chartSqlData.getTotal();
+					}
+				}else{
+					if(DateUtil.parse(series).compareTo(DateUtil.parse(seriesSql))>=0){
+						totalNum = totalNum + chartSqlData.getTotal();
+					}
 				}
+			
 			}
 			tableDataItem.put("订单总数", String.valueOf(totalNum));
 		}

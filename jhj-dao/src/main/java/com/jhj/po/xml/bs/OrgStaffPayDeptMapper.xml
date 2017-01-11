@@ -95,6 +95,10 @@
 			<![CDATA[ and add_time <= #{endAddTime}]]>
 		</if>
 		
+		<if test="payType !=null">
+			and order_no in (select order_no from order_prices where pay_type = #{payType})
+		</if>
+		
 	</sql>
 	
 	

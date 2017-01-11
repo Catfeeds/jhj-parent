@@ -164,7 +164,7 @@ public class ChartUtil {
 		
 		if (statType.equals("day")) {
 			for (i = 0; i < ago.intValue(); i++) {
-				curDate = DateUtil.addDay(startDate, i, Calendar.DATE, "M-d");
+				curDate = DateUtil.addDay(startDate, i, Calendar.DATE, "Y-M-d");
 				timeSeries.add(curDate);
 			}
 		}
@@ -235,9 +235,9 @@ public class ChartUtil {
 		if (statType.equals("day")) {
 			//当天的 时间戳
 			
-			long dayStart = TimeStampUtil.getMillisOfDayFull(nowYear+"-"+seriesName+" "+"00:00:00")/1000;
+			long dayStart = TimeStampUtil.getMillisOfDayFull(seriesName+" "+"00:00:00")/1000;
 			
-			long dayEnd =  TimeStampUtil.getMillisOfDayFull(nowYear+"-"+seriesName+" "+"23:59:59")/1000;
+			long dayEnd =  TimeStampUtil.getMillisOfDayFull(seriesName+" "+"23:59:59")/1000;
 			
 			map.put("startTime", dayStart);
 			map.put("endTime", dayEnd);

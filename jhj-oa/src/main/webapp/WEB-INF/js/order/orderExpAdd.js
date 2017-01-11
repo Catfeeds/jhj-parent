@@ -386,6 +386,7 @@ function serviceTypeChange() {
 			
 			$("#service-content").append(serviceContentHtml);
 			
+			sessionStorage.removeItem("totalOrderPay");
 			changePrice();
 		}
 	});
@@ -456,12 +457,16 @@ function changePrice(couponsValue) {
 	
 	if (totalOrderPay != undefined && totalOrderPay != "" && totalOrderPay != 0) {
 		totalOrderPay = totalOrderPay.toFixed(2);
+		var val = sessionStorage.getItem("totalOrderPay");
+		if(parseFloat(val)>0){
+			totalOrderPay = val;
+		}
 		$("#orderPay").val(totalOrderPay-couponsValue);
 	}
 	
 	if (totalServiceHour != undefined && totalServiceHour != "" && totalServiceHour != 0) {
 		totalServiceHour = Math.round(totalServiceHour)
-		$("#serviceHour").val(totalServiceHour-couponsValue);
+		$("#serviceHour").val(totalServiceHour);
 	}
 	
 //	console.log(JSON.stringify(serviceAddonsJson));
@@ -479,3 +484,7 @@ function selectCoupons(){
 	changePrice(value);
 }
 
+function setValue(){
+	var orderPay = $("#orderPay").val();
+	sessionStorage.setItem("totalOrderPay",orderPay);
+}
