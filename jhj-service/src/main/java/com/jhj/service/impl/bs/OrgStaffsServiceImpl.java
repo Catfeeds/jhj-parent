@@ -21,6 +21,7 @@ import com.jhj.po.dao.bs.OrgStaffsMapper;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.university.PartnerServiceTypeMapper;
+import com.jhj.po.model.bs.AuthIdcard;
 import com.jhj.po.model.bs.OrgStaffAuth;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
@@ -30,6 +31,7 @@ import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.bs.AuthIdCardService;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffTagsService;
@@ -41,6 +43,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.university.StudyStaffPassQueryService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.AuthIdCardSearchVo;
 import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.bs.NewStaffFormVo;
 import com.jhj.vo.bs.NewStaffListVo;
@@ -55,6 +58,7 @@ import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.IDCardAuth;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
@@ -113,6 +117,9 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 
 	@Autowired
 	private PartnerServiceTypeService partService;
+	
+	@Autowired
+	private AuthIdCardService authIdCardService;
 
 	@Override
 	public int deleteByPrimaryKey(Long staffId) {
@@ -521,6 +528,36 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		String provinceName = dictService.getProvinceName(staffs.getProvinceId());
 
 		listVo.setNativePlace(provinceName + " " + cityName);
+		
+		//查询是否实名认证
+		int isAuthIdCard = 0;
+		String name = listVo.getName();
+		String idCard = listVo.getCardId();
+		
+		if (!StringUtil.isEmpty(name) && !StringUtil.isEmpty(idCard)) {
+			AuthIdCardSearchVo searchVo = new AuthIdCardSearchVo();
+			searchVo.setName(name);
+			searchVo.setIdCard(idCard);
+			
+			List<AuthIdcard> auths = authIdCardService.selectBySearchVo(searchVo);
+			if (!auths.isEmpty()) {
+				AuthIdcard authIdCard = auths.get(0);
+				String content = authIdCard.getContent();
+				Map<String, String> ai = IDCardAuth.getResultMap(content);
+				
+				String code = ai.get("code").toString();
+				
+				if (code.equals("0")) {
+					isAuthIdCard = 1;
+				} else {
+					isAuthIdCard = 2;
+				}
+				
+				
+			}	
+		}
+		
+		listVo.setIsAuthIdCard(isAuthIdCard);
 
 		return listVo;
 	}

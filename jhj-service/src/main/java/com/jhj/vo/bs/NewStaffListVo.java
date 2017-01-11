@@ -17,6 +17,8 @@ public class NewStaffListVo extends OrgStaffs {
 	private String orgName;		//云店名称
 	
 	private String parentOrgName;	//门店名称
+	
+	private int isAuthIdCard;  //是否实名认证 0 = 否 1 = 是.
 
 	public String getNativePlace() {
 		return nativePlace;
@@ -40,6 +42,14 @@ public class NewStaffListVo extends OrgStaffs {
 
 	public void setParentOrgName(String parentOrgName) {
 		this.parentOrgName = parentOrgName;
+	}
+
+	public int getIsAuthIdCard() {
+		return isAuthIdCard;
+	}
+
+	public void setIsAuthIdCard(int isAuthIdCard) {
+		this.isAuthIdCard = isAuthIdCard;
 	}
 	
 }
