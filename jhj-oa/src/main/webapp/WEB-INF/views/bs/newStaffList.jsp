@@ -29,50 +29,40 @@
 							<header class="panel-info">
 								<h4>数据搜索</h4>
 								<form:form class="form-inline" modelAttribute="staffSearchVoModel" action="new_staff_list" method="get">
-								<table class="table">
-									<tr>
-										<td>选择门店:</td>
-										<td><orgSelectTag:select selectId="${staffSearchVoModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
-										<td>选择云店:</td>
-										<td>
-											<select name="orgId" id="orgId" class="form-control">
-												<option value="0">全部</option>
-											</select>
-										</td>
-										<td>
-											<button type="submit" class="btn btn-primary">搜索</button>
-										</td>
-										<td>
-											<button onClick="btn_add('newbs/new_staff_form?orgStaffId=0')" class="btn btn-primary" type="button">
-											<i class="icon-expand-alt"></i>
-											新增
-										</td>
-
-									</button>
-									</tr>
-									<tr>
-										<td>手机号:</td>
-										<td><form:input path="mobile" class="form-control" type="test" /></td>	
-										<td>姓名:</td>
-										<td><form:input path="name" class="form-control" type="text" /></td>	
-										<td>是否可用：</td>
-										<td colspan = "2"><form:radiobutton path="status" value="0" />否
-								 			<form:radiobutton path="status" value="1" />是
-								 		</td>	
-									</tr>
-									
-									
-										
-								 	</table>
-									
+									<table class="table">
+										<tr>
+											<td>选择门店:</td>
+											<td><orgSelectTag:select selectId="${staffSearchVoModel.parentId }" sessionOrgId="${loginOrgId }" /></td>
+											<td>选择云店:</td>
+											<td><select name="orgId" id="orgId" class="form-control">
+													<option value="0">全部</option>
+												</select></td>
+											<td>
+												<button type="submit" class="btn btn-primary">搜索</button>
+											</td>
+											<td>
+												<button onClick="btn_add('newbs/new_staff_form?orgStaffId=0')" class="btn btn-primary" type="button">
+													<i class="icon-expand-alt"></i>
+													新增
+											</td>
+											</button>
+										</tr>
+										<tr>
+											<td>手机号:</td>
+											<td><form:input path="mobile" class="form-control" type="test" /></td>
+											<td>姓名:</td>
+											<td><form:input path="name" class="form-control" type="text" /></td>
+											<td>是否可用：</td>
+											<td colspan="2"><form:radiobutton path="status" value="0" />否 <form:radiobutton path="status" value="1" />是
+											</td>
+										</tr>
+									</table>
 								</form:form>
 							</header>
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<header class="panel-info">
 								<h4>工作人员列表</h4>
-								<div class="pull-right">
-									
-								</div>
+								<div class="pull-right"></div>
 							</header>
 							<table class="table table-striped table-advance table-hover">
 								<thead>
@@ -95,7 +85,7 @@
 										<tr>
 											<td><img id="head_img" src="${ orgStaff.headImg }" width="60px" height="60px"
 													onerror="this.onerror=null;this.src='/jhj-oa/upload/headImg/default-head-img.png'"></td>
-											<td>${ orgStaff.parentOrgName } - ${ orgStaff.orgName }</td>
+											<td>${ orgStaff.parentOrgName }-${ orgStaff.orgName }</td>
 											<td>${ orgStaff.name }</td>
 											<td><c:choose>
 													<c:when test="${ orgStaff.sex == 0}">
@@ -108,26 +98,19 @@
 											<td><fmt:formatDate value="${ orgStaff.birth}" pattern="yyyy-MM-dd" /></td>
 											<td>${ orgStaff.nativePlace }</td>
 											<td>${ orgStaff.cardId }</td>
-											<td>
-												<c:if test="${orgStaff.isAuthIdCard == 0 }">
-													<%-- <a href="/jhj-oa/newbs/auth-idcard-view?staffId=${orgStaff.staffId }" data-toggle="modal" data-target="#idAuthViewModal"><font color="red">未认证</font></a>
-													<button id="btn_update" 
-													class="btn btn-warning btn-xs" title="未认证">
-													<i class="icon-pencil"></i> --%>
+											<td><c:if test="${orgStaff.isAuthIdCard == 0 }">
 													
-													<input type="button" value="未认证" class="btn btn-warning"  data-toggle="modal" data-target="#idAuthViewModal">
-												</button>
-												
-												</c:if>
-												
-												<c:if test="${orgStaff.isAuthIdCard == 1 }">
-													<a href="#" data-toggle="modal" data-target="#idAuthViewModal"><font color="green">已认证</font></a>
-												</c:if>
-												
-												<c:if test="${orgStaff.isAuthIdCard == 2 }">
-													<a href="#" data-toggle="modal" data-target="#idAuthViewModal"><font color="green">认证失败</font></a>
-												</c:if>
-											</td>
+													<input type="button" value="未认证" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-warning" >
+													</button>
+												</c:if> <c:if test="${orgStaff.isAuthIdCard == 1 }">
+													<a href="#" data-toggle="modal" data-target="#idAuthViewModal">
+														<font color="green">已认证</font>
+													</a>
+												</c:if> <c:if test="${orgStaff.isAuthIdCard == 2 }">
+													<a href="#" data-toggle="modal" data-target="#idAuthViewModal">
+														<font color="green">认证失败</font>
+													</a>
+												</c:if></td>
 											<td>${ orgStaff.mobile }</td>
 											<td><c:choose>
 													<c:when test="${ orgStaff.status == 0}">
@@ -142,7 +125,8 @@
 													class="btn btn-primary btn-xs" title="修改">
 													<i class="icon-pencil"></i>
 												</button>
-												<button onClick="btn_update('orderCanlendar/order-scheduling?org_staff_id=${orgStaff.staffId}')" class="btn btn-info">排班</button>
+												<button onClick="btn_update('orderCanlendar/order-scheduling?org_staff_id=${orgStaff.staffId}')"
+													class="btn btn-info">排班</button>
 												</button>
 											</td>
 										</tr>
@@ -159,12 +143,24 @@
 				</div>
 			</section>
 		</section>
-		
-		<%@include file="./authIdCardView.jsp"%>
-		
+		<div class="modal fade" id="idAuthViewModal" tabindex="-1" role="dialog" aria-labelledby="idAuthViewModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">服务人员认证信息</h4>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary serviceType-confirm-btn">认证</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<%@ include file="../shared/pageFooter.jsp"%>
 	</section>
-	
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/bs/newStaffList.js'/>"></script>
 </body>
