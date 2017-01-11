@@ -100,16 +100,13 @@
 											<td>${ orgStaff.cardId }</td>
 											<td><c:if test="${orgStaff.isAuthIdCard == 0 }">
 													
-													<input type="button" value="未认证" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-warning" >
-													</button>
+													<input type="button" value="未认证" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-danger" >
+													
 												</c:if> <c:if test="${orgStaff.isAuthIdCard == 1 }">
-													<a href="#" data-toggle="modal" data-target="#idAuthViewModal">
-														<font color="green">已认证</font>
-													</a>
+													<input type="button" value="已认证" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-success" >
+													
 												</c:if> <c:if test="${orgStaff.isAuthIdCard == 2 }">
-													<a href="#" data-toggle="modal" data-target="#idAuthViewModal">
-														<font color="green">认证失败</font>
-													</a>
+													<input type="button" value="未认证" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-danger" >
 												</c:if></td>
 											<td>${ orgStaff.mobile }</td>
 											<td><c:choose>
@@ -152,10 +149,7 @@
 						<h4 class="modal-title" id="myModalLabel">服务人员认证信息</h4>
 					</div>
 					<div class="modal-body"></div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary serviceType-confirm-btn">认证</button>
-					</div>
+
 				</div>
 			</div>
 		</div>

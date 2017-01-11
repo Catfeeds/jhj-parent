@@ -117,6 +117,10 @@ public class AuthIdCardController extends AdminController {
 			String content = authIdCard.getContent();
 			authData = IDCardAuth.getResultMap(content);
 			
+			Long updateTime = authIdCard.getUpdateTime();
+			String authTime = TimeStampUtil.timeStampToDateStr(updateTime * 1000);
+			authData.put("authTime", authTime);
+			
 			String code = authData.get("code").toString();
 			
 			if (code.equals("0")) {

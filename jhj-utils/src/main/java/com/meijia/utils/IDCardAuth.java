@@ -66,36 +66,55 @@ public class IDCardAuth {
 
 			String code = object.get("code").getAsString();
 			result.put("code", code);
+			
+			if (code.equals("200")) {
+				result.put("msg", "查询失败，余额不足，请充值");
+			}
 
 			if (object.get("data").isJsonObject()) {
 				JsonObject dataObj = object.get("data").getAsJsonObject();
 
 				System.out.println("data = " + dataObj);
+				
+				if (dataObj.get("moible_prov") != null) {
+					String mobileProv = dataObj.get("moible_prov").getAsString();
+					result.put("mobileProv", mobileProv);
+				}
+				
+				if (dataObj.get("sex") != null) {
+					String sex = dataObj.get("sex").getAsString();
+					if (sex.equals("M")) result.put("sex", "男");
+					if (sex.equals("F")) result.put("sex", "女");
+					
+				}
+				
+				if (dataObj.get("birthday") != null) {
+					String birthday = dataObj.get("birthday").getAsString();
+					result.put("birthday", birthday);
+				}
+				
+				if (dataObj.get("address") != null && !dataObj.get("address").isJsonNull()) {
+					String address = dataObj.get("address").getAsString();
+					if (!StringUtil.isEmpty(address)) {
+						result.put("address", address);
+					}
+				}
+				
+				if (dataObj.get("mobile_operator") != null) {
+					String mobileOperator = dataObj.get("mobile_operator").getAsString();
+					result.put("mobileOperator", mobileOperator);
+				}
+				
+				if (dataObj.get("mobile_city") != null) {
+					String mobileCity = dataObj.get("mobile_city").getAsString();
+					result.put("mobileCity", mobileCity);
+				}
 
-				String mobileProv = dataObj.get("moible_prov").getAsString();
-				System.out.println("mobileProv = " + mobileProv);
-				result.put("mobileProv", mobileProv);
-
-				String sex = dataObj.get("sex").getAsString();
-				result.put("sex", sex);
-
-				String birthday = dataObj.get("birthday").getAsString();
-				result.put("birthday", birthday);
-
-				String address = dataObj.get("address").getAsString();
-				result.put("address", address);
-
-				String mobileOperator = dataObj.get("mobile_operator").getAsString();
-				result.put("mobileOperator", mobileOperator);
-
-				String mobileCity = dataObj.get("mobile_city").getAsString();
-				result.put("mobileCity", mobileCity);
-
-				System.out.println("sex = " + sex);
-				System.out.println("birthday = " + birthday);
-				System.out.println("address = " + address);
-				System.out.println("mobileOperator = " + mobileOperator);
-				System.out.println("mobileCity = " + mobileCity);
+//				System.out.println("sex = " + sex);
+//				System.out.println("birthday = " + birthday);
+//				System.out.println("address = " + address);
+//				System.out.println("mobileOperator = " + mobileOperator);
+//				System.out.println("mobileCity = " + mobileCity);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
