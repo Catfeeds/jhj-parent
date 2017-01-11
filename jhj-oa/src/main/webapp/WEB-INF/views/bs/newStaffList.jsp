@@ -110,11 +110,22 @@
 											<td>${ orgStaff.cardId }</td>
 											<td>
 												<c:if test="${orgStaff.isAuthIdCard == 0 }">
-													<font color="red">未认证</font>
+													<%-- <a href="/jhj-oa/newbs/auth-idcard-view?staffId=${orgStaff.staffId }" data-toggle="modal" data-target="#idAuthViewModal"><font color="red">未认证</font></a>
+													<button id="btn_update" 
+													class="btn btn-warning btn-xs" title="未认证">
+													<i class="icon-pencil"></i> --%>
+													
+													<input type="button" value="未认证" class="btn btn-warning"  data-toggle="modal" data-target="#idAuthViewModal">
+												</button>
+												
 												</c:if>
 												
 												<c:if test="${orgStaff.isAuthIdCard == 1 }">
-													<font color="green">已认证</font>
+													<a href="#" data-toggle="modal" data-target="#idAuthViewModal"><font color="green">已认证</font></a>
+												</c:if>
+												
+												<c:if test="${orgStaff.isAuthIdCard == 2 }">
+													<a href="#" data-toggle="modal" data-target="#idAuthViewModal"><font color="green">认证失败</font></a>
 												</c:if>
 											</td>
 											<td>${ orgStaff.mobile }</td>
@@ -148,9 +159,13 @@
 				</div>
 			</section>
 		</section>
+		
+		<%@include file="./authIdCardView.jsp"%>
+		
 		<%@ include file="../shared/pageFooter.jsp"%>
 	</section>
 	
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/bs/newStaffList.js'/>"></script>
 </body>
 </html>

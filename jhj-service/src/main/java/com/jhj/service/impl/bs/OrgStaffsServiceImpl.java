@@ -58,6 +58,7 @@ import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.IDCardAuth;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
@@ -535,11 +536,24 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		
 		if (!StringUtil.isEmpty(name) && !StringUtil.isEmpty(idCard)) {
 			AuthIdCardSearchVo searchVo = new AuthIdCardSearchVo();
-			searchVo.setName(listVo.getName());
+			searchVo.setName(name);
+			searchVo.setIdCard(idCard);
 			
 			List<AuthIdcard> auths = authIdCardService.selectBySearchVo(searchVo);
 			if (!auths.isEmpty()) {
-				isAuthIdCard = 1;
+				AuthIdcard authIdCard = auths.get(0);
+				String content = authIdCard.getContent();
+				Map<String, String> ai = IDCardAuth.getResultMap(content);
+				
+				String code = ai.get("code").toString();
+				
+				if (code.equals("0")) {
+					isAuthIdCard = 1;
+				} else {
+					isAuthIdCard = 2;
+				}
+				
+				
 			}	
 		}
 		
