@@ -8,7 +8,7 @@
 		<section class="panel">
 			<div class="twt-feed blue-bg">
 				<h1>${orgStaff.name }, 身份证号:${orgStaff.cardId }</h1>
-				<p>
+				<p id="authStatus">
 					<c:if test="${isAuthIdCard == 0 }">
 						<font color="red">未认证</font>
 					</c:if>
@@ -51,7 +51,7 @@
 </div>
 <div class="modal-footer">
 	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-	<button type="button" class="btn btn-primary serviceType-confirm-btn">
+	<button type="button" class="btn btn-primary" id="doAuthIdCardBtn" onclick="doAuthIdCard(${orgStaff.staffId})">
 	<c:if test="${isAuthIdCard != 1 }">
 		认证
 	</c:if>

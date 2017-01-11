@@ -67,17 +67,17 @@
 							<table class="table table-striped table-advance table-hover">
 								<thead>
 									<tr>
-										<th>员工头像</th>
-										<th>门店</th>
-										<th>姓名</th>
-										<th>性别</th>
-										<th>出生日期</th>
-										<th>籍贯</th>
-										<th>身份证号</th>
-										<th>实名认证</th>
-										<th>电话号码</th>
-										<th>是否可用</th>
-										<th>操作</th>
+										<th width="10%">员工头像</th>
+										<th width="15%">门店</th>
+										<th width="8%">姓名</th>
+										<th width="5%">性别</th>
+										<th width="8%">出生日期</th>
+										<th width="13%">籍贯</th>
+										<th width="5%">身份证号</th>
+										<th width="10%">实名认证</th>
+										<th width="8%">电话号码</th>
+										<th width="6%">是否可用</th>
+										<th width="20%">操作</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -106,7 +106,7 @@
 													<input type="button" value="已认证" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-success" >
 													
 												</c:if> <c:if test="${orgStaff.isAuthIdCard == 2 }">
-													<input type="button" value="未认证" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-danger" >
+													<input type="button" value="认证失败" onclick="openAuthView(${orgStaff.staffId})" class="btn btn-danger" >
 												</c:if></td>
 											<td>${ orgStaff.mobile }</td>
 											<td><c:choose>

@@ -126,16 +126,14 @@ public class IDCardAuth {
 
 	public static void main(String[] args) {
 		// 发送 GET 请求
-		// String httpUrl = " http://v.apix.cn/apixcredit/idcheck/idcard";
-		// String httpArg = "type=idcard&name=张彦敏&cardno=372523197609273316";
-		// String jsonResult = request(httpUrl, httpArg);
-		// System.out.println(jsonResult);
+		 String httpUrl = " http://v.apix.cn/apixcredit/idcheck/idcard";
+		 String httpArg = "type=idcard&name=张现葵&cardno=37152219890621781x";
+		 String jsonResult = request(httpUrl, httpArg);
+		 System.out.println(jsonResult);
 
-		// String jsonResult =
-		// "{\"msg\":\"成功：验证信息一致\",\"code\":0,\"data\":{\"moible_prov\":\"北京\",\"sex\":\"M\",\"birthday\":\"1983-11-12\",\"address\":\"江苏省苏州市吴中区\",\"mobile_operator\":\"联通185卡\",\"mobile_city\":\"北京\"}}";
-		// String jsonResult =
-		// "{\"msg\":\"库中不存在该身份证号\",\"code\":101,\"data\":\"\"}";
-		String jsonResult = "{\"msg\":\"姓名和身份证号一致\",\"code\":0,\"data\":{\"cardno\":\"372523197609273316\",\"birthday\":\"1976-09-27\",\"sex\":\"M\",\"name\":\"张彦敏\",\"address\":null}}";
+//		String jsonResult = "{\"msg\":\"成功：验证信息一致\",\"code\":0,\"data\":{\"moible_prov\":\"北京\",\"sex\":\"M\",\"birthday\":\"1983-11-12\",\"address\":\"江苏省苏州市吴中区\",\"mobile_operator\":\"联通185卡\",\"mobile_city\":\"北京\"}}";
+//		String jsonResult = "{\"msg\":\"库中不存在该身份证号\",\"code\":101,\"data\":\"\"}";
+//		String jsonResult = "{\"msg\":\"姓名和身份证号一致\",\"code\":0,\"data\":{\"cardno\":\"372523197609273316\",\"birthday\":\"1976-09-27\",\"sex\":\"M\",\"name\":\"张彦敏\",\"address\":null}}";
 		JsonParser parser = new JsonParser(); // 创建JSON解析器
 		JsonObject object = (JsonObject) parser.parse(jsonResult); // 创建JsonObject对象
 
