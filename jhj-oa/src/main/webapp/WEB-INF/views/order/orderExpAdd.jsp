@@ -111,7 +111,7 @@
 											<label class="col-md-2 control-label"><font
 												color="red">*</font>总价格</label>
 											<div class="col-md-5">
-												<input class="form-control" type="number" id="orderPay" name="orderPay" value="0"/>
+												<input class="form-control" type="number" id="orderPay" name="orderPay" value="0" oninput="setValue()"/>
 											</div>
 										</div>
 										

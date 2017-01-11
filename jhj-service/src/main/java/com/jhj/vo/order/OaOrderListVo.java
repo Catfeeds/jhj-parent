@@ -110,6 +110,15 @@ public class OaOrderListVo extends Orders {
 	private List<OrderDispatchVo> orderDispatchs;
 	
 	private String overWorkStr;
+	
+	//补时或补差价的金额
+	private BigDecimal spreadMoeny;
+	
+	//0 = 补交差价 1 = 加时
+	private int orderExtType;
+	
+	//补差价/加时  支付方式
+	private short payTypeExt;
 
 	public String getServiceDateStartStr() {
 		return serviceDateStartStr;
@@ -446,4 +455,30 @@ public class OaOrderListVo extends Orders {
 	public void setOverWorkStr(String overWorkStr) {
 		this.overWorkStr = overWorkStr;
 	}
+
+	public BigDecimal getSpreadMoeny() {
+		return spreadMoeny;
+	}
+
+	public void setSpreadMoeny(BigDecimal spreadMoeny) {
+		this.spreadMoeny = spreadMoeny;
+	}
+
+	public int getOrderExtType() {
+		return orderExtType;
+	}
+
+	public void setOrderExtType(int orderExtType) {
+		this.orderExtType = orderExtType;
+	}
+
+	public short getPayTypeExt() {
+		return payTypeExt;
+	}
+
+	public void setPayTypeExt(short payTypeExt) {
+		this.payTypeExt = payTypeExt;
+	}
+
+	
 }
