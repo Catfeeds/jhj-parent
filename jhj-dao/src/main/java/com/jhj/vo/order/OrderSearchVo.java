@@ -59,6 +59,10 @@ public class OrderSearchVo {
 	
 	private Long endUpdateTime;	
 	
+	private Long startOrderDoneTime;
+	
+	private Long endOrderDoneTime;
+	
 	private Long startTime;
 	
 	private Long endTime;
@@ -74,6 +78,10 @@ public class OrderSearchVo {
 	private String startUpdateTimeStr;
 	
 	private String endUpdateTimeStr;
+	
+	private String startOrderDoneTimeStr;
+	
+	private String endOrderDoneTimeStr;
 	
 	private Long parentId;
 	
@@ -424,6 +432,38 @@ public class OrderSearchVo {
 
 	public void setEndUpdateTimeStr(String endUpdateTimeStr) {
 		this.endUpdateTimeStr = endUpdateTimeStr;
+	}
+
+	public Long getStartOrderDoneTime() {
+		return startOrderDoneTime;
+	}
+
+	public void setStartOrderDoneTime(Long startOrderDoneTime) {
+		this.startOrderDoneTime = startOrderDoneTime;
+	}
+
+	public Long getEndOrderDoneTime() {
+		return endOrderDoneTime;
+	}
+
+	public void setEndOrderDoneTime(Long endOrderDoneTime) {
+		this.endOrderDoneTime = endOrderDoneTime;
+	}
+
+	public String getStartOrderDoneTimeStr() {
+		return startOrderDoneTimeStr;
+	}
+
+	public void setStartOrderDoneTimeStr(String startOrderDoneTimeStr) {
+		this.startOrderDoneTimeStr = startOrderDoneTimeStr;
+	}
+
+	public String getEndOrderDoneTimeStr() {
+		return endOrderDoneTimeStr;
+	}
+
+	public void setEndOrderDoneTimeStr(String endOrderDoneTimeStr) {
+		this.endOrderDoneTimeStr = endOrderDoneTimeStr;
 	}
 	
 }

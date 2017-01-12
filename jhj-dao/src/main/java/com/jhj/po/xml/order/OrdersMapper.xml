@@ -25,6 +25,7 @@
 		<result column="remarks_confirm" property="remarksConfirm" jdbcType="VARCHAR" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+		<result column="order_done_time" property="orderDoneTime" jdbcType="NUMERIC" />
 
 		<result column="remarks_bussiness_confirm" property="remarksBussinessConfirm" jdbcType="VARCHAR" />
 	</resultMap>
@@ -32,8 +33,8 @@
 		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_no, order_type,
 		service_type,service_content, service_date, service_hour, staff_nums, order_status,
 		order_rate,
-		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time
-		,remarks_bussiness_confirm
+		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time,
+		order_done_time, remarks_bussiness_confirm
 	</sql>
 
 	<!-- 在某个 门店 下过单 的 用户 -->
