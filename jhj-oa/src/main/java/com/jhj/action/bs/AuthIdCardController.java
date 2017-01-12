@@ -155,9 +155,10 @@ public class AuthIdCardController extends AdminController {
 		}
 		
 		String httpUrl = "http://v.apix.cn/apixcredit/idcheck/idcard";
-		String httpArg = "type=idcard&name="+name+"&cardno="+cardId;
+		String httpArg = "type=idcard_photo&name="+name+"&cardno="+cardId;
 
 		String jsonResult = IDCardAuth.request(httpUrl, httpArg);
+		System.out.println(jsonResult);
 //		String jsonResult = "{\"msg\":\"库中不存在该身份证号\",\"code\":101,\"data\":\"\"}";
 //		String jsonResult = "{\"msg\":\"姓名和身份证号不一致\",\"code\":102,\"data\":{\"cardno\":\"330727199102104720\",\"birthday\":\"1991-02-10\",\"sex\":\"F\",\"name\":\"张翔\",\"address\":\"浙江省金华市磐安县\"}}";
 		AuthIdCardSearchVo searchVo = new AuthIdCardSearchVo();
