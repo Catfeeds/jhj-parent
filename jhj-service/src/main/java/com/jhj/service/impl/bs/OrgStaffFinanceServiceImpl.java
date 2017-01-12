@@ -541,7 +541,11 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		vo.setOrderMoney(orderMoney);
 		vo.setOrderPay(orderPay);
+		
+		orderPayExtDiff =  MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
 		vo.setOrderPayExtDiff(orderPayExtDiff);
+		
+		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
 		vo.setOrderPayExtOverWork(orderPayExtOverWork);
 		
 		vo.setOrderIncoming(orderIncoming);
