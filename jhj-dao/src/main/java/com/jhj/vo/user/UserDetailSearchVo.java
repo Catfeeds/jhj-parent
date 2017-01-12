@@ -37,6 +37,9 @@ public class UserDetailSearchVo extends UserDetailPay{
 	
 	private Short isVip;
 	
+	//排序
+	private String orderByParam;
+	
 	public List<Long> getUserIds() {
 		return userIds;
 	}
@@ -109,4 +112,13 @@ public class UserDetailSearchVo extends UserDetailPay{
 		this.isVip = isVip;
 	}
 
+	public String getOrderByParam() {
+		return orderByParam;
+	}
+
+	public void setOrderByParam(String orderByParam) {
+		this.orderByParam = orderByParam;
+	}
+
+	
 }

@@ -53,6 +53,7 @@ public class IDCardAuth {
 		result.put("address", "");
 		result.put("mobileOperator", "");
 		result.put("mobileCity", "");
+		result.put("img", "");
 
 		if (StringUtil.isEmpty(jsonResult))
 			return result;
@@ -109,12 +110,11 @@ public class IDCardAuth {
 					String mobileCity = dataObj.get("mobile_city").getAsString();
 					result.put("mobileCity", mobileCity);
 				}
-
-//				System.out.println("sex = " + sex);
-//				System.out.println("birthday = " + birthday);
-//				System.out.println("address = " + address);
-//				System.out.println("mobileOperator = " + mobileOperator);
-//				System.out.println("mobileCity = " + mobileCity);
+				
+				if (dataObj.get("idcardphoto") != null) {
+					String idcardphoto = dataObj.get("idcardphoto").getAsString();
+					result.put("img", idcardphoto);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,7 +127,7 @@ public class IDCardAuth {
 	public static void main(String[] args) {
 		// 发送 GET 请求
 		 String httpUrl = " http://v.apix.cn/apixcredit/idcheck/idcard";
-		 String httpArg = "type=idcard&name=张现葵&cardno=37152219890621781x";
+		 String httpArg = "type=idcard_photo&name=张现葵&cardno=37152219890621781x";
 		 String jsonResult = request(httpUrl, httpArg);
 		 System.out.println(jsonResult);
 

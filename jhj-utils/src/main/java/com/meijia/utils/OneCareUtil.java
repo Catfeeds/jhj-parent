@@ -538,7 +538,7 @@ public class OneCareUtil {
 			orderTypeName = "订单退款";
 			break;
 		case 9:
-			orderTypeName = "补交差价";
+			orderTypeName = "订单加时";
 			break;
 		default:
 			orderTypeName = "";
