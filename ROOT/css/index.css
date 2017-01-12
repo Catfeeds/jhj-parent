@@ -21,7 +21,7 @@ body{
     height:60px;
 }
 .index-shouye1 img{
-    height:80px;；
+    height:80px;
     margin-top: 10px;
     margin-left: 10px;
 }
@@ -35,18 +35,19 @@ body{
     line-height: 150px;
     padding-left: 30px;
     color: #FFAE00;
+    font-size: 24px;
 }
 .index-shouye2 img{
-    height:30px;
-    margin-top: 60px;
+    height:40px;
+    margin-top: 50px;
     margin-left: 15px;
 }
 .index-shouye3{
     position: absolute;
     left:200px;
-    background: url(../img/mobile4.png) no-repeat center;
-    width:250px;
-    height:471px;
+    background: url(../img/mobile5.png) no-repeat center;
+    width:298px;
+    height:469px;
     padding:58px 68px 65px 56px;
     overflow:hidden;
 }
