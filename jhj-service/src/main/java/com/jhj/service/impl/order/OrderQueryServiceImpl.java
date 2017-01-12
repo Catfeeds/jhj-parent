@@ -23,6 +23,7 @@ import com.jhj.po.dao.user.UserCouponsMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.common.Imgs;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
@@ -33,6 +34,7 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.ImgService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.dict.DictService;
@@ -46,6 +48,7 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
+import com.jhj.vo.ImgSearchVo;
 import com.jhj.vo.order.OrderDetailVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderListVo;
@@ -106,6 +109,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	
 	@Autowired
 	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+	private ImgService imgService;
 
 	@Override
 	public List<Orders> selectBySearchVo(OrderSearchVo searchVo) {
@@ -625,7 +631,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
 	@Override
 	public OrderDetailVo getOrderDetailVo(Orders item, Long staffId) {
-
+		Long orderId = item.getId();
 		OrderDetailVo result = new OrderDetailVo();
 		OrderListVo vo = this.getOrderListVo(item, staffId);
 
@@ -660,7 +666,17 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				result.setTelStaff(org.getOrgTel());
 			}
 		}
-
+		
+		//图片
+		List<Imgs> orderImgs = new ArrayList<Imgs>();
+		ImgSearchVo searchVo = new ImgSearchVo();
+		searchVo.setLinkId(orderId);
+		searchVo.setLinkType(Constants.IMG_LINK_TYPE_ORDER);
+		List<Imgs> imgs = imgService.selectBySearchVo(searchVo);
+		if (!imgs.isEmpty()) orderImgs = imgs;
+		
+		result.setOrderImgs(orderImgs);
+		
 		return result;
 	}
 

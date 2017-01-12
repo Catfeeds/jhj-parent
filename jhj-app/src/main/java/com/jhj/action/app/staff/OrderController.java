@@ -1,11 +1,12 @@
 package com.jhj.action.app.staff;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,11 +17,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.common.Imgs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPriceExt;
@@ -28,6 +34,7 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.ImgService;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffDetailDeptService;
@@ -46,13 +53,14 @@ import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrderQuerySearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrderBeginVo;
 import com.jhj.vo.staff.StaffOrderVo;
+import com.meijia.utils.ImgServerUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
+
 
 @Controller
 @RequestMapping(value = "/app/staff/order")
@@ -108,6 +116,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private UsersService userService;
+	
+	@Autowired
+	private ImgService imgService;
 
 	/**
 	 * 当日统计数接口
@@ -218,10 +229,13 @@ public class OrderController extends BaseController {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "post_done", method = RequestMethod.POST)
 	public AppResultData<Object> postDone(HttpServletRequest request,
 			@RequestParam("staff_id") Long staffId,
-			@RequestParam("order_id") Long orderId) throws ParseException {
+			@RequestParam("order_id") Long orderId,
+			@RequestParam(value = "imgs", required = false) MultipartFile[] imgs
+			) throws ParseException, JsonParseException, JsonMappingException, IOException {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
 		Orders orders = ordersService.selectByPrimaryKey(orderId);
@@ -239,12 +253,45 @@ public class OrderController extends BaseController {
 			result.setMsg("未到服务完成时间点.不能提前完成服务");
 			return result;
 		}
+		
+		if (imgs == null && imgs.length == 0) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("请客户在派工单上签字后拍照上传.");
+			return result;
+		}
 
 
 		// 改变服务状态为已完成
 		orders.setOrderStatus((short) 7);
 		orders.setUpdateTime(TimeStampUtil.getNow()/1000);
+		orders.setOrderDoneTime(TimeStampUtil.getNowSecond());
 		ordersService.updateByPrimaryKeySelective(orders);
+		
+		//处理上传图片
+
+		// 处理图片问题
+
+		for (int i = 0; i < imgs.length; i++) {
+			String url = Constants.IMG_SERVER_HOST + "/upload/";
+			String fileName = imgs[i].getOriginalFilename();
+			String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+			fileType = fileType.toLowerCase();
+			String sendResult = ImgServerUtil.sendPostBytes(url, imgs[i].getBytes(), fileType);
+
+			ObjectMapper mapper = new ObjectMapper();
+			HashMap<String, Object> o = mapper.readValue(sendResult, HashMap.class);
+			String ret = o.get("ret").toString();
+			HashMap<String, String> info = (HashMap<String, String>) o.get("info");
+			String imgUrl = Constants.IMG_SERVER_HOST + "/" + info.get("md5").toString();
+			Imgs orderImg = imgService.initImg();
+			orderImg.setLinkId(orderId);
+			orderImg.setLinkType(Constants.IMG_LINK_TYPE_ORDER);
+			orderImg.setImgUrl(imgUrl);
+			imgService.insert(orderImg);
+		}
+		
+		
+		
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(orderId);
 		
 		String orderNo = orders.getOrderNo();

@@ -420,7 +420,9 @@ public class Constants {
 	 
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_0 = 0;  //订单欠款
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_1 = 1;  //订单欠款取消
-
+	 
+	 //图片类型
+	 public static String IMG_LINK_TYPE_ORDER = "order";
 }
 
 

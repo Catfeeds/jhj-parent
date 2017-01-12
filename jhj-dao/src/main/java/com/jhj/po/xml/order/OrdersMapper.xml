@@ -245,6 +245,14 @@
 		<if test="endUpdateTime !=null">
 			<![CDATA[ and update_time <= #{endUpdateTime}]]>
 		</if>
+		
+		<if test="startOrderDoneTime !=null">
+			<![CDATA[ and order_done_time >= #{startOrderDoneTime}]]>
+		</if>
+
+		<if test="endOrderDoneTime !=null">
+			<![CDATA[ and order_done_time <= #{"endOrderDoneTime !=null"}]]>
+		</if>
 
 		<if test="parentId !=null">
 			and id in (select order_id from order_dispatchs where parent_id = #{parentId,jdbcType=NUMERIC} and dispatch_status = 1)
@@ -454,7 +462,7 @@
 		order_type, service_type,
 		service_content, service_date, service_hour, staff_nums,
 		order_status, order_rate, order_rate_content,
-		order_from,order_op_from, remarks,remarks_confirm,add_time, update_time,
+		order_from,order_op_from, remarks,remarks_confirm,add_time, update_time, order_done_time,
 		remarks_bussiness_confirm
 		)
 		values
@@ -473,7 +481,7 @@
 		#{remarks,jdbcType=VARCHAR},
 		#{remarksConfirm,jdbcType=VARCHAR},
 		#{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC},
-		#{remarksBussinessConfirm,jdbcType=VARCHAR}
+		#{orderDoneTime,jdbcType=NUMERIC}, #{remarksBussinessConfirm,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jhj.po.model.order.Orders">
@@ -552,7 +560,9 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
-
+			<if test="orderDoneTime != null">
+				order_done_time,
+			</if>
 			<if test="remarksBussinessConfirm !=null">
 				remarks_bussiness_confirm
 			</if>
@@ -626,6 +636,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=NUMERIC},
+			</if>
+			<if test="orderDoneTime != null">
+				#{orderDoneTime,jdbcType=NUMERIC},
 			</if>
 			<if test="remarksBussinessConfirm !=null">
 				#{remarksBussinessConfirm,jdbcType=VARCHAR}
@@ -703,7 +716,11 @@
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=NUMERIC},
 			</if>
-
+			
+			<if test="orderDoneTime != null">
+	order_done_time = #{orderDoneTime,jdbcType=NUMERIC},
+			</if>
+			
 			<if test="remarksBussinessConfirm !=null and remarksBussinessConfirm !='' ">
 				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR}
 			</if>
@@ -771,6 +788,7 @@
 		add_time =
 		#{addTime,jdbcType=NUMERIC},
 		update_time = #{updateTime,jdbcType=NUMERIC},
+		order_done_time = #{orderDoneTime,jdbcType=NUMERIC},
 		remarks_bussiness_confirm =
 		#{remarksBussinessConfirm,jdbcType=VARCHAR},
 
