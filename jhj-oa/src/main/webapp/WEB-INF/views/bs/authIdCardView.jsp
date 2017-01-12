@@ -21,8 +21,20 @@
 				</p>
 				<a href="#">
 					<img id="head_img" src="${orgStaff.headImg }"
-						onerror="this.onerror=null;this.src='/jhj-oa/upload/headImg/default-head-img.png'" width="60px" height="60px">
+						onerror="this.onerror=null;this.src='/jhj-oa/upload/headImg/default-head-img.png'" width="60px" height="60px"/>
 				</a>
+			</div>
+				
+					
+			<div class="twt-category">
+				<div class="col-lg-12" id="authImg">
+				认证图片：
+					<c:if test="${authData.img != '' && authData.img != null }">
+						<img src="data:image/bmp;base64,${authData.img }" /> 
+					</c:if>
+					
+				</div>
+			
 			</div>
 			<div class="twt-category">
 

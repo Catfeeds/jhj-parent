@@ -10,7 +10,7 @@ $("#idAuthViewModal").on("hidden.bs.modal", function() {
 });
 
 function doAuthIdCard(staffId) {
-	if (confirm("认证需要访问黑格科技，需花费1.1元，是否确定认证?")){
+	if (confirm("认证需要访问黑格科技，需花费2元，是否确定认证?")){
 		$.ajax({
 	    	type:"POST",   // http请求方式
 	    	url: appRootUrl +"/newbs/do-auth-id-card.json", // 发送给服务器的url
@@ -41,11 +41,21 @@ function authIdCardAjaxReview(data) {
 	}
 	
 	var authData = data.authData;
-	console.log(authData);
-	$("#authTime").html("认证时间:"+ authData.authTime);
-	$("#msg").html("认证情况:"+ authData.msg);
-	$("#mobileProv").html("手机号归属地:"+ authData.mobileProv);
-	$("#sex").html("性别:"+ authData.sex);
-	$("#birthday").html("生日:"+ authData.birthday);
-	$("#address").html("地址:"+ authData.address);
+	
+	//认证图片
+	if (authData != undefined || authData != '') {
+		$("#authTime").html("认证时间:"+ authData.authTime);
+		$("#msg").html("认证情况:"+ authData.msg);
+		$("#mobileProv").html("手机号归属地:"+ authData.mobileProv);
+		$("#sex").html("性别:"+ authData.sex);
+		$("#birthday").html("生日:"+ authData.birthday);
+		$("#address").html("地址:"+ authData.address);
+		
+		//认证图片
+		var authImgObj = "<img src=\"data:image/png;base64,"+authData.img+"\" /> ";
+		$("#authImg").html("认证图片:" + authImgObj);
+	}
+	
+	
+	
 }
