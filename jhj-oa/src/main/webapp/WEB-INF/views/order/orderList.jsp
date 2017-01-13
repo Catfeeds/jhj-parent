@@ -209,6 +209,7 @@
 										<th>订单状态</th>
 										<th>支付方式</th>
 										<th>支付金额</th>
+										<th>补时/差价</th>
 										<th>操作</th>
 									</tr>
 								</thead>
@@ -234,6 +235,11 @@
 												<td><orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" orderType="${item.orderType }" /></td>
 												<td>${ item.payTypeName }</td>
 												<td>${ item.orderPay }</td>
+												<td><c:if test="${item.orderExtType == 0 and item.spreadMoeny>0 }">补差价：<payTypeNameTag:payType payType="${item.payTypeExt }" orderStatus="${item.orderStatus }"/></c:if>
+													<c:if test="${item.orderExtType == 1 }">加时：<payTypeNameTag:payType payType="${item.payTypeExt }" orderStatus="${item.orderStatus }"/></c:if>
+													<c:if test="${item.spreadMoeny>0 }">${ item.spreadMoeny }</c:if>
+													<c:if test="${item.spreadMoeny==0 }">-</c:if>
+												</td>
 												<td>
 													<button id="btn_detail"
 														onClick="javascript:btnDetail('${ item.orderNo }', '${item.orderType }', '${item.disStatus}')"

@@ -44,6 +44,7 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserTrailReal;
+import com.jhj.service.bs.AuthIdCardService;
 import com.jhj.service.bs.OrgStaffAuthService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffTagsService;
@@ -109,9 +110,6 @@ public class NewOrgStaffController extends AdminController {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchService;
-	
-	
-	
 	
 	/**
 	 * @throws UnsupportedEncodingException 
