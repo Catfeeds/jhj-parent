@@ -74,8 +74,10 @@ public class CleanupUserDetailPayController extends BaseController{
 							orderVo.setOrderNo(userDetailPay.getOrderNo());
 							Orders orders = orderQueryService.selectBySearchVo(orderVo).get(0);
 							if(orders.getOrderStatus()>0){
-								if(restMoney.compareTo(orderPay)>0)
+								if(restMoney.compareTo(orderPay)>=0)
 									restMoney = restMoney.subtract(orderPay);
+								else
+									restMoney = new BigDecimal(0);
 							}
 						}
 						if(orderType==1){
