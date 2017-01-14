@@ -47,7 +47,7 @@
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
 
-		<if test="mobile != null">
+		<if test="mobile != null and mobile!=''">
 			and staff_id in (select staff_id from org_staffs where mobile = #{mobile,jdbcType=VARCHAR})
 		</if>
 
