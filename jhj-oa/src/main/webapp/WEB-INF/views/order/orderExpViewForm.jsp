@@ -170,13 +170,8 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单来源</label>
 							<div class="col-md-5">
-								<%-- <form:input path="orderOpFromName" class="form-control" readonly="true" />
-								<form:errors path="orderOpFromName" class="field-has-error"></form:errors> --%>
-								<form:select path="orderOpFrom" cssClass="form-control">
-									<form:option value="">--请选择订单来源--</form:option>
-									<form:option value="1">来电订单</form:option>
-									<form:options items="${cooperativeBusiness }" itemValue="id" itemLabel="businessName"/>
-								</form:select>
+								<form:input path="orderOpFromName" class="form-control" readonly="true" />
+								<form:errors path="orderOpFromName" class="field-has-error"></form:errors>
 							</div>
 						</div>
 						<div class="form-group">
