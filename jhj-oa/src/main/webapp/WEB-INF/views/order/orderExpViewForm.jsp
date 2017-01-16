@@ -193,6 +193,9 @@
 								<form:textarea path="remarks" readonly="true" rows="2" cols="50" class="form-control" />
 							</div>
 						</div>
+						<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
+							<input type="submit" name="修改" class="btn btn-success"/>
+						</c:if>
 					</section>
 					<section class="panel" id ="dispatchSection"> <header class="panel-info"> <h4>派工信息</h4> </header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />

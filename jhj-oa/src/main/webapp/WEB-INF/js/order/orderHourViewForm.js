@@ -418,26 +418,41 @@ $("#checkOrderLog").on('click',function(){
 		dataType:"json",
 		success:function(data){
 			if(data.status==0){
-				var temp = $("#orderLogTemp").html();
-				var html = '';   
 				var result = data.data;
 				if(result != null && result.length>0){
+					var temp = $("#orderLogTemp").html();
+					var html = '';   
 					for(var i=0;i<result.length;i++){
-						var htmlTemp = temp;
 						var orderLog = result[i];
+						var htmlTemp = temp;
 						htmlTemp += htmlTemp.replace(new RegExp('{index}','gm'),i);
-						htmlTemp += htmlTemp.replace(new RegExp('{action}','gm'),orderLog.action);
-						htmlTemp += htmlTemp.replace(new RegExp('{userName}','gm'),orderLog.user_name);
-						htmlTemp += htmlTemp.replace(new RegExp('{userType}','gm'),orderLog.user_type);
-						htmlTemp += htmlTemp.replace(new RegExp('{remarks}','gm'),orderLog.remarks);
-						htmlTemp += htmlTemp.replace(new RegExp('{addTime}','gm'),orderLog.add_time);
+						if(orderLog.action!=null && orderLog.action!='')
+							htmlTemp += htmlTemp.replace(new RegExp('{action}','gm'),orderLog.action);
+						else 
+							htmlTemp += htmlTemp.replace(new RegExp('{action}','gm'),"");
+						if(orderLog.user_name!=null && orderLog.user_name!='')
+							htmlTemp += htmlTemp.replace(new RegExp('{userName}','gm'),orderLog.user_name);
+						else 
+							htmlTemp += htmlTemp.replace(new RegExp('{userName}','gm'),"");
+						if(orderLog.user_type!=null && orderLog.user_type!='')
+							htmlTemp += htmlTemp.replace(new RegExp('{userType}','gm'),orderLog.user_type);
+						else
+							htmlTemp += htmlTemp.replace(new RegExp('{userType}','gm'),"");
+						if(orderLog.remarks!=null && orderLog.remarks!='')
+							htmlTemp += htmlTemp.replace(new RegExp('{remarks}','gm'),orderLog.remarks);
+						else 
+							htmlTemp += htmlTemp.replace(new RegExp('{remarks}','gm'),'');
+						htmlTemp += htmlTemp.replace(new RegExp('{addTime}','gm'),parseFloat(orderLog.add_time));
 						html +=htmlTemp;
 					}
 				}
-				$("#showOrderLog").html(html);
+				$("#showOrderLog").html("").html(html);
+				$("#table-order-log").css("display","block");
 			}else if(data.status==999){
 				alert("没有数据！");
 			}
 		}
 	});
 });
+
+$('#checkOrderLog').popover();

@@ -24,6 +24,7 @@
 		<div class="col-lg-12">
 			<section class="panel">
 			<div class="panel-body">
+				<button id="checkOrderLog" class="btn btn-success">查看订单日志</button>
 				<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 					enctype="multipart/form-data">
 					<form:hidden path="id" />
@@ -147,6 +148,9 @@
 								<form:textarea path="remarks" readonly="true" rows="2" cols="50" class="form-control" />
 							</div>
 						</div>
+						<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
+							<input type="submit" name="修改" class="btn btn-success"/>
+						</c:if>
 						
 						</section>
 						<section class="panel" id="dispatchSection"> <header class="panel-info">
@@ -277,6 +281,34 @@
 			</div>
 			</section>
 		</div>
+	</div>
+	<div class="col-sm-12" style="display:none" z-index="100" id="table-order-log">
+		<table class="table table-striped table-advance table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>操作</th>
+					<th>录入人</th>
+					<th>用户类型</th>
+				 	<th>备注信息</th>
+					<th>录入时间</th>
+				</tr>
+			</thead>
+			<tbody id="showOrderLog">
+				
+			</tbody>
+			
+			<tbody style="display:none" id='orderLogTemp'>
+				<tr>
+					<td>{index}</td>
+					<td>{action}</td>
+					<td>{userName}</td>
+					<td>{userType}</td>
+					<td>{remarks}</td>
+					<td>{addTime}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 	<!-- page end--> </section> </section> <!--main content end--> <!--footer start--> <%@ include file="../shared/pageFooter.jsp"%>
 	<!--footer end--> </section>
