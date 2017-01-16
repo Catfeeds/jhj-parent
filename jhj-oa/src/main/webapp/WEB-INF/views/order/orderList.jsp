@@ -252,6 +252,9 @@
 															<i class="icon-plus-sign-alt"></i>
 														</button>
 													</c:if>
+													<c:if test="${item.remarks ne ''}">
+														<i class="btn btn-primary btn-xs glyphicon glyphicon-comment" title="${item.remarks }"></i>
+													</c:if>
 												</td>
 											</tr>
 									</c:forEach>

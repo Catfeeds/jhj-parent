@@ -70,14 +70,19 @@
 										<label class="col-md-2 control-label">选择云店*</label>
 										<div class="col-md-5">
 											<%-- <cloudOrgSelectTag:select selectId="${leaveModel.orgId }" logInParentOrgId="${logInParentOrgId }"/> --%>
-											<select name="orgId" id="orgId" class="form-control">
-												<c:if test="${leaveModel.cloudOrgName!=null }">
-													<option value="${leaveModel.orgId}">${leaveModel.cloudOrgName }</option>
-												</c:if>
-												<c:if test="${leaveModel.cloudOrgName==null }">
-													<option value="0">全部</option>
-												</c:if>
-											</select>
+											<c:if test="${leaveModel.orgId>0 }">
+												<input name="orgName" value="${leaveModel.cloudOrgName }" class="form-control" readonly="readonly"/>
+											</c:if>
+											<c:if test="${leaveModel.orgId==0 }">
+												<select name="orgId" id="orgId" class="form-control">
+													<c:if test="${leaveModel.cloudOrgName!=null }">
+														<option value="${leaveModel.orgId}">${leaveModel.cloudOrgName }</option>
+													</c:if>
+													<c:if test="${leaveModel.cloudOrgName==null }">
+														<option value="0">全部</option>
+													</c:if>
+												</select>
+											</c:if>
 										</div>
 									</div>
 											
@@ -87,9 +92,14 @@
 
 										<label class="col-md-2 control-label">选择服务人员*</label>
 										<div class="col-md-5">
-											<select name="staffId" path="staffId" id="staffId" class="form-control">
+											<c:if test="${leaveModel.staffId>0 }">
+												<input name="staffName" readonly="readonly" class="form-control" value="${leaveModel.staffName }"/>
+											</c:if>
+											<c:if test="${leaveModel.staffId==0 }">
+												<select name="staffId" path="staffId" id="staffId" class="form-control">
 													<option value="">请选择服务人员</option>
-											</select> 
+												</select> 
+											</c:if>
 										</div>
 									</div>
 									
