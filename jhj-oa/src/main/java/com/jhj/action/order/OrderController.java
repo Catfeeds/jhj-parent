@@ -316,5 +316,25 @@ public class OrderController extends BaseController {
 
 		return "order/orderExpAdd";
 	}
+	
+	@AuthPassport
+	@RequestMapping(value = "/update_order", method = RequestMethod.POST)
+	public String updateOrder(Model model,@ModelAttribute("orderModel") Orders orderForm) {
+
+		String url=null;
+		Orders orders = orderService.selectByOrderNo(orderForm.getOrderNo());
+		orders.setOrderOpFrom(orderForm.getOrderOpFrom());
+		orderService.updateByPrimaryKeySelective(orders);
+		if(orders.getOrderType()==0)
+			url = "redirect:order-hour-list";
+		if(orders.getOrderType()==1){
+			if(orders.getServiceType()==62 || orders.getServiceType()==63 || orders.getServiceType()==64 ||orders.getServiceType()==65)
+				url = "redirect:order-exp-baby-list";
+			else
+				url = "redirect:order-exp-list";
+		}
+			
+		return url;
+	}
 
 }

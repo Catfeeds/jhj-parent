@@ -403,3 +403,41 @@ function remove(selectStaffId, selectStaffName, distanceValue) {
 }
 
 window.onload = selectStaff;
+
+//查看订单日志
+$("#checkOrderLog").on('click',function(){
+	var orderNo = $("#orderNo").val();
+	if(orderNo==undefined || orderNo ==null || orderNo == '') return false;
+	
+	$.ajax({
+		type:"GET",
+		url:"/jhj-app/app/orderLog/orderLog-list.json",
+		data:{
+			"order_no":orderNo
+		},
+		dataType:"json",
+		success:function(data){
+			if(data.status==0){
+				var temp = $("#orderLogTemp").html();
+				var html = '';   
+				var result = data.data;
+				if(result != null && result.length>0){
+					for(var i=0;i<result.length;i++){
+						var htmlTemp = temp;
+						var orderLog = result[i];
+						htmlTemp += htmlTemp.replace(new RegExp('{index}','gm'),i);
+						htmlTemp += htmlTemp.replace(new RegExp('{action}','gm'),orderLog.action);
+						htmlTemp += htmlTemp.replace(new RegExp('{userName}','gm'),orderLog.user_name);
+						htmlTemp += htmlTemp.replace(new RegExp('{userType}','gm'),orderLog.user_type);
+						htmlTemp += htmlTemp.replace(new RegExp('{remarks}','gm'),orderLog.remarks);
+						htmlTemp += htmlTemp.replace(new RegExp('{addTime}','gm'),orderLog.add_time);
+						html +=htmlTemp;
+					}
+				}
+				$("#showOrderLog").html(html);
+			}else if(data.status==999){
+				alert("没有数据！");
+			}
+		}
+	});
+});
