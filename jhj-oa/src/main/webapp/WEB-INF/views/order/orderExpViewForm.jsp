@@ -34,7 +34,7 @@
 		<div class="col-lg-12">
 			<section class="panel">
 			<div class="panel-body">
-				<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="updateStaffByOrderNo"
+				<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 					enctype="multipart/form-data">
 					<form:hidden path="id" />
 					<form:hidden path="userId" />
@@ -132,6 +132,25 @@
 								<form:errors path="orderMoney" class="field-has-error"></form:errors>
 							</div>
 						</div>
+						
+						<%-- <c:if test="${ oaOrderListVoModel.couponValue > 0 }"> --%>
+						<div class="form-group">
+							<label class="col-md-2 control-label">优惠券</label>
+							<div class="col-md-5">
+								<form:input path="couponValue" class="form-control" maxLength="32" readonly="true" />
+								<form:errors path="couponValue" class="field-has-error"></form:errors>
+							</div>
+						</div>
+						
+						<%-- <div class="form-group">
+							<label class="col-md-2 control-label">优惠券名称</label>
+							<div class="col-md-5">
+								<form:input path="couponName" class="form-control" maxLength="32" readonly="true" />
+								<form:errors path="couponName" class="field-has-error"></form:errors>
+							</div>
+						</div> --%>
+						<%-- </c:if> --%>
+						
 						<div class="form-group">
 							<label class="col-md-2 control-label">支付金额</label>
 							<div class="col-md-5">
@@ -151,8 +170,13 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单来源</label>
 							<div class="col-md-5">
-								<form:input path="orderOpFromName" class="form-control" readonly="true" />
-								<form:errors path="orderOpFromName" class="field-has-error"></form:errors>
+								<%-- <form:input path="orderOpFromName" class="form-control" readonly="true" />
+								<form:errors path="orderOpFromName" class="field-has-error"></form:errors> --%>
+								<form:select path="orderOpFrom" cssClass="form-control">
+									<form:option value="">--请选择订单来源--</form:option>
+									<form:option value="1">来电订单</form:option>
+									<form:options items="${cooperativeBusiness }" itemValue="id" itemLabel="businessName"/>
+								</form:select>
 							</div>
 						</div>
 						<div class="form-group">
@@ -162,23 +186,6 @@
 								<form:errors path="payTypeName" class="field-has-error"></form:errors>
 							</div>
 						</div>
-						<c:if test="${ oaOrderListVoModel.couponValue > 0 }">
-						<div class="form-group">
-							<label class="col-md-2 control-label">优惠券</label>
-							<div class="col-md-5">
-								<form:input path="couponValue" class="form-control" maxLength="32" readonly="true" />
-								<form:errors path="couponValue" class="field-has-error"></form:errors>
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label class="col-md-2 control-label">优惠券名称</label>
-							<div class="col-md-5">
-								<form:input path="couponName" class="form-control" maxLength="32" readonly="true" />
-								<form:errors path="couponName" class="field-has-error"></form:errors>
-							</div>
-						</div>
-						</c:if>
 						
 						<div class="form-group">
 							<label class="col-md-2 control-label">用户备注:</label>
