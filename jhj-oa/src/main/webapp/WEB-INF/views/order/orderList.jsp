@@ -252,6 +252,9 @@
 															<i class="icon-plus-sign-alt"></i>
 														</button>
 													</c:if>
+													<c:if test="${item.remarks ne ''}">
+														<i class="" title="${item.remarks }">备注</i>
+													</c:if>
 												</td>
 											</tr>
 									</c:forEach>
