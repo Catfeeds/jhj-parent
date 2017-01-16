@@ -141,9 +141,13 @@ var loadStaffDynamic = function(data, status, xhr) {
 	
 	var tdHtml = "";
 	
-	if (result.length == 0) {
-		alert("暂无可用派工");
+	var orderStatus = $("#orderStatus").val();
+	if (orderStatus != 7 && orderStatus != 8) {
+		if (result.length == 0) {
+			alert("暂无可用派工");
+		}
 	}
+	
 	
 	for (var i = 0, j = result.length; i < j; i++) {
 		

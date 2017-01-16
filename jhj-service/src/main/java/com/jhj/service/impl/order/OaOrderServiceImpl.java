@@ -15,6 +15,7 @@ import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.common.Imgs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
@@ -25,6 +26,7 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
+import com.jhj.service.ImgService;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -43,6 +45,7 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
+import com.jhj.vo.ImgSearchVo;
 import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
@@ -116,6 +119,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 	
 	@Autowired
 	private OrderAppointService orderAppointService;
+	
+	@Autowired
+	private ImgService imgService;
 	
 	@Override
 	public OaOrderListVo completeVo(Orders orders) {
@@ -242,7 +248,32 @@ public class OaOrderServiceImpl implements OaOrderService {
 		oaOrderListVo.setCloudOrgName(cloudName);
 		oaOrderListVo.setOrgName(orgName);	
 		oaOrderListVo.setOrderDispatchs(orderDispatchs);
-
+		
+		//订单完成时间
+		String orderDoneTimeStr = "";
+		String overworkTimeStr = "";
+		Long orderDoneTime = orders.getOrderDoneTime();
+		//订单完成图片
+		List<Imgs> orderImgs = new ArrayList<Imgs>();
+		if (orders.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_7) || 
+			orders.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_8)) {
+			
+			//订单完成时间
+			orderDoneTimeStr = TimeStampUtil.timeStampToDateStr(orderDoneTime * 1000,  "yyyy-MM-dd HH:mm:ss");
+			int overworkMin = (int) ((orderDoneTime - orders.getServiceDate()) / 60);
+			
+			overworkTimeStr = overworkMin + "分钟";
+			
+			ImgSearchVo searchVo = new ImgSearchVo();
+			searchVo.setLinkId(orders.getId());
+			searchVo.setLinkType(Constants.IMG_LINK_TYPE_ORDER);
+			List<Imgs> imgs = imgService.selectBySearchVo(searchVo);
+			if (!imgs.isEmpty()) orderImgs = imgs;
+		}
+		oaOrderListVo.setOrderImgs(orderImgs);
+		oaOrderListVo.setOrderDoneTime(orderDoneTime);
+		oaOrderListVo.setOrderDoneTimeStr(orderDoneTimeStr);
+		oaOrderListVo.setOverworkTimeStr(overworkTimeStr);
 		return oaOrderListVo;
 	}
 

@@ -13,17 +13,18 @@
 <%@ include file="../shared/importCss.jsp"%>
 <!--css for this page-->
 <link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" />
-<link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet"  />
+<link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet" />
+<link href="<c:url value='/assets/fancybox/source/jquery.fancybox.css?v=2.1.3'/>" rel="stylesheet'/>" />
+<link href="<c:url value='/css/gallery.css'/>" rel="stylesheet" type="text/css" />
 <style>
 .bootstrap-tagsinput input {
-  border: none;
-  box-shadow: none;
+	border: none;
+	box-shadow: none;
 }
 
 .bootstrap-tagsinput .label {
-  font-size: 100%;
+	font-size: 100%;
 }
-
 </style>
 </head>
 <body>
@@ -41,10 +42,12 @@
 					<form:hidden path="orderNo" />
 					<form:hidden path="orderStatus" />
 					<form:hidden path="staffId" />
-					<form:hidden path="isAuto"/>
-					<form:hidden path="isMulti"/>
+					<form:hidden path="isAuto" />
+					<form:hidden path="isMulti" />
 					<div class="form-body">
-					<section class="panel"> <header class="panel-info"> <h4>订单基本信息</h4> </header>
+						<section class="panel"> <header class="panel-info">
+						<h4>订单基本信息</h4>
+						</header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						<div class="form-group ">
 							<div class="col-md-5">
@@ -67,7 +70,6 @@
 								<form:errors path="mobile" class="field-has-error"></form:errors>
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">服务类型</label>
 							<div class="col-md-5">
@@ -87,37 +89,30 @@
 										</tr>
 									</thead>
 									<tbody id="service-content">
-									<c:forEach items="${orderAddonVos}" var="item">
-										<tr>
-											<td>${item.serviceAddonName }</td>
-											<td>${item.price } ${item.itemUnit }</td>
-											<td>${item.serviceHour }</td>
-											<td>${item.itemNum }</td>
-										</tr>
-									</c:forEach>
-									
+										<c:forEach items="${orderAddonVos}" var="item">
+											<tr>
+												<td>${item.serviceAddonName }</td>
+												<td>${item.price }${item.itemUnit }</td>
+												<td>${item.serviceHour }</td>
+												<td>${item.itemNum }</td>
+											</tr>
+										</c:forEach>
 									</tbody>
 								</table>
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">服务开始时间</label>
 							<div class="col-md-5">
-								<input type="text" readonly="true" value="${oaOrderListVoModel.serviceDateStr }" class="form-control"/>
+								<input type="text" readonly="true" value="${oaOrderListVoModel.serviceDateStr }" class="form-control" />
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">服务时长</label>
 							<div class="col-md-5">
 								<form:input path="serviceHour" class="form-control" maxLength="32" readonly="true" />
 							</div>
 						</div>
-						
-						
-						
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单状态</label>
 							<div class="col-md-5">
@@ -132,7 +127,6 @@
 								<form:errors path="orderMoney" class="field-has-error"></form:errors>
 							</div>
 						</div>
-						
 						<%-- <c:if test="${ oaOrderListVoModel.couponValue > 0 }"> --%>
 						<div class="form-group">
 							<label class="col-md-2 control-label">优惠券</label>
@@ -141,16 +135,13 @@
 								<form:errors path="couponValue" class="field-has-error"></form:errors>
 							</div>
 						</div>
-						
 						<%-- <div class="form-group">
 							<label class="col-md-2 control-label">优惠券名称</label>
 							<div class="col-md-5">
 								<form:input path="couponName" class="form-control" maxLength="32" readonly="true" />
 								<form:errors path="couponName" class="field-has-error"></form:errors>
 							</div>
-						</div> --%>
-						<%-- </c:if> --%>
-						
+						</div> --%> <%-- </c:if> --%>
 						<div class="form-group">
 							<label class="col-md-2 control-label">支付金额</label>
 							<div class="col-md-5">
@@ -181,19 +172,19 @@
 								<form:errors path="payTypeName" class="field-has-error"></form:errors>
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label class="col-md-2 control-label">用户备注:</label>
 							<div class="col-md-5">
 								<form:textarea path="remarks" readonly="true" rows="2" cols="50" class="form-control" />
 							</div>
 						</div>
-					</section>
-					<section class="panel" id ="dispatchSection"> <header class="panel-info"> <h4>派工信息</h4> </header>
+						</section>
+						<section class="panel" id="dispatchSection"> <header class="panel-info">
+						<h4>派工信息</h4>
+						</header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-						
 						<div class="col-sm-12">
-							<table class="table table-striped table-advance table-hover" >
+							<table class="table table-striped table-advance table-hover">
 								<thead>
 									<tr>
 										<th>门店</th>
@@ -206,8 +197,8 @@
 										<th>派工类型</th>
 									</tr>
 								</thead>
-								<tbody >
-									 <c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
+								<tbody>
+									<c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
 										<tr>
 											<td>${item.parentOrgName }</td>
 											<td>${item.orgName }</td>
@@ -218,16 +209,41 @@
 											<td>${item.applyTimeStr }</td>
 											<td>${item.dispatchActionStr }</td>
 										</tr>
-									 </c:forEach>
+									</c:forEach>
 								</tbody>
 							</table>
 						</div>
-						
-						
-					</section>
-					<section class="panel" id ="doDispatchSection"> <header class="panel-info"> <h4>派工调整</h4> </header>
+						</section>
+						<c:if test="${!empty oaOrderListVoModel.orderImgs}">
+							<section class="panel" id="orderDoneSection"> <header class="panel-info">
+							<h4>完成服务信息</h4>
+							</header>
+							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
+							<div class="form-group">
+								<label class="col-md-2 control-label">完成服务时间</label>
+								<div class="col-md-5">${oaOrderListVoModel.orderDoneTimeStr }</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">服务超时</label>
+								<div class="col-md-5">${oaOrderListVoModel.overworkTimeStr }</div>
+							</div>
+							<div class="container">
+								<div class="row">
+									<c:forEach items="${oaOrderListVoModel.orderImgs}" var="item">
+										<div class="col-lg-3">
+											<a class="fancybox" rel="image-group-name" href="${item.imgUrl }" title="派工单">
+												<img class="img-responsive thumbnail" src="${item.imgUrl }" alt="" />
+											</a>
+										</div>
+									</c:forEach>
+								</div>
+							</div>
+							</section>
+						</c:if>
+						<section class="panel" id="doDispatchSection"> <header class="panel-info">
+						<h4>派工调整</h4>
+						</header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-							
 						<div class="form-group required">
 							<label class="col-md-2 control-label">用户服务地址</label>
 							<div class="col-md-5">
@@ -276,10 +292,9 @@
 							</div>
 						</div>
 						<div id="staffList" class="col-sm-12">
-							
-							已选择：<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true"  />
-
-							<table class="table table-striped table-advance table-hover" >
+							已选择：
+							<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true" />
+							<table class="table table-striped table-advance table-hover">
 								<thead>
 									<tr>
 										<th>选派员工</th>
@@ -302,7 +317,8 @@
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3">
 								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
-								<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5}">
+								<c:if
+									test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5}">
 									<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9 }">
 										<input type="button" id="cancleOrder" class="btn btn-success" value="取消订单">
 									</c:if>
@@ -326,19 +342,36 @@
 		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>" type="text/javascript"></script>
 	<script src="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.js'/>" type="text/javascript"></script>
+	<script src="<c:url value='/assets/fancybox/source/jquery.fancybox.pack.js'/>"></script>
+	<script src="<c:url value='/js/modernizr.custom.js'/>"></script>
+	<script src="<c:url value='/js/toucheffects.js'/>"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.fancybox').fancybox({
+				padding : 0,
+				openEffect : 'elastic',
+				closeBtn : false
+			});
+		});
+	</script>
 	
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderExpViewForm.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
-	
 	<script>
 		<c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
 
-			var selectedStaffId = ${item.staffId};
-			var selectedStaffName = "${item.staffName}";
-			var selectedDistanceValue = ${item.userAddrDistance};
-			addSelectedStaffs(selectedStaffId, selectedStaffName, selectedDistanceValue);
+		var selectedStaffId = $
+		{
+			item.staffId
+		};
+		var selectedStaffName = "${item.staffName}";
+		var selectedDistanceValue = $
+		{
+			item.userAddrDistance
+		};
+		addSelectedStaffs(selectedStaffId, selectedStaffName, selectedDistanceValue);
 		</c:forEach>
 	</script>
 </body>
