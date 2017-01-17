@@ -372,7 +372,6 @@ myApp.onPageInit('order-lib-cal',function(page) {
     /*---------------暂时添加代码-------------------*/
     if(date<'2017-01-24'){
     	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
-    	return false;
     }
     /*---------------暂时添加代码-------------------*/
     
