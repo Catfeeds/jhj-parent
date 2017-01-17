@@ -78,6 +78,14 @@ myApp.onPageInit('order-lib-cal',function(page) {
             noSelectHour();
             filterServiceDate();
             filterWeek(serviceTypeId);
+            
+            /*-----------暂时添加的代码需要删除------*/
+            if(s<'2017-01-24'){
+        		$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+        		return false;
+        	}
+            /*-----------暂时添加的代码需要删除------*/
+            
         });
         $$("#rilikongjian3-dateTime li").removeClass("hour-beijingse");
         filterServiceDate();
@@ -95,6 +103,13 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var preDay = moment(date).add(c, 'days');
         nowDate=preDay;
         getDay(preDay);
+        
+        /*---------暂时添加的代码------------*/
+        if(preDay.format("YYYY-MM-DD")<'2017-01-24'){
+        	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+    		return false;
+        }
+        /*---------暂时添加的代码------------*/
     }
 
     //后一天
@@ -102,6 +117,13 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var afterDay = moment(date).add(c, 'days');
         nowDate=afterDay;
         getDay(afterDay);
+        
+        /*---------暂时添加的代码------------*/
+        if(afterDay.format("YYYY-MM-DD")<'2017-01-24'){
+        	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+    		return false;
+        }
+        /*---------暂时添加的代码------------*/
     }
 
     //日历减1天
