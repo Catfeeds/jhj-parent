@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,6 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
-import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderServiceAddonsService;
@@ -49,7 +49,6 @@ import com.jhj.service.users.UserLoginedService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UserSmsTokenService;
 import com.jhj.service.users.UsersService;
-import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.order.DeepCleanVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -57,8 +56,7 @@ import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
-
-import org.apache.commons.beanutils.BeanUtils;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  * @description：
@@ -107,9 +105,6 @@ public class OrderAmController extends BaseController {
 
 	@Autowired
 	private DictCouponsService dictCouponsService;
-
-	@Autowired
-	private OrderLogService orderLogService;
 
 	@Autowired
 	private UserDetailPayService userDetailPayService;

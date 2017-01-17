@@ -348,13 +348,18 @@ var selectStaff = function() {
 }
 
 // 取消订单
-$("#cancleOrder").on("click", function() {
+$("#cancleForm").on("click", function() {
 	var id = $("#id").val();
+	var remarks = $("#remark").val();
+	if(remarks!=null || remarks!=''){
+		$(this).attr("disabled",false);
+	} 
 	if (confirm("请确认取消订单吗？")) {
 		console.log("asdfasdfasdf");
 		$("#cancleOrder").attr("disabled",false);
 		var params = {};
 		params.order_id = id;
+		params.remarks = remarks;
 		$.ajax({
 			type : "POST",
 			url : "/jhj-oa/order/cancelOrder.json",
@@ -373,7 +378,6 @@ $("#cancleOrder").on("click", function() {
 			}
 		});
 	}
-	
 });
 
 function addSelectedStaffs(selectStaffId, selectStaffName, distanceValue) {
@@ -419,35 +423,17 @@ $("#checkOrderLog").on('click',function(){
 		success:function(data){
 			if(data.status==0){
 				var result = data.data;
-				if(result != null && result.length>0){
-					var temp = $("#orderLogTemp").html();
-					var html = '';   
-					for(var i=0;i<result.length;i++){
+				if(result.length>0){
+					var html = ''; 
+					for(var i=0,len=result.length;i<len;i++){
 						var orderLog = result[i];
-						var htmlTemp = temp;
-						htmlTemp += htmlTemp.replace(new RegExp('{index}','gm'),i);
-						if(orderLog.action!=null && orderLog.action!='')
-							htmlTemp += htmlTemp.replace(new RegExp('{action}','gm'),orderLog.action);
-						else 
-							htmlTemp += htmlTemp.replace(new RegExp('{action}','gm'),"");
-						if(orderLog.user_name!=null && orderLog.user_name!='')
-							htmlTemp += htmlTemp.replace(new RegExp('{userName}','gm'),orderLog.user_name);
-						else 
-							htmlTemp += htmlTemp.replace(new RegExp('{userName}','gm'),"");
-						if(orderLog.user_type!=null && orderLog.user_type!='')
-							htmlTemp += htmlTemp.replace(new RegExp('{userType}','gm'),orderLog.user_type);
-						else
-							htmlTemp += htmlTemp.replace(new RegExp('{userType}','gm'),"");
-						if(orderLog.remarks!=null && orderLog.remarks!='')
-							htmlTemp += htmlTemp.replace(new RegExp('{remarks}','gm'),orderLog.remarks);
-						else 
-							htmlTemp += htmlTemp.replace(new RegExp('{remarks}','gm'),'');
-						htmlTemp += htmlTemp.replace(new RegExp('{addTime}','gm'),parseFloat(orderLog.add_time));
-						html +=htmlTemp;
+						var htmlText="";
+						htmlText+="<tr><td>"+(i+1)+"</td><td>"+orderLog.action+"</td><td>"+orderLog.user_name+"</td><td>"+
+						orderLog.user_type_name+"</td><td>"+orderLog.remarks+"</td><td>"+orderLog.add_time_str+"</td></tr>";
+						html += htmlText;
 					}
+					$("#showOrderLog").html("").html(html);
 				}
-				$("#showOrderLog").html("").html(html);
-				$("#table-order-log").css("display","block");
 			}else if(data.status==999){
 				alert("没有数据！");
 			}
@@ -455,4 +441,3 @@ $("#checkOrderLog").on('click',function(){
 	});
 });
 
-$('#checkOrderLog').popover();

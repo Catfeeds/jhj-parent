@@ -253,7 +253,7 @@
 														</button>
 													</c:if>
 													<c:if test="${item.remarks ne ''}">
-														<i class="btn btn-primary btn-xs glyphicon glyphicon-comment" title="${item.remarks }"></i>
+														<i class="btn btn-success btn-xs glyphicon glyphicon-comment" title="${item.remarks }"></i>
 													</c:if>
 												</td>
 											</tr>

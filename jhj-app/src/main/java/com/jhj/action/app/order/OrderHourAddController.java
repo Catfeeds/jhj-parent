@@ -241,6 +241,19 @@ public class OrderHourAddController extends BaseController {
 		 * 2.插入订单日志表  order_log
 		 */
 		OrderLog orderLog = orderLogService.initOrderLog(order);
+		if(order.getOrderFrom()==1){
+			orderLog.setAction(Constants.ORDER_ACTION_ADD);
+			orderLog.setUserId(userId);
+			orderLog.setUserName(u.getMobile());
+			orderLog.setUserType((short)0);
+		}
+		if(order.getOrderFrom()==2){
+			/*orderLog.setAction(Constants.ORDER_ACTION_ADD);
+			AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
+			orderLog.setUserId();
+			orderLog.setUserName();
+			orderLog.setUserType((short)2);*/
+		}
 		
 		orderLogService.insert(orderLog);
 		
