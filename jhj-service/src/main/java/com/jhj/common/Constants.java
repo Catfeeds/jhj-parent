@@ -420,6 +420,14 @@ public class Constants {
 	 
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_0 = 0;  //订单欠款
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_1 = 1;  //订单欠款取消
+	 
+	 //订单操作
+	 public static String ORDER_ACTION_ADD = "订单添加";
+	 public static String ORDER_ACTION_PAY = "订单支付";
+	 public static String ORDER_ACTION_START_SERVER = "订单开始服务";
+	 public static String ORDER_ACTION_END_SERVER = "订单完成服务";
+	 public static String ORDER_ACTION_EVALUATE = "订单评价";
+	 public static String ORDER_ACTION_CANCLE = "取消订单";
 
 }
 

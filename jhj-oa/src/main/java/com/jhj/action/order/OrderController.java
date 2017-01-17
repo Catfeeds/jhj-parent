@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AccountAuth;
+import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
@@ -239,12 +245,24 @@ public class OrderController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/cancelOrder.json", method = RequestMethod.POST)
 	public AppResultData<Object> cancelOrder(
-			@RequestParam("order_id") Long orderId) {
+			@RequestParam("order_id") Long orderId,
+			@RequestParam("remarks") String remarks,HttpServletRequest request) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
 
 		AppResultData<Object> result = orderCancelService.cancleOrderDone(order);
+		
+		if(result.status==0){
+			OrderLog initOrderLog = orderLogService.initOrderLog(order);
+			initOrderLog.setAction(Constants.ORDER_ACTION_CANCLE);
+			initOrderLog.setUserType((short)2);
+			AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
+			initOrderLog.setUserId(auth.getId());
+			initOrderLog.setUserName(auth.getUsername());
+			initOrderLog.setRemarks(remarks);
+			orderLogService.insert(initOrderLog);
+		}
 		
 		return result;
 	}

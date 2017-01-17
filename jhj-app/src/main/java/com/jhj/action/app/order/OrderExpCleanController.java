@@ -17,16 +17,13 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
-import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
-import com.jhj.po.model.user.UserRefAm;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.ValidateService;
 import com.jhj.service.bs.DictCouponsService;
@@ -34,7 +31,6 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
-import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderServiceAddonsService;
@@ -43,13 +39,13 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
-import com.meijia.utils.vo.AppResultData;
 import com.jhj.vo.order.DeepCleanVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrderViewVo;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.StringUtil;
+import com.meijia.utils.vo.AppResultData;
 
 /**
  * @description：
@@ -66,8 +62,6 @@ public class OrderExpCleanController extends BaseController {
 	private OrdersService ordersService;
 	@Autowired
 	private OrderPricesService orderPricesService;
-	@Autowired
-	private OrderLogService orderLogService;
 	@Autowired
 	private OrderExpCleanService orderExpCleanService;
 	@Autowired
@@ -203,8 +197,7 @@ public class OrderExpCleanController extends BaseController {
 		/*
 		 * 插入订单日志表  order_log
 		 */
-		OrderLog orderLog = orderLogService.initOrderLog(order);
-		orderLogService.insert(orderLog);
+		  
 		
 		/* CouponsId,新增参数，判断用户下单时候有使用优惠，如果有使用优惠券，则在user_conpos表中插入该用户对应得优惠券信息
 		 * 

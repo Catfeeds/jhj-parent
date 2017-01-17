@@ -13,6 +13,7 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.service.order.OrderLogService;
+import com.jhj.vo.order.OrderLogVo;
 import com.meijia.utils.vo.AppResultData;
 
 @Controller
@@ -28,9 +29,15 @@ public class OrderLogController extends BaseController{
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
 		List<OrderLog> orderLogList = orderLogService.selectByOrderNo(orderNo);
+		
 		if(orderLogList.isEmpty())
 			result = new AppResultData<Object>(Constants.ERROR_999, ConstantMsg.ERROR_999_MSG_10, "");
-		else
+		else{
+			for(int i=0,len=orderLogList.size();i<len;i++){
+				OrderLogVo transVo = orderLogService.transVo(orderLogList.get(i));
+				orderLogList.set(i, transVo);
+			}
+		}
 			result.setData(orderLogList);
 		return result;
 	}
