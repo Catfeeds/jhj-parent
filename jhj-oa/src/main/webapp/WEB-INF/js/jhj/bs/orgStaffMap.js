@@ -7,7 +7,7 @@ map.addControl(new BMap.MapTypeControl()); // 添加地图类型控件
 map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
 map.enableScrollWheelZoom(false); // 开启鼠标滚轮缩放
 
-map.setMapStyle({style:"grayscale"});
+//map.setMapStyle({style:"grayscale"});
 
 var top_left_control = new BMap.ScaleControl({
 	anchor : BMAP_ANCHOR_TOP_LEFT
@@ -203,7 +203,7 @@ function loadStaffRoute() {
 			
 			var htmlStr = "";
 			$.each(tableDatas, function(i, obj) {
-				htmlStr = "<tr>";
+				htmlStr+= "<tr>";
 				htmlStr+= "<td>" + obj.staff_name + "</td>";
 				htmlStr+= "<td>" + obj.staff_nums + "</td>";
 				htmlStr+= "<td>" + obj.order_type_name + "</td>";
