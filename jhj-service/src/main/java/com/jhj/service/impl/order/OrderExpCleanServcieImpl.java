@@ -68,6 +68,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 		
 		//订单总价 = 订单单价（price） * 订单数量（itemNum）
 		BigDecimal orderMoney =  new BigDecimal(0.0);
+		BigDecimal orderOriginMoney =  new BigDecimal(0.0);
 		// 把JsonElement对象转换成JsonArray
 		if (el.isJsonArray()) {// 数组
 			JsonArray jsonArray = el.getAsJsonArray();
@@ -89,6 +90,8 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =orderMoney.add(price.multiply(itemNumBigDecimal));
+			    
+			    orderOriginMoney = orderOriginMoney.add(dictServiceAddons.getPrice().multiply(itemNumBigDecimal));
 			}
 		} else {// 单个对象
 			// 把JsonElement对象转换成JsonObject
@@ -106,10 +109,14 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				}
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
 			    orderMoney =price.multiply(itemNumBigDecimal);
+			    
+			    orderOriginMoney = orderOriginMoney.add(dictServiceAddons.getPrice().multiply(itemNumBigDecimal));
 			}
 		}
 		orderPrices.setOrderMoney(orderMoney);
 		orderPrices.setOrderPay(orderMoney);
+		orderPrices.setOrderOriginPrice(orderOriginMoney);
+		orderPrices.setOrderPrimePrice(orderMoney);
 		return orderPrices;
 	}
 

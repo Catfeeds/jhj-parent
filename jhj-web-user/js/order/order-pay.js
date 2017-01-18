@@ -5,6 +5,8 @@ myApp.onPageInit('order-pay', function(page) {
 	var orderNo = sessionStorage.getItem('order_no');
 	var orderId = sessionStorage.getItem('order_id');
 	var orderPay = sessionStorage.getItem('order_pay');
+	var orderOriginPay = sessionStorage.getItem('order_origin_pay');
+	
 	var userCouponId = sessionStorage.getItem('user_coupon_id');
 	var userCouponValue = sessionStorage.getItem('user_coupon_value');
 	if (userCouponValue == undefined || userCouponValue == "" || userCouponValue == null) {
@@ -50,6 +52,7 @@ myApp.onPageInit('order-pay', function(page) {
 		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay2.png");
 		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay1.png");
 		$$("#orderPayType").val(2);
+		changePayType('img-wxpay', 2);
 	} else  {
 		$$("#select-wxpay").css("display", "none");
 		$$("#select-alipay").css("display", "block");
@@ -57,6 +60,7 @@ myApp.onPageInit('order-pay', function(page) {
 		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
 		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay1.png");
 		$$("#orderPayType").val(1);
+		changePayType('img-alipay', 1)
 	}
 	
 	var postOrderPaySuccess =function(data, textStatus, jqXHR) {
@@ -193,4 +197,16 @@ function changePayType(imgPayType, orderPayType) {
 			$$('#' + value).attr("src","img/dingdan-pay/dingdan-pay2.png");
 		}
 	});
+	
+	//更换价格
+	var orderPay = sessionStorage.getItem('order_pay');
+	var orderOriginPay = sessionStorage.getItem('order_origin_pay');
+	if (orderPayType == 0) {
+		$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
+		$$("#orderPayStrLi").html("￥"+orderPay+"元");
+	} else {
+		$$("#orderMoneyStrLi").html("￥"+orderOriginPay+"元");
+		$$("#orderPayStrLi").html("￥"+orderOriginPay+"元");
+	}
+	
 }

@@ -9,6 +9,8 @@
     <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
     <result column="pay_type" property="payType" jdbcType="NUMERIC" />
     <result column="coupon_id" property="couponId" jdbcType="NUMERIC" />
+    <result column="order_origin_price" property="orderOriginPrice" jdbcType="DECIMAL" />
+    <result column="order_prime_price" property="orderPrimePrice" jdbcType="DECIMAL" />
     <result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
     <result column="order_pay" property="orderPay" jdbcType="DECIMAL" />
     <result column="order_pay_back" property="orderPayBack" jdbcType="DECIMAL" />
@@ -17,7 +19,7 @@
     <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, mobile, order_id, order_no, pay_type, coupon_id, order_money, order_pay, 
+    id, user_id, mobile, order_id, order_no, pay_type, coupon_id, order_origin_price, order_prime_price, order_money, order_pay, 
     order_pay_back, order_pay_back_fee, add_time, update_time
   </sql>
   
@@ -85,12 +87,13 @@
   <insert id="insert" parameterType="com.jhj.po.model.order.OrderPrices" >
     insert into order_prices (id, user_id, mobile, 
       order_id, order_no, pay_type, 
-      coupon_id, order_money, order_pay, 
+      coupon_id, order_origin_price, order_prime_price, order_money, order_pay, 
       order_pay_back, order_pay_back_fee, add_time, 
       update_time)
     values (#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, 
       #{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR}, #{payType,jdbcType=NUMERIC}, 
-      #{couponId,jdbcType=NUMERIC}, #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL}, 
+      #{couponId,jdbcType=NUMERIC},  #{orderOriginPrice,jdbcType=DECIMAL}, #{orderPrimePrice,jdbcType=DECIMAL}, 
+      #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL}, 
       #{orderPayBack,jdbcType=DECIMAL}, #{orderPayBackFee,jdbcType=DECIMAL}, #{addTime,jdbcType=NUMERIC}, 
       #{updateTime,jdbcType=NUMERIC})
   </insert>
@@ -117,6 +120,12 @@
       </if>
       <if test="couponId != null" >
         coupon_id,
+      </if>
+      <if test="orderOriginPrice != null" >
+        order_origin_price,
+      </if>
+      <if test="orderPrimePrice != null" >
+        order_prime_price,
       </if>
       <if test="orderMoney != null" >
         order_money,
@@ -159,6 +168,12 @@
       <if test="couponId != null" >
         #{couponId,jdbcType=NUMERIC},
       </if>
+      <if test="orderOriginPrice != null" >
+        #{orderOriginPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPrimePrice != null" >
+        #{orderPrimePrice,jdbcType=DECIMAL},
+      </if>
       <if test="orderMoney != null" >
         #{orderMoney,jdbcType=DECIMAL},
       </if>
@@ -200,6 +215,12 @@
       <if test="couponId != null" >
         coupon_id = #{couponId,jdbcType=NUMERIC},
       </if>
+      <if test="orderOriginPrice != null" >
+        order_origin_price = #{orderOriginPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPrimePrice != null" >
+        order_prime_price = #{orderPrimePrice,jdbcType=DECIMAL},
+      </if>
       <if test="orderMoney != null" >
         order_money = #{orderMoney,jdbcType=DECIMAL},
       </if>
@@ -229,6 +250,8 @@
       order_no = #{orderNo,jdbcType=VARCHAR},
       pay_type = #{payType,jdbcType=NUMERIC},
       coupon_id = #{couponId,jdbcType=NUMERIC},
+      order_origin_price = #{orderOriginPrice,jdbcType=DECIMAL},
+      order_prime_price = #{orderPrimePrice,jdbcType=DECIMAL},
       order_money = #{orderMoney,jdbcType=DECIMAL},
       order_pay = #{orderPay,jdbcType=DECIMAL},
       order_pay_back = #{orderPayBack,jdbcType=DECIMAL},
