@@ -115,6 +115,7 @@ public class OrderHourAddController extends BaseController {
     /**
      * 
      * @param couponsId 优惠券ID
+     * @param user_id username 后台录入人
      * 
      * */
 	@RequestMapping(value = "post_hour", method = RequestMethod.POST)
@@ -132,7 +133,9 @@ public class OrderHourAddController extends BaseController {
 			@RequestParam(value = "orderPay", required = false, defaultValue = "0") BigDecimal orderPay,
 			@RequestParam(value = "orderOpFrom", required = false, defaultValue = "0") Long orderOpFrom,
 			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId,
-			@RequestParam(value ="coupons_id",required =false) Long couponsId
+			@RequestParam(value ="coupons_id",required =false) Long couponsId,
+			@RequestParam(value ="user_id",required =false) Long user_id,
+			@RequestParam(value ="user_name",required =false) String username
 			) throws Exception{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -248,11 +251,10 @@ public class OrderHourAddController extends BaseController {
 			orderLog.setUserType((short)0);
 		}
 		if(order.getOrderFrom()==2){
-			/*orderLog.setAction(Constants.ORDER_ACTION_ADD);
-			AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
-			orderLog.setUserId();
-			orderLog.setUserName();
-			orderLog.setUserType((short)2);*/
+			orderLog.setAction(Constants.ORDER_ACTION_ADD);
+			orderLog.setUserId(user_id);
+			orderLog.setUserName(username);
+			orderLog.setUserType((short)2);
 		}
 		
 		orderLogService.insert(orderLog);

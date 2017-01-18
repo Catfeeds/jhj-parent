@@ -153,6 +153,10 @@ public class OrderOnlinePayController extends BaseController {
 			ordersService.updateByPrimaryKeySelective(order);
 			// 插入订单日志
 			OrderLog orderLog = orderLogService.initOrderLog(order);
+			orderLog.setAction(Constants.ORDER_ACTION_PAY);
+			orderLog.setUserId(userId);
+			orderLog.setUserName(u.getMobile());
+			orderLog.setUserType((short)0);
 			orderLogService.insert(orderLog);
 			// 记录用户消费明细
 			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);
@@ -167,6 +171,10 @@ public class OrderOnlinePayController extends BaseController {
 			ordersService.updateByPrimaryKeySelective(order);
 			// 插入订单日志
 			OrderLog orderLog = orderLogService.initOrderLog(order);
+			orderLog.setAction(Constants.ORDER_ACTION_PAY);
+			orderLog.setUserId(userId);
+			orderLog.setUserName(u.getMobile());
+			orderLog.setUserType((short)0);
 			orderLogService.insert(orderLog);
 			// 记录用户消费明细
 			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, tradeStatus, tradeNo, payAccount);

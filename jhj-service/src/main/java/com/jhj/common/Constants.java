@@ -428,6 +428,9 @@ public class Constants {
 	 public static String ORDER_ACTION_END_SERVER = "订单完成服务";
 	 public static String ORDER_ACTION_EVALUATE = "订单评价";
 	 public static String ORDER_ACTION_CANCLE = "取消订单";
+	 public static String ORDER_ACTION_DISPATCHS = "订单派工";
+	 public static String ORDER_ACTION_UPDATE = "订单修改";
+	
 
 }
 
