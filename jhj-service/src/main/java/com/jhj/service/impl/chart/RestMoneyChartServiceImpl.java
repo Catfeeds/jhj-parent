@@ -9,8 +9,10 @@ import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.meijia.utils.ChartUtil;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.MathDoubleUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,12 +87,12 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 
         if (chartSearchVo.getStatType().equals("day")) {
-            chartSearchVo.setFormatParam("%c-%e");
+            chartSearchVo.setFormatParam("%Y-%m-%e");
             statDatas = orderCardsMapper.saleCardByMonth(chartSearchVo);
         }
 
         if (chartSearchVo.getStatType().equals("month")) {
-            chartSearchVo.setFormatParam("%c");
+            chartSearchVo.setFormatParam("%Y-%m");
             statDatas = orderCardsMapper.saleCardByMonth(chartSearchVo);
         }
 
@@ -106,41 +108,51 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         String str = null, str1 = null;
         for (ChartMapVo chartSqlData : statDatas) {
             for (HashMap<String, String> tableDataItem : tableDatas) {
-                if (chartSearchVo.getSelectCycle() == 1) {
-                    str = tableDataItem.get("series").split("-")[1];
-                    str1 = chartSqlData.getSeries().split("-")[1];
-                } else if (chartSearchVo.getSelectCycle() == 12) {
-                    str = tableDataItem.get("series").split("-")[1];
-                    str1 = chartSqlData.getSeries().split("-")[1];
-                } else if (chartSearchVo.getSelectCycle() == 3
-                        || chartSearchVo.getSelectCycle() == 6) {
-                    str = tableDataItem.get("series").split("-")[1];
-                    if (chartSearchVo.getSearchType() == 0) {
-                        str1 = chartSqlData.getSeries();
-                    }
-                    if (chartSearchVo.getSearchType() == 1) {
-                        str1 = chartSqlData.getSeries().split("-")[1];
-                    }
-                }
-                if (Integer.parseInt(str) == Integer.parseInt(str1)) {
-                    // 2 = 1000面值 3 = 2000面值 4 =3000面值
-                    if (chartSqlData.getName().equals("2")) {
-                        oneMoney = chartSqlData.getTotalMoney();
-                        tableDataItem.put("一千面值",
-                                MathBigDecimalUtil.round2(oneMoney));
-                    }
-                    if (chartSqlData.getName().equals("3")) {
-                        twopMoney = chartSqlData.getTotalMoney();
-                        tableDataItem.put("两千面值",
-                                MathBigDecimalUtil.round2(twopMoney));
-                    }
-                    if (chartSqlData.getName().equals("4")) {
-                        fiveMoney = chartSqlData.getTotalMoney();
-                        tableDataItem.put("三千面值",
-                                MathBigDecimalUtil.round2(fiveMoney));
-                    }
-                }
-
+            	
+            	if(chartSearchVo.getStatType().equals("day")){
+            		String str2 =tableDataItem.get("series");
+					String str3 = chartSqlData.getSeries();
+					if(DateUtil.compareDateStr(str3,str2)==0){
+						// 2 = 1000面值 3 = 2000面值 4 =3000面值
+	                    if (chartSqlData.getName().equals("2")) {
+	                        oneMoney = chartSqlData.getTotalMoney();
+	                        tableDataItem.put("一千面值",
+	                                MathBigDecimalUtil.round2(oneMoney));
+	                    }
+	                    if (chartSqlData.getName().equals("3")) {
+	                        twopMoney = chartSqlData.getTotalMoney();
+	                        tableDataItem.put("两千面值",
+	                                MathBigDecimalUtil.round2(twopMoney));
+	                    }
+	                    if (chartSqlData.getName().equals("4")) {
+	                        fiveMoney = chartSqlData.getTotalMoney();
+	                        tableDataItem.put("三千面值",
+	                                MathBigDecimalUtil.round2(fiveMoney));
+	                    }
+					}
+            		
+            	}else{
+            		String[] str2 = tableDataItem.get("series").split("-");
+					String[] str3 = chartSqlData.getSeries().split("-");
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+						// 2 = 1000面值 3 = 2000面值 4 =3000面值
+	                    if (chartSqlData.getName().equals("2")) {
+	                        oneMoney = chartSqlData.getTotalMoney();
+	                        tableDataItem.put("一千面值",
+	                                MathBigDecimalUtil.round2(oneMoney));
+	                    }
+	                    if (chartSqlData.getName().equals("3")) {
+	                        twopMoney = chartSqlData.getTotalMoney();
+	                        tableDataItem.put("两千面值",
+	                                MathBigDecimalUtil.round2(twopMoney));
+	                    }
+	                    if (chartSqlData.getName().equals("4")) {
+	                        fiveMoney = chartSqlData.getTotalMoney();
+	                        tableDataItem.put("三千面值",
+	                                MathBigDecimalUtil.round2(fiveMoney));
+	                    }
+					}
+            	}
                 BigDecimal moneySum = new BigDecimal(0);
                 BigDecimal oneThousandMoney = new BigDecimal(
                         tableDataItem.get("一千面值"));
@@ -351,7 +363,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         statDatas = new ArrayList<ChartMapVo>();
 
         if (chartSearchVo.getStatType().equals("day")) {
-        	chartSearchVo.setFormatParam("%c-%e");
+        	chartSearchVo.setFormatParam("%Y-%m-%e");
             statDatas = usersMapper.userResyMoneyLessTwoByDay(chartSearchVo);
         }
 

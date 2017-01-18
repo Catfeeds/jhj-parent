@@ -17,6 +17,7 @@ import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.meijia.utils.ChartUtil;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.MathDoubleUtil;
 
@@ -89,12 +90,12 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			chartSearchVo.setFormatParam("%c");
+			chartSearchVo.setFormatParam("%Y-%m");
 			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}	
 		
@@ -112,36 +113,47 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			Integer myNum = 0;
 			for (ChartMapVo chartSqlData : statDatas) {
 				//处理表格形式的数据.
-				if(chartSearchVo.getSelectCycle()==1){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
-					str = tableDataItem.get("series").split("-")[1];
-					if(chartSearchVo.getSearchType()==0){
-						str1 = chartSqlData.getSeries();
-					}
-					if(chartSearchVo.getSearchType()==1){
-						str1 = chartSqlData.getSeries().split("-")[1];
-					}
-				}
-				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
-					Integer total =0;
-					if(chartSqlData.getTotal()!=null){
-						total = chartSqlData.getTotal();
-					}
-					//0代表基础服务  1 = 深度服务 母婴到家  
-					if (chartSqlData.getName().equals("0")){
-						hourNum+=total;
-					}
-					if(chartSqlData.getName().equals("1")){
-						if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
-							deepNum+=total;
+				str = tableDataItem.get("series");
+				str1 = chartSqlData.getSeries();
+				if(chartSearchVo.getStatType().equals("day")){
+					if(DateUtil.compareDateStr(str,str1)==0){
+						Integer total =0;
+						if(chartSqlData.getTotal()!=null){
+							total = chartSqlData.getTotal();
 						}
-						if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
-							myNum+=total;
+						//0代表基础服务  1 = 深度服务 母婴到家  
+						if (chartSqlData.getName().equals("0")){
+							hourNum+=total;
+						}
+						if(chartSqlData.getName().equals("1")){
+							if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+								deepNum+=total;
+							}
+							if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+								myNum+=total;
+							}
+						}
+					}
+					
+				}else{
+					String[] str2 = tableDataItem.get("series").split("-");
+					String[] str3 = chartSqlData.getSeries().split("-");
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+						Integer total =0;
+						if(chartSqlData.getTotal()!=null){
+							total = chartSqlData.getTotal();
+						}
+						//0代表基础服务  1 = 深度服务 母婴到家  
+						if (chartSqlData.getName().equals("0")){
+							hourNum+=total;
+						}
+						if(chartSqlData.getName().equals("1")){
+							if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+								deepNum+=total;
+							}
+							if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+								myNum+=total;
+							}
 						}
 					}
 				}
@@ -269,12 +281,12 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		// 1. 查询SQL获得统计数据 -- 不同来源的订单数量
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			chartSearchVo.setFormatParam("%c");
+			chartSearchVo.setFormatParam("%Y-%m");
 			statDatas = orderMapper.chartTypeRevenue(chartSearchVo);
 		}	
 		
@@ -354,52 +366,78 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			BigDecimal myMoney = new BigDecimal(0);
 			for (ChartMapVo chartSqlData : statDatas) {
 			//处理表格形式的数据.
-				if(chartSearchVo.getSelectCycle()==1){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
-					str = tableDataItem.get("series").split("-")[1];
-					if(chartSearchVo.getSearchType()==0){
-						str1 = chartSqlData.getSeries();
-					}
-					if(chartSearchVo.getSearchType()==1){
-						str1 = chartSqlData.getSeries().split("-")[1];
-					}
-				}
-				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
-					Integer total =0;
-					if(chartSqlData.getTotal()!=null){
-						total = chartSqlData.getTotal();
-					}
-					//0代表基础服务  1 = 深度服务 母婴到家  
-					if (chartSqlData.getName().equals("0")){
-						hourNum+=total;
-						tableDataItem.put("基础服务", String.valueOf(hourNum));
-						if(chartSqlData.getTotalMoney()!=null){
-							hourMoney=hourMoney.add(chartSqlData.getTotalMoney());
+				if(chartSearchVo.getStatType().equals("day")){
+					String str2 =tableDataItem.get("series");
+					String str3 = chartSqlData.getSeries();
+					if(DateUtil.compareDateStr(str3,str2)==0){
+						Integer total =0;
+						if(chartSqlData.getTotal()!=null){
+							total = chartSqlData.getTotal();
 						}
-						tableDataItem.put("基础服务营业额", MathBigDecimalUtil.round2(hourMoney));
-					}
-					if(chartSqlData.getName().equals("1")){
-						if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
-							deepNum+=total;
-							tableDataItem.put("深度服务", String.valueOf(deepNum));
+						//0代表基础服务  1 = 深度服务 母婴到家  
+						if (chartSqlData.getName().equals("0")){
+							hourNum+=total;
+							tableDataItem.put("基础服务", String.valueOf(hourNum));
 							if(chartSqlData.getTotalMoney()!=null){
-								deepMoney=deepMoney.add(chartSqlData.getTotalMoney());
+								hourMoney=hourMoney.add(chartSqlData.getTotalMoney());
 							}
-							tableDataItem.put("深度服务营业额", MathBigDecimalUtil.round2(deepMoney));
+							tableDataItem.put("基础服务营业额", MathBigDecimalUtil.round2(hourMoney));
 						}
-						if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
-							myNum+=total;
-							tableDataItem.put("母婴到家", String.valueOf(myNum));
-							
-							if(chartSqlData.getTotalMoney()!=null){
-								myMoney=myMoney.add(chartSqlData.getTotalMoney());
+						if(chartSqlData.getName().equals("1")){
+							if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+								deepNum+=total;
+								tableDataItem.put("深度服务", String.valueOf(deepNum));
+								if(chartSqlData.getTotalMoney()!=null){
+									deepMoney=deepMoney.add(chartSqlData.getTotalMoney());
+								}
+								tableDataItem.put("深度服务营业额", MathBigDecimalUtil.round2(deepMoney));
 							}
-							tableDataItem.put("母婴到家营业额", MathBigDecimalUtil.round2(myMoney));
+							if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+								myNum+=total;
+								tableDataItem.put("母婴到家", String.valueOf(myNum));
+								
+								if(chartSqlData.getTotalMoney()!=null){
+									myMoney=myMoney.add(chartSqlData.getTotalMoney());
+								}
+								tableDataItem.put("母婴到家营业额", MathBigDecimalUtil.round2(myMoney));
+							}
+						}
+					}
+				}else{
+					String[] str2 = tableDataItem.get("series").split("-");
+					String[] str3 = chartSqlData.getSeries().split("-");
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+						Integer total =0;
+						if(chartSqlData.getTotal()!=null){
+							total = chartSqlData.getTotal();
+						}
+						//0代表基础服务  1 = 深度服务 母婴到家  
+						if (chartSqlData.getName().equals("0")){
+							hourNum+=total;
+							tableDataItem.put("基础服务", String.valueOf(hourNum));
+							if(chartSqlData.getTotalMoney()!=null){
+								hourMoney=hourMoney.add(chartSqlData.getTotalMoney());
+							}
+							tableDataItem.put("基础服务营业额", MathBigDecimalUtil.round2(hourMoney));
+						}
+						if(chartSqlData.getName().equals("1")){
+							if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+								deepNum+=total;
+								tableDataItem.put("深度服务", String.valueOf(deepNum));
+								if(chartSqlData.getTotalMoney()!=null){
+									deepMoney=deepMoney.add(chartSqlData.getTotalMoney());
+								}
+								tableDataItem.put("深度服务营业额", MathBigDecimalUtil.round2(deepMoney));
+							}
+							if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+								myNum+=total;
+								tableDataItem.put("母婴到家", String.valueOf(myNum));
+								
+								if(chartSqlData.getTotalMoney()!=null){
+									myMoney=myMoney.add(chartSqlData.getTotalMoney());
+								}
+								tableDataItem.put("母婴到家营业额", MathBigDecimalUtil.round2(myMoney));
+							}
 						}
 					}
 				}
