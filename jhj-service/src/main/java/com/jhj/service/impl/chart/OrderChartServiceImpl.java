@@ -227,7 +227,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 			for (ChartMapVo chartSqlData : statData) {
 				String seriesSql = chartSqlData.getSeries();
 				String[] str3 = seriesSql.split("-");
-				if(chartSearchVo.getSelectCycle()!=1){
+				if(!chartSearchVo.getStatType().equals("day")){
 					if (Integer.valueOf(str3[0])<Integer.valueOf(str2[0]) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])){
 						totalNum = totalNum + chartSqlData.getTotal();
 					}
@@ -392,52 +392,101 @@ public class OrderChartServiceImpl implements OrderChartService {
 			
 			for (ChartMapVo chartSqlData : statDatas) {
 			
-				str = tableDataItem.get("series").split("-")[1];
-				str1 = chartSqlData.getSeries().split("-")[1];
-				
-				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
-					
-					//表格数据
-					if(chartSqlData.getOrderType()==0){
-						if(chartSqlData.getServiceType()==28){
-							jpTotal+=chartSqlData.getTotal();
-							jpTotalMoney = jpTotalMoney.add(chartSqlData.getTotalMoney());
-							
+				if(chartSearchVo.getStatType().equals("day")){
+					str = tableDataItem.get("series");
+					str1 = chartSqlData.getSeries();
+					if(DateUtil.compareDateStr(str1,str)==0){
+						//表格数据
+						if(chartSqlData.getOrderType()==0){
+							if(chartSqlData.getServiceType()==28){
+								jpTotal+=chartSqlData.getTotal();
+								jpTotalMoney = jpTotalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
+							if(chartSqlData.getServiceType()==68){
+								jcTotoal+=chartSqlData.getTotal();
+								jcTotoalMoney = jcTotoalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
 						}
-						if(chartSqlData.getServiceType()==68){
-							jcTotoal+=chartSqlData.getTotal();
-							jcTotoalMoney = jcTotoalMoney.add(chartSqlData.getTotalMoney());
-							
+						if(chartSqlData.getOrderType()==1){
+							if(Arrays.asList(deepServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+								sdTotal+=chartSqlData.getTotal();
+								sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
+							if(Arrays.asList(myServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+								myTotal+=chartSqlData.getTotal();
+								myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
+						}
+						
+						//图标数据
+						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
+							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
+							tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2")){
+							for(int i=0,len=businessList.size();i<len;i++){
+								if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
+									tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
+									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+									continue;
+								}
+							}
 						}
 					}
-					if(chartSqlData.getOrderType()==1){
-						if(Arrays.asList(deepServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
-							sdTotal+=chartSqlData.getTotal();
-							sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
-							
+				}else{
+					String[] str2 = tableDataItem.get("series").split("-");
+					String[] str3 = chartSqlData.getSeries().split("-");
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+						//表格数据
+						if(chartSqlData.getOrderType()==0){
+							if(chartSqlData.getServiceType()==28){
+								jpTotal+=chartSqlData.getTotal();
+								jpTotalMoney = jpTotalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
+							if(chartSqlData.getServiceType()==68){
+								jcTotoal+=chartSqlData.getTotal();
+								jcTotoalMoney = jcTotoalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
 						}
-						if(Arrays.asList(myServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
-							myTotal+=chartSqlData.getTotal();
-							myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
-							
+						if(chartSqlData.getOrderType()==1){
+							if(Arrays.asList(deepServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+								sdTotal+=chartSqlData.getTotal();
+								sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
+							if(Arrays.asList(myServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+								myTotal+=chartSqlData.getTotal();
+								myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
+								
+							}
 						}
-					}
-					
-					//图标数据
-					if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
-						tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
-						tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
-					}
-					if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
-						tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
-						tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
-					}
-					if(chartSqlData.getOrderFrom().equals("2")){
-						for(int i=0,len=businessList.size();i<len;i++){
-							if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
-								tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
-								tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
-								continue;
+						
+						//图标数据
+						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
+							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
+							tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2")){
+							for(int i=0,len=businessList.size();i<len;i++){
+								if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
+									tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
+									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+									continue;
+								}
 							}
 						}
 					}
@@ -545,12 +594,12 @@ public class OrderChartServiceImpl implements OrderChartService {
 		// 1. 查询SQL获得统计数据 -- 不同来源的订单数量
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 		if (chartSearchVo.getStatType().equals("day") ) {
-			chartSearchVo.setFormatParam("%c-%e");
+			chartSearchVo.setFormatParam("%Y-%m-%e");
 			statDatas = orderMapper.getOrderSrc(chartSearchVo);
 		}
 		
 		if (chartSearchVo.getStatType().equals("month") ) {
-			chartSearchVo.setFormatParam("%c");
+			chartSearchVo.setFormatParam("%Y-%m");
 			statDatas = orderMapper.getOrderSrc(chartSearchVo);
 		}	
 		
@@ -563,41 +612,57 @@ public class OrderChartServiceImpl implements OrderChartService {
 		for (ChartMapVo chartSqlData : statDatas) {
 			//处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {
-				if(chartSearchVo.getSelectCycle()==1){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==12){
-					str = tableDataItem.get("series").split("-")[1];
-					str1 = chartSqlData.getSeries().split("-")[1];
-				}else if(chartSearchVo.getSelectCycle()==3 ||chartSearchVo.getSelectCycle()==6){
-					str = tableDataItem.get("series").split("-")[1];
-					if(chartSearchVo.getSearchType()==0){
-						str1 = chartSqlData.getSeries();
+				
+				if(chartSearchVo.getStatType().equals("day")){
+					String str2 =tableDataItem.get("series");
+					String str3 = chartSqlData.getSeries();
+					if(DateUtil.compareDateStr(str3,str2)==0){
+						
+						//0代表APP  1 = 微网站来源 2=第三方来源
+						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
+							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
+							tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2")){
+							for(int i=0,len=businessList.size();i<len;i++){
+								if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
+									tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
+									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+									continue;
+								}
+							}
+						}
 					}
-					if(chartSearchVo.getSearchType()==1){
-						str1 = chartSqlData.getSeries().split("-")[1];
-					}
-				}
-				if (Integer.parseInt(str)==Integer.parseInt(str1)) {
-					//0代表APP  1 = 微网站来源 2=第三方来源
-					if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
-						tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
-						tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
-					}
-					if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
-						tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
-						tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
-					}
-					if(chartSqlData.getOrderFrom().equals("2")){
-						for(int i=0,len=businessList.size();i<len;i++){
-							if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
-								tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
-								tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
-								continue;
+				}else{
+					
+					String[] str2 = tableDataItem.get("series").split("-");
+					String[] str3 = chartSqlData.getSeries().split("-");
+					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+						//0代表APP  1 = 微网站来源 2=第三方来源
+						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
+							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
+							tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
+							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+						}
+						if(chartSqlData.getOrderFrom().equals("2")){
+							for(int i=0,len=businessList.size();i<len;i++){
+								if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
+									tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
+									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+									continue;
+								}
 							}
 						}
 					}
 				}
+				
 			}
 		}
 		
