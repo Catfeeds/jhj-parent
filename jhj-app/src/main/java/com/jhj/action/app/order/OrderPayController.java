@@ -172,6 +172,14 @@ public class OrderPayController extends BaseController {
 		//此时 orderPay 和 orderMoney 值是相等的
 		BigDecimal orderPay = orderPrice.getOrderMoney();
 		BigDecimal orderMoney = orderPrice.getOrderMoney();
+		BigDecimal orderOriginPay = orderPrice.getOrderOriginPrice();
+		
+		//只有余额支付才能使用会员价
+		if (!orderPayType.equals(Constants.PAY_TYPE_0)) {
+			orderPay = orderOriginPay;
+			orderMoney = orderOriginPay;
+		}
+		
 		
 		if(couponId!=null && couponId>0){
 			UserCoupons userCoupons =new UserCoupons();
@@ -213,7 +221,7 @@ public class OrderPayController extends BaseController {
 		
 		//判断当前是否有满足条件阿姨，没有则返回提示信息.
 //		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
-				
+		
 		orderPrice.setOrderPay(orderPay);
 		orderPrice.setPayType(orderPayType);
 		orderPrice.setUpdateTime(updateTime);

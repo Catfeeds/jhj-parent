@@ -20,6 +20,8 @@ function removeSessionData() {
 	sessionStorage.removeItem("order_id");
 	sessionStorage.removeItem("order_pay");
 	sessionStorage.removeItem("order_money");
+	sessionStorage.removeItem("order_origin_pay");
+	sessionStorage.removeItem("order_origin_money");
 	sessionStorage.removeItem("service_addons");
 	sessionStorage.removeItem("service_addons_json");
 	sessionStorage.removeItem("total_service_hour");

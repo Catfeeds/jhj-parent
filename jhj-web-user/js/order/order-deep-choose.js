@@ -252,6 +252,7 @@ function setItemNum(serviceAddonId, defaultNum) {
 function setDeepTotal() {
 
 	var orderMoney = itemPrice = Number(0);
+	var orderOriginMoney = Number(0);
 	var totalServiceHour = 0;
 	var serviceAddonId = 0;
 	var serviceAddonIdObj;
@@ -292,7 +293,7 @@ function setDeepTotal() {
 		 if (isVip == 1) itemPrice = disPrice.match(reg);
 
 		 orderMoney = Number(orderMoney) + Number(itemNum) * Number(itemPrice);
-		 
+		 orderOriginMoney = Number(orderOriginMoney) + Number(itemNum) * Number(price);
 		 var serviceHour = serviceAddonServiceHour * itemNum;
 			
 		 if(defaultNum != "" && defaultNum != 0) {
@@ -323,6 +324,8 @@ function setDeepTotal() {
 	totalServiceHour = totalServiceHour.toFixed(0);
 	sessionStorage.setItem("order_money", orderMoney);
 	sessionStorage.setItem("order_pay", orderMoney);
+	sessionStorage.setItem("order_origin_money", orderOriginMoney);
+	sessionStorage.setItem("order_origin_pay", orderOriginMoney);
 	sessionStorage.setItem("total_service_hour", totalServiceHour);
 	sessionStorage.setItem("service_addons", JSON.stringify(serviceAddons));
 	sessionStorage.setItem("service_addons_json", JSON.stringify(serviceAddonsJson));
