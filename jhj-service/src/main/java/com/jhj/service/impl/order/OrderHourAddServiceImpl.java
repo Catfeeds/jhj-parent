@@ -508,7 +508,8 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		//会员价套餐价格
 		BigDecimal mpprice = type.getMpprice();
 		
-		
+		BigDecimal orderOriginHourPay = price;
+		BigDecimal orderOriginPay = pprice;
 		BigDecimal orderHourPay = price;
 		BigDecimal orderPay = pprice;
 		
@@ -528,8 +529,14 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 			BigDecimal tmpPrice = orderHourPay.multiply(new BigDecimal(serviceHour));
 			tmpPrice = tmpPrice.multiply(new BigDecimal(staffNums));
 			orderPay = tmpPrice;
+			
+			BigDecimal tmpOriginPrice = orderOriginHourPay.multiply(new BigDecimal(serviceHour));
+			tmpOriginPrice = tmpOriginPrice.multiply(new BigDecimal(staffNums));
+			orderOriginPay = tmpOriginPrice;
+			
 		}
-		
+		prices.setOrderOriginPrice(orderOriginPay);
+		prices.setOrderPrimePrice(orderPay);
 		prices.setOrderMoney(orderPay);
 		prices.setOrderPay(orderPay);
 		

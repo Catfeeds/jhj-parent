@@ -72,21 +72,28 @@ myApp.onPageInit('order-lib-cal',function(page) {
                     $$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
                 }
             }
-            if(getServiceDate()<date){
-            	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
-            }
             noSelectHour();
             filterServiceDate();
             filterWeek(serviceTypeId);
+            
+            /*-----------暂时添加的代码需要删除------*/
+            if(s<'2017-01-24'){
+        		$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+        		return false;
+        	}
+            /*-----------暂时添加的代码需要删除------*/
+            
         });
         $$("#rilikongjian3-dateTime li").removeClass("hour-beijingse");
         filterServiceDate();
         noSelectHour();
         $$("#rilikongjian3-day").find(":first-child").addClass("beijingse");
+       
         if(cmp==date){
             tomm(cmp);
         }
         filterWeek(serviceTypeId);
+        
     }
     getDay(date);
 
@@ -95,6 +102,13 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var preDay = moment(date).add(c, 'days');
         nowDate=preDay;
         getDay(preDay);
+        
+        /*---------暂时添加的代码------------*/
+        if(preDay.format("YYYY-MM-DD")<'2017-01-24'){
+        	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+    		return false;
+        }
+        /*---------暂时添加的代码------------*/
     }
 
     //后一天
@@ -102,6 +116,13 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var afterDay = moment(date).add(c, 'days');
         nowDate=afterDay;
         getDay(afterDay);
+        
+        /*---------暂时添加的代码------------*/
+        if(afterDay.format("YYYY-MM-DD")<'2017-01-24'){
+        	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+    		return false;
+        }
+        /*---------暂时添加的代码------------*/
     }
 
     //日历减1天
@@ -346,6 +367,15 @@ myApp.onPageInit('order-lib-cal',function(page) {
         noSelectHour();
     }
     tomm();
+    
+    
+    /*---------------暂时添加代码-------------------*/
+    if(date<'2017-01-24'){
+    	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+    }
+    /*---------------暂时添加代码-------------------*/
+    
+    
 
     //查询服务人员的已有派工的服务时间
     if(staffId!=0 && staffId!=null && staffId!=''){

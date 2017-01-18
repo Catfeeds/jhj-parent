@@ -510,8 +510,8 @@ public class OrgStaffsController extends BaseController {
 		//时间
 		if (StringUtil.isEmpty(serviceDateStr)) serviceDateStr = DateUtil.getToday();
 		
-		Long startTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 00:00:00");
-		Long endTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 23:59:59");
+		Long startTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 08:00:00");
+		Long endTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 20:00:00");
 		searchVo1.setStartTime(startTime / 1000);
 		searchVo1.setEndTime(endTime / 1000);
 		
