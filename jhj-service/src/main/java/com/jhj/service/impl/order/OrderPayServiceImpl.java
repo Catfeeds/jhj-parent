@@ -191,6 +191,10 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 		// 2.插入订单日志表 order_log
 		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLog.setAction(Constants.ORDER_ACTION_PAY+"-支付成功");
+		orderLog.setUserId(userId);
+		orderLog.setUserName(order.getMobile());
+		orderLog.setUserType((short)0);
 		orderLogService.insert(orderLog);
 
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
@@ -315,6 +319,10 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 		// 2.插入订单日志表 order_log
 		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLog.setAction(Constants.ORDER_ACTION_PAY+"-支付成功");
+		orderLog.setUserId(order.getUserId());
+		orderLog.setUserName(order.getMobile());
+		orderLog.setUserType((short)0);
 		orderLogService.insert(orderLog);
 
 		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");

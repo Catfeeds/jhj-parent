@@ -19,6 +19,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
@@ -31,6 +32,7 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
+import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderServiceAddonsService;
@@ -90,6 +92,9 @@ public class OrderExpCleanController extends BaseController {
 	
 	@Autowired
 	private ValidateService validateService;
+	
+	@Autowired
+	private OrderLogService orderLogService;
 
 	@RequestMapping(value = "post_exp.json", method = RequestMethod.POST)
 	public AppResultData<Object> saveAmOrder(
@@ -105,7 +110,9 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam(value = "order_pay", required = false, defaultValue = "0") BigDecimal orderPay,
 			@RequestParam(value = "order_op_from", required = false) Long orderOpFrom,
 			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId,
-			@RequestParam(value ="coupons_id",required =false) Long couponsId)
+			@RequestParam(value ="coupons_id",required =false) Long couponsId,
+			@RequestParam(value ="userid",required =false) Long user_id,
+			@RequestParam(value ="user_name",required =false) String username)
 			throws Exception {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -197,6 +204,21 @@ public class OrderExpCleanController extends BaseController {
 		/*
 		 * 插入订单日志表  order_log
 		 */
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		if(order.getOrderFrom()==1){
+			orderLog.setAction(Constants.ORDER_ACTION_ADD);
+			orderLog.setUserId(userId);
+			orderLog.setUserName(u.getMobile());
+			orderLog.setUserType((short)0);
+		}
+		if(order.getOrderFrom()==2){
+			orderLog.setAction(Constants.ORDER_ACTION_ADD);
+			orderLog.setUserId(user_id);
+			orderLog.setUserName(username);
+			orderLog.setUserType((short)2);
+		}
+		
+		orderLogService.insert(orderLog);
 		  
 		
 		/* CouponsId,新增参数，判断用户下单时候有使用优惠，如果有使用优惠券，则在user_conpos表中插入该用户对应得优惠券信息

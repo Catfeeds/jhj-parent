@@ -351,8 +351,9 @@ var selectStaff = function() {
 $("#cancleForm").on("click", function() {
 	var id = $("#id").val();
 	var remarks = $("#remark").val();
-	if(remarks!=null || remarks!=''){
-		$(this).attr("disabled",false);
+	if(remarks==undefined || remarks==null || remarks==''){
+		$('#remark-error').text("取消原因不能为空！").css("color","red");
+		return false;
 	} 
 	if (confirm("请确认取消订单吗？")) {
 		console.log("asdfasdfasdf");

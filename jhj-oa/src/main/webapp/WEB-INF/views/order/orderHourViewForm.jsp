@@ -318,6 +318,7 @@
 	      <div class="modal-body">
 	        <form  name="cancleForms">
 	        	<textarea name="remarks" id="remark" rows="3" cols="78" placeholder="取消原因"></textarea>
+	        	<span id="remark-error"></span>
 	        </form>
 	      </div>
 	     <div class="modal-footer">

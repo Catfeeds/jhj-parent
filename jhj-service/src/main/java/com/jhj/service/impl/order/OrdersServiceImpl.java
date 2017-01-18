@@ -493,6 +493,7 @@ public class OrdersServiceImpl implements OrdersService {
 
 		// 记录订单日志.
 		OrderLog orderLog = orderLogService.initOrderLog(orders);
+		
 		orderLogService.insert(orderLog);
 
 		return "取消成功,支付款项已退回您的余额";
