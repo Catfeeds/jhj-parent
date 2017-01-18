@@ -5,7 +5,7 @@ ALTER table order_log ADD `action` varchar(1000) NOT NULL COMMENT '操作';
 
 ALTER TABLE `orders` ADD `order_done_time` INT(11) UNSIGNED NULL DEFAULT '0' COMMENT '订单完成时间' AFTER `update_time`;
 
-update `orders` set order_done_time = update_time where order_status in (7,8)
+update `orders` set order_done_time = update_time where order_status in (7,8);
 
 
 ALTER TABLE `order_prices` ADD `order_origin_price` DECIMAL(9,2) NOT NULL DEFAULT '0' COMMENT '订单原价' AFTER `coupon_id`;
