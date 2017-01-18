@@ -15,6 +15,7 @@ myApp.onPageBeforeInit('order-pay-ext', function(page) {
 		// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
 		sessionStorage.setItem("pay_order_type", 3);
 		sessionStorage.setItem("order_pay", orderPayExt);
+		sessionStorage.setItem("order_origin_pay", orderPayExt);
 		mainView.router.loadPage("order/order-pay.html");
 	});
 });
