@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -303,6 +304,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();
 
         if (chartSearchVo.getStatType().equals("day")) {
+        	chartSearchVo.setFormatParam("%Y-%m-%e");
             statDatas = usersMapper.userResyMoneyByDay(chartSearchVo);
         }
 
@@ -324,8 +326,14 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         	for (ChartMapVo chartSqlData : statDatas) {
                 String str = tableDataItem.get("series");
                 String series = chartSqlData.getSeries();
-                if (str.equals(series)) {
-                	total = total + chartSqlData.getTotal();
+                if(chartSearchVo.getStatType().equals("day")){
+                	if(DateUtil.compareDateStr(series,str)==0){
+                		total = total + chartSqlData.getTotal();
+					}
+                }else{
+                	if (str.equals(series)) {
+                		total = total + chartSqlData.getTotal();
+                	}
                 }
             }
         	tableDataItem.put("余额用户",String.valueOf(total));
@@ -335,7 +343,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         statDatas = new ArrayList<ChartMapVo>();
 
         if (chartSearchVo.getStatType().equals("day")) {
-        	chartSearchVo.setFormatParam("%c-%e");
+        	chartSearchVo.setFormatParam("%Y-%m-%e");
             statDatas = usersMapper.selectUserAllResyMoneyByDay(chartSearchVo);
         }
 
@@ -353,8 +361,14 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         	for (ChartMapVo chartSqlData : statDatas) {
                 String str = tableDataItem.get("series");
                 String series = chartSqlData.getSeries();
-                if (str.equals(series)) {
-                    allRestMoney = chartSqlData.getTotalMoney();
+                if(chartSearchVo.getStatType().equals("day")){
+                	if(DateUtil.compareDateStr(series,str)==0){
+                		 allRestMoney = chartSqlData.getTotalMoney();
+					}
+                }else{
+                	if (str.equals(series)) {
+                		 allRestMoney = chartSqlData.getTotalMoney();
+                	}
                 }
             }
         	tableDataItem.put("余额总金额", MathBigDecimalUtil.round2(allRestMoney));
@@ -376,13 +390,19 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
             statDatas = usersMapper.userResyMoneyLessTwoByQuarter(chartSearchVo);
         }
         for (HashMap<String, String> tableDataItem : tableDatas) {
-        	int total =0;
+        	BigDecimal total = new BigDecimal(0);
         	for (ChartMapVo chartSqlData : statDatas) {
             // 处理表格形式的数据.
                 String str = tableDataItem.get("series");
                 String series = chartSqlData.getSeries();
-                if (str.equals(series)) {
-                	total = total + chartSqlData.getTotal();
+                if(chartSearchVo.getStatType().equals("day")){
+                	if(DateUtil.compareDateStr(series,str)==0){
+                		total = total.add(chartSqlData.getTotalMoney());
+					}
+                }else{
+                	if (str.equals(series)) {
+                		total = total.add(chartSqlData.getTotalMoney());
+                	}
                 }
             }
         	tableDataItem.put("余额<200",String.valueOf(total));
@@ -391,7 +411,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         statDatas = new ArrayList<ChartMapVo>();
 
         if (chartSearchVo.getStatType().equals("day")) {
-        	chartSearchVo.setFormatParam("%c-%e");
+        	chartSearchVo.setFormatParam("%Y-%m-%e");
             statDatas = usersMapper.userResyMoneyLessThousandByDay(chartSearchVo);
         }
 
@@ -405,10 +425,18 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         }
         for (HashMap<String, String> tableDataItem : tableDatas) {
             // 处理表格形式的数据.
-        	int total=0;
+        	BigDecimal total = new BigDecimal(0);
         	for (ChartMapVo chartSqlData : statDatas) {
-                if (tableDataItem.get("series").toString().equals(chartSqlData.getSeries())) {
-                	total = total + chartSqlData.getTotal();
+        		 String str = tableDataItem.get("series");
+                 String series = chartSqlData.getSeries();
+        		if(chartSearchVo.getStatType().equals("day")){
+                	if(DateUtil.compareDateStr(series,str)==0){
+                		total = total.add(chartSqlData.getTotalMoney());
+					}
+                }else{
+                	if (str.equals(series)) {
+                		total = total.add(chartSqlData.getTotalMoney());
+                	}
                 }
             }
             tableDataItem.put("余额200~1k",String.valueOf(total));
@@ -417,7 +445,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         statDatas = new ArrayList<ChartMapVo>();
 
         if (chartSearchVo.getStatType().equals("day")) {
-        	chartSearchVo.setFormatParam("%c-%e");
+        	chartSearchVo.setFormatParam("%Y-%m-%e");
             statDatas = usersMapper.userResyMoneyBetweenByDay(chartSearchVo);
         }
 
@@ -431,11 +459,19 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         }
         for (HashMap<String, String> tableDataItem : tableDatas) {
             // 处理表格形式的数据.
-        	int total =0;
+        	BigDecimal total = new BigDecimal(0);
         	for (ChartMapVo chartSqlData : statDatas) {
-                String series = chartSqlData.getSeries();
-                if (tableDataItem.get("series").toString().equals(series)) {
-                	total = total + chartSqlData.getTotal();
+        		 String str = tableDataItem.get("series");
+                 String series = chartSqlData.getSeries();
+                
+                if(chartSearchVo.getStatType().equals("day")){
+                	if(DateUtil.compareDateStr(series,str)==0){
+                		total = total.add(chartSqlData.getTotalMoney());
+					}
+                }else{
+                	if (str.equals(series)) {
+                		total = total.add(chartSqlData.getTotalMoney());
+                	}
                 }
             }
         	tableDataItem.put("1K~3K",String.valueOf(total));
@@ -444,7 +480,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         statDatas = new ArrayList<ChartMapVo>();
 
         if (chartSearchVo.getStatType().equals("day")) {
-        	chartSearchVo.setFormatParam("%c-%e");
+        	chartSearchVo.setFormatParam("%Y-%m-%e");
             statDatas = usersMapper.userResyMoneyThreeThousandByDay(chartSearchVo);
         }
 
@@ -457,46 +493,54 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
             statDatas = usersMapper.userResyMoneyThreeThousandByQuarter(chartSearchVo);
         }
         for (HashMap<String, String> tableDataItem : tableDatas) {
+        	BigDecimal total = new BigDecimal(0);
         	for (ChartMapVo chartSqlData : statDatas) {
             // 处理表格形式的数据.
                 String str = tableDataItem.get("series");
                 String series = chartSqlData.getSeries();
-                if (str.equals(series)) {
-
-                    tableDataItem.put("余额>3k",String.valueOf(chartSqlData.getTotal()));
+                if(chartSearchVo.getStatType().equals("day")){
+                	if(DateUtil.compareDateStr(series,str)==0){
+                		total = total.add(chartSqlData.getTotalMoney());
+					}
+                }else{
+                	if (str.equals(series)) {
+                		total = total.add(chartSqlData.getTotalMoney());
+                	}
                 }
             }
+        	tableDataItem.put("余额>3k",String.valueOf(total));
         }
 
         // 4-5.各种余额占比
 
-        String lessTwoPercent = "0";
-        String lessThousandPercent = "0";
-        String lessBetweenPercent = "0";
-        String MoreThousandPercent = "0";
+        String lessTwoPercent = "0.00%";
+        String lessThousandPercent = "0.00%";
+        String lessBetweenPercent = "0.00%";
+        String MoreThousandPercent = "0.00%";
 
         for (HashMap<String, String> tableDataItem : tableDatas) {
-            Integer countTotal = Integer.valueOf(tableDataItem.get("余额用户"));
+        	String totalMoney= tableDataItem.get("余额总金额");
+            
             // 每行记录各种余额数量
-            Integer lessTwo = Integer.valueOf(tableDataItem.get("余额<200"));
-            Integer lessThousand = Integer.valueOf(tableDataItem.get("余额200~1k"));
-            Integer lessBetween = Integer.valueOf(tableDataItem.get("1K~3K"));
-            Integer MoreThousand = Integer.valueOf(tableDataItem.get("余额>3k"));
-            if (countTotal > 0) {
-                lessTwoPercent = MathDoubleUtil.getPercent(lessTwo, countTotal);
-                tableDataItem.put("余额<200占比", lessTwoPercent);
-                lessThousandPercent = MathDoubleUtil.getPercent(lessThousand,countTotal);
-                tableDataItem.put("余额200~1k占比", lessThousandPercent);
-                lessBetweenPercent = MathDoubleUtil.getPercent(lessBetween,countTotal);
-                tableDataItem.put("1K~3K占比", lessBetweenPercent);
-                MoreThousandPercent = MathDoubleUtil.getPercent(MoreThousand,countTotal);
-                tableDataItem.put("余额>3k占比", MoreThousandPercent);
-
-            } else {
-                tableDataItem.put("余额<200占比", "0.00%");
-                tableDataItem.put("余额200~1k占比", "0.00%");
-                tableDataItem.put("1K~3K占比", "0.00%");
-                tableDataItem.put("余额>3k占比", "0.00%");
+        	String lessTwo = tableDataItem.get("余额<200");
+        	String lessThousand = tableDataItem.get("余额200~1k");
+        	String lessBetween = tableDataItem.get("1K~3K");
+        	String MoreThousand = tableDataItem.get("余额>3k");
+            DecimalFormat df1 = new DecimalFormat("0.00%");
+            if(Double.parseDouble(totalMoney)>0.00){
+            	lessTwoPercent = df1.format(Double.parseDouble(lessTwo)/Double.parseDouble(totalMoney));
+            	tableDataItem.put("余额<200占比", lessTwoPercent);
+            	lessThousandPercent = df1.format(Double.parseDouble(lessThousand)/Double.parseDouble(totalMoney));
+            	tableDataItem.put("余额200~1k占比", lessThousandPercent);
+            	lessBetweenPercent = df1.format(Double.parseDouble(lessBetween)/Double.parseDouble(totalMoney));
+            	tableDataItem.put("1K~3K占比", lessBetweenPercent);
+            	MoreThousandPercent = df1.format(Double.parseDouble(MoreThousand)/Double.parseDouble(totalMoney));
+            	tableDataItem.put("余额>3k占比", MoreThousandPercent);
+            }else{
+            	tableDataItem.put("余额<200占比", lessTwoPercent);
+            	tableDataItem.put("余额200~1k占比", lessThousandPercent);
+            	tableDataItem.put("1K~3K占比", lessBetweenPercent);
+            	tableDataItem.put("余额>3k占比", MoreThousandPercent);
             }
         }
 
@@ -507,12 +551,12 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 
         List<HashMap<String, Object>> dataItems = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> chartDataItem = null;
-        List<Integer> datas = null;
+        List<Double> datas = null;
         for (int i = 0; i < legend.size(); i++) {
             chartDataItem = new HashMap<String, Object>();
             chartDataItem.put("name", legend.get(i));
             chartDataItem.put("type", "bar");
-            datas = new ArrayList<Integer>();
+            datas = new ArrayList<Double>();
 
             for (int j = 1; j < timeSeries.size(); j++) {
                 for (HashMap<String, String> tableDataItem : tableDatas) {
@@ -520,7 +564,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
                             tableDataItem.get("series").toString())) {
                         String valueStr = tableDataItem.get(legend.get(i))
                                 .toString();
-                        Integer v = Integer.valueOf(valueStr);
+                        Double v = Double.valueOf(valueStr);
                         datas.add(v);
                     }
                 }
