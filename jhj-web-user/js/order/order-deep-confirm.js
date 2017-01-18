@@ -93,6 +93,8 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 			var orderPayStr = orderMoney - userCouponValue;
 			if (orderPayStr < 0) orderPayStr = 0;
 			
+			sessionStorage.setItem("order_pay", orderPayStr);
+			
 			var orderOriginPayStr = orderOriginMoney - userCouponValue;
 			if (orderOriginPayStr < 0) orderOriginPayStr = 0;
 			
@@ -154,7 +156,7 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		    	  
 		    	  console.log("order_pay = " + sessionStorage.getItem("order_pay"));
 		    	  $$("#userCouponName").html(userCouponNameStr);
-		    	  $$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
+		    	  $$("#orderPayStr").html(sessionStorage.getItem("order_pay") + "元");
 		      }
 		});
 	}
