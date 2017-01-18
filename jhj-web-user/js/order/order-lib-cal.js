@@ -77,7 +77,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             filterWeek(serviceTypeId);
             
             /*-----------暂时添加的代码需要删除------*/
-            if(s<'2017-01-24'){
+            if(s<'2017-01-30'){
         		$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
         		return false;
         	}
@@ -104,7 +104,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         getDay(preDay);
         
         /*---------暂时添加的代码------------*/
-        if(preDay.format("YYYY-MM-DD")<'2017-01-24'){
+        if(preDay.format("YYYY-MM-DD")<'2017-01-30'){
         	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
     		return false;
         }
@@ -118,7 +118,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         getDay(afterDay);
         
         /*---------暂时添加的代码------------*/
-        if(afterDay.format("YYYY-MM-DD")<'2017-01-24'){
+        if(afterDay.format("YYYY-MM-DD")<'2017-01-30'){
         	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
     		return false;
         }
@@ -370,7 +370,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     
     
     /*---------------暂时添加代码-------------------*/
-    if(date<'2017-01-24'){
+    if(date<'2017-01-30'){
     	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
     }
     /*---------------暂时添加代码-------------------*/
