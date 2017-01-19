@@ -433,7 +433,7 @@ $("#checkOrderLog").on('click',function(){
 					for(var i=0,len=result.length;i<len;i++){
 						var orderLog = result[i];
 						var htmlText="";
-						htmlText+="<tr><td>"+(i+1)+"</td><td>"+orderLog.action+"</td><td>"+orderLog.user_name+"</td><td>"+
+						htmlText+="<tr><td>"+(i+1)+"</td><td>"+orderLog.action+"</td><td>"+orderLog.real_name+"</td><td>"+
 						orderLog.user_type_name+"</td><td>"+orderLog.remarks+"</td><td>"+orderLog.add_time_str+"</td></tr>";
 						html += htmlText;
 					}
