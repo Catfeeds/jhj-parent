@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AccountAuth;
+import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.Users;
@@ -239,19 +243,31 @@ public class OrderController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/cancelOrder.json", method = RequestMethod.POST)
 	public AppResultData<Object> cancelOrder(
-			@RequestParam("order_id") Long orderId) {
+			@RequestParam("order_id") Long orderId,
+			@RequestParam("remarks") String remarks,HttpServletRequest request) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
 
 		AppResultData<Object> result = orderCancelService.cancleOrderDone(order);
 		
+		if(result.status==0){
+			OrderLog initOrderLog = orderLogService.initOrderLog(order);
+			initOrderLog.setAction(Constants.ORDER_ACTION_CANCLE);
+			initOrderLog.setUserType((short)2);
+			AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
+			initOrderLog.setUserId(auth.getId());
+			initOrderLog.setUserName(auth.getUsername());
+			initOrderLog.setRemarks("人工取消-"+remarks);
+			orderLogService.insert(initOrderLog);
+		}
+		
 		return result;
 	}
 	
 	@AuthPassport
 	@RequestMapping(value = "/order-hour-add", method = RequestMethod.GET)
-	public String oaOrderHourAdd(Model model) {
+	public String oaOrderHourAdd(Model model,HttpServletRequest request) {
 		
 		// 订单的来源
 		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
@@ -272,13 +288,16 @@ public class OrderController extends BaseController {
 		serviceTypeList = partService.selectByIds(serviceTypeIds);
 		
 		model.addAttribute("serviceTypeList", serviceTypeList);
+		AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+		model.addAttribute("accountAuth", accountAuth);
+		
 		return "order/orderHourAdd";
 	}
 
 	
 	@AuthPassport
 	@RequestMapping(value = "/order-exp-add", method = RequestMethod.GET)
-	public String orderAmAdd(Model model) {
+	public String orderAmAdd(Model model,HttpServletRequest request) {
 
 		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
 		vo.setEnable((short) 1);
@@ -293,12 +312,16 @@ public class OrderController extends BaseController {
 		serviceTypeVo.setEnable((short)1);
 		List<PartnerServiceType> serviceTypeList = serviceType.selectByPartnerServiceTypeVo(serviceTypeVo);
 		model.addAttribute("serviceType", serviceTypeList);
+		
+		AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+		model.addAttribute("accountAuth", accountAuth);
+		
 		return "order/orderExpAdd";
 	}
 
 	@AuthPassport
 	@RequestMapping(value = "/order-baby-add", method = RequestMethod.GET)
-	public String orderBabyAdd(Model model) {
+	public String orderBabyAdd(Model model,HttpServletRequest request) {
 
 		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
 		vo.setEnable((short) 1);
@@ -313,8 +336,46 @@ public class OrderController extends BaseController {
 		serviceTypeVo.setEnable((short)1);
 		List<PartnerServiceType> serviceTypeList = serviceType.selectByPartnerServiceTypeVo(serviceTypeVo);
 		model.addAttribute("serviceType", serviceTypeList);
+		
+		AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+		model.addAttribute("accountAuth", accountAuth);
 
 		return "order/orderExpAdd";
+	}
+	
+	@AuthPassport
+	@RequestMapping(value = "/update_order", method = RequestMethod.POST)
+	public String updateOrder(Model model,@ModelAttribute("orderModel") Orders orderForm,HttpServletRequest request) {
+
+		String url=null;
+		Orders orders = orderService.selectByOrderNo(orderForm.getOrderNo());
+		Long orderOpFrom = orders.getOrderOpFrom();
+		orders.setOrderOpFrom(orderForm.getOrderOpFrom());
+		orderService.updateByPrimaryKeySelective(orders);
+		if(orders.getOrderType()==0)
+			url = "redirect:order-hour-list";
+		if(orders.getOrderType()==1){
+			if(orders.getServiceType()==62 || orders.getServiceType()==63 || orders.getServiceType()==64 ||orders.getServiceType()==65)
+				url = "redirect:order-exp-baby-list";
+			else
+				url = "redirect:order-exp-list";
+		}
+		
+		if(orderOpFrom!=orderForm.getOrderOpFrom()){
+			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+			OrderLog initOrderLog = orderLogService.initOrderLog(orders);
+			initOrderLog.setAction(Constants.ORDER_ACTION_UPDATE);
+			initOrderLog.setUserId(accountAuth.getId());
+			initOrderLog.setUserName(accountAuth.getUsername());
+			initOrderLog.setUserType((short)2);
+			
+			CooperativeBusiness cb1 = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+			CooperativeBusiness cb2 = cooperateBusinessService.selectByPrimaryKey(orderForm.getOrderOpFrom());
+			initOrderLog.setRemarks(cb1.getBusinessName()+"修改成"+cb2.getBusinessName());
+			orderLogService.insert(initOrderLog);
+		}
+			
+		return url;
 	}
 
 }

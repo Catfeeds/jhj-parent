@@ -263,6 +263,10 @@ public class OrderPayController extends BaseController {
 			
 			//记录订单日志.
 			OrderLog orderLog = orderLogService.initOrderLog(order);
+			orderLog.setAction(Constants.ORDER_ACTION_PAY);
+			orderLog.setUserId(u.getId());
+			orderLog.setUserName(u.getMobile());
+			orderLog.setUserType((short)0);
 			orderLogService.insert(orderLog);
 			
 			//记录用户消费明细

@@ -64,7 +64,7 @@
                                     		100%
                                         </c:if>
                                         <c:if test="${item.totalSended > 0 && item.totalFail > 0}">
-                                    		${ (item.totalSended - item.totalFail)/item.totalSended*100 }%
+                                        	<fmt:formatNumber value="${ (item.totalSended - item.totalFail)/item.totalSended }" maxFractionDigits="2" type="percent" />
                                         </c:if>
                                         
                                     </td>

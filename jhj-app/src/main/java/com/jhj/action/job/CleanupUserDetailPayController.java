@@ -82,11 +82,11 @@ public class CleanupUserDetailPayController extends BaseController{
 						}
 						if(orderType==1){
 							restMoney = restMoney.add(orderPay);
-							if(userDetailPay.getAddTime()>1470758400 && userDetailPay.getAddTime()<1476979200){
+							if(userDetailPay.getAddTime()>1470758400 && userDetailPay.getAddTime()<1479916799){
 								OrderCards orderCard = orderCardService.selectByOrderCardsNo(userDetailPay.getOrderNo());
 								if(orderCard.getOrderStatus()==1){
 									if(orderCard.getCardPay().compareTo(new BigDecimal(500))==0){
-										restMoney = restMoney.add(new BigDecimal(50));
+										restMoney = restMoney.add(new BigDecimal(30));
 									}
 									if(orderCard.getCardPay().compareTo(new BigDecimal(1000))==0){
 										restMoney = restMoney.add(new BigDecimal(100));

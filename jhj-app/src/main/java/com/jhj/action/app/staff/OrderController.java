@@ -440,6 +440,10 @@ public class OrderController extends BaseController {
 		ordersService.updateByPrimaryKeySelective(orders);
 		// 记录订单日志.
 		OrderLog orderLog = orderLogService.initOrderLog(orders);
+		orderLog.setAction(Constants.ORDER_ACTION_UPDATE+"-待评价");
+		orderLog.setUserId(orders.getUserId());
+		orderLog.setUserName(orders.getMobile());
+		orderLog.setUserType((short)0);
 		orderLogService.insert(orderLog);
 		
 		return result;

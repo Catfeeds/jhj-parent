@@ -50,6 +50,8 @@
 									<input type="hidden" id="mpprice" name="pprice"" value="135">
 									<input type="hidden" id="maxServiceHour" name="maxServiceHour"" value="6">
 									<input type="hidden" id="minServiceHour" name="minServiceHour"" value="3">
+									<input type="hidden" id="user_id" value="${accountAuth.id }" />
+									<input type="hidden" id="username" value="${accountAuth.username }" />
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label">

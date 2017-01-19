@@ -219,6 +219,12 @@ function saveFrom() {
 	var couponsId = $("input[name='couponsId']:selected").val();
 	params.coupons_id = couponsId;
 	
+	var user_id = $("#user_id").val();
+	var user_name = $("#username").val();
+	
+	params.user_id = user_id;
+	params.user_name = user_name;
+	
 	if ($('#orderHourForm').validate().form()) {
 		$('#submitForm').attr('disabled', "true");
 		$.ajax({

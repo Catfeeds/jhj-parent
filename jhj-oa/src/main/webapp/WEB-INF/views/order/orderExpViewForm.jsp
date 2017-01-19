@@ -35,6 +35,7 @@
 		<div class="col-lg-12">
 			<section class="panel">
 			<div class="panel-body">
+				<button id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal">查看订单日志</button>
 				<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 					enctype="multipart/form-data">
 					<form:hidden path="id" />
@@ -161,8 +162,13 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单来源</label>
 							<div class="col-md-5">
-								<form:input path="orderOpFromName" class="form-control" readonly="true" />
-								<form:errors path="orderOpFromName" class="field-has-error"></form:errors>
+								<%-- <form:input path="orderOpFromName" class="form-control" readonly="true" />
+								<form:errors path="orderOpFromName" class="field-has-error"></form:errors> --%>
+								<form:select path="orderOpFrom" cssClass="form-control">
+									<form:option value="">--请选择订单来源--</form:option>
+									<form:option value="1">来电订单</form:option>
+									<form:options items="${cooperativeBusiness }" itemValue="id" itemLabel="businessName" />
+								</form:select>
 							</div>
 						</div>
 						<div class="form-group">
@@ -178,7 +184,10 @@
 								<form:textarea path="remarks" readonly="true" rows="2" cols="50" class="form-control" />
 							</div>
 						</div>
-						</section>
+						<c:if
+							test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
+							<input type="submit" name="修改" class="btn btn-success" />
+						</c:if> </section>
 						<section class="panel" id="dispatchSection"> <header class="panel-info">
 						<h4>派工信息</h4>
 						</header>
@@ -214,31 +223,31 @@
 							</table>
 						</div>
 						</section>
-						<c:if test="${!empty oaOrderListVoModel.orderImgs}">
-							<section class="panel" id="orderDoneSection"> <header class="panel-info">
-							<h4>完成服务信息</h4>
-							</header>
-							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-							<div class="form-group">
-								<label class="col-md-2 control-label">完成服务时间</label>
-								<div class="col-md-5">${oaOrderListVoModel.orderDoneTimeStr }</div>
+						c:if test="${!empty oaOrderListVoModel.orderImgs}">
+						<section class="panel" id="orderDoneSection"> <header class="panel-info">
+						<h4>完成服务信息</h4>
+						</header>
+						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
+						<div class="form-group">
+							<label class="col-md-2 control-label">完成服务时间</label>
+							<div class="col-md-5">${oaOrderListVoModel.orderDoneTimeStr }</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-2 control-label">服务超时</label>
+							<div class="col-md-5">${oaOrderListVoModel.overworkTimeStr }</div>
+						</div>
+						<div class="container">
+							<div class="row">
+								<c:forEach items="${oaOrderListVoModel.orderImgs}" var="item">
+									<div class="col-lg-3">
+										<a class="fancybox" rel="image-group-name" href="${item.imgUrl }" title="派工单">
+											<img class="img-responsive thumbnail" src="${item.imgUrl }" alt="" />
+										</a>
+									</div>
+								</c:forEach>
 							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">服务超时</label>
-								<div class="col-md-5">${oaOrderListVoModel.overworkTimeStr }</div>
-							</div>
-							<div class="container">
-								<div class="row">
-									<c:forEach items="${oaOrderListVoModel.orderImgs}" var="item">
-										<div class="col-lg-3">
-											<a class="fancybox" rel="image-group-name" href="${item.imgUrl }" title="派工单">
-												<img class="img-responsive thumbnail" src="${item.imgUrl }" alt="" />
-											</a>
-										</div>
-									</c:forEach>
-								</div>
-							</div>
-							</section>
+						</div>
+						</section>
 						</c:if>
 						<section class="panel" id="doDispatchSection"> <header class="panel-info">
 						<h4>派工调整</h4>
@@ -320,7 +329,8 @@
 								<c:if
 									test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5}">
 									<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9 }">
-										<input type="button" id="cancleOrder" class="btn btn-success" value="取消订单">
+										<input type="button" id="cancleOrder" class="btn btn-success" value="取消订单" data-toggle="modal"
+											data-target="#orderCancleModal" />
 									</c:if>
 								</c:if>
 							</div>
@@ -328,6 +338,64 @@
 				</form:form>
 			</div>
 			</section>
+		</div>
+	</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						<b>订单修改记录</b>
+					</h4>
+				</div>
+				<div class="modal-body">
+					<table class="table table-striped table-advance table-hover">
+						<thead>
+							<tr>
+								<th>序号</th>
+								<th>操作</th>
+								<th>录入人</th>
+								<th>用户类型</th>
+								<th>备注信息</th>
+								<th>录入时间</th>
+							</tr>
+						</thead>
+						<tbody id="showOrderLog"></tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="orderCancleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						<b>订单取消</b>
+					</h4>
+				</div>
+				<div class="modal-body">
+					<form name="cancleForms">
+						<textarea name="remarks" id="remark" rows="3" cols="78" placeholder="取消原因"></textarea>
+						<span id="remark-error"></span>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="cancleForm" class="btn btn-default" data-dismiss="modal">提交</button>
+				</div>
+			</div>
 		</div>
 	</div>
 	<!-- page end--> </section> </section> <!--main content end--> <!--footer start--> <%@ include file="../shared/pageFooter.jsp"%>
@@ -353,7 +421,7 @@
 				closeBtn : false
 			});
 		});
-	</script>
+	</script>	
 	
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>

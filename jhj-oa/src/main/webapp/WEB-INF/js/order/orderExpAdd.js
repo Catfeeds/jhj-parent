@@ -218,6 +218,9 @@ function saveFrom() {
 	
 	var couponsId = $("input[name='couponsId']:selected").val();
 	params.coupons_id = couponsId;
+	
+	params.userid = $("#userid").val();
+	params.user_name = $("#username").val();
 
 	if ($('#orderExpForm').validate().form()) {
 		$('#submitForm').attr('disabled',"true");

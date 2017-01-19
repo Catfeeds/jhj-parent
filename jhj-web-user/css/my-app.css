@@ -2069,7 +2069,7 @@ i.toolbar-icon-tixing {
   padding-bottom:20px;
 }
 .shendu-bx-yuyue{
-	width:100%;height:45px;
+  width:100%;height:45px;
 }
 .shendu-bx-xd{
   width:100%;
@@ -2107,22 +2107,22 @@ i.toolbar-icon-tixing {
   font-size: 14px;
 }
 .shendu-bx-xd11 li:nth-child(1){
-	width:40%;
+  width:40%;
 }
 .shendu-bx-xd11 li:nth-child(2){
-	width:30%;
+  width:30%;
 }
 .shendu-bx-xd11 li:nth-child(3){
-	width:30%;
+  width:30%;
 }
 .shendu-bx-xd1 li:nth-child(1){
-	width:40%;
+  width:40%;
 }
 .shendu-bx-xd1 li:nth-child(2){
-	width:30%;
+  width:30%;
 }
 .shendu-bx-xd1 li:nth-child(3){
-	width:30%;
+  width:30%;
 }
 .shendu-bx-xd2{
   width:100%;
@@ -2446,6 +2446,7 @@ i.toolbar-icon-tixing {
   text-align: center;
   line-height: 50px;
   font-size: 16px;
+  color:#000;
 }
 
 .rilikongjian4{
@@ -3117,13 +3118,13 @@ i.toolbar-icon-tixing {
   color:#F96269;
 }
 .youhuiquan8{
-	width:100%;
-	clear:both;
-	height:28px;
-	font-size:14px;
-	text-align:center;
-	line-height:28px;
-	color:#fff;
+  width:100%;
+  clear:both;
+  height:28px;
+  font-size:14px;
+  text-align:center;
+  line-height:28px;
+  color:#fff;
 }
 
 
@@ -3223,8 +3224,8 @@ i.toolbar-icon-tixing {
 }
 /* 百度地图地址提示 */
 .baidu-map{
-	width:100%;
-	background:#fff;
+  width:100%;
+  background:#fff;
 }
 
 
@@ -3302,11 +3303,11 @@ i.toolbar-icon-tixing {
 -webkit-text-stroke: 0.5px #35ADF9;
 }
 .fangshiwenzi{
-	margin:0;
-	width:95%;
-	padding-left:5%;
-	line-height:40px;
-	color:#000;
+  margin:0;
+  width:95%;
+  padding-left:5%;
+  line-height:40px;
+  color:#000;
 }
 
 
@@ -4277,10 +4278,10 @@ i.toolbar-icon-tixing {
   font-size: 14px;
 }
 .chongzhi input{
-	border:0;
-	border-bottom:1px solid #dedede;
-	font-size:14px;
-	width:50%;
+  border:0;
+  border-bottom:1px solid #dedede;
+  font-size:14px;
+  width:50%;
 }
 .chongzhi1{
   margin-top: 15px;
@@ -4698,6 +4699,103 @@ i.toolbar-icon-tixing {
 
 
 
+/*洁宝宝*/
+.order-jiebaobao{
+  width:98%;
+  margin-left: 1%;
+  margin-top: 10px;
+}
+.order-jiebaobao1{
+  width:100%;
+  height:40px;
+}
+.order-jiebaobao1 li{
+  width:33%;
+  float: left;
+  margin-left: 0.25%;
+  text-align: center;
+  line-height: 40px;
+  color:#fff;
+  background: #64CDBE;
+  font-size: 14px;
+}
+.order-jiebaobao2{
+  width:100%;
+  height:90px;
+}
+.order-jiebaobao2 li{
+  width:33%;
+  height:90px;
+  float: left;
+  margin-left: 0.25%;
+  text-align: center;
+  line-height: 90px;
+  color:#000;
+  background: #E9E9E9;
+  font-size: 14px;
+}
+.order-jiebaobao2 li p{
+  margin:0;
+  padding-left: 1%;
+  height:30px;
+  text-align: left;
+  line-height: 30px;
+  color:#000;
+}
+.order-jiebaobao3{
+  width:100%;
+  height:180px;
+}
+.order-jiebaobao3 li{
+  width:33%;
+  height:180px;
+  float: left;
+  margin-left: 0.25%;
+  text-align: center;
+  line-height: 180px;
+  color:#000;
+  background: #DADADA;
+  font-size: 14px;
+}
+.order-jiebaobao3 li p{
+  margin:0;
+  padding-left: 1%;
+  height:30px;
+  text-align: left;
+  line-height: 30px;
+  color:#000;
+}
+.order-jiebaobao4{
+  width:100%;
+  height:240px;
+}
+.order-jiebaobao4 li{
+  width:33%;
+  height:240px;
+  float: left;
+  margin-left: 0.25%;
+  text-align: center;
+  line-height: 240px;
+  color:#000;
+  background: #E9E9E9;
+  font-size: 14px;
+}
+.order-jiebaobao4 li p{
+  margin:0;
+  padding-left: 1%;
+  height:30px;
+  text-align: left;
+  line-height: 30px;
+  color:#000;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -4964,9 +5062,9 @@ i.toolbar-icon-tixing {
   margin-top: 15px;
 }
 .beijingse{
-	color:#FEB954;
+  color:#FEB954;
 }
 
 .hour-beijingse{
-	color:#D1D1D1;
+  color:#D1D1D1;
 }
