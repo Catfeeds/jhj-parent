@@ -136,13 +136,16 @@
 											<div class="form-group">
 												<label class="col-md-2 control-label">订单来源</label>
 												<div class="col-md-5">
-													<%-- <form:input path="orderOpFromName" class="form-control" />
-								<form:errors path="orderOpFromName" class="field-has-error"></form:errors> --%>
-													<form:select path="orderOpFrom" cssClass="form-control">
-														<form:option value="">--请选择订单来源--</form:option>
-														<form:option value="1">来电订单</form:option>
-														<form:options items="${cooperativeBusiness }" itemValue="id" itemLabel="businessName" />
-													</form:select>
+													<c:if test="${oaOrderListVoModel.orderFrom !=1 }">
+														<form:select path="orderOpFrom" cssClass="form-control">
+															<form:option value="">--请选择订单来源--</form:option>
+															<form:option value="1">来电订单</form:option>
+															<form:options items="${cooperativeBusiness }" itemValue="id" itemLabel="businessName" />
+														</form:select>
+													</c:if>
+													<c:if test="${oaOrderListVoModel.orderFrom == 1 }">
+														<input class="form-control" value="微网站" readonly="readonly"/>
+													</c:if>
 												</div>
 											</div>
 											<div class="form-group">
@@ -160,7 +163,9 @@
 											</div>
 											<c:if
 												test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
-												<input type="submit" name="修改" class="btn btn-success" />
+												<c:if test="${oaOrderListVoModel.orderFrom !=1 }">
+													<input type="submit" class="btn btn-success" value="修改"/>
+												</c:if>
 											</c:if>
 										</section>
 										<section class="panel" id="dispatchSection">
@@ -319,7 +324,7 @@
 					</div>
 				</div>
 				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
+					<div class="modal-dialog" style="width: 70%;">
 						<div class="modal-content">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal">
