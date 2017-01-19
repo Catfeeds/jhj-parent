@@ -223,7 +223,7 @@
 							</table>
 						</div>
 						</section>
-						c:if test="${!empty oaOrderListVoModel.orderImgs}">
+						<c:if test="${!empty oaOrderListVoModel.orderImgs}">
 						<section class="panel" id="orderDoneSection"> <header class="panel-info">
 						<h4>完成服务信息</h4>
 						</header>
