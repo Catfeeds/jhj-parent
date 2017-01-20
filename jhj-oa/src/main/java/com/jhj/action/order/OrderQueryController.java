@@ -216,6 +216,14 @@ public class OrderQueryController extends BaseController {
 		OaOrderListVo oaOrderListVo = oaOrderService.getOrderVoDetailHour(orderNo, disStatus);
 
 		model.addAttribute("oaOrderListVoModel", oaOrderListVo);
+		
+		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
+		vo.setEnable((short) 1);
+		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
+				.selectCooperativeBusinessVo(vo);
+		if (CooperativeBusinessList != null) {
+			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
+		}
 
 		// 得到 当前登录 的 店长所在 门店id，
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
@@ -447,6 +455,14 @@ public class OrderQueryController extends BaseController {
 			orderAddonVos = orderServiceAddonsService.changeToOrderServiceAddons(orderAddons);
 		}
 		model.addAttribute("orderAddonVos", orderAddonVos);
+		
+		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
+		vo.setEnable((short) 1);
+		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
+				.selectCooperativeBusinessVo(vo);
+		if (CooperativeBusinessList != null) {
+			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
+		}
 		
 		
 		return "order/orderExpViewForm";		

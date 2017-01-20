@@ -257,6 +257,10 @@ public class OrderServiceRechargeController extends BaseController {
 		 * 订单日志
 		 */
 		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLog.setAction(Constants.ORDER_ACTION_ADD+"-手机话费充值");
+		orderLog.setUserId(userId);
+		orderLog.setUserName(u.getMobile());
+		orderLog.setUserType((short)0);
 		orderLogService.insert(orderLog);
 
 		
@@ -347,6 +351,10 @@ public class OrderServiceRechargeController extends BaseController {
 		
 		//记录订单日志.
 		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLog.setAction(Constants.ORDER_ACTION_PAY+"-手机话费充值成功");
+		orderLog.setUserId(order.getUserId());
+		orderLog.setUserName(order.getMobile());
+		orderLog.setUserType((short)0);
 		orderLogService.insert(orderLog);
 		
 		return result;

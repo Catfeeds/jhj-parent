@@ -270,6 +270,9 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 					staffNames = staffNames.substring(0, staffNames.length() -1 );
 				}
 				orderHourListVo.setStaffNames(staffNames);
+				if(!list.isEmpty()){
+					orderHourListVo.setStaffMobile(list.get(0).getStaffMobile());
+				}
 			}
 			
 			voList.add(orderHourListVo);

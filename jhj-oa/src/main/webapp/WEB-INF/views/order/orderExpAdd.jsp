@@ -49,6 +49,8 @@
 									<input type="hidden" id="isVip" name="isVip" value="0">
 									<input type="hidden" id="orderFrom" name="orderFrom" value="2">
 									<input type="hidden" id="serviceAddonDatas" name="serviceAddonDatas" value=""/>
+									<input type="hidden" id="userid" value="${accountAuth.id }" />
+									<input type="hidden" id="username" value="${accountAuth.username }" />
 									
 									<div class="form-body">
 										<div class="form-group">

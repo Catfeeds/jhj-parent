@@ -9,9 +9,13 @@
     <result column="order_status" property="orderStatus" jdbcType="NUMERIC" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="add_time" property="addTime" jdbcType="NUMERIC" />
+    <result column="user_id" property="userId" jdbcType="NUMERIC" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="SMALLINT" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, mobile, order_id, order_no, order_status, remarks, add_time
+    id, mobile, order_id, order_no, order_status, remarks, add_time,user_id,user_name,user_type,action
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -33,10 +37,11 @@
   <insert id="insert" parameterType="com.jhj.po.model.order.OrderLog" >
     insert into order_log (id, mobile, order_id, 
       order_no, order_status, remarks, 
-      add_time)
+      add_time,user_id,user_name,user_type,action)
     values (#{id,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, #{orderId,jdbcType=NUMERIC}, 
       #{orderNo,jdbcType=VARCHAR}, #{orderStatus,jdbcType=NUMERIC}, #{remarks,jdbcType=VARCHAR}, 
-      #{addTime,jdbcType=NUMERIC})
+      #{addTime,jdbcType=NUMERIC},#{userId,jdbcType=NUMERIC},#{userName,jdbcType=VARCHAR},
+      #{userType,jdbcType=SMALLINT},#{action,jdbcType=VARCHAR})
       
        <!-- 配置mysql主键自增 -->
 		<selectKey keyProperty="id" resultType="Long" order="AFTER">
@@ -70,6 +75,18 @@
       <if test="addTime != null" >
         add_time,
       </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userType != null" >
+        user_types,
+      </if>
+      <if test="action != null" >
+        action,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -92,6 +109,18 @@
       </if>
       <if test="addTime != null" >
         #{addTime,jdbcType=NUMERIC},
+      </if>
+       <if test="userId != null" >
+        #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=SMALLINT},
+      </if>
+      <if test="action != null" >
+        #{action,jdbcType=VARCHAR}
       </if>
     </trim>
   </insert>
@@ -116,6 +145,18 @@
       <if test="addTime != null" >
         add_time = #{addTime,jdbcType=NUMERIC},
       </if>
+       <if test="userId != null" >
+        user_id = #{userId,jdbcType=NUMERIC},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=SMALLINT},
+      </if>
+      <if test="action != null" >
+        action = #{action,jdbcType=VARCHAR}
+      </if>
     </set>
     where id = #{id,jdbcType=NUMERIC}
   </update>
@@ -126,7 +167,11 @@
       order_no = #{orderNo,jdbcType=VARCHAR},
       order_status = #{orderStatus,jdbcType=NUMERIC},
       remarks = #{remarks,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=NUMERIC}
+      add_time = #{addTime,jdbcType=NUMERIC},
+      user_id = #{userId,jdbcType=NUMERIC},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=SMALLINT},
+      action = #{action,jdbcType=VARCHAR}
     where id = #{id,jdbcType=NUMERIC}
   </update>
 </mapper>

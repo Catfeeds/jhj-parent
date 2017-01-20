@@ -34,6 +34,7 @@
 		<div class="col-lg-12">
 			<section class="panel">
 			<div class="panel-body">
+				
 				<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 					enctype="multipart/form-data">
 					<form:hidden path="id" />
@@ -170,8 +171,18 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单来源</label>
 							<div class="col-md-5">
-								<form:input path="orderOpFromName" class="form-control" readonly="true" />
-								<form:errors path="orderOpFromName" class="field-has-error"></form:errors>
+
+								<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
+									<form:select path="orderOpFrom" cssClass="form-control">
+										<form:option value="">--请选择订单来源--</form:option>
+										<form:option value="1">来电订单</form:option>
+										<form:options items="${cooperativeBusiness }" itemValue="id" itemLabel="businessName"/>
+									</form:select>
+								</c:if>
+								<c:if test="${oaOrderListVoModel.orderFrom==1 }">
+									<input class="form-control" value="微网站" readonly="true" />
+								</c:if>
+
 							</div>
 						</div>
 						<div class="form-group">
@@ -188,7 +199,16 @@
 								<form:textarea path="remarks" readonly="true" rows="2" cols="50" class="form-control" />
 							</div>
 						</div>
+						<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
+							<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
+								<div class="col-md-offset-3 col-md-3">
+									<input type="submit" value="修改" class="btn btn-danger"/>
+									<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal" value="查看订单日志" />
+								</div>
+							</c:if>
+						</c:if>
 					</section>
+					<br/>
 					<section class="panel" id ="dispatchSection"> <header class="panel-info"> <h4>派工信息</h4> </header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						
@@ -301,10 +321,10 @@
 						</section>
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3">
-								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
+								<button type="button" class="btn btn-success" id="submitForm">派工调整修改</button>
 								<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5}">
 									<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9 }">
-										<input type="button" id="cancleOrder" class="btn btn-success" value="取消订单">
+										<input type="button" id="cancleOrder" class="btn btn-success" value="取消订单" data-toggle="modal" data-target="#orderCancleModal"/>
 									</c:if>
 								</c:if>
 							</div>
@@ -314,6 +334,56 @@
 			</section>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" style="width: 70%;">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel"><b>订单修改记录</b></h4>
+	      </div>
+	      <div class="modal-body">
+	        <table class="table table-striped table-advance table-hover">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>操作</th>
+						<th>录入人</th>
+						<th>用户类型</th>
+					 	<th>备注信息</th>
+						<th>录入时间</th>
+					</tr>
+				</thead>
+				<tbody id="showOrderLog"></tbody>
+			</table>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="modal fade" id="orderCancleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel"><b>订单取消</b></h4>
+	      </div>
+	      <div class="modal-body">
+	        <form  name="cancleForms">
+	        	<textarea name="remarks" id="remark" rows="3" cols="78" placeholder="取消原因"></textarea>
+	        	<span id="remark-error"></span>
+	        </form>
+	      </div>
+	     <div class="modal-footer">
+	        <button type="button" id="cancleForm" class="btn btn-default" data-dismiss="modal" >提交</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
 	<!-- page end--> </section> </section> <!--main content end--> <!--footer start--> <%@ include file="../shared/pageFooter.jsp"%>
 	<!--footer end--> </section>
 	<!-- js placed at the end of the document so the pages load faster -->

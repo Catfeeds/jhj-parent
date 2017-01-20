@@ -23,7 +23,7 @@
 			<section class="panel"> <form:form class="form-inline" modelAttribute="leaveSearchVoModel"
 				action="leave_list" method="GET">
 				<header class="panel-info">
-				<table class="table">
+				<table class="table table-bordered table-condensed">
 					<tr>
 						<td>选择门店:</td>
 						<td><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
@@ -33,11 +33,20 @@
 							</select></td>
 						<td>服务人员手机号:</td>
 						<td><form:input path="mobile" maxlength="11" class="form-control" /></td>
+					</tr>
+					<tr>
+						<td>请假状态</td>
+						<td>
+							<div class="checkbox">
+								<label>
+									<form:checkbox path="leaveStatus" value="1" />请假中
+								</label>
+							</div>
+						</td>
 						<td>请假时间:</td>
 						<td><form:input path="leaveDateStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 								readonly="true" /></td>
-								
-						<td>
+						<td colspan="2">
 							<button type="submit" class="btn btn-primary">搜索</button>
 							<button type="reset" class="btn btn-primary">重置</button>
 						</td>
@@ -64,7 +73,7 @@
 						<th>请假申请时间</th>
 						<th>假期时间</th>
 						<th>请假天数</th>
-						<th>员工状态</th>
+						<th>请假状态</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -114,7 +123,7 @@
 			format : "yyyy-mm-dd",
 			language : "zh-CN",
 			autoclose : true,
-			startView : 1,
+			startView : 0,
 			todayBtn : true
 		});
 		

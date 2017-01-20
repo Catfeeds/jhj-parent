@@ -849,7 +849,7 @@
 
 	<select id="orderRevenueByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT orderFrom, 
-		FROM_UNIXTIME(T4.add_time, "%c-%e") AS series,
+		FROM_UNIXTIME(T4.add_time, "%Y-%m-%e") AS series,
 		T4.order_op_from as orderOpFrom,T4.order_type as orderType,T4.service_type as serviceType, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(
 		SELECT order_from AS orderFrom,T3.order_op_from,T3.order_type,T3.service_type,T3.add_time,order_money
@@ -1082,10 +1082,10 @@
 	<select id="chartTypeRevenue" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name,service_type as serviceType, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(SELECT order_type AS name,service_type,
-		<if test="selectCycle!=12">
+		<if test="statType=='day'">
 			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType!='day'">
 			CONCAT(year(FROM_UNIXTIME(add_time)), "-",quarter(FROM_UNIXTIME(add_time)) ) as series,
 		</if>
 		order_money FROM

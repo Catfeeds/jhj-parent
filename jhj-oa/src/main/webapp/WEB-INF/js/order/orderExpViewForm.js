@@ -385,13 +385,19 @@ var selectStaff = function() {
 }
 
 //取消订单
-$("#cancleOrder").on("click", function() {
+$("#cancleForm").on("click", function() {
 	var id = $("#id").val();
+	var remarks = $("#remark").val();
+	if(remarks==undefined || remarks==null || remarks==''){
+		$('#remark-error').text("取消原因不能为空！").css("color","red");
+		return false;
+	} 
 	if (confirm("请确认取消订单吗？")) {
 		console.log("asdfasdfasdf");
 		$("#cancleOrder").attr("disabled",false);
 		var params = {};
 		params.order_id = id;
+		params.remarks = remarks;
 		$.ajax({
 			type : "POST",
 			url : "/jhj-oa/order/cancelOrder.json",
@@ -414,3 +420,36 @@ $("#cancleOrder").on("click", function() {
 });
 
 window.onload = selectStaff;
+
+//查看订单日志
+$("#checkOrderLog").on('click',function(){
+	var orderNo = $("#orderNo").val();
+	if(orderNo==undefined || orderNo ==null || orderNo == '') return false;
+	
+	$.ajax({
+		type:"GET",
+		url:"/jhj-app/app/orderLog/orderLog-list.json",
+		data:{
+			"order_no":orderNo
+		},
+		dataType:"json",
+		success:function(data){
+			if(data.status==0){
+				var result = data.data;
+				if(result.length>0){
+					var html = ''; 
+					for(var i=0,len=result.length;i<len;i++){
+						var orderLog = result[i];
+						var htmlText="";
+						htmlText+="<tr><td>"+(i+1)+"</td><td>"+orderLog.action+"</td><td>"+orderLog.real_name+"</td><td>"+
+						orderLog.user_type_name+"</td><td>"+orderLog.remarks+"</td><td>"+orderLog.add_time_str+"</td></tr>";
+						html += htmlText;
+					}
+					$("#showOrderLog").html("").html(html);
+				}
+			}else if(data.status==999){
+				alert("没有数据！");
+			}
+		}
+	});
+});

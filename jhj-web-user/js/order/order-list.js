@@ -38,6 +38,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			htmlPart = htmlPart.replace(new RegExp('{orderStatus}', "gm"), order.order_status);
 			
 			htmlPart = htmlPart.replace(new RegExp('{staffNames}', "gm"), order.staff_names);
+			htmlPart = htmlPart.replace(new RegExp('{staffMobile}', "gm"), order.staff_mobile);
 			
 			var orderStatus = order.order_status;
 			console.log("orderStatus = " + orderStatus);
@@ -58,11 +59,12 @@ myApp.onPageBeforeInit('order-list', function(page) {
 
 			htmlPart = htmlPart.replace(new RegExp('{priceExtendStyle}', "gm"), priceExtendStyle);
 			
-			var orderRateStr = "立即评价";
 			var orderRateStyle = "none"
 			if (orderStatus >= 3 && orderStatus <= 8) {
 				orderRateStyle = "block";
 			}
+			if(orderStatus>=3 && orderStatus<7) orderRateStr = "联系服务员";
+			if (orderStatus == 7) orderRateStr = "立即评价";
 			if (orderStatus == 8) orderRateStr = "已评价";
 			htmlPart = htmlPart.replace(new RegExp('{orderRateStr}', "gm"), orderRateStr);
 			htmlPart = htmlPart.replace(new RegExp('{orderRateStyle}', "gm"), orderRateStyle);
@@ -220,5 +222,18 @@ function linkOrderRate(obj) {
 	
 	mainView.router.loadPage(orderRateUrl);
 }
+
+function choseLink(obj){
+	var orderStatus = $$(obj).parent().parent().find('input[name=orderStatus]').val();;
+	if(orderStatus>=3 && orderStatus<7){
+		var html = $$(obj).text();
+		var staffMobile = $$("#staffMobile").val();
+		$$(obj).parent().attr("href","tel:"+staffMobile);
+		
+	}
+	if(orderStatus==7 || orderStatus==8){
+		linkOrderRate($$(obj).parent().parent());
+	}
+};
 
 

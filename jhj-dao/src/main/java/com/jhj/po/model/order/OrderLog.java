@@ -14,6 +14,18 @@ public class OrderLog {
     private String remarks;
 
     private Long addTime;
+    
+    //录入人ID
+    private Long userId;
+    
+    //录入人名称
+    private String userName;
+    
+    //用户类型，0，用户；1，服务人员；2，后台管理人员
+    private Short userType;
+    
+    //操作
+    private String action;
 
     public Long getId() {
         return id;
@@ -70,4 +82,38 @@ public class OrderLog {
     public void setAddTime(Long addTime) {
         this.addTime = addTime;
     }
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public Short getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Short userType) {
+		this.userType = userType;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+    
+    
 }

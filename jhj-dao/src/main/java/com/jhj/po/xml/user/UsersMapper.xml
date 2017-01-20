@@ -40,6 +40,13 @@
 	
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
 		<include refid="bySearchVo" />
+		<if test="orderNum!=null and orderNum!=''">
+			or id in (SELECT DISTINCT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) and is_vip=0
+			<if test="mobile != null">
+				and mobile like CONCAT('%','${mobile}','%' )
+			</if>
+			<include refid="charSearchVo" />
+		</if>
 		order by add_time desc
 	</select>
 	
@@ -100,9 +107,6 @@
 			and is_vip = #{isVip,jdbcType=NUMERIC}
 		</if>
 		
-		<if test="orderNum!=null and orderNum!=''">
-			or id in (SELECT DISTINCT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) and is_vip=0 
-		</if>
 	</sql>
 
 	<!-- 展示 只在 当前门店 下过单的 客户 -->
@@ -554,7 +558,7 @@
 	</select>
 	<!-- 用户有余额人数统计 -->
 	<select id="userResyMoneyByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, "%c-%e") AS series,
+		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		COUNT(*) AS total
 		FROM users
 		WHERE rest_money > 0
@@ -588,18 +592,19 @@
 	</select>
 
 	<!-- 用户余额不足200的人数 -->
-
 	<select id="userResyMoneyLessTwoByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,
+		sum(case when rest_money &gt; 0 and rest_money &lt;= 200 then rest_money end ) as totalMoney
 		FROM users
 		WHERE rest_money &gt; 0 and rest_money &lt;= 200
 		<include refid="charSearchVo"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
+	
 	<select id="userResyMoneyLessTwoByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 0 and rest_money &lt;=200 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money &gt; 0 and rest_money &lt;= 200
 		<include refid="charSearchVo"/>
@@ -607,7 +612,7 @@
 	</select>
 	<select id="userResyMoneyLessTwoByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 0 and rest_money &lt;=200 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money &gt; 0 and rest_money &lt;= 200
 		<include refid="charSearchVo"/>
@@ -617,7 +622,7 @@
 
 	<select id="userResyMoneyLessThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 200 and rest_money &lt;=1000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money >200 and rest_money &lt;= 1000
 		<include refid="charSearchVo"/>
@@ -625,7 +630,7 @@
 	</select>
 	<select id="userResyMoneyLessThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 200 and rest_money &lt;=1000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money >200 and rest_money &lt;= 1000
 		<include refid="charSearchVo"/>
@@ -633,7 +638,7 @@
 	</select>
 	<select id="userResyMoneyLessThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 200 and rest_money &lt;=1000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money >200 and rest_money &lt;= 1000
 		<include refid="charSearchVo"/>
@@ -644,7 +649,7 @@
 
 	<select id="userResyMoneyThreeThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 3000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money > 3000
 		<include refid="charSearchVo"/>
@@ -652,7 +657,7 @@
 	</select>
 	<select id="userResyMoneyThreeThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 3000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money > 3000
 		<include refid="charSearchVo"/>
@@ -660,7 +665,7 @@
 	</select>
 	<select id="userResyMoneyThreeThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 3000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money > 3000
 		<include refid="charSearchVo"/>
@@ -671,7 +676,7 @@
 
 	<select id="userResyMoneyBetweenByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 1000 and rest_money &lt;=3000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money > 1000 and rest_money &lt;= 3000
 		<include refid="charSearchVo"/>
@@ -679,7 +684,7 @@
 	</select>
 	<select id="userResyMoneyBetweenByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 1000 and rest_money &lt;=3000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money > 1000 and rest_money &lt;= 3000
 		<include refid="charSearchVo"/>
@@ -687,7 +692,7 @@
 	</select>
 	<select id="userResyMoneyBetweenByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
-		COUNT(*) AS total
+		COUNT(*) AS total,sum(case when rest_money &gt; 1000 and rest_money &lt;=3000 then rest_money else 0 end) as totalMoney
 		FROM users
 		WHERE rest_money > 1000 and rest_money &lt;= 3000
 		<include refid="charSearchVo"/>
@@ -720,10 +725,10 @@
 	
 	<select id="totalNum" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT COUNT(*) AS total,
-		<if test="selectCycle!=12">
+		<if test="statType=='day'">
 			FROM_UNIXTIME(add_time, '${formatParam}') AS series
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType!='day'">
 			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
 		</if>
 		FROM users

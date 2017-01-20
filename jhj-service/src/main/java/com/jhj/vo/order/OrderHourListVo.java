@@ -43,6 +43,8 @@ public class OrderHourListVo extends Orders {
 	private String staffNames;
 	
 	private Short payType;
+	
+	private String staffMobile;
 
 	public String getAddress() {
 		return address;
@@ -123,4 +125,13 @@ public class OrderHourListVo extends Orders {
 	public void setOrderOriginPay(BigDecimal orderOriginPay) {
 		this.orderOriginPay = orderOriginPay;
 	}
+
+	public String getStaffMobile() {
+		return staffMobile;
+	}
+
+	public void setStaffMobile(String staffMobile) {
+		this.staffMobile = staffMobile;
+	}
+	
 }

@@ -109,6 +109,8 @@ public class Constants {
 	public static String NOTICE_USER_REST_MONEY_NOT_ENOUGH= "34652";
 	public static String STAFF_PAY_DEPT_SUCCESS =" 80274";   //服务人员支付欠款成功
 	public static String STAFF_CASE_REQ = "80272";   //服务人员申请提现
+	public static String PAY_SUCCESS_ORDER_SMS = "151019";
+	
 
 	//支付方式： 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付(保留,暂不开发)
 	//4 = 上门刷卡（保留，暂不开发） 5 = 优惠券兑换
@@ -420,6 +422,17 @@ public class Constants {
 	 
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_0 = 0;  //订单欠款
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_1 = 1;  //订单欠款取消
+	 
+	 //订单操作
+	 public static String ORDER_ACTION_ADD = "订单添加";
+	 public static String ORDER_ACTION_PAY = "订单支付";
+	 public static String ORDER_ACTION_START_SERVER = "订单开始服务";
+	 public static String ORDER_ACTION_END_SERVER = "订单完成服务";
+	 public static String ORDER_ACTION_EVALUATE = "订单评价";
+	 public static String ORDER_ACTION_CANCLE = "取消订单";
+	 public static String ORDER_ACTION_DISPATCHS = "订单派工";
+	 public static String ORDER_ACTION_UPDATE = "订单修改";
+	
 
 }
 

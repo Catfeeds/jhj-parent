@@ -6,9 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.order.OrderLogMapper;
+import com.jhj.po.model.admin.AdminAccount;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
+import com.jhj.service.admin.AdminAccountService;
 import com.jhj.service.order.OrderLogService;
+import com.jhj.vo.order.OrderLogVo;
+import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
 
 @Service
@@ -16,6 +21,10 @@ public class OrderLogServiceImpl implements OrderLogService {
 
 	@Autowired
 	private OrderLogMapper orderLogMapper;
+	
+	@Autowired
+	private AdminAccountService adminAccountService;
+	
 	@Override
 	public OrderLog initOrderLog(Orders orders) {
 		OrderLog orderLog = new OrderLog();
@@ -26,6 +35,10 @@ public class OrderLogServiceImpl implements OrderLogService {
 		orderLog.setOrderStatus(orders.getOrderStatus());
 		orderLog.setRemarks(orders.getRemarks());
 		orderLog.setId(0L);
+		orderLog.setUserId(0L);
+		orderLog.setUserName("");
+		orderLog.setUserType((short)2);
+		orderLog.setAction("");
 		return orderLog;
 	}
 
@@ -37,5 +50,32 @@ public class OrderLogServiceImpl implements OrderLogService {
 	@Override
 	public List<OrderLog> selectByOrderNo(String orderNo) {
 		return orderLogMapper.selectByOrderNo(orderNo);
+	}
+
+	@Override
+	public OrderLogVo transVo(OrderLog orderLog) {
+		if(orderLog==null) return null;
+		
+		OrderLogVo orderLogVo=new OrderLogVo();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(orderLog, orderLogVo);
+		
+		String addTimeStr = DateUtil.convTimeStampToStringDate(orderLog.getAddTime(), DateUtil.DEFAULT_FULL_PATTERN);
+		orderLogVo.setAddTimeStr(addTimeStr);
+		if(orderLog.getUserType()==0){
+			orderLogVo.setUserTypeName("用户");
+			orderLogVo.setRealName(orderLog.getUserName());
+		}
+		if(orderLog.getUserType()==1){
+			orderLogVo.setUserTypeName("服务人员");
+			orderLogVo.setRealName(orderLog.getUserName());
+		}
+		if(orderLog.getUserType()==2){
+			orderLogVo.setUserTypeName("后台管理人员");
+			AdminAccount adminAccount = adminAccountService.selectByPrimaryKey(orderLog.getUserId());
+			orderLogVo.setRealName(adminAccount.getName());
+			
+		}
+		return orderLogVo;
 	}
 }
