@@ -290,7 +290,7 @@ public class OrderPayController extends BaseController {
 				 *    您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
 				 */
 				
-				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
+				SmsUtil.SendSms(u.getMobile(),  Constants.PAY_SUCCESS_ORDER_SMS, paySuccessForUser);
 				
 				
 				orderPayService.orderPaySuccessToDoForHour(u.getId(), order.getId(), false);
@@ -302,7 +302,7 @@ public class OrderPayController extends BaseController {
 				 *  2016年4月13日18:50:29  没啥大用了， jhj2.1 已经没有 深度 保洁订单类型了
  				 * 
 				 */
-				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
+				SmsUtil.SendSms(u.getMobile(),  Constants.PAY_SUCCESS_ORDER_SMS, paySuccessForUser);
 				orderPayService.orderPaySuccessToDoForDeep(order);
 			}
 
@@ -315,7 +315,7 @@ public class OrderPayController extends BaseController {
 //				您预定的{1}{2}服务已经确认，感谢您的支持，服务人员会尽快与您联系，如有任何疑问请拨打010-56429112
 				
 				orderPayService.orderPaySuccessToDoForAm(order);
-				SmsUtil.SendSms(u.getMobile(),  "114802", paySuccessForUser);
+				SmsUtil.SendSms(u.getMobile(),  Constants.PAY_SUCCESS_ORDER_SMS, paySuccessForUser);
 			}
 		}
 		

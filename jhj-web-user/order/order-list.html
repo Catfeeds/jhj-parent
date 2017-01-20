@@ -42,7 +42,7 @@
 					去支付
 				</div>
 				<div class="all-button3" style="display: {priceExtendStyle}" onclick="doOrderPayExt($$(this).parent())">补交差价</div>
-				<div class="all-button4" style="display: {orderRateStyle}" onclick="linkOrderRate($$(this).parent())">{orderRateStr}</div>
+				<a href="#" id="staffPhone" class="external"><div class="all-button4" style="display: {orderRateStyle}" id="linkOrderRate" onclick="choseLink(this)">{orderRateStr}</div></a><!-- onclick="linkOrderRate($$(this).parent())" -->
 				<div style="clear:both;"></div>
 				<input type="hidden" id="orderStatus" name="orderStatus" value="{orderStatus}" />
 				<input type="hidden" id="serviceTypeId" name="serviceTypeId" value="{serviceTypeId}" />
@@ -54,6 +54,7 @@
 				<input type="hidden" id="userCouponId" name="userCouponId" value="{userCouponId}" />
 				<input type="hidden" id="userCouponValue" name="userCouponValue" value="{userCouponValue}" />
 				<input type="hidden" id="staffNames" name="staffNames" value="{staffNames}" />
+				<input type="hidden" id="staffMobile" name="staffMobile" value="{staffMobile}" />
 			</div>
 		</div>
 	</div>

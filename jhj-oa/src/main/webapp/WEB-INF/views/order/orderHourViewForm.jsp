@@ -34,7 +34,6 @@
 					<div class="col-lg-12">
 						<section class="panel">
 							<div class="panel-body">
-								<button id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal">查看订单日志</button>
 								<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 									enctype="multipart/form-data">
 									<form:hidden path="id" />
@@ -136,15 +135,15 @@
 											<div class="form-group">
 												<label class="col-md-2 control-label">订单来源</label>
 												<div class="col-md-5">
-													<c:if test="${oaOrderListVoModel.orderFrom !=1 }">
+													<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
 														<form:select path="orderOpFrom" cssClass="form-control">
 															<form:option value="">--请选择订单来源--</form:option>
 															<form:option value="1">来电订单</form:option>
 															<form:options items="${cooperativeBusiness }" itemValue="id" itemLabel="businessName" />
 														</form:select>
 													</c:if>
-													<c:if test="${oaOrderListVoModel.orderFrom == 1 }">
-														<input class="form-control" value="微网站" readonly="readonly"/>
+													<c:if test="${oaOrderListVoModel.orderFrom==1 }">
+														<input class="form-control" value="微网站" readonly="true" />
 													</c:if>
 												</div>
 											</div>
@@ -163,11 +162,16 @@
 											</div>
 											<c:if
 												test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
-												<c:if test="${oaOrderListVoModel.orderFrom !=1 }">
-													<input type="submit" class="btn btn-success" value="修改"/>
+												<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
+													<div class="col-md-offset-3 col-md-3">
+														<input type="submit" value="修改" class="btn btn-danger" />
+														<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal"
+															value="查看订单日志" />
+													</div>
 												</c:if>
 											</c:if>
 										</section>
+										<br />
 										<section class="panel" id="dispatchSection">
 											<header class="panel-info">
 												<h4>派工信息</h4>
@@ -308,7 +312,7 @@
 										</section>
 										<div class="form-actions fluid">
 											<div class="col-md-offset-3 col-md-3">
-												<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
+												<button type="button" class="btn btn-success" id="submitForm">派工调整修改</button>
 												<c:if
 													test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 5 }">
 													<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9 }">
@@ -412,7 +416,6 @@
 			});
 		});
 	</script>
-	
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderHourViewForm.js'/>"></script>

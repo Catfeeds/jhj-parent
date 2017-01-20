@@ -35,7 +35,6 @@
 		<div class="col-lg-12">
 			<section class="panel">
 			<div class="panel-body">
-				<button id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal">查看订单日志</button>
 				<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 					enctype="multipart/form-data">
 					<form:hidden path="id" />
@@ -190,11 +189,14 @@
 						<c:if
 							test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
 							<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
-								<input type="submit" class="btn btn-success" value="修改"/>
+								<div class="col-md-offset-3 col-md-3">
+									<input type="submit" value="修改" class="btn btn-danger" />
+									<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal"
+										value="查看订单日志" />
+								</div>
 							</c:if>
-						</c:if> 
-						
-					</section>
+						</c:if> </section>
+						<br />
 						<section class="panel" id="dispatchSection"> <header class="panel-info">
 						<h4>派工信息</h4>
 						</header>
@@ -231,30 +233,30 @@
 						</div>
 						</section>
 						<c:if test="${!empty oaOrderListVoModel.orderImgs}">
-						<section class="panel" id="orderDoneSection"> <header class="panel-info">
-						<h4>完成服务信息</h4>
-						</header>
-						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-						<div class="form-group">
-							<label class="col-md-2 control-label">完成服务时间</label>
-							<div class="col-md-5">${oaOrderListVoModel.orderDoneTimeStr }</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-2 control-label">服务超时</label>
-							<div class="col-md-5">${oaOrderListVoModel.overworkTimeStr }</div>
-						</div>
-						<div class="container">
-							<div class="row">
-								<c:forEach items="${oaOrderListVoModel.orderImgs}" var="item">
-									<div class="col-lg-3">
-										<a class="fancybox" rel="image-group-name" href="${item.imgUrl }" title="派工单">
-											<img class="img-responsive thumbnail" src="${item.imgUrl }" alt="" />
-										</a>
-									</div>
-								</c:forEach>
+							<section class="panel" id="orderDoneSection"> <header class="panel-info">
+							<h4>完成服务信息</h4>
+							</header>
+							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
+							<div class="form-group">
+								<label class="col-md-2 control-label">完成服务时间</label>
+								<div class="col-md-5">${oaOrderListVoModel.orderDoneTimeStr }</div>
 							</div>
-						</div>
-						</section>
+							<div class="form-group">
+								<label class="col-md-2 control-label">服务超时</label>
+								<div class="col-md-5">${oaOrderListVoModel.overworkTimeStr }</div>
+							</div>
+							<div class="container">
+								<div class="row">
+									<c:forEach items="${oaOrderListVoModel.orderImgs}" var="item">
+										<div class="col-lg-3">
+											<a class="fancybox" rel="image-group-name" href="${item.imgUrl }" title="派工单">
+												<img class="img-responsive thumbnail" src="${item.imgUrl }" alt="" />
+											</a>
+										</div>
+									</c:forEach>
+								</div>
+							</div>
+							</section>
 						</c:if>
 						<section class="panel" id="doDispatchSection"> <header class="panel-info">
 						<h4>派工调整</h4>
@@ -332,7 +334,7 @@
 						</section>
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3">
-								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
+								<button type="button" class="btn btn-success" id="submitForm">派工调整修改</button>
 								<c:if
 									test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5}">
 									<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9 }">
@@ -428,8 +430,7 @@
 				closeBtn : false
 			});
 		});
-	</script>	
-	
+	</script>		
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderExpViewForm.js'/>"></script>
