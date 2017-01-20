@@ -24,7 +24,7 @@
 		<div class="col-lg-12">
 			<section class="panel">
 			<div class="panel-body">
-				<button id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal">查看订单日志</button>
+				
 				<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 					enctype="multipart/form-data">
 					<form:hidden path="id" />
@@ -155,6 +155,8 @@
 							<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
 							<div class="col-md-offset-3 col-md-3">
 								<input type="submit" value="修改" class="btn btn-danger"/>
+								<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal" value="查看订单日志"/>
+								
 							</div>
 							</c:if>
 						</c:if>
