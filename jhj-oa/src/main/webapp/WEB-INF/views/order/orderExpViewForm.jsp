@@ -199,10 +199,13 @@
 						</div>
 						<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
 							<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
-								<input type="submit" value="修改" class="btn btn-success"/>
+								<div class="col-md-offset-3 col-md-3">
+									<input type="submit" value="修改" class="btn btn-danger"/>
+								</div>
 							</c:if>
 						</c:if>
 					</section>
+					<br/>
 					<section class="panel" id ="dispatchSection"> <header class="panel-info"> <h4>派工信息</h4> </header>
 						<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 						
@@ -315,7 +318,7 @@
 						</section>
 						<div class="form-actions fluid">
 							<div class="col-md-offset-3 col-md-3">
-								<button type="button" class="btn btn-success" id="submitForm">保存修改</button>
+								<button type="button" class="btn btn-success" id="submitForm">派工调整修改</button>
 								<c:if test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5}">
 									<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 9 }">
 										<input type="button" id="cancleOrder" class="btn btn-success" value="取消订单" data-toggle="modal" data-target="#orderCancleModal"/>
