@@ -24,6 +24,7 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.common.Imgs;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
@@ -37,6 +38,7 @@ import com.jhj.po.model.user.Users;
 import com.jhj.service.ImgService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.dict.DictService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -112,6 +114,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	
 	@Autowired
 	private ImgService imgService;
+	
+	@Autowired
+	private CooperateBusinessService cooperateBusinessService;
 
 	@Override
 	public List<Orders> selectBySearchVo(OrderSearchVo searchVo) {
@@ -676,6 +681,17 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		if (!imgs.isEmpty()) orderImgs = imgs;
 		
 		result.setOrderImgs(orderImgs);
+		
+		//订单来源
+		Short orderFrom = item.getOrderFrom();
+		Long orderOpFrom = item.getOrderOpFrom();
+		CooperativeBusiness cooperativeBusiness=null;
+		if(orderOpFrom!=null){
+			cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+		}
+		
+		String orderFromName = OrderUtils.getOrderFromName(orderFrom, orderOpFrom, cooperativeBusiness);
+		result.setOrderFromName(orderFromName);
 		
 		return result;
 	}

@@ -15,6 +15,8 @@ public class OrderDetailVo extends OrderListVo {
 	private List<OrderServiceAddonViewVo> serviceAddons;
 	
 	private List<Imgs> orderImgs;
+	
+	private String orderFromName;
 
 	public String getOrderRatio() {
 		return orderRatio;
@@ -54,6 +56,14 @@ public class OrderDetailVo extends OrderListVo {
 
 	public void setOrderImgs(List<Imgs> orderImgs) {
 		this.orderImgs = orderImgs;
+	}
+
+	public String getOrderFromName() {
+		return orderFromName;
+	}
+
+	public void setOrderFromName(String orderFromName) {
+		this.orderFromName = orderFromName;
 	}
 	
 	
