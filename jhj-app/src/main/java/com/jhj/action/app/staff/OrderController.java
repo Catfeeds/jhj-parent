@@ -231,11 +231,11 @@ public class OrderController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "post_done", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+	@RequestMapping(value = "post_done", method = RequestMethod.POST)
 	public AppResultData<Object> postDone(HttpServletRequest request,
-			@RequestPart("staff_id") Long staffId,
-			@RequestPart("order_id") Long orderId,
-			@RequestPart(value = "imgs", required = false) MultipartFile[] imgs
+			@RequestParam("staff_id") Long staffId,
+			@RequestParam("order_id") Long orderId,
+			@RequestParam(value = "imgs", required = false) MultipartFile[] imgs
 			) throws ParseException, JsonParseException, JsonMappingException, IOException {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
