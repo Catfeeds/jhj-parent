@@ -235,7 +235,7 @@ public class OrderController extends BaseController {
 	public AppResultData<Object> postDone(HttpServletRequest request,
 			@RequestPart("staff_id") Long staffId,
 			@RequestPart("order_id") Long orderId,
-			@RequestPart(value = "imgs", required = false) MultipartFile[] imgs
+			@RequestParam(value = "imgs", required = false) MultipartFile[] imgs
 			) throws ParseException, JsonParseException, JsonMappingException, IOException {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
