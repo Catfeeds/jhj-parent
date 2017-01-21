@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -230,11 +231,11 @@ public class OrderController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "post_done", method = RequestMethod.POST)
+	@RequestMapping(value = "post_done", method = RequestMethod.POST, consumes = {"multipart/form-data"})
 	public AppResultData<Object> postDone(HttpServletRequest request,
-			@RequestParam("staff_id") Long staffId,
-			@RequestParam("order_id") Long orderId,
-			@RequestParam(value = "imgs", required = false) MultipartFile[] imgs
+			@RequestPart("staff_id") Long staffId,
+			@RequestPart("order_id") Long orderId,
+			@RequestPart(value = "imgs", required = false) MultipartFile[] imgs
 			) throws ParseException, JsonParseException, JsonMappingException, IOException {
 		AppResultData<Object> result = new AppResultData<Object>(
 				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
