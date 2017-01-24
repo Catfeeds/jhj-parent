@@ -224,6 +224,15 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		
 		if (cancelOrderPay.compareTo(BigDecimal.ZERO) == 0) return true;
 		
+		
+		
+		
+		BigDecimal restMoney = user.getRestMoney();
+		BigDecimal add = restMoney.add(cancelOrderPay);
+		user.setRestMoney(add);
+		user.setUpdateTime(TimeStampUtil.getNowSecond());
+		userService.updateByPrimaryKeySelective(user);
+		
 		UserDetailSearchVo searchVo = new UserDetailSearchVo();
 		searchVo.setUserId(userId);
 		searchVo.setOrderId(order.getId());
@@ -242,14 +251,8 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		userDetailPay.setPayType(orderPrice.getPayType());
 		userDetailPay.setOrderMoney(cancelOrderPay);
 		userDetailPay.setOrderPay(cancelOrderPay);
+		userDetailPay.setRestMoney(user.getRestMoney());
 		userDetailPayService.insert(userDetailPay);
-		
-		
-		BigDecimal restMoney = user.getRestMoney();
-		BigDecimal add = restMoney.add(cancelOrderPay);
-		user.setRestMoney(add);
-		user.setUpdateTime(TimeStampUtil.getNowSecond());
-		userService.updateByPrimaryKeySelective(user);
 
 		return true;
 	}
