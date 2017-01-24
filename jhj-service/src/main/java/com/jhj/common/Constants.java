@@ -109,6 +109,8 @@ public class Constants {
 	public static String NOTICE_USER_REST_MONEY_NOT_ENOUGH= "34652";
 	public static String STAFF_PAY_DEPT_SUCCESS =" 80274";   //服务人员支付欠款成功
 	public static String STAFF_CASE_REQ = "80272";   //服务人员申请提现
+	public static String PAY_SUCCESS_ORDER_SMS = "151019";
+	
 
 	//支付方式： 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付(保留,暂不开发)
 	//4 = 上门刷卡（保留，暂不开发） 5 = 优惠券兑换
