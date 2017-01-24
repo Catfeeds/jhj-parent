@@ -1,10 +1,12 @@
 package com.jhj.action.bs;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -183,8 +185,14 @@ public class OrgStaffLeaveController extends BaseController {
 		leave.setParentId(org.getParentId());
 
 		if (id == 0) {
-
-			leaveService.insert(leave);
+			LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
+			leaveSearchVo.setStaffId(leave.getStaffId());
+			leaveSearchVo.setLeaveStatus("1");
+			List<OrgStaffLeave> staffLeave = leaveService.selectBySearchVo(leaveSearchVo);
+			if(staffLeave.size()==0){
+				leaveService.insert(leave);
+			}
+			
 		} else {
 			leaveService.updateByPrimaryKeySelective(leave);
 		}

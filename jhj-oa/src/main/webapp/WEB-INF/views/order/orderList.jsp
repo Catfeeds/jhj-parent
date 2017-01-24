@@ -216,6 +216,7 @@
 								<tbody>
 									<c:forEach items="${oaOrderListVoModel.list}" var="item">
 											<tr>
+												<input type="hidden" id="orderno" value="${item.orderNo }">
 												<input type="hidden" id="itemPayType" value="${item.payType }">
 												<input type="hidden" id="itemOrderStatus" value="${item.orderStatus }">
 												<input type="hidden" id="staffNums" value="${item.staffNums }">
@@ -246,12 +247,10 @@
 														class="btn btn-primary btn-xs" title="订单详情">
 														<i class=" icon-ambulance"></i>
 													</button> <!-- 如果 运营人员备注为 空，可以添加，不为空，不让添加 --> 
-													<c:if test="${ empty item.remarksBussinessConfirm  }">
-														<button onClick="btn_update('order/remarks_bussiness_form?orderId=${ item.id }&orderType=${item.orderType }')"
-															class="btn btn-primary btn-xs" title="添加订单备注">
-															<i class="icon-plus-sign-alt"></i>
-														</button>
-													</c:if>
+													<button onclick="submitRemarks(this)"
+														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-target="#updateOrderRemark ">
+														<i class="icon-plus-sign-alt"></i>
+													</button>
 													<c:if test="${item.remarks ne ''}">
 														<i class="btn btn-success btn-xs glyphicon glyphicon-comment" title="${item.remarks }"></i>
 													</c:if>
@@ -280,6 +279,26 @@
 		<%@ include file="../shared/pageFooter.jsp"%>
 		<!--footer end-->
 	</section>
+	
+	<div class="modal fade" id="updateOrderRemark" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel"><b>订单备注</b></h4>
+	      </div>
+	      <div class="modal-body">
+	        <form  name="cancleForms">
+	        	<textarea name="remarks" id="remarks" rows="3" cols="78" placeholder="备注信息"></textarea>
+	        	<span id="remark-error"></span>
+	        </form>
+	      </div>
+	     <div class="modal-footer">
+	        <button type="button" id="submit-remarks" class="btn btn-default" data-dismiss="modal" >添加/修改备注</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	<!-- js placed at the end of the document so the pages load faster -->
 	<!--common script for all pages-->
 	

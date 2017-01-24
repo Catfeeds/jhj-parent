@@ -1,6 +1,7 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -278,7 +279,11 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		statResult.put("totalOrderPayType7", "0");
 		
 		
-		searchVo.setDispatchStatus((short) 1);
+//		searchVo.setDispatchStatus((short) 1);
+		List<Short> orderStatusList = new ArrayList<Short>();
+		orderStatusList.add((short) 7);
+		orderStatusList.add((short) 8);
+		searchVo.setOrderStatusList(orderStatusList);
 		Map<String, Object> stats =  orderDispatchPriceMapper.getTotalOrderMoneyMultiStat(searchVo);
 		
 		if (stats == null) return statResult;

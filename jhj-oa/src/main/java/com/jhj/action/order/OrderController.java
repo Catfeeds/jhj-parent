@@ -187,49 +187,52 @@ public class OrderController extends BaseController {
 	/**
 	 * 运营人员 为订单 添加 备注
 	 */
-	@AuthPassport
-	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.GET)
-	public String toBussinessRemarkForm(Model model,
-			@RequestParam("orderId") Long orderId) {
-
-		Orders orders = orderService.selectByPrimaryKey(orderId);
-
-		model.addAttribute("orderModel", orders);
-
-		return "order/OrderRemarksBussinessForm";
-	}
+//	@AuthPassport
+//	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.GET)
+//	public String toBussinessRemarkForm(Model model,
+//			@RequestParam("orderId") Long orderId) {
+//
+//		Orders orders = orderService.selectByPrimaryKey(orderId);
+//
+//		model.addAttribute("orderModel", orders);
+//
+//		return "order/OrderRemarksBussinessForm";
+//	}
 
 	/**
 	 * 运营人员 为订单 添加 备注
 	 */
 	@AuthPassport
-	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.POST)
-	public String submitBussinessRemarkForm(
-			@ModelAttribute("orderModel") Orders orderForm,
-			BindingResult bindingResult) {
+	@ResponseBody
+	@RequestMapping(value = "update-remarks", method = RequestMethod.POST)
+	public Map<String,String> updateRemarks(@RequestParam("order_no") String orderNo,
+			@RequestParam(value="remarks",required=false) String remarks,
+			HttpServletRequest request) {
 
-		Long id = orderForm.getId();
+		Orders orders = orderService.selectByOrderNo(orderNo);
+		String oldRemarks = orders.getRemarks();
 
-		Orders orders = orderService.selectByPrimaryKey(id);
-
-		orders.setRemarksBussinessConfirm(orderForm
-				.getRemarksBussinessConfirm());
-
-		// 这里不设置修改时间。。与1期的定时任务，可能会冲突
+		orders.setRemarks(remarks);
 		orderService.updateByPrimaryKeySelective(orders);
-
-		String returnUrl = "";
-
-		if (orders.getOrderType() == Constants.ORDER_TYPE_0) {
-			// 钟点工订单
-			returnUrl = "redirect:order-hour-list";
+		if(oldRemarks.equals("") || !oldRemarks.equals(remarks)){
+			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+			OrderLog initOrderLog = orderLogService.initOrderLog(orders);
+			initOrderLog.setAction(Constants.ORDER_ACTION_UPDATE);
+			initOrderLog.setUserId(accountAuth.getId());
+			initOrderLog.setUserName(accountAuth.getUsername());
+			initOrderLog.setUserType((short)2);
+			
+			StringBuffer bf=new StringBuffer();
+			StringBuffer append = bf.append(oldRemarks).append("修改成").append(remarks);
+			initOrderLog.setRemarks(append.toString());
+			orderLogService.insert(initOrderLog);
 		}
-		if (orders.getOrderType() == Constants.ORDER_TYPE_1) {
-			// 深度保洁
-			returnUrl = "redirect:order-deep-list";
-		}
-
-		return returnUrl;
+		
+		Map<String,String> map =new HashMap<String,String>();
+		map.put("status", "0");
+		
+		return map;
+		
 	}
 
 	/**

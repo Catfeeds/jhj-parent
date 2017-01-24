@@ -118,7 +118,6 @@ public class OrderHourListVo extends Orders {
 		this.payType = payType;
 	}
 
-
 	public BigDecimal getOrderOriginPay() {
 		return orderOriginPay;
 	}
@@ -135,6 +134,4 @@ public class OrderHourListVo extends Orders {
 		this.staffMobile = staffMobile;
 	}
 	
-	
-
 }

@@ -160,7 +160,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		// 6.服务人员欠款减少
 		// 7.记录服务人员订单取消金额.
 		// 8.订单状态改为取消
-		if (orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) || orderStatus.equals(Constants.ORDER_HOUR_STATUS_7)) {
+		if (orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) || orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) {
 			this.cancelOrderForUserRestMoney(orders, orderPrice);
 			this.cancelOrderForUserCoupon(orderPrice);
 			
@@ -299,7 +299,6 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		Long orderId = order.getId();
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderId(orderId);
-		searchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo);
 
 		if (orderDispatchs.isEmpty())

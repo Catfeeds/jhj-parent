@@ -12,7 +12,8 @@
 <%@ include file="../shared/importCss.jsp"%>
 <!--css for this page-->
 <link rel="stylesheet" href="<c:url value='/css/fileinput.css'/>" type="text/css" />
-<link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" />
+<%-- <link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" /> --%>
+<link rel="stylesheet" href='<c:url value='/css/order-calendar.css'/>' type="text/css"/>
 <style>
 .tangram-suggestion-main {
 	z-index: 1060;
@@ -120,7 +121,7 @@
 												<font color="red">*</font>服务时间
 											</label>
 											<div class="col-md-5">
-												<input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" />
+												<input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" data-toggle="modal" data-target="#orderCalendar"/>
 											</div>
 										</div>
 										
@@ -210,19 +211,60 @@
 		<%@ include file="../shared/pageFooter.jsp"%>
 		<!--footer end-->
 	</section>
+	
+	<!-- 日期选择 -->
+	<div class="modal fade" id="orderCalendar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	        <div class="rili">
+				<div class="rili1">
+					<div class="rili1-1" id="show-year">2016</div>
+					<ul class="rili1-2">
+						<li id="substranc-day"><span>&lt;</span></li>
+						<li id="show-month">九月</li>
+						<li id="add-day"><span>&gt;</span></li>
+					</ul>
+					<ul class="rili1-3" id="show-week">
+						<!-- <li class="rili-week">今天</li> -->
+						
+					</ul>
+				</div>
+				<ul class="rili1-4" id="show-day">
+					<!-- <li><p class="rili-day">1</p></li> -->
+					
+				</ul>
+				<!-- <li class="rili-time">8:00</li>
+					<li>
+						<p>8:30</p>
+						<p>约满</p>
+					</li> -->
+				<!-- 填充时间 -->
+				<ul class="rili1-5" id="show-dateTime">
+					
+				</ul>
+				<div class="rili1-6">
+					<a href="#"><p class="rili1-6-2" id="checkDate" data-dismiss="">确定</p></a>
+				</div>
+			</div>
+	    </div>
+	  </div>
+	</div>
+	
+	
 	<!-- js placed at the end of the document so the pages load faster -->
 	<!--common script for all pages-->
 	<%@ include file="../shared/importJs.jsp"%>
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>
 	<!--script for this page-->
-	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script>
-	<script type="text/javascript"
-		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
+	<%-- <script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'/>"></script> --%>
+	<%-- <script type="text/javascript"
+		src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script> --%>
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>" type="text/javascript"></script>
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/validate-methods.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderHourAdd.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
 </body>
 </html>

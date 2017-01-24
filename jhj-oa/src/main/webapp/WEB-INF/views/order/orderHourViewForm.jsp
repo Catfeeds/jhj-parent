@@ -160,16 +160,16 @@
 													<form:textarea path="remarks" readonly="true" rows="2" cols="50" class="form-control" />
 												</div>
 											</div>
-											<c:if
-												test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3  or sessionScope.accountAuth.accountRole.id == 14 }">
-												<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
-													<div class="col-md-offset-3 col-md-3">
+											<div class="col-md-offset-3 col-md-3">
+												<c:if
+													test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5 or sessionScope.accountAuth.accountRole.id == 14 }">
+													<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
 														<input type="submit" value="修改" class="btn btn-danger" />
-														<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal"
-															value="查看订单日志" />
-													</div>
+													</c:if>
 												</c:if>
-											</c:if>
+												<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal"
+													value="查看订单日志" />
+											</div>
 										</section>
 										<br />
 										<section class="panel" id="dispatchSection">
