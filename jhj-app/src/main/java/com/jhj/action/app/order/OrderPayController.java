@@ -174,12 +174,10 @@ public class OrderPayController extends BaseController {
 		BigDecimal orderMoney = orderPrice.getOrderMoney();
 		BigDecimal orderOriginPay = orderPrice.getOrderOriginPrice();
 		
-		//只有余额支付才能使用会员价
-		if (!orderPayType.equals(Constants.PAY_TYPE_0)) {
-			if(order.getOrderFrom()!=2){
-				orderPay = orderOriginPay;
-				orderMoney = orderOriginPay;
-			}
+		//只有余额支付才能使用会员价,并且不是后台下单的订单
+		if (!orderPayType.equals(Constants.PAY_TYPE_0) && order.getOrderFrom() !=2 ) {
+			orderPay = orderOriginPay;
+			orderMoney = orderOriginPay;
 		}
 		
 		
@@ -223,7 +221,7 @@ public class OrderPayController extends BaseController {
 		
 		//判断当前是否有满足条件阿姨，没有则返回提示信息.
 //		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
-		
+		orderPrice.setOrderMoney(orderMoney);
 		orderPrice.setOrderPay(orderPay);
 		orderPrice.setPayType(orderPayType);
 		orderPrice.setUpdateTime(updateTime);
