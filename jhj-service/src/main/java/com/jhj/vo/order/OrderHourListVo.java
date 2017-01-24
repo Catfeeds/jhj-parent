@@ -41,6 +41,8 @@ public class OrderHourListVo extends Orders {
 	private String staffNames;
 	
 	private Short payType;
+	
+	private String staffMobile;
 
 	public String getAddress() {
 		return address;
@@ -113,4 +115,14 @@ public class OrderHourListVo extends Orders {
 	public void setPayType(Short payType) {
 		this.payType = payType;
 	}
+
+	public String getStaffMobile() {
+		return staffMobile;
+	}
+
+	public void setStaffMobile(String staffMobile) {
+		this.staffMobile = staffMobile;
+	}
+	
+	
 }
