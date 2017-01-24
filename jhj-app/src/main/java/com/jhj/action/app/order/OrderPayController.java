@@ -176,8 +176,10 @@ public class OrderPayController extends BaseController {
 		
 		//只有余额支付才能使用会员价
 		if (!orderPayType.equals(Constants.PAY_TYPE_0)) {
-			orderPay = orderOriginPay;
-			orderMoney = orderOriginPay;
+			if(order.getOrderFrom()!=2){
+				orderPay = orderOriginPay;
+				orderMoney = orderOriginPay;
+			}
 		}
 		
 		
