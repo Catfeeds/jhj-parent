@@ -121,7 +121,7 @@ var formVal = $('#orderExpForm').validate({
 
 
 // 设置日历控件
-$('#serviceDate').datetimepicker({
+/*$('#serviceDate').datetimepicker({
 	format : "yyyy-mm-dd hh:ii",
 	language : "zh-CN",
 	autoclose : true,
@@ -129,7 +129,7 @@ $('#serviceDate').datetimepicker({
 	minuteStep : 30
 });
 $('#serviceDate').datetimepicker('setStartDate', new Date());
-
+*/
 // 输入完手机号获取用户信息，根据用户的id获取用户的服务地址
 function getAddrByMobile(addrId) {
 	var mobile = $("#mobile").val();
