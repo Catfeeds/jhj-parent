@@ -123,7 +123,7 @@
 			format : "yyyy-mm-dd",
 			language : "zh-CN",
 			autoclose : true,
-			startView : 1,
+			startView : 0,
 			todayBtn : true
 		});
 		
