@@ -216,7 +216,7 @@ function saveFrom() {
 	params.remarks = $("#remarks").val();
 	var order_pay_type = $("#orderPayType").val();
 	
-	var couponsId = $("input[name='couponsId']:selected").val();
+	var couponsId = $("#couponsId :selected").val();
 	params.coupons_id = couponsId;
 	
 	var user_id = $("#user_id").val();
