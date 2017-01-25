@@ -214,7 +214,7 @@ public class OrderController extends BaseController {
 
 		orders.setRemarks(remarks);
 		orderService.updateByPrimaryKeySelective(orders);
-		if(oldRemarks==null || !oldRemarks.equals(remarks)){
+		if(oldRemarks.equals("") || !oldRemarks.equals(remarks)){
 			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
 			OrderLog initOrderLog = orderLogService.initOrderLog(orders);
 			initOrderLog.setAction(Constants.ORDER_ACTION_UPDATE);
@@ -229,6 +229,7 @@ public class OrderController extends BaseController {
 		}
 		
 		Map<String,String> map =new HashMap<String,String>();
+		map.put("status", "0");
 		
 		return map;
 		

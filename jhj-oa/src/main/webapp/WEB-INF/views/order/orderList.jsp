@@ -247,12 +247,10 @@
 														class="btn btn-primary btn-xs" title="订单详情">
 														<i class=" icon-ambulance"></i>
 													</button> <!-- 如果 运营人员备注为 空，可以添加，不为空，不让添加 --> 
-													<c:if test="${ empty item.remarksBussinessConfirm  }">
-														<button <%-- onClick="btn_update('order/remarks_bussiness_form?orderId=${ item.id }&orderType=${item.orderType }')" --%>
-															class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-target="#updateOrderRemark ">
-															<i class="icon-plus-sign-alt"></i>
-														</button>
-													</c:if>
+													<button onclick="submitRemarks(this)"
+														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-target="#updateOrderRemark ">
+														<i class="icon-plus-sign-alt"></i>
+													</button>
 													<c:if test="${item.remarks ne ''}">
 														<i class="btn btn-success btn-xs glyphicon glyphicon-comment" title="${item.remarks }"></i>
 													</c:if>
