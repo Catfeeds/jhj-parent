@@ -23,7 +23,8 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			htmlPart = htmlPart.replace(new RegExp('{orderNo}', "gm"), order.order_no);
 			htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), order.service_type);
 			htmlPart = htmlPart.replace(new RegExp('{orderPay}', "gm"), order.order_pay);
-			
+			htmlPart = htmlPart.replace(new RegExp('{orderOriginPay}', "gm"), order.order_origin_pay);
+
 			htmlPart = htmlPart.replace(new RegExp('{serviceTypeName}', "gm"), order.service_type_name);
 			htmlPart = htmlPart.replace(new RegExp('{orderStatusStr}', "gm"), order.order_status_name);
 			htmlPart = htmlPart.replace(new RegExp('{serviceDateStr}', "gm"), order.service_date_str);
@@ -147,6 +148,7 @@ function doOrderPay(obj) {
 	var orderId = obj.find('input[name=orderId]').val();
 	var orderNo = obj.find('input[name=orderNo]').val();
 	var orderPay = obj.find('input[name=orderPay]').val();
+	var orderOriginPay = obj.find('input[name=orderOriginPay]').val();
 	var userCouponId = obj.find('input[name=userCouponId]').val();
 	var userCouponValue = obj.find('input[name=userCouponValue]').val();
 	
@@ -154,6 +156,7 @@ function doOrderPay(obj) {
 	sessionStorage.setItem("order_id", orderId);
 	sessionStorage.setItem("order_no", orderNo);
 	sessionStorage.setItem("order_pay", orderPay);
+	sessionStorage.setItem("order_origin_pay", orderOriginPay);
 	sessionStorage.setItem("user_coupon_id", userCouponId);
 	sessionStorage.setItem("user_coupon_value", userCouponValue);
 	
@@ -174,12 +177,15 @@ function doOrderPayExt(obj) {
 		var orderId = obj.find('input[name=orderId]').val();
 		var orderNo = obj.find('input[name=orderNo]').val();
 		var orderPay = obj.find('input[name=orderPay]').val();
+		
 		var staffNames = obj.find('input[name=staffNames]').val();
+		
 		
 		sessionStorage.setItem("service_type_id", serviceTypeId);
 		sessionStorage.setItem("order_id", orderId);
 		sessionStorage.setItem("order_no", orderNo);
 		sessionStorage.setItem("order_pay", orderPay);
+		
 		sessionStorage.setItem("staff_names", staffNames);
 		
 		console.log("staffNames = " + sessionStorage.getItem("staff_names"));

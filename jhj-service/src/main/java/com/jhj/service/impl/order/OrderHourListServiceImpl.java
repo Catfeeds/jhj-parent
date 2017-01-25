@@ -230,15 +230,25 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			
 			OrderPrices orderPrice = orderPriceService.selectByOrderId(orders.getId());
 			if (orderPrice != null) {
-				BigDecimal orderPay = orderPriceService.getTotalOrderPay(orderPrice);
+				BigDecimal orderPay = orderPrice.getOrderPrimePrice();
 				orderHourListVo.setOrderPay(orderPay);
+				
+				BigDecimal orderOriginPay = orderPrice.getOrderOriginPrice();
+				
+				
 				orderHourListVo.setPayType(orderPrice.getPayType());
 				orderHourListVo.setCouponId(orderPrice.getCouponId());
 				orderHourListVo.setCouponValue(new BigDecimal(0));
 				if (orderPrice.getCouponId() > 0L) {
 					UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(orderPrice.getCouponId());
-					if (userCoupon != null) orderHourListVo.setCouponValue(userCoupon.getValue());
+					if (userCoupon != null) {
+						orderHourListVo.setCouponValue(userCoupon.getValue());
+						
+						orderOriginPay = orderOriginPay.subtract(userCoupon.getValue());
+					}
 				}
+				
+				orderHourListVo.setOrderOriginPay(orderOriginPay);
 			}
 			
 			//订单派工信息

@@ -62,10 +62,15 @@ myApp.onPageBeforeInit('order-hour-confirm', function(page) {
 	var serviceHours = sessionStorage.getItem('total_service_hour');
 	var orderHourPay = sessionStorage.getItem('order_pay');
 	var orderHourMoney = sessionStorage.getItem('order_money');
+	
+	var orderOriginPay = sessionStorage.getItem('order_origin_money');
+	var	orderOriginMoney = sessionStorage.getItem('order_origin_money');
+	
 	$$("#staffNums").val(staffNums);
 	$$("#serviceHour").val(serviceHours);
 	$$("#serviceHourStr").html(serviceHours + "小时");
 	$$("#orderMoney").val(orderHourMoney);
+	$$("#orderOriginMoney").val(orderOriginMoney);
 	$$("#priceStr").html(orderHourMoney);
 	$$("#orderMoneyStr").html(orderHourMoney + "元");
 	
@@ -89,6 +94,10 @@ myApp.onPageBeforeInit('order-hour-confirm', function(page) {
 			var orderPayStr = $$("#orderMoney").val() - userCouponValue;
 			if (orderPayStr < 0) orderPayStr = 0;
 			sessionStorage.setItem("order_pay", orderPayStr);
+			
+			var orderOriginPayStr = $$("#orderOriginMoney").val() - userCouponValue;
+			if (orderOriginPayStr < 0) orderOriginPayStr = 0;
+			sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
 		}
 	} else {
 		//读取用户可用的优惠劵
@@ -137,6 +146,11 @@ myApp.onPageBeforeInit('order-hour-confirm', function(page) {
 		    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
 					  if (orderPayStr < 0) orderPayStr = 0;
 					  sessionStorage.setItem("order_pay", orderPayStr);
+					  
+					  var orderOriginPayStr = $$("#orderOriginMoney").val() - userCouponValue;
+					  if (orderOriginPayStr < 0) orderOriginPayStr = 0;
+					  sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
+					  
 					  userCouponNameStr = userCouponName;
 		    	  }
 		    	  

@@ -132,6 +132,8 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		record.setCouponId(0L); // 优惠券字段，0 = 不使用 >0 使用
 
 		BigDecimal defaultValue = new BigDecimal(0);
+		record.setOrderOriginPrice(defaultValue);
+		record.setOrderPrimePrice(defaultValue);
 		record.setOrderMoney(defaultValue);
 
 		record.setOrderPay(defaultValue);

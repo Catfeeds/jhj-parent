@@ -177,6 +177,10 @@ function setOrderHourTotal() {
 	var isVip = localStorage['is_vip'];
 	if (isVip == undefined || isVip == "") isVip = 0;
 	console.log("is_vip ==" + isVip);
+	
+	var orderOriginalPay = pprice;
+	var orderOriginalPrice = price;
+	
 	var orderHourPay = pprice;
 	var orderHourPrice = price;
 	if (isVip == 1) {
@@ -186,12 +190,19 @@ function setOrderHourTotal() {
 	
 	if (staffNums > 1 || serviceHours > minServiceHour) {
 		orderHourPay = orderHourPrice * serviceHours * staffNums;
+		
+		orderOriginalPay = orderOriginalPrice * serviceHours * staffNums;
 	}
 	
 	$$("#orderHourPayStr").html(orderHourPay + "元");
 	
 	sessionStorage.setItem("order_money", orderHourPay);
 	sessionStorage.setItem("order_pay", orderHourPay);
+	
+	//再存储非会员价的价格，满足需求，只有余额支付才能使用会员价.
+	sessionStorage.setItem("order_origin_money", orderOriginalPay);
+	sessionStorage.setItem("order_origin_pay", orderOriginalPay);
+	
 	sessionStorage.setItem("total_staff_nums", staffNums);
 	sessionStorage.setItem("total_service_hour", serviceHours);
 	

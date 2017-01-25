@@ -34,6 +34,8 @@ public class OrderHourListVo extends Orders {
 	
 	private BigDecimal orderPay;
 	
+	private BigDecimal orderOriginPay;
+	
 	private Long couponId;
 	
 	private BigDecimal couponValue;
@@ -116,6 +118,14 @@ public class OrderHourListVo extends Orders {
 		this.payType = payType;
 	}
 
+	public BigDecimal getOrderOriginPay() {
+		return orderOriginPay;
+	}
+
+	public void setOrderOriginPay(BigDecimal orderOriginPay) {
+		this.orderOriginPay = orderOriginPay;
+	}
+
 	public String getStaffMobile() {
 		return staffMobile;
 	}
@@ -123,6 +133,5 @@ public class OrderHourListVo extends Orders {
 	public void setStaffMobile(String staffMobile) {
 		this.staffMobile = staffMobile;
 	}
-	
 	
 }

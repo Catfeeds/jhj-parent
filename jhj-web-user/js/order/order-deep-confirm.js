@@ -34,10 +34,14 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 	});
 	
 	var orderMoney = sessionStorage.getItem("order_money");
+	
 	console.log("orderMoney =" + orderMoney);
 	$$("#priceStr").html(orderMoney);
 	$$("#orderMoneyStr").html(orderMoney+ "元");
 	$$("#orderMoney").val(orderMoney);
+	
+	var orderOriginMoney = sessionStorage.getItem("order_origin_money");
+	$$("#orderOriginMoney").val(orderOriginMoney);
 	
 	$$("#serviceHourStr").html(sessionStorage.getItem("total_service_hour") + "小时");
 	
@@ -88,7 +92,13 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 			console.log("orderMoney =" + orderMoney);
 			var orderPayStr = orderMoney - userCouponValue;
 			if (orderPayStr < 0) orderPayStr = 0;
+			
 			sessionStorage.setItem("order_pay", orderPayStr);
+			
+			var orderOriginPayStr = orderOriginMoney - userCouponValue;
+			if (orderOriginPayStr < 0) orderOriginPayStr = 0;
+			
+			sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
 		}
 	} else {
 		//读取用户可用的优惠劵
@@ -136,12 +146,17 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
 					  if (orderPayStr < 0) orderPayStr = 0;
 					  sessionStorage.setItem("order_pay", orderPayStr);
+					  
+					  var orderOriginPayStr = $$("#orderOriginMoney").val() - userCouponValue;
+					  if (orderOriginPayStr < 0) orderOriginPayStr = 0;
+					  sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
+					  
 					  userCouponNameStr = userCouponName;
 		    	  }
 		    	  
 		    	  console.log("order_pay = " + sessionStorage.getItem("order_pay"));
 		    	  $$("#userCouponName").html(userCouponNameStr);
-		    	  $$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
+		    	  $$("#orderPayStr").html(sessionStorage.getItem("order_pay") + "元");
 		      }
 		});
 	}

@@ -16,6 +16,10 @@ public class OrderPrices {
     private Short payType;
 
     private Long couponId;
+    
+    private BigDecimal orderOriginPrice;
+    
+    private BigDecimal orderPrimePrice;
 
     private BigDecimal orderMoney;
 
@@ -134,4 +138,20 @@ public class OrderPrices {
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
+
+	public BigDecimal getOrderOriginPrice() {
+		return orderOriginPrice;
+	}
+
+	public void setOrderOriginPrice(BigDecimal orderOriginPrice) {
+		this.orderOriginPrice = orderOriginPrice;
+	}
+
+	public BigDecimal getOrderPrimePrice() {
+		return orderPrimePrice;
+	}
+
+	public void setOrderPrimePrice(BigDecimal orderPrimePrice) {
+		this.orderPrimePrice = orderPrimePrice;
+	}
 }

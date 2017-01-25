@@ -170,6 +170,8 @@ public class OrderExpCleanController extends BaseController {
 		if (orderFrom.equals((short)2) && orderPay.compareTo(new BigDecimal(0)) == 1) {
 			orderPrices.setOrderMoney(orderPay);
 			orderPrices.setOrderPay(orderPay);
+			orderPrices.setOrderOriginPrice(orderPay);
+			orderPrices.setOrderPrimePrice(orderPay);
 		}
 		
 		orderPrices.setUserId(userId);

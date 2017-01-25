@@ -299,7 +299,6 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		Long orderId = order.getId();
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderId(orderId);
-		searchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(searchVo);
 
 		if (orderDispatchs.isEmpty())

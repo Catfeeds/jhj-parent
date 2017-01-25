@@ -125,6 +125,7 @@
 						<div class="form-group">
 							<label class="col-md-2 control-label">订单来源</label>
 							<div class="col-md-5">
+
 								<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
 									<form:select path="orderOpFrom" cssClass="form-control">
 										<form:option value="">--请选择订单来源--</form:option>
