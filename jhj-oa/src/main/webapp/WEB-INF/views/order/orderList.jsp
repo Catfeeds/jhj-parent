@@ -216,7 +216,7 @@
 								<tbody>
 									<c:forEach items="${oaOrderListVoModel.list}" var="item">
 											<tr>
-												<input type="hidden" id="orderNo" value="${item.orderNo }">
+												<input type="hidden" id="orderno" value="${item.orderNo }">
 												<input type="hidden" id="itemPayType" value="${item.payType }">
 												<input type="hidden" id="itemOrderStatus" value="${item.orderStatus }">
 												<input type="hidden" id="staffNums" value="${item.staffNums }">

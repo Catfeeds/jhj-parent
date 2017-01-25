@@ -90,7 +90,7 @@ function cleanForm(){
 }
 
 $("#submit-remarks").on('click',function(){
-	var orderNo = $("#orderNo").val();
+	var orderNo = $("#orderno").val();
 	var remarks = $("#remarks").val();
 	
 	if(remarks==undefined || remarks ==null || remarks=='') return false;
