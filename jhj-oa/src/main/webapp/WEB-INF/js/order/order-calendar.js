@@ -28,7 +28,6 @@ $(function(){
     //获取当前日期
     var date=moment().format("YYYY-MM-DD");
     var nowDate=date;
-    
     var nowHour=moment().hour();
     
     var dayTime="";
@@ -42,9 +41,63 @@ $(function(){
 	}
 	showYearMonth(date);
 	
+	 //获取当前选择的时间，如何没有选择时间默认是当前时间
+    function getServiceDate(){
+        var serviceDate='';
+        var year = $("#show-year").text();
+        var month = $("#show-month").text();
+        var day = $(selectDay).text();
+        if($(selectDay).text()==undefined ||$(selectDay).text()=="" || $(selectDay).text()==null){
+            day=moment(date).add(count, 'days').format("DD");
+        }
+        var pre_li = $(selectDay).prevAll("li");
+        var after_li = $(selectDay).nextAll("li");
+        var flag=0;
+        var flag1=0;
+        var flag2=0;
+        if(pre_li.length>0 && after_li.length>0){
+            for(var i=0;i<pre_li.length;i++){
+                var val = $(pre_li[i]).text();
+                if(val<day){
+                    flag++;
+                }else{
+                    flag1++;
+                }
+            }
+            for(var j=0;j<after_li.length;j++){
+                var val=$(after_li[j]).text();
+                if(val>day ||val<day){
+                    flag2++;
+                }
+            }
+            if(flag>0 && flag2>0){
+                serviceDate=year+"-"+month+"-"+day;
+            }else{
+            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+            }
+        }
+
+        if(pre_li.length==0){
+            var nextVal=$(after_li[0]).text();
+            var next5Val=$(after_li[5]).text();
+            if(nextVal>day || (nextVal<day && next5Val<day)){
+                serviceDate=year+"-"+month+"-"+day;
+            }else{
+            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+            }
+        }
+        if(after_li.length==0){
+            var preVal=$(pre_li[0]).text();
+            var pre5Val=$(pre_li[5]).text();
+            if(preVal<day && pre5Val<day){
+                serviceDate=year+"-"+month+"-"+day;
+            }else{
+            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+            }
+        }
+        return  serviceDate;
+    }
 	
-    
-    
     //日历天数显示
     function getDay(cal){
     	var contentDay="";
@@ -74,37 +127,35 @@ $(function(){
     	$("#show-day").html(contentDay);
     	showYearMonth(cal);
     	
-    	
     	$("#show-day li").on("click",function(){
     		selectDay = $(this);
     		$("#show-day").find("li p").removeClass("rili-day");
     		$("#show-dateTime li").removeClass("rili-time");
-    		$("#checkDate").removeClass("all-button2").addClass("all-button11");
+    		$("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
     		$(this).find("p").addClass("rili-day");
     		tomm();
-    		var s=getServiceDate();
-    		if(getServiceDate()==date){
+    		if(cal==date){
     			if(nowHour>=16){
-    				$("#rilikongjian3-day li").removeClass("beijingse");
-    				$(selectDay).addClass("beijingse");
-    				$("#show-dateTime li").addClass("rili-time-no");
+    				$("#show-day li").removeClass("rili-time");
+    				$(selectDay).addClass("rili-time");
+    				$("#show-dateTime li").addClass("rili-time");
     			}
     		}
-    		noSelectHour();
+//    		noSelectHour();
 //    		filterServiceDate();
 //            filterWeek(serviceTypeId);
     		
     		/*-----------暂时添加的代码需要删除------*/
-    		if(s<'2017-01-30'){
-    			$("#show-dateTime li").addClass("rili-time-no");
-    			return false;
-    		}
+//    		if(s<'2017-01-30'){
+//    			$("#show-dateTime li").addClass("rili-time-no");
+//    			return false;
+//    		}
     		/*-----------暂时添加的代码需要删除------*/
     		
     	});
     	$("#show-dateTime li").removeClass("rili-time-no");
 //    	filterServiceDate();
-    	noSelectHour();
+//    	noSelectHour();
     	$("#show-day").find(":first-child p").addClass("rili-day");
     	
     	if(cmp==date){
@@ -114,22 +165,7 @@ $(function(){
     }
     getDay(date);
     
-  //选择时间
-	 $("#show-dateTime li").on("click",function(){
-	        $("#show-dateTime").find("li").removeClass("rili-time");
-	        $(this).addClass("rili-time");
-	        if($(this).hasClass("rili-time-no")){
-	            dayTime="";
-	            $(this).removeClass("rili-time");
-	            $("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
-	        }else{
-	            dayTime=$(this).text();
-	            $("#checkDate").removeClass("rili1-6-2").addClass("rili1-6-1");
-	        }
-	        if(''!=dayTime){
-	            $("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
-	        }
-	  });
+  
 
 
     //前一天
@@ -168,7 +204,7 @@ $(function(){
         if(dy==''){
         	dy = $("#show-day").find("li p[class='rili-time']").text();
         }
-        var cmp='';
+        dayTime="";
         var service_date = getServiceDate();
         var comp_day = moment(service_date).add(-7,'days').format("YYYY-MM-DD");
         if(comp_day>=date){
@@ -186,14 +222,31 @@ $(function(){
     $("#add-day").click(function(){
         $("#show-dateTime").find("li").removeClass("rili-time");
         $("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
+        dayTime="";
         count++;
         var days = count*dayNum;
         get7Day(days);
     });
-
     
+    //选择时间
+	 $("#show-dateTime li").on("click",function(){
+	        $("#show-dateTime").find("li").removeClass("rili-time");
+	        $(this).addClass("rili-time");
+	        if($(this).hasClass("rili-time-no")){
+	            dayTime="";
+	            $(this).removeClass("rili-time");
+	            $("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
+	        }else{
+	            dayTime=$(this).text();
+	            $("#checkDate").removeClass("rili1-6-2").addClass("rili1-6-1");
+	        }
+//	        if(dayTime=="" ){
+//	            $("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
+//	        }
+	  });
 
-    function noSelectHour(){
+
+   /* function noSelectHour(){
         var li=$("#show-dateTime").find("li");
         for(var i=7;i<=9;i++){
             $(li[i]).addClass("rili-time-no");
@@ -201,66 +254,7 @@ $(function(){
             dayTime=$(li[i]).text();
             dayTime="";
         }
-    }
-    //获取当前选择的时间，如何没有选择时间默认是当前时间
-    function getServiceDate(){
-        var serviceDate='';
-        var year = $("#show-year").text();
-        var month = $("#show-month").text();
-        var day = $(selectDay).text();
-        if($(selectDay).text()==undefined ||$(selectDay).text()=="" || $(selectDay).text()==null){
-            day=moment(date).add(count, 'days').format("DD");
-        }
-        var pre_li = $(selectDay).prevAll("li");
-        var after_li = $(selectDay).nextAll("li");
-        var flag1=false;
-        var flag2=false;
-        if(pre_li.length>0 && after_li.length>0){
-            for(var i=0;i<pre_li.length;i++){
-                var val = pre_li[i].innerHTML;
-                if(val<day){
-                    flag1=true;
-                }else{
-                    flag1=false;
-                }
-            }
-            for(var j=0;j<after_li.length;j++){
-                var val=after_li[j].innerHTML;
-                if(val>day ||val<day){
-                    flag2=true;
-                }
-            }
-            if(flag1 && flag2){
-                serviceDate=year+"-"+month+"-"+day;
-            }else{
-            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
-            }
-        }
-
-        if(pre_li.length==0){
-            var nextVal=$(after_li[0]).text();
-            var next5Val=$(after_li[5]).text();
-            if(nextVal>day || (nextVal<day && next5Val<day)){
-                serviceDate=year+"-"+month+"-"+day;
-            }else{
-            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
-            }
-        }
-        if(after_li.length==0){
-            var preVal=$(pre_li[0]).text();
-            var pre5Val=$(pre_li[5]).text();
-            if(preVal<day && pre5Val<day){
-                serviceDate=year+"-"+month+"-"+day;
-            }else{
-            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
-            }
-        }
-        if(after_li.length==0 && pre_li.length==0){
-            serviceDate=year+"-"+month+"-"+day;
-        }
-        return  serviceDate;
-    }
-
+    }*/
    
 
     /**
@@ -274,7 +268,7 @@ $(function(){
     	}else{
     		nyr=val;
     	}
-        if(nyr==moment().format("YYYY-MM-DD")){
+        if(nyr==date){
             var lis = $("#show-dateTime").find("li");
 
             if(nowHour>=0 && nowHour<=4){
@@ -342,12 +336,12 @@ $(function(){
             }
             if(nowHour>=16 && nowHour<=19){
                 var d=moment().add(1,"days").format("DD");
-                var lisd = $("#rilikongjian3-day").find("li");
+                var lisd = $("#show-day").find("li");
                 for(var i=0;i<=lisd.length;i++){
                     var val = $(lisd[i]).text();
                     if(d==val){
-                        $("#rilikongjian3-day li").removeClass("beijingse");
-                        $(lisd[i]).addClass("beijingse");
+                        $("#show-day li").removeClass("rili-time");
+                        $(lisd[i]).addClass("rili-time-no");
 
                     }
                 }
@@ -358,22 +352,22 @@ $(function(){
                         $(lis[i]).addClass("rili-time-no");
                     }
                 }
-                $("#rilikongjian3-day li").removeClass("beijingse");
-                $("#rilikongjian3-day").find("li:nth-child(2)").addClass("beijingse");
+                $("#show-day li").removeClass("rili-time");
+                $("#show-day").find("li:nth-child(2)").addClass("rili-time");
             }
         }
-        if(nyr>moment().format("YYYY-MM-DD")){
+        if(nyr>date){
             $("#show-dateTime").find("li").removeClass("rili-time-no");
         }
-        noSelectHour();
+//        noSelectHour();
     }
-    tomm();
+//    tomm();
     
     
     /*---------------暂时添加代码-------------------*/
-    if(date<'2017-01-30'){
-    	$("#show-dateTime li").addClass("rili-time-no");
-    }
+//    if(date<'2017-01-30'){
+//    	$("#show-dateTime li").addClass("rili-time-no");
+//    }
     /*---------------暂时添加代码-------------------*/
     
     
@@ -444,12 +438,16 @@ $(function(){
 
     //获取选择的服务时间
     $("#checkDate").click(function(){
-        var st = getServiceDate()+" "+dayTime+":00";
+    	var year = $("#show-year").text();
+        var month = $("#show-month").text();
+        var day = $("#show-day li p[class='rili-day']").text();
+        var st =year +"-"+month+"-"+day+" "+dayTime+":00";
         if(dayTime!=""){
             $("#serviceDate").val(st);
             $(this).attr("data-dismiss","modal");
         }else{
-            return;
+        	 $(this).attr("data-dismiss","");
+            return false;
         }
     });
 });
