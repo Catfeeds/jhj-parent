@@ -1,0 +1,160 @@
+div,p,span,ul,li,a{
+	list-style: none;margin:0;padding:0;font-family: "宋体";text-decoration: none;
+}
+.rili{
+	width:600px;
+	margin:0 auto;
+	height:460px;
+	background: #EAF3F2;
+}
+.rili1{
+	width:100%;
+	height:120px;
+	background: linear-gradient(to top, #67E3F8 , #7AA0F4);
+}
+.rili1-1{
+	text-align: center;
+	line-height: 40px;
+	color:#fff;
+	font-weight: bold;
+	font-size: 24px;
+	width:100%;
+	height:40px;
+}
+.rili1-2{
+	width:100%;
+	height:40px;
+}
+.rili1-2 li{
+	width:33.3%;float: left;font-size: 22px;
+	color:#fff;
+}
+.rili1-2 li:nth-child(1){
+	width:30.3%;
+	text-align: left;
+	padding-left: 3%;
+}
+.rili1-2 li:nth-child(2){
+	width:33.3%;
+	text-align: center;
+}
+.rili1-2 li:nth-child(3){
+	width:30.3%;
+	text-align: right;
+	padding-right: 3%;
+}
+.rili1-2 li span{
+	border:1px solid #fff;
+}
+.rili1-2 li span:hover{
+	cursor: pointer;
+}
+.rili1-3{
+	width:100%;
+	height:40px;
+}
+.rili1-3 li{
+	float: left;
+	width:14.2%;
+	text-align: center;
+	line-height: 40px;
+	color:#fff;
+	font-size: 22px;
+}
+.rili1-3 li:hover{
+	color:#000;
+	cursor: pointer;
+}
+.rili1-4{
+	width:100%;
+	height:40px;
+	background: #fff;
+}
+.rili1-4 li{
+	float: left;
+	width:14.2%;
+	text-align: center;
+	line-height: 40px;
+	color:#000;
+	font-size: 22px;
+}
+.rili1-4 li p{
+	width:40px;
+	height:40px;
+	margin-left: 35%;
+	border-radius: 50%;
+}
+.rili1-4 li p:hover{
+	color:#fff;
+	background: #FEB954;
+	cursor: pointer;
+}
+.rili1-5{
+	width:100%;
+	height:170px;
+	margin-top: 10px;
+	background: #fff;
+	clear: both;
+}
+.rili1-5 li{
+	float: left;
+	width:13%;
+	text-align: center;
+	line-height: 40px;
+	color:#000;
+	font-size: 18px;
+	margin-left: 0.8%;
+	border:1px solid #ABABAB;
+	margin-top: 10px;
+}
+.rili1-5 li:hover{
+	cursor: pointer;
+}
+.rili1-5 li p{
+	color:#999;
+	width:100%;
+	height:20px;
+	line-height: 20px;
+	text-align: center;
+}
+.rili1-6{
+	width:100%;
+	height:60px;
+	margin-top: 30px;
+}
+/*灰色按钮*/
+.rili1-6-2{
+	width:60px;
+	height:60px;
+	background: #ccc;
+	border-radius: 50%;
+	color:#fff;
+	margin-left: 45%;
+	text-align: center;
+	line-height: 60px;
+}
+/*正常按钮*/
+.rili1-6-1{
+	width:60px;
+	height:60px;
+	background: #FEB954;
+	border-radius: 50%;
+	color:#fff;
+	margin-left: 45%;
+	text-align: center;
+	line-height: 60px;
+}
+/*星期特效*/
+.rili-week{
+	color:#000!important;
+}
+/*天特效*/
+.rili-day{
+	color:#fff;
+	background: #FEB954;
+}
+/*时刻特效*/
+.rili-time{
+	color:#FEB954!important;
+	border:1px solid #FEB954!important;
+}

@@ -124,14 +124,14 @@ var formVal = $('#orderHourForm').validate({
 
 
 // 设置日历控件
-$('#serviceDate').datetimepicker({
-	format : "yyyy-mm-dd hh:ii",
-	language : "zh-CN",
-	autoclose : true,
-	todayBtn : true,
-	minuteStep : 30
-});
-$('#serviceDate').datetimepicker('setStartDate', new Date());
+//$('#serviceDate').datetimepicker({
+//	format : "yyyy-mm-dd hh:ii",
+//	language : "zh-CN",
+//	autoclose : true,
+//	todayBtn : true,
+//	minuteStep : 30
+//});
+//$('#serviceDate').datetimepicker('setStartDate', new Date());
 
 // 输入完手机号获取用户信息，根据用户的id获取用户的服务地址
 function getAddrByMobile(addrId) {

@@ -63,6 +63,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			if (orderStatus >= 3 && orderStatus <= 8) {
 				orderRateStyle = "block";
 			}
+			var orderRateStr='';
 			if(orderStatus>=3 && orderStatus<7) orderRateStr = "联系服务员";
 			if (orderStatus == 7) orderRateStr = "立即评价";
 			if (orderStatus == 8) orderRateStr = "已评价";
