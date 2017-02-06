@@ -335,7 +335,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			
-			if (staffIds.isEmpty()) break;
+			if (staffIds.isEmpty()) continue;
 			
 			//排除掉已经指定的员工
 			if (!appointStaffIds.isEmpty()) {
@@ -348,8 +348,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			for (Long sid : staffIds) {
 				canDispatchStaffIds.add(sid);
 			}
-			
-			if (canDispatchStaffIds.size() >= staffNums) break;
+		
+			int canDispatchStaffIdsSize = 0;
+			if (!canDispatchStaffIds.isEmpty()) canDispatchStaffIdsSize = canDispatchStaffIds.size();
+			if (canDispatchStaffIdsSize >= staffNums) break;
 		}
 		
 		if (canDispatchStaffIds.isEmpty()) return dispatchStaffIds;
