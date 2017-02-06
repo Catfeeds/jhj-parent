@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.common.Imgs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 
@@ -83,6 +84,10 @@ public class OaOrderListVo extends Orders {
 	private String serviceDateStartStr; // 服务开始时间，
 
 	private String serviceDateEndStr; // 服务结束时间
+	
+	private String orderDoneTimeStr;  //服务完成时间
+	
+	private String  overworkTimeStr; //服务超时时间
 
 	// 2016年3月29日17:36:47 jhj2.1 之后，都具体了具体的 服务类型。如 钟点工-->金牌保洁初体验。金牌保洁深度体验、、、、
 	private String orderTypeName;
@@ -119,6 +124,9 @@ public class OaOrderListVo extends Orders {
 	
 	//补差价/加时  支付方式
 	private short payTypeExt;
+	
+	
+	private List<Imgs> orderImgs;
 
 	public String getServiceDateStartStr() {
 		return serviceDateStartStr;
@@ -478,6 +486,30 @@ public class OaOrderListVo extends Orders {
 
 	public void setPayTypeExt(short payTypeExt) {
 		this.payTypeExt = payTypeExt;
+	}
+
+	public List<Imgs> getOrderImgs() {
+		return orderImgs;
+	}
+
+	public void setOrderImgs(List<Imgs> orderImgs) {
+		this.orderImgs = orderImgs;
+	}
+
+	public String getOrderDoneTimeStr() {
+		return orderDoneTimeStr;
+	}
+
+	public void setOrderDoneTimeStr(String orderDoneTimeStr) {
+		this.orderDoneTimeStr = orderDoneTimeStr;
+	}
+
+	public String getOverworkTimeStr() {
+		return overworkTimeStr;
+	}
+
+	public void setOverworkTimeStr(String overworkTimeStr) {
+		this.overworkTimeStr = overworkTimeStr;
 	}
 
 	

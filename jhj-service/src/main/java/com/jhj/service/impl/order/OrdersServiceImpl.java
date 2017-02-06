@@ -107,7 +107,7 @@ public class OrdersServiceImpl implements OrdersService {
 
 		record.setAddTime(TimeStampUtil.getNowSecond());
 		record.setUpdateTime(TimeStampUtil.getNowSecond());
-
+		record.setOrderDoneTime(0L);
 		record.setRemarksBussinessConfirm(""); // 运营人员在 后台 对订单详情添加的 备注
 
 		return record;

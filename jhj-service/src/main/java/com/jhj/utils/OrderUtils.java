@@ -288,6 +288,28 @@ public class OrderUtils {
 		return vo;
 	}
 
+	// 订单来源
+	public static String getOrderFromName(short orderFrom, Long orderOpFrom, CooperativeBusiness cooperativeBusiness) {
+		String orderFromName = "";
+		if (orderFrom == 0) {
+			orderFromName = "app";
+		}
+		if (orderFrom == 1) {
+			orderFromName = "微网站";
+		}
+		if (orderFrom == 2 && orderOpFrom != null) {
+			if (orderOpFrom == 1) {
+				orderFromName = "来电订单";
+			} else {
+				if (cooperativeBusiness != null) {
+					orderFromName = cooperativeBusiness.getBusinessName();
+				} 
+			}
+		}
+
+		return orderFromName;
+	}
+
 	// 获得订单分成比例名称
 	public static String getOrderSettingType(Short orderType) {
 
@@ -305,7 +327,7 @@ public class OrderUtils {
 		if (orderType.equals(Constants.ORDER_TYPE_3)) {
 			settingType = "dis-ratio";
 		}
-		
+
 		return settingType;
 
 	}

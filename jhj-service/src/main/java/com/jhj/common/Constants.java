@@ -422,7 +422,9 @@ public class Constants {
 	 
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_0 = 0;  //订单欠款
 	 public static Short STAFF_DETAIL_DEPT_ORDER_TYPE_1 = 1;  //订单欠款取消
-	 
+
+	 //图片类型
+	 public static String IMG_LINK_TYPE_ORDER = "order";
 	 //订单操作
 	 public static String ORDER_ACTION_ADD = "订单添加";
 	 public static String ORDER_ACTION_PAY = "订单支付";
@@ -432,7 +434,6 @@ public class Constants {
 	 public static String ORDER_ACTION_CANCLE = "取消订单";
 	 public static String ORDER_ACTION_DISPATCHS = "订单派工";
 	 public static String ORDER_ACTION_UPDATE = "订单修改";
-	
 
 }
 

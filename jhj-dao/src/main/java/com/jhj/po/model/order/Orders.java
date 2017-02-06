@@ -47,6 +47,8 @@ public class Orders {
 
     private Long updateTime;
     
+    private Long orderDoneTime;
+    
     private String remarksBussinessConfirm;
     
     public String getRemarksBussinessConfirm() {
@@ -239,6 +241,14 @@ public class Orders {
 
 	public void setStaffNums(int staffNums) {
 		this.staffNums = staffNums;
+	}
+
+	public Long getOrderDoneTime() {
+		return orderDoneTime;
+	}
+
+	public void setOrderDoneTime(Long orderDoneTime) {
+		this.orderDoneTime = orderDoneTime;
 	}
 
 }

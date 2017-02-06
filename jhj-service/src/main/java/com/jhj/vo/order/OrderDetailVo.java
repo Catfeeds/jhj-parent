@@ -2,6 +2,8 @@ package com.jhj.vo.order;
 
 import java.util.List;
 
+import com.jhj.po.model.common.Imgs;
+
 public class OrderDetailVo extends OrderListVo {
 
 	private String orderRatio;
@@ -11,6 +13,10 @@ public class OrderDetailVo extends OrderListVo {
 	private String overWorkStr;
 	
 	private List<OrderServiceAddonViewVo> serviceAddons;
+	
+	private List<Imgs> orderImgs;
+	
+	private String orderFromName;
 
 	public String getOrderRatio() {
 		return orderRatio;
@@ -42,6 +48,22 @@ public class OrderDetailVo extends OrderListVo {
 
 	public void setOverWorkStr(String overWorkStr) {
 		this.overWorkStr = overWorkStr;
+	}
+
+	public List<Imgs> getOrderImgs() {
+		return orderImgs;
+	}
+
+	public void setOrderImgs(List<Imgs> orderImgs) {
+		this.orderImgs = orderImgs;
+	}
+
+	public String getOrderFromName() {
+		return orderFromName;
+	}
+
+	public void setOrderFromName(String orderFromName) {
+		this.orderFromName = orderFromName;
 	}
 	
 	
