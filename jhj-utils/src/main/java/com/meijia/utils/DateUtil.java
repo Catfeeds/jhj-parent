@@ -232,8 +232,7 @@ public class DateUtil {
 		int hours = getHours();
 		int minutes = getMinutes();
 		int seconds = getSeconds();
-		Calendar calendar = new GregorianCalendar(year, month, day, hours,
-				minutes, seconds);
+		Calendar calendar = new GregorianCalendar(year, month, day, hours, minutes, seconds);
 		calendar.add(field, count);
 		String tmpDate = format(calendar.getTime(), format);
 		DEFAULT_CALENDAR.setTime(new Date());
@@ -392,7 +391,7 @@ public class DateUtil {
 		}
 		return day + " 23:59:59";
 	}
-	
+
 	/**
 	 * 转换日期+时+分的时间转化
 	 * 
@@ -591,8 +590,7 @@ public class DateUtil {
 		String curDate = "";
 
 		for (int i = 0; i < 7; i++) {
-			curDate = DateUtil
-					.addDay(startDate, i, Calendar.DATE, "yyyy-MM-dd");
+			curDate = DateUtil.addDay(startDate, i, Calendar.DATE, "yyyy-MM-dd");
 			weekTime.add(curDate);
 		}
 
@@ -609,7 +607,7 @@ public class DateUtil {
 
 		cal.setTime(new Date());
 
-		 cal.add(Calendar.DATE, -6);
+		cal.add(Calendar.DATE, -6);
 
 		// System.out.println(df.format(cal.getTime()));
 
@@ -621,9 +619,9 @@ public class DateUtil {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-		if(date != null){
+		if (date != null) {
 			cal.setTime(date);
-		}else{
+		} else {
 			cal.setTime(new Date());
 		}
 
@@ -651,8 +649,7 @@ public class DateUtil {
 	/*
 	 * long 型时间戳转换为 String 类型 字符串日期（yyyy-MM-dd）
 	 */
-	public static String convTimeStampToStringDate(Long timeStamp,
-			String pattern) {
+	public static String convTimeStampToStringDate(Long timeStamp, String pattern) {
 		SimpleDateFormat format1 = new SimpleDateFormat(pattern);
 
 		long unixLong = timeStamp * 1000;
@@ -678,8 +675,7 @@ public class DateUtil {
 	 * 根据 日期格式字符串，得到 对应的 时间戳 ，秒值 “2015-10-10 00:00:00” --> 1444406400
 	 */
 	public static long getUnixTimeStamp(String date) throws ParseException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		Date parse = dateFormat.parse(date);
 
@@ -687,7 +683,7 @@ public class DateUtil {
 
 		return time;
 	}
-	
+
 	/*
 	 * 字符串时间戳,转换为 日期
 	 */
@@ -821,31 +817,55 @@ public class DateUtil {
 
 		return age + "";
 	}
-	
-	//日期添加月份
-	public static Date toDate(int month){
-		int mth = getMonth()+month;
+
+	// 日期添加月份
+	public static Date toDate(int month) {
+		int mth = getMonth() + month;
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, mth);
 		return cal.getTime();
 	}
-	
-	//获取每个月的开始日期
-	public static Long curStartDate(int mouth){
+
+	// 获取每个月的开始日期
+	public static Long curStartDate(int mouth) {
 		Calendar cal = Calendar.getInstance();
-		int mou=cal.get(Calendar.MONTH)-mouth;
+		int mou = cal.get(Calendar.MONTH) - mouth;
 		cal.set(Calendar.MONTH, mou);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		String strDate = format(cal.getTime(), "yyyy-MM-dd");
-		return TimeStampUtil.getMillisOfDay(strDate)/1000;
+		return TimeStampUtil.getMillisOfDay(strDate) / 1000;
 	}
-	
-	public static Long curLastDate(int mouth){
+
+	public static Long curLastDate(int mouth) {
 		Calendar cal = Calendar.getInstance();
-		int mou=cal.get(Calendar.MONTH)+1-mouth;
+		int mou = cal.get(Calendar.MONTH) + 1 - mouth;
 		cal.set(Calendar.MONTH, mou);
 		cal.set(Calendar.DAY_OF_MONTH, 0);
 		String strDate = format(cal.getTime(), "yyyy-MM-dd");
-		return TimeStampUtil.getMillisOfDayFull(getEndOfDay(strDate))/1000;
+		return TimeStampUtil.getMillisOfDayFull(getEndOfDay(strDate)) / 1000;
+	}
+
+	public static String formatDateTime(long mss) {
+		String DateTimes = null;
+		long days = mss / (60 * 60 * 24);
+		long hours = (mss % (60 * 60 * 24)) / (60 * 60);
+		long minutes = (mss % (60 * 60)) / 60;
+		long seconds = mss % 60;
+		if (days > 0) {
+			DateTimes = days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒";
+		} else if (hours > 0) {
+			DateTimes = hours + "小时" + minutes + "分钟" + seconds + "秒";
+		} else if (minutes > 0) {
+			DateTimes = minutes + "分钟" + seconds + "秒";
+		} else {
+			DateTimes = seconds + "秒";
+		}
+
+		return DateTimes;
+	}
+	
+	public static void main(String[] args) {
+		Long mss = 372200L;
+		System.out.println(DateUtil.formatDateTime(mss));
 	}
 }
