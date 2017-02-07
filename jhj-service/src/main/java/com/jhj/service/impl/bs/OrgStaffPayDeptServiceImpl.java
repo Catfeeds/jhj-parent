@@ -1,6 +1,7 @@
 package com.jhj.service.impl.bs;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,7 @@ public class OrgStaffPayDeptServiceImpl implements OrgStaffPayDeptService {
 	
 	@Override
 	public BigDecimal totalBySearchVo(OrderSearchVo searchVo) {
+		searchVo.setOrderStatusList(null);
 		searchVo.setOrderStatus((short) 2);
 		return orgStaffPayDeptMapper.totalBySearchVo(searchVo);
 	}
