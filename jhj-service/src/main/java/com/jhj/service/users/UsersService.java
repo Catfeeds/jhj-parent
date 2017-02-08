@@ -24,6 +24,8 @@ public interface UsersService {
 
     int updateByPrimaryKey(Users record);
     
+    int insertBatch(List<Users> list);
+    
 	Users genUser(String mobile, Short addFrom);
 	
 	Users initUsers(String mobile, Short addFrom);

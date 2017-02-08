@@ -470,5 +470,10 @@ public class UsersServiceImpl implements UsersService {
 	public List<Users> selectUsersByOrderMobile() {
 		return usersMapper.selectUsersByOrderMobile();
 	}
+
+	@Override
+	public int insertBatch(List<Users> users) {
+		return usersMapper.insertBatch(users);
+	}
 	
 }

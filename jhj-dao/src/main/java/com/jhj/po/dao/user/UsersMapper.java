@@ -20,6 +20,9 @@ public interface UsersMapper {
 
 	int updateByPrimaryKey(Users record);
 	
+	//批量插入
+	int insertBatch(List<Users> users);
+	
 	Users selectByPrimaryKey(Long id);
 	
 	Users selectByMobile(String mobile);
