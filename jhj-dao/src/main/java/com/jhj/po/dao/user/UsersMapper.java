@@ -2,7 +2,6 @@ package com.jhj.po.dao.user;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.chart.ChartMapVo;
@@ -19,6 +18,9 @@ public interface UsersMapper {
 	int updateByPrimaryKeySelective(Users record);
 
 	int updateByPrimaryKey(Users record);
+	
+	//批量插入
+	int insertBatch(List<Users> users);
 	
 	Users selectByPrimaryKey(Long id);
 	

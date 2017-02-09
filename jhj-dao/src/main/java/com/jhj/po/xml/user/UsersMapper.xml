@@ -537,6 +537,28 @@
 		where id
 		= #{id,jdbcType=NUMERIC}
 	</update>
+	
+	<!-- 批量插入 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into users (id, province_name, mobile,
+		3rd_type, openid, name,
+		sex, head_img, rest_money,
+		score, user_type,remarks, add_from,
+		add_time, update_time,is_vip)
+		values
+		<foreach collection="list" item="item" separator =",">
+			(#{item.id,jdbcType=NUMERIC}, #{item.provinceName,jdbcType=VARCHAR}, #{item.mobile,jdbcType=CHAR},
+			#{item.thirdType,jdbcType=VARCHAR}, #{item.openid,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.sex,jdbcType=VARCHAR}, #{item.headImg,jdbcType=VARCHAR}, #{item.restMoney,jdbcType=NUMERIC},
+			#{item.score,jdbcType=NUMERIC},
+			#{item.userType,jdbcType=NUMERIC}, #{item.remarks,jdbcType=VARCHAR},#{item.addFrom,jdbcType=NUMERIC},
+			#{item.addTime,jdbcType=NUMERIC}, #{item.updateTime,jdbcType=NUMERIC},#{item.isVip,jdbcType=NUMERIC})
+		</foreach>
+	</insert>
 
 	<!-- 用户个数统计 -->
 	<select id="statTotalUser" resultType="java.lang.Integer" parameterType="com.jhj.vo.chart.ChartSearchVo">

@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.CopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ import com.jhj.po.dao.user.UserAddrsMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.dict.DictCardType;
-import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.tags.UserRefTags;
 import com.jhj.po.model.user.UserAddrs;
@@ -36,14 +34,12 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.TagSearchVo;
-import com.jhj.vo.order.OrderCardsVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.sun.mail.util.BEncoderStream;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -469,6 +465,11 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public List<Users> selectUsersByOrderMobile() {
 		return usersMapper.selectUsersByOrderMobile();
+	}
+
+	@Override
+	public int insertBatch(List<Users> users) {
+		return usersMapper.insertBatch(users);
 	}
 	
 }
