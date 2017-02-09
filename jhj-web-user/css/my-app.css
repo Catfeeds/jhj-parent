@@ -5028,6 +5028,105 @@ i.toolbar-icon-tixing {
 
 
 
+/*养老护工*/
+.old-hugong{
+  width:98%;
+  height:500px;
+  margin-left: 1%;
+  margin-top: 15px;
+}
+.old-hugong1{
+  width:10%;
+  height:500px;
+  text-align: center;
+  line-height: 166px;
+  font-size: 18px;
+  color:#fff;
+  float: left;
+  background: #82CEC3;
+}
+.old-hugong2{
+  width:10%;
+  height:500px;
+  float: left;
+}
+.old-hugong2-1{
+  width:100%;
+  height:166.6666px;
+  text-align: center;
+  line-height:83.33333px;
+  color:#fff;
+  font-size: 14px;
+  background: #EBAC44;
+  clear: both;
+}
+.old-hugong2-2{
+  width:100%;
+  height:166.6666px;
+  text-align: center;
+  line-height:83.33333px;
+  color:#fff;
+  clear: both;
+  font-size: 14px;
+  background: #CF6876;
+}
+.old-hugong2-3{
+  width:100%;
+  height:166.6666px;
+  text-align: center;
+  line-height:83.33333px;
+  color:#fff;
+  clear: both;
+  font-size: 14px;
+  background: #7AB4F1;
+}
+.old-hugong3{
+  width:80%;
+  height:500px;
+  margin-left: 20%;
+}
+.old-hugong3-1{
+  width:99%;
+  padding-left: 1%;
+  height:166.6666px;
+  background: #EBAC44;
+}
+.old-hugong3-1 p{
+  margin:0;
+  font-size: 12px;
+  text-align: left;
+  line-height: 20px;
+  color:#fff;
+}
+.old-hugong3-2{
+  width:99%;
+  padding-left: 1%;
+  height:166.6666px;
+  background: #CF6876;
+}
+.old-hugong3-2 p{
+  margin:0;
+  font-size: 12px;
+  text-align: left;
+  line-height: 20px;
+  color:#fff;
+}
+.old-hugong3-3{
+  width:99%;
+  padding-left: 1%;
+  height:166.6666px;
+  background: #7AB4F1;
+}
+.old-hugong3-3 p{
+  margin:0;
+  font-size: 12px;
+  text-align: left;
+  line-height: 20px;
+  color:#fff;
+}
+
+
+
 
 
 
