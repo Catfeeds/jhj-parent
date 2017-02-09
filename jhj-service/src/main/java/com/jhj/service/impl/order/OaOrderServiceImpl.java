@@ -824,6 +824,23 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setPayTypeExt(payTypeExt);
 		}
 		oaOrderListVo.setSpreadMoeny(spreadMoeny);
+		
+		//是否有加时的标识
+		String overWorkStr = "";
+		overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
+		oaOrderListVo.setOverWorkStr(overWorkStr);
+		if(!overWorkStr.equals("")){
+			int overworkMin = (int) ((orders.getOrderDoneTime() - orders.getServiceDate()-orders.getServiceHour() * 3600) / 60);
+			String overworkTimeStr=null;
+			if(overworkMin>=60){
+				int overworkMinHour = overworkMin/60;
+				int overworkMinMinute = overworkMin%60;
+				overworkTimeStr = overworkMinHour + "小时"+overworkMinMinute+"分钟";
+			}else{
+				overworkTimeStr = overworkMin + "分钟";
+			}
+			oaOrderListVo.setOverworkTimeStr(overworkTimeStr);
+		}
 
 		return oaOrderListVo;
 	}
