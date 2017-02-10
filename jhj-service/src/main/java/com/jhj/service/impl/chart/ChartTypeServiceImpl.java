@@ -104,7 +104,9 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		}		
 		
 		Short[] shenduserviceType={34,35,36,50,51,52,53,54,55,56,60,61};
+		List<Short> deepType = Arrays.asList(shenduserviceType);
 		Short[] muyinserviceType={62,63,64,65};
+		List<Short> hourType = Arrays.asList(muyinserviceType);
 		String str=null,str1=null;
 		//4-2.真实数据填充（table表格），计算每行总计，以及各品类占比
 		for (Map<String, String> tableDataItem : tableDatas) {
@@ -126,19 +128,17 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 							hourNum+=total;
 						}
 						if(chartSqlData.getName().equals("1")){
-							if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+							if(deepType.contains(chartSqlData.getServiceType())){
 								deepNum+=total;
 							}
-							if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+							if(hourType.contains(chartSqlData.getServiceType())){
 								myNum+=total;
 							}
 						}
 					}
 					
 				}else{
-					String[] str2 = tableDataItem.get("series").split("-");
-					String[] str3 = chartSqlData.getSeries().split("-");
-					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+					if (str.equals(str1)) {
 						Integer total =0;
 						if(chartSqlData.getTotal()!=null){
 							total = chartSqlData.getTotal();
@@ -148,10 +148,10 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 							hourNum+=total;
 						}
 						if(chartSqlData.getName().equals("1")){
-							if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
+							if(deepType.contains(chartSqlData.getServiceType())){
 								deepNum+=total;
 							}
-							if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
+							if(hourType.contains(chartSqlData.getServiceType())){
 								myNum+=total;
 							}
 						}
@@ -297,64 +297,6 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		Short[] shenduserviceType={34,35,36,50,51,52,53,54,55,56,60,61};
 		Short[] muyinserviceType={62,63,64,65};
 		
-		
-		Map<String,String> totalTable = new HashMap<String,String>();
-		Integer tableHourNum = 0;
-		Integer tableDeepNum = 0;
-		Integer tableMyNum = 0;
-		BigDecimal tableHourMoney = new BigDecimal(0);
-		BigDecimal tableDeepMoney = new BigDecimal(0);
-		BigDecimal tableMyMoney = new BigDecimal(0);
-		for (ChartMapVo chartSqlData : statDatas) {
-			
-			//0代表基础服务  1 = 深度服务 母婴到家  
-			Integer total =0;
-			if(chartSqlData.getTotal()!=null){
-				total = chartSqlData.getTotal();
-			}
-			//0代表基础服务  1 = 深度服务 母婴到家  
-			if (chartSqlData.getName().equals("0")){
-				tableHourNum+=total;
-				if(chartSqlData.getTotalMoney()!=null){
-					tableHourMoney=tableHourMoney.add(chartSqlData.getTotalMoney());
-				}
-			}
-			if(chartSqlData.getName().equals("1")){
-				if(Arrays.asList(shenduserviceType).contains(chartSqlData.getServiceType())){
-					tableDeepNum+=total;
-					if(chartSqlData.getTotalMoney()!=null){
-						tableDeepMoney=tableDeepMoney.add(chartSqlData.getTotalMoney());
-					}
-				}
-				if(Arrays.asList(muyinserviceType).contains(chartSqlData.getServiceType())){
-					tableMyNum+=total;
-					if(chartSqlData.getTotalMoney()!=null){
-						tableMyMoney=tableMyMoney.add(chartSqlData.getTotalMoney());
-					}
-				}
-			}
-			
-			int totalNum = tableHourNum+tableDeepNum+tableMyNum;
-			BigDecimal totalMoney =new BigDecimal(0);
-			totalMoney = totalMoney.add(tableHourMoney).add(tableDeepMoney).add(tableMyMoney);
-			
-			totalTable.put("总单数", String.valueOf(totalNum));
-			totalTable.put("总营业额", String.valueOf(totalMoney));
-			totalTable.put("基础服务", String.valueOf(tableHourNum));
-			totalTable.put("基础服务营业额", MathBigDecimalUtil.round2(tableHourMoney));
-			totalTable.put("基础服务营业额占比", MathDoubleUtil.getPercent(tableHourMoney.intValue(),totalMoney.intValue()));
-			totalTable.put("深度服务", String.valueOf(tableDeepNum));
-			totalTable.put("深度服务营业额", MathBigDecimalUtil.round2(tableDeepMoney));
-			totalTable.put("深度服务营业额占比", MathDoubleUtil.getPercent(tableDeepMoney.intValue(),totalMoney.intValue()));
-			totalTable.put("母婴到家", String.valueOf(tableMyNum));
-			totalTable.put("母婴到家营业额", MathBigDecimalUtil.round2(tableMyMoney));
-			totalTable.put("母婴到家营业额占比",MathDoubleUtil.getPercent(tableMyMoney.intValue(),totalMoney.intValue()));
-		}
-		chartDataVo.setTableMap(totalTable);
-		
-		
-		
-		
 		String str=null,str1 = null;
 		
 		for (Map<String, String> tableDataItem : tableDatas) {
@@ -404,9 +346,9 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 						}
 					}
 				}else{
-					String[] str2 = tableDataItem.get("series").split("-");
-					String[] str3 = chartSqlData.getSeries().split("-");
-					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+					String str2 = tableDataItem.get("series");
+					String str3 = chartSqlData.getSeries();
+					if (str2.equals(str3)) {
 						Integer total =0;
 						if(chartSqlData.getTotal()!=null){
 							total = chartSqlData.getTotal();
@@ -444,35 +386,42 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			}
 		}
 		
-		for (Map<String, String> tableDataItem : tableDatas) {
-			
-			BigDecimal moneyHour = new BigDecimal(tableDataItem.get("基础服务营业额"));
-			BigDecimal moneyAm = new BigDecimal(tableDataItem.get("深度服务营业额"));
-			BigDecimal muy = new BigDecimal(tableDataItem.get("母婴到家营业额"));
-			
-			BigDecimal moneySum = moneyHour.add(moneyAm).add(muy);
-			tableDataItem.put("总营业额", MathBigDecimalUtil.round2(moneySum));
-			
-			//intValue(), 效果 只取整数位，舍弃小数位  1.11  、 1.61  -->  1
-			if(moneySum.intValue() > 0 ){
-				tableDataItem.put("基础服务营业额占比", MathDoubleUtil.getPercent(moneyHour.intValue(),moneySum.intValue()));
-				tableDataItem.put("深度服务营业额占比", MathDoubleUtil.getPercent(moneyAm.intValue(),moneySum.intValue()));
-				tableDataItem.put("母婴到家营业额占比", MathDoubleUtil.getPercent(muy.intValue(),moneySum.intValue()));
-			}else{
-				tableDataItem.put("基础服务营业额占比","0.00%");
-				tableDataItem.put("深度服务营业额占比","0.00%");
-				tableDataItem.put("母婴到家营业额占比","0.00%");
-			}
-			
-			Integer numHour = Integer.valueOf(tableDataItem.get("基础服务"));
-			Integer numAm = Integer.valueOf(tableDataItem.get("深度服务"));
-			Integer my = Integer.valueOf(tableDataItem.get("母婴到家"));
-			
-			tableDataItem.put("总单数", String.valueOf(numHour+numAm+my));
-		}
-		
+		Map<String,String> totalTable = new HashMap<String,String>();
+		Integer tableHourNum = 0;
+		Integer tableDeepNum = 0;
+		Integer tableMyNum = 0;
+		Integer totalNum =0;
+		BigDecimal tableHourMoney = new BigDecimal(0);
+		BigDecimal tableDeepMoney = new BigDecimal(0);
+		BigDecimal tableMyMoney = new BigDecimal(0);
+		BigDecimal totalMoney =new BigDecimal(0);
 		//5. 去掉第一个tableDataItem;
 		if (tableDatas.size() > 0) tableDatas.remove(0);
+		for (Map<String, String> tableDataItem : tableDatas) {
+			
+			tableHourMoney=tableHourMoney.add(new BigDecimal(tableDataItem.get("基础服务营业额")));
+			tableDeepMoney=tableDeepMoney.add(new BigDecimal(tableDataItem.get("深度服务营业额")));
+			tableMyMoney=tableMyMoney.add(new BigDecimal(tableDataItem.get("母婴到家营业额")));
+			
+			tableHourNum+=Integer.parseInt(tableDataItem.get("基础服务"));
+			tableDeepNum+=Integer.parseInt(tableDataItem.get("深度服务"));
+			tableMyNum+=Integer.parseInt(tableDataItem.get("母婴到家"));
+			
+		}
+		totalNum = tableHourNum+tableDeepNum+tableMyNum;
+		totalMoney = totalMoney.add(tableHourMoney).add(tableDeepMoney).add(tableMyMoney);
+		totalTable.put("总单数", String.valueOf(totalNum));
+		totalTable.put("总营业额", String.valueOf(totalMoney));
+		totalTable.put("基础服务", String.valueOf(tableHourNum));
+		totalTable.put("基础服务营业额", MathBigDecimalUtil.round2(tableHourMoney));
+		totalTable.put("基础服务营业额占比", MathDoubleUtil.getPercent(tableHourMoney.intValue(),totalMoney.intValue()));
+		totalTable.put("深度服务", String.valueOf(tableDeepNum));
+		totalTable.put("深度服务营业额", MathBigDecimalUtil.round2(tableDeepMoney));
+		totalTable.put("深度服务营业额占比", MathDoubleUtil.getPercent(tableDeepMoney.intValue(),totalMoney.intValue()));
+		totalTable.put("母婴到家", String.valueOf(tableMyNum));
+		totalTable.put("母婴到家营业额", MathBigDecimalUtil.round2(tableMyMoney));
+		totalTable.put("母婴到家营业额占比",MathDoubleUtil.getPercent(tableMyMoney.intValue(),totalMoney.intValue()));
+		chartDataVo.setTableMap(totalTable);
 		
 		//6. 根据表格的数据生成图表的数据.
 		//初始化图表数据格式

@@ -829,7 +829,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		String overWorkStr = "";
 		overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
 		oaOrderListVo.setOverWorkStr(overWorkStr);
-		if(!overWorkStr.equals("")){
+		if(!overWorkStr.equals("") && orders.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7){
 			int overworkMin = (int) ((orders.getOrderDoneTime() - orders.getServiceDate()-orders.getServiceHour() * 3600) / 60);
 			String overworkTimeStr=null;
 			if(overworkMin>=60){

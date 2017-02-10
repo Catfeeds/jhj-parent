@@ -224,7 +224,7 @@ public class OrderChartController extends BaseController {
 		}
 		
 		if (chartSearchVo.getSelectCycle() == 0)
-			chartSearchVo.setSelectCycle(1);
+			chartSearchVo.setSelectCycle(3);
 
 		//30天前.
 		Date nowDate = DateUtil.parse(DateUtil.getBeginOfDay());

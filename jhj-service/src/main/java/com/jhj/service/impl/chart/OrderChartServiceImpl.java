@@ -375,8 +375,10 @@ public class OrderChartServiceImpl implements OrderChartService {
 			statDatas = orderMapper.orderRevenueByQuarter(chartSearchVo);
 		}		
 		
-		String[] deepServiceType = {"34","35","36","50","51","52","53","54","55","56","60","61","71"};
+//		String[] deepServiceType = {"34","35","36","50","51","52","53","54","55","56","60","61","71"};
+//		List<String> deepType = Arrays.asList(deepServiceType);
 		String[] myServiceType = {"62","63","64","65"};
+		List<String> hourType = Arrays.asList(myServiceType);
 		//1-1. 替换表格数据   App来源和微网站来源(数量)
 		String str=null,str1 = null;
 		for (Map<String, String> tableDataItem : tableDatas) {
@@ -410,12 +412,12 @@ public class OrderChartServiceImpl implements OrderChartService {
 							}
 						}
 						if(chartSqlData.getOrderType()==1){
-							if(Arrays.asList(deepServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+							if(!hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								sdTotal+=chartSqlData.getTotal();
 								sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
 								
 							}
-							if(Arrays.asList(myServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+							if(hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								myTotal+=chartSqlData.getTotal();
 								myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
 								
@@ -442,9 +444,9 @@ public class OrderChartServiceImpl implements OrderChartService {
 						}
 					}
 				}else{
-					String[] str2 = tableDataItem.get("series").split("-");
-					String[] str3 = chartSqlData.getSeries().split("-");
-					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+					String str2 = tableDataItem.get("series");
+					String str3 = chartSqlData.getSeries();
+					if (str2.equals(str3)) {
 						//表格数据
 						if(chartSqlData.getOrderType()==0){
 							if(chartSqlData.getServiceType()==28){
@@ -459,12 +461,12 @@ public class OrderChartServiceImpl implements OrderChartService {
 							}
 						}
 						if(chartSqlData.getOrderType()==1){
-							if(Arrays.asList(deepServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+							if(!hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								sdTotal+=chartSqlData.getTotal();
 								sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
 								
 							}
-							if(Arrays.asList(myServiceType).contains(String.valueOf(chartSqlData.getServiceType()))){
+							if(hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								myTotal+=chartSqlData.getTotal();
 								myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
 								
@@ -639,9 +641,9 @@ public class OrderChartServiceImpl implements OrderChartService {
 					}
 				}else{
 					
-					String[] str2 = tableDataItem.get("series").split("-");
-					String[] str3 = chartSqlData.getSeries().split("-");
-					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
+					String str2 = tableDataItem.get("series");
+					String str3 = chartSqlData.getSeries();
+					if (str2.equals(str3)) {
 						//0代表APP  1 = 微网站来源 2=第三方来源
 						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
 							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));

@@ -1101,10 +1101,10 @@
 	<select id="chartTypeRevenue" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name,service_type as serviceType, series, COUNT(*) AS total, SUM(order_money) AS totalMoney FROM
 		(SELECT order_type AS name,service_type,
-		<if test="statType=='day'">
+		<if test="statType!='quarter'">
 			FROM_UNIXTIME(add_time, #{formatParam}) AS series,
 		</if>
-		<if test="statType!='day'">
+		<if test="statType=='quarter'">
 			CONCAT(year(FROM_UNIXTIME(add_time)), "-",quarter(FROM_UNIXTIME(add_time)) ) as series,
 		</if>
 		order_money FROM
@@ -1324,10 +1324,10 @@
 	<!-- 订单来源统计 -->
 	<select id="getOrderSrc" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT o.order_from as orderFrom,o.order_op_from as orderOpFrom,
-		<if test="selectCycle!=12">
+		<if test="statType!='quarter'">
 			FROM_UNIXTIME(o.add_time, #{formatParam}) AS series,
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType=='quarter'">
 			concat(year(FROM_UNIXTIME(o.add_time)),"-",quarter(FROM_UNIXTIME(o.add_time))) AS series,
 		</if>
 		sum(order_money) as totalMoney,count(*) as total 

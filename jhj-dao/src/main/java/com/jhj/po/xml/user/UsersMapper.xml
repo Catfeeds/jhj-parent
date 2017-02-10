@@ -250,10 +250,10 @@
 	<select id="statByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT name, series, COUNT(*) AS total,COUNT(CASE is_vip=1 when 1 THEN 0 END) as totalVip FROM
 		(SELECT add_from AS name,is_vip,
-		<if test="selectCycle!=12">
+		<if test="statType!='quarter'">
 			FROM_UNIXTIME(add_time, #{formatParam}) AS series
 		</if>
-		<if test="selectCycle==12">
+		<if test="statType=='quarter'">
 			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
 		</if>
 		FROM users
@@ -746,10 +746,10 @@
 	
 	<select id="totalNum" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT COUNT(*) AS total,
-		<if test="statType=='day'">
+		<if test="statType!='quarter'">
 			FROM_UNIXTIME(add_time, '${formatParam}') AS series
 		</if>
-		<if test="statType!='day'">
+		<if test="statType=='quarter'">
 			concat(year(FROM_UNIXTIME(add_time)),"-",quarter(FROM_UNIXTIME(add_time))) AS series
 		</if>
 		FROM users
