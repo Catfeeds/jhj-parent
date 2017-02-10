@@ -167,8 +167,6 @@ public class OrderCalendarController extends BaseController {
 		leaveSearchVo.setRangeEndDate(endDate);
 		leaveSearchVo.setLeaveStatus("1");
 
-		// 请假列表
-		
 		//请假人员统计
 		int leaveStaffSize=0;
 		
@@ -214,19 +212,19 @@ public class OrderCalendarController extends BaseController {
 						Long leaveDate = staffLeave.getLeaveDate().getTime();
 						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
 						Long weekDateToday=TimeStampUtil.getMillisOfDay(weekDate);
-						if(weekDate.equals(today) && leaveDate<=longToday && leaveDateEnd >=longToday){
-							leaveNum++;
-						}
+//						if(weekDate.equals(today) && leaveDate<=longToday && leaveDateEnd >=longToday){
+//							leaveNum++;
+//						}
 						if (leaveDate<=weekDateToday && leaveDateEnd >=weekDateToday) {
 							EventVo eventVo = new EventVo();
 							eventVo.setDateDuration(weekDate);
 							eventVo.setEventName("请假中");
 							eventVo.setServiceTime(leaveDate);
 							eventList.add(eventVo);
-							if(startTimeStr.equals(weekDate)){
-								leaveStaffSize++;
-							}
 						}
+					}
+					if(startTimeStr.equals(weekDate)){
+						leaveStaffSize++;
 					}
 				}
 				
@@ -237,16 +235,12 @@ public class OrderCalendarController extends BaseController {
 						Long serviceDate = staffDisVo.getServiceDate() * 1000;
 						String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
 						//统计今日明日派工订单数
-						if(serviceDateStr.equals(today) && weekDate.equals(today)){
-							if(!set.contains(staffId)){
-								set.add(staffId);
-								dispathNum++;
-							}
-						}
-					/*	else if(serviceDateStr.equals(tom) && weekDate.equals(tom)){
-							tomOrder++;
-						}*/
-//						Long disStaffId = staffDisVo.getStaffId();
+//						if(serviceDateStr.equals(today) && weekDate.equals(today)){
+//							if(!set.contains(staffId)){
+//								set.add(staffId);
+//								dispathNum++;
+//							}
+//						}
 						String orderNo = staffDisVo.getOrderNo();
 						if (serviceDateStr.equals(weekDate)) {
 							EventVo eventVo = new EventVo();
@@ -307,8 +301,7 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("weekDateModel", weekDateList);
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
-		model.addAttribute("dispatchNum",staffListSize-blackNum-leaveNum);
-//		model.addAttribute("tomorrowOrder",tomOrder);
+		model.addAttribute("dispatchNum",staffListSize-blackNum-leaveStaffSize);
 
 		return "staffDisAndLeave/staffDisAndLeaveList";
 	}
