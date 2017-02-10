@@ -144,8 +144,8 @@ public class OrgStaffLeaveController extends BaseController {
 		leave.setLeaveDate(DateUtil.parse(leaveDate));
 		leave.setLeaveDateEnd(DateUtil.parse(leaveDateEnd));
 		long dublDate = TimeStampUtil.compareTimeStr(leave.getLeaveDate().getTime(),leave.getLeaveDateEnd().getTime());
-		int dayNum = (int)dublDate/(1000 * 60 * 60 * 24)+1;
-		leave.setTotalDays(dayNum);
+		long dayNum = dublDate/(1000 * 60 * 60 * 24)+1;
+		leave.setTotalDays(new Long(dayNum).intValue());
 
 		// 请假日期
 //		leave.setLeaveStatus();
