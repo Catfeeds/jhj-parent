@@ -182,9 +182,12 @@ myApp.onPageInit('login', function (page) {
     	   	if(flag ==true){
     	   	//返回用户浏览的上一页
 	   			var target = mainView.history[mainView.history.length-2];
-	   			
-	   			mainView.router.loadPage(target);
-    	   //mainView.router.loadPage("index.html");
+	   			var nextUrl = page.query.next_url;
+    	   		if(nextUrl!=null && nextUrl!=''){
+    	   			mainView.router.loadPage(nextUrl);
+    	   		}else{
+    	   			mainView.router.loadPage(target);
+    	   		}
     	   	}else{
     	   		mainView.router.loadPage("user/mine-add-addr.html");
     	   	}
