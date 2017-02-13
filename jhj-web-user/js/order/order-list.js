@@ -121,10 +121,8 @@ myApp.onPageBeforeInit('order-list', function(page) {
 		var cpage = ++page;
 		loadOrderList(userId, cpage);
 	});
-	
-	
-	
 	loadOrderList(userId, page);
+	
 });
 
 function orderView(orderType, orderNo) {
