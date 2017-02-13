@@ -122,9 +122,12 @@ myApp.onPageBeforeInit('order-list', function(page) {
 		loadOrderList(userId, cpage);
 	});
 	
+	if(userId==undefined && userId == null && userId==''){ 
+		mainView.router.loadPage("/login.html");
+	}else{
+		loadOrderList(userId, page);
+	}
 	
-	
-	loadOrderList(userId, page);
 });
 
 function orderView(orderType, orderNo) {
