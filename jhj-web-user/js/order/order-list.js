@@ -121,7 +121,12 @@ myApp.onPageBeforeInit('order-list', function(page) {
 		var cpage = ++page;
 		loadOrderList(userId, cpage);
 	});
-	loadOrderList(userId, page);
+	if(userId==undefined){
+		view.router.loadPage('login.html?next_url=order/order-list.html');
+		return false;
+	}else{
+		loadOrderList(userId, page);
+	}
 	
 });
 
