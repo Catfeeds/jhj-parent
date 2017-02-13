@@ -183,6 +183,7 @@ myApp.onPageInit('login', function (page) {
     	   	//返回用户浏览的上一页
 	   			var target = mainView.history[mainView.history.length-2];
 	   			var nextUrl = page.query.next_url;
+
     	   		if(nextUrl!=null && nextUrl!=''){
     	   			mainView.router.loadPage(nextUrl);
     	   		}else{
