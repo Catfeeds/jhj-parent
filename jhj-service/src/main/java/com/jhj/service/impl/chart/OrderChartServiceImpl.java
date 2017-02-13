@@ -393,6 +393,10 @@ public class OrderChartServiceImpl implements OrderChartService {
 			BigDecimal myTotalMoney = new BigDecimal(0);
 			
 			for (ChartMapVo chartSqlData : statDatas) {
+				BigDecimal totalMoney = chartSqlData.getTotalMoney();
+				if(totalMoney==null){
+					totalMoney=new BigDecimal(0);
+				}
 			
 				if(chartSearchVo.getStatType().equals("day")){
 					str = tableDataItem.get("series");
@@ -402,24 +406,24 @@ public class OrderChartServiceImpl implements OrderChartService {
 						if(chartSqlData.getOrderType()==0){
 							if(chartSqlData.getServiceType()==28){
 								jpTotal+=chartSqlData.getTotal();
-								jpTotalMoney = jpTotalMoney.add(chartSqlData.getTotalMoney());
+								jpTotalMoney = jpTotalMoney.add(totalMoney);
 								
 							}
 							if(chartSqlData.getServiceType()==68){
 								jcTotoal+=chartSqlData.getTotal();
-								jcTotoalMoney = jcTotoalMoney.add(chartSqlData.getTotalMoney());
+								jcTotoalMoney = jcTotoalMoney.add(totalMoney);
 								
 							}
 						}
 						if(chartSqlData.getOrderType()==1){
 							if(!hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								sdTotal+=chartSqlData.getTotal();
-								sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
+								sdTotalMoney = sdTotalMoney.add(totalMoney);
 								
 							}
 							if(hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								myTotal+=chartSqlData.getTotal();
-								myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
+								myTotalMoney = myTotalMoney.add(totalMoney);
 								
 							}
 						}
@@ -427,17 +431,17 @@ public class OrderChartServiceImpl implements OrderChartService {
 						//图标数据
 						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
 							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
-							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(totalMoney));
 						}
 						if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
 							tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
-							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(totalMoney));
 						}
 						if(chartSqlData.getOrderFrom().equals("2")){
 							for(int i=0,len=businessList.size();i<len;i++){
 								if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
 									tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
-									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(totalMoney));
 									continue;
 								}
 							}
@@ -451,24 +455,24 @@ public class OrderChartServiceImpl implements OrderChartService {
 						if(chartSqlData.getOrderType()==0){
 							if(chartSqlData.getServiceType()==28){
 								jpTotal+=chartSqlData.getTotal();
-								jpTotalMoney = jpTotalMoney.add(chartSqlData.getTotalMoney());
+								jpTotalMoney = jpTotalMoney.add(totalMoney);
 								
 							}
 							if(chartSqlData.getServiceType()==68){
 								jcTotoal+=chartSqlData.getTotal();
-								jcTotoalMoney = jcTotoalMoney.add(chartSqlData.getTotalMoney());
+								jcTotoalMoney = jcTotoalMoney.add(totalMoney);
 								
 							}
 						}
 						if(chartSqlData.getOrderType()==1){
 							if(!hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								sdTotal+=chartSqlData.getTotal();
-								sdTotalMoney = sdTotalMoney.add(chartSqlData.getTotalMoney());
+								sdTotalMoney = sdTotalMoney.add(totalMoney);
 								
 							}
 							if(hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
 								myTotal+=chartSqlData.getTotal();
-								myTotalMoney = myTotalMoney.add(chartSqlData.getTotalMoney());
+								myTotalMoney = myTotalMoney.add(totalMoney);
 								
 							}
 						}
@@ -476,17 +480,17 @@ public class OrderChartServiceImpl implements OrderChartService {
 						//图标数据
 						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
 							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
-							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+							tableDataItem.put("微网站金额", MathBigDecimalUtil.round2(totalMoney));
 						}
 						if(chartSqlData.getOrderFrom().equals("2") && chartSqlData.getOrderOpFrom().equals("1")){
 							tableDataItem.put("来电订单", String.valueOf(chartSqlData.getTotal()));
-							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+							tableDataItem.put("来电订单金额", MathBigDecimalUtil.round2(totalMoney));
 						}
 						if(chartSqlData.getOrderFrom().equals("2")){
 							for(int i=0,len=businessList.size();i<len;i++){
 								if(chartSqlData.getOrderOpFrom().equals(String.valueOf(businessList.get(i).getId()))){
 									tableDataItem.put(businessList.get(i).getBusinessName(), String.valueOf(chartSqlData.getTotal()));
-									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(chartSqlData.getTotalMoney()));
+									tableDataItem.put(businessList.get(i).getBusinessName()+"金额", MathBigDecimalUtil.round2(totalMoney));
 									continue;
 								}
 							}
@@ -610,7 +614,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 		}		
 		
 		//1-1. 替换表格数据   App来源和微网站来源(数量)
-		String str=null,str1 = null;
 		for (ChartMapVo chartSqlData : statDatas) {
 			//处理表格形式的数据.
 			for (Map<String, String> tableDataItem : tableDatas) {

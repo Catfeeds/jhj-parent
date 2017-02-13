@@ -885,7 +885,7 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
+		GROUP BY series,T4.service_type,orderFrom,orderOpFrom ORDER BY series ASC
 
 	</select>
 
@@ -908,7 +908,7 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
+		GROUP BY series,T4.service_type,orderFrom,orderOpFrom ORDER BY series ASC
 		
 	</select>
 
@@ -932,7 +932,7 @@
 		ON T1.id = T2. order_id
 		) AS T3
 		) AS T4
-		GROUP BY orderFrom,orderOpFrom, series ORDER BY series ASC
+		GROUP BY series,T4.service_type,orderFrom,orderOpFrom ORDER BY series ASC
 		
 	</select>
 
