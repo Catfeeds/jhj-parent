@@ -59,16 +59,31 @@ myApp.onPageBeforeInit('order-list', function(page) {
 
 			htmlPart = htmlPart.replace(new RegExp('{priceExtendStyle}', "gm"), priceExtendStyle);
 			
-			var orderRateStyle = "none"
-			if (orderStatus >= 3 && orderStatus <= 8) {
-				orderRateStyle = "block";
-			}
+			var orderRateStyle = ""
 			var orderRateStr='';
-			if(orderStatus>=3 && orderStatus<7) orderRateStr = "联系服务员";
-			if (orderStatus == 7) orderRateStr = "立即评价";
-			if (orderStatus == 8) orderRateStr = "已评价";
+			var orderRateStylePhone='';
+			var url="#";
+			if(orderStatus>=3 && orderStatus<7) {
+				orderRateStyle = "none";
+				orderRateStylePhone = "block";
+				var staffMobile = $$("#staffMobile").val();
+				url = "tel:"+staffMobile;
+				
+			}
+			if (orderStatus == 7) {
+				orderRateStr = "立即评价";
+				orderRateStyle = "block";
+				orderRateStylePhone = "none";
+			}
+			if (orderStatus == 8) {
+				orderRateStr = "已评价";
+				orderRateStyle = "block";
+				orderRateStylePhone = "none";
+			}
 			htmlPart = htmlPart.replace(new RegExp('{orderRateStr}', "gm"), orderRateStr);
 			htmlPart = htmlPart.replace(new RegExp('{orderRateStyle}', "gm"), orderRateStyle);
+			htmlPart = htmlPart.replace(new RegExp('{orderRateStylePhone}', "gm"), orderRateStylePhone);
+			htmlPart = htmlPart.replace(new RegExp('{url}', "gm"), url);
 			
 			html+= htmlPart;
 		}
@@ -214,25 +229,14 @@ function linkOrderRate(obj) {
 	var staffNames = obj.find('input[name=staffNames]').val();
 	sessionStorage.setItem("staff_names", staffNames);
 	
-	var orderRateUrl = "order/order-rate.html";
+	if(orderStatus == 7){
+		mainView.router.loadPage("order/order-rate.html");
+	}
 	if (orderStatus == 8) {
-		orderRateUrl = "order/order-user-rate.html";
+		mainView.router.loadPage("order/order-user-rate.html");
 	}
 	
-	mainView.router.loadPage(orderRateUrl);
 }
 
-function choseLink(obj){
-	var orderStatus = $$(obj).parent().parent().find('input[name=orderStatus]').val();;
-	if(orderStatus>=3 && orderStatus<7){
-		var html = $$(obj).text();
-		var staffMobile = $$("#staffMobile").val();
-		$$(obj).parent().attr("href","tel:"+staffMobile);
-		
-	}
-	if(orderStatus==7 || orderStatus==8){
-		linkOrderRate($$(obj).parent().parent());
-	}
-};
 
 
