@@ -63,7 +63,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			var orderRateStr='';
 			var orderRateStylePhone='none';
 			var url="#";
-			if(orderStatus>=2 && orderStatus<7) {
+			if(orderStatus>=3 && orderStatus<7) {
 				orderRateStyle = "none";
 				orderRateStylePhone = "block";
 				url = "tel:"+order.staff_mobile;
