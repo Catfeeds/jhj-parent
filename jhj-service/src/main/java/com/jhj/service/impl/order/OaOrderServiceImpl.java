@@ -830,16 +830,13 @@ public class OaOrderServiceImpl implements OaOrderService {
 		overWorkStr = orderPriceExtService.getOverWorkStr(orders.getId());
 		oaOrderListVo.setOverWorkStr(overWorkStr);
 		if(!overWorkStr.equals("") && orders.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7){
-			int overworkMin = (int) ((orders.getOrderDoneTime() - orders.getServiceDate()-orders.getServiceHour() * 3600) / 60);
-			String overworkTimeStr=null;
-			if(overworkMin>=60){
-				int overworkMinHour = overworkMin/60;
-				int overworkMinMinute = overworkMin%60;
-				overworkTimeStr = overworkMinHour + "小时"+overworkMinMinute+"分钟";
-			}else{
-				overworkTimeStr = overworkMin + "分钟";
+			Long overworkMin = (long) (orders.getOrderDoneTime() - orders.getServiceDate()-orders.getServiceHour() * 3600);
+			
+			if(overworkMin / 60 >30){
+				String overworkTimeStr = DateUtil.formatDateTime(overworkMin);
+				oaOrderListVo.setOverworkTimeStr(overworkTimeStr);
 			}
-			oaOrderListVo.setOverworkTimeStr(overworkTimeStr);
+			
 		}
 
 		return oaOrderListVo;
