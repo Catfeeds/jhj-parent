@@ -66,8 +66,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			if(orderStatus>=3 && orderStatus<7) {
 				orderRateStyle = "none";
 				orderRateStylePhone = "block";
-				var staffMobile = $$("#staffMobile").val();
-				url = "tel:"+staffMobile;
+				url = "tel:"+order.staff_mobile;
 				
 			}
 			if (orderStatus == 7) {
