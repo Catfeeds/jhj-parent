@@ -316,7 +316,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			// ---4.排除请假的员工.
 			LeaveSearchVo searchVo3 = new LeaveSearchVo();
 
-			searchVo3.setOrgId(orgId);
+			searchVo3.setStaffIds(staffIdAlls);
 
 			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 			Date leaveDate = DateUtil.parse(serviceDateStr);
@@ -772,10 +772,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		// ---4.排除请假的员工.
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
-		if (parentId > 0L)
-			searchVo3.setParentId(parentId);
-		if (orgId > 0L)
-			searchVo3.setOrgId(orgId);
+
 
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 		Date leaveDate = DateUtil.parse(serviceDateStr);
