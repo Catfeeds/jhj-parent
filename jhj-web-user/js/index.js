@@ -3,7 +3,17 @@ myApp.onPageInit('index', function(page) {
 })
 myApp.swiper('.swiper-1', {
   pagination:'.swiper-1 .swiper-pagination',
-  spaceBetween: 50
+  speed:400,
+  autoplay:1000,
+  spaceBetween: 50,
+  effect:'coverflow',
+  coverflow:{
+	  rotate: 50,
+	  stretch: 0,
+	  depth: 100,
+	  modifier: 1,
+	  slideShadows : true
+  }
 });
 
 function getUserInfo() {

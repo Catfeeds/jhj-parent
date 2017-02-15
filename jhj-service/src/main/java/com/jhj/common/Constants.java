@@ -434,6 +434,10 @@ public class Constants {
 	 public static String ORDER_ACTION_CANCLE = "取消订单";
 	 public static String ORDER_ACTION_DISPATCHS = "订单派工";
 	 public static String ORDER_ACTION_UPDATE = "订单修改";
+	 
+	 
+	 //优惠券
+	 public static Long NEW_USER_REGISTER_COUPONS_ID = 4137L;
 
 }
 
