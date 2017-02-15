@@ -83,6 +83,13 @@
 		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="orgIds !=null and orgIds.size() > 0 ">
+			and org_id in
+			<foreach item="item" index="index" collection="orgIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
 
 		<if test="parentId !=null and parentId != 0">
 			and parent_org_id = #{parentId,jdbcType=NUMERIC}
@@ -120,6 +127,10 @@
 		</if>
 		<if test="staffCode!=null">
 			and staff_code = #{staffCode,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="serviceTypeId !=null and serviceTypeId != 0">
+			and staff_id in (select staff_id from org_staff_skill where service_type_id = #{serviceTypeId,jdbcType=NUMERIC})
 		</if>
 		order by add_time desc
 	</sql>

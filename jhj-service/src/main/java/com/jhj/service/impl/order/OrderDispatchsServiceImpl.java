@@ -11,10 +11,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.PageHelper;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.dao.bs.OrgStaffLeaveMapper;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffLeave;
@@ -26,7 +24,6 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.po.model.user.Users;
-import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
@@ -39,10 +36,8 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.OrgDispatchPoiVo;
-import com.jhj.vo.dispatch.StaffDispatchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
-import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrgStaffsNewVo;
 import com.jhj.vo.org.LeaveSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
@@ -1135,6 +1130,165 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		
 		
 		return result;
+	}
+	
+	/**
+	 * 检查是否已经约满了员工
+	 * seriviceTypeId  服务ID
+	 * serviceDateStr  服务日期（单位:天）
+	 * addrId          服务地址
+	 */
+	@Override
+	public List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId) {
+		
+		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
+		
+		for (int i = 0; i < 24; i++) {
+			
+			String h = String.valueOf(i);
+			if (h.length() == 1) h = "0" + h;
+			Map<String, String> item1 = new HashMap<String, String>();
+			
+		
+			item1.put("service_hour", h + ":00");
+			item1.put("total", "0");
+			item1.put("total_dispatched", "0");
+			item1.put("is_full", "0");
+			datas.add(item1);
+			
+			Map<String, String> item2 = new HashMap<String, String>();
+			item2.put("service_hour", h + ":30");
+			item2.put("total", "0");
+			item2.put("total_dispatched", "0");
+			item2.put("is_full", "0");
+			datas.add(item2);
+			
+		}
+		
+		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
+
+		List<OrgDispatchPoiVo> orgList = getMatchOrgs(addrs.getLatitude(), addrs.getLongitude(), 0L, 0L, true);
+		
+		List<Long> orgIds = new ArrayList<Long>();
+		
+		for (int i = 0; i < orgList.size(); i++) {
+			OrgDispatchPoiVo org = orgList.get(i);
+			Long orgId = org.getOrgId();
+			orgIds.add(orgId);
+		}
+		
+		if (orgIds.isEmpty()) return datas;
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		//先找出云店下所有的员工,并且具有该项技能的人员.
+		StaffSearchVo staffSearchVo = new StaffSearchVo();
+		staffSearchVo.setOrgIds(orgIds);
+		staffSearchVo.setServiceTypeId(serviceTypeId);
+		staffSearchVo.setStatus(1);
+		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
+		for (OrgStaffs os : staffList) {
+			if (!staffIds.contains(os.getStaffId())) staffIds.add(os.getStaffId());
+		}
+		System.out.println("总人数:" + staffIds.size());
+		//排除黑名单人员
+		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
+		searchVo2.setIsBlack((short) 1);
+		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);
+		for (OrgStaffFinance osf : blackList) {
+			if (staffIds.contains(osf.getStaffId())) {
+				staffIds.remove(osf.getStaffId());
+			}
+		}
+		System.out.println("排除黑名单后总人数:" + staffIds.size());
+		//排除请假人员
+		LeaveSearchVo searchVo3 = new LeaveSearchVo();
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		searchVo3.setLeaveDate(leaveDate);
+		searchVo3.setLeaveStatus("1");
+		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
+		if (!leaveList.isEmpty()) {
+			for (OrgStaffLeave ol : leaveList) {
+				if (staffIds.contains(ol.getStaffId())) {
+					staffIds.remove(ol.getStaffId());
+				}
+			}
+		}
+		System.out.println("排除请假后总人数:" + staffIds.size());
+		if (staffIds.isEmpty()) return datas;
+		
+		int total = staffIds.size();
+		//找出当天所有的派工订单和人员.
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 00:00:00");
+		Long endServiceTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 23:59:59"); 
+		orderDispatchSearchVo.setStartServiceTime(startServiceTime / 1000);
+		orderDispatchSearchVo.setEndServiceTime(endServiceTime / 1000);
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		
+		List<OrderDispatchs> orderDispatchs = this.selectBySearchVo(orderDispatchSearchVo);
+		for (OrderDispatchs orderDispatch : orderDispatchs) {
+			Long orderId = orderDispatch.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+			
+			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) ||
+				order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1) ||
+				order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)
+					) {
+				continue;
+			}
+				
+				
+			
+			Long serviceDate = orderDispatch.getServiceDate();
+			
+			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
+			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
+			if (servcieDateTmpInt > 0 && servcieDateTmpInt < 30) {
+				serviceDate = serviceDate - servcieDateTmpInt * 60;
+			} else if (servcieDateTmpInt > 30) {
+				serviceDate = serviceDate + 30 * 60 - servcieDateTmpInt * 60;
+			}
+			
+			
+			Double serviceHour = orderDispatch.getServiceHours();
+			
+			Double stepHour = (double) 0;
+			while (stepHour <= serviceHour) {
+				
+				String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + stepHour * 60 * 60) * 1000), "HH:mm");
+				System.out.println(orderServiceDateStr);
+				
+				
+				for (int i = 0 ; i < datas.size(); i++) {
+					Map<String, String> item = datas.get(i);
+					String itemServiceHour = item.get("service_hour");
+					
+					if (orderServiceDateStr.equals(itemServiceHour)) {
+						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
+						totalDispatched = totalDispatched + 1;
+						item.put("total_dispatched", String.valueOf(totalDispatched));
+						datas.set(i, item);
+						break;
+					}
+				}
+				stepHour = stepHour + 0.5;
+			}
+		}
+		
+		//最后再进行循环，把是否约满字段补上.
+		for (int i = 0 ; i < datas.size(); i++) {
+			Map<String, String> item = datas.get(i);
+			int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
+			int isFull = 0;
+			if (total > 0 && totalDispatched >= 0 && totalDispatched >= total ) {
+				isFull = 1;
+			}
+			item.put("total", String.valueOf(total));
+			item.put("is_full", String.valueOf(isFull));
+			datas.set(i, item);
+		}
+		
+		return datas;
 	}
 
 }
