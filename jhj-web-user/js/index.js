@@ -5,15 +5,8 @@ myApp.swiper('.swiper-1', {
   pagination:'.swiper-1 .swiper-pagination',
   speed:400,
   autoplay:2000,
-  spaceBetween: 50,
-  effect:'coverflow',
-  coverflow:{
-	  rotate: 50,
-	  stretch: 0,
-	  depth: 100,
-	  modifier: 1,
-	  slideShadows : true
-  }
+  spaceBetween: 50
+  
 });
 
 function getUserInfo() {
