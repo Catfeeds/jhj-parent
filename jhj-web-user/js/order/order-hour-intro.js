@@ -43,7 +43,7 @@ myApp.onPageBeforeInit('order-hour-intro', function(page) {
 			break;
 		case 68:
 			getIntroData(serviceTypeId);
-			$$("#order-hour-banner-img").attr("src", "img/jinpaibaojie/order-jinpai2.png");
+			$$("#order-hour-banner-img").attr("src", "img/jinpaibaojie/order-jinpai2-1.jpg");
 			break;
 		case 69:
 			getIntroData(serviceTypeId);

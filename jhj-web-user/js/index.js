@@ -1,7 +1,10 @@
 myApp.onPageInit('index', function(page) {
 	removeSessionData();
 })
-
+myApp.swiper('.swiper-1', {
+  pagination:'.swiper-1 .swiper-pagination',
+  spaceBetween: 50
+});
 
 function getUserInfo() {
 	
