@@ -89,8 +89,16 @@ function cleanForm(){
 	$("form :input").not(":button, :submit, :reset, :hidden, :checkbox").val("").remove("selected");
 }
 
+function showLog(obj){
+	$("#updateOrderRemark").show();
+	var orderNo = obj.getAttribute("data-order-no");
+	$("#modal-orderNo").attr("value",orderNo);
+	var remarks = $(obj).next().attr("title");
+	$("#remarks").val(remarks);
+}
+
 $("#submit-remarks").on('click',function(){
-	var orderNo = $("#orderno").val();
+	var orderNo = $("#modal-orderNo").val();
 	var remarks = $("#remarks").val();
 	
 	if(remarks==undefined || remarks ==null || remarks=='') return false;
@@ -104,7 +112,7 @@ $("#submit-remarks").on('click',function(){
 		},
 		dataType:"json",
 		success:function(data){
-			console.log("----------------")
+			location.reload(true);
 		}
 	});
 	

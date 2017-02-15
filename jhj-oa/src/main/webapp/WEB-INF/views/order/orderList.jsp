@@ -247,8 +247,8 @@
 														class="btn btn-primary btn-xs" title="订单详情">
 														<i class=" icon-ambulance"></i>
 													</button> <!-- 如果 运营人员备注为 空，可以添加，不为空，不让添加 --> 
-													<button onclick="submitRemarks(this)"
-														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-target="#updateOrderRemark ">
+													<button id="btnremarks"
+														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-order-no="${item.orderNo}" data-target="#updateOrderRemark" onclick="showLog(this)">
 														<i class="icon-plus-sign-alt"></i>
 													</button>
 													<c:if test="${item.remarks ne ''}">
@@ -292,6 +292,7 @@
 	      </div>
 	      <div class="modal-body">
 	        <form  name="cancleForms">
+	        	<input type="hidden" id="modal-orderNo" value=""/>
 	        	<textarea name="remarks" id="remarks" rows="3" cols="78" placeholder="备注信息"></textarea>
 	        	<span id="remark-error"></span>
 	        </form>
