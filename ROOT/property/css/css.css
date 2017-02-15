@@ -1,0 +1,73 @@
+body,dd,dt,ul,li,p,img,span,div,b,em,a,h1,h2,h3,h4,h5{
+    margin:0;padding:0;font-size:18px ;
+    font-family: "微软雅黑";
+    font-weight: normal;list-style:none;color:#000;text-decoration: none;
+    border:0;
+}
+.property{
+	background: url(../img/background.png) no-repeat center;
+	width:100%;
+	background-size: 100% 100%;
+	margin-top: -7px;
+}
+.all-img{
+	width:90%;
+	margin-left: 5%;
+	margin-top: 30px;
+}
+.property-1{
+	background: url(../img/iphone.png) no-repeat center;
+	width:90%;
+	margin-top:30px;
+	margin-left: 5%;
+	height:150px;
+	background-size: 100% 100%;
+	border-radius: 5px;
+}
+.property-1-1{
+	width:90%;
+	padding-top:15px;
+	color:#fff;
+	font-weight: bold;
+	font-size: 14px;
+	margin-left: 10%;
+	height:50px;
+	line-height: 50px;
+}
+.property-1-1 input{
+	width:60%;
+	height:30px;
+	border:2px solid #F2C043;
+	line-height: 50px;
+	font-size: 14px;
+	padding-left: 5px;
+	color:#000;
+	border-radius: 5px;
+}
+.property-1-2{
+	width:100%;
+	height: 40px;
+}
+.property-1-2-1{
+	width:40%;
+	height:40px;
+	text-align: center;
+	line-height: 40px;
+	color:#B30E0C;
+	font-weight: bold;
+	font-size: 14px;
+	margin-left: 30%;
+	background: #F5BE1B;
+	border-radius: 5px;
+	float: left;
+}
+
+
+
+
+
+
+
+
+
+
