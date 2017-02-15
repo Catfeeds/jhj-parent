@@ -11,6 +11,8 @@ public class StaffSearchVo {
 	
 	private Long orgId;
 	
+	private List<Long> orgIds;
+	
 	private Long parentId;
 	  
 	private List<Long> cloudOrgList;
@@ -163,6 +165,14 @@ public class StaffSearchVo {
 
 	public void setStaffCode(String staffCode) {
 		this.staffCode = staffCode;
+	}
+
+	public List<Long> getOrgIds() {
+		return orgIds;
+	}
+
+	public void setOrgIds(List<Long> orgIds) {
+		this.orgIds = orgIds;
 	}
 	
 

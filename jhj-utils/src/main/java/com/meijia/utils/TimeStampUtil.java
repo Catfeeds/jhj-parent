@@ -185,6 +185,24 @@ public class TimeStampUtil {
 		
 //		System.out.println(TimeStampUtil.timeStampToDateStr(1464597140L*1000, "HH"));
 		
-		System.out.println(TimeStampUtil.getEndOfToday());
+//		System.out.println(TimeStampUtil.getEndOfToday());
+		Long serviceDate =1487119380L;
+		
+		String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
+		int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
+		if (servcieDateTmpInt > 0 && servcieDateTmpInt < 30) {
+			serviceDate = serviceDate - servcieDateTmpInt * 60;
+		} else if (servcieDateTmpInt > 30) {
+			serviceDate = serviceDate + 30 * 60 - servcieDateTmpInt * 60;
+		}
+		
+		Double serviceHour = 3.5;
+		Double i = (double) 0;
+		while (i <= serviceHour) {
+			
+			String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + i * 60 * 60) * 1000), "HH:mm");
+			System.out.println(orderServiceDateStr);
+			i = i + 0.5;
+		}
 	}
 }

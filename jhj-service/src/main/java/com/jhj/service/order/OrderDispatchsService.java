@@ -58,5 +58,7 @@ public interface OrderDispatchsService {
 	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
 
 	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
+
+	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
    	
 }
