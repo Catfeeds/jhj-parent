@@ -28,7 +28,7 @@ var myApp = new Framework7({
 		myApp.hideIndicator();
 	},
 	preroute : function(view, options) {
-
+		
 		if (!isLogin() && options.url.indexOf('order/order-hour-choose.html') >= 0 ) {
 			view.router.loadPage('login.html');
 			return false;

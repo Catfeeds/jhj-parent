@@ -283,8 +283,8 @@ public class UserCouponsController extends BaseController {
 		}
 
 		/*
-		 * 从http://www.jia-he-jia.com/h5/页面领取优惠券
-		 * 周年庆领取优惠券
+		 * 
+		 * 领取优惠券活动
 		 */
 		@RequestMapping(value = "receive_coupon.json", method = RequestMethod.POST)
 		public AppResultData<String> receiveCoupon(
@@ -303,14 +303,12 @@ public class UserCouponsController extends BaseController {
 			
 			//判断只有这三种优惠劵可用
 			List<Long> validateCouponIds = new ArrayList<Long>();
-//			validateCouponIds.add(4167L);
-//			validateCouponIds.add(4168L);
-//			validateCouponIds.add(4169L);
-			validateCouponIds.add(4170L);
-			validateCouponIds.add(4171L);
-			validateCouponIds.add(4172L);
-			validateCouponIds.add(4173L);
-			validateCouponIds.add(4174L);
+			validateCouponIds.add(4185L);
+			validateCouponIds.add(4186L);
+			validateCouponIds.add(4187L);
+			validateCouponIds.add(4188L);
+			validateCouponIds.add(4189L);
+			validateCouponIds.add(4190L);
 			
 			String[] couponsIdList = couponsId.split(",");
 			List<Long> list=new ArrayList<Long>();
@@ -330,14 +328,12 @@ public class UserCouponsController extends BaseController {
 			CouponSearchVo couponSearchVo=new CouponSearchVo();
 			couponSearchVo.setCouponsIdList(list);
 			List<DictCoupons> couponsList = dictCouponsService.selectBySearchVo(couponSearchVo);
-//			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsIdList);
 			
 			if (couponsList == null) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg("无效的优惠劵");
 				return result;
 			}
-			
 			
 			if(couponsList!=null && couponsList.size()>0){
 				UserCoupons uc = new UserCoupons();
@@ -350,12 +346,11 @@ public class UserCouponsController extends BaseController {
 						userCouponsService.insertSelective(userCoupons);
 					} else {
 						result.setStatus(Constants.ERROR_999);
-						result.setMsg("你已经领取过此优惠劵");
+						result.setMsg("您已经领取过此优惠劵");
 						return result;
 					}
 				}
 			}
-			
 			
 			return result;
 		}
