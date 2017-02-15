@@ -1,6 +1,7 @@
 package com.jhj.vo.org;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -16,6 +17,8 @@ public class LeaveSearchVo {
 	private Long parentId;
 	
 	private Long staffId; // 员工手机号对应的员工id, 已 保证是 在 同一个 门店 ！
+	
+	private List<Long> staffIds;
 	
 	private String mobile;	
 
@@ -101,6 +104,14 @@ public class LeaveSearchVo {
 
 	public void setLeaveStatus(String leaveStatus) {
 		this.leaveStatus = leaveStatus;
+	}
+
+	public List<Long> getStaffIds() {
+		return staffIds;
+	}
+
+	public void setStaffIds(List<Long> staffIds) {
+		this.staffIds = staffIds;
 	}
 
 

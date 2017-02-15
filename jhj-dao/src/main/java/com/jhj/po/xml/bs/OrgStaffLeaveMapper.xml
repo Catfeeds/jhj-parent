@@ -46,6 +46,13 @@
 		<if test="staffId != null and staffId !=0 ">
 			and staff_id = #{staffId,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="staffIds != null">
+			and staff_id in
+			<foreach item="item" index="index" collection="staffIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
 
 		<if test="mobile != null and mobile!=''">
 			and staff_id in (select staff_id from org_staffs where mobile = #{mobile,jdbcType=VARCHAR})
