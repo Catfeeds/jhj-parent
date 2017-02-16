@@ -526,11 +526,13 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		double serviceHour = order.getServiceHour();
 		
 		if (staffNums > 1 || serviceHour > type.getServiceHour()) {
-			BigDecimal tmpPrice = orderHourPay.multiply(new BigDecimal(serviceHour));
+			BigDecimal tmpPrice =  orderHourPay.multiply(new BigDecimal(serviceHour - type.getServiceHour()));
+			tmpPrice = orderPay.add(tmpPrice);
 			tmpPrice = tmpPrice.multiply(new BigDecimal(staffNums));
 			orderPay = tmpPrice;
 			
-			BigDecimal tmpOriginPrice = orderOriginHourPay.multiply(new BigDecimal(serviceHour));
+			BigDecimal tmpOriginPrice = orderOriginHourPay.multiply(new BigDecimal(serviceHour - type.getServiceHour()));
+			tmpOriginPrice = orderOriginPay.add(tmpOriginPrice);
 			tmpOriginPrice = tmpOriginPrice.multiply(new BigDecimal(staffNums));
 			orderOriginPay = tmpOriginPrice;
 			
