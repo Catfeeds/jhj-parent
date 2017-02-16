@@ -424,7 +424,9 @@ function changePrice(couponsValue) {
 		$("#orderPay").val(orderHourPay-couponsValue);
 	}
 	if (staffNums > 1 || serviceHours > minServiceHour) {
-		orderPay = orderHourPrice * serviceHours * staffNums-couponsValue;
+		orderPay = parseFloat(orderHourPay) + parseFloat(serviceHours - minServiceHour) * parseFloat(orderHourPrice);
+		orderPay = orderPay * staffNums-couponsValue;
+//		orderPay = orderHourPrice * serviceHours * staffNums-couponsValue;
 		var val = sessionStorage.getItem("totalOrderPay");
 		if(parseFloat(val)>0){
 			orderPay = val;

@@ -189,9 +189,15 @@ function setOrderHourTotal() {
 	}
 	
 	if (staffNums > 1 || serviceHours > minServiceHour) {
-		orderHourPay = orderHourPrice * serviceHours * staffNums;
 		
-		orderOriginalPay = orderOriginalPrice * serviceHours * staffNums;
+		orderHourPay = parseFloat(orderHourPay) + parseFloat(serviceHours - minServiceHour) * parseFloat(orderHourPrice);
+		orderHourPay = orderHourPay * staffNums;
+
+		orderOriginalPay = parseFloat(orderOriginalPay) + parseFloat(serviceHours - minServiceHour) * parseFloat(orderOriginalPrice);
+		orderOriginalPay = orderOriginalPay * staffNums;
+//		orderHourPay = orderHourPrice * serviceHours * staffNums;
+		
+//		orderOriginalPay = orderOriginalPrice * serviceHours * staffNums;
 	}
 	
 	$$("#orderHourPayStr").html(orderHourPay + "元");
