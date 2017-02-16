@@ -478,11 +478,11 @@ public class OrderController extends BaseController {
 			return result;
 		}
 				
-		if (serviceHour == 0 ) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg("小时数为0.");
-			return result;
-		}
+//		if (serviceHour == 0 ) {
+//			result.setStatus(Constants.ERROR_999);
+//			result.setMsg("小时数为0.");
+//			return result;
+//		}
 		
 		if (orderPay == null) {
 			result.setStatus(Constants.ERROR_999);
