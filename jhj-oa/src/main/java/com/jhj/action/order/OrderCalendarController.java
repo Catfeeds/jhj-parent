@@ -3,7 +3,6 @@ package com.jhj.action.order;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +27,6 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.service.bs.OrgStaffBlackService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffsService;
@@ -204,7 +202,6 @@ public class OrderCalendarController extends BaseController {
 				// 具体事件
 				List<EventVo> eventList = new ArrayList<EventVo>();
 				if(leaveList!=null && leaveList.size()>0){
-					String currentDate = DateUtil.getNow("yyyy-MM-dd");
 					for (OrgStaffLeave staffLeave : leaveList) {
 						Long leaveDate = staffLeave.getLeaveDate().getTime();
 						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
@@ -216,8 +213,7 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setServiceTime(leaveDate);
 							eventList.add(eventVo);
 						}
-						Long currentTimeStamp = TimeStampUtil.getNow();
-						if(weekDate.equals(currentDate) && leaveDate<=currentTimeStamp && leaveDateEnd>=currentTimeStamp){
+						if(weekDate.equals(startTimeStr) && leaveDate<=startTime*1000 && leaveDateEnd>=startTime*1000){
 							staffIdSet.add(staffId);
 						}
 					}
@@ -271,6 +267,7 @@ public class OrderCalendarController extends BaseController {
 					for(int i=0;i<staffFinanceList.size();i++){
 						OrgStaffFinance orgStaffFinance = staffFinanceList.get(i);
 						if(orgStaffFinance.getStaffId().longValue()==staffId.longValue()){
+							staffIdSet.add(orgStaffFinance.getStaffId());
 							EventVo eventVo = new EventVo();
 							eventVo.setDateDuration(weekDate);
 							eventVo.setEventName("黑名单");
@@ -286,13 +283,6 @@ public class OrderCalendarController extends BaseController {
 			disAndLeaveVo.setTimeEventList(timeEventList);
 			listVo.add(disAndLeaveVo);
 		}
-		if(staffFinanceList!=null && staffFinanceList.size()>0){
-			for(OrgStaffFinance sf:staffFinanceList){
-				if(!staffIdSet.contains(sf.getStaffId())){
-					staffIdSet.add(sf.getStaffId());
-				}
-			}
-		}
 
 		Gson gson = new Gson();
 		String json = gson.toJson(listVo);
@@ -305,6 +295,7 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
 		model.addAttribute("dispatchNum",staffListSize-staffIdSet.size());
+		model.addAttribute("startTimeStr", startTimeStr);
 
 		return "staffDisAndLeave/staffDisAndLeaveList";
 	}

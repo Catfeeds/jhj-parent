@@ -72,7 +72,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 										<div class="form-group">
 			                          		日期：
 											<input id="startTimeStr" name="startTimeStr" class="form-control form_datetime"
-											 style="width:220px; margin-bottom:0" readonly="true" />
+											 style="width:220px; margin-bottom:0" readonly="true" value="${startTimeStr }"/>
 										</div>
 										<!-- <div class="form-group">
 											结束时间：
