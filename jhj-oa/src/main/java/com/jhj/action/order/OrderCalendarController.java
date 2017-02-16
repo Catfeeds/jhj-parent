@@ -266,7 +266,7 @@ public class OrderCalendarController extends BaseController {
 				if(!staffFinanceList.isEmpty() && staffFinanceList.size()>0){
 					for(int i=0;i<staffFinanceList.size();i++){
 						OrgStaffFinance orgStaffFinance = staffFinanceList.get(i);
-						if(orgStaffFinance.getStaffId()==staffId){
+						if(orgStaffFinance.getStaffId().longValue()==staffId.longValue()){
 							EventVo eventVo = new EventVo();
 							eventVo.setDateDuration(weekDate);
 							eventVo.setEventName("黑名单");
