@@ -177,10 +177,7 @@ public class OrderCalendarController extends BaseController {
 		List<String> weekDateList = DateUtil.getLastWeekArray(startTimeStr);
 		Long compareTime=TimeStampUtil.getMillisOfDayFull(startTimeStr+" 12:00:00");
 		
-		int dispathNum=0,leaveNum=0,blackNum=0;
-		String today = DateUtil.getToday();
-		Long longToday=TimeStampUtil.getMillisOfDay(today);
-//		String tom=DateUtil.addDay(DateUtil.getNowOfDate(), 1, Calendar.DAY_OF_WEEK, "yyyy-MM-dd");
+		int blackNum=0;
 		Set<Long> set=new HashSet<Long>();
 		
 		//黑名单员工
@@ -212,9 +209,6 @@ public class OrderCalendarController extends BaseController {
 						Long leaveDate = staffLeave.getLeaveDate().getTime();
 						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
 						Long weekDateToday=TimeStampUtil.getMillisOfDay(weekDate);
-//						if(weekDate.equals(today) && leaveDate<=longToday && leaveDateEnd >=longToday){
-//							leaveNum++;
-//						}
 						if (leaveDate<=weekDateToday && leaveDateEnd >=weekDateToday) {
 							EventVo eventVo = new EventVo();
 							eventVo.setDateDuration(weekDate);
@@ -234,13 +228,6 @@ public class OrderCalendarController extends BaseController {
 						// 服务日期 , 格式 'yyyy-MM-dd'
 						Long serviceDate = staffDisVo.getServiceDate() * 1000;
 						String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
-						//统计今日明日派工订单数
-//						if(serviceDateStr.equals(today) && weekDate.equals(today)){
-//							if(!set.contains(staffId)){
-//								set.add(staffId);
-//								dispathNum++;
-//							}
-//						}
 						String orderNo = staffDisVo.getOrderNo();
 						if (serviceDateStr.equals(weekDate)) {
 							EventVo eventVo = new EventVo();
@@ -276,9 +263,22 @@ public class OrderCalendarController extends BaseController {
 						}
 					}
 				}
+				if(!staffFinanceList.isEmpty() && staffFinanceList.size()>0){
+					for(int i=0;i<staffFinanceList.size();i++){
+						OrgStaffFinance orgStaffFinance = staffFinanceList.get(i);
+						if(orgStaffFinance.getStaffId()==staffId){
+							EventVo eventVo = new EventVo();
+							eventVo.setDateDuration(weekDate);
+							eventVo.setEventName("黑名单");
+//							eventVo.setServiceTime(leaveDate);
+							eventList.add(eventVo);
+						}
+					}
+				}
 				timeEventVo.setEventList(eventList);
 				timeEventList.add(timeEventVo);
 			}
+			
 			disAndLeaveVo.setTimeEventList(timeEventList);
 			listVo.add(disAndLeaveVo);
 		}
@@ -286,6 +286,7 @@ public class OrderCalendarController extends BaseController {
 			blackNum=staffFinanceList.size();
 			for(OrgStaffFinance sf:staffFinanceList){
 				if(set.contains(sf.getStaffId())){
+//					set.add(sf.getStaffId());
 					blackNum--;
 				}
 			}
