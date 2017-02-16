@@ -177,8 +177,7 @@ public class OrderCalendarController extends BaseController {
 		List<String> weekDateList = DateUtil.getLastWeekArray(startTimeStr);
 		Long compareTime=TimeStampUtil.getMillisOfDayFull(startTimeStr+" 12:00:00");
 		
-		int blackNum=0;
-		Set<Long> set=new HashSet<Long>();
+		Set<Long> staffIdSet=new HashSet<Long>();
 		
 		//黑名单员工
 		OrgStaffFinanceSearchVo vo=new OrgStaffFinanceSearchVo();
@@ -205,6 +204,7 @@ public class OrderCalendarController extends BaseController {
 				// 具体事件
 				List<EventVo> eventList = new ArrayList<EventVo>();
 				if(leaveList!=null && leaveList.size()>0){
+					String currentDate = DateUtil.getNow("yyyy-MM-dd");
 					for (OrgStaffLeave staffLeave : leaveList) {
 						Long leaveDate = staffLeave.getLeaveDate().getTime();
 						Long leaveDateEnd = staffLeave.getLeaveDateEnd().getTime();
@@ -215,6 +215,10 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setEventName("请假中");
 							eventVo.setServiceTime(leaveDate);
 							eventList.add(eventVo);
+						}
+						Long currentTimeStamp = TimeStampUtil.getNow();
+						if(weekDate.equals(currentDate) && leaveDate<=currentTimeStamp && leaveDateEnd>=currentTimeStamp){
+							staffIdSet.add(staffId);
 						}
 					}
 					if(startTimeStr.equals(weekDate)){
@@ -283,11 +287,9 @@ public class OrderCalendarController extends BaseController {
 			listVo.add(disAndLeaveVo);
 		}
 		if(staffFinanceList!=null && staffFinanceList.size()>0){
-			blackNum=staffFinanceList.size();
 			for(OrgStaffFinance sf:staffFinanceList){
-				if(set.contains(sf.getStaffId())){
-//					set.add(sf.getStaffId());
-					blackNum--;
+				if(!staffIdSet.contains(sf.getStaffId())){
+					staffIdSet.add(sf.getStaffId());
 				}
 			}
 		}
@@ -302,7 +304,7 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("weekDateModel", weekDateList);
 		model.addAttribute("amStaffSize",staffListSize-leaveStaffSize-dispatchSizeAM );
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
-		model.addAttribute("dispatchNum",staffListSize-blackNum-leaveStaffSize);
+		model.addAttribute("dispatchNum",staffListSize-staffIdSet.size());
 
 		return "staffDisAndLeave/staffDisAndLeaveList";
 	}
