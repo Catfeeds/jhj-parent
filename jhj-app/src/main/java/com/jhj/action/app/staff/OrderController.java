@@ -477,12 +477,6 @@ public class OrderController extends BaseController {
 			result.setMsg("开始服务的订单才能加时");
 			return result;
 		}
-				
-//		if (serviceHour == 0 ) {
-//			result.setStatus(Constants.ERROR_999);
-//			result.setMsg("小时数为0.");
-//			return result;
-//		}
 		
 		if (orderPay == null) {
 			result.setStatus(Constants.ERROR_999);
@@ -495,6 +489,14 @@ public class OrderController extends BaseController {
 			result.setMsg("加时价格不正确.");
 			return result;
 		}
+		
+		if (serviceHour == 0 && orderPay.compareTo(BigDecimal.ZERO) == 0 ) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("加时小时和价格都为0，无效的加时。");
+			return result;
+		}
+		
+		
 		
 		//检测延长的时间是否跟服务人员有冲突
 		Long serviceDate = order.getServiceDate();
