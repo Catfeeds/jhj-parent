@@ -190,61 +190,62 @@ myApp.onPageInit('order-lib-cal',function(page) {
     }
     //获取当前选择的时间，如何没有选择时间默认是当前时间
     function getServiceDate(){
-        var serviceDate='';
-        var year = $$(".rilikongjian p").text();
-        var month = $$("#rilikongjian1-month").text();
-        var day = $$(selectDay).text();
-        if($$(selectDay).text()==undefined ||$$(selectDay).text()=="" || $$(selectDay).text()==null){
-            day=moment(date).add(count, 'days').format("DD");
-        }
-        var pre_li = $$(selectDay).prevAll("li");
-        var after_li = $$(selectDay).nextAll("li");
-        var flag1=false;
-        var flag2=false;
-        if(pre_li.length>0 && after_li.length>0){
-            for(var i=0;i<pre_li.length;i++){
-                var val = pre_li[i].innerHTML;
-                if(val<day){
-                    flag1=true;
-                }else{
-                    flag1=false;
-                }
-            }
-            for(var j=0;j<after_li.length;j++){
-                var val=after_li[j].innerHTML;
-                if(val>day ||val<day){
-                    flag2=true;
-                }
-            }
-            if(flag1 && flag2){
-                serviceDate=year+"-"+month+"-"+day;
-            }else{
-            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
-            }
-        }
+    	 var serviceDate='';
+         var year = $$(".rilikongjian p").text();
+         var month = $$("#rilikongjian1-month").text();
+         var day = $$(selectDay).text();
+         if($$(selectDay).text()==undefined ||$$(selectDay).text()=="" || $$(selectDay).text()==null){
+             day=moment(date).add(count, 'days').format("DD");
+         }
+         var pre_li = $$(selectDay).prevAll("li");
+         var after_li = $$(selectDay).nextAll("li");
+	 	 var flag=0;
+	 	 var flag1=0;
+         var flag2=0;
+         if(pre_li.length>0 && after_li.length>0){
+             for(var i=0;i<pre_li.length;i++){
+                 var val = $$(pre_li[i]).text();
+                 if(val<day){
+                	 flag++;
+                 }else{
+                     flag1++;
+                 }
+             }
+             for(var j=0;j<after_li.length;j++){
+                 var val=$$(after_li[j]).text();
+                 if(val>day ||val<day){
+                      flag2++;
+                 }
+             }
+             if(flag>0 && flag2>0){
+                 serviceDate=year+"-"+month+"-"+day;
+             }else{
+             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             }
+         }
 
-        if(pre_li.length==0){
-            var nextVal=$$(after_li[0]).text();
-            var next5Val=$$(after_li[5]).text();
-            if(nextVal>day || (nextVal<day && next5Val<day)){
-                serviceDate=year+"-"+month+"-"+day;
-            }else{
-            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
-            }
-        }
-        if(after_li.length==0){
-            var preVal=$$(pre_li[0]).text();
-            var pre5Val=$$(pre_li[5]).text();
-            if(preVal<day && pre5Val<day){
-                serviceDate=year+"-"+month+"-"+day;
-            }else{
-            	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
-            }
-        }
-        if(after_li.length==0 && pre_li.length==0){
-            serviceDate=year+"-"+month+"-"+day;
-        }
-        return serviceDate;
+         if(pre_li.length==0){
+             var nextVal=$$(after_li[0]).text();
+             var next5Val=$$(after_li[5]).text();
+             if(nextVal>day || (nextVal<day && next5Val<day)){
+                 serviceDate=year+"-"+month+"-"+day;
+             }else{
+             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             }
+         }
+         if(after_li.length==0){
+             var preVal=$$(pre_li[0]).text();
+             var pre5Val=$$(pre_li[5]).text();
+             if(preVal<day && pre5Val<day){
+                 serviceDate=year+"-"+month+"-"+day;
+             }else{
+             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             }
+         }
+         if(after_li.length==0 && pre_li.length==0){
+             serviceDate=year+"-"+month+"-"+day;
+         }
+         return serviceDate;
     }
 
     $$("#rilikongjian3-dateTime li").on("click",function(){
@@ -440,6 +441,30 @@ myApp.onPageInit('order-lib-cal',function(page) {
     	}
     }
     filterWeek(serviceTypeId);
+    
+    function isFull(serviceDateStr){
+    	var param = {};
+    	param.service_type_id = sessionStorage.getItem("service_type_id");
+    	param.addr_id = localStorage.getItem("default_addr_id");
+    	if(serviceDateStr==undefined || serviceDateStr==null || serviceDateStr==''){
+    		serviceDateStr = moment().format("YYYY-MM-DD");
+    	}
+    	param.service_date_str = serviceDateStr;
+    	$$.ajax({
+    		type:"POST",
+    		url:siteAPIPath+"order/check_dispatch.json",
+    		data:param,
+    		success:function(data){
+    			console.log(data)
+    			if(data.status=='0' && data.msg=='ok'){
+    				
+    			}
+    		}
+    	});
+    }
+    
+    isFull();
+    
 
     //获取选择的服务时间
     $$("#all-button2").click(function(){
@@ -454,4 +479,6 @@ myApp.onPageInit('order-lib-cal',function(page) {
             return;
         }
     });
+    
 });
+

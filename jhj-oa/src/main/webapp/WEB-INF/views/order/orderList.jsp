@@ -293,7 +293,7 @@
 	      <div class="modal-body">
 	        <form  name="cancleForms">
 	        	<input type="hidden" id="modal-orderNo" value=""/>
-	        	<textarea name="remarks" id="remarks" rows="3" cols="78" placeholder="备注信息"></textarea>
+	        	<textarea name="remarks" id="remarks" rows="3" cols="78" maxlength='200' placeholder="备注信息"></textarea>
 	        	<span id="remark-error"></span>
 	        </form>
 	      </div>
