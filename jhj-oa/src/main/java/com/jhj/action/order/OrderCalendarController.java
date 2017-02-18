@@ -161,8 +161,8 @@ public class OrderCalendarController extends BaseController {
 		
 		Date startDate = DateUtil.parse(startTimeStr);
 		Date endDate = DateUtil.parse(endTimeStr);
-		leaveSearchVo.setRangeStartDate(startDate);
-		leaveSearchVo.setRangeEndDate(endDate);
+//		leaveSearchVo.setRangeStartDate(startDate);
+//		leaveSearchVo.setRangeEndDate(endDate);
 		leaveSearchVo.setLeaveStatus("1");
 
 		//请假人员统计

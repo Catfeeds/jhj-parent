@@ -32,6 +32,8 @@ public class LeaveSearchVo {
 	
 	//请假状态  1= 请假中  2= 请假取消
     private String leaveStatus;
+    
+    private String staffName;
 
 	
 	public Long getOrgId() {
@@ -112,6 +114,14 @@ public class LeaveSearchVo {
 
 	public void setStaffIds(List<Long> staffIds) {
 		this.staffIds = staffIds;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
 	}
 
 

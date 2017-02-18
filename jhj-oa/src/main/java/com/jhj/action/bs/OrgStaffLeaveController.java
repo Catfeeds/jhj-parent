@@ -1,6 +1,7 @@
 package com.jhj.action.bs;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +77,15 @@ public class OrgStaffLeaveController extends BaseController {
 		if (!StringUtil.isEmpty(searchVo.getLeaveDateStr())) {
 			Date leaveDate = DateUtil.parse(searchVo.getLeaveDateStr());
 			searchVo.setLeaveDate(leaveDate);
+		}
+		
+		if(searchVo.getStaffName()!=null && !searchVo.getStaffName().equals("")){
+			String staffName = searchVo.getStaffName();
+			try {
+				searchVo.setStaffName(new String(staffName.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		PageInfo pageList = leaveService.selectByListPage(searchVo, pageNo, pageSize);
