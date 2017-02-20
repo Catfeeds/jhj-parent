@@ -26,6 +26,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     var count=0;
     var dayTime="";
     var selectDay="#rilikongjian3-day li[class='beijingse']";
+    var dayNum=1;
 
     //日历天数显示
     function getDay(cal){
@@ -76,13 +77,6 @@ myApp.onPageInit('order-lib-cal',function(page) {
             filterServiceDate();
             filterWeek(serviceTypeId);
             
-            /*-----------暂时添加的代码需要删除------*/
-            if(s<'2017-01-30'){
-        		$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
-        		return false;
-        	}
-            /*-----------暂时添加的代码需要删除------*/
-            
         });
         $$("#rilikongjian3-dateTime li").removeClass("hour-beijingse");
         filterServiceDate();
@@ -97,71 +91,47 @@ myApp.onPageInit('order-lib-cal',function(page) {
     }
     getDay(date);
 
-    //前一天
-    function getPreDay(c){
-        var preDay = moment(date).add(c, 'days');
+    //日期变化
+    function getPreDay(selectDate,c){
+        var preDay;
+        if(selectDate==undefined || selectDate==null || selectDate==''){
+        	preDay = moment(date).add(c, 'days');
+    	}else{
+    		preDay = moment(selectDate).add(c, 'days');
+    	}
         nowDate=preDay;
         getDay(preDay);
-        
-        /*---------暂时添加的代码------------*/
-        if(preDay.format("YYYY-MM-DD")<'2017-01-30'){
-        	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
-    		return false;
-        }
-        /*---------暂时添加的代码------------*/
     }
 
-    //后一天
-    function getNextDay(c){
-        var afterDay = moment(date).add(c, 'days');
-        nowDate=afterDay;
-        getDay(afterDay);
-        
-        /*---------暂时添加的代码------------*/
-        if(afterDay.format("YYYY-MM-DD")<'2017-01-30'){
-        	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
-    		return false;
-        }
-        /*---------暂时添加的代码------------*/
-    }
+//    //后一天
+//    function getNextDay(c){
+//        var afterDay = moment(date).add(c, 'days');
+//        nowDate=afterDay;
+//        getDay(afterDay);
+//    }
 
     //日历减1天
     $$("#rilikongjian1-left").click(function(){
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
         $$("#all-button2").removeClass("all-button2").addClass("all-button11");
-        var dy=$$(selectDay).parent().find(":first-child").text();
-        if(dy==null){
-        	dy = $$("#rilikongjian3-day").find("li[class='beijingse']").text();
+        dayTime="";
+        var selectDate = getServiceDate();
+        var comp_day = moment(selectDate).add(-1,'days').format("YYYY-MM-DD");
+        if(comp_day>=date){
+        	getPreDay(selectDate,-dayNum);
         }
-        var cmp='';
-        if(dy==null ||dy==""){
-            dy=moment(getServiceDate()).subtract(1, 'days');
-            if(dy.format("YYYY-MM-DD")<=date) return false;
-            var com_dy=moment(getServiceDate()).format("DD");
-            var dy_month = dy.format("YYYY-MM");
-            var com_month = moment(getServiceDate()).format("YYYY-MM");
-            var ss=$$(dy).parent().find(":first-child").text();
-            if(ss>com_dy && dy_month<=com_month){
-            	cmp = getServiceDate();
-            }else if(ss<com_dy &&dy_month<=com_month){
-            	cmp = getServiceDate();
-            }else{
-            	cmp = moment(date).format("YYYY-MM")+"-"+dy.format("DD");
-            }
-        }else{
-        	cmp=moment().format("YYYY-MM")+"-"+dy;
+        if(comp_day<=date && selectDate>date){
+        	var days = moment(selectDate).diff(moment(date),'days');
+        	getPreDay(selectDate,-days);
         }
-        if(cmp<=date) return false;
-        count--;
-        getPreDay(count);
     });
 
     //日历加1天
     $$("#rilikongjian1-right").click(function(){
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
         $$("#all-button2").removeClass("all-button2").addClass("all-button11");
-        count++;
-        getNextDay(count);
+        var selectDate = getServiceDate();
+        getPreDay(selectDate,dayNum);
     });
 
     //遍历时间
@@ -193,9 +163,9 @@ myApp.onPageInit('order-lib-cal',function(page) {
     	 var serviceDate='';
          var year = $$(".rilikongjian p").text();
          var month = $$("#rilikongjian1-month").text();
-         var day = $$(selectDay).text();
-         if($$(selectDay).text()==undefined ||$$(selectDay).text()=="" || $$(selectDay).text()==null){
-             day=moment(date).add(count, 'days').format("DD");
+         var day = $$("#rilikongjian3-day li[class='beijingse']").text();
+         if(day==undefined || day==null || day==''){
+        	 day = $$(selectDay).text();
          }
          var pre_li = $$(selectDay).prevAll("li");
          var after_li = $$(selectDay).nextAll("li");
@@ -217,7 +187,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
                       flag2++;
                  }
              }
-             if(flag>0 && flag2>0){
+             if(flag==pre_li.length && flag2==after_li.length){
                  serviceDate=year+"-"+month+"-"+day;
              }else{
              	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
