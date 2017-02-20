@@ -20,8 +20,8 @@ public class TestOrderDispatchController extends JUnitActionBase{
 
      	MockHttpServletRequestBuilder postRequest = post(url);
 	    postRequest = postRequest.param("service_type_id", "28");
-	    postRequest = postRequest.param("service_date_str", "2017-02-23");
-	    postRequest = postRequest.param("addr_id", "4227");
+	    postRequest = postRequest.param("service_date_str", "2017-02-22");
+	    postRequest = postRequest.param("addr_id", "4468");
 
 	    
 	    ResultActions resultActions = mockMvc.perform(postRequest);

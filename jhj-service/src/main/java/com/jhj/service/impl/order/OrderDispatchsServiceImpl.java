@@ -1177,7 +1177,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			orgIds.add(orgId);
 		}
 		
-		if (orgIds.isEmpty()) return datas;
+		if (orgIds.isEmpty())  {
+			//如果匹配不到任何云店，则显示所有都为已约满.
+			for (int i = 0 ; i < datas.size(); i++) {
+				Map<String, String> item = datas.get(i);				
+				item.put("is_full", "1");
+				datas.set(i, item);
+			}
+			return datas;
+		}
 		
 		List<Long> staffIds = new ArrayList<Long>();
 		//先找出云店下所有的员工,并且具有该项技能的人员.
@@ -1189,7 +1197,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		for (OrgStaffs os : staffList) {
 			if (!staffIds.contains(os.getStaffId())) staffIds.add(os.getStaffId());
 		}
-		System.out.println("总人数:" + staffIds.size());
+//		System.out.println("总人数:" + staffIds.size());
 		//排除黑名单人员
 		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
 		searchVo2.setIsBlack((short) 1);
@@ -1199,7 +1207,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				staffIds.remove(osf.getStaffId());
 			}
 		}
-		System.out.println("排除黑名单后总人数:" + staffIds.size());
+//		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		//排除请假人员
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
 		Date leaveDate = DateUtil.parse(serviceDateStr);
@@ -1213,7 +1221,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 		}
-		System.out.println("排除请假后总人数:" + staffIds.size());
+//		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) return datas;
 		
 		int total = staffIds.size();
@@ -1256,7 +1264,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			while (stepHour <= serviceHour) {
 				
 				String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + stepHour * 60 * 60) * 1000), "HH:mm");
-				System.out.println(orderServiceDateStr);
+//				System.out.println(orderServiceDateStr);
 				
 				
 				for (int i = 0 ; i < datas.size(); i++) {
