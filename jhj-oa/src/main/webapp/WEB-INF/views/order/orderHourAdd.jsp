@@ -120,8 +120,8 @@
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务时间
 											</label>
-											<div class="col-md-5">
-												<input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" data-toggle="modal" data-target="#orderCalendar"/>
+											<div class="col-md-5" onclick="selectServiceDateTime()">
+												<input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" data-toggle="modal" data-target=""/>
 												<!-- <input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" /> -->
 											</div>
 										</div>

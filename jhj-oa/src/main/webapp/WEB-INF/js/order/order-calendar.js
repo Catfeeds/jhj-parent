@@ -1,7 +1,7 @@
 /**
  * Created by hulj on 2016/10/20.
  */
-$(function(){
+function selectServiceDate(){
 
     var weekDay=['周日','周一','周二','周三','周四','周五','周六'];
     var tempWeek=['周日','周一','周二','周三','周四','周五','周六'];
@@ -124,12 +124,20 @@ $(function(){
     //是否约满
     function isFull(serviceDateStr){
     	var param = {};
-    	param.service_type_id = sessionStorage.getItem("service_type_id");
-    	param.addr_id = localStorage.getItem("default_addr_id");
+    	param.service_type_id = $("#serviceType").val();
+    	param.addr_id = $("#addrId").val();
     	if(serviceDateStr==undefined || serviceDateStr==null || serviceDateStr==''){
     		serviceDateStr = moment().format("YYYY-MM-DD");
     	}
     	param.service_date_str = serviceDateStr;
+//    	if(service_type_id==undefined || service_type_id==null || service_type_id==''){
+//    		alert("请选服务类型！");
+//    		return false;
+//    	}
+//    	if(addr_id==undefined || addr_id==null || addr_id==''){
+//    		alert("请选择服务地址！");
+//    		return false;
+//    	}
     	$.ajax({
     		type:"POST",
     		url:"http://localhost:8080/jhj-app/app/order/check_dispatch.json",
@@ -178,10 +186,10 @@ $(function(){
     		$("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
     		$(this).find("p").addClass("rili-day");
 //    		tomm();
-    		if(cal==date){
+    		if(getServiceDate()==date){
     			if(nowHour>=16){
-    				$("#show-day li").removeClass("rili-time");
-    				$(selectDay).addClass("rili-time");
+    				$("#show-day li p").removeClass("rili-day");
+    				$(selectDay).find("p").addClass("rili-day");
     				$("#show-dateTime li").addClass("rili-time");
     			}
     		}
@@ -283,9 +291,9 @@ $(function(){
                 $("#show-day").find("li:nth-child(2)").addClass("rili-time");
             }
         }
-        if(nyr>date){
-            $("#show-dateTime").find("li").removeClass("rili-time-no");
-        }
+//        if(nyr>date){
+//            $("#show-dateTime").find("li").removeClass("rili-time-no");
+//        }
     }
     
     function filterBackDate(arrys,compNum){
@@ -326,4 +334,19 @@ $(function(){
             return false;
         }
     });
-});
+}
+
+function selectServiceDateTime(){
+	var service_type_id = $("#serviceType").val();
+	var addr_id = $("#addrId").val();
+	if(service_type_id==undefined || service_type_id==null || service_type_id==''){
+		alert("请选服务类型！");
+		return false;
+	}
+	if(addr_id==undefined || addr_id==null || addr_id==''){
+		alert("请选择服务地址！");
+		return false;
+	}
+	document.getElementById('serviceDate').setAttribute("data-target","#orderCalendar");
+	selectServiceDate();
+}
