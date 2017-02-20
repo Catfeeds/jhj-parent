@@ -103,13 +103,6 @@ myApp.onPageInit('order-lib-cal',function(page) {
         getDay(preDay);
     }
 
-//    //后一天
-//    function getNextDay(c){
-//        var afterDay = moment(date).add(c, 'days');
-//        nowDate=afterDay;
-//        getDay(afterDay);
-//    }
-
     //日历减1天
     $$("#rilikongjian1-left").click(function(){
         $$("#rilikongjian3-dateTime").find("li").removeClass("beijingse");
@@ -248,67 +241,31 @@ myApp.onPageInit('order-lib-cal',function(page) {
             var lis = $$("#rilikongjian3-dateTime").find("li");
 
             if(nowHour>=0 && nowHour<=4){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<2){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+                filterPreCurrentTime(lis,2);
             }
             if(nowHour>=4 && nowHour<=6){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<4){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,4);
             }
             if(nowHour==7){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<6){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,6);
             }
             if(nowHour>=8 && nowHour<=9){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<10){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,10);
             }
             if(nowHour==10){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<12){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,12);
             }
             if(nowHour==11){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<14){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,14);
             }
             if(nowHour==12){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<16){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,16);
             }
             if(nowHour==13){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<18){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,18);
             }
             if(nowHour>=14 && nowHour<=15){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<20){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,20);
             }
             if(nowHour>=16 && nowHour<=19){
                 var d=moment().add(1,"days").format("DD");
@@ -323,11 +280,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
                 }
             }
             if(nowHour>=20 && nowHour<=23){
-                for(var i=0;i<=lis.length;i++){
-                    if(i<2){
-                        $$(lis[i]).addClass("hour-beijingse");
-                    }
-                }
+            	filterPreCurrentTime(lis,2);
                 $$("#rilikongjian3-day li").removeClass("beijingse");
                 $$("#rilikongjian3-day").find("li:nth-child(2)").addClass("beijingse");
             }
@@ -339,15 +292,16 @@ myApp.onPageInit('order-lib-cal',function(page) {
     }
     tomm();
     
-    
-    /*---------------暂时添加代码-------------------*/
-    if(date<'2017-01-30'){
-    	$$("#rilikongjian3-dateTime li").addClass("hour-beijingse");
+    //当前时间之前的时间不可选择
+    function filterPreCurrentTime(arrays,timeNum){
+    	for(var i=0;i<=arrays.length;i++){
+            if(i<timeNum){
+                $$(arrays[i]).addClass("hour-beijingse");
+            }
+        }
     }
-    /*---------------暂时添加代码-------------------*/
     
     
-
     //查询服务人员的已有派工的服务时间
     if(staffId!=0 && staffId!=null && staffId!=''){
     	$$.ajax({

@@ -7,13 +7,10 @@ $(function(){
     var tempWeek=['周日','周一','周二','周三','周四','周五','周六'];
     var time=['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
         '14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
-    var count=0;
     var dayNum=7;
     //获取当前日期
     var date=moment().format("YYYY-MM-DD");
-    var nowDate=date;
     var nowHour=moment().hour();
-    
     var dayTime=""; 
     var selectDay="#show-day li p[class='rili-day']";
     
@@ -195,9 +192,6 @@ $(function(){
     	$("#show-day").find(":first-child p").addClass("rili-day");
     	var compareDate = getServiceDate();
     	isFull(compareDate);
-//    	if(cmp==date){
-//    		tomm(cmp);
-//    	}
     }
     getDay(date);
 
@@ -209,7 +203,6 @@ $(function(){
     	}else{
     		afterDay = moment(selectDay).add(countDay, 'days');
     	}
-        nowDate=afterDay;
         getDay(afterDay);
     }
 
