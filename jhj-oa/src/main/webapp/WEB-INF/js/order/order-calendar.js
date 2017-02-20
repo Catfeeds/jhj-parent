@@ -19,25 +19,20 @@ function selectServiceDate(){
         var dateTime='';
         var html = $("#show-dateTime").html();
         for(var i=0;i<time.length;i++){
-            var notSelectTime=['11:30','12:00','12:30'];
-            if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
-                dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
-            }else{
-            	if(val==undefined || val==null || val==''){
-    				dateTime+="<li>"+time[i]+"</li>";
-            	}else{
-            		for(var j = 0 ; j < val.length;j++){
-            			if(time[i]==val[j].service_hour){
-            				if(val[j].is_full==0){
-            					dateTime+="<li>"+time[i]+"</li>";
-            				}
-            				if(val[j].is_full==1){
-            					dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
-            				}
-            			}
-            		}
-            	}
-            }
+            if(val==undefined || val==null || val==''){
+				dateTime+="<li>"+time[i]+"</li>";
+        	}else{
+        		for(var j = 0 ; j < val.length;j++){
+        			if(time[i]==val[j].service_hour){
+        				if(val[j].is_full==0){
+        					dateTime+="<li>"+time[i]+"</li>";
+        				}
+        				if(val[j].is_full==1){
+        					dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
+        				}
+        			}
+        		}
+        	}
         }
         $("#show-dateTime").html(dateTime);
         $("#show-dateTime li").on("click",function(obj){
@@ -130,14 +125,6 @@ function selectServiceDate(){
     		serviceDateStr = moment().format("YYYY-MM-DD");
     	}
     	param.service_date_str = serviceDateStr;
-//    	if(service_type_id==undefined || service_type_id==null || service_type_id==''){
-//    		alert("请选服务类型！");
-//    		return false;
-//    	}
-//    	if(addr_id==undefined || addr_id==null || addr_id==''){
-//    		alert("请选择服务地址！");
-//    		return false;
-//    	}
     	$.ajax({
     		type:"POST",
     		url:"http://localhost:8080/jhj-app/app/order/check_dispatch.json",
@@ -185,7 +172,6 @@ function selectServiceDate(){
     		$("#show-dateTime li").removeClass("rili-time");
     		$("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
     		$(this).find("p").addClass("rili-day");
-//    		tomm();
     		if(getServiceDate()==date){
     			if(nowHour>=16){
     				$("#show-day li p").removeClass("rili-day");
@@ -291,9 +277,6 @@ function selectServiceDate(){
                 $("#show-day").find("li:nth-child(2)").addClass("rili-time");
             }
         }
-//        if(nyr>date){
-//            $("#show-dateTime").find("li").removeClass("rili-time-no");
-//        }
     }
     
     function filterBackDate(arrys,compNum){
