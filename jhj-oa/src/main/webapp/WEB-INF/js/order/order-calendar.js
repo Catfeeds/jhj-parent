@@ -125,9 +125,13 @@ function selectServiceDate(){
     		serviceDateStr = moment().format("YYYY-MM-DD");
     	}
     	param.service_date_str = serviceDateStr;
+    	var host = window.location.host;
+		var appName = "jhj-app";
+		var localUrl = "http://" + host;
+		var siteAPIPath = localUrl + "/" + appName + "/app/";
     	$.ajax({
     		type:"POST",
-    		url:"http://localhost:8080/jhj-app/app/order/check_dispatch.json",
+    		url:siteAPIPath+"order/check_dispatch.json",
     		data:param,
     		success:function(data){
     			if(data.status=='0' && data.msg=='ok'){
@@ -180,7 +184,6 @@ function selectServiceDate(){
     			}
     		}
     		isFull(getServiceDate());
-    		
     	});
     	$("#show-dateTime li").removeClass("rili-time-no");
     	$("#show-day").find(":first-child p").addClass("rili-day");
