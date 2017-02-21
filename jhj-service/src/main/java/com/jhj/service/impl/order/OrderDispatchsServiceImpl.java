@@ -1222,7 +1222,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 		}
 //		System.out.println("排除请假后总人数:" + staffIds.size());
-		if (staffIds.isEmpty()) return datas;
+		if (staffIds.isEmpty()) {
+			//如果人数都为0，则显示所有都为已约满.
+			for (int i = 0 ; i < datas.size(); i++) {
+				Map<String, String> item = datas.get(i);				
+				item.put("is_full", "1");
+				datas.set(i, item);
+			}
+			return datas;
+		}
 		
 		int total = staffIds.size();
 		//找出当天所有的派工订单和人员.
@@ -1246,9 +1254,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 				
 				
-			
-			Long serviceDate = orderDispatch.getServiceDate();
-			
+			//已 排班的 阿姨, 时间跨度为 服务开始前2小时 - 服务结束时间
+			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
+
 			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
 			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
 			if (servcieDateTmpInt > 0 && servcieDateTmpInt < 30) {
@@ -1257,8 +1265,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				serviceDate = serviceDate + 30 * 60 - servcieDateTmpInt * 60;
 			}
 			
-			
-			Double serviceHour = orderDispatch.getServiceHours();
+			//时间跨度为结束时间 + 1小时59分钟被占用
+			Double serviceHour = orderDispatch.getServiceHours() + 4;
 			
 			Double stepHour = (double) 0;
 			while (stepHour <= serviceHour) {
