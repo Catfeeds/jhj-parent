@@ -1,4 +1,3 @@
-
 // 百度地图API功能
 // 百度地图API功能
 var map = new BMap.Map("allmap"); // 创建Map实例
@@ -7,7 +6,7 @@ map.addControl(new BMap.MapTypeControl()); // 添加地图类型控件
 map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
 map.enableScrollWheelZoom(false); // 开启鼠标滚轮缩放
 
-//map.setMapStyle({style:"grayscale"});
+// map.setMapStyle({style:"grayscale"});
 
 var top_left_control = new BMap.ScaleControl({
 	anchor : BMAP_ANCHOR_TOP_LEFT
@@ -70,7 +69,7 @@ function loadStaffMapDatas() {
 	});
 }
 
-function setOnlines(datas) {	
+function setOnlines(datas) {
 	// 设置门店地图标注
 	$.each(datas, function(i, obj) {
 		var name = obj.name;
@@ -94,9 +93,9 @@ function setOnlines(datas) {
 			lineHeight : "20px",
 			lineWeight : "50px",
 			fontFamily : "微软雅黑",
-			background :"url('../img/baidumap/staffImg.png') no-repeat center",
-			border:'0',
-			backgroundColor:"0"
+			background : "url('../img/baidumap/staffImg.png') no-repeat center",
+			border : '0',
+			backgroundColor : "0"
 		});
 		
 		var iconUrl = "";
@@ -115,9 +114,9 @@ function setOnlines(datas) {
 		map.addOverlay(marker);
 		
 		var poiName = obj.poi_name;
-		if (poiName == undefined )  poiName = "";
-		var msgContent = "时间：" + obj.poi_time_str + "<br>位置："+ poiName;
-		addClickHandler(msgContent,marker);
+		if (poiName == undefined) poiName = "";
+		var msgContent = "时间：" + obj.poi_time_str + "<br>位置：" + poiName;
+		addClickHandler(msgContent, marker);
 	});
 }
 
@@ -150,7 +149,7 @@ function loadStaffRoute() {
 		alert("请指定日期.");
 		return false;
 	}
-		
+	
 	var staffId = $("#selectStaff").val();
 	
 	if (staffId == undefined || staffId == "") {
@@ -167,8 +166,7 @@ function loadStaffRoute() {
 	params.staff_id = staffId;
 	params.merge_distance = mergeDistance;
 	
-	
-	//读取地图信息
+	// 读取地图信息
 	$.ajax({
 		type : 'GET',
 		url : '/jhj-oa/bs/get_staff_trail.json',
@@ -188,7 +186,7 @@ function loadStaffRoute() {
 		}
 	});
 	
-	//读取订单信息.
+	// 读取订单信息.
 	$.ajax({
 		type : 'GET',
 		url : '/jhj-oa/order/get_list_by_date.json',
@@ -203,18 +201,18 @@ function loadStaffRoute() {
 			
 			var htmlStr = "";
 			$.each(tableDatas, function(i, obj) {
-				htmlStr+= "<tr>";
-				htmlStr+= "<td>" + obj.staff_name + "</td>";
-				htmlStr+= "<td>" + obj.staff_nums + "</td>";
-				htmlStr+= "<td>" + obj.order_type_name + "</td>";
-				htmlStr+= "<td>" + obj.service_date_str + "</td>";
-				htmlStr+= "<td>" + obj.service_hour + "</td>";
-				htmlStr+= "<td>" + obj.order_address + "</td>";
-				htmlStr+= "<td>" + obj.order_op_from_name + "</td>";
-				htmlStr+= "<td>" + obj.order_status_name + "</td>";
-				htmlStr+= "<td>" + obj.pay_type_name + "</td>";
-				htmlStr+= "<td>" + obj.order_pay + "</td>";
-				htmlStr+= "<tr>";
+				htmlStr += "<tr>";
+				htmlStr += "<td>" + obj.staff_name + "</td>";
+				htmlStr += "<td>" + obj.staff_nums + "</td>";
+				htmlStr += "<td>" + obj.order_type_name + "</td>";
+				htmlStr += "<td>" + obj.service_date_str + "</td>";
+				htmlStr += "<td>" + obj.service_hour + "</td>";
+				htmlStr += "<td>" + obj.order_address + "</td>";
+				htmlStr += "<td>" + obj.order_op_from_name + "</td>";
+				htmlStr += "<td>" + obj.order_status_name + "</td>";
+				htmlStr += "<td>" + obj.pay_type_name + "</td>";
+				htmlStr += "<td>" + obj.order_pay + "</td>";
+				htmlStr += "<tr>";
 			});
 			
 			if (htmlStr != "") {
@@ -230,7 +228,7 @@ function loadStaffRoute() {
 }
 
 function setStaffRoute(trailDatas) {
-
+	
 	// 如果只有一个点，则不需要折线，地图标一个点即可.
 	if (trailDatas.length == 1) {
 		var o = trailDatas[0];
@@ -239,31 +237,27 @@ function setStaffRoute(trailDatas) {
 	}
 	
 	showPoly(trailDatas);
-
+	
 }
 
-
-
 function showPoly(trailDatas) {
-		
+	
 	var pointList = [];
 	$.each(trailDatas, function(i, obj) {
-				
+		
 		var p = new BMap.Point(obj.lng, obj.lat, obj.poi_name);
 		pointList.push(p);
 		
 		addMakerPoint(obj.lng, obj.lat, obj.add_time_str, obj.poi_name);
-
+		
 	});
-	
 	
 	var group = Math.floor(pointList.length / 11);
 	var mode = pointList.length % 11;
 	
-	var driving = new BMap.DrivingRoute(map, 
-		{
-//		renderOptions:{map: map, autoViewport: true},
-		policy: BMAP_DRIVING_POLICY_AVOID_HIGHWAYS, 
+	var driving = new BMap.DrivingRoute(map, {
+		// renderOptions:{map: map, autoViewport: true},
+		policy : BMAP_DRIVING_POLICY_AVOID_HIGHWAYS,
 		onSearchComplete : function(results) {
 			if (driving.getStatus() == BMAP_STATUS_SUCCESS) {
 				var plan = driving.getResults().getPlan(0);
@@ -291,14 +285,14 @@ function showPoly(trailDatas) {
 	
 }
 
-//信息窗口配置
+// 信息窗口配置
 var opts = {
-		width : 250, // 信息窗口宽度
-		height : 80, // 信息窗口高度
-		title : "", // 信息窗口标题
-		enableMessage : true
-	// 设置允许信息窗发送短息
-	};
+	width : 250, // 信息窗口宽度
+	height : 80, // 信息窗口高度
+	title : "", // 信息窗口标题
+	enableMessage : true
+// 设置允许信息窗发送短息
+};
 
 function addMakerPoint(lng, lat, title, content) {
 	
@@ -316,9 +310,9 @@ function addMakerPoint(lng, lat, title, content) {
 		lineHeight : "20px",
 		lineWeight : "50px",
 		fontFamily : "微软雅黑",
-		background :"url('../img/baidumap/staffImg.png') no-repeat center",
-		border:'0',
-		backgroundColor:"0"
+		background : "url('../img/baidumap/staffImg.png') no-repeat center",
+		border : '0',
+		backgroundColor : "0"
 	});
 	
 	var marker = new BMap.Marker(point, {
@@ -329,20 +323,25 @@ function addMakerPoint(lng, lat, title, content) {
 	
 	map.addOverlay(marker);
 	
-	var msgContent = "时间：" + title + "<br>位置："+ content;
-	addClickHandler(msgContent,marker);
+	var msgContent = "时间：" + title + "<br>位置：" + content;
+	addClickHandler(msgContent, marker);
 }
 
-
-function addClickHandler(content,marker){
-	marker.addEventListener("click",function(e){
-		openInfo(content,e)}
-	);
+function addClickHandler(content, marker) {
+	marker.addEventListener("click", function(e) {
+		openInfo(content, e)
+	});
 }
 
-function openInfo(content,e){
+function openInfo(content, e) {
 	var p = e.target;
 	var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-	var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
-	map.openInfoWindow(infoWindow,point); //开启信息窗口
+	var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象
+	map.openInfoWindow(infoWindow, point); // 开启信息窗口
 }
+
+$("#btn-fullscreen").click(function() {
+	screenfull.toggle($('#allmap')[0]);
+});
+
+
