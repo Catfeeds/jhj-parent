@@ -89,8 +89,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
         var dateTime='';
         for(var i=0;i<time.length;i++){
         	
+        	var notSelectTime=['11:30','12:00','12:30'];
         	 if(result==undefined || result==null || result==''){
-        		 var notSelectTime=['11:30','12:00','12:30'];
                  if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
                      dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
                  }else{
@@ -99,12 +99,17 @@ myApp.onPageInit('order-lib-cal',function(page) {
         	 }else{
         		 for(var j=0;j<result.length;j++){
           			if(time[i]==result[j].service_hour){
-          				if(val[j].is_full==0){
-          					dateTime+="<li>"+time[i]+"</li>";
+          				if(result[j].is_full==0){
+          					if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
+                                dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
+                            }else{
+                            	dateTime+="<li>"+time[i]+"</li>";
+                            }
           				}
-          				if(val[j].is_full==1){
+          				if(result[j].is_full==1){
           					dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</p></li>";
           				}
+          				
           			}
           		}
         	 }
@@ -148,7 +153,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
     		url:siteAPIPath+"order/check_dispatch.json",
     		data:param,
     		success:function(data){
-    			var result = data.data;
+    			var result = JSON.parse(data);
+    			result = result.data;
     			getTime(serviceDateStr,result);
     		}
     	});
@@ -286,15 +292,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             	filterPreCurrentTime(lis,20);
             }
             if(nowHour>=16 && nowHour<=19){
-                var d=moment().add(1,"days").format("DD");
-                var lisd = $$("#calendar-day").find("li");
-                for(var i=0;i<=lisd.length;i++){
-                    var val = $$(lisd[i]).text();
-                    if(d==val){
-                        $$("#calendar-day li p").removeClass("rilichange-day");
-                        $$(lisd[i]).children().addClass("rilichange-day");
-                    }
-                }
+            	filterPreCurrentTime(lis,20);
             }
             if(nowHour>=20 && nowHour<=23){
             	filterPreCurrentTime(lis,2);
