@@ -19,39 +19,20 @@ function selectServiceDate(){
         var dateTime='';
         var html = $("#show-dateTime").html();
         for(var i=0;i<time.length;i++){
-//            if(val==undefined || val==null || val==''){
-//				dateTime+="<li>"+time[i]+"</li>";
-//        	}else{
-//        		for(var j = 0 ; j < val.length;j++){
-//        			if(time[i]==val[j].service_hour){
-//        				if(val[j].is_full==0){
-//        					dateTime+="<li>"+time[i]+"</li>";
-//        				}
-//        				if(val[j].is_full==1){
-//        					dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
-//        				}
-//        			}
-//        		}
-//        	}
-        	var notSelectTime=['11:30','12:00','12:30'];
-            if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
-                dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
-            }else{
-            	if(val==undefined || val==null || val==''){
-    				dateTime+="<li>"+time[i]+"</li>";
-            	}else{
-            		for(var j = 0 ; j < val.length;j++){
-            			if(time[i]==val[j].service_hour){
-            				if(val[j].is_full==0){
-            					dateTime+="<li>"+time[i]+"</li>";
-            				}
-            				if(val[j].is_full==1){
-            					dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
-            				}
-            			}
-            		}
-            	}
-            }
+            if(val==undefined || val==null || val==''){
+				dateTime+="<li>"+time[i]+"</li>";
+        	}else{
+        		for(var j = 0 ; j < val.length;j++){
+        			if(time[i]==val[j].service_hour){
+        				if(val[j].is_full==0){
+        					dateTime+="<li>"+time[i]+"</li>";
+        				}
+        				if(val[j].is_full==1){
+        					dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
+        				}
+        			}
+        		}
+        	}
         }
         $("#show-dateTime").html(dateTime);
         $("#show-dateTime li").on("click",function(obj){
