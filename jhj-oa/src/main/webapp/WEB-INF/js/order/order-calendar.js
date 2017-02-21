@@ -321,6 +321,7 @@ function selectServiceDate(){
         	 $(this).attr("data-dismiss","");
             return false;
         }
+        $("cancleForm").attr("data-dismiss","modal");
     });
 }
 
