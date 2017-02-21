@@ -143,7 +143,7 @@ public class MsgController extends BaseController {
 		//2016年1月28日17:10:51  设置一些默认属性
 		msg.setContent("");
 		msg.setGotoUrl("");
-		msg.setUserType((short)0);	//用户类型，暂时都设置为 服务人员
+		msg.setUserType((short)1);	//用户类型，暂时都设置为 服务人员
 		
 		
 		Msg initMsg = msgService.initMsg();
