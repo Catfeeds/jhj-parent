@@ -176,14 +176,15 @@ function selectServiceDate(){
     		$("#show-dateTime li").removeClass("rili-time");
     		$("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
     		$(this).find("p").addClass("rili-day");
-    		if(getServiceDate()==date){
+    		var selectDate = getServiceDate();
+    		if(selectDate==date){
     			if(nowHour>=16){
     				$("#show-day li p").removeClass("rili-day");
     				$(selectDay).find("p").addClass("rili-day");
     				$("#show-dateTime li").addClass("rili-time");
     			}
     		}
-    		isFull(getServiceDate());
+    		isFull(selectDate);
     	});
     	$("#show-dateTime li").removeClass("rili-time-no");
     	$("#show-day").find(":first-child p").addClass("rili-day");
