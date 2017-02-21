@@ -558,7 +558,7 @@ public class OrgStaffsController extends BaseController {
 			String destLng = preItem.getLng();
 			String destLat = preItem.getLat();
 			int distance = MapPoiUtil.poiDistance(fromLng, fromLat, destLng, destLat);
-			System.out.println("i = " + i + "--- distncae = " + distance);
+//			System.out.println("i = " + i + "--- distncae = " + distance);
 			//超过2公里，则标记为一个点;
 			if (distance >= mergeDistance) {
 				
