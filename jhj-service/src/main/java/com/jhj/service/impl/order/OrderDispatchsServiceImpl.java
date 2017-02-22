@@ -1240,6 +1240,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		orderDispatchSearchVo.setStartServiceTime(startServiceTime / 1000);
 		orderDispatchSearchVo.setEndServiceTime(endServiceTime / 1000);
 		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		orderDispatchSearchVo.setStaffIds(staffIds);
 		
 		List<OrderDispatchs> orderDispatchs = this.selectBySearchVo(orderDispatchSearchVo);
 		for (OrderDispatchs orderDispatch : orderDispatchs) {
@@ -1255,8 +1256,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				
 				
 			//已 排班的 阿姨, 时间跨度为 服务开始前2小时 - 服务结束时间
-			Long serviceDate = orderDispatch.getServiceDate();
-//			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
+//			Long serviceDate = orderDispatch.getServiceDate();
+			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
 
 			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
 			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
@@ -1267,14 +1268,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 			
 			//时间跨度为结束时间 + 1小时59分钟被占用
-//			Double serviceHour = orderDispatch.getServiceHours() + 4;
-			Double serviceHour = orderDispatch.getServiceHours();
+			Double serviceHour = orderDispatch.getServiceHours() + 4;
+//			Double serviceHour = orderDispatch.getServiceHours();
 			
 			Double stepHour = (double) 0;
-			while (stepHour <= serviceHour) {
+			while (stepHour < serviceHour) {
 				
 				String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + stepHour * 60 * 60) * 1000), "HH:mm");
-//				System.out.println(orderServiceDateStr);
+				
 				
 				
 				for (int i = 0 ; i < datas.size(); i++) {
@@ -1284,6 +1285,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 					if (orderServiceDateStr.equals(itemServiceHour)) {
 						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
 						totalDispatched = totalDispatched + 1;
+//						System.out.println("order_id = " + orderId + "--orderServiceDateStr = " + orderServiceDateStr + " --itemServiceHour = " + itemServiceHour + "--totalDispatched =" + totalDispatched);
 						item.put("total_dispatched", String.valueOf(totalDispatched));
 						datas.set(i, item);
 						break;
