@@ -210,7 +210,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         $$("#calendar-time li").removeClass("rilichange-no-time");
         filterServiceDate();
         $$("#calendar-day li:first-child").find("p").addClass("rilichange-day");
-        isFull(getServiceDate());
+        isFull(getServiceDate(selectDay));
     }
     getDay(date);
 
@@ -231,7 +231,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     $$("#calendar-day-left").click(function(){
         $$("#calendar-time").find("li").removeClass("rilichange-time");
         $$("#all-button2").removeClass("all-button2").addClass("all-button11");
-        var selectDate = getServiceDate();
+        var selectDate = getServiceDate(selectDay);
         var comp_day = moment(selectDate).add(-dayNum,'days').format("YYYY-MM-DD");
         if(comp_day>=date){
         	getPreDay(selectDate,-dayNum);
@@ -246,7 +246,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     $$("#calendar-day-right").click(function(){
         $$("#calendar-time").find("li").removeClass("rilichange-time");
         $$("#all-button2").removeClass("all-button2").addClass("all-button11");
-        var selectDate = getServiceDate();
+        var selectDate = getServiceDate(selectDay);
         getPreDay(selectDate,dayNum);
     });
 
@@ -257,7 +257,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     function tomm(val){
     	var nyr
     	if(val==undefined ||val==null || val==''){
-    		nyr=getServiceDate();
+    		nyr=getServiceDate(selectDay);
     	}else{
     		nyr=val;
     	}
@@ -344,7 +344,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             var hour2 = serviceDateAdd.format("HH:mm");
             var hoursub = serviceDateSub.format("HH:mm");
             var s = d[i].split(" ");
-            if(date==getServiceDate()){
+            if(date==getServiceDate(selectDay)){
                 for(var i=0;i<time.length;i++){
                 	var index=i;
                 	if(hoursub>=time[0] && time[i]>hoursub && time[i]<=hour1){
