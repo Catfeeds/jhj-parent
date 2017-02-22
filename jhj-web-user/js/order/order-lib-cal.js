@@ -221,6 +221,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     	}else{
     		preDay = moment(selectDate).add(c, 'days');
     	}
+        dayTime="";
         nowDate=preDay;
         getDay(preDay);
     }
@@ -229,7 +230,6 @@ myApp.onPageInit('order-lib-cal',function(page) {
     $$("#calendar-day-left").click(function(){
         $$("#calendar-time").find("li").removeClass("rilichange-time");
         $$("#all-button2").removeClass("all-button2").addClass("all-button11");
-        dayTime="";
         var selectDate = getServiceDate();
         var comp_day = moment(selectDate).add(-dayNum,'days').format("YYYY-MM-DD");
         if(comp_day>=date){
