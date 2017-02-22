@@ -1255,7 +1255,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				
 				
 			//已 排班的 阿姨, 时间跨度为 服务开始前2小时 - 服务结束时间
-			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
+			Long serviceDate = orderDispatch.getServiceDate();
+//			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
 
 			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
 			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
@@ -1266,7 +1267,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 			
 			//时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 4;
+//			Double serviceHour = orderDispatch.getServiceHours() + 4;
+			Double serviceHour = orderDispatch.getServiceHours();
 			
 			Double stepHour = (double) 0;
 			while (stepHour <= serviceHour) {
