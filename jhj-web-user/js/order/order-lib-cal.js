@@ -33,11 +33,10 @@ myApp.onPageInit('order-lib-cal',function(page) {
          var month = $$("#calendar-month").text();
          var day = $$("#calendar-day li p[class='rilichange-day']").text();
          if(day==undefined || day==null || day==''){
-        	 var ss = $$(element);
         	 day = $$(element).text();
          }
-         var pre_li = $$(selectDay).prevAll("li");
-         var after_li = $$(selectDay).nextAll("li");
+         var pre_li = $$(element).parent().prevAll("li");
+         var after_li = $$(element).parent().nextAll("li");
 	 	 var flag=0;
 	 	 var flag1=0;
          var flag2=0;
@@ -366,7 +365,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     
     //获取选择的服务时间
     $$("#all-button2").click(function(){
-    	var selectDate = getServiceDate();
+    	var selectDate = getServiceDate(selectDay);
         var st = selectDate+" "+dayTime+":00";
         if(dayTime!=""){
             console.log("serviceTime = " + st)
