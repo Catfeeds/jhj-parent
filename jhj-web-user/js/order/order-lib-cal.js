@@ -195,6 +195,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             $$("#calendar-time").find("li").removeClass("rilichange-time rilichange-no-time");
             $$("#all-button2").removeClass("all-button2").addClass("all-button11");
             $$(this).children().addClass("rilichange-day");
+            dayTime="";
             var selectDate = getServiceDate($$(this).children());
             if(selectDate==date){
                 if(nowHour>=16){
