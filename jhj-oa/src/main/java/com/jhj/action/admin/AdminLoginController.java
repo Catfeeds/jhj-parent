@@ -114,7 +114,7 @@ public class AdminLoginController extends BaseController {
 		        	return login(model);
 			 	}
 
-	        if (account.getRoleId().equals(0)) {
+	        if (account.getRoleId().equals(0L)) {
 	        	result.addError(new FieldError("contentModel","username","此用户当前未被授权，不能登录。"));
 	        	return login(model);
 		       }
@@ -133,7 +133,7 @@ public class AdminLoginController extends BaseController {
 		        	return login(model);
 			 	}
 
-	        if (business.getRoleId().equals(0)) {
+	        if (business.getRoleId().equals(0L)) {
 	        	result.addError(new FieldError("contentModel","username","此用户当前未被授权，不能登录。"));
 	        	return login(model);
 		       }
