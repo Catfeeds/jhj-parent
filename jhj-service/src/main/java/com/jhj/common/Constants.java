@@ -438,6 +438,7 @@ public class Constants {
 	 public static String ORDER_ACTION_OVERWORK = "订单加时";
 	 public static String ORDER_ACTION_UPDATE_SERVICE_DATETIME ="修改服务时间";
 	 public static String ORDER_ACTION_UPDATE_DISPATCHS_STAFF = "调整派工人员";
+	 public static String ORDER_ACTION_RATES = "订单评价";
 	 
 	 
 	 //优惠券

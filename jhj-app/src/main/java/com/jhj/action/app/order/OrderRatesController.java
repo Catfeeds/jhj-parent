@@ -22,12 +22,14 @@ import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderRateImg;
 import com.jhj.po.model.order.OrderRates;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.DictService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderRateImgService;
 import com.jhj.service.order.OrderRatesService;
 import com.jhj.service.order.OrdersService;
@@ -59,6 +61,9 @@ public class OrderRatesController extends BaseController {
 	
 	@Autowired
 	private DictService dictService;
+	
+	@Autowired
+	private OrderLogService orderLogService;
 
 	@RequestMapping(value = "post_rate.json", method = RequestMethod.POST)
 	public AppResultData<Object> PostExpCleanOrder(
@@ -156,7 +161,14 @@ public class OrderRatesController extends BaseController {
 		orders.setOrderStatus(Constants.ORDER_HOUR_STATUS_8);
 		orders.setUpdateTime(TimeStampUtil.getNowSecond());
 		ordersService.updateByPrimaryKeySelective(orders);
-
+		
+		OrderLog orderLog = orderLogService.initOrderLog(orders);
+		orderLog.setUserType((short)0);
+		orderLog.setUserId(userId);
+		orderLog.setUserName(orders.getMobile());
+		orderLog.setAction(Constants.ORDER_ACTION_RATES);
+		orderLogService.insert(orderLog);
+		
 		return result;
 	}
 
