@@ -182,6 +182,15 @@ public class OrderQueryController extends BaseController {
 		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
 		if (!StringUtil.isEmpty(serviceEndTimeStr))
 			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
+		
+		String startOrderDoneTimeStr = request.getParameter("startOrderDoneTimeStr");
+		if (!StringUtil.isEmpty(startOrderDoneTimeStr))
+			model.addAttribute("startOrderDoneTimeStr", startOrderDoneTimeStr);
+
+		String endOrderDoneTimeStr = request.getParameter("endOrderDoneTimeStr");
+		if (!StringUtil.isEmpty(endOrderDoneTimeStr))
+			model.addAttribute("endOrderDoneTimeStr", endOrderDoneTimeStr);
+		
 		CooperativeBusinessSearchVo businessSearchVo=new CooperativeBusinessSearchVo();
 		businessSearchVo.setEnable((short)1);
 		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);

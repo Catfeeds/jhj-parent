@@ -155,10 +155,10 @@
 														<tr>
 															<td width="10%" style="border:0;border-bottom-width:0;border-left-width:0">服务完成时间：</td>
 															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
-																<input id="startUpdateTimeStr" name="startUpdateTimeStr" value="${startUpdateTimeStr }" class="form-control form_datetime"
+																<input id="startUpdateTimeStr" name="startOrderDoneTimeStr" value="${startOrderDoneTimeStr }" class="form-control form_datetime"
 																	style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span> 
 																<input id="endUpdateTimeStr"
-																	name="endUpdateTimeStr" value="${endUpdateTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
+																	name="endOrderDoneTimeStr" value="${endOrderDoneTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
 															</td>
 															<td width="10%" style="border-top-width:0;border-bottom-width:0;"></td>
 															<td width="40%" style="border-top-width:0;border-bottom-width:0;">

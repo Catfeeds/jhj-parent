@@ -771,22 +771,22 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		
 		
 		// 服务完成开始时间
-		String startUpdateTimeStr = request.getParameter("startUpdateTimeStr");
-		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+		String startOrderDoneTimeStr = request.getParameter("startOrderDoneTimeStr");
+		if (!StringUtil.isEmpty(startOrderDoneTimeStr)) {
 			
-			if (startUpdateTimeStr.length() == 10) startUpdateTimeStr = startUpdateTimeStr + " 00:00";
+			if (startOrderDoneTimeStr.length() == 10) startOrderDoneTimeStr = startOrderDoneTimeStr + " 00:00";
 			
-			searchVo.setStartUpdateTime(TimeStampUtil.getMillisOfDayFull(startUpdateTimeStr+":00") / 1000);
+			searchVo.setStartUpdateTime(TimeStampUtil.getMillisOfDayFull(startOrderDoneTimeStr+":00") / 1000);
 			
 		}
 		
 		
-		String endUpdateTimeStr = request.getParameter("endUpdateTimeStr");
-		if (!StringUtil.isEmpty(startUpdateTimeStr)) {
+		String endOrderDoneTimeStr = request.getParameter("endOrderDoneTimeStr");
+		if (!StringUtil.isEmpty(endOrderDoneTimeStr)) {
 			
-			if (endUpdateTimeStr.length() == 10) endUpdateTimeStr = endUpdateTimeStr + " 23:59";
+			if (endOrderDoneTimeStr.length() == 10) endOrderDoneTimeStr = endOrderDoneTimeStr + " 23:59";
 			
-			searchVo.setEndUpdateTime(TimeStampUtil.getMillisOfDayFull(endUpdateTimeStr+":59") / 1000);
+			searchVo.setEndUpdateTime(TimeStampUtil.getMillisOfDayFull(endOrderDoneTimeStr+":59") / 1000);
 		}
 		
 		// 处理查询时间条件--------------------------------结束

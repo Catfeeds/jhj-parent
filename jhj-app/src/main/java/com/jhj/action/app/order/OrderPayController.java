@@ -55,7 +55,7 @@ import com.meijia.utils.vo.AppResultData;
 public class OrderPayController extends BaseController {
 
 	@Autowired
-	UsersService userService;
+	private UsersService userService;
 
 	@Autowired
 	private OrdersService ordersService;
@@ -70,7 +70,7 @@ public class OrderPayController extends BaseController {
     private OrderQueryService orderQueryService;
 
 	@Autowired
-	OrderLogService orderLogService;
+	private OrderLogService orderLogService;
 	
 	@Autowired
 	private UserDetailPayService userDetailPayService;
@@ -424,6 +424,14 @@ public class OrderPayController extends BaseController {
 				//更新通知服务人员.
 				orderPayService.orderPaySuccessToDoOrderPayExt(order, orderPriceExt);
 			}
+			
+			//补差价日志
+			OrderLog orderLog = orderLogService.initOrderLog(order);
+			orderLog.setUserType((short)0);
+			orderLog.setUserId(u.getId());
+			orderLog.setUserName(u.getMobile());
+			orderLog.setAction(Constants.ORDER_ACTION_PAY_EXT+orderPayExt+"元");
+			orderLogService.insert(orderLog);
 			
 			OrderPriceExtVo vo = new OrderPriceExtVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(order, vo);

@@ -17,8 +17,8 @@ myApp.onPageBeforeInit('order-rate-staff', function(page) {
 		
 		var html = ''; // 当前订单
 		
-		for (var i = 0; i < orderRates.length; i++) {
-			var rate = orderRates[i];
+//		for (var i = 0; i < orderRates.length; i++) {
+			var rate = orderRates;
 			var htmlPart = htmlTemplate;
 			htmlPart = htmlPart.replace(new RegExp('{staffName}', "gm"), rate.name);
 			htmlPart = htmlPart.replace(new RegExp('{age}', "gm"), rate.age);
@@ -37,8 +37,8 @@ myApp.onPageBeforeInit('order-rate-staff', function(page) {
 			var totalRateStar = rate.total_rate_star;
 			
 			if (totalRateStar > 0) {
-				for (var i = 1 ; i <= 5; i++) {
-					if (i <= totalRateStar) {
+				for (var j = 1 ; j <= 5; j++) {
+					if (j <= totalRateStar) {
 						totalRateStarHtml+='<img src="img/yudingayi/xx.png" alt="">';
 					} else {
 						totalRateStarHtml+='<img src="img/yudingayi/xx1.png" alt="">';
@@ -48,7 +48,7 @@ myApp.onPageBeforeInit('order-rate-staff', function(page) {
 			}
 			htmlPart = htmlPart.replace(new RegExp('{totalRateStar}', "gm"), totalRateStarHtml);
 			html += htmlPart;
-		}
+//		}
 		
 		$$("#staffTotalRate").html(html);
 		
