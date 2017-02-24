@@ -262,32 +262,29 @@ public class OrderRatesController extends BaseController {
 				@RequestParam("staff_id") Long staffId) {
 			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 			
-			
-			
 			OrderDispatchSearchVo orderRateSearchVo = new OrderDispatchSearchVo();
 			orderRateSearchVo.setStaffId(staffId);
 			
 			List<OrderRates> orderRates = orderRatesService.selectBySearchVo(orderRateSearchVo);
 			
-			
-			List<OrderStaffRateVo> vos = new ArrayList<OrderStaffRateVo>();
+			OrderStaffRateVo vos = null;
 			
 			//如果没有评价，则默认为最低评价
 			if (orderRates.isEmpty()) {
 				
 				OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
 				
-				OrderStaffRateVo vo = orgStaffsService.getOrderStaffRateVo(orgStaff);
+				vos = orgStaffsService.getOrderStaffRateVo(orgStaff);
 				
 				int totalRateStar = 5;
 				String totalArrival = "100%"; 
-				vo.setTotalRateStar(totalRateStar);
-				vo.setTotalArrival(totalArrival);
-				vos.add(vo);
+				vos.setTotalRateStar(totalRateStar);
+				vos.setTotalArrival(totalArrival);
 				
 			} else {
 			
-				vos = orderRatesService.changeToOrderStaffReteVo(orderRates);
+				List<OrderStaffRateVo> lists = orderRatesService.changeToOrderStaffReteVo(orderRates);
+				vos = lists.get(0);
 			}
 			result.setData(vos);
 			return result;
