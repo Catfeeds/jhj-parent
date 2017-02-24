@@ -434,6 +434,10 @@ public class Constants {
 	 public static String ORDER_ACTION_CANCLE = "取消订单";
 	 public static String ORDER_ACTION_DISPATCHS = "订单派工";
 	 public static String ORDER_ACTION_UPDATE = "订单修改";
+	 public static String ORDER_ACTION_PAY_EXT = "订单补交差价";
+	 public static String ORDER_ACTION_OVERWORK = "订单加时";
+	 public static String ORDER_ACTION_UPDATE_SERVICE_DATETIME ="修改服务时间";
+	 public static String ORDER_ACTION_UPDATE_DISPATCHS_STAFF = "调整派工人员";
 	 
 	 
 	 //优惠券

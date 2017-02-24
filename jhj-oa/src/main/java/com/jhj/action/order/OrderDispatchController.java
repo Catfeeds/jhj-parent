@@ -15,15 +15,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
+import com.jhj.po.model.admin.AdminAccount;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
@@ -87,6 +91,9 @@ public class OrderDispatchController extends BaseController {
 	
 	@Autowired
 	private OrderServiceAddonsService orderServiceAddonsService;
+	
+	@Autowired
+	private OrderLogService orderLogService;
 
 	/**
 	 * 
@@ -139,7 +146,8 @@ public class OrderDispatchController extends BaseController {
 			@RequestParam("orderId") Long orderId, 
 			@RequestParam("selectStaffIds") String selectStaffIds,
 			@RequestParam("newServiceDate") String newServiceDate, 
-			@RequestParam("distanceValue") int distanceValue) {
+			@RequestParam("distanceValue") int distanceValue,
+			HttpServletRequest request) {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 
@@ -238,9 +246,7 @@ public class OrderDispatchController extends BaseController {
 					resultData.setMsg(nop.getStaffName() + "在" + newServiceDate + "已有其他派工，不能修改服务时间，请进行换人操作.");
 					return resultData;
 				}
-				
 			}
-			
 			
 			// 更新订单表
 			order.setServiceDate(serviceDateTime);
@@ -257,6 +263,15 @@ public class OrderDispatchController extends BaseController {
 				//发送短信
 				SmsUtil.SendSms(op.getStaffMobile(), "114590", smsContent);
 			}
+			
+			OrderLog orderLog = orderLogService.initOrderLog(order);
+			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+			orderLog.setUserType((short)2);
+			orderLog.setUserId(accountAuth.getId());
+			orderLog.setUserName(accountAuth.getUsername());
+			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_SERVICE_DATETIME);
+			orderLogService.insert(orderLog);
+			
 			return resultData;
 		}
 		
@@ -273,6 +288,14 @@ public class OrderDispatchController extends BaseController {
 				} 
 			}
 			oldDispatchs = disList.get(0);
+			
+			OrderLog orderLog = orderLogService.initOrderLog(order);
+			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+			orderLog.setUserType((short)2);
+			orderLog.setUserId(accountAuth.getId());
+			orderLog.setUserName(accountAuth.getUsername());
+			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
+			orderLogService.insert(orderLog);
 		}
 		
 		Double serviceHour = (double) order.getServiceHour();
@@ -303,6 +326,7 @@ public class OrderDispatchController extends BaseController {
 			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE, new String[] { beginTimeStr,
 					partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
 		}
+		
 		return resultData;
 	}
 	

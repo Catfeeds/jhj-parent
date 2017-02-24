@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -201,7 +200,6 @@ public class OrderController extends BaseController {
 
 		Orders orders = ordersService.selectByPrimaryKey(orderId);
 		
-
 		if (orders == null) {
 			return result;
 		}
@@ -219,6 +217,13 @@ public class OrderController extends BaseController {
 		
 		orders.setOrderStatus((short) 5);
 		ordersService.updateByPrimaryKeySelective(orders);
+		
+		//订单日志
+		OrderLog orderLog = orderLogService.initOrderLog(orders);
+		orderLog.setUserId(staffId);
+		orderLog.setUserName(orgStaffsService.selectByPrimaryKey(staffId).getName());
+		orderLog.setUserType((short)1);
+		orderLog.setAction(Constants.ORDER_ACTION_START_SERVER);
 
 		OrderBeginVo vo = new OrderBeginVo();
 		vo.setOrderId(orderId);
@@ -261,7 +266,6 @@ public class OrderController extends BaseController {
 			return result;
 		}
 
-
 		// 改变服务状态为已完成
 		orders.setOrderStatus((short) 7);
 		orders.setUpdateTime(TimeStampUtil.getNow()/1000);
@@ -271,7 +275,6 @@ public class OrderController extends BaseController {
 		//处理上传图片
 
 		// 处理图片问题
-
 		for (int i = 0; i < imgs.length; i++) {
 			String url = Constants.IMG_SERVER_HOST + "/upload/";
 			String fileName = imgs[i].getOriginalFilename();
@@ -291,13 +294,10 @@ public class OrderController extends BaseController {
 			imgService.insert(orderImg);
 		}
 		
-		
-		
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(orderId);
 		
 		String orderNo = orders.getOrderNo();
 		//更新orderdispatchs的更新时间
-		
 		
 		//如果多人，则直接循环，把多人的金额都加上
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
@@ -318,6 +318,13 @@ public class OrderController extends BaseController {
 			//更新服务人员的财务信息，包括财务总表，财务明细，欠款明细，是否加入黑名单
 			orgStaffFinanceService.orderDone(orders, orderPrices, orgStaffs);
 		}
+		
+		OrderLog orderLog = orderLogService.initOrderLog(orders);
+		orderLog.setUserType((short)1);
+		orderLog.setUserId(staffId);
+		orderLog.setUserName(orgStaffs.getName());
+		orderLog.setAction(Constants.ORDER_ACTION_END_SERVER);
+		orderLogService.insert(orderLog);
 		
 		//完成服务给用户发送短信
 //        ordersService.userOrderPostDoneSuccessTodo(orders);
@@ -496,13 +503,10 @@ public class OrderController extends BaseController {
 			return result;
 		}
 		
-		
-		
 		//检测延长的时间是否跟服务人员有冲突
 		Long serviceDate = order.getServiceDate();
 		double newServiceHour = order.getServiceHour();
 	    newServiceHour+= serviceHour;
-		
 		
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderId(order.getId());
@@ -532,8 +536,6 @@ public class OrderController extends BaseController {
 			}
 			
 		}
-		
-		
 		
 		OrderPriceExt orderPriceExt = orderPriceExtService.initOrderPriceExt();
 		orderPriceExt.setUserId(order.getUserId());
@@ -595,6 +597,13 @@ public class OrderController extends BaseController {
 	    	op.setUpdateTime(TimeStampUtil.getNowSecond());
 	    	orderDispatchsService.updateByPrimaryKey(op);
 	    }
+	    
+	    OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLog.setUserType((short)1);
+		orderLog.setUserId(staffId);
+		orderLog.setUserName(orgStaffsService.selectByPrimaryKey(staffId).getName());
+		orderLog.setAction(Constants.ORDER_ACTION_OVERWORK+orderPay+"元");
+		orderLogService.insert(orderLog);
 		
 		
 		return result;

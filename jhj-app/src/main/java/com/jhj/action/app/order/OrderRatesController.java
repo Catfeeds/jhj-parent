@@ -240,7 +240,7 @@ public class OrderRatesController extends BaseController {
 		
 		List<OrderStaffRateVo> vos = orderRatesService.changeToOrderStaffReteVo(orderRates);
 		
-		
+		result.setData(vos);
 		return result;
 	}
 	
