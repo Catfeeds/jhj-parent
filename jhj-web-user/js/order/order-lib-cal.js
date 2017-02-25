@@ -98,17 +98,22 @@ myApp.onPageInit('order-lib-cal',function(page) {
         	 }else{
         		 for(var j=0;j<result.length;j++){
           			if(time[i]==result[j].service_hour){
-          				if(result[j].is_full==0){
-          					if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
-                                dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
-                            }else{
-                            	dateTime+="<li>"+time[i]+"</li>";
-                            }
+          				if(selectDate!='2017-02-25'){
+          					
+          					if(result[j].is_full==0){
+          						if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
+          							dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
+          						}else{
+          							dateTime+="<li>"+time[i]+"</li>";
+          						}
+          					}
+          					if(result[j].is_full==1){
+          						dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</p></li>";
+          					}
           				}
-          				if(result[j].is_full==1){
-          					dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</p></li>";
-          				}
-          				
+          				if(selectDate=='2017-02-25'){
+          					dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
+          		        }
           			}
           		}
         	 }
