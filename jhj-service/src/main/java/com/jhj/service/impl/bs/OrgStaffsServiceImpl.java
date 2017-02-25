@@ -718,7 +718,6 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		try {
 			age = DateUtil.getAge(orgStaff.getBirth());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (!StringUtil.isEmpty(age)) age = age + "岁";

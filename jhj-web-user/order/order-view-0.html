@@ -42,9 +42,6 @@
 							{{/each}}
 							</li>
 						</ul>
-						
-						{{/each}}
-					
 					{{/js_compare}}
 				</div>
 				<div class="order-xiadan">
@@ -62,16 +59,29 @@
 						<li>优惠券</li>
 						<li>{{coupon_name}}</li>
 					</ul>
-					
-					<ul class="xiadan1" style="border: 0;">
-						<li>
-							<img src="img/xiadan/liuyan.png" alt="">
-						</li>
-						<li>留言</li>
-						<li>
-							<textarea name="remarks" id="remarks" class="tarea" >{{remarks}}</textarea>
-						</li>
-					</ul>
+					<div class="list-block" style="margin:0!important;">
+ 							<ul>
+							<li class="accordion-item">
+							  <a href="#" class="item-content item-link">
+						        <div class="item-inner">
+						          <div class="item-title" style="width:35%;">
+						          	<ul class="xiadan1" style="border: 0;">
+							          	<li style="margin-left:0;">
+											<img src="img/xiadan/liuyan.png" alt="">
+										</li>
+										<li style="margin-left:30%;">留言</li>
+						          	</ul>
+						          </div>
+						        </div>
+						      </a>
+						      <div class="accordion-item-content">
+						        <div class="content-block">
+						          <p style="font-size:14px;">{{remarks}}</p>
+						        </div>
+						      </div>
+						    </li>
+						</ul>
+					 </div>
 				</div>
 			</div>
 		</div>

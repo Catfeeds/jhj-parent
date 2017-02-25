@@ -141,8 +141,8 @@ public class AdminAccountController extends AdminController {
 
 		AdminAccount adminAccount = adminAccountService.selectByUsername(username);
 //&& username!=accountRegisterVo.getUsername()&&username==account.getUsername()
-		if (adminAccount != null && adminAccount.getId() > 0 
-				&& adminAccount.getId() != accountRegisterVo.getId()) {
+		if (adminAccount != null && adminAccount.getId() > 0L 
+				&& adminAccount.getId().longValue() != accountRegisterVo.getId().longValue()) {
 			result.addError(new FieldError("adminAccount", "username",
 					"该用户名已被注册。"));
 			return register(request, model);

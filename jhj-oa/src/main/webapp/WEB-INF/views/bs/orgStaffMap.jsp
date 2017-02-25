@@ -120,8 +120,12 @@ body, html {
 											</select></td>
 										<td>合并范围(单位:米):</td>
 										<td><input id="mergeDistance" name="mergeDistance" value="2000" class="form-control" type="text" /></td>
-										<td colspan="4">
+										<td colspan="2">
 											<button type="button" onclick="loadStaffRoute()" class="btn btn-primary">轨迹查询</button>
+										</td>
+										
+										<td colspan="2">
+											<button type="button" id="btn-fullscreen" class="btn btn-warning">全屏地图</button>
 										</td>
 									</tr>
 								</table>
@@ -164,6 +168,7 @@ body, html {
 	<!-- 引入百度地图API,其中   申请的密钥   ak 和主机 ip绑定， -->
 	<script src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
 	<script src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
+	<script src="<c:url value='/assets/screenfull.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-staff.js'/>"></script>
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>

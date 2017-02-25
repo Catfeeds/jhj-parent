@@ -43,6 +43,8 @@
 								</label>
 							</div>
 						</td>
+						<td>服务人员姓名:</td>
+						<td><form:input path="staffName" class="form-control" style="width:110px; margin-bottom:0"/></td>
 						<td>请假时间:</td>
 						<td><form:input path="leaveDateStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 								readonly="true" /></td>

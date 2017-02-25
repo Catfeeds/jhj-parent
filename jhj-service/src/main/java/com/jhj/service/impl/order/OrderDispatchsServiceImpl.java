@@ -1177,7 +1177,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			orgIds.add(orgId);
 		}
 		
-		if (orgIds.isEmpty()) return datas;
+		if (orgIds.isEmpty())  {
+			//如果匹配不到任何云店，则显示所有都为已约满.
+			for (int i = 0 ; i < datas.size(); i++) {
+				Map<String, String> item = datas.get(i);				
+				item.put("is_full", "1");
+				datas.set(i, item);
+			}
+			return datas;
+		}
 		
 		List<Long> staffIds = new ArrayList<Long>();
 		//先找出云店下所有的员工,并且具有该项技能的人员.
@@ -1189,7 +1197,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		for (OrgStaffs os : staffList) {
 			if (!staffIds.contains(os.getStaffId())) staffIds.add(os.getStaffId());
 		}
-		System.out.println("总人数:" + staffIds.size());
+//		System.out.println("总人数:" + staffIds.size());
 		//排除黑名单人员
 		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
 		searchVo2.setIsBlack((short) 1);
@@ -1199,7 +1207,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				staffIds.remove(osf.getStaffId());
 			}
 		}
-		System.out.println("排除黑名单后总人数:" + staffIds.size());
+//		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		//排除请假人员
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
 		Date leaveDate = DateUtil.parse(serviceDateStr);
@@ -1213,8 +1221,16 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 		}
-		System.out.println("排除请假后总人数:" + staffIds.size());
-		if (staffIds.isEmpty()) return datas;
+//		System.out.println("排除请假后总人数:" + staffIds.size());
+		if (staffIds.isEmpty()) {
+			//如果人数都为0，则显示所有都为已约满.
+			for (int i = 0 ; i < datas.size(); i++) {
+				Map<String, String> item = datas.get(i);				
+				item.put("is_full", "1");
+				datas.set(i, item);
+			}
+			return datas;
+		}
 		
 		int total = staffIds.size();
 		//找出当天所有的派工订单和人员.
@@ -1224,6 +1240,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		orderDispatchSearchVo.setStartServiceTime(startServiceTime / 1000);
 		orderDispatchSearchVo.setEndServiceTime(endServiceTime / 1000);
 		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		orderDispatchSearchVo.setStaffIds(staffIds);
 		
 		List<OrderDispatchs> orderDispatchs = this.selectBySearchVo(orderDispatchSearchVo);
 		for (OrderDispatchs orderDispatch : orderDispatchs) {
@@ -1238,9 +1255,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 				
 				
-			
-			Long serviceDate = orderDispatch.getServiceDate();
-			
+			//已 排班的 阿姨, 时间跨度为 服务开始前2小时 - 服务结束时间
+//			Long serviceDate = orderDispatch.getServiceDate();
+			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
+
 			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
 			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
 			if (servcieDateTmpInt > 0 && servcieDateTmpInt < 30) {
@@ -1249,14 +1267,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				serviceDate = serviceDate + 30 * 60 - servcieDateTmpInt * 60;
 			}
 			
-			
-			Double serviceHour = orderDispatch.getServiceHours();
+			//时间跨度为结束时间 + 1小时59分钟被占用
+			Double serviceHour = orderDispatch.getServiceHours() + 4;
+//			Double serviceHour = orderDispatch.getServiceHours();
 			
 			Double stepHour = (double) 0;
-			while (stepHour <= serviceHour) {
+			while (stepHour < serviceHour) {
 				
 				String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + stepHour * 60 * 60) * 1000), "HH:mm");
-				System.out.println(orderServiceDateStr);
+				
 				
 				
 				for (int i = 0 ; i < datas.size(); i++) {
@@ -1266,6 +1285,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 					if (orderServiceDateStr.equals(itemServiceHour)) {
 						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
 						totalDispatched = totalDispatched + 1;
+//						System.out.println("order_id = " + orderId + "--orderServiceDateStr = " + orderServiceDateStr + " --itemServiceHour = " + itemServiceHour + "--totalDispatched =" + totalDispatched);
 						item.put("total_dispatched", String.valueOf(totalDispatched));
 						datas.set(i, item);
 						break;

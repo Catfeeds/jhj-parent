@@ -23,7 +23,6 @@ import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
-import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.ValidateService;
@@ -263,18 +262,13 @@ public class OrderExpCleanController extends BaseController {
 		OrderPrices orderPrices = orderPricesService.selectByOrderIds(orderNo);
 
 		if (list == null && orderPrices == null) {
-
 			return result;
-
 		}
-
 		try {
 			BeanUtils.copyProperties(deepCleanVo, vo);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -289,14 +283,13 @@ public class OrderExpCleanController extends BaseController {
 				deepCleanVo.setCouponValue(dictCoupons.getValue());
 			}
 		}
-		List<UserAddrs> userAddrsList = userAddrsService.selectByUserId(orders.getUserId());
+//		List<UserAddrs> userAddrsList = userAddrsService.selectByUserId(orders.getUserId());
 		if (orders != null) {
 			Users users = userService.selectByPrimaryKey(orders.getUserId());
 			if (users != null) {
 				deepCleanVo.setRestMoney(users.getRestMoney());
 			}
 		}
-		deepCleanVo.setUserAddrsList(userAddrsList);
 		
 		//派工信息
 		List<OrderDispatchs> orderDispatchs = new ArrayList<OrderDispatchs>();
@@ -304,10 +297,9 @@ public class OrderExpCleanController extends BaseController {
 			OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
 			orderDispatchSearchVo.setOrderId(orders.getId());
 			orderDispatchSearchVo.setDispatchStatus((short) 1);
-			
 			orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+			deepCleanVo.setOrderDispatchs(orderDispatchs);
 		}
-		
 		
 		result.setData(deepCleanVo);
 

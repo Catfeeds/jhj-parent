@@ -80,7 +80,7 @@
 
 							<label class="col-md-2 control-label">赠送礼包</label>
 							<div class="col-md-5">
-								<select id="selectGiftId" name="selectGiftId">
+								<select id="selectGiftId" name="selectGiftId" class="form-control">
 									<option value="0">不赠送</option>
 									<c:forEach items="${gifts}" var="selectItem">
 										<option value="${selectItem.getGiftId()}"

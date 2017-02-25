@@ -1,5 +1,13 @@
 myApp.onPageInit('index', function(page) {
 	removeSessionData();
+	myApp.swiper('.swiper-1', {
+		  pagination:'.swiper-1 .swiper-pagination',
+		  speed:400,
+		  autoplay:3000,
+		  spaceBetween: 50,
+		  loop:true
+		  
+		});
 })
 myApp.swiper('.swiper-1', {
   pagination:'.swiper-1 .swiper-pagination',
