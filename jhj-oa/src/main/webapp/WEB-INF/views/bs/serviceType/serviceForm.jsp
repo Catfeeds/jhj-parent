@@ -63,10 +63,18 @@
                            
                            
                            <div class="form-group required">
-                              <label  class="col-md-2 control-label">非会员价*</label>
+                              <label  class="col-md-2 control-label">非会员价(加时)*</label>
                               <div class="col-md-5">
                                  <form:input path="price" class="form-control" placeholder="非会员价"/>
                                  <form:errors path="price" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">非会员价员工提成(加时)*</label>
+                              <div class="col-md-5">
+                                 <form:input path="staffPrice" class="form-control" placeholder="非会员价员工提成"/>
+                                 <form:errors path="staffPrice" class="field-has-error"/>
                               </div>
                            </div>
                            
@@ -79,10 +87,26 @@
                            </div>
                            
                            <div class="form-group required">
-                              <label  class="col-md-2 control-label">会员价*</label>
+                              <label  class="col-md-2 control-label">非会员价员工提成(套餐)*</label>
+                              <div class="col-md-5">
+                                 <form:input path="staffPprice" class="form-control" placeholder="非会员价员工提成"/>
+                                 <form:errors path="staffPprice" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">会员价(加时)*</label>
                               <div class="col-md-5">
                                  <form:input path="mprice" class="form-control" placeholder="会员价"/>
                                  <form:errors path="mprice" class="field-has-error"/>
+                              </div>
+                           </div>
+                           
+                            <div class="form-group required">
+                              <label  class="col-md-2 control-label">会员价员工提成(加时)*</label>
+                              <div class="col-md-5">
+                                 <form:input path="staffMprice" class="form-control" placeholder="会员价员工提成"/>
+                                 <form:errors path="staffMprice" class="field-has-error"/>
                               </div>
                            </div>
                            
@@ -94,6 +118,13 @@
                               </div>
                            </div>
                            
+                           <div class="form-group required">
+                              <label  class="col-md-2 control-label">会员价员工提成(套餐)*</label>
+                              <div class="col-md-5">
+                                 <form:input path="staffMpprice" class="form-control" placeholder="套餐提成"/>
+                                 <form:errors path="staffMpprice" class="field-has-error"/>
+                              </div>
+                           </div>
                            
                            
                            
@@ -118,14 +149,16 @@
                            
                            <div class="form-group ">
 							<label class="col-md-2 control-label">服务子项(没有可不填)</label>
-							<div class="col-md-8">
+							<div class="col-md-12">
 								<table id="serviceAddonTable" class="table table-hover table-condensed controls">
 									<thead>
 										<tr>
 											<th>类别</th>
 											<th>单位</th>
 											<th>非会员价</th>
+											<th>非会员价员工提成</th>
 											<th>会员价</th>
+											<th>会员价员工提成</th>
 											<th>起步数量</th>
 											<th>服务时长</th>
 											<th>#</th>
@@ -137,7 +170,9 @@
 												<input type="text" name="serviceAddonName" value="${item.name}" maxLength="32" class="form-control"></td>
 											<td><input type="text" name="itemUnit" value="${item.itemUnit}" maxLength="32" class="form-control"></td>
 											<td><input type="text" name="serviceAddonPrice" value="${item.price}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonStaffPrice" value="${item.staffPrice}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
 											<td><input type="text" name="serviceAddonDisPrice" value="${item.disPrice}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
+											<td><input type="text" name="serviceAddonStaffDisPrice" value="${item.staffDisPrice}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
 											<td><input type="text" name="defaultNum" value="${item.defaultNum}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
 											<td><input type="text" name="serviceAddonServiceHour" value="${item.serviceHour}" onkeyup="value=value.replace(/[^\-?\d.]/g,'')" maxLength="32" class="form-control"></td>
 											<td><span class="input-group-btn">

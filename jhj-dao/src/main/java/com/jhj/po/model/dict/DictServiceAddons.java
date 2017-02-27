@@ -16,8 +16,12 @@ public class DictServiceAddons {
     private String tips;
 
     private BigDecimal price;
+    
+    private BigDecimal staffPrice;
 
     private BigDecimal disPrice;
+    
+    private BigDecimal staffDisPrice;
 
     private String descUrl;
 
@@ -143,5 +147,21 @@ public class DictServiceAddons {
 
 	public void setServiceHour(double serviceHour) {
 		this.serviceHour = serviceHour;
+	}
+
+	public BigDecimal getStaffPrice() {
+		return staffPrice;
+	}
+
+	public void setStaffPrice(BigDecimal staffPrice) {
+		this.staffPrice = staffPrice;
+	}
+
+	public BigDecimal getStaffDisPrice() {
+		return staffDisPrice;
+	}
+
+	public void setStaffDisPrice(BigDecimal staffDisPrice) {
+		this.staffDisPrice = staffDisPrice;
 	}
 }

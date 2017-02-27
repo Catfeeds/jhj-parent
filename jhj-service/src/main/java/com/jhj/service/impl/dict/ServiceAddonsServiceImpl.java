@@ -121,7 +121,9 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 		String serviceAddonName[] = request.getParameterValues("serviceAddonName");
 		String itemUnit[] = request.getParameterValues("itemUnit");
 		String price[] = request.getParameterValues("serviceAddonPrice");
+		String staffPrice[] = request.getParameterValues("serviceAddonStaffPrice");
 		String disPrice[] = request.getParameterValues("serviceAddonDisPrice");
+		String staffDisPrice[] = request.getParameterValues("serviceAddonStaffDisPrice");
 		String defaultNum[] = request.getParameterValues("defaultNum");
 		String serviceAddonServiceHour[] = request.getParameterValues("serviceAddonServiceHour");
 
@@ -129,7 +131,9 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 		String serviceAddonNameItem = "";
 		String itemUnitItem = "";
 		String priceItem = "";
+		String staffPriceItem = "";
 		String disPriceItem = "";
+		String staffDisPriceItem = "";
 		String defaultNumItem = "";
 		String serviceAddonServiceHourItem = "";
 
@@ -139,14 +143,18 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 			serviceAddonNameItem = serviceAddonName[i];
 			itemUnitItem = itemUnit[i];
 			priceItem = price[i];
+			staffPriceItem = staffPrice[i];
 			disPriceItem = disPrice[i];
+			staffDisPriceItem = staffDisPrice[i];
 			defaultNumItem = defaultNum[i];
 			serviceAddonServiceHourItem = serviceAddonServiceHour[i];
 
 			if (StringUtil.isEmpty(serviceAddonNameItem) && 
 				StringUtil.isEmpty(itemUnitItem) && 
 				(StringUtil.isEmpty(priceItem) || priceItem.equals("0")) && 
+				(StringUtil.isEmpty(staffPriceItem) || staffPriceItem.equals("0")) && 
 				(StringUtil.isEmpty(disPriceItem) || disPriceItem.equals("0")) && 
+				(StringUtil.isEmpty(staffDisPriceItem) || staffDisPriceItem.equals("0")) && 
 				(StringUtil.isEmpty(defaultNumItem) || defaultNumItem.equals("0")) &&
 				(StringUtil.isEmpty(serviceAddonServiceHourItem) || serviceAddonServiceHourItem.equals("0.0"))
 			   ) {
@@ -176,7 +184,9 @@ public class ServiceAddonsServiceImpl implements ServiceAddonsService {
 			d.setName(serviceAddonNameItem);
 			d.setItemUnit(itemUnitItem);
 			d.setPrice(new BigDecimal(priceItem));
+			d.setStaffPrice(new BigDecimal(staffPriceItem));
 			d.setDisPrice(new BigDecimal(disPriceItem));
+			d.setStaffDisPrice(new BigDecimal(staffDisPriceItem));
 			d.setDefaultNum(Integer.valueOf(defaultNumItem));
 			d.setEnable((short) 1);
 			d.setUpdateTime(TimeStampUtil.getNowSecond());

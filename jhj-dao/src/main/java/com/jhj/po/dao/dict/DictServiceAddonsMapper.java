@@ -3,7 +3,6 @@ package com.jhj.po.dao.dict;
 import java.util.List;
 
 import com.jhj.po.model.dict.DictServiceAddons;
-import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.vo.ServiceAddonSearchVo;
 
 public interface DictServiceAddonsMapper {

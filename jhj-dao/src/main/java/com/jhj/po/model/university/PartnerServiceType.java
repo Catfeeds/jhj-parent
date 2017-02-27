@@ -20,6 +20,14 @@ public class PartnerServiceType {
     private BigDecimal pprice;
     
     private BigDecimal mpprice;
+    
+    private BigDecimal staffPrice;
+    
+    private BigDecimal staffMprice;
+    
+    private BigDecimal staffPprice;
+    
+    private BigDecimal staffMpprice;
 
     private String remarks;
 
@@ -201,6 +209,38 @@ public class PartnerServiceType {
 
 	public void setMpprice(BigDecimal mpprice) {
 		this.mpprice = mpprice;
+	}
+
+	public BigDecimal getStaffPrice() {
+		return staffPrice;
+	}
+
+	public void setStaffPrice(BigDecimal staffPrice) {
+		this.staffPrice = staffPrice;
+	}
+
+	public BigDecimal getStaffMprice() {
+		return staffMprice;
+	}
+
+	public void setStaffMprice(BigDecimal staffMprice) {
+		this.staffMprice = staffMprice;
+	}
+
+	public BigDecimal getStaffPprice() {
+		return staffPprice;
+	}
+
+	public void setStaffPprice(BigDecimal staffPprice) {
+		this.staffPprice = staffPprice;
+	}
+
+	public BigDecimal getStaffMpprice() {
+		return staffMpprice;
+	}
+
+	public void setStaffMpprice(BigDecimal staffMpprice) {
+		this.staffMpprice = staffMpprice;
 	}
 	
 }
