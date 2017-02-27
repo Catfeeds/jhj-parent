@@ -60,16 +60,16 @@ function selectServiceDate(){
 	showYearMonth(date);
 	
 	 //获取当前选择的时间，如何没有选择时间默认是当前时间
-    function getServiceDate(){
+    function getServiceDate(element){
         var serviceDate='';
         var year = $("#show-year").text();
         var month = $("#show-month").text();
         var day = $("#show-day li p[class='rili-day']").text();
         if(day==undefined || day==null || day==''){
-       	 	day = $(selectDay).text();
+       	 	day = $(element).text();
         }
-        var pre_li = $(selectDay).prevAll("li");
-        var after_li = $(selectDay).nextAll("li");
+        var pre_li = $(element).prevAll("li");
+        var after_li = $(element).nextAll("li");
         var flag=0;
         var flag1=0;
         var flag2=0;
@@ -176,7 +176,7 @@ function selectServiceDate(){
     		$("#show-dateTime li").removeClass("rili-time");
     		$("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
     		$(this).find("p").addClass("rili-day");
-    		var selectDate = getServiceDate();
+    		var selectDate = getServiceDate(selectDay);
     		if(selectDate==date){
     			if(nowHour>=16){
     				$("#show-day li p").removeClass("rili-day");
@@ -188,7 +188,7 @@ function selectServiceDate(){
     	});
     	$("#show-dateTime li").removeClass("rili-time-no");
     	$("#show-day").find(":first-child p").addClass("rili-day");
-    	var compareDate = getServiceDate();
+    	var compareDate = getServiceDate(selectDay);
     	isFull(compareDate);
     }
     getDay(date);
@@ -209,7 +209,7 @@ function selectServiceDate(){
     	$("#show-dateTime").find("li").removeClass("rili-time");
     	$("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
         dayTime="";
-        var service_date = getServiceDate();
+        var service_date = getServiceDate(selectDay);
         var comp_day = moment(service_date).add(-7,'days').format("YYYY-MM-DD");
         if(comp_day>=date){
 	         get7Day(service_date,-dayNum);
@@ -225,7 +225,7 @@ function selectServiceDate(){
         $("#show-dateTime").find("li").removeClass("rili-time");
         $("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
         dayTime="";
-        var service_date = getServiceDate();
+        var service_date = getServiceDate(selectDay);
         get7Day(service_date,dayNum);
     });
     
@@ -238,7 +238,7 @@ function selectServiceDate(){
     function tomm(val){
     	var nyr
     	if(val==undefined ||val==null || val==''){
-    		var nyr=getServiceDate();
+    		var nyr=getServiceDate(selectDay);
     	}else{
     		nyr=val;
     	}
@@ -311,10 +311,8 @@ function selectServiceDate(){
 
     //获取选择的服务时间
     $("#checkDate").click(function(){
-    	var year = $("#show-year").text();
-        var month = $("#show-month").text();
-        var day = $("#show-day li p[class='rili-day']").text();
-        var st =year +"-"+month+"-"+day+" "+dayTime+":00";
+        var selectDate = getServiceDate(selectDay);
+        var st = selectDate+" "+dayTime+":00";
         if(dayTime!=""){
             $("#serviceDate").val(st);
             $(this).attr("data-dismiss","modal");
