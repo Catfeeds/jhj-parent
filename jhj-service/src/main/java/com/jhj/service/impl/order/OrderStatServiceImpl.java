@@ -228,11 +228,11 @@ public class OrderStatServiceImpl implements OrderStatService {
 //			BigDecimal orderIncoming = orderPriceService.getTotalOrderIncoming(order, searchVo.getStaffId());
 			Map<String, String> orderIncomingMap = new HashMap<String, String>();
 			
-			if (order.getServiceType().equals(Constants.ORDER_TYPE_0)) {
+			if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
 				orderIncomingMap = orderPriceService.getTotalOrderIncomingHour(order, searchVo.getStaffId());
 			}
 			
-			if (order.getServiceType().equals(Constants.ORDER_TYPE_1)) {
+			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
 				orderIncomingMap = orderPriceService.getTotalOrderIncomingDeep(order, searchVo.getStaffId());
 			}
 			

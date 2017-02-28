@@ -209,11 +209,11 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		Map<String, String> orderIncomingMap = new HashMap<String, String>();
 		
-		if (orders.getServiceType().equals(Constants.ORDER_TYPE_0)) {
+		if (orders.getOrderType().equals(Constants.ORDER_TYPE_0)) {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(orders, staffId);
 		}
 		
-		if (orders.getServiceType().equals(Constants.ORDER_TYPE_1)) {
+		if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(orders, staffId);
 		}
 		
