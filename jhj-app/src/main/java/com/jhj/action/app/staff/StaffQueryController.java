@@ -310,7 +310,21 @@ public class StaffQueryController extends BaseController {
 		for (OrderDispatchs item : orderDispatchs) {
 			Long orderId = item.getOrderId();
 			Orders order = ordersService.selectByPrimaryKey(orderId);
-			BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(order, staffId);
+			
+			
+			Map<String, String> orderIncomingMap = new HashMap<String, String>();
+			
+			if (order.getServiceType().equals(Constants.ORDER_TYPE_0)) {
+				orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(order, staffId);
+			}
+
+			if (order.getServiceType().equals(Constants.ORDER_TYPE_1)) {
+				orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(order, staffId);
+			}
+
+			String orderIncomingStr = orderIncomingMap.get("totalOrderPay");
+			BigDecimal orderIncoming = new BigDecimal(orderIncomingStr);
+
 			totalIncoming = MathBigDecimalUtil.add(totalIncoming, orderIncoming);
 		}
 		

@@ -1,7 +1,9 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,16 +12,20 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
+import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.dict.ServiceAddonsService;
 import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -28,9 +34,11 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -75,6 +83,13 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 
 	@Autowired
 	private SettingService settingService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerServiceTypeService;
+	
+	@Autowired
+	private ServiceAddonsService serviceAddonsService;
+	
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -348,6 +363,169 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		totalOrderPay = MathBigDecimalUtil.round(totalOrderPay, 2);
 		return totalOrderPay;
 	}
+	
+	/**
+	 * 获取金牌保洁订单的服务人员收入
+	 * 1. 对于订单支付的金额，按照提成配置价格提成，超出小时部分 = 套餐价提成 + （超出小时部分） * 小时提成
+	 * 2. 对于补差价和补时的收入，按照比例进行提成。
+	 */
+	@Override
+	public Map<String, String> getTotalOrderIncomingHour(Orders order, Long staffId) {
+
+		Long orderId = order.getId();
+		Double serviceHour = order.getServiceHour();
+		int staffNum = order.getStaffNums();
+		
+		Long userId = order.getUserId();
+		Users u = userService.selectByPrimaryKey(userId);
+		int isVip = u.getIsVip();
+		
+		Long serviceTypeId = order.getServiceType();
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+
+		BigDecimal staffPrice = serviceType.getStaffPrice();
+		BigDecimal staffMprice = serviceType.getStaffMprice();
+		
+		if (isVip == 1) {
+			staffPrice = serviceType.getStaffPprice();
+			staffMprice = serviceType.getStaffMpprice();
+		}
+		
+		Double minServiceHour = serviceType.getServiceHour();
+		
+		String incomingStr = "";
+		// 总收入合计
+		BigDecimal totalOrderPay = new BigDecimal(0);
+		
+		//计算加时的小时数
+		double overWorkHours = 0;
+		OrderSearchVo orderSearchVo = new OrderSearchVo();
+		orderSearchVo.setOrderId(orderId);
+		orderSearchVo.setOrderExtType((short) 1);
+		orderSearchVo.setOrderStatus((short) 2);
+		List<OrderPriceExt> orderPriceExts = orderPriceExtService.selectBySearchVo(orderSearchVo);
+		
+		for (OrderPriceExt item : orderPriceExts) {
+			overWorkHours = overWorkHours + item.getServiceHour();
+		}
+		
+		totalOrderPay = staffMprice;
+		//1. 如果没有加时，则判断是否为最低小时数，如果大于，则 收入 = 套餐价提成 + 超出小时数 * 小时提成。
+		if (overWorkHours == 0) {
+			if (serviceHour > minServiceHour) {
+				Double overHour = serviceHour - minServiceHour;
+				BigDecimal tmpOverPay = staffPrice.multiply(new BigDecimal(overHour));
+				totalOrderPay = staffMprice.add(tmpOverPay);
+			}
+		} else {
+		    //2. 如果有加时，则并且减去加时后，大于最低小时数，则 收入 = 套餐价提成 + （减去加时后超出小时数） * 小时提成。
+			if ( (serviceHour - overWorkHours) > minServiceHour ) {
+				Double overHour = serviceHour - overWorkHours - minServiceHour;
+				BigDecimal tmpOverPay = staffPrice.multiply(new BigDecimal(overHour));
+				totalOrderPay = staffMprice.add(tmpOverPay);
+			}
+		}
+		incomingStr = "订单提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+		
+		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
+		// 订单补差价金额 订单差价的折扣比例
+		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
+		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
+		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
+			totalOrderPay = totalOrderPay.add(orderPayExtDiff);
+			incomingStr+= ";订单补差价提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+		}
+
+		// 订单加时金额 订单加时的折扣比例
+		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
+		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
+		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
+			totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
+			incomingStr+= ";订单加时提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+		}
+		
+		//最后做一个服务人员平均
+		totalOrderPay = MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("incomingStr", incomingStr);
+		result.put("totalOrderPay", MathBigDecimalUtil.round2(totalOrderPay));
+		return result;
+	}
+	
+	/**
+	 * 获取深度保洁订单的服务人员收入
+	 * 1. 对于订单支付的金额，按照提成配置价格提成，超出小时部分 = 数量 * 提成
+	 * 2. 对于补差价和补时的收入，按照比例进行提成。
+	 */
+	@Override
+	public Map<String, String> getTotalOrderIncomingDeep(Orders order, Long staffId) {
+
+		Long orderId = order.getId();
+		int staffNum = order.getStaffNums();
+		
+		Long userId = order.getUserId();
+		Users u = userService.selectByPrimaryKey(userId);
+		int isVip = u.getIsVip();
+		
+		Long serviceTypeId = order.getServiceType();
+		
+		String incomingStr = "";
+		// 总收入合计
+		BigDecimal totalOrderPay = new BigDecimal(0);
+		
+		ServiceAddonSearchVo searchVo = new ServiceAddonSearchVo();
+		searchVo.setServiceType(serviceTypeId);
+		searchVo.setEnable((short) 1);
+		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectBySearchVo(searchVo);
+		
+		List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+		
+		for (OrderServiceAddons orderAddon : orderAddons)  {
+			Long serviceAddonId = orderAddon.getServiceAddonId();
+			int itemNum = orderAddon.getItemNum();
+			
+			for (DictServiceAddons dictAddon :  serviceAddons) {
+				if (dictAddon.getServiceAddonId().equals(serviceAddonId)) {
+					BigDecimal itemStaffPrice = dictAddon.getStaffPrice();
+					if (isVip == 1) {
+						itemStaffPrice = dictAddon.getStaffDisPrice();
+					}
+					BigDecimal itemOrderPay = itemStaffPrice.multiply(new BigDecimal(itemNum));
+					totalOrderPay = totalOrderPay.add(itemOrderPay);
+					break;
+				}
+			}
+		}
+		
+		incomingStr = "订单提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+
+		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
+		// 订单补差价金额 订单差价的折扣比例
+		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
+		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
+		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
+			totalOrderPay = totalOrderPay.add(orderPayExtDiff);
+			incomingStr = ";订单补差价提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+		}
+
+		// 订单加时金额 订单加时的折扣比例
+		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
+		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
+		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
+			totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
+			incomingStr = ";订单加时提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+		}
+		
+		//最后做一个服务人员平均
+		totalOrderPay = MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("incomingStr", incomingStr);
+		result.put("totalOrderPay", MathBigDecimalUtil.round2(totalOrderPay));
+		return result;
+	}
+	
 
 	/**
 	 * 获得订单的总欠款
