@@ -300,69 +300,69 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 	 * @params staffId
 	 * @return
 	 */
-	@Override
-	public BigDecimal getTotalOrderIncoming(Orders order, Long staffId) {
-		Long orderId = order.getId();
-
-		OrderPrices orderPrice = this.selectByOrderId(orderId);
-
-		// 订单支付金额
-		BigDecimal orderPay = orderPrice.getOrderPay();
-
-		// 订单优惠劵金额
-		BigDecimal orderPayCoupon = new BigDecimal(0);
-		Long userCouponId = orderPrice.getCouponId();
-		if (userCouponId > 0L) {
-			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
-			Long couponId = userCoupon.getCouponId();
-			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
-			orderPayCoupon = dictCoupon.getValue();
-		}
-
-		// 订单补差价金额
-		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
-
-		// 订单加时金额
-		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
-
-		// 找出派工，是否为多个
-		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-		orderDispatchSearchVo.setOrderId(orderId);
-		orderDispatchSearchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
-
-		int staffNum = 1;
-		if (!orderDispatchs.isEmpty())
-			staffNum = orderDispatchs.size();
-		
-		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
-		
-		// 订单金额的折扣比例,先平均在折扣
-		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
-		orderPay = orderPay.multiply(incomingPercent);
-
-		// 订单差价的折扣比例,先平均在折扣
-		orderPayExtDiff = MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
-		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
-
-		// 订单加时的折扣比例,先平均在折扣
-		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
-		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
-
-		// 订单优惠劵的金额，先平均在折扣
-		orderPayCoupon = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
-		BigDecimal couponPercent = new BigDecimal(0.5);
-		orderPayCoupon = orderPayCoupon.multiply(couponPercent);
-
-		// 总收入合计
-		BigDecimal totalOrderPay = new BigDecimal(0);
-		totalOrderPay = totalOrderPay.add(orderPay);
-		totalOrderPay = totalOrderPay.add(orderPayExtDiff);
-		totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
-		totalOrderPay = totalOrderPay.add(orderPayCoupon);
-		totalOrderPay = MathBigDecimalUtil.round(totalOrderPay, 2);
-		return totalOrderPay;
-	}
+//	@Override
+//	public BigDecimal getTotalOrderIncoming(Orders order, Long staffId) {
+//		Long orderId = order.getId();
+//
+//		OrderPrices orderPrice = this.selectByOrderId(orderId);
+//
+//		// 订单支付金额
+//		BigDecimal orderPay = orderPrice.getOrderPay();
+//
+//		// 订单优惠劵金额
+//		BigDecimal orderPayCoupon = new BigDecimal(0);
+//		Long userCouponId = orderPrice.getCouponId();
+//		if (userCouponId > 0L) {
+//			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
+//			Long couponId = userCoupon.getCouponId();
+//			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
+//			orderPayCoupon = dictCoupon.getValue();
+//		}
+//
+//		// 订单补差价金额
+//		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
+//
+//		// 订单加时金额
+//		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
+//
+//		// 找出派工，是否为多个
+//		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+//		orderDispatchSearchVo.setOrderId(orderId);
+//		orderDispatchSearchVo.setDispatchStatus((short) 1);
+//		List<OrderDispatchs> orderDispatchs = orderDispatchService.selectBySearchVo(orderDispatchSearchVo);
+//
+//		int staffNum = 1;
+//		if (!orderDispatchs.isEmpty())
+//			staffNum = orderDispatchs.size();
+//		
+//		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
+//		
+//		// 订单金额的折扣比例,先平均在折扣
+//		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
+//		orderPay = orderPay.multiply(incomingPercent);
+//
+//		// 订单差价的折扣比例,先平均在折扣
+//		orderPayExtDiff = MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
+//		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
+//
+//		// 订单加时的折扣比例,先平均在折扣
+//		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
+//		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
+//
+//		// 订单优惠劵的金额，先平均在折扣
+//		orderPayCoupon = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
+//		BigDecimal couponPercent = new BigDecimal(0.5);
+//		orderPayCoupon = orderPayCoupon.multiply(couponPercent);
+//
+//		// 总收入合计
+//		BigDecimal totalOrderPay = new BigDecimal(0);
+//		totalOrderPay = totalOrderPay.add(orderPay);
+//		totalOrderPay = totalOrderPay.add(orderPayExtDiff);
+//		totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
+//		totalOrderPay = totalOrderPay.add(orderPayCoupon);
+//		totalOrderPay = MathBigDecimalUtil.round(totalOrderPay, 2);
+//		return totalOrderPay;
+//	}
 	
 	/**
 	 * 获取金牌保洁订单的服务人员收入

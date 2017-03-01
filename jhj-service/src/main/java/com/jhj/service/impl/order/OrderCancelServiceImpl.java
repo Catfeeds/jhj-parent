@@ -1,7 +1,9 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -328,51 +330,67 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		Long orderId = order.getId();
 		Long staffId = orgStaff.getStaffId();
 		BigDecimal totalOrderPay = orderPricesService.getTotalOrderPay(orderPrice);
-		BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(order, staffId);
+		
+		Map<String, String> orderIncomingMap = new HashMap<String, String>();
+		
+		if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+			orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(order, staffId);
+		}
+
+		if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+			orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(order, staffId);
+		}
+
+		String orderIncomingStr = orderIncomingMap.get("totalOrderPay");
+		BigDecimal orderIncoming = new BigDecimal(orderIncomingStr);
+		
+		
+//		BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(order, staffId);
 
 		// =======================|订单收入组成，并生成备注
 
 		String remarks = "";
-		int staffNum = order.getStaffNums();
-		BigDecimal incomingPercent = orderPricesService.getOrderPercent(order, staffId);
-
-		// 1.订单支付金额
-		BigDecimal orderPay = orderPrice.getOrderPay();
-		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
-		orderPay = orderPay.multiply(incomingPercent);
-		String orderPayStr = MathBigDecimalUtil.round2(orderPay);
-		remarks = "订单收入:" + orderPayStr;
-		// 2.订单优惠劵金额
-		BigDecimal orderPayCoupon = new BigDecimal(0);
-		Long userCouponId = orderPrice.getCouponId();
-		if (userCouponId > 0L) {
-			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
-			Long couponId = userCoupon.getCouponId();
-			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
-			orderPayCoupon = dictCoupon.getValue();
-			orderPayCoupon = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
-			orderPayCoupon = orderPayCoupon.multiply(new BigDecimal(0.5));
-			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
-			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
-		}
-
-		// 3.订单补差价金额
-		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
-		orderPayExtDiff = MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
-		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
-		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
-			String orderPayExtDiffStr = MathBigDecimalUtil.round2(orderPayExtDiff);
-			remarks += " + 订单补差价收入:" + orderPayExtDiffStr;
-		}
-
-		// 4.订单加时金额
-		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
-		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
-		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
-		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
-			String orderPayExtOverWorkStr = MathBigDecimalUtil.round2(orderPayExtOverWork);
-			remarks += " + 订单加时收入:" + orderPayExtOverWorkStr;
-		}
+		remarks = orderIncomingMap.get("incomingStr").toString();
+//		int staffNum = order.getStaffNums();
+//		BigDecimal incomingPercent = orderPricesService.getOrderPercent(order, staffId);
+//
+//		// 1.订单支付金额
+//		BigDecimal orderPay = orderPrice.getOrderPay();
+//		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
+//		orderPay = orderPay.multiply(incomingPercent);
+//		String orderPayStr = MathBigDecimalUtil.round2(orderPay);
+//		remarks = "订单收入:" + orderPayStr;
+//		// 2.订单优惠劵金额
+//		BigDecimal orderPayCoupon = new BigDecimal(0);
+//		Long userCouponId = orderPrice.getCouponId();
+//		if (userCouponId > 0L) {
+//			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
+//			Long couponId = userCoupon.getCouponId();
+//			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
+//			orderPayCoupon = dictCoupon.getValue();
+//			orderPayCoupon = MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
+//			orderPayCoupon = orderPayCoupon.multiply(new BigDecimal(0.5));
+//			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
+//			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
+//		}
+//
+//		// 3.订单补差价金额
+//		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
+//		orderPayExtDiff = MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
+//		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
+//		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
+//			String orderPayExtDiffStr = MathBigDecimalUtil.round2(orderPayExtDiff);
+//			remarks += " + 订单补差价收入:" + orderPayExtDiffStr;
+//		}
+//
+//		// 4.订单加时金额
+//		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
+//		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
+//		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
+//		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
+//			String orderPayExtOverWorkStr = MathBigDecimalUtil.round2(orderPayExtOverWork);
+//			remarks += " + 订单加时收入:" + orderPayExtOverWorkStr;
+//		}
 
 		//1. 记录服务人员消费明细
 		String orderStatusStr = "取消订单";

@@ -40,7 +40,7 @@ public interface OrderPricesService {
 
 	BigDecimal getTotalOrderPay(OrderPrices orderPrice);
 	
-	BigDecimal getTotalOrderIncoming(Orders order, Long staffId);	
+//	BigDecimal getTotalOrderIncoming(Orders order, Long staffId);	
 	
 	BigDecimal getTotalOrderDept(Orders order, Long staffId);
 
