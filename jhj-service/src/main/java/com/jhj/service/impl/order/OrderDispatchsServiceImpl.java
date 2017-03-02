@@ -1242,10 +1242,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		orderDispatchSearchVo.setDispatchStatus((short) 1);
 		orderDispatchSearchVo.setStaffIds(staffIds);
 		
+		double orderServiceHour =0L;
 		List<OrderDispatchs> orderDispatchs = this.selectBySearchVo(orderDispatchSearchVo);
 		for (OrderDispatchs orderDispatch : orderDispatchs) {
 			Long orderId = orderDispatch.getOrderId();
 			Orders order = orderService.selectByPrimaryKey(orderId);
+			orderServiceHour = order.getServiceHour();
 			
 			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) ||
 				order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1) ||
@@ -1305,6 +1307,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
+			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
 		

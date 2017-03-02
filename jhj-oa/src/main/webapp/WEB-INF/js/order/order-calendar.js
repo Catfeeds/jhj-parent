@@ -17,11 +17,13 @@ function selectServiceDate(){
     //展示时间 
     function showTime(selectDate,val){
         var dateTime='';
+        var orderServiceHour=0;
         var html = $("#show-dateTime").html();
         for(var i=0;i<time.length;i++){
             if(val==undefined || val==null || val==''){
 				dateTime+="<li>"+time[i]+"</li>";
         	}else{
+        		orderServiceHour = val[0].order_service_hour;
         		for(var j = 0 ; j < val.length;j++){
         			if(time[i]==val[j].service_hour){
         				if(val[j].is_full==0){
@@ -45,6 +47,22 @@ function selectServiceDate(){
 	        }else{
 	            dayTime=$(this).text();
 	            $("#checkDate").removeClass("rili1-6-2").addClass("rili1-6-1");
+	        }
+	        
+	        var selectTime = dayTime.replace(":",".");
+	        var selectTimeStart = parseFloat(selectTime)-2;
+	        var selectTimeEnd = parseFloat(selectTime)+parseFloat(orderServiceHour)+1.5;
+	        for(var k=0;k<val.length;k++){
+	        	var valTime = val[k].service_hour;
+	        	var parseTime = valTime.replace(":",".");
+	        	if(parseTime>=selectTimeStart && parseTime<=selectTimeEnd){
+	        		if(val[k].is_full==1){
+	        			alert("这个时间不能选择");
+	        			break;
+	        		}
+	        	}
+	        	
+	        	
 	        }
 	  });
         tomm(selectDate);
