@@ -35,6 +35,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
          if(day==undefined || day==null || day==''){
         	 day = $$(element).text();
          }
+         serviceDate=year+"-"+month+"-"+day;
          var pre_li = $$(element).parent().prevAll("li");
          var after_li = $$(element).parent().nextAll("li");
 	 	 var flag=0;
@@ -56,9 +57,9 @@ myApp.onPageInit('order-lib-cal',function(page) {
                  }
              }
              if(flag==pre_li.length && flag2==after_li.length){
-                 serviceDate=year+"-"+month+"-"+day;
+                 serviceDate=serviceDate;
              }else{
-             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             	serviceDate = moment(serviceDate).add(1,'M').format("YYYY-MM-DD");
              }
          }
 
@@ -66,18 +67,18 @@ myApp.onPageInit('order-lib-cal',function(page) {
              var nextVal=$$(after_li[0]).text();
              var next5Val=$$(after_li[5]).text();
              if(nextVal>day || (nextVal<day && next5Val<day)){
-                 serviceDate=year+"-"+month+"-"+day;
+                 serviceDate=serviceDate;
              }else{
-             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             	serviceDate = moment(serviceDate).add(1,'M').format("YYYY-MM-DD");
              }
          }
          if(after_li.length==0){
              var preVal=$$(pre_li[0]).text();
              var pre5Val=$$(pre_li[5]).text();
              if(preVal<day && pre5Val<day){
-                 serviceDate=year+"-"+month+"-"+day;
+                 serviceDate=serviceDate;
              }else{
-             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             	serviceDate = moment(serviceDate).add(1,'M').format("YYYY-MM-DD");
              }
          }
          return serviceDate;
