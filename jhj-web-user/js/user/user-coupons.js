@@ -97,7 +97,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 
 			
 			//判断有效期
-			if(serviceDate<=fromDate || serviceDate>=toDate){
+			if(serviceDate<fromDate || serviceDate>toDate){
 				myApp.alert("当前优惠劵不适用!");
 				return false;
 			}
