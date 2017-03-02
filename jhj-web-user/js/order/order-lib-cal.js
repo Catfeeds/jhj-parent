@@ -35,6 +35,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
          if(day==undefined || day==null || day==''){
         	 day = $$(element).text();
          }
+         serviceDate=year+"-"+month+"-"+day;
          var pre_li = $$(element).parent().prevAll("li");
          var after_li = $$(element).parent().nextAll("li");
 	 	 var flag=0;
@@ -56,9 +57,9 @@ myApp.onPageInit('order-lib-cal',function(page) {
                  }
              }
              if(flag==pre_li.length && flag2==after_li.length){
-                 serviceDate=year+"-"+month+"-"+day;
+                 serviceDate=serviceDate;
              }else{
-             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             	serviceDate = moment(serviceDate).add(1,'M').format("YYYY-MM-DD");
              }
          }
 
@@ -66,18 +67,18 @@ myApp.onPageInit('order-lib-cal',function(page) {
              var nextVal=$$(after_li[0]).text();
              var next5Val=$$(after_li[5]).text();
              if(nextVal>day || (nextVal<day && next5Val<day)){
-                 serviceDate=year+"-"+month+"-"+day;
+                 serviceDate=serviceDate;
              }else{
-             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             	serviceDate = moment(serviceDate).add(1,'M').format("YYYY-MM-DD");
              }
          }
          if(after_li.length==0){
              var preVal=$$(pre_li[0]).text();
              var pre5Val=$$(pre_li[5]).text();
              if(preVal<day && pre5Val<day){
-                 serviceDate=year+"-"+month+"-"+day;
+                 serviceDate=serviceDate;
              }else{
-             	serviceDate = moment(year+"-"+month+"-"+day).add(1,'M').format("YYYY-MM-DD");
+             	serviceDate = moment(serviceDate).add(1,'M').format("YYYY-MM-DD");
              }
          }
          return serviceDate;
@@ -98,17 +99,26 @@ myApp.onPageInit('order-lib-cal',function(page) {
         	 }else{
         		 for(var j=0;j<result.length;j++){
           			if(time[i]==result[j].service_hour){
-          				if(result[j].is_full==0){
-          					if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
-                                dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
-                            }else{
-                            	dateTime+="<li>"+time[i]+"</li>";
-                            }
+          				if(selectDate!='2017-02-27'){
+          					
+          					if(result[j].is_full==0){
+          						if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
+          							dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
+          						}else{
+          							dateTime+="<li>"+time[i]+"</li>";
+          						}
+          					}
+          					if(result[j].is_full==1){
+          						dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</p></li>";
+          					}
           				}
-          				if(result[j].is_full==1){
-          					dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</p></li>";
-          				}
-          				
+          				if(selectDate=='2017-02-27'){
+          					if(i<4){
+          						dateTime+="<li>"+time[i]+"</li>";
+          					}else{
+          						dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
+          					}
+          		        }
           			}
           		}
         	 }

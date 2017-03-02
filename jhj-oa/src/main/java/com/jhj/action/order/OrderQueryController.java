@@ -588,5 +588,85 @@ public class OrderQueryController extends BaseController {
 		return result;
 
 	}
+	
+	@RequestMapping(value = "/order-list",method=RequestMethod.GET)
+	public String getOrderList(Model model, HttpServletRequest request, OrderSearchVo searchVo){
+		
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ConstantOa.DEFAULT_PAGE_SIZE;
+		// 分页
+
+		// 查询条件： 设置为钟点工的订单
+		if (searchVo == null)
+			searchVo = new OrderSearchVo();
+		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+
+		searchVo = orderQueryService.getOrderSearchVo(request, searchVo,searchVo.getOrderType(), sessionParentId);
+		searchVo.setOrderByProperty(searchVo.getOrderByProperty());
+		PageInfo result = orderQueryService.selectByListPage(searchVo, pageNo, pageSize);
+
+		List<Orders> orderList = result.getList();
+		Orders orders = null;
+		BigDecimal pageMoney=new BigDecimal(0);
+		for (int i = 0; i < orderList.size(); i++) {
+			orders = orderList.get(i);
+			OaOrderListVo completeVo = oaOrderService.completeNewVo(orders);
+			BigDecimal orderPay = completeVo.getOrderPay();
+			if(completeVo.getOrderStatus()>=Constants.ORDER_HOUR_STATUS_7 && completeVo.getOrderStatus()<=Constants.ORDER_HOUR_STATUS_8){
+				pageMoney = pageMoney.add(orderPay);
+			}
+			orderList.set(i, completeVo);
+		}
+		
+		result = new PageInfo(orderList);
+		
+		BigDecimal totalOrderPay = orderQueryService.getTotalOrderPay(searchVo);
+		BigDecimal totalOrderPayExt = orderQueryService.getTotalOrderPayExt(searchVo);
+		if (totalOrderPay == null) totalOrderPay = new BigDecimal(0);
+		if (totalOrderPayExt == null) totalOrderPayExt = new BigDecimal(0);
+		BigDecimal totalMoney = MathBigDecimalUtil.add(totalOrderPay, totalOrderPayExt);
+		
+		
+		String startTimeStr = request.getParameter("startTimeStr");
+		if (!StringUtil.isEmpty(startTimeStr))
+			model.addAttribute("startTimeStr", startTimeStr);
+
+		// 下单结束时间
+		String endTimeStr = request.getParameter("endTimeStr");
+		if (!StringUtil.isEmpty(endTimeStr))
+			model.addAttribute("endTimeStr", endTimeStr);
+		// 服务开始时间
+		String serviceStartTime = request.getParameter("serviceStartTimeStr");
+		if (!StringUtil.isEmpty(serviceStartTime))
+			model.addAttribute("serviceStartTimeStr", serviceStartTime);
+
+		// 服务结束时间
+		String serviceEndTimeStr = request.getParameter("serviceEndTimeStr");
+		if (!StringUtil.isEmpty(serviceEndTimeStr))
+			model.addAttribute("serviceEndTimeStr", serviceEndTimeStr);
+		
+		String startOrderDoneTimeStr = request.getParameter("startOrderDoneTimeStr");
+		if (!StringUtil.isEmpty(startOrderDoneTimeStr))
+			model.addAttribute("startOrderDoneTimeStr", startOrderDoneTimeStr);
+
+		String endOrderDoneTimeStr = request.getParameter("endOrderDoneTimeStr");
+		if (!StringUtil.isEmpty(endOrderDoneTimeStr))
+			model.addAttribute("endOrderDoneTimeStr", endOrderDoneTimeStr);
+		
+		CooperativeBusinessSearchVo businessSearchVo=new CooperativeBusinessSearchVo();
+		businessSearchVo.setEnable((short)1);
+		List<CooperativeBusiness> businessList = cooperateBusinessService.selectCooperativeBusinessVo(businessSearchVo);
+		model.addAttribute("businessList", businessList);
+		
+		model.addAttribute("pageMoney", pageMoney);
+		model.addAttribute("totalMoney", totalMoney);
+		model.addAttribute("loginOrgId", sessionParentId); // 当前登录的 id,动态显示搜索 条件
+		model.addAttribute("oaOrderListVoModel", result);
+		model.addAttribute("searchModel", searchVo);
+		model.addAttribute("listUrl", "order-list");
+
+		return "order/orderList";
+		
+	}
 
 }
