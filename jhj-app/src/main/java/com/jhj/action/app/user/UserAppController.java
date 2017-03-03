@@ -163,13 +163,9 @@ public class UserAppController extends BaseController {
 					if (userType == 0) {
 						// 给新注册的用户发送优惠券
 						DictCoupons dictCoupons = couponsService.selectByPrimaryKey(Constants.NEW_USER_REGISTER_COUPONS_ID);
-						List<UserCoupons> userCouponsList = new ArrayList<UserCoupons>();
 						if (dictCoupons != null) {
 							UserCoupons uc = userCouponService.initUserCoupons(u.getId(), dictCoupons);
-							userCouponsList.add(uc);
-						}
-						if (userCouponsList != null && userCouponsList.size() > 0) {
-							userCouponService.insertByList(userCouponsList);
+							userCouponService.insertSelective(uc);
 						}
 					}
 
