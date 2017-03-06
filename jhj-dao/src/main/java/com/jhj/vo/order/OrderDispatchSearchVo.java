@@ -54,6 +54,8 @@ public class OrderDispatchSearchVo {
 	private Short dispatchStatus;
 	
 	private Short isApply;
+	
+	private Long serviceTypeId;
 
 	public String getMobile() {
 		return mobile;
@@ -254,4 +256,14 @@ public class OrderDispatchSearchVo {
 	public void setIsApply(Short isApply) {
 		this.isApply = isApply;
 	}
+
+	public Long getServiceTypeId() {
+		return serviceTypeId;
+	}
+
+	public void setServiceTypeId(Long serviceTypeId) {
+		this.serviceTypeId = serviceTypeId;
+	}
+
+	
 }
