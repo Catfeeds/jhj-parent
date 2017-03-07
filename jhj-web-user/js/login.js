@@ -178,8 +178,8 @@ myApp.onPageInit('login', function (page) {
 	    	  }
     	   	  
     	   	}
-    	   	var flag =result.data.has_user_addr;
-    	   	if(flag ==true){
+//    	   	var flag =result.data.has_user_addr;
+//    	   	if(flag ==true){
     	   	//返回用户浏览的上一页
 	   			var target = mainView.history[mainView.history.length-2];
 	   			var nextUrl = page.query.next_url;
@@ -189,9 +189,10 @@ myApp.onPageInit('login', function (page) {
     	   		}else{
     	   			mainView.router.loadPage(target);
     	   		}
-    	   	}else{
+//    	   	}
+    	   /*	else{
     	   		mainView.router.loadPage("user/mine-add-addr.html");
-    	   	}
+    	   	}*/
     	   
     	};                
         
