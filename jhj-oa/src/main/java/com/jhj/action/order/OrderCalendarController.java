@@ -34,6 +34,7 @@ import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.newDispatch.EventVo;
 import com.jhj.vo.order.newDispatch.OaStaffDisAndLeaveVo;
@@ -100,7 +101,7 @@ public class OrderCalendarController extends BaseController {
 	 * @Description:
 	 * 
 	 *               门店 工作人员 排班表 和 请假表
-	 */
+	 */ 
 	@AuthPassport
 	@RequestMapping(value = "calendar_list", method = {RequestMethod.GET,RequestMethod.POST})
 	public String staffOrderList(OrderDispatchSearchVo searchVo, HttpServletRequest request, Model model) throws ParseException, UnsupportedEncodingException {
@@ -128,6 +129,9 @@ public class OrderCalendarController extends BaseController {
 		if(searchVo.getOrgId()!=null){
 			staffSearchVo.setOrgId(searchVo.getOrgId());
 		}
+		if(searchVo.getServiceTypeId()!=null &&searchVo.getServiceTypeId()>0){
+			staffSearchVo.setServiceTypeId(searchVo.getServiceTypeId());
+		}
 		// 登录门店下的 所有 员工
 		List<OrgStaffs> staffList = staffService.selectBySearchVo(staffSearchVo);
 		
@@ -151,6 +155,8 @@ public class OrderCalendarController extends BaseController {
 		// 排班列表人员统计
 		int dispatchSizeAM=0;
 		int dispatchSizePM=0;
+		boolean isDispatchAM=false;
+		boolean isDispatchPM=false;
 
 		//==================================================查出请假信息
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
@@ -158,11 +164,6 @@ public class OrderCalendarController extends BaseController {
 			// 所有员工的请假情况
 			leaveSearchVo.setParentId(parentId);
 		}
-		
-		Date startDate = DateUtil.parse(startTimeStr);
-		Date endDate = DateUtil.parse(endTimeStr);
-//		leaveSearchVo.setRangeStartDate(startDate);
-//		leaveSearchVo.setRangeEndDate(endDate);
 		leaveSearchVo.setLeaveStatus("1");
 
 		//请假人员统计
@@ -216,15 +217,17 @@ public class OrderCalendarController extends BaseController {
 						if(weekDate.equals(startTimeStr) && leaveDate<=startTime*1000 && leaveDateEnd>=startTime*1000){
 							staffIdSet.add(staffId);
 						}
-					}
-					if(startTimeStr.equals(weekDate)){
-						leaveStaffSize++;
+						if(startTimeStr.equals(weekDate) &&startTime*1000>=leaveDate && startTime*1000<=leaveDateEnd){
+							leaveStaffSize++;
+						}
 					}
 				}
 				
 				// 加入 排班事件
 				if(disList!=null && disList.size()>0){
 					for(OrderDispatchs staffDisVo : disList){
+						isDispatchAM=false;
+						isDispatchPM=false;
 						// 服务日期 , 格式 'yyyy-MM-dd'
 						Long serviceDate = staffDisVo.getServiceDate() * 1000;
 						String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, "yyyy-MM-dd");
@@ -255,12 +258,18 @@ public class OrderCalendarController extends BaseController {
 							eventVo.setOrderType(orders.getOrderType());
 							eventList.add(eventVo);
 							if(startTimeStr.equals(serviceDateStr)&& serviceDate>=compareTime){
-								dispatchSizePM++;
+								isDispatchAM=true;
 							}
 							if(startTimeStr.equals(serviceDateStr)&& serviceDate<compareTime){
-								dispatchSizeAM++;
+								isDispatchPM=true;
 							}
 						}
+					}
+					if(isDispatchAM){
+						dispatchSizePM++;
+					}
+					if(isDispatchPM){
+						dispatchSizeAM++;
 					}
 				}
 				if(!staffFinanceList.isEmpty() && staffFinanceList.size()>0){
@@ -271,7 +280,6 @@ public class OrderCalendarController extends BaseController {
 							EventVo eventVo = new EventVo();
 							eventVo.setDateDuration(weekDate);
 							eventVo.setEventName("黑名单");
-//							eventVo.setServiceTime(leaveDate);
 							eventList.add(eventVo);
 						}
 					}
@@ -288,6 +296,17 @@ public class OrderCalendarController extends BaseController {
 		String json = gson.toJson(listVo);
 		System.out.println(json);
 		
+		PartnerServiceTypeVo serviceTypeVo = new PartnerServiceTypeVo();
+		serviceTypeVo.setEnable((short)1);
+		serviceTypeVo.setViewType((short)0);
+		List<PartnerServiceType> serviceTypeList = partService.selectByPartnerServiceTypeVo(serviceTypeVo);
+		for(int i=0;i<serviceTypeList.size();i++){
+			PartnerServiceType serviceType = serviceTypeList.get(i);
+			if(serviceType.getParentId()==0L){
+				serviceTypeList.remove(serviceType);
+			}
+		}
+		
 		model.addAttribute("listVoModel", json);
 		model.addAttribute("disAndLeaveSearchVoModel", searchVo);
 		model.addAttribute("loginOrgId", parentId); // 当前登录的 id,动态显示搜索 条件
@@ -296,6 +315,7 @@ public class OrderCalendarController extends BaseController {
 		model.addAttribute("pmStaffSize",staffListSize-leaveStaffSize-dispatchSizePM );
 		model.addAttribute("dispatchNum",staffListSize-staffIdSet.size());
 		model.addAttribute("startTimeStr", startTimeStr);
+		model.addAttribute("serviceTypeList", serviceTypeList);
 
 		return "staffDisAndLeave/staffDisAndLeaveList";
 	}

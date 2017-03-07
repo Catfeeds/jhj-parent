@@ -68,6 +68,13 @@ import="com.jhj.oa.common.UrlHelper"%>
 										</div>
 										<div class="form-group">
 											    手机号：<form:input class="form-control" path="staffMobile" placeholder="请输入手机号"/>
+										</div>
+										<div class="form-group">
+			                          		服务人员技能：
+											<form:select path="serviceTypeId" class="form-control" >
+												<form:option value="">--请选择技能--</form:option>
+												<form:options items="${serviceTypeList }" itemLabel="name" itemValue="serviceTypeId" />
+											</form:select>
 										</div>	
 										<div class="form-group">
 			                          		日期：
