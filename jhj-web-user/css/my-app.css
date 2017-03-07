@@ -5015,13 +5015,13 @@ i.toolbar-icon-tixing {
   text-align: left;
 }
 
-#muyin5{
+.muyin5{
   width:48%;
-  font-size: 12px;
+  font-size: 12px!important;
   float: right;
-  margin:0;margin-right: 1%;
-  line-height: 20px;
-  margin-top: 30px;
+  margin:0!important;margin-right: 1%!important;
+  line-height: 20px!important;
+  margin-top: 30px!important;
 }
 
 
@@ -5292,6 +5292,13 @@ i.toolbar-icon-tixing {
 
 
 
+/*物业活动*/
+
+
+
+
+
+
 
 
 
@@ -5372,6 +5379,12 @@ i.toolbar-icon-tixing {
   margin-top: 30px;
   margin-right: 3%;
   float: right;
+}
+.all-img10{
+   width:100%;padding:0;margin-top: -7px;
+}
+.all-img11{
+  width:50%;float: left;margin-top: -7px;
 }
 /*textarea标签设定*/
 .tarea{
