@@ -47,8 +47,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_begin.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "1");
-	    postRequest = postRequest.param("order_id", "1");
+	    postRequest = postRequest.param("staff_id", "5");
+	    postRequest = postRequest.param("order_id", "5");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));
@@ -64,8 +64,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_done.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "1");
-	    postRequest = postRequest.param("order_id", "1");
+	    postRequest = postRequest.param("staff_id", "3");
+	    postRequest = postRequest.param("order_id", "4");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));
@@ -77,7 +77,7 @@ public class TestOrderController extends JUnitActionBase{
 	@Test
     public void testPostOrderDone() throws Exception {
 
-		String url = "/app/staff/order/post_done.json?staff_id=1&order_id=1";
+		String url = "/app/staff/order/post_done.json?staff_id=10&order_id=25";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
      	
@@ -108,10 +108,10 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_overwork.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "142");
-	    postRequest = postRequest.param("order_id", "8011");
-	    postRequest = postRequest.param("service_hour", "2");
-	    postRequest = postRequest.param("order_pay", "40");
+	    postRequest = postRequest.param("staff_id", "3");
+	    postRequest = postRequest.param("order_id", "4");
+	    postRequest = postRequest.param("service_hour", "1");
+	    postRequest = postRequest.param("order_pay", "50");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));
