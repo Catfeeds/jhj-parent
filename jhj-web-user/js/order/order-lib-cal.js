@@ -302,7 +302,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             	filterPreCurrentTime(lis,20);
             }
             if(nowHour>=16 && nowHour<=19){
-            	filterPreCurrentTime(lis,20);
+            	filterPreCurrentTime(lis,21);
             }
             if(nowHour>=20 && nowHour<=23){
             	filterPreCurrentTime(lis,2);
