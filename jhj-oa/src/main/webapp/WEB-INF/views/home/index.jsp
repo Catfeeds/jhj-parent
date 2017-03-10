@@ -44,7 +44,7 @@
                           </div>
                       </section>
                   </div>
-                 <!--  <a href="../user/home-user-list">
+                 <a href="../user/home-user-list">
 	                  <div class="col-lg-3 col-sm-6">
 	                      <section class="panel">
 	                          <div class="symbol red">
@@ -58,7 +58,7 @@
 	                          </div>
 	                      </section>
 	                  </div>
-                  </a> -->
+                  </a>
                   <div class="col-lg-3 col-sm-6">
                       <section class="panel">
                           <div class="symbol yellow">
@@ -72,7 +72,7 @@
                           </div>
                       </section>
                   </div>
-                  <%-- <div class="col-lg-3 col-sm-6">
+                  <div class="col-lg-3 col-sm-6">
                       <section class="panel">
                           <div class="symbol blue">
                               <i class="icon-bar-chart"></i>
@@ -92,7 +92,7 @@
                               </a>
                           </div>
                       </section>
-                  </div> --%>
+                  </div>
               </div>
               <!--state overview end-->
 			  <hr style="width: 100%; color: black; height: 1px; background-color: black;" />

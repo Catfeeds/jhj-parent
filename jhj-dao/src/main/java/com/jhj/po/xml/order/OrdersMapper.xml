@@ -1093,9 +1093,6 @@
 		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
-		<if test="serviceType!=null">
-		
-		</if>
 	</sql>
 
 	<select id="chartTypeRevenue" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">

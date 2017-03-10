@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,8 +39,7 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
      * 充值卡销售图表
      */
     @Override
-    public ChartDataVo statChartDatas(ChartSearchVo chartSearchVo,
-                                      List<String> timeSeries) {
+    public ChartDataVo statChartDatas(ChartSearchVo chartSearchVo,List<String> timeSeries) {
 
         ChartDataVo chartDataVo = new ChartDataVo();
 
@@ -49,20 +49,12 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         String statType = chartSearchVo.getStatType();
 
         // 1. table 列名
-        List<String> legendAll = new ArrayList<String>();
-        legendAll.add("一千面值");
-        legendAll.add("一千面值占比");
-        legendAll.add("两千面值");
-        legendAll.add("两千面值占比");
-        legendAll.add("三千面值");
-        legendAll.add("三千面值占比");
-        legendAll.add("营业额小计");
+        String[] legendAllArrys = {"五百面值","五百面值占比","一千面值","一千面值占比","两千面值","两千面值占比","三千面值","三千面值占比","营业额小计"};
+        List<String> legendAll = Arrays.asList(legendAllArrys);
 
         // 2. 统计图 图例
-        List<String> legend = new ArrayList<String>();
-        legend.add("一千面值");
-        legend.add("两千面值");
-        legend.add("三千面值");
+        String[] legendArrys = {"五百面值","一千面值","两千面值","三千面值"};
+        List<String> legend = Arrays.asList(legendArrys);
         chartDataVo.setLegend(JSON.toJSONString(legend));
 
         // 3.x轴
@@ -102,91 +94,47 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         }
 
         // 4-2.真实数据填充（table表格），计算每行总计，以及各品类占比
-        BigDecimal oneMoney = new BigDecimal(0);
-        BigDecimal twopMoney = new BigDecimal(0);
-        BigDecimal fiveMoney = new BigDecimal(0);
 
-        String str = null, str1 = null;
-        for (ChartMapVo chartSqlData : statDatas) {
-            for (HashMap<String, String> tableDataItem : tableDatas) {
-            	
-            	if(chartSearchVo.getStatType().equals("day")){
-            		String str2 =tableDataItem.get("series");
-					String str3 = chartSqlData.getSeries();
+        for (HashMap<String, String> tableDataItem : tableDatas) {
+        	BigDecimal moneySum = new BigDecimal(0);
+        	BigDecimal oneMoney = new BigDecimal(0);
+        	BigDecimal twopMoney = new BigDecimal(0);
+        	BigDecimal threeMoney = new BigDecimal(0);
+        	BigDecimal fiveMoney = new BigDecimal(0);
+        	BigDecimal money = new BigDecimal(0);
+        	String str2 =tableDataItem.get("series");
+        	for (ChartMapVo chartSqlData : statDatas) {
+        		String str3 = chartSqlData.getSeries();
+            	if(statType.equals("day")){
 					if(DateUtil.compareDateStr(str3,str2)==0){
-						// 2 = 1000面值 3 = 2000面值 4 =3000面值
-	                    if (chartSqlData.getName().equals("2")) {
-	                        oneMoney = chartSqlData.getTotalMoney();
-	                        tableDataItem.put("一千面值",
-	                                MathBigDecimalUtil.round2(oneMoney));
-	                    }
-	                    if (chartSqlData.getName().equals("3")) {
-	                        twopMoney = chartSqlData.getTotalMoney();
-	                        tableDataItem.put("两千面值",
-	                                MathBigDecimalUtil.round2(twopMoney));
-	                    }
-	                    if (chartSqlData.getName().equals("4")) {
-	                        fiveMoney = chartSqlData.getTotalMoney();
-	                        tableDataItem.put("三千面值",
-	                                MathBigDecimalUtil.round2(fiveMoney));
-	                    }
+						//1=500 2 = 1000面值 3 = 2000面值 4 =3000面值
+						this.setTableDateItem(chartSqlData, money, tableDataItem);
 					}
             		
             	}else{
-            		String[] str2 = tableDataItem.get("series").split("-");
-					String[] str3 = chartSqlData.getSeries().split("-");
-					if ((Integer.valueOf(str3[0])<Integer.valueOf(str2[0])) || Integer.valueOf(str3[0]).equals(Integer.valueOf(str2[0])) && Integer.valueOf(str3[1])<=Integer.valueOf(str2[1])) {
-						// 2 = 1000面值 3 = 2000面值 4 =3000面值
-	                    if (chartSqlData.getName().equals("2")) {
-	                        oneMoney = chartSqlData.getTotalMoney();
-	                        tableDataItem.put("一千面值",
-	                                MathBigDecimalUtil.round2(oneMoney));
-	                    }
-	                    if (chartSqlData.getName().equals("3")) {
-	                        twopMoney = chartSqlData.getTotalMoney();
-	                        tableDataItem.put("两千面值",
-	                                MathBigDecimalUtil.round2(twopMoney));
-	                    }
-	                    if (chartSqlData.getName().equals("4")) {
-	                        fiveMoney = chartSqlData.getTotalMoney();
-	                        tableDataItem.put("三千面值",
-	                                MathBigDecimalUtil.round2(fiveMoney));
-	                    }
+					if (str2.equals(str3)) {
+						this.setTableDateItem(chartSqlData, money, tableDataItem);
 					}
             	}
-                BigDecimal moneySum = new BigDecimal(0);
-                BigDecimal oneThousandMoney = new BigDecimal(
-                        tableDataItem.get("一千面值"));
-                BigDecimal twoThousandMoney = new BigDecimal(
-                        tableDataItem.get("两千面值"));
-                BigDecimal fiveThousandMoney = new BigDecimal(
-                        tableDataItem.get("三千面值"));
-                // 计算百分比
-                moneySum = oneThousandMoney.add(twoThousandMoney).add(
-                        fiveThousandMoney);
-                tableDataItem.put("营业额小计", moneySum.toString());
-                if (moneySum.intValue() > 0) {
-                    tableDataItem.put(
-                            "一千面值占比",
-                            MathDoubleUtil.getPercent(
-                                    oneThousandMoney.intValue(),
-                                    moneySum.intValue()));
-                    tableDataItem.put(
-                            "两千面值占比",
-                            MathDoubleUtil.getPercent(
-                                    twoThousandMoney.intValue(),
-                                    moneySum.intValue()));
-                    tableDataItem.put(
-                            "三千面值占比",
-                            MathDoubleUtil.getPercent(
-                                    fiveThousandMoney.intValue(),
-                                    moneySum.intValue()));
-                } else {
-                    tableDataItem.put("一千面值占比", "0.00%");
-                    tableDataItem.put("两千面值占比", "0.00%");
-                    tableDataItem.put("三千面值占比", "0.00%");
-                }
             }
+        	// 计算百分比
+        	fiveMoney = new BigDecimal(tableDataItem.get("五百面值"));
+        	oneMoney = new BigDecimal(tableDataItem.get("一千面值"));
+        	twopMoney = new BigDecimal(tableDataItem.get("两千面值"));
+        	threeMoney = new BigDecimal(tableDataItem.get("三千面值"));
+        	moneySum = fiveMoney.add(oneMoney).add(twopMoney).add(threeMoney);
+        	tableDataItem.put("营业额小计", moneySum.toString());
+        	if (moneySum.intValue() > 0) {
+        		tableDataItem.put("五百面值占比",MathDoubleUtil.getPercent(fiveMoney.intValue(),moneySum.intValue()));
+        		tableDataItem.put("一千面值占比",MathDoubleUtil.getPercent(oneMoney.intValue(),moneySum.intValue()));
+        		tableDataItem.put("两千面值占比",MathDoubleUtil.getPercent(twopMoney.intValue(),moneySum.intValue()));
+        		tableDataItem.put("三千面值占比",MathDoubleUtil.getPercent(threeMoney.intValue(),moneySum.intValue()));
+        	} else {
+        		tableDataItem.put("五百面值占比", "0.00%");
+        		tableDataItem.put("一千面值占比", "0.00%");
+        		tableDataItem.put("两千面值占比", "0.00%");
+        		tableDataItem.put("三千面值占比", "0.00%");
+        	}
         }
 
         // 5. 去掉第一个tableDataItem;
@@ -195,41 +143,10 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
 
         // 6. 根据表格的数据生成图表的数据.
         // 初始化图表数据格式
-        List<HashMap<String, Object>> dataItems = new ArrayList<HashMap<String, Object>>();
-        HashMap<String, Object> chartDataItem = null;
-        List<Integer> datas = null;
-        for (int i = 0; i < legend.size(); i++) {
-            chartDataItem = new HashMap<String, Object>();
-            chartDataItem.put("name", legend.get(i));
-            chartDataItem.put("type", "bar");
-            datas = new ArrayList<Integer>();
-
-            for (int j = 1; j < timeSeries.size(); j++) {
-                for (HashMap<String, String> tableDataItem : tableDatas) {
-                    if (timeSeries.get(j).equals(
-                            tableDataItem.get("series").toString())) {
-                        String valueStr = tableDataItem.get(legend.get(i))
-                                .toString();
-                        Integer v = Double.valueOf(valueStr).intValue();
-                        datas.add(v);
-                    }
-                }
-            }
-            chartDataItem.put("data", datas);
-            dataItems.add(chartDataItem);
-        }
-        chartDataVo.setSeries(JSON.toJSONString(dataItems));
-
-        // 最后要把tableData -》时间序列 ，比如有 6，7，8转换为 6月，7月，8月
-        for (HashMap<String, String> tableDataItem : tableDatas) {
-            String seriesName = tableDataItem.get("series").toString();
-            seriesName = ChartUtil.getTimeSeriesName(statType, seriesName);
-            tableDataItem.put("series", seriesName);
-        }
-
-        chartDataVo.setTableDatas(tableDatas);
+        this.generateCount(legend, timeSeries, tableDatas, statType, chartDataVo);
         return chartDataVo;
     }
+    
 
     /**
      * 用户余额图表
@@ -249,26 +166,13 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         String statType = chartSearchVo.getStatType();
 
         // 1. table 列名
-        List<String> legendAll = new ArrayList<String>();
-        legendAll.add("余额用户");
-        legendAll.add("余额总金额");
-        legendAll.add("余额<200");
-        legendAll.add("余额<200占比");
-        legendAll.add("余额200~1k");
-        legendAll.add("余额200~1k占比");
-        legendAll.add("1K~3K");
-        legendAll.add("1K~3K占比");
-        legendAll.add("余额>3k");
-        legendAll.add("余额>3k占比");
+        String[] legendAllArrys = {"余额用户","余额总金额","余额<200","余额<200占比","余额200~1k","余额200~1k占比","1K~3K","1K~3K占比","余额>3k","余额>3k占比"};
+        List<String> legendAll = Arrays.asList(legendAllArrys);
 
         // 2. 统计图 图例
-        List<String> legend = new ArrayList<String>();
-        legend.add("余额用户");
-        legend.add("余额<200");
-        legend.add("余额200~1k");
-        legend.add("1K~3K");
-        legend.add("余额>3k");
-
+        String[] legendArrys = {"余额用户","余额<200","余额200~1k","1K~3K","余额>3k"};
+        List<String> legend = Arrays.asList(legendArrys);
+       
         chartDataVo.setLegend(JSON.toJSONString(legend));
 
         // 3.x轴
@@ -547,9 +451,44 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
         // 5.去掉第一个 tableDataItem ??
         if (tableDatas.size() > 0)
             tableDatas.remove(0);
-        // 6.生成 统计图 数据
+        
+        this.generateCount(legend, timeSeries, tableDatas, statType, chartDataVo);
 
-        List<HashMap<String, Object>> dataItems = new ArrayList<HashMap<String, Object>>();
+        return chartDataVo;
+
+    }
+    
+    public HashMap<String, String> setTableDateItem(ChartMapVo chartSqlData,BigDecimal money,HashMap<String, String> tableDataItem){
+    	//1=500 2 = 1000面值 3 = 2000面值 4 =3000面值
+		if (chartSqlData.getName().equals("1")) {
+			money = chartSqlData.getTotalMoney();
+            tableDataItem.put("五百面值",
+                    MathBigDecimalUtil.round2(money));
+        }
+        if (chartSqlData.getName().equals("2")) {
+        	money = chartSqlData.getTotalMoney();
+            tableDataItem.put("一千面值",
+                    MathBigDecimalUtil.round2(money));
+        }
+        if (chartSqlData.getName().equals("3")) {
+        	money = chartSqlData.getTotalMoney();
+            tableDataItem.put("两千面值",
+                    MathBigDecimalUtil.round2(money));
+        }
+        if (chartSqlData.getName().equals("4")) {
+        	money = chartSqlData.getTotalMoney();
+            tableDataItem.put("三千面值",
+                    MathBigDecimalUtil.round2(money));
+        }
+        
+        return tableDataItem;
+    }
+    
+    
+    //统一生成 统计图 数据
+    public ChartDataVo generateCount(List<String> legend,List<String> timeSeries,List<HashMap<String, String>> tableDatas,
+    		String statType,ChartDataVo chartDataVo){
+    	List<HashMap<String, Object>> dataItems = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> chartDataItem = null;
         List<Double> datas = null;
         for (int i = 0; i < legend.size(); i++) {
@@ -582,9 +521,8 @@ public class RestMoneyChartServiceImpl implements RestMoneyChartService {
             tableDataItem.put("series", seriesName);
         }
         chartDataVo.setTableDatas(tableDatas);
-
+        
         return chartDataVo;
-
     }
-
+    
 }

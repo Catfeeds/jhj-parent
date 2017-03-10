@@ -60,8 +60,8 @@ public class HomeController extends AdminController {
     	int totalUser = userChartService.statTotalUser(chartSearchVo);
     	
     	//取消,未支付的，已支付的的订单数也是总得统计数
-//    	Short[] status={0, 1, 2, 3,4,5,6,7,8,9};
-//    	chartSearchVo.setStatus(Arrays.asList(status));
+    	Short[] status={3,4,5,6,7,8};
+    	chartSearchVo.setStatus(Arrays.asList(status));
     	//总订单数
     	Map<String,Integer> totalOrder = orderChartService.statTotalOrder(chartSearchVo) ; 
     	//今日新增用户数

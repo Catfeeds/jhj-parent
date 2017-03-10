@@ -70,6 +70,8 @@
 				<thead>
 					<tr>
 						<th>时间</th>
+						<th>500面值</th>
+						<th>占比(%)</th>
 						<th>1000面值</th>
 						<th>占比(%)</th>
 						<th>2000面值</th>
@@ -85,6 +87,8 @@
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<th>${item.series}</th>
+						<th>${item.五百面值}</th>
+						<th>${item.五百面值占比}</th>
 						<th>${item.一千面值}</th>
 						<th>${item.一千面值占比}</th>
 						<th>${item.两千面值}</th>
