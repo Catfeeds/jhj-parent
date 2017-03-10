@@ -241,7 +241,7 @@
 													<c:if test="${item.orderExtType == 1 }">加时：<payTypeNameTag:payType payType="${item.payTypeExt }" orderStatus="${item.orderStatus }"/></c:if>
 													<c:if test="${item.spreadMoeny>0 }">${ item.spreadMoeny }</c:if>
 													<c:if test="${item.spreadMoeny==0 }">-</c:if> --%>
-													<c:if test="item.orderExtTyePayStr!=null && item.orderExtTyePayStr!=''">
+													<c:if test="${item.orderExtTyePayStr ne null && item.orderExtTyePayStr ne'' }">
 														${item.orderExtTyePayStr}
 													</c:if>
 												</td>

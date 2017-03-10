@@ -827,10 +827,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 				if(orderExtType==1){
 					sb.append("加时-").append(orderPayExt).append("-"+payTypeName);
 				}
+				sb.append("/");
 			}
 			/*oaOrderListVo.setOrderExtType(orderExtType);
 			oaOrderListVo.setPayTypeExt(payTypeExt);*/
-			oaOrderListVo.setOrderExtTyePayStr(sb.toString());
+			int lastIndexOf = sb.lastIndexOf("/");
+			oaOrderListVo.setOrderExtTyePayStr(sb.substring(0, lastIndexOf).toString());
 		}
 		oaOrderListVo.setSpreadMoeny(spreadMoeny);
 		
