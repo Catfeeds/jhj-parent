@@ -125,6 +125,9 @@ public class OaOrderListVo extends Orders {
 	//补差价/加时  支付方式
 	private short payTypeExt;
 	
+	//补差价和加时
+	private String orderExtTyePayStr;
+	
 	
 	private List<Imgs> orderImgs;
 
@@ -512,5 +515,12 @@ public class OaOrderListVo extends Orders {
 		this.overworkTimeStr = overworkTimeStr;
 	}
 
-	
+	public String getOrderExtTyePayStr() {
+		return orderExtTyePayStr;
+	}
+
+	public void setOrderExtTyePayStr(String orderExtTyePayStr) {
+		this.orderExtTyePayStr = orderExtTyePayStr;
+	}
+
 }
