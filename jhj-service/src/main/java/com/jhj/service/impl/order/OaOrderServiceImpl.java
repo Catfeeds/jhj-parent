@@ -814,14 +814,23 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (orderPriceExtList.size() > 0) {
 			int orderExtType = -1;
 			short payTypeExt = -1;
+			StringBuffer sb = new StringBuffer();
 			for (OrderPriceExt item : orderPriceExtList) {
 				BigDecimal orderPayExt = item.getOrderPay();
 				spreadMoeny = MathBigDecimalUtil.add(spreadMoeny, orderPayExt);
 				orderExtType = item.getOrderExtType();
 				payTypeExt = item.getPayType();
+				String payTypeName = OneCareUtil.getPayTypeName(payTypeExt);
+				if(orderExtType==0){
+					sb.append("补差价-").append(orderPayExt).append("-"+payTypeName);
+				}
+				if(orderExtType==1){
+					sb.append("加时-").append(orderPayExt).append("-"+payTypeName);
+				}
 			}
-			oaOrderListVo.setOrderExtType(orderExtType);
-			oaOrderListVo.setPayTypeExt(payTypeExt);
+			/*oaOrderListVo.setOrderExtType(orderExtType);
+			oaOrderListVo.setPayTypeExt(payTypeExt);*/
+			oaOrderListVo.setOrderExtTyePayStr(sb.toString());
 		}
 		oaOrderListVo.setSpreadMoeny(spreadMoeny);
 		

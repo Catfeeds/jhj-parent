@@ -236,10 +236,14 @@
 												<td><orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" orderType="${item.orderType }" /></td>
 												<td>${ item.payTypeName }</td>
 												<td>${ item.orderPay }</td>
-												<td><c:if test="${item.orderExtType == 0 and item.spreadMoeny>0 }">补差价：<payTypeNameTag:payType payType="${item.payTypeExt }" orderStatus="${item.orderStatus }"/></c:if>
+												<td>
+													<%-- <c:if test="${item.orderExtType == 0 and item.spreadMoeny>0 }">补差价：<payTypeNameTag:payType payType="${item.payTypeExt }" orderStatus="${item.orderStatus }"/></c:if>
 													<c:if test="${item.orderExtType == 1 }">加时：<payTypeNameTag:payType payType="${item.payTypeExt }" orderStatus="${item.orderStatus }"/></c:if>
 													<c:if test="${item.spreadMoeny>0 }">${ item.spreadMoeny }</c:if>
-													<c:if test="${item.spreadMoeny==0 }">-</c:if>
+													<c:if test="${item.spreadMoeny==0 }">-</c:if> --%>
+													<c:if test="item.orderExtTyePayStr!=null && item.orderExtTyePayStr!=''">
+														${item.orderExtTyePayStr}
+													</c:if>
 												</td>
 												<td>
 													<button id="btn_detail"
