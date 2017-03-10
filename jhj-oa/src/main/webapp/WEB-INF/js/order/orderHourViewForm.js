@@ -114,7 +114,7 @@ $("#submitForm").on('click', function() {
 			alert("保存成功");
 			$('#submitForm').removeAttr("disabled");
 			var rootPath = getRootPath();
-			window.location.replace(rootPath + "/order/order-hour-list");
+			window.location.replace(rootPath + "/order/order-list");
 		},
 		error : function() {
 			$('#submitForm').removeAttr("disabled");
@@ -379,7 +379,7 @@ $("#cancleForm").on("click", function() {
 				}
 				alert("订单取消成功.");
 				var rootPath = getRootPath();
-				window.location.replace(rootPath + "/order/order-hour-list");
+				window.location.replace(rootPath + "/order/order-list");
 			}
 		});
 	}
