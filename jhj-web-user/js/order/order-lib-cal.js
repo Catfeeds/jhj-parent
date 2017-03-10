@@ -280,26 +280,29 @@ myApp.onPageInit('order-lib-cal',function(page) {
             if(nowHour>4 && nowHour<=6){
             	filterPreCurrentTime(lis,4);
             }
-            if(nowHour==7){
+            if(nowHour>=7 && nowHour<=8){
+            	filterPreCurrentTime(lis,5);
+            }
+            if(nowHour==9){
             	filterPreCurrentTime(lis,6);
             }
-            if(nowHour>=8 && nowHour<=9){
+            if(nowHour==10){
             	filterPreCurrentTime(lis,10);
             }
-            if(nowHour==10){
-            	filterPreCurrentTime(lis,12);
-            }
             if(nowHour==11){
-            	filterPreCurrentTime(lis,14);
+            	filterPreCurrentTime(lis,11);
             }
             if(nowHour==12){
-            	filterPreCurrentTime(lis,16);
+            	filterPreCurrentTime(lis,13);
             }
             if(nowHour==13){
-            	filterPreCurrentTime(lis,18);
+            	filterPreCurrentTime(lis,15);
             }
-            if(nowHour>=14 && nowHour<=15){
-            	filterPreCurrentTime(lis,20);
+            if(nowHour==14){
+            	filterPreCurrentTime(lis,17);
+            }
+            if(nowHour==15){
+            	filterPreCurrentTime(lis,19);
             }
             if(nowHour>=16 && nowHour<=19){
             	filterPreCurrentTime(lis,21);
