@@ -464,43 +464,22 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		Long orderId = order.getId();
 		int staffNum = order.getStaffNums();
 		
-		Long userId = order.getUserId();
-		Users u = userService.selectByPrimaryKey(userId);
-		int isVip = u.getIsVip();
+		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
 		
-		Long serviceTypeId = order.getServiceType();
+	
 		
 		String incomingStr = "";
 		// 总收入合计
 		BigDecimal totalOrderPay = new BigDecimal(0);
 		
-		ServiceAddonSearchVo searchVo = new ServiceAddonSearchVo();
-		searchVo.setServiceType(serviceTypeId);
-		searchVo.setEnable((short) 1);
-		List<DictServiceAddons> serviceAddons = serviceAddonsService.selectBySearchVo(searchVo);
-		
-		List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
-		
-		for (OrderServiceAddons orderAddon : orderAddons)  {
-			Long serviceAddonId = orderAddon.getServiceAddonId();
-			int itemNum = orderAddon.getItemNum();
-			
-			for (DictServiceAddons dictAddon :  serviceAddons) {
-				if (dictAddon.getServiceAddonId().equals(serviceAddonId)) {
-					BigDecimal itemStaffPrice = dictAddon.getStaffPrice();
-					if (isVip == 1) {
-						itemStaffPrice = dictAddon.getStaffDisPrice();
-					}
-					BigDecimal itemOrderPay = itemStaffPrice.multiply(new BigDecimal(itemNum));
-					totalOrderPay = totalOrderPay.add(itemOrderPay);
-					break;
-				}
-			}
-		}
-		
+		OrderPrices orderPrice = this.selectByOrderId(orderId);
+
+		// 订单支付金额
+		totalOrderPay = orderPrice.getOrderMoney();
+		totalOrderPay = totalOrderPay.multiply(incomingPercent);
 		incomingStr = "订单提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
 
-		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
+		
 		// 订单补差价金额 订单差价的折扣比例
 		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
 		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
