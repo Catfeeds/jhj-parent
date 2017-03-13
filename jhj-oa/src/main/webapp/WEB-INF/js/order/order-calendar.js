@@ -269,26 +269,29 @@ function selectServiceDate(){
             if(nowHour>4 && nowHour<=6){
             	filterBackDate(lis,4);
             }
-            if(nowHour==7){
+            if(nowHour>=7 && nowHour<=8){
+            	filterBackDate(lis,5);
+            }
+            if(nowHour==9){
             	filterBackDate(lis,6);
             }
-            if(nowHour>=8 && nowHour<=9){
+            if(nowHour==10){
             	filterBackDate(lis,10);
             }
-            if(nowHour==10){
-            	filterBackDate(lis,12);
-            }
             if(nowHour==11){
-            	filterBackDate(lis,14);
+            	filterBackDate(lis,11);
             }
             if(nowHour==12){
-            	filterBackDate(lis,16);
+            	filterBackDate(lis,13);
             }
             if(nowHour==13){
-            	filterBackDate(lis,18);
+            	filterBackDate(lis,15);
             }
-            if(nowHour>=14 && nowHour<=15){
-            	filterBackDate(lis,20);
+            if(nowHour==14){
+            	filterBackDate(lis,17);
+            }
+            if(nowHour==15){
+            	filterBackDate(lis,19);
             }
             if(nowHour>=16 && nowHour<=19){
                 filterBackDate(lis,21);
