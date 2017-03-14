@@ -1,4 +1,4 @@
-myApp.onPageInit('wuye-active', function (page) {
+myApp.onPageInit('firstOrderHalf', function (page) {
 	
 	$$("#get-active-coupons").on('click',function(){
 		var mobile = $$("#mobile").val();
@@ -11,7 +11,7 @@ myApp.onPageInit('wuye-active', function (page) {
         	myApp.alert("请填写正确的手机号码");
         	return false;
         }
-		var couponsIdList = '4185,4186,4187,4188,4189,4190';
+		var couponsIdList = '4191';
 		var host = window.location.host;
 		var appName = "jhj-app";
 		var localUrl = "http://" + host;
@@ -28,7 +28,7 @@ myApp.onPageInit('wuye-active', function (page) {
 					alert(data.msg);
 					return false;
 				}
-				mainView.router.loadPage("active/wuye-active-success.html");
+				mainView.router.loadPage("active/half-success.html");
 			}
 		});
 	});
