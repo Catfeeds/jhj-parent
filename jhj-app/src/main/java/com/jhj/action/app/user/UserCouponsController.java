@@ -3,6 +3,7 @@ package com.jhj.action.app.user;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -338,6 +339,8 @@ public class UserCouponsController extends BaseController {
 					List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
 					if(couponList.isEmpty() ){
 						UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), couponsList.get(i));
+						String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), 3, Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
+						userCoupons.setToDate(DateUtil.parse(toDateStr));
 						userCouponsService.insertSelective(userCoupons);
 					} else {
 						result.setStatus(Constants.ERROR_999);
