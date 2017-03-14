@@ -5293,8 +5293,20 @@ i.toolbar-icon-tixing {
 
 
 /*物业活动*/
-
-
+/*扫码半价优惠*/
+.jinpai-huodong-half{
+  float: right;
+  position:absolute;
+  height:30px;
+  right: 14%;
+  top: 20.5%;
+  width:40%;
+  font-size: 14px;
+  line-height: 30px;
+  background: 0;
+  border:0;
+  color:#fff;
+}
 
 
 
