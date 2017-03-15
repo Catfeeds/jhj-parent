@@ -584,6 +584,11 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 			}
 		}
 		
+		//10.20 -  11.21 号完成服务的订单， 服务人员收入 = (订单支付金额/派工人数) *  0.7
+		if (order.getAddTime() >= 1476892800L && order.getAddTime() < 1479657600) {
+			incomingPercent = new BigDecimal(0.7);
+		}
+		
 		return incomingPercent;
 	}
 
