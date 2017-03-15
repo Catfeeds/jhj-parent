@@ -380,68 +380,61 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		Users u = userService.selectByPrimaryKey(userId);
 		int isVip = u.getIsVip();
 		
+		OrderPrices orderPrice = this.selectByOrderId(orderId);
+		
 		Long serviceTypeId = order.getServiceType();
 		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
-
+		
+		//套餐价格
+		BigDecimal mprice = serviceType.getMpprice();
+		
+		//每小时服务人员提成
 		BigDecimal staffPrice = serviceType.getStaffPrice();
+		
+		//套餐服务人员提成
 		BigDecimal staffMprice = serviceType.getStaffPprice();
 		
 		if (isVip == 1) {
+			mprice = serviceType.getMpprice();
 			staffPrice = serviceType.getStaffPprice();
 			staffMprice = serviceType.getStaffMpprice();
 		}
-		
-		Double minServiceHour = serviceType.getServiceHour();
-		
+
 		String incomingStr = "";
 		// 总收入合计
-		BigDecimal totalOrderPay = new BigDecimal(0);
-		
-		//计算加时的小时数
-		double overWorkHours = 0;
-		OrderSearchVo orderSearchVo = new OrderSearchVo();
-		orderSearchVo.setOrderId(orderId);
-		orderSearchVo.setOrderExtType((short) 1);
-		orderSearchVo.setOrderStatus((short) 2);
-		List<OrderPriceExt> orderPriceExts = orderPriceExtService.selectBySearchVo(orderSearchVo);
-		
-		for (OrderPriceExt item : orderPriceExts) {
-			overWorkHours = overWorkHours + item.getServiceHour();
-		}
-		
-		totalOrderPay = staffMprice;
-		//1. 如果没有加时，则判断是否为最低小时数，如果大于，则 收入 = 套餐价提成 + 超出小时数 * 小时提成。
-		if (overWorkHours == 0) {
-			if (serviceHour > minServiceHour) {
-				Double overHour = serviceHour - minServiceHour;
-				BigDecimal tmpOverPay = staffPrice.multiply(new BigDecimal(overHour));
-				totalOrderPay = staffMprice.add(tmpOverPay);
-			}
-		} else {
-		    //2. 如果有加时，则并且减去加时后，大于最低小时数，则 收入 = 套餐价提成 + （减去加时后超出小时数） * 小时提成。
-			if ( (serviceHour - overWorkHours) > minServiceHour ) {
-				Double overHour = serviceHour - overWorkHours - minServiceHour;
-				BigDecimal tmpOverPay = staffPrice.multiply(new BigDecimal(overHour));
-				totalOrderPay = staffMprice.add(tmpOverPay);
-			}
-		}
+		BigDecimal totalOrderPay = staffMprice;
 		incomingStr = "订单提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
 		
 		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
+		
 		// 订单补差价金额 订单差价的折扣比例
 		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
-		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
 		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
-			totalOrderPay = totalOrderPay.add(orderPayExtDiff);
-			incomingStr+= ";订单补差价提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+			BigDecimal orderPayExtDiffStaff = orderPayExtDiff.multiply(incomingPercent);
+			incomingStr+= ";订单补差价提成:" +  MathBigDecimalUtil.div(orderPayExtDiffStaff, new BigDecimal(staffNum));
 		}
 
 		// 订单加时金额 订单加时的折扣比例
 		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
-		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
 		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
-			totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
-			incomingStr+= ";订单加时提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+			BigDecimal orderPayExtOverWorkStaff = orderPayExtOverWork.multiply(incomingPercent);
+			incomingStr+= ";订单加时提成:" +  MathBigDecimalUtil.div(orderPayExtOverWorkStaff, new BigDecimal(staffNum));
+		}
+		
+		//计算订单总金额，然后总金额减去套餐价格，直接按比例提成.
+		BigDecimal orderMoney = this.getTotalOrderMoney(orderPrice);
+		
+		if (orderMoney.compareTo(mprice) == 1) {
+			BigDecimal moreOrderPay = orderMoney.subtract(mprice);
+			BigDecimal moreOrderPayStaff = moreOrderPay.multiply(incomingPercent);
+			totalOrderPay = totalOrderPay.add(moreOrderPayStaff);
+			
+			//计算减去补差价，减去加时的多余金额。
+			BigDecimal otherOrderPay = moreOrderPay.subtract(orderPayExtDiff);
+			otherOrderPay = otherOrderPay.subtract(orderPayExtOverWork);
+			if (otherOrderPay.compareTo(BigDecimal.ZERO) == 1) {
+				incomingStr+= ";订单其他提成:" +  MathBigDecimalUtil.div(otherOrderPay, new BigDecimal(staffNum));
+			}
 		}
 		
 		//最后做一个服务人员平均
@@ -485,7 +478,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
 		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
 			totalOrderPay = totalOrderPay.add(orderPayExtDiff);
-			incomingStr = ";订单补差价提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+			incomingStr = ";订单补差价提成:" +  MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
 		}
 
 		// 订单加时金额 订单加时的折扣比例
@@ -493,7 +486,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
 		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
 			totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
-			incomingStr = ";订单加时提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+			incomingStr = ";订单加时提成:" +  MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
 		}
 		
 		//最后做一个服务人员平均
