@@ -478,7 +478,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
 		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
 			totalOrderPay = totalOrderPay.add(orderPayExtDiff);
-			incomingStr = ";订单补差价提成:" +  MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
+			incomingStr+= ";订单补差价提成:" +  MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
 		}
 
 		// 订单加时金额 订单加时的折扣比例
@@ -486,7 +486,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
 		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
 			totalOrderPay = totalOrderPay.add(orderPayExtOverWork);
-			incomingStr = ";订单加时提成:" +  MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
+			incomingStr+= ";订单加时提成:" +  MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
 		}
 		
 		//最后做一个服务人员平均
