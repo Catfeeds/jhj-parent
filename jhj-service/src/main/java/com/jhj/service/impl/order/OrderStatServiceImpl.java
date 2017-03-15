@@ -225,20 +225,24 @@ public class OrderStatServiceImpl implements OrderStatService {
 		if (list.isEmpty()) return totalIncomingMoney;
 		
 		for (Orders order : list) {
-//			BigDecimal orderIncoming = orderPriceService.getTotalOrderIncoming(order, searchVo.getStaffId());
-			Map<String, String> orderIncomingMap = new HashMap<String, String>();
-			
-			if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
-				orderIncomingMap = orderPriceService.getTotalOrderIncomingHour(order, searchVo.getStaffId());
+			BigDecimal orderIncoming = new BigDecimal(0);
+			//2017年3月15 14:00号之前的订单，按照老的计算方法.
+			if (order.getOrderDoneTime() <= 1489557600) {
+				orderIncoming = orderPriceService.getTotalOrderIncoming(order, searchVo.getStaffId());
+			} else {
+				Map<String, String> orderIncomingMap = new HashMap<String, String>();
+				
+				if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+					orderIncomingMap = orderPriceService.getTotalOrderIncomingHour(order, searchVo.getStaffId());
+				}
+				
+				if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+					orderIncomingMap = orderPriceService.getTotalOrderIncomingDeep(order, searchVo.getStaffId());
+				}
+				
+				String orderIncomingStr = orderIncomingMap.get("totalOrderPay");
+				orderIncoming = new BigDecimal(orderIncomingStr);
 			}
-			
-			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
-				orderIncomingMap = orderPriceService.getTotalOrderIncomingDeep(order, searchVo.getStaffId());
-			}
-			
-			String orderIncomingStr = orderIncomingMap.get("totalOrderPay");
-			BigDecimal orderIncoming = new BigDecimal(orderIncomingStr);
-			
 			totalIncomingMoney = totalIncomingMoney.add(orderIncoming);
 		}
 

@@ -49,6 +49,8 @@ public interface OrderPricesService {
 	Map<String, String> getTotalOrderIncomingHour(Orders order, Long staffId);
 
 	Map<String, String> getTotalOrderIncomingDeep(Orders order, Long staffId);
+
+	BigDecimal getTotalOrderIncoming(Orders order, Long staffId);
 	
 //	BigDecimal getOrderMoneyStaff(Orders order, Long staffId);
 //
