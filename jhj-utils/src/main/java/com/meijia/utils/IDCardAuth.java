@@ -75,7 +75,7 @@ public class IDCardAuth {
 			if (object.get("data").isJsonObject()) {
 				JsonObject dataObj = object.get("data").getAsJsonObject();
 
-				System.out.println("data = " + dataObj);
+//				System.out.println("data = " + dataObj);
 				
 				if (dataObj.get("moible_prov") != null) {
 					String mobileProv = dataObj.get("moible_prov").getAsString();

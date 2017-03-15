@@ -43,84 +43,85 @@ $('#selectedStaffs').on('itemRemoved', function(event) {
 
 // 提交派工修改
 $("#submitForm").on('click', function() {
-
-	$('#submitForm').attr('disabled', "true");
-	var orderStatus = $("#orderStatus").val();
-	
-	// 只有 已支付 和 已派工 的订单，可以有 调整派工操作
-	
-	if (orderStatus != 2 && orderStatus != 3) {
+	if (confirm("请确认提交？")) {
+		$('#submitForm').attr('disabled', "true");
+		var orderStatus = $("#orderStatus").val();
 		
-		alert("只有 已支付 或 已派工状态的 订单 ,可以进行调整 派工操作");
-		$('#submitForm').removeAttr("disabled");
-		return false;
-	}
-	
-	var orderDate = $("#serviceDateStr").val();
-	var orderDateTimeStamp = new Date(orderDate).getTime();
-	// 服务时间戳
-	var paramStamp = orderDateTimeStamp / 1000;
-	
-	// 人工 选择的 派工 人员.如果没选。默认为0
-	var selectStaffIds = $("#selectedStaffs").val();
-	console.log("selectStaffIds = " + selectStaffIds);
-	
-	// 距离 数字。。省去处理派工时，重新查表，计算距离
-	
-	var distanceValue = 0;
-	
-	var orderId = $("#id").val();
-	
-	// 如果 未选择派工 。直接 返回列表页
-	if (selectStaffIds == undefined || selectStaffIds == "") {
+		// 只有 已支付 和 已派工 的订单，可以有 调整派工操作
 		
-		alert("没有选择派工人员.");
-		$('#submitForm').removeAttr("disabled");
-		
-		return false;
-	}
-	
-	// 判断派工人员个数是否一致，用于派工调整，涉及到金额
-	if (orderStatus == 3) {
-		var staffNums = $("#staffNums").val();
-		if (staffNums != "" && staffNums != undefined && staffNums > 0) {
-			var staffAry = selectStaffIds.split(",");
+		if (orderStatus != 2 && orderStatus != 3) {
 			
-			if (staffAry.length != staffNums) {
-				alert("派工人数应为2人，请确认派工人数是否正确");
-				$('#submitForm').removeAttr("disabled");
-				return false;
+			alert("只有 已支付 或 已派工状态的 订单 ,可以进行调整 派工操作");
+			$('#submitForm').removeAttr("disabled");
+			return false;
+		}
+		
+		var orderDate = $("#serviceDateStr").val();
+		var orderDateTimeStamp = new Date(orderDate).getTime();
+		// 服务时间戳
+		var paramStamp = orderDateTimeStamp / 1000;
+		
+		// 人工 选择的 派工 人员.如果没选。默认为0
+		var selectStaffIds = $("#selectedStaffs").val();
+		console.log("selectStaffIds = " + selectStaffIds);
+		
+		// 距离 数字。。省去处理派工时，重新查表，计算距离
+		
+		var distanceValue = 0;
+		
+		var orderId = $("#id").val();
+		
+		// 如果 未选择派工 。直接 返回列表页
+		if (selectStaffIds == undefined || selectStaffIds == "") {
+			
+			alert("没有选择派工人员.");
+			$('#submitForm').removeAttr("disabled");
+			
+			return false;
+		}
+		
+		// 判断派工人员个数是否一致，用于派工调整，涉及到金额
+		if (orderStatus == 3) {
+			var staffNums = $("#staffNums").val();
+			if (staffNums != "" && staffNums != undefined && staffNums > 0) {
+				var staffAry = selectStaffIds.split(",");
+				
+				if (staffAry.length != staffNums) {
+					alert("派工人数应为2人，请确认派工人数是否正确");
+					$('#submitForm').removeAttr("disabled");
+					return false;
+				}
 			}
 		}
+		
+		$.ajax({
+			type : 'post',
+			url : '/jhj-oa/new_dispatch/save_order_hour.json',
+			data : {
+				"selectStaffIds" : selectStaffIds,
+				"orderId" : orderId,
+				"newServiceDate" : orderDate,
+				"distanceValue" : distanceValue
+			},
+			dataType : 'json',
+			success : function(data, status, xhr) {
+				var status = data.status;
+				if (status == "999") {
+					alert(data.msg);
+					$('#submitForm').removeAttr("disabled");
+					return false;
+				}
+				alert("保存成功");
+				$('#submitForm').removeAttr("disabled");
+				var rootPath = getRootPath();
+				window.location.replace(rootPath + "/order/order-list");
+			},
+			error : function() {
+				$('#submitForm').removeAttr("disabled");
+				alert("网络错误");
+			}
+		})
 	}
-	
-	$.ajax({
-		type : 'post',
-		url : '/jhj-oa/new_dispatch/save_order_hour.json',
-		data : {
-			"selectStaffIds" : selectStaffIds,
-			"orderId" : orderId,
-			"newServiceDate" : orderDate,
-			"distanceValue" : distanceValue
-		},
-		dataType : 'json',
-		success : function(data, status, xhr) {
-			var status = data.status;
-			if (status == "999") {
-				alert(data.msg);
-				$('#submitForm').removeAttr("disabled");
-				return false;
-			}
-			alert("保存成功");
-			$('#submitForm').removeAttr("disabled");
-			var rootPath = getRootPath();
-			window.location.replace(rootPath + "/order/order-list");
-		},
-		error : function() {
-			$('#submitForm').removeAttr("disabled");
-			alert("网络错误");
-		}
-	})
 });
 
 function getRootPath() {
