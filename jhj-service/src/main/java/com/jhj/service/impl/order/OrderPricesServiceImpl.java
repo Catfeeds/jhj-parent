@@ -386,17 +386,14 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
 		
 		//套餐价格
-		BigDecimal mprice = serviceType.getMpprice();
-		
-		//每小时服务人员提成
-		BigDecimal staffPrice = serviceType.getStaffPrice();
+		BigDecimal mprice = serviceType.getPprice();
+
 		
 		//套餐服务人员提成
 		BigDecimal staffMprice = serviceType.getStaffPprice();
 		
 		if (isVip == 1) {
 			mprice = serviceType.getMpprice();
-			staffPrice = serviceType.getStaffPprice();
 			staffMprice = serviceType.getStaffMpprice();
 		}
 
