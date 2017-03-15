@@ -33,7 +33,7 @@ public class TestOrderQuerysController extends JUnitActionBase{
     public void testGetDetail() throws Exception {
 
 		String url = "/app/staff/order/get_detail.json";
-		String params = "?staff_id=1&&order_id=1";
+		String params = "?staff_id=114&&order_id=10893";
 		MockHttpServletRequestBuilder getRequest = get(url + params);
 
 	    ResultActions resultActions = this.mockMvc.perform(getRequest);

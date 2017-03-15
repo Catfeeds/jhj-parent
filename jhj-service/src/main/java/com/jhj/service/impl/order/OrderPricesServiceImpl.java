@@ -384,7 +384,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
 
 		BigDecimal staffPrice = serviceType.getStaffPrice();
-		BigDecimal staffMprice = serviceType.getStaffMprice();
+		BigDecimal staffMprice = serviceType.getStaffPprice();
 		
 		if (isVip == 1) {
 			staffPrice = serviceType.getStaffPprice();
