@@ -38,6 +38,7 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.dict.ServiceAddonsService;
+import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.ServiceAddonSearchVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -64,6 +65,9 @@ public class NewPartnerServiceTypeController extends AdminController {
 	
 	@Autowired
 	private ServiceAddonsService serviceAddonsService;
+	
+	@Autowired
+	private SettingService settingService;
 	/**
 	 * 
 	 *  @Title: serviceTypeList

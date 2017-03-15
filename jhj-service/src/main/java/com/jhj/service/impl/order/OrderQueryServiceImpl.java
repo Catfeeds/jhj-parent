@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -551,7 +552,22 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			BigDecimal orderPay = orderPricesService.getTotalOrderPay(orderPrice);
 			vo.setOrderMoney(orderPay);
 			
-			BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(item, staffId);
+//			BigDecimal orderIncoming = orderPricesService.getTotalOrderIncoming(item, staffId);
+			
+			Map<String, String> orderIncomingMap = new HashMap<String, String>();
+			
+			if (item.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+				orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(item, searchVo.getStaffId());
+			}
+			
+			if (item.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+				orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(item, searchVo.getStaffId());
+			}
+			
+			String orderIncomingStr = orderIncomingMap.get("totalOrderPay");
+			BigDecimal orderIncoming = new BigDecimal(orderIncomingStr);
+			
+			
 			vo.setOrderIncoming(orderIncoming);
 
 		}

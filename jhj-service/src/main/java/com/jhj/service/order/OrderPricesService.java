@@ -2,6 +2,7 @@ package com.jhj.service.order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
@@ -39,11 +40,15 @@ public interface OrderPricesService {
 
 	BigDecimal getTotalOrderPay(OrderPrices orderPrice);
 	
-	BigDecimal getTotalOrderIncoming(Orders order, Long staffId);	
+//	BigDecimal getTotalOrderIncoming(Orders order, Long staffId);	
 	
 	BigDecimal getTotalOrderDept(Orders order, Long staffId);
 
 	BigDecimal getOrderPercent(Orders order, Long staffId);
+
+	Map<String, String> getTotalOrderIncomingHour(Orders order, Long staffId);
+
+	Map<String, String> getTotalOrderIncomingDeep(Orders order, Long staffId);
 	
 //	BigDecimal getOrderMoneyStaff(Orders order, Long staffId);
 //

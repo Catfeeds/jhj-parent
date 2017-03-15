@@ -225,7 +225,20 @@ public class OrderStatServiceImpl implements OrderStatService {
 		if (list.isEmpty()) return totalIncomingMoney;
 		
 		for (Orders order : list) {
-			BigDecimal orderIncoming = orderPriceService.getTotalOrderIncoming(order, searchVo.getStaffId());
+//			BigDecimal orderIncoming = orderPriceService.getTotalOrderIncoming(order, searchVo.getStaffId());
+			Map<String, String> orderIncomingMap = new HashMap<String, String>();
+			
+			if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+				orderIncomingMap = orderPriceService.getTotalOrderIncomingHour(order, searchVo.getStaffId());
+			}
+			
+			if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+				orderIncomingMap = orderPriceService.getTotalOrderIncomingDeep(order, searchVo.getStaffId());
+			}
+			
+			String orderIncomingStr = orderIncomingMap.get("totalOrderPay");
+			BigDecimal orderIncoming = new BigDecimal(orderIncomingStr);
+			
 			totalIncomingMoney = totalIncomingMoney.add(orderIncoming);
 		}
 
