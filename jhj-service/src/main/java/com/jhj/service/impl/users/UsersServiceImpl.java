@@ -471,5 +471,10 @@ public class UsersServiceImpl implements UsersService {
 	public int insertBatch(List<Users> users) {
 		return usersMapper.insertBatch(users);
 	}
+
+	@Override
+	public List<Users> listUserRestMoneyGtZero() {
+		return usersMapper.listUserRestMoneyGtZero();
+	}
 	
 }

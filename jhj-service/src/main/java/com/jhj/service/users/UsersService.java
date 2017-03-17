@@ -58,4 +58,6 @@ public interface UsersService {
 	Users selectByMobile(String mobile);
 	
 	List<Users> selectUsersByOrderMobile();
+	
+	List<Users> listUserRestMoneyGtZero();
 }

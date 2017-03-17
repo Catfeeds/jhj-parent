@@ -276,7 +276,7 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 			}
 			tableDatas.add(tableData);
 		}
-		Short[] status={7,8,9};
+		Short[] status={7,8};
 		chartSearchVo.setStatus(Arrays.asList(status));
 		// 1. 查询SQL获得统计数据 -- 不同来源的订单数量
 		List<ChartMapVo> statDatas = new ArrayList<ChartMapVo>();

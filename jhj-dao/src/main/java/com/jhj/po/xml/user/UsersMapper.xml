@@ -759,5 +759,10 @@
 		</if>
 		GROUP BY series ORDER BY series ASC
 	</select>
+	
+	<select id="listUserRestMoneyGtZero" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from users
+		where rest_money > 0 ORDER by rest_money desc
+	</select>
 
 </mapper>
