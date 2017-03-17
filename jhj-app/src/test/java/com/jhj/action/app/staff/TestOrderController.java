@@ -64,8 +64,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_done.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "3");
-	    postRequest = postRequest.param("order_id", "4");
+	    postRequest = postRequest.param("staff_id", "136");
+	    postRequest = postRequest.param("order_id", "10958");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));
@@ -77,7 +77,7 @@ public class TestOrderController extends JUnitActionBase{
 	@Test
     public void testPostOrderDone() throws Exception {
 
-		String url = "/app/staff/order/post_done.json?staff_id=10&order_id=25";
+		String url = "/app/staff/order/post_done.json?staff_id=53&order_id=10876";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
      	
