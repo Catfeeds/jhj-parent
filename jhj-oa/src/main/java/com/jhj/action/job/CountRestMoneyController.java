@@ -24,7 +24,7 @@ public class CountRestMoneyController {
 	@Autowired
 	private CountUserRestService countUserRestService;
 	
-	@RequestMapping("/saveCountRestMoney")
+	@RequestMapping("/saveCountRestMoney.json")
 	public String saveCountRestMoney() {
 		
 		List<Users> listUserRestMoneyGtZero = userService.listUserRestMoneyGtZero();
