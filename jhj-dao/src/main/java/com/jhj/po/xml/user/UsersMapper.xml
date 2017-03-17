@@ -174,52 +174,34 @@
 	<!-- 用户有余额的总钱数 -->
 	<select id="selectUserAllResyMoneyByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT
-		FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(rest_money) AS totalMoney
+		FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series, SUM(rest_money) AS totalMoney
 		FROM
-		users where 1 = 1
+		users u,order_cards oc where u.id = oc.user_id
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
+			<![CDATA[ and oc.add_time <= #{endTime}]]>
 		</if>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
 	<select id="selectUserAllResyMoneyByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series, SUM(rest_money) AS totalMoney FROM
-		users where 1 = 1
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series, SUM(rest_money) AS totalMoney FROM
+		users u,order_cards oc where u.id = oc.user_id
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
+			<![CDATA[ and oc.add_time <= #{endTime}]]>
 		</if>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
 	<select id="selectUserAllResyMoneyByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
 		SELECT
-		CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		CONCAT(year(FROM_UNIXTIME(oc.add_time)), "-", quarter(FROM_UNIXTIME(oc.add_time)) ) as series,
 		SUM(rest_money) AS totalMoney FROM
-		users where 1 = 1
+		users u,order_cards oc where u.id = oc.user_id
 		<!-- <if test="startTime !=null"> <![CDATA[ and add_time >= #{startTime}]]> </if> -->
 		<if test="endTime !=null">
-			<![CDATA[ and add_time <= #{endTime}]]>
-		</if>
-		<if test="status != null">
-			and order_status in
-			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
-				${item}
-			</foreach>
+			<![CDATA[ and oc.add_time <= #{endTime}]]>
 		</if>
 		GROUP BY series ORDER BY series ASC
 	</select>
@@ -614,109 +596,109 @@
 
 	<!-- 用户余额不足200的人数 -->
 	<select id="userResyMoneyLessTwoByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,
 		sum(case when rest_money &gt; 0 and rest_money &lt;= 200 then rest_money end ) as totalMoney
-		FROM users
-		WHERE rest_money &gt; 0 and rest_money &lt;= 200
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money &gt; 0 and rest_money &lt;= 200
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	
 	<select id="userResyMoneyLessTwoByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 0 and rest_money &lt;=200 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money &gt; 0 and rest_money &lt;= 200
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money &gt; 0 and rest_money &lt;= 200
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessTwoByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		SELECT CONCAT(year(FROM_UNIXTIME(oc.add_time)), "-", quarter(FROM_UNIXTIME(oc.add_time)) ) as series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 0 and rest_money &lt;=200 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money &gt; 0 and rest_money &lt;= 200
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money &gt; 0 and rest_money &lt;= 200
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<!-- 用户余额不足1000的人数 -->
 
 	<select id="userResyMoneyLessThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 200 and rest_money &lt;=1000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money >200 and rest_money &lt;= 1000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money >200 and rest_money &lt;= 1000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 200 and rest_money &lt;=1000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money >200 and rest_money &lt;= 1000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money >200 and rest_money &lt;= 1000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyLessThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		SELECT CONCAT(year(FROM_UNIXTIME(oc.add_time)), "-", quarter(FROM_UNIXTIME(oc.add_time)) ) as series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 200 and rest_money &lt;=1000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money >200 and rest_money &lt;= 1000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money >200 and rest_money &lt;= 1000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
 	<!-- 用户余额大于3000的人数 -->
 
 	<select id="userResyMoneyThreeThousandByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 3000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money > 3000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money > 3000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyThreeThousandByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 3000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money > 3000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money > 3000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyThreeThousandByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		SELECT CONCAT(year(FROM_UNIXTIME(oc.add_time)), "-", quarter(FROM_UNIXTIME(oc.add_time)) ) as series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 3000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money > 3000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money > 3000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
 	<!-- 用户余额在1000和3000之间的人数 -->
 
 	<select id="userResyMoneyBetweenByDay" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 1000 and rest_money &lt;=3000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money > 1000 and rest_money &lt;= 3000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money > 1000 and rest_money &lt;= 3000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyBetweenByMonth" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT FROM_UNIXTIME(add_time, #{formatParam}) AS series,
+		SELECT FROM_UNIXTIME(oc.add_time, #{formatParam}) AS series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 1000 and rest_money &lt;=3000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money > 1000 and rest_money &lt;= 3000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money > 1000 and rest_money &lt;= 3000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 	<select id="userResyMoneyBetweenByQuarter" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
-		SELECT CONCAT(year(FROM_UNIXTIME( add_time)), "-", quarter(FROM_UNIXTIME( add_time)) ) as series,
+		SELECT CONCAT(year(FROM_UNIXTIME(oc.add_time)), "-", quarter(FROM_UNIXTIME(oc.add_time)) ) as series,
 		COUNT(*) AS total,sum(case when rest_money &gt; 1000 and rest_money &lt;=3000 then rest_money else 0 end) as totalMoney
-		FROM users
-		WHERE rest_money > 1000 and rest_money &lt;= 3000
-		<include refid="charSearchVo"/>
+		FROM users u,order_cards oc where u.id = oc.user_id and
+		rest_money > 1000 and rest_money &lt;= 3000
+		<include refid="charSearchVo1"/>
 		GROUP BY series ORDER BY series ASC
 	</select>
 
@@ -741,6 +723,15 @@
 		</if>
 		<if test="endTime !=null">
 			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+	</sql>
+	
+	<sql id="charSearchVo1">
+		<if test="startTime !=null">
+			<![CDATA[ and oc.add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and oc.add_time <= #{endTime}]]>
 		</if>
 	</sql>
 	
