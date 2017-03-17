@@ -126,4 +126,6 @@ public interface UsersMapper {
 	List<ChartMapVo> getRestUserAndMoneyByQuarter(ChartSearchVo chartSearchVo);
 	
 	List<ChartMapVo> totalNum(ChartSearchVo chartSearchVo);
+	
+	List<Users> listUserRestMoneyGtZero();
 }

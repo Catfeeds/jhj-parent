@@ -73,13 +73,13 @@
 				<thead>
 					<tr>
 						<th>时间</th>
-						<th>金牌保洁订单数</th>
+						<!-- <th>金牌保洁订单数</th> -->
 						<th>金牌保洁总金额</th>
-						<th>基础保洁订单数</th>
+						<!-- <th>基础保洁订单数</th> -->
 						<th>基础保洁总金额</th>
-						<th>深度养护订单数</th>
+						<!-- <th>深度养护订单数</th> -->
 						<th>深度养护总金额</th>
-						<th>母婴到家订单数</th>
+						<!-- <th>母婴到家订单数</th> -->
 						<th>母婴到家总金额</th>
 					</tr>
 				</thead>
@@ -87,13 +87,13 @@
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<td>${item.series}</td>
-						<td>${item.金牌保洁订单数}</td>
+						<%-- <td>${item.金牌保洁订单数}</td> --%>
 						<td>${item.金牌保洁总金额}</td>
-						<td>${item.基础保洁订单数}</td>
+						<%-- <td>${item.基础保洁订单数}</td> --%>
 						<td>${item.基础保洁总金额}</td>
-						<td>${item.深度养护订单数}</td>
+						<%-- <td>${item.深度养护订单数}</td> --%>
 						<td>${item.深度养护总金额}</td>
-						<td>${item.母婴到家订单数}</td>
+						<%-- <td>${item.母婴到家订单数}</td> --%>
 						<td>${item.母婴到家总金额}</td>
 					</tr>
 				</c:forEach>
