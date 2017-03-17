@@ -80,7 +80,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 					var result = data;
 					if(result.status==999){
 						myApp.alert(result.msg);
-						mainView.router.loadPage(backUrl);
+//						mainView.router.loadPage(backUrl);
 					}
 					if(result.status==0){
 						mainView.router.loadPage(backUrl);
