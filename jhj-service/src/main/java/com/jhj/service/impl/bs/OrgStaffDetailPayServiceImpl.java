@@ -16,12 +16,14 @@ import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderSearchVo;
@@ -60,6 +62,9 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	
 	@Autowired
 	private UserAddrsService userAddrsService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -137,9 +142,14 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 			Long orderId = orgStaffDetailPay.getOrderId();
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			
-			orderTypeName = OneCareUtil.getJhjOrderTypeName(order.getOrderType());
-			vo.setOrderTypeName(orderTypeName);
-			
+			Long serviceType = order.getServiceType();
+			PartnerServiceType type = partnerService.selectByPrimaryKey(serviceType);
+			// 订单类型 具体名称 （具体到服务类型）, 如 钟点工-->金牌保洁初体验、金牌保洁深度体验。。。
+			if (type != null) {
+				vo.setOrderTypeName(type.getName());
+			} else {
+				vo.setOrderTypeName("");
+			}			
 		}
 
 		vo.setOrderPay("+" + orgStaffDetailPay.getOrderPay());
