@@ -337,7 +337,8 @@ public class OrderDispatchController extends BaseController {
 	public AppResultData<Object> saveExpOrder(Model model, 
 			@RequestParam("orderId") Long orderId, 
 			@RequestParam("selectStaffIds") String selectStaffIds,
-			@RequestParam("newServiceDate") String newServiceDate) {
+			@RequestParam("newServiceDate") String newServiceDate,
+			HttpServletRequest request) {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 
@@ -410,6 +411,8 @@ public class OrderDispatchController extends BaseController {
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		String[] smsContent = new String[] { timeStr };
 		
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
 		
 		//处理只更换派工时间，不更换派工人员的情况.
 		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
@@ -454,6 +457,11 @@ public class OrderDispatchController extends BaseController {
 				}
 			}
 			
+			orderLog.setUserId(sessionAccountAuth.getId());
+			orderLog.setUserName(sessionAccountAuth.getUsername());
+			orderLog.setUserType((short)2);
+			orderLog.setAction("调整派工时间");
+			orderLogService.insert(orderLog);
 			return resultData;
 			
 		}
@@ -507,9 +515,15 @@ public class OrderDispatchController extends BaseController {
 		// 更新为 已派工
 		order.setServiceHour(serviceHour);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
-		orderSevice.updateByPrimaryKeySelective(order);
+		int updateByPrimaryKeySelective = orderSevice.updateByPrimaryKeySelective(order);
 
-		
+		if(updateByPrimaryKeySelective>0){
+			orderLog.setUserId(sessionAccountAuth.getId());
+			orderLog.setUserName(sessionAccountAuth.getUsername());
+			orderLog.setUserType((short)2);
+			orderLog.setAction("调整派工人员");
+			orderLogService.insert(orderLog);
+		}
 
 		/*
 		 * 派工 短信通知
