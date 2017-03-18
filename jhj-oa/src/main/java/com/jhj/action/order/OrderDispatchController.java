@@ -219,6 +219,7 @@ public class OrderDispatchController extends BaseController {
 		// 用户收到派工通知---发送短信
 		String[] smsContent = new String[] { timeStr };
 		
+		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
 		
 		//处理只更换派工时间，不更换派工人员的情况.
 		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
@@ -265,10 +266,9 @@ public class OrderDispatchController extends BaseController {
 			}
 			
 			OrderLog orderLog = orderLogService.initOrderLog(order);
-			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
 			orderLog.setUserType((short)2);
-			orderLog.setUserId(accountAuth.getId());
-			orderLog.setUserName(accountAuth.getUsername());
+			orderLog.setUserId(sessionAccountAuth.getId());
+			orderLog.setUserName(sessionAccountAuth.getUsername());
 			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_SERVICE_DATETIME);
 			orderLogService.insert(orderLog);
 			
@@ -289,13 +289,6 @@ public class OrderDispatchController extends BaseController {
 			}
 			oldDispatchs = disList.get(0);
 			
-			OrderLog orderLog = orderLogService.initOrderLog(order);
-			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
-			orderLog.setUserType((short)2);
-			orderLog.setUserId(accountAuth.getId());
-			orderLog.setUserName(accountAuth.getUsername());
-			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
-			orderLogService.insert(orderLog);
 		}
 		
 		Double serviceHour = (double) order.getServiceHour();
@@ -310,7 +303,16 @@ public class OrderDispatchController extends BaseController {
 		order.setUpdateTime(TimeStampUtil.getNowSecond());
 		// 更新为 已派工
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
-		orderSevice.updateByPrimaryKeySelective(order);
+		int updateByPrimaryKeySelective = orderSevice.updateByPrimaryKeySelective(order);
+		if(updateByPrimaryKeySelective>0){
+			OrderLog orderLog = orderLogService.initOrderLog(order);
+			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+			orderLog.setUserType((short)2);
+			orderLog.setUserId(accountAuth.getId());
+			orderLog.setUserName(accountAuth.getUsername());
+			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
+			orderLogService.insert(orderLog);
+		}
 
 
 		// 2)派工成功，为服务人员发送推送消息---推送消息
@@ -411,7 +413,6 @@ public class OrderDispatchController extends BaseController {
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		String[] smsContent = new String[] { timeStr };
 		
-		OrderLog orderLog = orderLogService.initOrderLog(order);
 		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
 		
 		//处理只更换派工时间，不更换派工人员的情况.
@@ -456,11 +457,11 @@ public class OrderDispatchController extends BaseController {
 					SmsUtil.SendSms(d.getStaffMobile(), "114590", smsContent);
 				}
 			}
-			
+			OrderLog orderLog = orderLogService.initOrderLog(order);
 			orderLog.setUserId(sessionAccountAuth.getId());
 			orderLog.setUserName(sessionAccountAuth.getUsername());
 			orderLog.setUserType((short)2);
-			orderLog.setAction("调整派工时间");
+			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_SERVICE_DATETIME);
 			orderLogService.insert(orderLog);
 			return resultData;
 			
@@ -518,10 +519,11 @@ public class OrderDispatchController extends BaseController {
 		int updateByPrimaryKeySelective = orderSevice.updateByPrimaryKeySelective(order);
 
 		if(updateByPrimaryKeySelective>0){
+			OrderLog orderLog = orderLogService.initOrderLog(order);
 			orderLog.setUserId(sessionAccountAuth.getId());
 			orderLog.setUserName(sessionAccountAuth.getUsername());
 			orderLog.setUserType((short)2);
-			orderLog.setAction("调整派工人员");
+			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
 			orderLogService.insert(orderLog);
 		}
 
