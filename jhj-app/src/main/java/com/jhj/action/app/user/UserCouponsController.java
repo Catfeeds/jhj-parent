@@ -339,7 +339,7 @@ public class UserCouponsController extends BaseController {
 					List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
 					if(couponList.isEmpty() ){
 						UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), couponsList.get(i));
-						String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), 3, Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
+						String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), 7, Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
 						userCoupons.setToDate(DateUtil.parse(toDateStr));
 						userCouponsService.insertSelective(userCoupons);
 					} else {
