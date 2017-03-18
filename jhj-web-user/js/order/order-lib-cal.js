@@ -222,7 +222,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         $$("#calendar-day li:first-child").find("p").addClass("rilichange-day");
         isFull(getServiceDate(selectDay));
     }
-    getDay(date);
+//    getDay(date);
 
     //日期变化
     function getPreDay(selectDate,c){
