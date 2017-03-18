@@ -87,14 +87,14 @@
   </update>
   
   <insert id="insertList" parameterType="java.util.List">
-  	<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id">
+  	<!-- <selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id">
 		SELECT LAST_INSERT_ID() AS id
-	</selectKey>
-  	insert into count_user_rest (id, user_id, rest_money, add_time)
+	</selectKey> -->
+  	insert into count_user_rest (user_id, rest_money, add_time)
   	values 
    	<foreach collection="list" item="item" separator =",">
     (
-   		#{id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.restMoney,jdbcType=DECIMAL}, #{item.addTime,jdbcType=TIMESTAMP}
+   		 #{item.userId,jdbcType=INTEGER}, #{item.restMoney,jdbcType=DECIMAL}, #{item.addTime,jdbcType=TIMESTAMP}
 	)
    	</foreach>
   </insert>
