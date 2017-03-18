@@ -339,7 +339,7 @@ public class UserCouponsController extends BaseController {
 					List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
 					if(couponList.isEmpty() ){
 						UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), couponsList.get(i));
-						String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), 3, Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
+						String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), 7, Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
 						userCoupons.setToDate(DateUtil.parse(toDateStr));
 						userCouponsService.insertSelective(userCoupons);
 					} else {
@@ -347,6 +347,59 @@ public class UserCouponsController extends BaseController {
 						result.setMsg("您已经领取过此优惠劵");
 						return result;
 					}
+				}
+			}
+			
+			return result;
+		}
+		
+		@RequestMapping(value = "get_validate_one_coupons.json",method = RequestMethod.POST)
+		public AppResultData<Object> getValidateOneCoupons(
+				@RequestParam("user_coupon_id") Long user_coupon_id,
+				@RequestParam("user_id") Long userId,
+				@RequestParam(value="service_date") Long serviceDate,
+				@RequestParam(value="order_money",required=false) Float orderMoney,
+				@RequestParam("service_type") String serviceTypeId){
+
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(user_coupon_id);
+			DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(userCoupon.getCouponId());
+			
+			BigDecimal moeney=new BigDecimal(0);
+			if(orderMoney!=null){
+				moeney=new BigDecimal(orderMoney);
+			}
+			
+			Date fromDate = userCoupon.getFromDate();
+			String fromDateStr = DateUtil.formatDate(fromDate);
+			Long startTime = TimeStampUtil.getMillisOfDayFull(fromDateStr + " 00:00:00");
+			startTime = startTime / 1000;
+			
+			Date toDate = userCoupon.getToDate();
+			String toDateStr = DateUtil.formatDate(toDate);
+			Long endTime = TimeStampUtil.getMillisOfDayFull(toDateStr + " 23:59:59");
+			endTime = endTime / 1000;
+			
+			//1. 判断优惠券的有效期
+			if (serviceDate < startTime || serviceDate > endTime) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+			}
+
+			//2. 判断服务类型是否正确
+			if (!userCoupon.getServiceType().equals("0") &&
+				!userCoupon.getServiceType().toString().equals(serviceTypeId)) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+			}
+			
+			BigDecimal maxValue = new BigDecimal(0);
+			if (dictCoupons.getMaxValue() != null) maxValue = dictCoupons.getMaxValue();
+			if (!maxValue.equals(BigDecimal.ZERO)) {
+				if (moeney.compareTo(maxValue) < 0) {
+					result.setStatus(Constants.ERROR_999);
+					result.setMsg(ConstantMsg.COUPON_IS_INVALID);
 				}
 			}
 			
