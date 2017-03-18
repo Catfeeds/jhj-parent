@@ -288,6 +288,7 @@ public class OrderController extends BaseController {
 		serviceTypeIds.add(68L);
 		serviceTypeIds.add(69L);
 		serviceTypeIds.add(70L);
+		serviceTypeIds.add(73L);
 		serviceTypeList = partService.selectByIds(serviceTypeIds);
 		
 		model.addAttribute("serviceTypeList", serviceTypeList);
