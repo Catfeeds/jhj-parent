@@ -209,11 +209,10 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		Map<String, String> orderIncomingMap = new HashMap<String, String>();
 		
-		if (orders.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+		Long serviceTypeId = orders.getServiceType();
+		if (serviceTypeId.equals(28L) || serviceTypeId.equals(68L) || serviceTypeId.equals(73L)) {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(orders, staffId);
-		}
-		
-		if (orders.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+		} else {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(orders, staffId);
 		}
 		
@@ -478,11 +477,10 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		Map<String, String> orderIncomingMap = new HashMap<String, String>();
 		
-		if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+	
+		if (serviceTypeId.equals(28L) || serviceTypeId.equals(68L) || serviceTypeId.equals(73L)) {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(order, staffId);
-		}
-		
-		if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+		} else {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(order, staffId);
 		}
 		
