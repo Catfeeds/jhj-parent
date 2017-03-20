@@ -556,12 +556,11 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			
 			Map<String, String> orderIncomingMap = new HashMap<String, String>();
 			
-			if (item.getOrderType().equals(Constants.ORDER_TYPE_0)) {
-				orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(item, searchVo.getStaffId());
-			}
-			
-			if (item.getOrderType().equals(Constants.ORDER_TYPE_1)) {
-				orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(item, searchVo.getStaffId());
+			Long serviceTypeId = item.getServiceType();
+			if (serviceTypeId.equals(28L) || serviceTypeId.equals(68L) || serviceTypeId.equals(73L)) {
+				orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(item, staffId);
+			} else {
+				orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(item, staffId);
 			}
 			
 			String orderIncomingStr = orderIncomingMap.get("totalOrderPay");

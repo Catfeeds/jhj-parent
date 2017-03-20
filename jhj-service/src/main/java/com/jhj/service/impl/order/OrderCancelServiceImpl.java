@@ -333,11 +333,10 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 		
 		Map<String, String> orderIncomingMap = new HashMap<String, String>();
 		
-		if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
+		Long serviceTypeId = order.getServiceType();
+		if (serviceTypeId.equals(28L) || serviceTypeId.equals(68L) || serviceTypeId.equals(73L)) {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(order, staffId);
-		}
-
-		if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+		} else {
 			orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(order, staffId);
 		}
 

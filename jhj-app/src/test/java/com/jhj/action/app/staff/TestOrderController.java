@@ -77,7 +77,7 @@ public class TestOrderController extends JUnitActionBase{
 	@Test
     public void testPostOrderDone() throws Exception {
 
-		String url = "/app/staff/order/post_done.json?staff_id=53&order_id=10876";
+		String url = "/app/staff/order/post_done.json?staff_id=201&order_id=11195";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
      	
