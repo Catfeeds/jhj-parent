@@ -171,16 +171,16 @@ public class OrderHourAddController extends BaseController {
 		}
 		
 		//如果为特惠日，需要判断是否为周一到周三.
-		if (serviceType.equals(69L) || serviceType.equals(70L)) {
-			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000);
-			Date sDate = DateUtil.parse(serviceDateStr);
-			Week sWeek = DateUtil.getWeek(sDate);
-			if (sWeek.getNumber() < 1 || sWeek.getNumber() > 3) {
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg("只能限定周一到周三使用.");
-				return result;
-			}
-		}
+//		if (serviceType.equals(69L) || serviceType.equals(70L)) {
+//			String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000);
+//			Date sDate = DateUtil.parse(serviceDateStr);
+//			Week sWeek = DateUtil.getWeek(sDate);
+//			if (sWeek.getNumber() < 1 || sWeek.getNumber() > 3) {
+//				result.setStatus(Constants.ERROR_999);
+//				result.setMsg("只能限定周一到周三使用.");
+//				return result;
+//			}
+//		}
 		
 		Users u = userService.selectByPrimaryKey(userId);
 		
