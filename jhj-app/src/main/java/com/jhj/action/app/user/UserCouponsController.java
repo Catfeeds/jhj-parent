@@ -305,6 +305,11 @@ public class UserCouponsController extends BaseController {
 			//判断只有这三种优惠劵可用
 			List<Long> validateCouponIds = new ArrayList<Long>();
 			validateCouponIds.add(4191L);
+			validateCouponIds.add(4170L);
+			validateCouponIds.add(4171L);
+			validateCouponIds.add(4172L);
+			validateCouponIds.add(4173L);
+			validateCouponIds.add(4174L);
 			
 			String[] couponsIdList = couponsId.split(",");
 			List<Long> list=new ArrayList<Long>();
@@ -339,8 +344,10 @@ public class UserCouponsController extends BaseController {
 					List<UserCoupons> couponList = userCouponsService.selectByUserCoupons(uc);
 					if(couponList.isEmpty() ){
 						UserCoupons userCoupons = userCouponsService.initUserCoupons(u.getId(), couponsList.get(i));
-						String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), 7, Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
-						userCoupons.setToDate(DateUtil.parse(toDateStr));
+						if(couponsList.get(i).getId()==4191L){
+							String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), 7, Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
+							userCoupons.setToDate(DateUtil.parse(toDateStr));
+						}
 						userCouponsService.insertSelective(userCoupons);
 					} else {
 						result.setStatus(Constants.ERROR_999);
