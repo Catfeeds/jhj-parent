@@ -28,7 +28,7 @@ myApp.onPageInit('wuye-active', function (page) {
 					alert(data.msg);
 					return false;
 				}
-				mainView.router.loadPage("active/half-success.html");
+				mainView.router.loadPage("active/wuye-active-success.html");
 			}
 		});
 	});
