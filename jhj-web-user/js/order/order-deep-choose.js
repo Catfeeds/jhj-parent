@@ -19,7 +19,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 			$$.each(serviceAddons, function(i, item) {
 				var html = "";
 				var name = item.name;
-				if (name == "金牌保洁") return false;
+				if (name == "金牌保洁" || name =='基础保洁') return false;
 				html = "<ul class='order-rili'>";
 				html+= "<li>" + name + "</li>"
 				html+= '<li><span onclick="onDeepSubItemNum($$(this).parent())">-</span>';

@@ -39,7 +39,7 @@ myApp.onPageBeforeInit('order-deep-intro', function(page) {
 			var _data=data.data;
 			for(var i=0;i<_data.length;i++){
 				var name =_data[i].name;
-				if(name!="金牌保洁"){
+				if(name!="金牌保洁" && name!="基础保洁"){
 					result+="<ul class='shendu-bx-xd11'>" +
 					"<li>"+_data[i].name+"</li>"+
 					"<li>"+_data[i].price+"/"+_data[i].item_unit+"</li>"+
