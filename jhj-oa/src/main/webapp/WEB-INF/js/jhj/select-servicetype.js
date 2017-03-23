@@ -28,14 +28,14 @@ $("#parentServiceType").on('change', function(){
 				$serviceTypeOptions = '<option value="0">请选择服务子类</option>';
 				$.each($result.data, function(i, obj) {
 					if (obj.service_type_id == selectServiceType) {
-						$cloudOptions += '<option value="'+obj.service_type_id+'" selected>' + obj.name + "</option>";
+						$serviceTypeOptions += '<option value="'+obj.service_type_id+'" selected>' + obj.name + "</option>";
 					} else {
-						$cloudOptions += '<option value="'+obj.service_type_id+'">' + obj.name + "</option>";
+						$serviceTypeOptions += '<option value="'+obj.service_type_id+'">' + obj.name + "</option>";
 					}
 					
 				});
 				
-				$("#serviceType").html($cloudOptions);
+				$("#serviceType").html($serviceTypeOptions);
 			}
 		},
 		error:function(){

@@ -266,8 +266,9 @@ function serviceTypeChange() {
 		return false;
 	}
 	
-	var parentSerivceType = $("#parentSerivceType").val();
-	if (parentSerivceType == 23 || parentSerivceType == 24) {
+	var parentServiceType = $("#parentServiceType").val();
+	
+	if (parentServiceType == 23 || parentServiceType == 24) {
 		$("#divServiceAddons").css("display", "none");
 		serviceTypeChangeHour();
 	} else {

@@ -96,7 +96,7 @@
 												<font color="red">*</font>服务类型
 											</label>
 											<div class="col-md-5">
-												<select name="serviceType" id="serviceType" class="form-control" onchange="chageServiceType()">
+												<select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
 												</select>
 											</div>
 										</div>
@@ -104,7 +104,7 @@
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务子项
 											</label>
-											<div class="col-md-5">
+											<div class="col-md-8">
 												<table id="serviceAddonTable" border='1' class="table table-bordered">
 													<thead>
 														<tr>

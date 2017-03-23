@@ -50,10 +50,10 @@ public class ParentServiceTypeSelectTag extends SimpleTagSupport {
         	List<PartnerServiceType> optionList = partService.selectBySearchVo(searchVo);
 
             StringBuffer serviceTypeSelect = new StringBuffer();
-            serviceTypeSelect.append("<select id = \"parentServiceType \" name=\"parentServiceType\" class=\"form-control\">");
+            serviceTypeSelect.append("<select id = \"parentServiceType\" name=\"parentServiceType\" class=\"form-control\">");
             
             if (hasAll.equals("1")) {
-            	serviceTypeSelect.append("<option value='0' >全部</option>");
+            	serviceTypeSelect.append("<option value='0' >请选择服务大类</option>");
             }
             
             PartnerServiceType item = null;
