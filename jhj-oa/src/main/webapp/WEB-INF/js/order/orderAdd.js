@@ -259,6 +259,22 @@ function saveAddress() {
 }
 
 //============服务类别相关=========================================================
+$("#parentServiceType").on('change', function(){
+	var parentServiceTypeId = $(this).val();
+	if(0 == parentServiceTypeId){
+		return false;
+	}
+	
+	if (parentServiceTypeId == 23 || parentServiceTypeId == 24) {
+		$("#orderType").val(0);
+		$("#divServiceAddons").css("display", "none");
+	} else {
+		$("#orderType").val(1);
+		$("#divServiceAddons").css("display", "block");
+	}
+});
+
+
 function serviceTypeChange() {
 	var serviceType = $("select[name='serviceType']").val();
 	
@@ -344,7 +360,7 @@ function serviceTypeChangeExp() {
 				
 				
 				serviceContentHtml+="<td>" + serviceType[i].service_hour + "小时</td>";
-				serviceContentHtml+="<td><input type='text' name='itemNum' value='" + serviceType[i].default_num + "' onkeyup='changePrice()'  onafterpaste='changePrice()' ></td>";
+				serviceContentHtml+="<td><input type='text' name='itemNum' value='" + serviceType[i].default_num + "' onkeyup='changePriceExp()'  onafterpaste='changePriceExp()' ></td>";
 				serviceContentHtml+="</tr>";
 			}
 			
@@ -360,6 +376,23 @@ function serviceTypeChangeExp() {
 serviceTypeChange();
 
 //=====================价格相关====================================================
+function changePrice(courponsValue) {
+	var serviceType = $("select[name='serviceType']").val();
+	
+	if (serviceType == "" || serviceType == undefined) {
+		return false;
+	}
+	
+	var parentServiceType = $("#parentServiceType").val();
+	
+	if (parentServiceType == 23 || parentServiceType == 24) {
+		$("#divServiceAddons").css("display", "none");
+		serviceTypeChangeHour();
+	} else {
+		serviceTypeChangeExp();
+	}
+}
+
 
 //金牌保洁价格计算
 function changePriceHour(couponsValue) {
@@ -518,59 +551,22 @@ function setValue(){
 /*
  * 提交订单
  */
-function saveFrom() {
-	console.log("saveform");
-	var serviceAddonDatas = $("#serviceAddonDatas").val();
-	console.log(serviceAddonDatas);
-	console.log(serviceAddonDatas.length);
-	if (serviceAddonDatas == undefined || serviceAddonDatas == "" || serviceAddonDatas == []) {
-		alert("请输入服务子项的数量");
-		return false;
-	}	
+function saveForm() {
 	
-	var params = {};
-	params.user_id = $("#userId").val();
-	params.mobile = $("#mobile").val();
-	params.addr_id = $("#addrId").val();
-	params.service_type = $("#serviceType").val();
-	params.order_pay = $("#orderPay").val();
-	params.order_from = $("#orderFrom").val();
-	params.order_op_from = $("#orderOpFrom").val();
-	params.serviceHour = $("#serviceHour").val();
-	var serviceDate = $("#serviceDate").val();
-	params.service_date = moment(serviceDate + ":00", "YYYY-MM-DD HH:mm:ss").unix();
-	params.remarks = $("#remarks").val();
-	var orderPayType = $("#orderPayType").val();
-	params.service_addons_datas = $("#serviceAddonDatas").val();
-	
-	var couponsId = $("input[name='couponsId']:selected").val();
-	params.coupons_id = couponsId;
-	
-	params.userid = $("#userid").val();
-	params.user_name = $("#username").val();
-
-	if ($('#orderExpForm').validate().form()) {
-		$('#submitForm').attr('disabled',"true");
-		$.ajax({
-			type : "post",
-			url : "/jhj-app/app/order/post_exp.json",
-			data : params,
-			dataType : "json",
-			async:false,
-			success : function(data) {
-				console.log(data);
-				var orderNo = data.data.order_no;
-				var userId = data.data.user_id;
-				var service_type=data.data.service_type;
-				
-				if (data.status == 0) {
-					savePay(orderPayType, orderNo, userId,service_type,couponsId);
-				}
-				if (data.status == 999) {
-					alert(data.msg);
-					$('#submitForm').removeAttr("disabled");
-				}
-			}
-		});
+	if ($('#orderForm').validate().form()) {
+		
+		var parentServiceType = $("#parentServiceType").val();
+		
+		if (parentServiceType != 23 && parentServiceType != 24 ) {
+			var serviceAddonDatas = $("#serviceAddonDatas").val();
+			console.log(serviceAddonDatas);
+			console.log(serviceAddonDatas.length);
+			if (serviceAddonDatas == undefined || serviceAddonDatas == "" || serviceAddonDatas == []) {
+				alert("请输入服务子项的数量");
+				return false;
+			}	
+		}
 	}
+	
+	
 }
