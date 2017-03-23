@@ -450,8 +450,10 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 			maxOrderDept = new BigDecimal(jhjSetting.getSettingValue());
 		}
 		
-		if (maxOrderDept.compareTo(maxOrderDept) == 1) {
+		if (totalDept.compareTo(maxOrderDept) >= 1) {
 			orgStaffFinance.setIsBlack((short) 1);
+		}else{
+			orgStaffFinance.setIsBlack((short) 0);
 		}
 		
 		orgStaffFinance.setUpdateTime(TimeStampUtil.getNowSecond());
