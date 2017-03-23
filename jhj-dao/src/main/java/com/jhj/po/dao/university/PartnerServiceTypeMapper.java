@@ -1,6 +1,8 @@
 package com.jhj.po.dao.university;
 
 import java.util.List;
+
+import com.jhj.vo.PartnerServiceTypeSearchVo;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.vo.app.AmSkillVo;
@@ -39,4 +41,6 @@ public interface PartnerServiceTypeMapper {
 	    List<PartnerServiceType> selectByPartnerServiceTypeVo(PartnerServiceTypeVo vo);
 
 		List<PartnerServiceType> selectAll();
+
+		List<PartnerServiceType> selectBySearchVo(PartnerServiceTypeSearchVo searchVo);
 }

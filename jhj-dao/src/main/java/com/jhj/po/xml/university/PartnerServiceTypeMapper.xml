@@ -63,16 +63,12 @@
 		<include refid="Base_Column_List" />
 		from
 		partner_service_type
-		where
-		service_type_id NOT IN
-		(
-		select parent_id from partner_service_type
-		)
+		where parent_id > 0 and enable = 1;
 	</select>
 
 	<!-- 根据 parentId得到 service -->
-	<!-- <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long"> select <include refid="Base_Column_List" /> from partner_service_type 
-		where parent_id = #{parentId,jdbcType=NUMERIC} and enable = 1 </select> -->
+	<!-- <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long"> select <include refid="Base_Column_List" /> from partner_service_type where parent_id = 
+		#{parentId,jdbcType=NUMERIC} and enable = 1 </select> -->
 
 	<select id="selectNoParentService" resultMap="BaseResultMap">
 		select
@@ -109,6 +105,46 @@
 		<include refid="Base_Column_List" />
 		from partner_service_type where enable = 1
 	</select>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.PartnerServiceTypeSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from partner_service_type 
+		<include refid="bySearchVo"/>
+		order by service_type_id asc
+	</select>
+	
+	
+	<sql id="bySearchVo">
+		where 1 = 1
+		
+		<if test="serviceTypeId != null">
+			and service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="serviceTypeIds != null">
+			and service_type_id in
+			<foreach item="item" index="index" collection="serviceTypeIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		<if test="parentId != null">
+			and parent_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="parentIds != null">
+			and parent_id in
+			<foreach item="item" index="index" collection="parentIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>		
+		
+		<if test="isEnable != null">
+			and enable = #{isEnable,jdbcType=NUMERIC}
+		</if>
+		
+	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
@@ -125,19 +161,21 @@
 			SELECT LAST_INSERT_ID() AS service_type_id
 		</selectKey>
 		insert into partner_service_type (service_type_id, name, parent_id,
-		unit, default_num, 
+		unit, default_num,
 		price, staff_price, mprice, staff_mprice, pprice, staff_pprice, mpprice, staff_mpprice,
 		remarks, view_type, no,
 		service_img_url,
 		enable, service_property,
-		service_times, service_content, is_auto, is_multi,service_hour)
+		service_times, service_content,
+		is_auto, is_multi,service_hour)
 		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
 		#{parentId,jdbcType=NUMERIC},
-		#{unit,jdbcType=VARCHAR}, #{defaultNum,jdbcType=NUMERIC},
-		#{price,jdbcType=DECIMAL},  #{staffPrice,jdbcType=DECIMAL}, 
-		#{mprice,jdbcType=DECIMAL}, #{staffMprice,jdbcType=DECIMAL}, 
-		#{pprice,jdbcType=DECIMAL},   #{staffPprice,jdbcType=DECIMAL}, 
-		#{mpprice,jdbcType=DECIMAL},#{staffMpprice,jdbcType=DECIMAL}, 
+		#{unit,jdbcType=VARCHAR},
+		#{defaultNum,jdbcType=NUMERIC},
+		#{price,jdbcType=DECIMAL}, #{staffPrice,jdbcType=DECIMAL},
+		#{mprice,jdbcType=DECIMAL}, #{staffMprice,jdbcType=DECIMAL},
+		#{pprice,jdbcType=DECIMAL}, #{staffPprice,jdbcType=DECIMAL},
+		#{mpprice,jdbcType=DECIMAL},#{staffMpprice,jdbcType=DECIMAL},
 		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC},
 		#{no,jdbcType=NUMERIC},
 		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
@@ -381,16 +419,19 @@
 		update partner_service_type
 		set name = #{name,jdbcType=VARCHAR},
 		parent_id = #{parentId,jdbcType=NUMERIC},
-		unit = #{unit,jdbcType=VARCHAR},
+		unit =
+		#{unit,jdbcType=VARCHAR},
 		default_num = #{defaultNum,jdbcType=NUMERIC},
 		price = #{price,jdbcType=DECIMAL},
 		staff_price = #{staffPrice,jdbcType=DECIMAL},
-		mprice = #{mprice,jdbcType=DECIMAL},
+		mprice =
+		#{mprice,jdbcType=DECIMAL},
 		staff_mprice = #{staffMprice,jdbcType=DECIMAL},
 		pprice =
 		#{pprice,jdbcType=DECIMAL},
 		staff_pprice = #{staffPprice,jdbcType=DECIMAL},
-		mpprice = #{mpprice,jdbcType=DECIMAL},
+		mpprice =
+		#{mpprice,jdbcType=DECIMAL},
 		staff_mpprice = #{staffMpprice,jdbcType=DECIMAL},
 		remarks = #{remarks,jdbcType=VARCHAR},
 		view_type = #{viewType,jdbcType=NUMERIC},
