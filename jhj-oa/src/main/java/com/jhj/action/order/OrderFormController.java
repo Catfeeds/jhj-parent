@@ -23,6 +23,7 @@ import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
@@ -33,8 +34,10 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
+import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
+import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderLogService;
@@ -48,7 +51,9 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.OrderNoUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -106,6 +111,12 @@ public class OrderFormController extends BaseController {
 	
 	@Autowired
 	private UserDetailPayService userDetailPayService;
+	
+	@Autowired
+	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
+	
+	@Autowired
+	private OrgStaffsService orgStaffService;
 
 	@AuthPassport
 	@RequestMapping(value = "/order-add", method = RequestMethod.GET)
@@ -168,17 +179,20 @@ public class OrderFormController extends BaseController {
 		BigDecimal orderMoney = orderPay;
 
 		String couponsIdStr = request.getParameter("couponsId");
-		Long couponId = Long.valueOf(couponsIdStr);
 		Long userCouponId = 0L;
-		if (couponId > 0L) {
-
-			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponId);
-			UserCoupons userCoupons = userCouponService.initUserCoupons(userId, coupons);
-			userCoupons.setIsUsed((short) 1);
-			userCoupons.setUsedTime(TimeStampUtil.getNowSecond());
-			userCouponService.insert(userCoupons);
-			userCouponId = userCoupons.getId();
-			orderMoney = orderMoney.add(coupons.getValue());
+		if (!StringUtil.isEmpty(couponsIdStr)) {
+			Long couponId = Long.valueOf(couponsIdStr);
+			
+			if (couponId > 0L) {
+	
+				DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponId);
+				UserCoupons userCoupons = userCouponService.initUserCoupons(userId, coupons);
+				userCoupons.setIsUsed((short) 1);
+				userCoupons.setUsedTime(TimeStampUtil.getNowSecond());
+				userCouponService.insert(userCoupons);
+				userCouponId = userCoupons.getId();
+				orderMoney = orderMoney.add(coupons.getValue());
+			}
 		}
 		// 其他参数
 		Short orderFrom = formData.getOrderFrom();
@@ -308,9 +322,21 @@ public class OrderFormController extends BaseController {
 			}
 		}
 		
-		//进行派工
+		//进行派工, 并且发送短信
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
 		for (Long staffId : staffIds) {
 			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+			
+			OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
+			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+					Constants.ALERT_STAFF_MSG);
+			
+			
+			//发送短信
+			String[] smsContent = new String[] { timeStr };
+			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
 		}
 		
 		//更新派工状态为已派工。
