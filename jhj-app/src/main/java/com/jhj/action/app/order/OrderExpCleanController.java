@@ -159,6 +159,19 @@ public class OrderExpCleanController extends BaseController {
 			order.setRemarks(remarks);
 		}
 
+		Orders or = new Orders();
+		or.setUserId(order.getUserId());
+		or.setOrderType(order.getOrderType());
+		or.setOrderStatus(order.getOrderStatus());
+		Orders newestOrder = ordersService.getNewestOrder(or);
+		if(newestOrder!=null){
+			Long addTime = newestOrder.getAddTime();
+			if(order.getAddTime()-addTime<10){
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.FREQUENT_OPERATION);
+				return result;
+			}
+		}
 		// mybatis xml 需要增加插入后获取last_insert_id;
 		ordersService.insertSelective(order);
 		/*
