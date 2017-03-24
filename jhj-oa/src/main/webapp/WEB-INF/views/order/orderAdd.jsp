@@ -361,7 +361,7 @@
 	<script type="text/javascript" src="<c:url value='/js/validate-methods.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-servicetype.js'/>"></script
 	
-	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
+	
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<script src="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.js'/>" type="text/javascript"></script>
 	<script src="<c:url value='/assets/fancybox/source/jquery.fancybox.pack.js'/>"></script>
@@ -378,6 +378,7 @@
 	</script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
 
 
 
