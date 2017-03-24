@@ -45,13 +45,9 @@ public interface OrderDispatchsService {
 	
 	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
 
-	List<OrgStaffsNewVo> manualDispatchByOrg(Long orderId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
-
 	OrgStaffsNewVo initStaffsNew();
 
 	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
-
-	List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour, Long sessionOrgId);
 
 	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
 
@@ -60,5 +56,9 @@ public interface OrderDispatchsService {
 	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
 
 	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
+
+	List<OrgStaffsNewVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId);
+
+	List<OrgStaffsNewVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
    	
 }

@@ -417,15 +417,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * 3. 包含员工的距离.
 	 */
 	@Override
-	public List<OrgStaffsNewVo> manualDispatch(Long orderId, Long serviceDate, Double serviceHour, Long sessionOrgId) {
+	public List<OrgStaffsNewVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId) {
 
 		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
-
-		Orders order = orderService.selectByPrimaryKey(orderId);
-
-		Long serviceTypeId = order.getServiceType();
-
-		Long addrId = order.getAddrId();
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
 		String fromLat = addrs.getLatitude();
 		String fromLng = addrs.getLongitude();
@@ -617,13 +611,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * 3. 包含员工的距离.
 	 */
 	@Override
-	public List<OrgStaffsNewVo> manualDispatchByOrg(Long orderId, Long serviceDate, Double serviceHour, Long parentId, Long orgId) {
+	public List<OrgStaffsNewVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId) {
 
-		Orders order = orderService.selectByPrimaryKey(orderId);
-
-		Long serviceTypeId = order.getServiceType();
-
-		Long addrId = order.getAddrId();
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
 		String fromLat = addrs.getLatitude();
 		String fromLng = addrs.getLongitude();

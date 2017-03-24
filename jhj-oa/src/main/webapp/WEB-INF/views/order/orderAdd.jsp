@@ -13,12 +13,26 @@
 <!--css for this page-->
 <link rel="stylesheet" href="<c:url value='/css/fileinput.css'/>" type="text/css" />
 <link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" />
+<link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet" />
+<link href="<c:url value='/assets/fancybox/source/jquery.fancybox.css?v=2.1.3'/>" rel="stylesheet'/>" />
 <link rel="stylesheet" href='<c:url value='/css/order-calendar.css'/>' type="text/css" />
 <style>
 .tangram-suggestion-main {
 	z-index: 1060;
 }
 </style>
+<style>
+.bootstrap-tagsinput input {
+	border: none;
+	box-shadow: none;
+}
+
+.bootstrap-tagsinput .label {
+	font-size: 100%;
+}
+
+</style>
+
 </head>
 <body>
 	<section id="container">
@@ -51,9 +65,8 @@
 									<input type="hidden" id="mpprice" name="pprice" " value="135">
 									<input type="hidden" id="maxServiceHour" name="maxServiceHour" " value="6">
 									<input type="hidden" id="minServiceHour" name="minServiceHour" " value="3">
-									<input type="hidden" id="user_id" value="${accountAuth.id }" />
-									<input type="hidden" id="username" value="${accountAuth.username }" />
 									<input type="hidden" id="serviceAddonDatas" name="serviceAddonDatas" value="" />
+									<input type="hidden" id="selectStaffIds" name="selectStaffIds" value="" />
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label">
@@ -71,7 +84,7 @@
 												<font color="red">*</font>服务地址
 											</label>
 											<div class="col-md-5">
-												<select id="addrId" name="addrId" class="form-control">
+												<select id="addrId" name="addrId" class="form-control" onchange="addrChange()">
 													<option value="">--请选择服务地址--</option>
 												</select>
 											</div>
@@ -100,7 +113,7 @@
 												</select>
 											</div>
 										</div>
-										<div class="form-group" id="divServiceAddons" style="display:none">
+										<div class="form-group" id="divServiceAddons" style="display: none">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务子项
 											</label>
@@ -166,8 +179,6 @@
 											</label>
 											<div class="col-md-5">
 												<input type="text" id="orderPay" name="orderPay" class="form-control" value="" oninput="setValue()" />
-												<input type="hidden" id="hour-price" value="${hour.price }" />
-												<input type="hidden" id='cook-price' value="${cook.price }" />
 											</div>
 										</div>
 										<div class="form-group">
@@ -202,6 +213,12 @@
 											<label class="col-md-2 control-label">用户备注:</label>
 											<div class="col-md-5">
 												<textarea id="remarks" name="remarks" rows="5" maxlength='200' cols="50" class="form-control"></textarea>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label"></label>
+											<div class="col-md-5">
+												<form:errors path="remarks" ></form:errors>
 											</div>
 										</div>
 										<div class="form-actions fluid">
@@ -252,10 +269,86 @@
 				</div>
 			</div>
 		</div>
-		<!--main content end-->
-		<!--footer start-->
-		<%@ include file="../shared/pageFooter.jsp"%>
-		<!--footer end-->
+		<!-- 派工选择 -->
+		<div class="modal fade bs-example-modal-lg" id="modalDispatch" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" style="width:90%">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h4 class="modal-title" id="myModalLabel">选择派工</h4>
+					</div>
+					<div class="modal-body" style="height:400px;overflow:scroll;">
+						
+							<div class="form-body">
+								
+								<div class="form-group">
+									<label class="col-md-2 control-label">
+										<font color="red">派工方案</font>
+									</label>
+									<div class="col-md-5">
+										<input type="radio" id="disWay" name="disWay" value="0">
+										智能推荐
+										<input type="radio" id="disWay" name="disWay" value="1">
+										门店派工
+									</div>
+								</div>
+								
+								<div class="form-group required" id="div-org-id">
+									<label class="col-md-2 control-label">选择门店:</label>
+									<div class="col-md-5">
+										<orgSelectTag:select />
+									</div>
+								</div>
+								<div class="form-group" id="div-cloud-id">
+									<label class="col-md-2 control-label">选择云店:</label>
+									<div class="col-md-5">
+										<select name="orgId" id="orgId" class="form-control">
+											<option value="0">全部</option>
+										</select>
+									</div>
+								</div>
+								
+								<div id="staffList" class="col-sm-12">
+									已选择：
+									<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true" />
+									<table class="table table-striped table-advance table-hover">
+										<thead>
+											<tr>
+												<th>选派员工</th>
+												<th>地区门店</th>
+												<th>云店</th>
+												<th>云店距用户距离</th>
+												<th>服务人员</th>
+												<th>手机号</th>
+												<th>距用户距离</th>
+												<th>今日接单数</th>
+												<th>是否可派工</th>
+												<th>原因</th>
+											</tr>
+										</thead>
+										<tbody id="allStaff">
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" id="orderSubmit">提交订单</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		
+	</section>
+	<!--main content end-->
+	<!--footer start-->
+	<%@ include file="../shared/pageFooter.jsp"%>
+	<!--footer end-->
 	</section>
 	<!-- js placed at the end of the document so the pages load faster -->
 	<!--common script for all pages-->
@@ -263,12 +356,30 @@
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2sshjv8D4AOoOzozoutVb6WT"></script>
 	<!--script for this page-->
 	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>" type="text/javascript"></script>
+	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-fileupload/fileinput.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/validate-methods.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-servicetype.js'/>"></script
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.js'/>" type="text/javascript"></script>
+	<script src="<c:url value='/assets/fancybox/source/jquery.fancybox.pack.js'/>"></script>
+	<script src="<c:url value='/js/modernizr.custom.js'/>"></script>
+	<script src="<c:url value='/js/toucheffects.js'/>"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.fancybox').fancybox({
+				padding : 0,
+				openEffect : 'elastic',
+				closeBtn : false
+			});
+		});
+	</script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js'/>"></script>
+
+
+
 
 </body>
 </html>
