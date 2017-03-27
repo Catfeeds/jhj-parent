@@ -83,7 +83,7 @@ function orderRecomment(serviceTypeId){
 
 	if(serviceTypeId==undefined || serviceTypeId=='' || serviceTypeId==null) return ;
 
-	//洁癖虫保洁
+	//金牌保洁
 	var jinpai=[
 		{"name":"家务包月","url":"order/fiveservice/order-cus-hostwork-month.html","serviceTypeId":"61"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
@@ -95,7 +95,7 @@ function orderRecomment(serviceTypeId){
 	var bingxiang=[
 		{"name":"油烟机清洗","url":"order/order-deep-intro.html?service_type_id=36","serviceTypeId":"36"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
 		{"name":"洗衣机清洗","url":"order/order-deep-intro.html?service_type_id=60","serviceTypeId":"60"}
 	];
 
@@ -103,7 +103,7 @@ function orderRecomment(serviceTypeId){
 	var caboli=[
 		{"name":"油烟机清洗","url":"order/order-deep-intro.html?service_type_id=36","serviceTypeId":"36"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
 		{"name":"洗衣机清洗","url":"order/order-deep-intro.html?service_type_id=60","serviceTypeId":"60"}
 	];
 
@@ -111,7 +111,7 @@ function orderRecomment(serviceTypeId){
 	var chuwei=[
 		{"name":"擦玻璃","url":"order/order-deep-intro.html?service_type_id=54","serviceTypeId":"54"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
 		{"name":"床铺除螨杀菌","url":"","serviceTypeId":"34"}
 	];
 
@@ -127,7 +127,7 @@ function orderRecomment(serviceTypeId){
 	var diban=[
 		{"name":"擦玻璃","url":"order/order-deep-intro.html?service_type_id=54","serviceTypeId":"54"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
 		{"name":"床铺除螨杀菌","url":"","serviceTypeId":"34"}
 	];
 
@@ -135,7 +135,7 @@ function orderRecomment(serviceTypeId){
 	var fangwu=[
 		{"name":"擦玻璃","url":"order/order-deep-intro.html?service_type_id=54","serviceTypeId":"54"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
 		{"name":"床铺除螨杀菌","url":"order/order-deep-intro.html?service_type_id=34","serviceTypeId":"34"}
 	];
 
@@ -143,7 +143,7 @@ function orderRecomment(serviceTypeId){
 	var kongtiao=[
 		{"name":"油烟机清洗","url":"order/order-deep-intro.html?service_type_id=36","serviceTypeId":"36"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
 		{"name":"洗衣机清洗","url":"order/order-deep-intro.html?service_type_id=60","serviceTypeId":"60"}
 	];
 
@@ -151,7 +151,7 @@ function orderRecomment(serviceTypeId){
 	var xiyiji=[
 		{"name":"油烟机清洗","url":"order/order-deep-intro.html?service_type_id=36","serviceTypeId":"36"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"},
 		{"name":"空调清洗","url":"order/order-deep-intro.html?service_type_id=51","serviceTypeId":"51"}
 	];
 
@@ -168,7 +168,7 @@ function orderRecomment(serviceTypeId){
 		{"name":"冰箱清洗","url":"order/order-deep-intro.html?service_type_id=50","serviceTypeId":"50"},
 		{"name":"贴心家事","url":"order/order-old-homework.html?service_type_id=25","serviceTypeId":"25"},
 		{"name":"洗衣机清洗","url":"order/order-deep-intro.html?service_type_id=60","serviceTypeId":"60"},
-		{"name":"洁癖虫保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"}
+		{"name":"金牌保洁","url":"order/order-hour-intro.html","serviceTypeId":"28"}
 	];
 
 	//家务包月
