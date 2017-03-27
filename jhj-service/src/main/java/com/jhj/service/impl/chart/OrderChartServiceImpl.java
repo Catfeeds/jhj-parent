@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.jhj.common.Constants;
@@ -377,20 +379,11 @@ public class OrderChartServiceImpl implements OrderChartService {
 		
 //		String[] deepServiceType = {"34","35","36","50","51","52","53","54","55","56","60","61","71"};
 //		List<String> deepType = Arrays.asList(deepServiceType);
-		String[] myServiceType = {"62","63","64","65"};
-		List<String> hourType = Arrays.asList(myServiceType);
+//		String[] myServiceType = {"62","63","64","65"};
+//		List<String> hourType = Arrays.asList(myServiceType);
 		//1-1. 替换表格数据   App来源和微网站来源(数量)
 		String str=null,str1 = null;
 		for (Map<String, String> tableDataItem : tableDatas) {
-			int jpTotal=0;
-			int jcTotoal=0;
-			int sdTotal=0;
-			int myTotal=0;
-			
-			BigDecimal jpTotalMoney = new BigDecimal(0);
-			BigDecimal jcTotoalMoney = new BigDecimal(0);
-			BigDecimal sdTotalMoney = new BigDecimal(0);
-			BigDecimal myTotalMoney = new BigDecimal(0);
 			
 			for (ChartMapVo chartSqlData : statDatas) {
 				BigDecimal totalMoney = chartSqlData.getTotalMoney();
@@ -402,32 +395,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 					str = tableDataItem.get("series");
 					str1 = chartSqlData.getSeries();
 					if(DateUtil.compareDateStr(str1,str)==0){
-						//表格数据
-						if(chartSqlData.getOrderType()==0){
-							if(chartSqlData.getServiceType()==28){
-								jpTotal+=chartSqlData.getTotal();
-								jpTotalMoney = jpTotalMoney.add(totalMoney);
-								
-							}
-							if(chartSqlData.getServiceType()==68){
-								jcTotoal+=chartSqlData.getTotal();
-								jcTotoalMoney = jcTotoalMoney.add(totalMoney);
-								
-							}
-						}
-						if(chartSqlData.getOrderType()==1){
-							if(!hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
-								sdTotal+=chartSqlData.getTotal();
-								sdTotalMoney = sdTotalMoney.add(totalMoney);
-								
-							}
-							if(hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
-								myTotal+=chartSqlData.getTotal();
-								myTotalMoney = myTotalMoney.add(totalMoney);
-								
-							}
-						}
-						
 						//图标数据
 						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
 							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
@@ -451,32 +418,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 					String str2 = tableDataItem.get("series");
 					String str3 = chartSqlData.getSeries();
 					if (str2.equals(str3)) {
-						//表格数据
-						if(chartSqlData.getOrderType()==0){
-							if(chartSqlData.getServiceType()==28){
-								jpTotal+=chartSqlData.getTotal();
-								jpTotalMoney = jpTotalMoney.add(totalMoney);
-								
-							}
-							if(chartSqlData.getServiceType()==68){
-								jcTotoal+=chartSqlData.getTotal();
-								jcTotoalMoney = jcTotoalMoney.add(totalMoney);
-								
-							}
-						}
-						if(chartSqlData.getOrderType()==1){
-							if(!hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
-								sdTotal+=chartSqlData.getTotal();
-								sdTotalMoney = sdTotalMoney.add(totalMoney);
-								
-							}
-							if(hourType.contains(String.valueOf(chartSqlData.getServiceType()))){
-								myTotal+=chartSqlData.getTotal();
-								myTotalMoney = myTotalMoney.add(totalMoney);
-								
-							}
-						}
-						
 						//图标数据
 						if(chartSqlData.getOrderFrom().equals("1") && chartSqlData.getOrderOpFrom().equals("0")){
 							tableDataItem.put("微网站", String.valueOf(chartSqlData.getTotal()));
@@ -498,14 +439,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 					}
 				}
 			}
-			tableDataItem.put("金牌保洁订单数", String.valueOf(jpTotal));
-			tableDataItem.put("金牌保洁总金额", String.valueOf(jpTotalMoney));
-			tableDataItem.put("基础保洁订单数", String.valueOf(jcTotoal));
-			tableDataItem.put("基础保洁总金额", String.valueOf(jcTotoalMoney));
-			tableDataItem.put("深度养护订单数", String.valueOf(sdTotal));
-			tableDataItem.put("深度养护总金额", String.valueOf(sdTotalMoney));
-			tableDataItem.put("母婴到家订单数", String.valueOf(myTotal));
-			tableDataItem.put("母婴到家总金额", String.valueOf(myTotalMoney));
 		}
 		
 		//5. 去掉第一个tableDataItem;
