@@ -585,9 +585,11 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		vo.setServiceAddrLng("");
 		if (item.getAddrId() > 0L) {
 			UserAddrs userAddr = userAddrsService.selectByPrimaryKey(item.getAddrId());
-			vo.setServiceAddr(userAddr.getName() + userAddr.getAddr());
-			vo.setServiceAddrLat(userAddr.getLatitude());
-			vo.setServiceAddrLng(userAddr.getLongitude());
+			if (userAddr != null) {
+				vo.setServiceAddr(userAddr.getName() + userAddr.getAddr());
+				vo.setServiceAddrLat(userAddr.getLatitude());
+				vo.setServiceAddrLng(userAddr.getLongitude());
+			}
 
 		}
 		// 取货地址
