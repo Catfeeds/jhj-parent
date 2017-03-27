@@ -116,7 +116,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 	public boolean orderPaySuccessToDoForHour(Long userId, Long orderId,  boolean isChangeDispatch) {
 
 		Orders order = ordersService.selectByPrimaryKey(orderId);
-		
+		Long addrId = order.getAddrId();
 		// 4)如果有优惠劵，则需要将优惠劵变成已使用。
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
 		Long userCouponId = orderPrice.getCouponId();
@@ -164,7 +164,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
 		if (staffIds.size() != staffNums) {
 			staffNums = staffNums - staffIds.size();
-			List<Long> autoStaffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums, appointStaffIds);
+			List<Long> autoStaffIds = orderDispatchService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, appointStaffIds);
 		
 			for (Long autoStaffId : autoStaffIds) {
 				staffIds.add(autoStaffId);
@@ -228,7 +228,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 	 */
 	@Override
 	public boolean orderPaySuccessToDoForDeep(Orders order) {
-
+		Long addrId = order.getAddrId();
 		// 如果有优惠劵，则需要将优惠劵变成已使用。
 		Long orderId = order.getId();
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(orderId);
@@ -295,7 +295,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		int staffNums = 1;
 		if (staffIds.size() != staffNums) {
-			List<Long> autoStaffIds = orderDispatchService.autoDispatch(orderId, serviceDate, serviceHour, staffNums, appointStaffIds);
+			List<Long> autoStaffIds = orderDispatchService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, appointStaffIds);
 		
 			for (Long autoStaffId : autoStaffIds) {
 				staffIds.add(autoStaffId);

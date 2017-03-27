@@ -214,15 +214,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * @param appointStaffIds  已经指派的员工，需要排除掉
 	 */
 	@Override
-	public List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds) {
+	public List<Long> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds) {
 
 		List<Long> dispatchStaffIds = new ArrayList<Long>();
-
-		Orders order = orderService.selectByPrimaryKey(orderId);
-
-		Long serviceTypeId = order.getServiceType();
-
-		Long addrId = order.getAddrId();
 
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
 

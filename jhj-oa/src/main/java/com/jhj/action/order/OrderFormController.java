@@ -252,6 +252,7 @@ public class OrderFormController extends BaseController {
 		Orders order = orderService.initOrders();
 		order.setMobile(u.getMobile());
 		order.setUserId(userId);
+		order.setOrderType(orderType);
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);

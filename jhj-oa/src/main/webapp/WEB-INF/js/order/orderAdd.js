@@ -591,7 +591,9 @@ function saveForm() {
 		
 		$("#modalDispatch").modal("show");
 		var serviceDateUnix = moment(serviceDate).unix();
-				
+		
+		
+		
 		loadStaffsByServiceDate(serviceDateUnix);
 		$("input[name='disWay']").eq(0).attr("checked",true);
 		$("input[name='disWay']").trigger("change");
@@ -683,6 +685,10 @@ var loadStaffDynamic = function(data, status, xhr) {
 	
 	$("#allStaff").append(tdHtml);
 	
+	
+	var serviceDate = $("#serviceDate").val()
+	var serviceDateUnix = moment(serviceDate).unix();
+	loadAutoDispatch(serviceDateUnix);
 	return false;
 }
 
@@ -716,6 +722,29 @@ function doSelectStaff(staffId) {
 	console.log($('#selectedStaffs').val());
 }
 
+function doSelectStaffCheck(staffId) {
+
+	var selectStaffId = "";
+	var selectStaffName = "";
+	var distanceValue = "";
+	$("input[name='select-staff']").each(function(k, v) {
+		
+		var selectStaffId = $(this).parent().find("#selectStaffId").val();
+		
+		var selectStaffName = $(this).parent().find("#selectStaffName").val();
+		
+		var distanceValue = $(this).parent().find("#distanceValue").val();
+		
+		if (selectStaffId == staffId) {
+			// 如果该行被选中
+			$(this).attr("checked","true"); 
+			addSelectedStaffs(selectStaffId, selectStaffName, distanceValue);
+		}
+	});
+
+	console.log($('#selectedStaffs').val());
+}
+
 function addSelectedStaffs(selectStaffId, selectStaffName, distanceValue) {
 	var selectStaffIds = $("#selectedStaffs").val();
 	
@@ -730,6 +759,51 @@ function remove(selectStaffId, selectStaffName, distanceValue) {
 	if (selectStaffIds.indexOf(selectStaffId) >= 0) return false;
 	
 	$('#selectedStaffs').tagsinput('add', { id: selectStaffId, label: selectStaffName, distanceValue :  distanceValue});
+}
+
+function loadAutoDispatch(serviceDate) {
+	var addrId = $("#addrId").val();
+	if (addrId == undefined || addrId == "") {
+		return false;
+	}
+	
+	var serviceType = $("#serviceType").val();
+	if (serviceType == undefined || serviceType == "") {
+		return false;
+	}
+	
+	var params = {};
+
+	params.addrId = $("#addrId").val();
+	params.serviceHour = $("#serviceHour").val();
+	params.serviceTypeId = $("#serviceType").val();
+	params.serviceDate = serviceDate;
+	params.staffNums = $("#staffNums").val();
+	
+	$.ajax({
+		type : "get",
+		url : "/jhj-oa/new_dispatch/load_auto_dispatch.json",
+		data : params,
+		dataType : "json",
+		success : function(data) {
+			
+			console.log(data);
+			if (data == undefined || data == '') return false;
+			
+			$('#selectedStaffs').tagsinput('removeAll');
+
+			$('#selectedStaffs').val();
+			$.each(data, function(i, obj) {
+				
+				var staffId = obj.staff_id;
+				var staffName = obj.name;
+				console.log("staffId = " + staffId);
+				console.log("staffName = " + staffName);
+//				addSelectedStaffs(staffId, staffName, 0);
+				doSelectStaffCheck(staffId);
+			});
+		}
+	});
 }
 
 function loadStaffsByServiceDate(serviceDate) {

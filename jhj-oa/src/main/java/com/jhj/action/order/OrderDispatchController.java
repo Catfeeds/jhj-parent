@@ -23,6 +23,7 @@ import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
@@ -95,6 +96,50 @@ public class OrderDispatchController extends BaseController {
 	@Autowired
 	private OrderLogService orderLogService;
 
+	
+	/**
+	 * 
+	 * @Title: loadAutoDispatch
+	 * @Description: 自动派工，返回一个可用服务人员ID.
+	 *              
+	 * 
+	 * @param @param model
+	 * @param @param orderId
+	 * @param @param newServiceDate
+	 * @param @return 设定文件
+	 * @return String 返回类型
+	 * @throws
+	 */
+	@RequestMapping(value = "load_auto_dispatch.json", method = RequestMethod.GET)
+	public List<OrgStaffs> loadAutoDispatch(
+			@RequestParam("addrId") Long addrId,
+			@RequestParam("serviceTypeId") Long serviceTypeId,
+			@RequestParam("serviceDate") Long serviceDate,
+			@RequestParam("serviceHour") double serviceHour,
+			@RequestParam("staffNums") int staffNums
+			) {
+		
+		List<OrgStaffs> list = new ArrayList<OrgStaffs>();
+		
+		PartnerServiceType serviceType = partnerService.selectByPrimaryKey(serviceTypeId);
+
+		if (serviceType == null)
+			return list;
+
+		if (serviceType.getIsAuto().equals((short) 0))
+			return list;
+		
+		
+		List<Long> staffIds = orderDispatchsService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, new ArrayList<Long>());
+		if (!staffIds.isEmpty()) {
+			StaffSearchVo searchVo = new StaffSearchVo();
+			searchVo.setStaffIds(staffIds);
+			list = orgStaffsService.selectBySearchVo(searchVo);
+		}
+		return list;
+	}
+	
+	
 	/**
 	 * 
 	 * @Title: loadProperStaffListForBase

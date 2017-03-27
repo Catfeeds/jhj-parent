@@ -51,8 +51,6 @@ public interface OrderDispatchsService {
 
 	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
 
-	List<Long> autoDispatch(Long orderId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
-
 	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
 
 	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
@@ -60,5 +58,7 @@ public interface OrderDispatchsService {
 	List<OrgStaffsNewVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId);
 
 	List<OrgStaffsNewVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
+
+	List<Long> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
    	
 }
