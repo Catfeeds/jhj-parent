@@ -3,7 +3,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+"/";
+//针对微信支付， 如果访问域名为 jia-he-jia.com, 则变为 www.jia-he-jia.com
+String httpScheme = request.getScheme();
+String serviceName = request.getServerName();
+if (serviceName.indexOf("www") < 0) serviceName = "www." + serviceName;
+String basePath = httpScheme+"://"+serviceName+"/";
 
 String orderId = request.getParameter("orderId");
 String userCouponId = request.getParameter("userCouponId");
