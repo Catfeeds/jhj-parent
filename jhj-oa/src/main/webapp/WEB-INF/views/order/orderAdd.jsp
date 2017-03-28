@@ -30,9 +30,7 @@
 .bootstrap-tagsinput .label {
 	font-size: 100%;
 }
-
 </style>
-
 </head>
 <body>
 	<section id="container">
@@ -218,7 +216,7 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label"></label>
 											<div class="col-md-5">
-												<form:errors path="remarks" ></form:errors>
+												<form:errors path="remarks"></form:errors>
 											</div>
 										</div>
 										<div class="form-actions fluid">
@@ -272,67 +270,64 @@
 		<!-- 派工选择 -->
 		<div class="modal fade bs-example-modal-lg" id="modalDispatch" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg" style="width:90%">
+			<div class="modal-dialog modal-lg" style="width: 90%">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 						<h4 class="modal-title" id="myModalLabel">选择派工</h4>
 					</div>
-					<div class="modal-body" style="height:400px;overflow:scroll;">
-						
-							<div class="form-body">
-								
-								<div class="form-group">
-									<label class="col-md-2 control-label">
-										<font color="red">派工方案</font>
-									</label>
-									<div class="col-md-5">
-										<input type="radio" id="disWay" name="disWay" value="0">
-										智能推荐
-										<input type="radio" id="disWay" name="disWay" value="1">
-										门店派工
-									</div>
-								</div>
-								
-								<div class="form-group required" id="div-org-id">
-									<label class="col-md-2 control-label">选择门店:</label>
-									<div class="col-md-5">
-										<orgSelectTag:select />
-									</div>
-								</div>
-								<div class="form-group" id="div-cloud-id">
-									<label class="col-md-2 control-label">选择云店:</label>
-									<div class="col-md-5">
-										<select name="orgId" id="orgId" class="form-control">
-											<option value="0">全部</option>
-										</select>
-									</div>
-								</div>
-								
-								<div id="staffList" class="col-sm-12">
-									已选择：
-									<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true" />
-									<table class="table table-striped table-advance table-hover">
-										<thead>
-											<tr>
-												<th>选派员工</th>
-												<th>地区门店</th>
-												<th>云店</th>
-												<th>云店距用户距离</th>
-												<th>服务人员</th>
-												<th>手机号</th>
-												<th>距用户距离</th>
-												<th>今日接单数</th>
-												<th>是否可派工</th>
-												<th>原因</th>
-											</tr>
-										</thead>
-										<tbody id="allStaff">
-										</tbody>
-									</table>
-								</div>
+					<div class="modal-body" style="height: 400px; overflow: scroll;">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-label">
+								<font color="red">派工方案</font>
+							</label>
+							<div class="col-md-10">
+								<input type="radio" id="disWay" name="disWay" value="0">
+								智能推荐
+								<input type="radio" id="disWay" name="disWay" value="1">
+								门店派工
 							</div>
-
+						</div>
+						<div class="form-group col-md-12" id="div-org-id">
+							<label class="col-md-2 control-label">选择门店:</label>
+							<div class="col-md-5">
+								<orgSelectTag:select />
+							</div>
+						</div>
+						<div class="form-group col-md-12" id="div-cloud-id">
+							<label class="col-md-2 control-label">选择云店:</label>
+							<div class="col-md-5">
+								<select name="orgId" id="orgId" class="form-control">
+									<option value="0">全部</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-12" id="div-cloud-id">
+							<label class="col-md-2 control-label">已选择：</label>
+							<div class="col-md-5">
+								<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true" />
+							</div>
+						</div>
+						<div id="staffList" class="col-sm-12">
+							<table class="table table-striped table-advance table-hover">
+								<thead>
+									<tr>
+										<th>选派员工</th>
+										<th>地区门店</th>
+										<th>云店</th>
+										<th>云店距用户距离</th>
+										<th>服务人员</th>
+										<th>手机号</th>
+										<th>距用户距离</th>
+										<th>今日接单数</th>
+										<th>是否可派工</th>
+										<th>原因</th>
+									</tr>
+								</thead>
+								<tbody id="allStaff">
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -343,7 +338,6 @@
 			</div>
 			<!-- /.modal-dialog -->
 		</div>
-		
 	</section>
 	<!--main content end-->
 	<!--footer start-->
@@ -377,8 +371,5 @@
 	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
-
-
-
 </body>
 </html>
