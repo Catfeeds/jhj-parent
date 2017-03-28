@@ -105,7 +105,7 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		var params = {};
 		params.user_id = $$("#userId").val();
 		params.service_type = $$("#serviceType").val();
-		params.service_date = $$("#serviceDate").val();
+		params.service_date = sessionStorage.getItem('service_date');
 		params.order_money = $$("#orderMoney").val();
 		
 		$$.ajax({
