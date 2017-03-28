@@ -147,8 +147,6 @@ function getAddrByMobile(addrId) {
 					$("#userId").val(userId);
 					var isVip = data.data.isVip;
 					$("#isVip").val(isVip);
-					console.log(data.data);
-					console.log("is_vip ==" + isVip);
 					if (isVip == 0) $("#userTypeStr").html("普通会员");
 					if (isVip == 1) $("#userTypeStr").html("金牌会员");
 					serviceTypeChange();
@@ -409,7 +407,6 @@ function changePriceHour(couponsValue) {
 	staffNums = staffNums.replace(/\D|^0/g, '');
 	
 	var minServiceHour = $("#minServiceHour").val();
-	console.log("minServiceHour = " + minServiceHour);
 	var serviceType = $("select[name='serviceType'] option:selected").val();
 	
 	var price = $("#price").val();
@@ -419,11 +416,11 @@ function changePriceHour(couponsValue) {
 	
 	var isVip = $("#isVip").val();
 	if (isVip == undefined || isVip == "") isVip = 0;
-	console.log(" changePrice price ==" + price);
-	console.log(" changePrice mprice ==" + mprice);
-	console.log(" changePrice pprice ==" + pprice);
-	console.log(" changePrice mpprice ==" + mpprice);
-	console.log(" changePrice is_vip ==" + isVip);
+//	console.log(" changePrice price ==" + price);
+//	console.log(" changePrice mprice ==" + mprice);
+//	console.log(" changePrice pprice ==" + pprice);
+//	console.log(" changePrice mpprice ==" + mpprice);
+//	console.log(" changePrice is_vip ==" + isVip);
 	var orderHourPay = pprice;
 	var orderHourPrice = price;
 	if (isVip == 1) {
@@ -577,8 +574,8 @@ function saveForm() {
 		
 		if (parentServiceType != 23 && parentServiceType != 24) {
 			var serviceAddonDatas = $("#serviceAddonDatas").val();
-			console.log(serviceAddonDatas);
-			console.log(serviceAddonDatas.length);
+//			console.log(serviceAddonDatas);
+//			console.log(serviceAddonDatas.length);
 			if (serviceAddonDatas == undefined || serviceAddonDatas == ""
 					|| serviceAddonDatas == []) {
 				alert("请输入服务子项的数量");
@@ -586,14 +583,15 @@ function saveForm() {
 			}
 		}
 		
+		
+		
+		$('#selectedStaffs').tagsinput('removeAll');
+		$('#selectedStaffs').val('');
 		var serviceDate = $("#serviceDate").val()
 		$("#divSerivceDate").val(serviceDate);
 		
 		$("#modalDispatch").modal("show");
 		var serviceDateUnix = moment(serviceDate).unix();
-		
-		
-		
 		loadStaffsByServiceDate(serviceDateUnix);
 		$("input[name='disWay']").eq(0).attr("checked",true);
 		$("input[name='disWay']").trigger("change");
@@ -616,6 +614,7 @@ $('#selectedStaffs').tagsinput({
 
 $('#selectedStaffs').on('itemRemoved', function(event) {
 	  // event.item: contains the item
+	if (event.item == undefined) return false;
 	var staffId = event.item.id;
 	$("input[name='select-staff']").each(function(k, v) {
 		
@@ -686,9 +685,14 @@ var loadStaffDynamic = function(data, status, xhr) {
 	$("#allStaff").append(tdHtml);
 	
 	
-	var serviceDate = $("#serviceDate").val()
-	var serviceDateUnix = moment(serviceDate).unix();
-	loadAutoDispatch(serviceDateUnix);
+	var selectedStaffs = $("#selectedStaffs").val();
+	console.log("selectedStaffs = " + selectedStaffs );
+	if (selectedStaffs == undefined ||  selectedStaffs == "") {
+		var serviceDate = $("#serviceDate").val()
+		var serviceDateUnix = moment(serviceDate).unix();
+		loadAutoDispatch(serviceDateUnix);
+	}
+	
 	return false;
 }
 
@@ -718,7 +722,6 @@ function doSelectStaff(staffId) {
 		
 		
 	});
-
 	console.log($('#selectedStaffs').val());
 }
 
@@ -742,7 +745,6 @@ function doSelectStaffCheck(staffId) {
 		}
 	});
 
-	console.log($('#selectedStaffs').val());
 }
 
 function addSelectedStaffs(selectStaffId, selectStaffName, distanceValue) {
@@ -787,19 +789,15 @@ function loadAutoDispatch(serviceDate) {
 		dataType : "json",
 		success : function(data) {
 			
-			console.log(data);
 			if (data == undefined || data == '') return false;
 			
 			$('#selectedStaffs').tagsinput('removeAll');
 
-			$('#selectedStaffs').val();
+			$('#selectedStaffs').val('');
 			$.each(data, function(i, obj) {
 				
 				var staffId = obj.staff_id;
 				var staffName = obj.name;
-				console.log("staffId = " + staffId);
-				console.log("staffName = " + staffName);
-//				addSelectedStaffs(staffId, staffName, 0);
 				doSelectStaffCheck(staffId);
 			});
 		}
@@ -910,17 +908,22 @@ function loadStaffs() {
 
 // 点击选择 调整派工方案
 $("input[name='disWay']").on("change", function() {
-	console.log("disWay change");
+//	console.log("disWay change");
 	var thisVal = $("input[name='disWay']:checked").val();
-	console.log("thisVal = " + thisVal);
 	if (thisVal == 0) {
 		$("#div-org-id").hide();
 		$("#div-cloud-id").hide();
+		$("#modalDispatch").modal("show");
+		
+		var serviceDateUnix = moment(serviceDate).unix();
+		loadStaffsByServiceDate(serviceDateUnix);
 	}
 	
 	if (thisVal == 1) {
 		$("#div-org-id").show();
 		$("#div-cloud-id").show();
+		
+		loadStaffs();
 	}
 })
 
@@ -931,8 +934,6 @@ $("#orderSubmit").on("click", function(){
 	
 	
 	var selectStaffIds = $("#selectedStaffs").val();
-	console.log("selectStaffIds = " + selectStaffIds);
-	
 	if (selectStaffIds == undefined || selectStaffIds == "") {
 		
 		alert("没有选择派工人员.");
