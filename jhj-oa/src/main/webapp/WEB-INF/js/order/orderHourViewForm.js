@@ -200,15 +200,21 @@ $('.form_datetime').datetimepicker().on('changeDate', function(ev) {
 function loadStaffsByServiceDate(serviceDate) {
 	// 根据 服务 时间, 动态获取 有无 可用派工
 	var orderId = $("#id").val();
-	
+	var orderStatus = $("#orderStatus").val();
+	var addrId = $("#addrId").val();
+	var serviceHour = $("#serviceHour").val();
+	var serviceTypeId = $("#serviceType").val();
 	if (orderStatus < 2) return false;
 	
 	$.ajax({
 		type : "get",
 		url : "/jhj-oa/new_dispatch/load_staff_by_change_service_date.json",
 		data : {
-			"orderId" : orderId,
-			"newServiceDate" : serviceDate
+			"addrId" : addrId,
+			"serviceTypeId" : serviceTypeId,
+			"orderStatus" : orderStatus,
+			"serviceHour" : serviceHour,
+			"serviceDate" : serviceDate
 		},
 		dataType : "json",
 		success : loadStaffDynamic
@@ -276,15 +282,22 @@ function loadStaffs() {
 	var serviceDate = moment(serviceDateStr).unix();
 	
 	var orgId = $("#orgId").val();
+	var orderStatus = $("#orderStatus").val();
+	var addrId = $("#addrId").val();
+	var serviceHour = $("#serviceHour").val();
+	var serviceTypeId = $("#serviceType").val();
 	
 	$.ajax({
 		type : "get",
 		url : "/jhj-oa/new_dispatch/load_staff_by_change_cloud_org.json",
 		data : {
-			"orderId" : orderId,
 			"parentId" : parentId,
 			"orgId" : orgId,
-			"newServiceDate" : serviceDate
+			"addrId" : addrId,
+			"serviceTypeId" : serviceTypeId,
+			"orderStatus" : orderStatus,
+			"serviceHour" : serviceHour,
+			"serviceDate" : serviceDate
 		},
 		dataType : "json",
 		success : loadStaffDynamic

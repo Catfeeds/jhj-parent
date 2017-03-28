@@ -53,8 +53,8 @@ public class PartnerServiceTypeSelectTag extends SimpleTagSupport{
             orgSelect.append("<select id = \"serviceTypeId\" name=\"serviceTypeId\" class=\"form-control\">" );
 
             if (hasAll.equals("1")) {
-            	orgSelect.append("<option value='0' >请选择类别</option>");
-            }
+            	orgSelect.append("<option value='0' >请选择服务大类</option>");
+            } 
 
             PartnerServiceType item = null;
             String selected = "";

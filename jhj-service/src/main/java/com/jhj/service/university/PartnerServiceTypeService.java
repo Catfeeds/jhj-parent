@@ -3,6 +3,7 @@ package com.jhj.service.university;
 import java.util.List;
 
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.vo.PartnerServiceTypeSearchVo;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.bs.NewPartnerServiceVo;
@@ -71,4 +72,6 @@ public interface PartnerServiceTypeService {
 	List<PartnerServiceType> selectAll();
 	
 	List<PartnerServiceType> selectByIds(List<Long> ids);
+
+	List<PartnerServiceType> selectBySearchVo(PartnerServiceTypeSearchVo searchVo);
 }

@@ -106,6 +106,12 @@ public class HomeController extends AdminController {
     	
         return "home/index";
     }
+    
+    @RequestMapping(value = "/success")
+    public String success(HttpServletRequest request, Model model, String nextUrl) {
+    	model.addAttribute("nextUrl", nextUrl);
+    	return "/home/success";
+    }
 
     @RequestMapping(value = "/notfound")
     public ModelAndView notfound() {
