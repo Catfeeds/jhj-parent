@@ -72,26 +72,26 @@ public class SmsUtil {
 		
 		HashMap<String, String> result = new HashMap<String, String>();
 		
-//		ccp = restAPI.sendTemplateSMS(mobile,templeId ,content);
-//
-//		String statusCode = (String) ccp.get("statusCode");
-//
-//		if("000000".equals(statusCode)) {
-//			result.put("statusCode", statusCode);
-//			String msg = null;
-//			HashMap<String,Object> data = (HashMap<String, Object>) ccp.get("data");
-//			Set<String> keySet = data.keySet();
-//			for(String key:keySet){
-//				Object object = data.get(key);
-//				msg += key +" = "+object.toString();
-//			}
-//			result.put("msg", msg);
-//		} else {
-//			result.put("statusCode", statusCode);
-//			result.put("msg", (String) ccp.get("statusMsg"));
-//		}
-		result.put("statusCode", "000000");
-		result.put("msg", "");
+		ccp = restAPI.sendTemplateSMS(mobile,templeId ,content);
+
+		String statusCode = (String) ccp.get("statusCode");
+
+		if("000000".equals(statusCode)) {
+			result.put("statusCode", statusCode);
+			String msg = null;
+			HashMap<String,Object> data = (HashMap<String, Object>) ccp.get("data");
+			Set<String> keySet = data.keySet();
+			for(String key:keySet){
+				Object object = data.get(key);
+				msg += key +" = "+object.toString();
+			}
+			result.put("msg", msg);
+		} else {
+			result.put("statusCode", statusCode);
+			result.put("msg", (String) ccp.get("statusMsg"));
+		}
+//		result.put("statusCode", "000000");
+//		result.put("msg", "");
 		return result;
 	}
 	

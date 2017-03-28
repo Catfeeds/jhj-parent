@@ -159,42 +159,42 @@ public class PushUtil {
 	 */
 	public static boolean AndroidPushToSingle(HashMap<String, String> params) throws Exception {
 		
-//		String cid = "";
-//		String transmissionContent = "";
-//		
-//		if (params.containsKey("cid")) 
-//			cid = params.get("cid").toString();
-//
-//		if (params.containsKey("transmissionContent")) 
-//			transmissionContent = params.get("transmissionContent").toString();
-//		
-//		
-//		IGtPush push = new IGtPush(pushHost, appKey, masterSecret);
-//		
-//		TransmissionTemplate template = TransmissionTemplateDefault();
-//
-//		template.setTransmissionContent(transmissionContent);
-//		
-//		SingleMessage message = new SingleMessage();
-//		message.setOffline(true);
-//		message.setOfflineExpireTime(2 * 1000 * 3600);
-//		message.setData(template);
-//			
-//		Target target1 = new Target();
-//		target1.setAppId(appId);
-//		target1.setClientId(cid);
-//
-//		try {
-//			IPushResult ret = push.pushMessageToSingle(message, target1);
-//			System.out.println("正常：" + ret.getResponse().toString());
-//			
-//		} catch (RequestException e) {
-//			String requstId = e.getRequestId();
-//			IPushResult ret = push.pushMessageToSingle(message, target1,
-//					requstId);
-//
-//			System.out.println("异常：" + ret.getResponse().toString());
-//		}
+		String cid = "";
+		String transmissionContent = "";
+		
+		if (params.containsKey("cid")) 
+			cid = params.get("cid").toString();
+
+		if (params.containsKey("transmissionContent")) 
+			transmissionContent = params.get("transmissionContent").toString();
+		
+		
+		IGtPush push = new IGtPush(pushHost, appKey, masterSecret);
+		
+		TransmissionTemplate template = TransmissionTemplateDefault();
+
+		template.setTransmissionContent(transmissionContent);
+		
+		SingleMessage message = new SingleMessage();
+		message.setOffline(true);
+		message.setOfflineExpireTime(2 * 1000 * 3600);
+		message.setData(template);
+			
+		Target target1 = new Target();
+		target1.setAppId(appId);
+		target1.setClientId(cid);
+
+		try {
+			IPushResult ret = push.pushMessageToSingle(message, target1);
+			System.out.println("正常：" + ret.getResponse().toString());
+			
+		} catch (RequestException e) {
+			String requstId = e.getRequestId();
+			IPushResult ret = push.pushMessageToSingle(message, target1,
+					requstId);
+
+			System.out.println("异常：" + ret.getResponse().toString());
+		}
 		return true;
 	}			
 	
