@@ -60,6 +60,24 @@
 			add_time desc
 		</if>
 	</select>
+	
+	<select id="getNewestOrder" resultMap="BaseResultMap" parameterType="com.jhj.po.model.order.Orders">
+	  select <include refid="Base_Column_List"/> from orders where
+	  add_time = (select max(add_time) from orders
+	   <where>
+	  	<if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+	  	<if test="orderType != null">
+			and order_type = #{orderType,jdbcType=NUMERIC}
+		</if>
+		<if test="orderStatus != null">
+			and order_status = #{orderStatus,jdbcType=NUMERIC}
+		</if>
+	  </where>
+	  )
+	 
+	</select>
 
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderSearchVo">
 		select

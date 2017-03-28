@@ -499,6 +499,12 @@ public class OrdersServiceImpl implements OrdersService {
 		return "取消成功,支付款项已退回您的余额";
 	}
 
+	@Override
+	public Orders getNewestOrder(Orders order) {
+		
+		return ordersMapper.getNewestOrder(order);
+	}
+
 	/**
 	 * 后台取消订单
 	 * 

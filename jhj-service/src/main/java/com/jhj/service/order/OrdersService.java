@@ -45,6 +45,9 @@ public interface OrdersService {
 
 	// 取消 助理 预约订单（助理）
 	String cancelAmOrder(Orders order);
+	
+	//查询最新一条记录
+	Orders getNewestOrder(Orders order);
 
 	// 在jhj-oa系统中取消订单
 //	int cancelByOrder(Orders order);

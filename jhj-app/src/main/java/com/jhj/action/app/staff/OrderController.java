@@ -556,6 +556,22 @@ public class OrderController extends BaseController {
 		//补时标识
 		orderPriceExt.setOrderExtType(1);
 		
+		OrderSearchVo or = new OrderSearchVo();
+		or.setUserId(order.getUserId());
+		or.setOrderNo(order.getOrderNo());
+		or.setOrderExtType((short)1);
+		//OrderPriceExt
+		List<OrderPriceExt> list = orderPriceExtService.selectBySearchVo(or);
+		if(list!=null && list.size()>0){
+			OrderPriceExt orderPriceExt2 = list.get(0);
+			Long addTime = orderPriceExt2.getAddTime();
+			if(orderPriceExt.getAddTime()-addTime<10){
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.FREQUENT_OPERATION);
+				return result;
+			}
+		}
+		
 		orderPriceExtService.insert(orderPriceExt);
 		
 		Long userId = order.getUserId();

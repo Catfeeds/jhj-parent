@@ -38,9 +38,11 @@
 									enctype="multipart/form-data">
 									<form:hidden path="id" />
 									<form:hidden path="userId" />
+									<form:hidden path="addrId" />
 									<form:hidden path="orderNo" />
 									<form:hidden path="orderStatus" />
 									<form:hidden path="staffId" />
+									<form:hidden path="serviceType"/>
 									<div class="form-body">
 										<section class="panel">
 											<header class="panel-info">

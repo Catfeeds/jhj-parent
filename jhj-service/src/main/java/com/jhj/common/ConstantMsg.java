@@ -125,6 +125,8 @@ public class ConstantMsg {
 	public static String NOT_DISPATCH_BLACK_LIST = "在黑名单中";
 	
 	public static String NOT_DISPATCH_LEAVE = "服务时间在假期中";
+	
+	public static String FREQUENT_OPERATION = "您操作太频繁了！";
 }
 
 

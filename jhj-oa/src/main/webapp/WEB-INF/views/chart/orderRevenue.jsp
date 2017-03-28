@@ -72,29 +72,69 @@
 			<table class="table table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
 					<tr>
-						<th>时间</th>
-						<!-- <th>金牌保洁订单数</th> -->
-						<th>金牌保洁总金额</th>
-						<!-- <th>基础保洁订单数</th> -->
-						<th>基础保洁总金额</th>
-						<!-- <th>深度养护订单数</th> -->
-						<th>深度养护总金额</th>
-						<!-- <th>母婴到家订单数</th> -->
-						<th>母婴到家总金额</th>
+						<th>来源</th>
+						<th>总金额（元）</th>
+						<th>来源</th>
+						<th>总金额（元）</th>
+						<th>来源</th>
+						<th>总金额（元）</th>
+						<th>来源</th>
+						<th>总金额（元）</th>
 					</tr>
 				</thead>
 				<tbody>
-				<c:forEach items="${chartDatas.tableDatas}" var="item">
+				<c:forEach items="${chartDatas.tableDatas}" var="item" >
 					<tr>
-						<td>${item.series}</td>
-						<%-- <td>${item.金牌保洁订单数}</td> --%>
-						<td>${item.金牌保洁总金额}</td>
-						<%-- <td>${item.基础保洁订单数}</td> --%>
-						<td>${item.基础保洁总金额}</td>
-						<%-- <td>${item.深度养护订单数}</td> --%>
-						<td>${item.深度养护总金额}</td>
-						<%-- <td>${item.母婴到家订单数}</td> --%>
-						<td>${item.母婴到家总金额}</td>
+						<td colspan="8">${item.series }</td>
+					</tr>
+					<tr>
+						<th>京东</th>
+						<th>${item.京东金额 }</th>
+						<th>千丁</th>
+						<th>${item.千丁金额 }</th>
+						<th>到位 </th>
+						<th>${item.到位金额 }</th>
+						<th>国安社区 </th>
+						<th>${item.国安社区金额 }</th>
+					</tr>
+					<tr>
+						<th>美团 </th>
+						<th>${item.美团金额 }</th>
+						<th>淘宝 </th>
+						<th>${item.淘宝金额 }</th>
+						<th>百度 </th>
+						<th>${item.百度金额 }</th>
+						<th>格格小区 </th>
+						<th>${item.格格小区金额 }</th>
+					</tr>
+					<tr>
+						<th>葡萄生活 </th>
+						<th>${item.葡萄生活金额 }</th>
+						<th>海淀门店 </th>
+						<th>${item.海淀门店金额 }</th>
+						<th>微网站 </th>
+						<th>${item.微网站金额 }</th>
+						<th>来电订单 </th>
+						<th>${item.来电订单金额 }</th>
+					</tr>
+					<tr>
+						<th>社区 </th>
+						<th>${item.社区金额 }</th>
+						<th>58同城</th>
+						<th>${item['58同城金额']} </th>
+						<th>糯米</th>
+						<th>${item.糯米金额 }</th>
+						<th>大众点评</th>
+						<th>${item.大众点评金额 }</th>
+					</tr>
+					<tr>
+						<th>包月定制 </th>
+						<th>${item.包月定制金额 }</th>
+						<th>居然之家 </th>
+						<th>${item.居然之家金额 }</th>
+						<th>朝阳门店</th>
+						<th>${item.朝阳门店金额 }</th>
+						<th></th>
 					</tr>
 				</c:forEach>
 				</tbody>

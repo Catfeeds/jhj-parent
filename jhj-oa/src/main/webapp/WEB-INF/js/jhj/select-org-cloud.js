@@ -37,6 +37,10 @@ $("#parentId").on('change', function(){
 				});
 				
 				$("#orgId").html($cloudOptions);
+				
+				if (typeof parentIdExtendChange !== 'undefined' && $.isFunction(parentIdExtendChange)) {
+					parentIdExtendChange();
+				}
 			}
 		},
 		error:function(){

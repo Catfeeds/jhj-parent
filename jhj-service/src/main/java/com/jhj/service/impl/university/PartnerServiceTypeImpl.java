@@ -12,6 +12,7 @@ import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.university.PartnerServiceTypeMapper;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.vo.PartnerServiceTypeSearchVo;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.app.AmSkillVo;
 import com.jhj.vo.bs.NewPartnerServiceVo;
@@ -278,4 +279,10 @@ public class PartnerServiceTypeImpl implements PartnerServiceTypeService {
 		
 		return serviceType;
 	}
+	
+	@Override
+	public List<PartnerServiceType> selectBySearchVo(PartnerServiceTypeSearchVo searchVo) {
+		return partMapper.selectBySearchVo(searchVo);
+	}
+	
 }
