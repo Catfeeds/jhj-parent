@@ -341,7 +341,7 @@ public class OrderFormController extends BaseController {
 		}
 		
 		//更新派工状态为已派工。
-		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_2);
+		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
 		order.setUpdateTime(TimeStampUtil.getNowSecond());
 		orderService.updateByPrimaryKeySelective(order);
 		
