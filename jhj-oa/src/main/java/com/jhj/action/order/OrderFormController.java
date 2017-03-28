@@ -155,8 +155,18 @@ public class OrderFormController extends BaseController {
 		String serviceDateStr = request.getParameter("serviceDate");
 		Long serviceDate = TimeStampUtil.getMillisOfDayFull(serviceDateStr) / 1000;
 		int staffNums = formData.getStaffNums();
-
-		if (serviceDate < TimeStampUtil.getNowSecond()) {
+		
+		if (addrId == null || addrId <= 0L) {
+			result.addError(new FieldError("contentModel", "remarks", "请选择服务地址."));
+			return oaOrderHourAdd(request, model);
+		}
+		
+		if (serviceType == null || serviceType <= 0L) {
+			result.addError(new FieldError("contentModel", "remarks", "请服务子类."));
+			return oaOrderHourAdd(request, model);
+		}
+		
+		if (serviceDate == null || serviceDate < TimeStampUtil.getNowSecond()) {
 			result.addError(new FieldError("contentModel", "remarks", "服务日期不正确."));
 			return oaOrderHourAdd(request, model);
 		}

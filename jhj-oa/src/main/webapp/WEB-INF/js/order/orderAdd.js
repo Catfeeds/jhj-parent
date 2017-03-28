@@ -393,9 +393,9 @@ function changePrice(courponsValue) {
 	
 	if (parentServiceType == 23 || parentServiceType == 24) {
 		$("#divServiceAddons").css("display", "none");
-		serviceTypeChangeHour();
+		changePriceHour();
 	} else {
-		serviceTypeChangeExp();
+		changePriceExp();
 	}
 }
 
@@ -940,14 +940,20 @@ $("#orderSubmit").on("click", function(){
 		return false;
 	}
 	$("#selectStaffIds").val(selectStaffIds);
-		
-//	var ary = selectStaffIds.split(",");
-//	var selectStaffCount = ary.length();
-//	
-//	var staffNums = $("#staffNums").val();
-//	if (staffNums != selectStaffCount) {
-//		alert("当前订单服务人数为"+ staffNums + ", 派工人数选择了")
-//	}
+	
+	var selectStaffCount = 0;
+	if (selectStaffIds.indexOf(",") >= 0) {
+		var ary = selectStaffIds.split(",");
+		var selectStaffCount = ary.length;
+	} else {
+		selectStaffCount = 1;
+	}
+	
+	var staffNums = $("#staffNums").val();
+	if (staffNums != selectStaffCount) {
+		alert("当前订单录入服务人数为"+ staffNums + "人, 派工人数选择了"+selectStaffCount+"人,不一致.")
+		return false;
+	}
 	
 	
 	$("#orderForm").submit();

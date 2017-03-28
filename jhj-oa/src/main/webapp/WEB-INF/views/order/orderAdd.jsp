@@ -52,7 +52,7 @@
 							</header>
 							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 							<div class="panel-body">
-								<form:form class="form-horizontal" method="POST" name="form" id="orderForm">
+								<form:form class="form-horizontal" modelAttribute="contentModel" method="POST" name="form" id="orderForm">
 									<input type="hidden" id="userId" name="userId" />
 									<input type="hidden" id="orderType" name="orderType" value="0" />
 									<input type="hidden" id="orderForm" name="orderFrom" value="2">
@@ -213,10 +213,10 @@
 												<textarea id="remarks" name="remarks" rows="5" maxlength='200' cols="50" class="form-control"></textarea>
 											</div>
 										</div>
-										<div class="form-group">
+										<div class="form-group has-error">
 											<label class="col-md-2 control-label"></label>
 											<div class="col-md-5">
-												<form:errors path="remarks"></form:errors>
+												<h2><form:errors path="remarks" class="help-block"></form:errors></h2>
 											</div>
 										</div>
 										<div class="form-actions fluid">
