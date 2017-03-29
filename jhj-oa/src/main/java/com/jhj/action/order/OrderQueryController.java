@@ -589,6 +589,7 @@ public class OrderQueryController extends BaseController {
 
 	}
 	
+	@AuthPassport
 	@RequestMapping(value = "/order-list",method=RequestMethod.GET)
 	public String getOrderList(Model model, HttpServletRequest request, OrderSearchVo searchVo){
 		
