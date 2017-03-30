@@ -65,6 +65,10 @@
     </servlet>    
     <!-- Spring MVC配置文件结束 -->
     
+    <session-config>
+    	<session-timeout>360</session-timeout>
+    </session-config>
+    
     <servlet-mapping>
         <servlet-name>spring-jhj-oa</servlet-name>
         <url-pattern>/</url-pattern>
