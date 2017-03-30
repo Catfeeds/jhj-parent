@@ -64,6 +64,10 @@
         <load-on-startup>1</load-on-startup><!-- load-on-startup必须放在最后 -->
     </servlet>    
     <!-- Spring MVC配置文件结束 -->
+	
+	<session-config>
+    	<session-timeout>360</session-timeout>
+    </session-config>
     
     <servlet-mapping>
         <servlet-name>spring-jhj-oa</servlet-name>
