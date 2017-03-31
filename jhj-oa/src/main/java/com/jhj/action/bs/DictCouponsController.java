@@ -245,7 +245,7 @@ public class DictCouponsController extends BaseController {
         }
         
         PartnerServiceTypeVo serviceTypeVo=new PartnerServiceTypeVo();
-        Long[] serviceTypeId={23L,24L,26L,57L};
+        Long[] serviceTypeId={23L,24L,26L,57L,74L};
         serviceTypeVo.setParentServiceTypeId(Arrays.asList(serviceTypeId));
         serviceTypeVo.setEnable((short)1);
         List<PartnerServiceType> serviceType = partnerServiceTypeService.selectByPartnerServiceTypeVo(serviceTypeVo);

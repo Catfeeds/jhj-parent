@@ -311,6 +311,15 @@ public class UserCouponsController extends BaseController {
 			validateCouponIds.add(4173L);
 			validateCouponIds.add(4174L);
 			
+			//广告优惠券
+			validateCouponIds.add(4192L);
+			validateCouponIds.add(4193L);
+			validateCouponIds.add(4194L);
+			validateCouponIds.add(4195L);
+			validateCouponIds.add(4196L);
+			validateCouponIds.add(4197L);
+			validateCouponIds.add(4198L);
+			
 			String[] couponsIdList = couponsId.split(",");
 			List<Long> list=new ArrayList<Long>();
 			if(couponsIdList.length>0){
