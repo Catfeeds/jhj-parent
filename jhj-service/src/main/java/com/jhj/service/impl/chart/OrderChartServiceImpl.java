@@ -61,6 +61,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		legendAll.add("新增订单小计");
 		legendAll.add("环比增长率");
 		legendAll.add("微网站来源");
+		legendAll.add("微网站占比");
 		legendAll.add("App来源");
 		legendAll.add("平台来源");
 		legendAll.add("退单数");
@@ -122,7 +123,6 @@ public class OrderChartServiceImpl implements OrderChartService {
 			int thrNum=0;
 			int cancleNum=0;
 			Integer subTotal =1;
-			int totalNum=0;
 			for (ChartMapVo chartSqlData : statDatas) {
 			//处理表格形式的数据.
 				str = tableDataItem.get("series");
@@ -134,35 +134,22 @@ public class OrderChartServiceImpl implements OrderChartService {
 							if(chartSqlData.getTotal()!=null){
 								appNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("App来源", String.valueOf(appNum));
 						}
 						if(chartSqlData.getName().equals("1")){
 							if(chartSqlData.getTotal()!=null){
 								webNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("微网站来源", String.valueOf(webNum));
 						}
 						if(chartSqlData.getName().equals("2")){
 							if(chartSqlData.getTotal()!=null){
 								thrNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("平台来源", String.valueOf(thrNum));
 						}
 						if(chartSqlData.getOrderStatus()==0){
 							if(chartSqlData.getTotal()!=null){
 								cancleNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("退单数", String.valueOf(cancleNum));
 						}
-						//新增订单小计 
-						subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
-						subTotal = subTotal + chartSqlData.getTotal();
-						tableDataItem.put("新增订单小计", subTotal.toString());
-						NumberFormat nf=NumberFormat.getPercentInstance(); 
-						nf.setMaximumFractionDigits(2);
-						float s =(float)cancleNum/(float)subTotal;
-						
-						tableDataItem.put("退单率", String.valueOf(nf.format(s)));
 					}
 				}else{
 					if(DateUtil.compareDateStr(str1, str)==0){
@@ -171,38 +158,35 @@ public class OrderChartServiceImpl implements OrderChartService {
 							if(chartSqlData.getTotal()!=null){
 								appNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("App来源", String.valueOf(appNum));
 						}
 						if(chartSqlData.getName().equals("1")){
 							if(chartSqlData.getTotal()!=null){
 								webNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("微网站来源", String.valueOf(webNum));
 						}
 						if(chartSqlData.getName().equals("2")){
 							if(chartSqlData.getTotal()!=null){
 								thrNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("平台来源", String.valueOf(thrNum));
 						}
 						if(chartSqlData.getOrderStatus()==0){
 							if(chartSqlData.getTotal()!=null){
 								cancleNum+=chartSqlData.getTotal();
 							}
-							tableDataItem.put("退单数", String.valueOf(cancleNum));
 						}
-						//新增订单小计 
-						subTotal = Integer.valueOf(tableDataItem.get("新增订单小计"));
-						subTotal = subTotal + chartSqlData.getTotal();
-						tableDataItem.put("新增订单小计", subTotal.toString());
-						NumberFormat nf=NumberFormat.getPercentInstance(); 
-						nf.setMaximumFractionDigits(2);
-						float s =(float)cancleNum/(float)subTotal;
-						
-						tableDataItem.put("退单率", String.valueOf(nf.format(s)));
 					}
 				}
 			}
+			tableDataItem.put("App来源", String.valueOf(appNum));
+			tableDataItem.put("微网站来源", String.valueOf(webNum));
+			tableDataItem.put("平台来源", String.valueOf(thrNum));
+			tableDataItem.put("退单数", String.valueOf(cancleNum));
+			tableDataItem.put("新增订单小计", String.valueOf(appNum+webNum+thrNum));
+			NumberFormat nf=NumberFormat.getPercentInstance(); 
+			nf.setMaximumFractionDigits(2);
+			
+			tableDataItem.put("微网站占比", String.valueOf(nf.format((float)webNum/(float)subTotal)));
+			tableDataItem.put("退单率", String.valueOf(nf.format((float)cancleNum/(float)subTotal)));
 		}
 		
 		//查询每个月之前所有的订单总数

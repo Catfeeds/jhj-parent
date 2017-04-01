@@ -251,9 +251,9 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		
 		//2. 统计图 图例
 		List<String> legend = new ArrayList<String>();
-		legend.add("基础服务");
-		legend.add("深度服务");
-		legend.add("母婴到家");
+		legend.add("基础服务营业额");
+		legend.add("深度服务营业额");
+		legend.add("母婴到家营业额");
 		chartDataVo.setLegend(JSON.toJSONString(legend));
 		
 		//3. x轴 
@@ -296,8 +296,6 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		
 		Short[] shenduserviceType={34,35,36,50,51,52,53,54,55,56,60,61};
 		Short[] muyinserviceType={62,63,64,65};
-		
-		String str=null,str1 = null;
 		
 		for (Map<String, String> tableDataItem : tableDatas) {
 			Integer hourNum = 0;
@@ -427,18 +425,18 @@ public class ChartTypeServiceImpl implements ChartTypeService {
 		//初始化图表数据格式
 		List<Map<String, Object>> dataItems = new ArrayList<Map<String, Object>>();
 		Map<String,Object> chartDataItem = null;
-		List<Integer> datas = null;
+		List<Double> datas = null;
 		for (int i =0; i < legend.size(); i++) {
 			chartDataItem = new HashMap<String,Object>();
 			chartDataItem.put("name", legend.get(i));
 			chartDataItem.put("type", "bar");
-			datas = new ArrayList<Integer>();
+			datas = new ArrayList<Double>();
 			
 			for (int j =1; j < timeSeries.size(); j++) {
 				for (Map<String, String> tableDataItem : tableDatas) {
 					if (timeSeries.get(j).equals(tableDataItem.get("series").toString())) {
 						String valueStr = tableDataItem.get(legend.get(i)).toString();
-						Integer v = Integer.valueOf(valueStr);
+						Double v = Double.valueOf(valueStr);
 						datas.add(v);
 					}
 				}

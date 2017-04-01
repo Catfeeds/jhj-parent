@@ -77,6 +77,7 @@
 						<th>新增订单小计</th>
 						<th>环比增长率</th>
 						<th>微网站来源</th>
+						<th>微网站占比</th>
 						<th>App来源</th>
 						<th>平台来源</th>
 						<th>退单数</th>
@@ -91,6 +92,7 @@
 						<td>${item.新增订单小计}</td>
 						<td>${item.环比增长率}</td>
 						<td>${item.微网站来源}</td>
+						<td>${item.微网站占比}</td>
 						<td>${item.App来源}</td>
 						<td>${item.平台来源}</td>
 						<td>${item.退单数}</td>
