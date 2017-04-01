@@ -401,6 +401,7 @@ public class UserCouponsController extends BaseController {
 			if (serviceDate < startTime || serviceDate > endTime) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+				return result;
 			}
 
 			//2. 判断服务类型是否正确
@@ -408,6 +409,7 @@ public class UserCouponsController extends BaseController {
 				!userCoupon.getServiceType().toString().equals(serviceTypeId)) {
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+				return result;
 			}
 			
 			BigDecimal maxValue = new BigDecimal(0);
@@ -416,6 +418,7 @@ public class UserCouponsController extends BaseController {
 				if (moeney.compareTo(maxValue) < 0) {
 					result.setStatus(Constants.ERROR_999);
 					result.setMsg(ConstantMsg.COUPON_IS_INVALID);
+					return result;
 				}
 			}
 			

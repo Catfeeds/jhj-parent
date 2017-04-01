@@ -67,7 +67,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 			param = {};
 			param.user_coupon_id = $$(this).find("#user_coupon_id").val();
 			param.user_id = userId;
-			param.service_date = serviceDate;
+			param.service_date = serviceDate/1000;
 			param.order_money = orderMoney;
 			param.service_type = serviceTypeId;
 			
