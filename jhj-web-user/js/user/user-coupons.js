@@ -58,36 +58,44 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 		}
 	});
 	
-	
-
-
 	//处理订单调整到当前页面选择优惠劵的
 	if(serviceTypeId!=null && serviceTypeId!='' && serviceTypeId!=undefined){
-		$$(document).on('click', '#mine-coupons-use', function () {
+		$$(document).on('click',"#mine-coupons-use", function () {
 			param = {};
 			param.user_coupon_id = $$(this).find("#user_coupon_id").val();
-			param.user_id = userId;
-			param.service_date = serviceDate/1000;
-			param.order_money = orderMoney;
-			param.service_type = serviceTypeId;
+			param.user_id = localStorage.getItem("user_id");
+			param.service_date = sessionStorage.getItem("service_date");
+			param.order_money = sessionStorage.getItem('order_money');
+			param.service_type = sessionStorage.getItem('service_type_id');
+			
+			var userCouponId = $$(this).find("#user_coupon_id").val();
+			var userCouponValue = $$(this).find("#user_coupon_value").val();
+			var userCouponName = "￥" + userCouponValue;
 			
 			$$.ajax({
 				type:"POST",
 				url:siteAPIPath+"user/get_validate_one_coupons.json",
 				data:param,
 				dataType:"json",
+				async:false,
 				success:function(data){
 					var result = data;
 					if(result.status==999){
 						myApp.alert(result.msg);
-//						mainView.router.loadPage(backUrl);
+						return fase;
 					}
 					if(result.status==0){
+						$$(document).off('click','#mine-coupons-use');
+						sessionStorage.setItem("user_coupon_id", userCouponId);
+						sessionStorage.setItem("user_coupon_name", userCouponName);
+						sessionStorage.setItem("user_coupon_value", userCouponValue);
 						mainView.router.loadPage(backUrl);
 					}
 				}
 			});
-		})
+		});
 	}
 });
+
+
 
