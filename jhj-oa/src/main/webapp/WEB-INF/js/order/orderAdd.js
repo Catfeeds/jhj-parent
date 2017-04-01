@@ -399,6 +399,21 @@ function changePrice(courponsValue) {
 	}
 }
 
+function changePriceHourCheck(courponsValue) {
+	var serviceType = $("select[name='serviceType']").val();
+	
+	if (serviceType == "" || serviceType == undefined) {
+		return false;
+	}
+	
+	var parentServiceType = $("#parentServiceType").val();
+	
+	if (parentServiceType == 23 || parentServiceType == 24) {
+		$("#divServiceAddons").css("display", "none");
+		changePriceHour();
+	} 
+}
+
 // 金牌保洁价格计算
 function changePriceHour(couponsValue) {
 	var serviceHours = $("#serviceHour").val();
@@ -543,6 +558,7 @@ function changePriceExp(couponsValue) {
 		$("#serviceHour").val(totalServiceHour);
 	}
 	
+	// console.log(JSON.stringify(serviceAddonsJson));
 	// json赋值.
 	if (serviceAddonsJson.length > 0) {
 		$("#serviceAddonDatas").val(JSON.stringify(serviceAddonsJson));
