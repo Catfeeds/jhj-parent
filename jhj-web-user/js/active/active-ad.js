@@ -28,7 +28,7 @@ myApp.onPageInit('active-ad', function (page) {
 					alert(data.msg);
 					return false;
 				}
-				mainView.router.loadPage("");
+				mainView.router.loadPage("/u");
 			}
 		});
 	});
