@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.jhj.po.model.admin.AdminAccount;
+import com.jhj.vo.AdminAccountSearchVo;
 
 public interface AdminAccountMapper {
     int deleteByPrimaryKey(Long id);
@@ -29,4 +30,6 @@ public interface AdminAccountMapper {
     List<AdminAccount> selectByIds(List<Long> ids);
 
 	List<AdminAccount> selectByAll();
+
+	List<AdminAccount> selectBySearchVo(AdminAccountSearchVo searchVo);
 }

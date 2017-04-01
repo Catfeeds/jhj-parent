@@ -97,6 +97,8 @@ public class OrderSearchVo {
 	private Short payType; // 支付方式
 	
 	private Short dispatchStatus;
+	
+	private	Short adminId;
 
 	public String getMobile() {
 		return mobile;
@@ -464,6 +466,14 @@ public class OrderSearchVo {
 
 	public void setEndOrderDoneTimeStr(String endOrderDoneTimeStr) {
 		this.endOrderDoneTimeStr = endOrderDoneTimeStr;
+	}
+
+	public Short getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(Short adminId) {
+		this.adminId = adminId;
 	}
 	
 }

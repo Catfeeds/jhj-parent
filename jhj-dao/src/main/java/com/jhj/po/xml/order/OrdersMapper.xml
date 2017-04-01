@@ -295,6 +295,10 @@
 		<if test="staffName!=null and staffName!=''">
 			and id in (select order_id from order_dispatchs where staff_name like  CONCAT('%',#{staffName},'%')  and dispatch_status = 1)
 		</if>
+		
+		<if test="adminId!=null and adminId != 0">
+			and id in (select distinct order_id from order_log where user_type = 2 and user_id = #{adminId,jdbcType=NUMERIC})
+		</if>
 	</sql>
 
 	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">

@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.service.admin.AdminAccountService;
 import com.jhj.service.admin.AdminOrganizationService;
 import com.jhj.service.admin.AdminRoleService;
+import com.jhj.vo.AdminAccountSearchVo;
 import com.jhj.vo.admin.AccountSearchVo;
 import com.jhj.vo.admin.AdminAccountVo;
 import com.jhj.po.dao.admin.AdminAccountMapper;
@@ -233,5 +234,9 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 		
 		return adminAccountMapper.selectByAll();
 	}
-
+	
+	@Override
+	public List<AdminAccount> selectBySearchVo(AdminAccountSearchVo searchVo) {
+		return adminAccountMapper.selectBySearchVo(searchVo);
+	}
 }

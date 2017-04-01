@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.jhj.vo.AdminAccountSearchVo;
 import com.jhj.vo.admin.AccountSearchVo;
 import com.jhj.vo.admin.AdminAccountVo;
 import com.jhj.po.model.admin.AdminAccount;
@@ -51,6 +52,8 @@ public interface AdminAccountService {
 		int updateByPrimaryKeySelectives(AdminAccount record);
 
 		List<AdminAccount> selectByAll();
+
+		List<AdminAccount> selectBySearchVo(AdminAccountSearchVo searchVo);
 		
 		
 

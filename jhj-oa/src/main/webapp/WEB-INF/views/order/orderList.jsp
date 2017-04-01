@@ -15,6 +15,7 @@
 <%@ taglib prefix="serviceTypeSelectTag" uri="/WEB-INF/tags/serviceTypeSelect.tld"%>
 <%@ taglib prefix="orderStatusSelectTag" uri="/WEB-INF/tags/orderSatusSelect.tld"%>
 <%@ taglib prefix="orderFromSelectTag" uri="/WEB-INF/tags/orderFromSelect.tld"%>
+<%@ taglib prefix="adminAccountSelectTag" uri="/WEB-INF/tags/adminAccountSelect.tld"%>
 <html>
 <head>
 <!--common css for all pages-->
@@ -160,9 +161,9 @@
 																<input id="endUpdateTimeStr"
 																	name="endOrderDoneTimeStr" value="${endOrderDoneTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
 															</td>
-															<td width="10%" style="border-top-width:0;border-bottom-width:0;"></td>
+															<td width="10%" style="border-top-width:0;border-bottom-width:0;">录入人</td>
 															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
-																
+																<adminAccountSelectTag:select roleId="${accountAuth.accountRole.id}" selectId="${searchModel.adminId }" />
 															</td>
 														</tr>
 													</tbody>
