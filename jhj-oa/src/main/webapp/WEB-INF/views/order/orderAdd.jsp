@@ -158,7 +158,7 @@
 												<font color="red">*</font>服务时长
 											</label>
 											<div class="col-md-5">
-												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePrice()" onafterpaste="changePrice()"
+												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePriceHourCheck()" onafterpaste="changePriceHourCheck"
 													class="form-control" value="3" />
 											</div>
 										</div>
