@@ -57,14 +57,16 @@
 									<input type="hidden" id="orderType" name="orderType" value="0" />
 									<input type="hidden" id="orderForm" name="orderFrom" value="2">
 									<input type="hidden" id="isVip" name="isVip" value="0">
-									<input type="hidden" id="price" name="price" " value="50">
-									<input type="hidden" id="mprice" name="mprice" " value="45">
-									<input type="hidden" id="pprice" name="pprice" " value="149">
-									<input type="hidden" id="mpprice" name="pprice" " value="135">
-									<input type="hidden" id="maxServiceHour" name="maxServiceHour" " value="6">
-									<input type="hidden" id="minServiceHour" name="minServiceHour" " value="3">
+									<input type="hidden" id="price" name="price" value="50">
+									<input type="hidden" id="mprice" name="mprice" value="45">
+									<input type="hidden" id="pprice" name="pprice" value="149">
+									<input type="hidden" id="mpprice" name="pprice" value="135">
+									<input type="hidden" id="maxServiceHour" name="maxServiceHour" value="6">
+									<input type="hidden" id="minServiceHour" name="minServiceHour" value="3">
 									<input type="hidden" id="serviceAddonDatas" name="serviceAddonDatas" value="" />
 									<input type="hidden" id="selectStaffIds" name="selectStaffIds" value="" />
+									<input type="hidden" id="adminId" name="adminId" value="${accountAuth.id}" />
+									<input type="hidden" id="adminName" name="adminName" value="${accountAuth.name}" />
 									<div class="form-body">
 										<div class="form-group">
 											<label class="col-md-2 control-label">
