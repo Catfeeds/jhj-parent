@@ -175,9 +175,14 @@ public class OrderPayController extends BaseController {
 		BigDecimal orderOriginPay = orderPrice.getOrderOriginPrice();
 		
 		//只有余额支付才能使用会员价,并且不是后台下单的订单
-		if (!orderPayType.equals(Constants.PAY_TYPE_0) && order.getOrderFrom() !=2 ) {
+		if ( order.getOrderFrom() !=2 ) {
 			orderPay = orderOriginPay;
 			orderMoney = orderOriginPay;
+			
+			if (orderPayType.equals(Constants.PAY_TYPE_0) && u.getIsVip() == 1) {
+				orderPay = orderPrice.getOrderPrimePrice();
+				orderMoney = orderPrice.getOrderPrimePrice();
+			}
 		}
 		
 		
