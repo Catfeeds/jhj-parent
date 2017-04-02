@@ -184,6 +184,10 @@
 		<include refid="Base_Column_List" />
 		from order_dispatchs where 1=1 
 		
+		<if test="orgId !=null and orgId != 0">
+			and org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+		
 		<if test="staffId !=null ">
 			and staff_id =#{staffId,jdbcType=NUMERIC}
 		</if>

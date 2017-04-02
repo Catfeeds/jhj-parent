@@ -139,6 +139,7 @@ function getAddrByMobile(addrId) {
 				"mobile" : mobile
 			},
 			dataType : "json",
+			async : false,
 			success : function(data) {
 				if (data.data != false) {
 					var userId = data.data.id;
@@ -154,6 +155,7 @@ function getAddrByMobile(addrId) {
 					$.ajax({
 						type : "get",
 						dataType : "json",
+						async : false,
 						url : "/jhj-app/app/user/get_user_addrs.json?user_id=" + userId,
 						success : function(result) {
 							var userAddr = result.data;
@@ -201,6 +203,7 @@ function regUser(mobile) {
 				"mobile" : mobile
 			},
 			dataType : "json",
+			async : false,
 			success : function(data) {
 				$("#userId").val(data.data);
 				$("#userId").data("userId", data.data)
@@ -247,6 +250,7 @@ function saveAddress() {
 		url : "/jhj-app/app/user/post_user_addrs.json",
 		data : form,
 		dataType : "json",
+		async : false,
 		success : function(data) {
 			$("#from-add-addr").hide();
 			alert("地址添加成功");
@@ -299,6 +303,7 @@ function serviceTypeChangeHour() {
 	$.ajax({
 		type : "get",
 		dataType : "json",
+		async : false,
 		url : "/jhj-app/app/dict/get_service_type.json?service_type_id=" + id,
 		success : function(data) {
 			var serviceType = data.data;
@@ -333,6 +338,7 @@ function serviceTypeChangeExp() {
 			"service_type_id" : serviceType
 		},
 		dataType : "json",
+		async : false,
 		success : function(data) {
 			$("#service-content").children().remove();
 			var serviceType = data.data;
@@ -605,6 +611,7 @@ function saveForm() {
 		$("#divSerivceDate").val(serviceDate);
 		
 		$("#modalDispatch").modal("show");
+		var serviceDate = $("#serviceDate").val();
 		var serviceDateUnix = moment(serviceDate).unix();
 		loadStaffsByServiceDate(serviceDateUnix);
 		$("input[name='disWay']").eq(0).attr("checked", true);
@@ -808,6 +815,7 @@ function loadAutoDispatch(serviceDate) {
 		url : "/jhj-oa/new_dispatch/load_auto_dispatch.json",
 		data : params,
 		dataType : "json",
+		async : false,
 		success : function(data) {
 			
 			if (data == undefined || data == '') return false;
@@ -827,7 +835,7 @@ function loadAutoDispatch(serviceDate) {
 
 function loadStaffsByServiceDate(serviceDate) {
 	// 根据 服务 时间, 动态获取 有无 可用派工
-	
+	console.log("loadStaffsByServiceDate = " + serviceDate);
 	var addrId = $("#addrId").val();
 	if (addrId == undefined || addrId == "") {
 		return false;
@@ -849,6 +857,7 @@ function loadStaffsByServiceDate(serviceDate) {
 	$.ajax({
 		type : "get",
 		url : "/jhj-oa/new_dispatch/load_staff_by_change_service_date.json",
+		async : false,
 		data : params,
 		dataType : "json",
 		success : loadStaffDynamic
@@ -914,6 +923,7 @@ function loadStaffs() {
 		type : "get",
 		url : "/jhj-oa/new_dispatch/load_staff_by_change_cloud_org.json",
 		data : params,
+		async : false,
 		dataType : "json",
 		success : loadStaffDynamic
 	});
@@ -928,6 +938,7 @@ $("input[name='disWay']").on("change", function() {
 		$("#div-cloud-id").hide();
 		$("#modalDispatch").modal("show");
 		
+		var serviceDate = $("#serviceDate").val();
 		var serviceDateUnix = moment(serviceDate).unix();
 		loadStaffsByServiceDate(serviceDateUnix);
 	}
