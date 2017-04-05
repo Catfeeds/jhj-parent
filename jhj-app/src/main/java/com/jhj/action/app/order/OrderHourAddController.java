@@ -204,9 +204,9 @@ public class OrderHourAddController extends BaseController {
 		or.setUserId(order.getUserId());
 		or.setOrderType(order.getOrderType());
 		or.setOrderStatus(order.getOrderStatus());
-		Orders newestOrder = ordersService.getNewestOrder(or);
-		if(newestOrder!=null){
-			Long addTime = newestOrder.getAddTime();
+		List<Orders> newestOrder = ordersService.getNewestOrder(or);
+		if(newestOrder!=null && newestOrder.size()>0){
+			Long addTime = newestOrder.get(0).getAddTime();
 			if(order.getAddTime()-addTime<10){
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg(ConstantMsg.FREQUENT_OPERATION);

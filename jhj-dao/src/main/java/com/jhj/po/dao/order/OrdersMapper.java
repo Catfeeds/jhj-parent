@@ -37,7 +37,7 @@ public interface OrdersMapper {
 	List<Orders> selectByListPage(OrderSearchVo searchVo);
 	
 	//查询最新一条记录
-	Orders getNewestOrder(Orders order);
+	List<Orders> getNewestOrder(Orders order);
 
 	/********************************************
 	 * 统 计
