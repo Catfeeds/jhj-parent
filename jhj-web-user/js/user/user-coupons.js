@@ -60,7 +60,7 @@ myApp.onPageInit('mine-coupons-list', function (page) {
 	
 	//处理订单调整到当前页面选择优惠劵的
 	if(serviceTypeId!=null && serviceTypeId!='' && serviceTypeId!=undefined){
-		$$(document).on('click',"#mine-coupons-use", function () {
+		$$(document).off().on('click',"#mine-coupons-use", function () {
 			param = {};
 			param.user_coupon_id = $$(this).find("#user_coupon_id").val();
 			param.user_id = localStorage.getItem("user_id");

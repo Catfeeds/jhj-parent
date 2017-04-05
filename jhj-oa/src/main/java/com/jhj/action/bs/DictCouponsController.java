@@ -61,6 +61,7 @@ import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.RandomUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.sun.tools.internal.ws.processor.model.Request;
 
 /**
  * @description：
@@ -715,14 +716,16 @@ public class DictCouponsController extends BaseController {
      *
      *
      * */
-    @RequestMapping("/sendToUserCoupons")
+    @RequestMapping(value = "/sendToUserCoupons", method = RequestMethod.GET)
     public String sendToUserCoupons(Model model,@RequestParam("couponsId") Long couponsId){
     	
     	model.addAttribute("couponsId", couponsId);
     	return "coupons/sendToUserCoupons";
     }
     
-    @RequestMapping("/sendToUserCoupons")
+    @AuthPassport
+    @RequestMapping(value = "/sendToUserCoupons", method = RequestMethod.POST)
+    @ResponseBody
     public String sendToUserCoupons(@RequestParam("couponsId") Long couponsId,
     		@RequestParam("mobiles") String mobiles){
     	
@@ -747,8 +750,7 @@ public class DictCouponsController extends BaseController {
     			userCoupons.setServiceType(dictCoupons.getServiceType());
     			userCoupons.setValue(dictCoupons.getValue());
     			if(dictCoupons.getRangMonth()>0){
-//    				 DateUtil.
-//    				userCoupons.setToDate(DateUtil.parse(toDateStr));
+    				userCoupons.setToDate(DateUtil.toDate(dictCoupons.getRangMonth()));
     			}else{
     				Long fromDate = dictCoupons.getFromDate().getTime();
     				Long toDate = dictCoupons.getToDate().getTime();
@@ -756,11 +758,13 @@ public class DictCouponsController extends BaseController {
     				String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), day.intValue(), Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
     				userCoupons.setToDate(DateUtil.parse(toDateStr));
     			}
+    			userCouponsList.add(userCoupons);
     		}
     	}
     	
+    	int insertByList = userCouponsService.insertByList(userCouponsList);
     	
-    	return "redirect:recharge-coupon-list";
+    	return String.valueOf(insertByList);
     }
     
 }

@@ -385,8 +385,7 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 
 	@Override
 	public int insertByList(List<UserCoupons> userCouponsList) {
-		userCouponsMapper.insertByList(userCouponsList);
-		return 0;
+		return userCouponsMapper.insertByList(userCouponsList);
 	}
 
 	@Override

@@ -94,6 +94,7 @@
 							            	<button id="btn_update"  onClick="btn_update('bs/chargeSendCoupons?id=${ item.id }')" class="btn btn-primary btn-xs" title="修改"><i class="icon-pencil"></i></button>
 	                                  		<button id="btn_del" onClick="btn_del('bs/deleteByRechargeCouponId?id=${item.id}')" class="btn btn-danger btn-xs"  title="删除"><i class="icon-trash "></i></button>
 							                <button id="btn_userList"  onClick="btn_update('bs/toRechargeCouponUserList?id=${ item.id }')" class="btn btn-primary btn-xs" title="用户"><i class="icon-user"></i></button>
+							            	<a href="sendToUserCoupons?couponsId=${item.id }"><button>发送指定用户</button></a>
 							            </td>
                               </tr>
                               </c:forEach>
