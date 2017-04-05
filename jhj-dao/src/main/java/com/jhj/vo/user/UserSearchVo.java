@@ -43,6 +43,8 @@ public class UserSearchVo {
 	//设置下单超过2单的用户
 	private String orderNum;
 	
+	private List<String> mobileList;
+	
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}
@@ -171,5 +173,12 @@ public class UserSearchVo {
 		this.orderNum = orderNum;
 	}
 
-	
+	public List<String> getMobileList() {
+		return mobileList;
+	}
+
+	public void setMobileList(List<String> mobileList) {
+		this.mobileList = mobileList;
+	}
+
 }

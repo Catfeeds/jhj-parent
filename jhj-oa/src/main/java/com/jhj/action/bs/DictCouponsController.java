@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -708,4 +709,58 @@ public class DictCouponsController extends BaseController {
         hashMap.put("success", "200");
         return hashMap;
     }
+    
+    /**
+     *给指定用户发送优惠券
+     *
+     *
+     * */
+    @RequestMapping("/sendToUserCoupons")
+    public String sendToUserCoupons(Model model,@RequestParam("couponsId") Long couponsId){
+    	
+    	model.addAttribute("couponsId", couponsId);
+    	return "coupons/sendToUserCoupons";
+    }
+    
+    @RequestMapping("/sendToUserCoupons")
+    public String sendToUserCoupons(@RequestParam("couponsId") Long couponsId,
+    		@RequestParam("mobiles") String mobiles){
+    	
+    	DictCoupons dictCoupons = dictCouponsService.selectByPrimaryKey(couponsId);
+    	
+    	String[] str = mobiles.split(",");
+    	List<String> mobileList = Arrays.asList(str);
+    	
+    	UserSearchVo searchVo = new UserSearchVo();
+    	searchVo.setMobileList(mobileList);
+    	List<Users> userList = usersService.selectBySearchVo(searchVo);
+    	
+    	List<UserCoupons> userCouponsList = null;
+    	
+    	if(userList!=null && userList.size()>0){
+    		userCouponsList = new ArrayList<UserCoupons>();
+    		for(int i=0;i<userList.size();i++){
+    			Users users = userList.get(i);
+    			UserCoupons userCoupons = userCouponsService.initUserCoupons();
+    			userCoupons.setUserId(users.getId());
+    			userCoupons.setCouponId(dictCoupons.getId());
+    			userCoupons.setServiceType(dictCoupons.getServiceType());
+    			userCoupons.setValue(dictCoupons.getValue());
+    			if(dictCoupons.getRangMonth()>0){
+//    				 DateUtil.
+//    				userCoupons.setToDate(DateUtil.parse(toDateStr));
+    			}else{
+    				Long fromDate = dictCoupons.getFromDate().getTime();
+    				Long toDate = dictCoupons.getToDate().getTime();
+    				Long day = (fromDate-toDate)/(24*60*60*1000);
+    				String toDateStr = DateUtil.addDay(DateUtil.getNowOfDate(), day.intValue(), Calendar.DAY_OF_MONTH, DateUtil.DEFAULT_PATTERN);
+    				userCoupons.setToDate(DateUtil.parse(toDateStr));
+    			}
+    		}
+    	}
+    	
+    	
+    	return "redirect:recharge-coupon-list";
+    }
+    
 }

@@ -107,6 +107,13 @@
 			and is_vip = #{isVip,jdbcType=NUMERIC}
 		</if>
 		
+		<if test="mobileList!=null">
+			and mobile in 
+			<foreach collection="mobileList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		
 	</sql>
 
 	<!-- 展示 只在 当前门店 下过单的 客户 -->
