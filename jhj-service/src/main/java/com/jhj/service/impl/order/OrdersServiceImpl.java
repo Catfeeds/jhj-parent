@@ -1,6 +1,7 @@
 package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -500,7 +501,7 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public Orders getNewestOrder(Orders order) {
+	public List<Orders> getNewestOrder(Orders order) {
 		
 		return ordersMapper.getNewestOrder(order);
 	}

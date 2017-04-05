@@ -1,5 +1,7 @@
 package com.jhj.service.order;
 
+import java.util.List;
+
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.order.OrderViewVo;
@@ -47,7 +49,7 @@ public interface OrdersService {
 	String cancelAmOrder(Orders order);
 	
 	//查询最新一条记录
-	Orders getNewestOrder(Orders order);
+	List<Orders> getNewestOrder(Orders order);
 
 	// 在jhj-oa系统中取消订单
 //	int cancelByOrder(Orders order);
