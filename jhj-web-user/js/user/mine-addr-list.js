@@ -125,10 +125,14 @@ function delAddr(obj){
 		type:"get",
 		url:siteAPIPath + "user/delete_addr.json",
 		data:{"addr_id":id},
+		async:false,
 		success:function(data){
-			var result = data.data;
+			var result = JSON.parse(data);
 			if(result.status == 999){
 				myApp.alert(result.msg);
+				myApp.confirm = function(msg) {
+				    return false;
+				}
 			}
 		}
 	});
