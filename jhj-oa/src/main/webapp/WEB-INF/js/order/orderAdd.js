@@ -958,7 +958,7 @@ $("#orderSubmit").on("click", function() {
 	var selectStaffIds = $("#selectedStaffs").val();
 	if (selectStaffIds == undefined || selectStaffIds == "") {
 		
-		if (confirm("未选择派工人员，确定要提交订单吗?")) {
+		if (confirm("未选择派工人员，提交订单会如果是自动派工服务品类则会自动派工?")) {
 			$("#selectStaffIds").val("");
 			orderFormSubmit();
 		}

@@ -298,6 +298,19 @@ public class OrderAddController extends BaseController {
 			}
 		}
 
+		//如果为自动派工的服务品类，没有选择服务人员，则会自动派工.
+		if (staffIds.isEmpty()) {
+			
+			// 增加判断，是否可以自动派工.
+			if (partnerServiceType.getIsAuto().equals((short) 1)) {
+				List<Long> appointStaffIds = new ArrayList<Long>();
+				staffIds = orderDispatchService.autoDispatch(addrId, serviceType, serviceDate, serviceHour, staffNums, appointStaffIds);
+			}
+				
+		}
+		
+		
+		
 		// 如果有选择派工人员，则进行派工, 并且发送短信
 		if (!staffIds.isEmpty()) {
 			String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
