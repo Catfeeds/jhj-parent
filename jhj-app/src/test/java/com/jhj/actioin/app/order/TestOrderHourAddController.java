@@ -59,10 +59,10 @@ public class TestOrderHourAddController extends JUnitActionBase {
 		
 		MockHttpServletRequestBuilder postRequest = post(url);
 		
-		postRequest = postRequest.param("user_id", "3717");                
-		postRequest = postRequest.param("order_no", "777694512360194048");
-		postRequest = postRequest.param("order_pay_type", "6");
-		postRequest = postRequest.param("user_coupon_id", "0");
+		postRequest = postRequest.param("user_id", "9609");                
+		postRequest = postRequest.param("order_no", "848370502924763136");
+		postRequest = postRequest.param("order_pay_type", "2");
+
 		
 		ResultActions resultActions = mockMvc.perform(postRequest);
 		

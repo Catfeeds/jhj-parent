@@ -958,27 +958,34 @@ $("#orderSubmit").on("click", function() {
 	var selectStaffIds = $("#selectedStaffs").val();
 	if (selectStaffIds == undefined || selectStaffIds == "") {
 		
-		alert("没有选择派工人员.");
-		return false;
-	}
-	$("#selectStaffIds").val(selectStaffIds);
-	
-	var selectStaffCount = 0;
-	if (selectStaffIds.indexOf(",") >= 0) {
-		var ary = selectStaffIds.split(",");
-		var selectStaffCount = ary.length;
+		if (confirm("未选择派工人员，确定要提交订单吗?")) {
+			$("#selectStaffIds").val("");
+			orderFormSubmit();
+		}
 	} else {
-		selectStaffCount = 1;
+		
+		$("#selectStaffIds").val(selectStaffIds);
+		
+		var selectStaffCount = 0;
+		if (selectStaffIds.indexOf(",") >= 0) {
+			var ary = selectStaffIds.split(",");
+			var selectStaffCount = ary.length;
+		} else {
+			selectStaffCount = 1;
+		}
+		
+		var staffNums = $("#staffNums").val();
+		if (staffNums != selectStaffCount) {
+			alert("当前订单录入服务人数为" + staffNums + "人, 派工人数选择了" + selectStaffCount + "人,不一致.")
+			return false;
+		}
+		
+		orderFormSubmit();
 	}
 	
-	var staffNums = $("#staffNums").val();
-	if (staffNums != selectStaffCount) {
-		alert("当前订单录入服务人数为" + staffNums + "人, 派工人数选择了" + selectStaffCount + "人,不一致.")
-		return false;
-	}
-	
-	// $("#orderForm").submit();
-	
+})
+
+function orderFormSubmit() {
 	// 提交订单
 	var params = {};
 	params.userId = $("#userId").val();
@@ -999,8 +1006,8 @@ $("#orderSubmit").on("click", function() {
 	params.couponsId = $("#couponsId").val();
 	params.remarks = $("#remarks").val();
 	
-//	console.log(params);
-//	return false;
+	// console.log(params);
+	// return false;
 	$.ajax({
 		type : "post",
 		url : "/jhj-app/app/order/post_order_add.json",
@@ -1014,7 +1021,7 @@ $("#orderSubmit").on("click", function() {
 				return false;
 			}
 			alert("订单添加成功！");
-			location.href="order-list";
+			location.href = "order-list";
 		}
 	});
-})
+}

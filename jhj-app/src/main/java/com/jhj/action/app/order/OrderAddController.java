@@ -112,7 +112,7 @@ public class OrderAddController extends BaseController {
 			@RequestParam("staffNums") int staffNums, 
 			@RequestParam("orderPay") BigDecimal orderPay,
 			@RequestParam(value = "serviceAddonDatas", required = false, defaultValue = "") String serviceAddonDatas,
-			@RequestParam("selectStaffIds") String selectStaffIds, 
+			@RequestParam(value = "selectStaffIds", required = false, defaultValue = "") String selectStaffIds,
 			@RequestParam("orderPayType") Short orderPayType, 
 			@RequestParam("orderFrom") Short orderFrom,
 			@RequestParam("orderOpFrom") Long orderOpFrom, 
@@ -158,38 +158,35 @@ public class OrderAddController extends BaseController {
 				return result;
 			}
 		}
-
-		// 派工人员，再次检查是否被占用.
-		if (StringUtil.isEmpty(selectStaffIds)) {
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg("未选择派工人员");
-			return result;
-		}
 		
-		String[] staffIdsAry = StringUtil.convertStrToArray(selectStaffIds);
-		// 本次派工人员，可为多个.
 		List<Long> staffIds = new ArrayList<Long>();
-		for (int i = 0; i < staffIdsAry.length; i++) {
-			String tmpStaffIdStr = staffIdsAry[i];
-			if (StringUtil.isEmpty(tmpStaffIdStr))
-				continue;
-			Long staffId = Long.valueOf(tmpStaffIdStr);
-			staffIds.add(staffId);
-			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-			// 注意结束时间也要服务结束后 1:59分钟
-			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setStaffId(staffId);
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStartServiceTime(startServiceTime);
-			searchVo1.setEndServiceTime(endServiceTime);
-			List<OrderDispatchs> ooDisList = orderDispatchService.selectByMatchTime(searchVo1);
-
-			for (OrderDispatchs nop : ooDisList) {
-				String nowServiceDateStr = TimeStampUtil.timeStampToDateStr(nop.getServiceDate() * 1000, "MM-dd HH:MM");
-				result.setStatus(Constants.ERROR_999);
-				result.setMsg(nop.getStaffName() + "在" + nowServiceDateStr + "已有其他派工,时间冲突.");
-				return result;
+		// 派工人员，再次检查是否被占用.
+		if (!StringUtil.isEmpty(selectStaffIds)) {
+			String[] staffIdsAry = StringUtil.convertStrToArray(selectStaffIds);
+			// 本次派工人员，可为多个.
+			
+			for (int i = 0; i < staffIdsAry.length; i++) {
+				String tmpStaffIdStr = staffIdsAry[i];
+				if (StringUtil.isEmpty(tmpStaffIdStr))
+					continue;
+				Long staffId = Long.valueOf(tmpStaffIdStr);
+				staffIds.add(staffId);
+				Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+				// 注意结束时间也要服务结束后 1:59分钟
+				Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
+				OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+				searchVo1.setStaffId(staffId);
+				searchVo1.setDispatchStatus((short) 1);
+				searchVo1.setStartServiceTime(startServiceTime);
+				searchVo1.setEndServiceTime(endServiceTime);
+				List<OrderDispatchs> ooDisList = orderDispatchService.selectByMatchTime(searchVo1);
+	
+				for (OrderDispatchs nop : ooDisList) {
+					String nowServiceDateStr = TimeStampUtil.timeStampToDateStr(nop.getServiceDate() * 1000, "MM-dd HH:MM");
+					result.setStatus(Constants.ERROR_999);
+					result.setMsg(nop.getStaffName() + "在" + nowServiceDateStr + "已有其他派工,时间冲突.");
+					return result;
+				}
 			}
 		}
 		
@@ -210,8 +207,9 @@ public class OrderAddController extends BaseController {
 		
 		
 		// 派工人数已实际选择的人数为主.
-		staffNums = staffIds.size();
-
+		if (!staffIds.isEmpty()) {
+			staffNums = staffIds.size();
+		}
 		/**
 		 * 开始写入
 		 * 1.订单表，
@@ -300,34 +298,36 @@ public class OrderAddController extends BaseController {
 			}
 		}
 
-		// 进行派工, 并且发送短信
-		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
-		String timeStr = beginTimeStr + "-" + endTimeStr;
-		for (Long staffId : staffIds) {
-			Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
-
-			OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
-
-			// 发送短信
-			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+		// 如果有选择派工人员，则进行派工, 并且发送短信
+		if (!staffIds.isEmpty()) {
+			String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+			String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
+			String timeStr = beginTimeStr + "-" + endTimeStr;
+			for (Long staffId : staffIds) {
+				Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+	
+				OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
+				dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+						Constants.ALERT_STAFF_MSG);
+	
+				// 发送短信
+				String[] smsContent = new String[] { timeStr };
+				SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+			}
+	
+			// 更新派工状态为已派工。
+			order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
+			order.setUpdateTime(TimeStampUtil.getNowSecond());
+			orderService.updateByPrimaryKeySelective(order);
+	
+			// 订单日志
+			orderLog = orderLogService.initOrderLog(order);
+			orderLog.setUserType((short) 2);
+			orderLog.setUserId(adminId);
+			orderLog.setUserName(adminName);
+			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
+			orderLogService.insert(orderLog);
 		}
-
-		// 更新派工状态为已派工。
-		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
-		order.setUpdateTime(TimeStampUtil.getNowSecond());
-		orderService.updateByPrimaryKeySelective(order);
-
-		// 订单日志
-		orderLog = orderLogService.initOrderLog(order);
-		orderLog.setUserType((short) 2);
-		orderLog.setUserId(adminId);
-		orderLog.setUserName(adminName);
-		orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
-		orderLogService.insert(orderLog);
 
 		return result;
 	}
