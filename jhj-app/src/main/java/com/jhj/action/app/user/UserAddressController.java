@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.async.UsersAsyncService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserRefAmService;
 import com.jhj.service.users.UsersService;
@@ -45,6 +47,9 @@ public class UserAddressController extends BaseController {
 
 	@Autowired
 	private UsersAsyncService usersAsyncService;
+	
+	@Autowired
+	private OrdersService ordersService;
 
 	/**
 	 * 根据userId查询用户的地址
@@ -221,6 +226,23 @@ public class UserAddressController extends BaseController {
 	public AppResultData<String> deleteAddr(@RequestParam("addr_id") Long addrId) {
 
 		AppResultData<String> result = new AppResultData<String>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		UserAddrs userAddrs = userAddrsService.selectByPrimaryKey(addrId);
+		if(userAddrs!=null){
+			Long userId = userAddrs.getUserId();
+			Orders order = new Orders();
+			order.setUserId(userId);
+			List<Orders> newestOrder = ordersService.getNewestOrder(order);
+			if(newestOrder!=null && newestOrder.size()>0){
+				Orders orders = newestOrder.get(0);
+				Short orderStatus = orders.getOrderStatus();
+				if(orderStatus>1 && orderStatus<7){
+					result.setStatus(Constants.ERROR_999);
+					result.setMsg("您还有未完成的订单，不能删除该地址");
+					return result;
+				}
+			}
+		}
 		
 		userAddrsService.deleteByPrimaryKey(addrId);
 
