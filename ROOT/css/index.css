@@ -85,13 +85,13 @@ body{
     width:450px;
     height:80px;
     position:absolute;
-    right:250px;
+    right:230px;
 }
 .index-shouye6 li{
     width:100%;
-    height:40px;
+    height:30px;
     text-align: center;
-    line-height: 40px;
+    line-height: 30px;
     font-weight: bold;
 }
 .index-shouye7{
@@ -119,7 +119,7 @@ body{
 .index-shouye7-2{
     width:100%;
     height:40px;
-    text-align: center;
+    text-align: left;
     line-height: 40px;；
     font-weight: bold;
     color:#000;
