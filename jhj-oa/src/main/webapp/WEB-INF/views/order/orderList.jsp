@@ -24,6 +24,11 @@
 <link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>" rel="stylesheet"
 	type="text/css" />
 <link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" />
+<style type="text/css">
+	.showHide {
+		display:none;
+	}
+</style>
 </head>
 <body>
 	<section id="container">
@@ -46,7 +51,7 @@
 									 method="GET" id="oaSearchForm">
 									<form:hidden path="orderType"/>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-condensed" >
-										<tr>
+										<tr class="tr-hidden">
 											<td width="10%">选择门店:</td>
 											<td width="23%"><orgSelectTag:select selectId="${searchModel.parentId }" sessionOrgId="${loginOrgId }"/></td>
 											<td width="10%">选择云店:</td>
@@ -55,6 +60,20 @@
 													<option value="0">全部</option>
 												</select>
 											</td>
+											<td width="10%">是否接单</td>
+											<td width="23%"><form:select path="isApply" class="form-control">
+													<option value="">全部</option>
+													<form:option value="1">是</form:option>
+													<form:option value="0">否</form:option>
+												</form:select>
+											</td>
+										</tr>
+										
+										<tr>
+											<td width="10%">用户手机号：</td>
+											<td width="23%"><form:input path="mobile" class="form-control" placeholder="请输入手机号" /></td>
+											<td width="10%">服务地址：</td>
+											<td width="23%"><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
 											<td width="10%">订单状态：</td>
 											<td width="23%"><c:if test="${loginOrgId == 0 }">
 													<form:select path="orderStatus" class="form-control">
@@ -78,21 +97,6 @@
 														<form:option value="9">已关闭</form:option>
 													</form:select>
 												</c:if>
-											</td>
-										</tr>
-										
-										<tr>
-											<td width="10%">用户手机号：</td>
-											<td width="23%"><form:input path="mobile" class="form-control" placeholder="请输入手机号" /></td>
-											<td width="10%">服务地址：</td>
-											<td width="23%"><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
-											
-											<td width="10%">是否接单</td>
-											<td width="23%"><form:select path="isApply" class="form-control">
-													<option value="">全部</option>
-													<form:option value="1">是</form:option>
-													<form:option value="0">否</form:option>
-												</form:select>
 											</td>
 										</tr>
 										<tr>
@@ -122,7 +126,20 @@
 													<form:option value="7">第三方支付</form:option>
 												</form:select>
 											</td>
-														
+										</tr>
+										<tr class="tr-hidden">
+											<td width="10%">服务人员姓名：</td>
+											<td width="23%">
+												<form:input path="staffName" class="form-control" placeholder="请输入服务人员名称"/>
+											</td>
+											<td width="10%">订单号：</td>
+											<td width="23%">
+												<form:input path="orderNo" class="form-control" placeholder="请输入订单号"/>
+											</td>
+											<td width="10%" style="border-top-width:0;border-bottom-width:0;">录入人</td>
+											<td width="40%" style="border-top-width:0;border-bottom-width:0;">
+												<adminAccountSelectTag:select roleId="${accountAuth.accountRole.id}" selectId="${searchModel.adminId }" />
+											</td>
 										</tr>
 										<tr>
 											<td width="100%" colspan="6" style="padding:0;border:0">
@@ -137,7 +154,7 @@
 																	name="endTimeStr" value="${endTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
 															</td>
 															<td width="10%" style="border-top-width:0;border-bottom-width:0;">服务日期：</td>
-															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
+															<td width="40%" style="border-top-width:0;border-bottom-width:0;border-right-width:0;">
 																<input id="serviceStartTimeStr" name="serviceStartTimeStr" value="${serviceStartTimeStr }"
 																class="form-control form-datetime" style="width: 170px; margin-bottom: 0" readonly="true" /> <span>至</span>
 																<input id="serviceEndTimeStr" name="serviceEndTimeStr" value="${serviceEndTimeStr }" class="form-control form-datetime"
@@ -151,7 +168,7 @@
 										
 										<tr>
 											<td width="100%" colspan="6" style="padding:0;border:0">
-												<table width="100%" style="border:0" cellspacing="0" cellpadding="0" class="table-bordered table-condensed">
+												<table width="100%" style="border:0;border-top:1px solid #ddd" cellspacing="0" cellpadding="0" class="table-bordered table-condensed">
 													<tbody>
 														<tr>
 															<td width="10%" style="border:0;border-bottom-width:0;border-left-width:0">服务完成时间：</td>
@@ -161,30 +178,16 @@
 																<input id="endUpdateTimeStr"
 																	name="endOrderDoneTimeStr" value="${endOrderDoneTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
 															</td>
-															<td width="10%" style="border-top-width:0;border-bottom-width:0;">录入人</td>
-															<td width="40%" style="border-top-width:0;border-bottom-width:0;">
-																<adminAccountSelectTag:select roleId="${accountAuth.accountRole.id}" selectId="${searchModel.adminId }" />
+															<td colspan="6" style="border-bottom-width:0;border-right-width:0;">
+																<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
+																<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
+																<button type="button" class="btn btn-primary" onclick="cleanForm()">清空</button>
+																<button type="button" class="btn btn-primary" onclick="expand()">展开</button>
 															</td>
 														</tr>
 													</tbody>
 												</table>
 											 </td>
-										</tr>
-										
-										<tr>
-											<td width="10%">服务人员姓名：</td>
-											<td width="23%">
-												<form:input path="staffName" class="form-control" placeholder="请输入服务人员名称"/>
-											</td>
-											<td width="10%">订单号：</td>
-											<td width="23%">
-												<form:input path="orderNo" class="form-control" placeholder="请输入订单号"/>
-											</td>
-											<td colspan="6">
-												<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
-												<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>
-												<button type="button" class="btn btn-primary" onclick="cleanForm()">清空</button>
-											</td>		
 										</tr>
 									</table>
 								</form:form>

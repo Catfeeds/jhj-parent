@@ -8,6 +8,7 @@
 <!-- s -->
 
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
+<%@ taglib prefix="serviceTypeTag" uri="/WEB-INF/tags/partnerServiceTypeName.tld"%>
 <html>
 <head>
 <title>会员优惠券列表</title>
@@ -38,39 +39,42 @@
 			<table class="table table-striped table-advance table-hover">
 				<thead>
 					<tr>
-
 						<th>优惠券名称</th>
+						<th>优惠券面值</th>
+						<th>使用金额条件</th>
+						<th>使用类型</th>
 						<th>开始日期</th>
 						<th>结束日期</th>
 						<th>使用情况</th>
 						<th>使用时间</th>
 						<th>对应订单号</th>
-						
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${userCouponsVos}" var="item">
 						<tr>
-
 							<td>${item.couponsName}</td>
+							<td>${item.value}</td>
+							<td>${item.maxValue }</td>
+							<td><serviceTypeTag:typeId typeId="${item.serviceType }" /></td>
 							<td><fmt:formatDate value="${ item.fromDate}"
 									pattern="yyyy-MM-dd" /></td>
 							<td><fmt:formatDate value="${ item.toDate}"
 									pattern="yyyy-MM-dd" /></td>
 							  <td>
-							  <c:choose>
-												<c:when test="${item.isUsed  == 0}">
-														未使用
-												</c:when>
-												<c:when test="${item.isUsed  == 1}">
-														已使用
-												</c:when>
-										</c:choose>	
-										</td>
+								  <c:choose>
+										<c:when test="${item.isUsed  == 0}">
+												未使用
+										</c:when>
+										<c:when test="${item.isUsed  == 1}">
+												已使用
+										</c:when>
+								  </c:choose>	
+							  </td>
 							  <td>
-							            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.usedTime * 1000}"/>
-							            </td>
-							   <td>${item.orderNo}</td>
+							     <timestampTag:timestamp patten="yyyy-MM-dd" t="${item.usedTime * 1000}"/>
+							  </td>
+							  <td>${item.orderNo}</td>
 						</tr>
 					</c:forEach>
 				</tbody>

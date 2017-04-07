@@ -1,12 +1,15 @@
 package com.jhj.vo.user;
 
+import java.math.BigDecimal;
+
 import com.jhj.po.model.user.UserCoupons;
 
 public class UserCouponsVo extends UserCoupons{
 
-	String couponsName;
+	private String couponsName;
 	
-	//Long couponsCounts;
+	private BigDecimal maxValue;
+	
 
 	public String getCouponsName() {
 		return couponsName;
@@ -16,14 +19,12 @@ public class UserCouponsVo extends UserCoupons{
 		this.couponsName = couponsName;
 	}
 
-	/*public Long getCouponsCounts() {
-		return couponsCounts;
+	public BigDecimal getMaxValue() {
+		return maxValue;
 	}
 
-	public void setCouponsCounts(Long couponsCounts) {
-		this.couponsCounts = couponsCounts;
-	}*/
-	
-	
-	
+	public void setMaxValue(BigDecimal maxValue) {
+		this.maxValue = maxValue;
+	}
+
 }

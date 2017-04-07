@@ -118,3 +118,9 @@ $("#submit-remarks").on('click',function(){
 	
 });
 
+/** 查询条件展开缩起*/
+function expand(){
+	$(".tr-hidden").toggleClass("showHide");
+	
+}
+

@@ -4,7 +4,7 @@
     <meta name="description" content="">
     <meta name="author" content="meijia">
     <meta name="keyword" content="">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <!-- <link rel="shortcut icon" href="img/favicon.png"> -->
 
     <title>家和家-运营平台</title>
 

@@ -38,8 +38,12 @@ public class PartnerServiceTypeNameTag extends SimpleTagSupport{
         	
         	
         	PartnerServiceType partnerServiceType = partService.selectByPrimaryKey(typeId);
+        	if(partnerServiceType!=null){
+        		getJspContext().getOut().write(partnerServiceType.getName());
+        	}else{
+        		getJspContext().getOut().write("");
+        	}
 			
-            getJspContext().getOut().write(partnerServiceType.getName());
         } catch (Exception e) {
             e.printStackTrace();
         }

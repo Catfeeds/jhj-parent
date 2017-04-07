@@ -357,17 +357,16 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		try {
 			BeanUtils.copyProperties(vo, userCoupons);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		// 优惠券名称
 		DictCoupons dictCoupons = dictCouponsService
 				.selectByPrimaryKey(userCoupons.getCouponId());
-		vo.setCouponsName(dictCoupons.getDescription());
+		vo.setCouponsName(dictCoupons.getIntroduction());
+		vo.setMaxValue(dictCoupons.getMaxValue());
 
 		return vo;
 	}

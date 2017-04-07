@@ -100,11 +100,12 @@
 					            </td>
 					            <td>
 					            	<c:if test="${item.isVip==1}">
-						            	<a href="user-pay-detail?mobile=${item.mobile }">消费明细</a>
+						            	<a href="user-pay-detail?mobile=${item.mobile }"><button>消费明细</button></a>
 					            	</c:if>
 					            	<c:if test="${item.isVip==0}">
-						            	<a href="not-vip-user-pay-detail?mobile=${item.mobile }">消费明细</a>
+						            	<a href="not-vip-user-pay-detail?mobile=${item.mobile }"><button>消费明细</button></a>
 					            	</c:if>
+					            	<a href='coupons-list?user_id=${item.id }'><button>优费券明细</button></a>
 					            </td>
                               </tr>
                               </c:forEach>
