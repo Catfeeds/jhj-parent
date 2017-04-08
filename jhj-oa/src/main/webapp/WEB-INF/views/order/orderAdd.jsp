@@ -309,6 +309,10 @@
 							<div class="col-md-5">
 								<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true" />
 							</div>
+							
+							<div class="form-group col-md-5">
+								<input type="checkbox" id="sendSmsToUser" value="1" checked="checked" />发送短信通知给用户
+							</div>
 						</div>
 						<div id="staffList" class="col-sm-12">
 							<table class="table table-striped table-advance table-hover">

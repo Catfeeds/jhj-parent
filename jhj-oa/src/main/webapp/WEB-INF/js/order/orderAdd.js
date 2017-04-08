@@ -1006,8 +1006,14 @@ function orderFormSubmit() {
 	params.couponsId = $("#couponsId").val();
 	params.remarks = $("#remarks").val();
 	
-	// console.log(params);
-	// return false;
+	if ($("#sendSmsToUser").is(":checked")) {
+		params.sendSmsToUser = 1;
+	} else {
+		params.sendSmsToUser = 0;
+	}
+	
+//	 console.log(params);
+//	 return false;
 	$.ajax({
 		type : "post",
 		url : "/jhj-app/app/order/post_order_add.json",
