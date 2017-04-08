@@ -270,7 +270,6 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setOrgId(orgId);
 			searchVo1.setDispatchStatus((short) 1);
 			searchVo1.setStartServiceTime(startServiceTime);
 			searchVo1.setEndServiceTime(endServiceTime);
