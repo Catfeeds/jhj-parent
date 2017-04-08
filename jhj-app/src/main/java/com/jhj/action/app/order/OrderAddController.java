@@ -119,7 +119,8 @@ public class OrderAddController extends BaseController {
 			@RequestParam(value = "couponsId", required = false, defaultValue = "0") Long couponsId,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "adminId", required = false, defaultValue = "0") Long adminId,
-			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName)
+			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName,
+			@RequestParam(value = "sendSmsToUser", required = false, defaultValue = "0") int sendSmsToUser)
 			throws Exception {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -340,6 +341,15 @@ public class OrderAddController extends BaseController {
 			orderLog.setUserName(adminName);
 			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
 			orderLogService.insert(orderLog);
+		}
+		
+		//根据状态来确定是否发送短信
+		if (sendSmsToUser == 1) {
+			 String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy年MM月dd日HH:mm");
+			 
+			 String[] paySuccessForUser = new String[] {serviceTime,serviceName};
+			 
+			 SmsUtil.SendSms(u.getMobile(),  Constants.PAY_SUCCESS_ORDER_SMS, paySuccessForUser);
 		}
 
 		return result;
