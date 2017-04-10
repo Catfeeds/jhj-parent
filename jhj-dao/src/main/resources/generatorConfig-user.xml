@@ -40,7 +40,7 @@
 					targetProject="jhj-dao" type="XMLMAPPER">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
-
+		
 		<table schema="jhj" tableName="user_ref_org"
 			enableInsert="true"
 			enableSelectByPrimaryKey="true"
@@ -55,6 +55,25 @@
 			<columnOverride  column="org_id" property="org_id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="parent_org_id" property="parentOrgId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
 			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		</table>
+
+		<table schema="jhj3.0" tableName="user_sms_notice"
+			enableInsert="true"
+			enableSelectByPrimaryKey="true"
+			enableUpdateByPrimaryKey="true"
+			selectByExampleQueryId="false"
+			enableUpdateByExample="false"
+			enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableCountByExample="false">
+			<generatedKey column="id" sqlStatement="mysql" identity="true" />
+			<columnOverride  column="id" property="id" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="user_id" property="userId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			<columnOverride  column="add_time" property="addTime" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+			
+			<columnOverride column="is_suceess" property="isSuceess" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+			<columnOverride column="user_type" property="userType" javaType="java.lang.Short" jdbcType="NUMERIC"/>
+
 		</table>
 	
 	</context>

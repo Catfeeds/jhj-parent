@@ -37,5 +37,7 @@ public interface OrderQueryService {
 	BigDecimal getTotalOrderPay(OrderSearchVo vo);
 
 	BigDecimal getTotalOrderPayExt(OrderSearchVo vo);
+
+	List<Long> getLastOrder(OrderSearchVo searchVo);
 	
 }

@@ -887,4 +887,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 //		vo.setOrderStatusList(orderStatusList);
 		return ordersMapper.getTotalOrderPayExt(vo);
 	}
+	
+	@Override
+	public List<Long> getLastOrder(OrderSearchVo searchVo) {
+		return ordersMapper.getLastOrder(searchVo);
+	}
 }

@@ -72,7 +72,7 @@ public class Constants {
 	public static short BACK_SUCCESS = 2;
 
 	//0 = 发送失败 1 = 发送成功
-	public static short SMS_SUCCESS= 0;			//2015-11-24 15:46:10，  发送成功和失败都是 0  ？？？？
+	public static short SMS_SUCCESS= 1;			//2015-11-24 15:46:10，  发送成功和失败都是 0  ？？？？
 	public static short SMS_FAIL= 0;
 	public static String SMS_SUCCESS_CODE= "000000";
 	public static String SMS_STATUS_CODE= "statusCode";

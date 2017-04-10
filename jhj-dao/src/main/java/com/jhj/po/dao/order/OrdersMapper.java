@@ -174,4 +174,7 @@ public interface OrdersMapper {
 	List<ChartMapVo> totalByRateOrder(ChartSearchVo chartSearchVo);
 	
 	List<ChartMapVo> statByTotal(ChartSearchVo chartSearchVo);
+	
+	//查询用户的最后下单情况
+	List<Long> getLastOrder(OrderSearchVo searchVo);
 }

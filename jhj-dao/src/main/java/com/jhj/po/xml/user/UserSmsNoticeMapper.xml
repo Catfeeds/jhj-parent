@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jhj.po.dao.user.UserSmsNoticeMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.user.UserSmsNotice">
+		<id column="id" property="id" jdbcType="NUMERIC" />
+		<result column="user_id" property="userId" jdbcType="NUMERIC" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="user_type" property="userType" jdbcType="NUMERIC" />
+		<result column="last_month" property="lastMonth" jdbcType="NUMERIC" />
+		<result column="sms_template_id" property="smsTemplateId" jdbcType="VARCHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="is_suceess" property="isSuceess" jdbcType="NUMERIC" />
+		<result column="sms_return" property="smsReturn" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="update_time" property="updateTime" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, mobile, user_type, last_month, sms_template_id, remarks, is_suceess, sms_return,
+		add_time, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_sms_notice
+		where id = #{id,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSmsNoticeSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from user_sms_notice
+		<include refid="bySearchVo"/>
+		order by add_time desc
+	</select>
+	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSmsNoticeSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from user_sms_notice
+		<include refid="bySearchVo"/>
+		order by add_time desc
+	</select>
+	
+	<select id="totalBySearchVo" resultType="java.lang.Integer" parameterType="com.jhj.vo.user.UserSmsNoticeSearchVo">
+		select count(*) as total
+		from user_sms_notice
+		<include refid="bySearchVo"/>
+		order by add_time desc
+	</select>
+	
+	<sql id="bySearchVo">
+		where 1=1
+		<if test="userId != null">
+			and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="userIds != null and userIds.size()>0">
+			and id in
+			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+				
+		<if test="userType != null">
+			and user_type = #{userType,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="lastMonth != null">
+			and last_month = #{lastMonth,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="smsTemplateId != null">
+			and sms_template_id = #{smsTemplateId,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="mobile != null">
+			and mobile like CONCAT('%','${mobile}','%' )
+		</if>
+
+		<if test="startTime !=null">
+			<![CDATA[ and add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and add_time <= #{endTime}]]>
+		</if>
+		
+	</sql>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from user_sms_notice
+		where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.user.UserSmsNotice">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into user_sms_notice (user_id, mobile, user_type, last_month,
+		sms_template_id, remarks, is_suceess,
+		sms_return, add_time, update_time
+		)
+		values (#{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR}, #{userType,jdbcType=NUMERIC},
+		#{lastMonth,jdbcType=NUMERIC},
+		#{smsTemplateId,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{isSuceess,jdbcType=NUMERIC},
+		#{smsReturn,jdbcType=VARCHAR}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.user.UserSmsNotice">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into user_sms_notice
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="lastMonth != null">
+				last_month,
+			</if>
+			<if test="smsTemplateId != null">
+				sms_template_id,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="isSuceess != null">
+				is_suceess,
+			</if>
+			<if test="smsReturn != null">
+				sms_return,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=CHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=NUMERIC},
+			</if>
+			<if test="lastMonth != null">
+				#{lastMonth,jdbcType=NUMERIC},
+			</if>
+			<if test="smsTemplateId != null">
+				#{smsTemplateId,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="isSuceess != null">
+				#{isSuceess,jdbcType=NUMERIC},
+			</if>
+			<if test="smsReturn != null">
+				#{smsReturn,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.user.UserSmsNotice">
+		update user_sms_notice
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=CHAR},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=NUMERIC},
+			</if>
+			<if test="lastMonth != null">
+				last_month = #{lastMonth,jdbcType=NUMERIC},
+			</if>
+			<if test="smsTemplateId != null">
+				sms_template_id = #{smsTemplateId,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="isSuceess != null">
+				is_suceess = #{isSuceess,jdbcType=NUMERIC},
+			</if>
+			<if test="smsReturn != null">
+				sms_return = #{smsReturn,jdbcType=VARCHAR},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.user.UserSmsNotice">
+		update user_sms_notice
+		set user_id = #{userId,jdbcType=NUMERIC},
+		mobile = #{mobile,jdbcType=CHAR},
+		user_type = #{userType,jdbcType=NUMERIC},
+		last_month = #{lastMonth,jdbcType=NUMERIC},
+		sms_template_id = #{smsTemplateId,jdbcType=VARCHAR},
+		remarks = #{remarks,jdbcType=VARCHAR},
+		is_suceess = #{isSuceess,jdbcType=NUMERIC},
+		sms_return = #{smsReturn,jdbcType=VARCHAR},
+		add_time = #{addTime,jdbcType=NUMERIC},
+		update_time = #{updateTime,jdbcType=INTEGER}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+</mapper>
