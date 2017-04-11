@@ -30,6 +30,8 @@ public class UserDetailPay {
     private Short payType;
 
     private Long addTime;
+    
+    private String remarks;
 
     public Long getId() {
         return id;
@@ -142,4 +144,13 @@ public class UserDetailPay {
 	public void setRestMoney(BigDecimal restMoney) {
 		this.restMoney = restMoney;
 	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	
 }

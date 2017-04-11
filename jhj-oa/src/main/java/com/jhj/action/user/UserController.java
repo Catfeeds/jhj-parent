@@ -64,6 +64,7 @@ import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
+import com.sun.tools.internal.ws.processor.model.Request;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -719,5 +720,36 @@ public class UserController extends BaseController {
 		model.addAttribute("loginOrgId", sessionParentId);
 		model.addAttribute("orderCardsVo", orderCardsVo);
 		return "user/chargeList";
+	}
+	
+	@RequestMapping(value = "/updateUserRestMoney", method = RequestMethod.GET)
+	public String updateUserRestMoney(Model model,@RequestParam("userId") Long userId){
+		Users user = usersService.selectByPrimaryKey(userId);
+		model.addAttribute("user", user);
+		return "user/userRestMoney";
+	}
+	
+	@RequestMapping(value = "/updateUserRestMoney", method = RequestMethod.POST)
+	public String updateUserRestMoney(@RequestParam("id") Long userId,
+			@RequestParam("restMoney") Double restMoney,HttpServletRequest request){
+		
+		Users user = usersService.selectByPrimaryKey(userId);
+		BigDecimal restMoney1 = user.getRestMoney();
+		BigDecimal money = new BigDecimal(restMoney);
+		user.setRestMoney(money);
+		usersService.updateByPrimaryKeySelective(user);
+		
+		AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+		String username = accountAuth.getUsername();
+		
+		UserDetailPay initUserDetailPay = userDetailPayService.initUserDetailPay();
+		initUserDetailPay.setUserId(userId);
+		initUserDetailPay.setMobile(user.getMobile());
+		initUserDetailPay.setOrderType((short)100);
+		initUserDetailPay.setRestMoney(money);
+		initUserDetailPay.setRemarks(username+"将用户"+user.getMobile()+"的余额从"+restMoney1+"修改成"+money);
+		userDetailPayService.insert(initUserDetailPay);
+		
+		return "redirect:user-list";
 	}
 }

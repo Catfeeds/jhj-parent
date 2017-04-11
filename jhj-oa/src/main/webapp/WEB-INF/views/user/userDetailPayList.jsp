@@ -105,7 +105,8 @@
 		                              <th>支付方式</th>
 		                              <th>用户余额</th>
 		                              <th>状态</th>
-		                              <th >添加时间</th>
+		                              <th>描述</th>
+		                              <th>添加时间</th>
 	                              </tr>
                               </thead>
                               <tbody>
@@ -113,10 +114,7 @@
                               <tr>
                             	<td>${ item.orderNo }</td>
 					            <td>${ item.mobile }</td>
-					            <td>
-					            	<!-- todo 不能显示 充值记录！！ -->
-					            	<orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/>
-					            </td>
+					            <td><orderTypeTag:orderTypeId orderTypeId="${ item.orderType }"/></td>
 					            <td align="center">
 					            	<c:if test="${item.orderType==1 }">
 					            	 	￥${ item.orderPay }
@@ -127,16 +125,11 @@
 					            	 	￥${ item.orderPay }
 					            	</c:if>
 					            </td>
-					            <td>
-									<payTypeTag:payType payType="${ item.payType }" orderStatus="2"/>
-					            </td>
+					            <td><payTypeTag:payType payType="${ item.payType }" orderStatus="2"/></td>
 					             <td>${ item.restMoney }</td>
-					            <td>
-					            	<userDetailPayStatus:status orderId="${item.orderId }" orderType="${item.orderType }" orderNo="${item.orderNo }"/>
-					            </td>
-					            <td>
-					            	<timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/>
-					            </td>
+					            <td><userDetailPayStatus:status orderId="${item.orderId }" orderType="${item.orderType }" orderNo="${item.orderNo }"/></td>
+					            <td>${ item.remarks }</td>
+					            <td><timestampTag:timestamp patten="yyyy-MM-dd HH:mm:ss" t="${item.addTime * 1000}"/></td>
                               </tr>
                               </c:forEach>
                               </tbody>

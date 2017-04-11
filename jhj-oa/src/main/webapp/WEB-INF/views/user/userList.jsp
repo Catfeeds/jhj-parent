@@ -106,6 +106,7 @@
 						            	<a href="not-vip-user-pay-detail?mobile=${item.mobile }"><button>消费明细</button></a>
 					            	</c:if>
 					            	<a href='coupons-list?user_id=${item.id }'><button>优费券明细</button></a>
+					            	<a href='updateUserRestMoney?userId=${item.id }'><button>修改用户余额</button></a>
 					            </td>
                               </tr>
                               </c:forEach>

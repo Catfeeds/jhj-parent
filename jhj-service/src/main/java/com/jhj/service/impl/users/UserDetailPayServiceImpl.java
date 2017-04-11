@@ -269,6 +269,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 		detailPay.setTradeStatus("");
 		detailPay.setPayType((short) 0);
 		detailPay.setAddTime(TimeStampUtil.getNowSecond());
+		detailPay.setRemarks("");
 
 		return detailPay;
 	}

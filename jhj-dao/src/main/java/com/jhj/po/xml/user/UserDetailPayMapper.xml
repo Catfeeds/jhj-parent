@@ -16,10 +16,11 @@
 		<result column="trade_status" property="tradeStatus" jdbcType="VARCHAR" />
 		<result column="pay_type" property="payType" jdbcType="NUMERIC" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, pay_account, user_id, mobile, order_type, order_id, order_no, order_money, order_pay, rest_money,
-		trade_no, trade_status, pay_type, add_time
+		trade_no, trade_status, pay_type, add_time,remarks
 	</sql>
 	<sql id="searchVo">
 
@@ -129,14 +130,14 @@
 		mobile, order_type, order_id,
 		order_no, order_money, order_pay, rest_money,
 		trade_no, trade_status, pay_type,
-		add_time)
+		add_time,remarks)
 		values (#{id,jdbcType=NUMERIC}, #{payAccount,jdbcType=VARCHAR}, #{userId,jdbcType=NUMERIC},
 		#{mobile,jdbcType=CHAR},
 		#{orderType,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC},
 		#{orderNo,jdbcType=VARCHAR}, #{orderMoney,jdbcType=DECIMAL}, #{orderPay,jdbcType=DECIMAL},
 		#{restMoney,jdbcType=DECIMAL},
 		#{tradeNo,jdbcType=VARCHAR}, #{tradeStatus,jdbcType=VARCHAR}, #{payType,jdbcType=NUMERIC},
-		#{addTime,jdbcType=NUMERIC})
+		#{addTime,jdbcType=NUMERIC},#{remarks,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.user.UserDetailPay">
 		insert into user_detail_pay
@@ -183,6 +184,9 @@
 			<if test="addTime != null">
 				add_time,
 			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -226,6 +230,9 @@
 			</if>
 			<if test="addTime != null">
 				#{addTime,jdbcType=NUMERIC},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -271,6 +278,9 @@
 			<if test="addTime != null">
 				add_time = #{addTime,jdbcType=NUMERIC},
 			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -290,7 +300,8 @@
 		trade_no = #{tradeNo,jdbcType=VARCHAR},
 		trade_status = #{tradeStatus,jdbcType=VARCHAR},
 		pay_type = #{payType,jdbcType=NUMERIC},
-		add_time = #{addTime,jdbcType=NUMERIC}
+		add_time = #{addTime,jdbcType=NUMERIC},
+		remarks = #{remarks,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
 

@@ -539,6 +539,8 @@ public class OneCareUtil {
 			break;
 		case 9:
 			orderTypeName = "订单加时";
+		case 100:
+			orderTypeName = "修改余额";
 			break;
 		default:
 			orderTypeName = "";

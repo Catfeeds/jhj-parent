@@ -1,0 +1,1 @@
+ALTER TABLE `user_detail_pay` ADD `remarks` varchar(300) NOT NULL COMMENT '描述' before `add_time`;
