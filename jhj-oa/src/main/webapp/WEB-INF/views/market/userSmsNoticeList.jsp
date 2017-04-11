@@ -52,10 +52,10 @@
 							<td>${ item.remarks }</td>
 							
 							<td>
-								<c:if test="${item.isSuceess==1}">
+								<c:if test="${item.smsReturn == '000000'}">
 									发送成功
 								</c:if> 
-								<c:if test="${item.isSuceess==0}">
+								<c:if test="${item.isSuceess != '000000'}">
 									发送失败
 								</c:if>
 							</td>
