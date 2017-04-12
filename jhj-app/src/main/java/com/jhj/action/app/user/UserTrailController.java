@@ -49,6 +49,11 @@ public class UserTrailController extends BaseController {
 		//默认现在user_type 都等于 0 
 		userType = 0;
 		
+		if(userId==null){
+			AppResultData<String> result = new AppResultData<String>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+			return result;
+		}
+		
 		UserTrailReal record = null;
 
 		UserTrailSearchVo searchVo = new UserTrailSearchVo();
