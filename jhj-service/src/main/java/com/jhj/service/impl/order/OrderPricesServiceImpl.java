@@ -400,7 +400,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		String incomingStr = "";
 		// 总收入合计
 		BigDecimal totalOrderPay = staffMprice;
-		incomingStr = "订单提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+		incomingStr = "订单提成:" +  totalOrderPay;
 		
 		BigDecimal incomingPercent = this.getOrderPercent(order, staffId);
 		
@@ -408,18 +408,21 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(order, (short) 0);
 		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
 			BigDecimal orderPayExtDiffStaff = orderPayExtDiff.multiply(incomingPercent);
-			incomingStr+= ";订单补差价提成:" +  MathBigDecimalUtil.div(orderPayExtDiffStaff, new BigDecimal(staffNum));
+			orderPayExtDiffStaff = MathBigDecimalUtil.div(orderPayExtDiffStaff, new BigDecimal(staffNum));
+			incomingStr+= ";订单补差价提成:" +  orderPayExtDiffStaff;
 		}
 
 		// 订单加时金额 订单加时的折扣比例
 		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(order, (short) 1);
 		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
 			BigDecimal orderPayExtOverWorkStaff = orderPayExtOverWork.multiply(incomingPercent);
-			incomingStr+= ";订单加时提成:" +  MathBigDecimalUtil.div(orderPayExtOverWorkStaff, new BigDecimal(staffNum));
+			orderPayExtOverWorkStaff = MathBigDecimalUtil.div(orderPayExtOverWorkStaff, new BigDecimal(staffNum));
+			incomingStr+= ";订单加时提成:" +  orderPayExtOverWorkStaff;
 		}
 		
 		//计算订单总金额，然后总金额减去套餐价格，直接按比例提成.
 		BigDecimal orderMoney = this.getTotalOrderMoney(orderPrice);
+		orderMoney =  MathBigDecimalUtil.div(orderMoney, new BigDecimal(staffNum));
 		
 		if (orderMoney.compareTo(mprice) == 1) {
 			BigDecimal moreOrderPay = orderMoney.subtract(mprice);
@@ -427,15 +430,17 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 			totalOrderPay = totalOrderPay.add(moreOrderPayStaff);
 			
 			//计算减去补差价，减去加时的多余金额。
+			orderPayExtDiff = MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
+			orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
 			BigDecimal otherOrderPay = moreOrderPay.subtract(orderPayExtDiff);
 			otherOrderPay = otherOrderPay.subtract(orderPayExtOverWork);
 			if (otherOrderPay.compareTo(BigDecimal.ZERO) == 1) {
-				incomingStr+= ";订单其他提成:" +  MathBigDecimalUtil.div(otherOrderPay, new BigDecimal(staffNum));
+				incomingStr+= ";订单其他提成:" +  otherOrderPay;
 			}
 		}
 		
 		//最后做一个服务人员平均
-		totalOrderPay = MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
+//		totalOrderPay = MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
 
 		Map<String, String> result = new HashMap<String, String>();
 		result.put("incomingStr", incomingStr);

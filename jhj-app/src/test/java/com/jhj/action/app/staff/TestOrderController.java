@@ -47,25 +47,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_begin.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "5");
-	    postRequest = postRequest.param("order_id", "5");
-	    ResultActions resultActions = mockMvc.perform(postRequest);
-
-	    resultActions.andExpect(content().contentType(this.mediaType));
-	    resultActions.andExpect(status().isOk());
-
-	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
-    }
-	
-	
-	@Test
-    public void PostInviteTime() throws Exception {
-
-		String url = "/app/staff/order/post_done.json";
-
-     	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "136");
-	    postRequest = postRequest.param("order_id", "10958");
+	    postRequest = postRequest.param("staff_id", "50");
+	    postRequest = postRequest.param("order_id", "12234");
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
 	    resultActions.andExpect(content().contentType(this.mediaType));
@@ -77,7 +60,7 @@ public class TestOrderController extends JUnitActionBase{
 	@Test
     public void testPostOrderDone() throws Exception {
 
-		String url = "/app/staff/order/post_done.json?staff_id=201&order_id=11195";
+		String url = "/app/staff/order/post_done.json?staff_id=50&order_id=12234";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
      	
@@ -108,8 +91,8 @@ public class TestOrderController extends JUnitActionBase{
 		String url = "/app/staff/order/post_overwork.json";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
-	    postRequest = postRequest.param("staff_id", "3");
-	    postRequest = postRequest.param("order_id", "4");
+	    postRequest = postRequest.param("staff_id", "50");
+	    postRequest = postRequest.param("order_id", "12234");
 	    postRequest = postRequest.param("service_hour", "1");
 	    postRequest = postRequest.param("order_pay", "50");
 	    ResultActions resultActions = mockMvc.perform(postRequest);

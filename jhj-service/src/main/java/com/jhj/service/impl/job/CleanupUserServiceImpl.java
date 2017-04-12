@@ -111,7 +111,7 @@ public class CleanupUserServiceImpl implements CleanupUserService {
 			userService.updateByPrimaryKey(user);
 			
 			//1. 记录消费明细
-			UserDetailPay userDetailPay = new UserDetailPay();
+			UserDetailPay userDetailPay = userDetailPayService.initUserDetailPay();
 
 			userDetailPay.setUserId(user.getId());
 			userDetailPay.setMobile(user.getMobile());
@@ -178,7 +178,7 @@ public class CleanupUserServiceImpl implements CleanupUserService {
 			}
 
 			//1. 记录消费明细
-			UserDetailPay userDetailPay = new UserDetailPay();
+			UserDetailPay userDetailPay = userDetailPayService.initUserDetailPay();
 
 			userDetailPay.setUserId(user.getId());
 			userDetailPay.setMobile(user.getMobile());
@@ -245,7 +245,7 @@ public class CleanupUserServiceImpl implements CleanupUserService {
 			}
 
 			//1. 记录消费明细
-			UserDetailPay userDetailPay = new UserDetailPay();
+			UserDetailPay userDetailPay = userDetailPayService.initUserDetailPay();
 
 			userDetailPay.setUserId(user.getId());
 			userDetailPay.setMobile(user.getMobile());
@@ -299,7 +299,7 @@ public class CleanupUserServiceImpl implements CleanupUserService {
 			if (orderPrice == null) continue;
 
 			//1. 记录消费明细 ,订单支付的情况
-			UserDetailPay userDetailPay = new UserDetailPay();
+			UserDetailPay userDetailPay = userDetailPayService.initUserDetailPay();
 
 			userDetailPay.setUserId(user.getId());
 			userDetailPay.setMobile(user.getMobile());
@@ -320,7 +320,7 @@ public class CleanupUserServiceImpl implements CleanupUserService {
 			userDetailPayService.insert(userDetailPay);
 			
 			//1. 记录消费明细，订单取消的情况
-			userDetailPay = new UserDetailPay();
+			userDetailPay = userDetailPayService.initUserDetailPay();
 
 			userDetailPay.setUserId(user.getId());
 			userDetailPay.setMobile(user.getMobile());

@@ -87,7 +87,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Override
 	public UserDetailPay addUserDetailPayForOrder(Users user, Orders order, OrderPrices orderPrice, String tradeStatus, String tradeNo, String payAccount) {
 
-		UserDetailPay userDetailPay = new UserDetailPay();
+		UserDetailPay userDetailPay = this.initUserDetailPay();
 
 		userDetailPay.setUserId(user.getId());
 		userDetailPay.setMobile(user.getMobile());
@@ -117,7 +117,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	public UserDetailPay addUserDetailPayForOrderPayExt(Users user, Orders order, OrderPriceExt orderPriceExt, String tradeStatus, String tradeNo,
 			String payAccount) {
 
-		UserDetailPay userDetailPay = new UserDetailPay();
+		UserDetailPay userDetailPay = this.initUserDetailPay();
 
 		userDetailPay.setUserId(user.getId());
 		userDetailPay.setMobile(user.getMobile());
@@ -163,7 +163,7 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Override
 	public UserDetailPay addUserDetailPayForOrderCard(Users user, OrderCards orderCard, String tradeStatus, String tradeNo, String payAccount) {
 
-		UserDetailPay userDetailPay = new UserDetailPay();
+		UserDetailPay userDetailPay = this.initUserDetailPay();
 
 		userDetailPay.setUserId(user.getId());
 		userDetailPay.setMobile(user.getMobile());

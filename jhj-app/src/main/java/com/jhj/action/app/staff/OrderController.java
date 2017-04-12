@@ -577,7 +577,7 @@ public class OrderController extends BaseController {
 		Long userId = order.getUserId();
 		Users user = userService.selectByPrimaryKey(userId);
 		//更新用户明细表
-		UserDetailPay detailPay = new UserDetailPay();
+		UserDetailPay detailPay = userDetailPayService.initUserDetailPay();
 		detailPay.setId(0L);
 	    detailPay.setPayAccount("");
 	    detailPay.setUserId(order.getUserId());
