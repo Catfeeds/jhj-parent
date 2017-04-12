@@ -297,7 +297,7 @@
 		</if>
 		
 		<if test="adminId!=null and adminId != 0">
-			and id in (select distinct order_id from order_log where user_type = 2 and action = '订单添加' and user_id = #{adminId,jdbcType=NUMERIC})
+			and order_no in (select distinct order_no from order_log where user_type = 2 and action = '订单添加' and user_id = #{adminId,jdbcType=NUMERIC})
 		</if>
 	</sql>
 
