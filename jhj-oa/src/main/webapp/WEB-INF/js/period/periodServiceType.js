@@ -10,7 +10,7 @@ var formVal = $('#form').validate({
 		serviceTypeId : {
 			required : true
 		},
-		serviceAddonId : {
+		packageType : {
 			required : true,
 		},
 		price : {
@@ -43,8 +43,8 @@ var formVal = $('#form').validate({
 		serviceTypeId : {
 			required : "服务类型不能为空"
 		},
-		serviceAddonId : {
-			required : "服务子类型不能为空",
+		packageType : {
+			required : "定制类型不能为空",
 		},
 		price : {
 			required : "原价不能为空",
@@ -52,6 +52,7 @@ var formVal = $('#form').validate({
 		},
 		vipPrice : {
 			required : "会员价不能为空",
+			
 			digits : "总次数必须为数字",
 		},
 		num : {
@@ -84,10 +85,35 @@ var formVal = $('#form').validate({
 });
 
 $(function(){
+	
+	$("#serviceTypeId").on("change",function(){
+		var serviceTypeId = $("#serviceTypeId").val();
+		$.ajax({
+			type:"get",
+			url:"/jhj-app/app/dict/get_service_type_addons.json?service_type_id="+serviceTypeId,
+			dataType:"json",
+			success:function(data){
+				var result = data.data;
+				if(result.length>0){
+					var option ="";
+					for(var i=0;i<result.length;i++){
+						var serviceTypeAddons = result[i];
+						var id = serviceTypeAddons.service_addon_id;
+						var name = serviceTypeAddons.name;
+						option += "<option value='"+id+"'>"+name+"</option>";
+					}
+					$("#serviceAddonId").append(option);
+				}
+			}
+		});
+	});
+	
+	
+	
 	$("#btn-save").on('click',function(){
 		if($('#form').validate().form()){
-			$("form").action="save";
-			$("form").submit();
+			form.action="save";
+			form.submit();
 		}
 	});
 });

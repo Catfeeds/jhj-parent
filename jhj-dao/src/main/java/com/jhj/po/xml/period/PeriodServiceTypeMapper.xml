@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.jhj.po.model.period.PeriodServiceType" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="service_type_id" property="serviceTypeId" jdbcType="INTEGER" />
     <result column="service_addon_id" property="serviceAddonId" jdbcType="INTEGER" />
     <result column="price" property="price" jdbcType="DECIMAL" />
@@ -16,7 +17,7 @@
     <result column="add_time" property="addTime" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, service_type_id, service_addon_id, price, vip_price, num, punit, total, 
+    id, name, package_type, service_type_id, service_addon_id, price, vip_price, num, punit, total, 
     enbale, remarks, add_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -30,12 +31,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jhj.po.model.period.PeriodServiceType" >
-    insert into period_service_type (id, name, service_type_id, 
+    insert into period_service_type (id, name, package_type, service_type_id, 
       service_addon_id, price, vip_price, 
       num, punit, total, 
       enbale, remarks, add_time
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{packageType,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER}, 
       #{serviceAddonId,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{vipPrice,jdbcType=DECIMAL}, 
       #{num,jdbcType=INTEGER}, #{punit,jdbcType=VARCHAR}, #{total,jdbcType=VARCHAR}, 
       #{enbale,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}
@@ -49,6 +50,9 @@
       </if>
       <if test="name != null" >
         name,
+      </if>
+      <if test="packageType != null" >
+        package_type,
       </if>
       <if test="serviceTypeId != null" >
         service_type_id,
@@ -88,6 +92,9 @@
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
+       <if test="packageType != null" >
+        #{packageType,jdbcType=VARCHAR},
+      </if>
       <if test="serviceTypeId != null" >
         #{serviceTypeId,jdbcType=INTEGER},
       </if>
@@ -126,6 +133,9 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="packageType != null" >
+        package_type = #{packageType,jdbcType=VARCHAR},
+      </if>
       <if test="serviceTypeId != null" >
         service_type_id = #{serviceTypeId,jdbcType=INTEGER},
       </if>
@@ -162,6 +172,7 @@
   <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.period.PeriodServiceType" >
     update period_service_type
     set name = #{name,jdbcType=VARCHAR},
+      package_type = #{packageType,jdbcType=VARCHAR},
       service_type_id = #{serviceTypeId,jdbcType=INTEGER},
       service_addon_id = #{serviceAddonId,jdbcType=INTEGER},
       price = #{price,jdbcType=DECIMAL},
@@ -184,6 +195,9 @@
   	<where>
   	  <if test="name != null" >
         and name = #{name,jdbcType=VARCHAR}
+      </if>
+       <if test="packageType != null" >
+        and package_type = #{packageType,jdbcType=VARCHAR}
       </if>
       <if test="serviceTypeId != null" >
         and service_type_id = #{serviceTypeId,jdbcType=INTEGER}

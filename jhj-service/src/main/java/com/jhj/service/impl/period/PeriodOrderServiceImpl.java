@@ -1,11 +1,16 @@
 package com.jhj.service.impl.period;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jhj.po.dao.period.PeriodOrderMapper;
 import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.service.period.PeriodOrderService;
+import com.meijia.utils.DateUtil;
+import com.meijia.utils.OrderNoUtil;
+import com.meijia.utils.TimeStampUtil;
 
 @Service
 public class PeriodOrderServiceImpl implements PeriodOrderService{
@@ -42,5 +47,27 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 	public int updateByPrimaryKey(PeriodOrder record) {
 		return periodOrderMapper.updateByPrimaryKey(record);
 	}
+
+	@Override
+	public PeriodOrder init() {
+		PeriodOrder po = new PeriodOrder();
+		po.setAddrId(0);
+		po.setAddTime(TimeStampUtil.getNowSecond());
+		po.setMobile("");
+		po.setOrderFrom(0);
+		po.setOrderMoney(new BigDecimal(0));
+		po.setOrderNo(String.valueOf(OrderNoUtil.genOrderNo()));
+		po.setOrderPrice(new BigDecimal(0));
+		po.setOrderStatus(0);
+		po.setOrderType(0);
+		po.setRemarks("");
+		po.setServiceTypeId(0);
+		po.setUpdateTime(TimeStampUtil.getNowSecond());
+		po.setUserCouponsId(0);
+		po.setUserId(0);
+		return po;
+	}
+	
+	
    
 }

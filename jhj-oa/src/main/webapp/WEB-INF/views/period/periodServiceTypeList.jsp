@@ -32,6 +32,7 @@
 						<th>总次数</th>
 						<th>是否有效</th>
 						<th>备注</th>
+						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,13 +43,14 @@
 							<td>${item.serviceAddonId }</td>
 							<td>${item.price }</td>
 							<td>${item.vipPrice }</td>
-							<td>${item.num }/{item.punit }</td>
+							<td>${item.num }/${item.punit }</td>
 							<td>${item.total }</td>
 							<td>
 								<c:if test="${item.enbale==0 }">是</c:if>
 								<c:if test="${item.enbale==1 }">否</c:if>
 							</td>
 							<td>${item.remarks }</td>
+							<td><a href="add?id=${item.id }"><button>修改</button></a></td>
 						</tr>
 					</c:forEach>
 				</tbody> 

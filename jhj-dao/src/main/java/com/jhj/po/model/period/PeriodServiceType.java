@@ -6,6 +6,8 @@ public class PeriodServiceType {
     private Integer id;
 
     private String name;
+    
+    private String packageType;
 
     private Integer serviceTypeId;
 
@@ -27,99 +29,108 @@ public class PeriodServiceType {
 
     private Long addTime;
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Integer getServiceTypeId() {
-        return serviceTypeId;
-    }
+	public String getPackageType() {
+		return packageType;
+	}
 
-    public void setServiceTypeId(Integer serviceTypeId) {
-        this.serviceTypeId = serviceTypeId;
-    }
+	public void setPackageType(String packageType) {
+		this.packageType = packageType;
+	}
 
-    public Integer getServiceAddonId() {
-        return serviceAddonId;
-    }
+	public Integer getServiceTypeId() {
+		return serviceTypeId;
+	}
 
-    public void setServiceAddonId(Integer serviceAddonId) {
-        this.serviceAddonId = serviceAddonId;
-    }
+	public void setServiceTypeId(Integer serviceTypeId) {
+		this.serviceTypeId = serviceTypeId;
+	}
 
-    public BigDecimal getPrice() {
-        return price;
-    }
+	public Integer getServiceAddonId() {
+		return serviceAddonId;
+	}
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
+	public void setServiceAddonId(Integer serviceAddonId) {
+		this.serviceAddonId = serviceAddonId;
+	}
 
-    public BigDecimal getVipPrice() {
-        return vipPrice;
-    }
+	public BigDecimal getPrice() {
+		return price;
+	}
 
-    public void setVipPrice(BigDecimal vipPrice) {
-        this.vipPrice = vipPrice;
-    }
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
 
-    public Integer getNum() {
-        return num;
-    }
+	public BigDecimal getVipPrice() {
+		return vipPrice;
+	}
 
-    public void setNum(Integer num) {
-        this.num = num;
-    }
+	public void setVipPrice(BigDecimal vipPrice) {
+		this.vipPrice = vipPrice;
+	}
 
-    public String getPunit() {
-        return punit;
-    }
+	public Integer getNum() {
+		return num;
+	}
 
-    public void setPunit(String punit) {
-        this.punit = punit == null ? null : punit.trim();
-    }
+	public void setNum(Integer num) {
+		this.num = num;
+	}
 
-    public String getTotal() {
-        return total;
-    }
+	public String getPunit() {
+		return punit;
+	}
 
-    public void setTotal(String total) {
-        this.total = total == null ? null : total.trim();
-    }
+	public void setPunit(String punit) {
+		this.punit = punit;
+	}
 
-    public Integer getEnbale() {
-        return enbale;
-    }
+	public String getTotal() {
+		return total;
+	}
 
-    public void setEnbale(Integer enbale) {
-        this.enbale = enbale;
-    }
+	public void setTotal(String total) {
+		this.total = total;
+	}
 
-    public String getRemarks() {
-        return remarks;
-    }
+	public Integer getEnbale() {
+		return enbale;
+	}
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks == null ? null : remarks.trim();
-    }
+	public void setEnbale(Integer enbale) {
+		this.enbale = enbale;
+	}
 
-    public Long getAddTime() {
-        return addTime;
-    }
+	public String getRemarks() {
+		return remarks;
+	}
 
-    public void setAddTime(Long addTime) {
-        this.addTime = addTime;
-    }
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Long getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Long addTime) {
+		this.addTime = addTime;
+	}
+
 }

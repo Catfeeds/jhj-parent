@@ -19,11 +19,13 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
+import com.jhj.oa.vo.PeriodServiceTypeVo;
 import com.jhj.po.model.period.PeriodServiceType;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.period.PeriodServiceTypeService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.PartnerServiceTypeVo;
+import com.meijia.utils.BeanUtilsExp;
 
 @Controller
 @RequestMapping("/period")
@@ -43,13 +45,17 @@ public class PeriodServiceTypeController extends BaseController{
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(Model model,@RequestParam(value="id",required=false) Integer id) {
-		PeriodServiceType periodServiceType = null;
+		PeriodServiceTypeVo periodServiceTypeVo = new PeriodServiceTypeVo();
 		if(id!=null){
-			periodServiceType = periodServiceTypeService.selectByPrimaryKey(id);
-		}else{
-			periodServiceType = new PeriodServiceType();
+			PeriodServiceType periodServiceType = periodServiceTypeService.selectByPrimaryKey(id);
+			BeanUtilsExp.copyPropertiesIgnoreNull(periodServiceType, periodServiceTypeVo);
+			String packageType = periodServiceType.getPackageType();
+			if(packageType!=null && !"".equals(packageType)){
+				String[] split = packageType.split(",");
+				periodServiceTypeVo.setPackageTypeList(Arrays.asList(split));
+			}
 		}
-		model.addAttribute("periodServiceType", periodServiceType);
+		model.addAttribute("periodServiceTypeVo", periodServiceTypeVo);
 		
 		PartnerServiceTypeVo vo = new PartnerServiceTypeVo();
 		Long[] parentServiceTypeId = {23L,24L,25L,26L,27L,74L};
@@ -62,33 +68,39 @@ public class PeriodServiceTypeController extends BaseController{
 	}
 
 	@RequestMapping(value = "/save",method = RequestMethod.POST)
-	public String save(@ModelAttribute PeriodServiceType periodServiceType) {
+	public String save(@ModelAttribute PeriodServiceTypeVo periodServiceTypeVo) {
 		
-		if(periodServiceType.getId()!=null && periodServiceType.getId()>0){
-			PeriodServiceType pt = periodServiceTypeService.selectByPrimaryKey(periodServiceType.getId());
-			pt.setName(periodServiceType.getName());
-			pt.setNum(periodServiceType.getNum());
-			pt.setPrice(periodServiceType.getPrice());
-			pt.setPunit(periodServiceType.getPunit());
-			pt.setRemarks(periodServiceType.getRemarks());
-			pt.setServiceAddonId(periodServiceType.getServiceAddonId());
-			pt.setServiceTypeId(periodServiceType.getServiceTypeId());
-			pt.setTotal(periodServiceType.getTotal());
-			pt.setVipPrice(periodServiceType.getVipPrice());
-			pt.setEnbale(periodServiceType.getEnbale());
+		if(periodServiceTypeVo.getId()!=null && periodServiceTypeVo.getId()>0){
+			PeriodServiceType pt = periodServiceTypeService.selectByPrimaryKey(periodServiceTypeVo.getId());
+			pt.setName(periodServiceTypeVo.getName());
+			pt.setNum(periodServiceTypeVo.getNum());
+			pt.setPrice(periodServiceTypeVo.getPrice());
+			pt.setPunit(periodServiceTypeVo.getPunit());
+			pt.setRemarks(periodServiceTypeVo.getRemarks());
+			pt.setServiceAddonId(periodServiceTypeVo.getServiceAddonId());
+			pt.setServiceTypeId(periodServiceTypeVo.getServiceTypeId());
+			pt.setTotal(periodServiceTypeVo.getTotal());
+			pt.setVipPrice(periodServiceTypeVo.getVipPrice());
+			pt.setEnbale(periodServiceTypeVo.getEnbale());
+			List<String> packageTypeList = periodServiceTypeVo.getPackageTypeList();
+			String replace = packageTypeList.toString().replace(" ", "").replace("[", "").replace("]", "");
+			pt.setPackageType(replace);
 			periodServiceTypeService.updateByPrimaryKeySelective(pt);
 		}else{
 			PeriodServiceType init = periodServiceTypeService.init();
-			init.setName(periodServiceType.getName());
-			init.setNum(periodServiceType.getNum());
-			init.setPrice(periodServiceType.getPrice());
-			init.setPunit(periodServiceType.getPunit());
-			init.setRemarks(periodServiceType.getRemarks());
-			init.setServiceAddonId(periodServiceType.getServiceAddonId());
-			init.setServiceTypeId(periodServiceType.getServiceTypeId());
-			init.setTotal(periodServiceType.getTotal());
-			init.setVipPrice(periodServiceType.getVipPrice());
-			init.setEnbale(periodServiceType.getEnbale());
+			init.setName(periodServiceTypeVo.getName());
+			init.setNum(periodServiceTypeVo.getNum());
+			init.setPrice(periodServiceTypeVo.getPrice());
+			init.setPunit(periodServiceTypeVo.getPunit());
+			init.setRemarks(periodServiceTypeVo.getRemarks());
+			init.setServiceAddonId(periodServiceTypeVo.getServiceAddonId());
+			init.setServiceTypeId(periodServiceTypeVo.getServiceTypeId());
+			init.setTotal(periodServiceTypeVo.getTotal());
+			init.setVipPrice(periodServiceTypeVo.getVipPrice());
+			init.setEnbale(periodServiceTypeVo.getEnbale());
+			List<String> packageTypeList = periodServiceTypeVo.getPackageTypeList();
+			String replace = packageTypeList.toString().replace(" ", "").replace("[", "").replace("]", "");
+			init.setPackageType(replace);
 			periodServiceTypeService.insertSelective(init);
 		}
 		return "redirect:getList";

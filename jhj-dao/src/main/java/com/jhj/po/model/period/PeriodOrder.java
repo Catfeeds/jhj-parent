@@ -29,9 +29,9 @@ public class PeriodOrder {
 
     private String remarks;
 
-    private Integer addTime;
+    private Long addTime;
 
-    private Integer updateTime;
+    private Long updateTime;
 
     public Integer getId() {
         return id;
@@ -137,19 +137,20 @@ public class PeriodOrder {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
-    public Integer getAddTime() {
-        return addTime;
-    }
+	public Long getAddTime() {
+		return addTime;
+	}
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
-    }
+	public void setAddTime(Long addTime) {
+		this.addTime = addTime;
+	}
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
+	public Long getUpdateTime() {
+		return updateTime;
+	}
 
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setUpdateTime(Long updateTime) {
+		this.updateTime = updateTime;
+	}
+
 }

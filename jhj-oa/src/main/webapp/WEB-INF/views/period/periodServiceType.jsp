@@ -21,7 +21,7 @@
 				</header>
 				<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 				<div class="panel-body">
-					<form:form method="post" name="form" id="form" commandName="periodServiceType" class="form-horizontal">
+					<form:form method="post" name="form" id="form" commandName="periodServiceTypeVo" class="form-horizontal">
 						<form:hidden path="id"/>
 						<div class="form-group required">
 							<label class="col-md-2 control-label">
@@ -34,27 +34,41 @@
 						
 						<div class="form-group">
 							<label class="col-md-2 control-label">
-								<font color="red">*</font>服务类型
+								<font color="red">*</font>定制类型
 							</label>
-							<div class="col-md-5">
-								<form:select path="serviceTypeId" class="form-control">
-									<form:option value="">--请选择服务类型--</form:option>
-									<form:option value="1">套餐一</form:option>
-									<form:option value="2">套餐二</form:option>
-									<form:option value="3">套餐三</form:option>
-									<form:option value="4">套餐四</form:option>
-								</form:select>
+							<div class="col-md-5 checkbox">
+								<label>
+									<form:checkbox path="packageTypeList" value="1" />套餐一
+								</label>
+								<label>
+									<form:checkbox path="packageTypeList" value="2" />套餐二
+								</label>
+								<label>
+									<form:checkbox path="packageTypeList" value="3" />套餐三
+								</label>
+								<label>
+									<form:checkbox path="packageTypeList" value="4" />套餐四
+								</label>
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="col-md-2 control-label">
-								<font color="red">*</font>服务子类型
+								<font color="red">*</font>服务类型
 							</label>
 							<div class="col-md-5">
-								<form:select path="serviceAddonId" class="form-control">
-									<form:option value="">--请选择服务子类型--</form:option>
+								<form:select path="serviceTypeId" id="serviceTypeId" class="form-control">
+									<form:option value="">--请选择服务类型--</form:option>
 									<form:options items="${partnerServiceTypeList }" itemLabel="name" itemValue="serviceTypeId"/>
+								</form:select>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label">服务子类型</label>
+							<div class="col-md-5">
+								<form:select path="serviceAddonId" id="serviceAddonId" class="form-control">
+									<form:option value="">--请选择服务子类型--</form:option>
 								</form:select>
 							</div>
 						</div>
@@ -114,9 +128,13 @@
 							<label class="col-md-2 control-label">
 								<font color="red">*</font>是否有效
 							</label>
-							<div class="col-md-5">
-								<form:radiobutton path="enbale" value="0" checked="true"/>是
-								<form:radiobutton path="enbale" value="1" />否
+							<div class="col-md-5 radio">
+								<label>
+									<form:radiobutton path="enbale" value="0" checked="true"/>是
+								</label>
+								<label>
+									<form:radiobutton path="enbale" value="1" />否
+								</label>
 							</div>
 						</div>
 						
@@ -137,5 +155,7 @@
 	<!--footer end--> </section>
 	<!--common script for all pages-->
 	<%@ include file="../shared/importJs.jsp"%>
+	<script src="<c:url value='/assets/jquery-validation/dist/jquery.validate.min.js'/>" type="text/javascript"></script>
+	<script type="text/javascript" src="<c:url value='/js/period/periodServiceType.js'/>"></script>
 </body>
 </html>

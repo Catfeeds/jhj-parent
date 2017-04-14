@@ -14,4 +14,6 @@ public interface PeriodOrderService {
     int updateByPrimaryKeySelective(PeriodOrder record);
 
     int updateByPrimaryKey(PeriodOrder record);
+    
+    PeriodOrder init();
 }
