@@ -1,5 +1,7 @@
 package com.jhj.service.period;
 
+import java.util.List;
+
 import com.jhj.po.model.period.PeriodOrderAddons;
 
 public interface PeriodOrderAddonsService {
@@ -14,4 +16,8 @@ public interface PeriodOrderAddonsService {
     int updateByPrimaryKeySelective(PeriodOrderAddons record);
 
     int updateByPrimaryKey(PeriodOrderAddons record);
+    
+    int insertBatch(List<PeriodOrderAddons> periodOrdeAddonsList);
+    
+    PeriodOrderAddons init();
 }

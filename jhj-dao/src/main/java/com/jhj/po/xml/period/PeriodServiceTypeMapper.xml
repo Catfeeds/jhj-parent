@@ -197,7 +197,7 @@
         and name = #{name,jdbcType=VARCHAR}
       </if>
        <if test="packageType != null" >
-        and package_type = #{packageType,jdbcType=VARCHAR}
+        and package_type like concat ('%',#{packageType,jdbcType=VARCHAR},'%') 
       </if>
       <if test="serviceTypeId != null" >
         and service_type_id = #{serviceTypeId,jdbcType=INTEGER}

@@ -150,4 +150,17 @@
       add_time = #{addTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <insert id="insertBatch" parameterType="java.util.List">
+  	insert into period_order_addons (id, user_id, period_order_id, 
+      period_order_no, service_type_id, service_addon_id, 
+      price, vip_price, num, 
+      add_time) values 
+      <foreach collection="periodOrdeAddonsList" item="item" separator=",">
+      	(#{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.periodOrderId,jdbcType=INTEGER}, 
+      #{item.periodOrderNo,jdbcType=VARCHAR}, #{item.serviceTypeId,jdbcType=INTEGER}, #{item.serviceAddonId,jdbcType=INTEGER}, 
+      #{item.price,jdbcType=DECIMAL}, #{item.vipPrice,jdbcType=DECIMAL}, #{item.num,jdbcType=INTEGER}, 
+      #{item.addTime,jdbcType=TIMESTAMP})
+      </foreach>
+  </insert>
 </mapper>

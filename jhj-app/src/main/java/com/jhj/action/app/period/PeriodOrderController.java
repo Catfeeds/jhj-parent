@@ -12,6 +12,7 @@ import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
 import com.meijia.utils.vo.AppResultData;
 
@@ -21,6 +22,9 @@ public class PeriodOrderController extends BaseController{
 	
 	@Autowired
 	private PeriodOrderService periodOrderService;
+	
+	@Autowired
+	private PeriodOrderAddonsService periodOrderAddonsService;
 	
 	@RequestMapping(value="/save-period-order.json",method=RequestMethod.POST)
 	public AppResultData<Object> save(
@@ -57,6 +61,10 @@ public class PeriodOrderController extends BaseController{
 		init.setOrderFrom(orderFrom);
 		init.setRemarks(remarks);
 		periodOrderService.insert(init);
+		
+		
+		
+		
 		
 		return result;
 	}

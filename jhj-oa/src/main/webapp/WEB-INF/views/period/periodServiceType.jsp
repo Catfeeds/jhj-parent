@@ -148,7 +148,7 @@
 						<button type="button" id="btn-save" class="btn btn-success">保存</button>
 					</form:form>
 				</div>
-			</section>
+			</section> 
 		</div>
 	</div>
 	<!-- page end--> </section> </section> <!--main content end--> <!--footer start--> <%@ include file="../shared/pageFooter.jsp"%>
