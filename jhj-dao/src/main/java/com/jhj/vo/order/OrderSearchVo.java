@@ -99,6 +99,8 @@ public class OrderSearchVo {
 	private Short dispatchStatus;
 	
 	private	Short adminId;
+	
+	private String remarks;
 
 	public String getMobile() {
 		return mobile;
@@ -474,6 +476,14 @@ public class OrderSearchVo {
 
 	public void setAdminId(Short adminId) {
 		this.adminId = adminId;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 }

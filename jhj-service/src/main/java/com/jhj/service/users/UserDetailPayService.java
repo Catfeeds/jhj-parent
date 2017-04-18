@@ -9,6 +9,7 @@ import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.user.AppUserDetailPayVo;
@@ -32,6 +33,9 @@ public interface UserDetailPayService {
 
 	UserDetailPay addUserDetailPayForOrder(Users user, Orders order, OrderPrices orderPrice, String tradeStatus, String tradeNo, String payAccount);
 
+	/**  记录定制消费明细  */
+	UserDetailPay addUserDetailPayForOrder(Users user, PeriodOrder periodOrder, OrderPrices orderPrice, String tradeStatus, String tradeNo, String payAccount);
+	
 	void updateByPayAccount(String tradeNo, String payAccount);
 
 	UserDetailPay selectByTradeNo(String tradeNo);

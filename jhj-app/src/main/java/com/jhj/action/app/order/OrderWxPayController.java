@@ -20,11 +20,13 @@ import com.jhj.po.model.dict.DictCardType;
 import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.period.PeriodOrderService;
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -59,6 +61,9 @@ public class OrderWxPayController extends BaseController {
 	
 	@Autowired
 	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+	private PeriodOrderService periodOrderService;
 
 	@RequestMapping(value = "wxpay", method = RequestMethod.GET)
 	public void jsPay(HttpServletRequest request, HttpServletResponse response,
@@ -142,6 +147,23 @@ public class OrderWxPayController extends BaseController {
 			
 			tradeName = "叮当到家家庭服务";
 		}
+		
+		//定制支付
+		if (payOrderType.equals(Constants.PAY_PERIOD_ORDER_TYPE_4)) {
+			PeriodOrder periodOrder = periodOrderService.selectByPrimaryKey(orderId.intValue());
+			
+			userId = periodOrder.getUserId().longValue();
+			orderNo = periodOrder.getOrderNo();
+			// 实际支付金额
+
+			BigDecimal p1 = new BigDecimal(100);
+			BigDecimal p2 = MathBigDecimalUtil.mul(periodOrder.getOrderPrice(), p1);
+			BigDecimal orderPayNow = MathBigDecimalUtil.round(p2, 0);
+			wxPay = orderPayNow.toString();
+			
+			tradeName = "叮当到家家庭服务";
+		}
+
 
 		// 测试
 		// wxPay = "1";

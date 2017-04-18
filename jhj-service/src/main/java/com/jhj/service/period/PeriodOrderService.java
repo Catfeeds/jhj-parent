@@ -16,4 +16,6 @@ public interface PeriodOrderService {
     int updateByPrimaryKey(PeriodOrder record);
     
     PeriodOrder init();
+    
+    PeriodOrder selectByOrderNo(String orderNo);
 }

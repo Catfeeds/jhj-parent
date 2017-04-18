@@ -67,6 +67,11 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 		po.setUserId(0);
 		return po;
 	}
+
+	@Override
+	public PeriodOrder selectByOrderNo(String orderNo) {
+		return periodOrderMapper.selectByOrderNo(orderNo);
+	}
 	
 	
    

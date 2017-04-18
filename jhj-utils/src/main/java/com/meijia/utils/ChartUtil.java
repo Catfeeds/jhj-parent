@@ -23,7 +23,7 @@ public class ChartUtil {
 		String statType = "month";
 		if (searchMonth == 1) statType = "day";
 		if (searchMonth > 1 && searchMonth < 12) statType = "month";
-		if (searchMonth == 12) statType = "quarter";
+		if (searchMonth == 12) statType = "month";
 			
 		return statType;
 	}

@@ -178,6 +178,10 @@
 																<input id="endUpdateTimeStr"
 																	name="endOrderDoneTimeStr" value="${endOrderDoneTimeStr }" class="form-control form_datetime" style="width: 170px; margin-bottom: 0" readonly="true" />
 															</td>
+															<td width="10%" style="border:0;border-bottom-width:0;border-left-width:0">备注：</td>
+															<td width="15%" style="border-top-width:0;border-bottom-width:0;">
+																<input id="remarks" name="remarks" class="form-control" />
+															</td>
 															<td colspan="6" style="border-bottom-width:0;border-right-width:0;">
 																<button type="button" id="btnSearch" name="searchForm" class="btn btn-primary" value="${listUrl }">搜索</button>
 																<button type="button" id="btnExport" name="searchForm" class="btn btn-success">导出excel</button>

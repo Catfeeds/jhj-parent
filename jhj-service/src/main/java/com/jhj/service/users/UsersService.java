@@ -60,4 +60,7 @@ public interface UsersService {
 	List<Users> selectUsersByOrderMobile();
 	
 	List<Users> listUserRestMoneyGtZero();
+	
+	//统计所有用户的余额
+	Double countUserRestMoney();
 }

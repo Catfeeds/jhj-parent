@@ -128,4 +128,6 @@ public interface UsersMapper {
 	List<ChartMapVo> totalNum(ChartSearchVo chartSearchVo);
 	
 	List<Users> listUserRestMoneyGtZero();
+	
+	Double countUserRestMoney();
 }

@@ -119,9 +119,10 @@
                               </c:forEach>
                               </tbody>
                           </table>
-
-                          
                       </section>
+                      <div>
+                      	<label>余额：</label><b>${userRestMoney}</b>
+                      </div>
                       <c:import url = "../shared/paging.jsp">
 	        				<c:param name="pageModelName" value="pageList"/>
 	        				<c:param name="urlAddress" value="/user/user-charge-list"/>

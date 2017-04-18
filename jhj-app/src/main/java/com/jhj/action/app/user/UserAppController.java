@@ -160,13 +160,11 @@ public class UserAppController extends BaseController {
 				if (u == null) {// 验证手机号是否已经注册，如果未注册，则自动注册用户，
 					u = usersService.genUser(mobile, Constants.USER_NET);
 
-					if (userType == 0) {
-						// 给新注册的用户发送优惠券
-						DictCoupons dictCoupons = couponsService.selectByPrimaryKey(Constants.NEW_USER_REGISTER_COUPONS_ID);
-						if (dictCoupons != null) {
-							UserCoupons uc = userCouponService.initUserCoupons(u.getId(), dictCoupons);
-							userCouponService.insertSelective(uc);
-						}
+					// 给新注册的用户发送优惠券
+					DictCoupons dictCoupons = couponsService.selectByPrimaryKey(Constants.NEW_USER_REGISTER_COUPONS_ID);
+					if (dictCoupons != null) {
+						UserCoupons uc = userCouponService.initUserCoupons(u.getId(), dictCoupons);
+						userCouponService.insertSelective(uc);
 					}
 
 				}

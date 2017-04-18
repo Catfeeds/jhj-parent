@@ -762,5 +762,9 @@
 		select <include refid="Base_Column_List"/> from users
 		where rest_money > 0 ORDER by rest_money desc
 	</select>
+	
+	<select id="countUserRestMoney" resultType="java.lang.Double">
+		SELECT SUM(rest_money) from users
+	</select>
 
 </mapper>

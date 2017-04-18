@@ -716,6 +716,11 @@ public class UserController extends BaseController {
 		//用户充值金额统计
 		Map<String, Double> chargeMoney = orderCardsService.countTotal(orderCardsVo);
 		model.addAllAttributes(chargeMoney);
+		
+		//用户余额统计
+		Double countUserRestMoney = usersService.countUserRestMoney();
+		model.addAttribute("userRestMoney", countUserRestMoney);
+		
 		model.addAttribute("pageList", page);
 		model.addAttribute("loginOrgId", sessionParentId);
 		model.addAttribute("orderCardsVo", orderCardsVo);

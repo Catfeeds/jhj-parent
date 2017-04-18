@@ -14,4 +14,6 @@ public interface PeriodOrderMapper {
     int updateByPrimaryKeySelective(PeriodOrder record);
 
     int updateByPrimaryKey(PeriodOrder record);
+    
+    PeriodOrder selectByOrderNo(String orderNo);
 }

@@ -301,6 +301,11 @@
 		<if test="adminId!=null and adminId != 0">
 			and order_no in (select distinct order_no from order_log where user_type = 2 and action = '订单添加' and user_id = #{adminId,jdbcType=NUMERIC})
 		</if>
+		
+		<if test="remarks!=null and remarks!=''">
+			and MATCH(remarks) AGAINST ('${remarks}' IN BOOLEAN MODE)
+		</if>
+		
 	</sql>
 
 	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">

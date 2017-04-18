@@ -125,16 +125,19 @@ public class UserChartServiceImpl implements UserChartService {
 		vo.setEndTime(chartSearchVo.getEndTime());
 		if (chartSearchVo.getStatType().equals("day")) {
 			vo.setFormatParam("%Y-%m-%e");
+			vo.setStatType("day");
 			totalNum = usersMapper.totalNum(vo);
 		}
 
 		if (chartSearchVo.getStatType().equals("month")) {
 			vo.setFormatParam("%Y-%m");
+			vo.setStatType("month");
 			totalNum = usersMapper.totalNum(vo);
 		}
 
 		if (chartSearchVo.getStatType().equals("quarter")) {
 			vo.setSelectCycle(12);
+			vo.setStatType("quarter");
 			totalNum = usersMapper.totalNum(vo);
 		}
 		
@@ -201,7 +204,7 @@ public class UserChartServiceImpl implements UserChartService {
 			
 			Integer num=0;
 			for (ChartMapVo chartSqlData : totalNum) {
-				if(chartSearchVo.getStatType().equals("day")){
+				if(!chartSearchVo.getStatType().equals("quarter")){
 					String str2 =tableDataItem.get("series");
 					String str3 = chartSqlData.getSeries();
 					if(DateUtil.compareDateStr(str3,str2)>=0){

@@ -17,6 +17,7 @@ import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
@@ -282,6 +283,35 @@ public class UserDetailPayServiceImpl implements UserDetailPayService {
 	@Override
 	public Map<String, BigDecimal> totolMoeny(UserDetailSearchVo userDetailSearchVo) {
 		return userDetailPayMapper.totolMoeny(userDetailSearchVo);
+	}
+
+	@Override
+	public UserDetailPay addUserDetailPayForOrder(Users user,
+			PeriodOrder periodOrder, OrderPrices orderPrice,
+			String tradeStatus, String tradeNo, String payAccount) {
+		
+		UserDetailPay userDetailPay = this.initUserDetailPay();
+
+		userDetailPay.setUserId(user.getId());
+		userDetailPay.setMobile(user.getMobile());
+		userDetailPay.setOrderId(periodOrder.getId().longValue());
+		userDetailPay.setOrderNo(periodOrder.getOrderNo());
+
+		userDetailPay.setOrderType(Constants.USER_DETAIL_ORDER_TYPE_10);
+		userDetailPay.setPayType(orderPrice.getPayType());
+		userDetailPay.setOrderMoney(orderPrice.getOrderMoney());
+		userDetailPay.setOrderPay(orderPrice.getOrderPay());
+		userDetailPay.setRestMoney(user.getRestMoney());
+		// trade_no
+		userDetailPay.setPayAccount(payAccount);
+		userDetailPay.setTradeNo(tradeNo);
+		userDetailPay.setTradeStatus(tradeStatus);
+
+		userDetailPay.setAddTime(TimeStampUtil.getNowSecond());
+
+		userDetailPayMapper.insert(userDetailPay);
+		return userDetailPay;
+		
 	}
 
 	

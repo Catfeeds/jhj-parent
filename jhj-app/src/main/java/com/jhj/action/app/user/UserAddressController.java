@@ -108,7 +108,6 @@ public class UserAddressController extends BaseController {
 	 */
 	@RequestMapping(value = "post_user_addrs", method = RequestMethod.POST)
 	public AppResultData<Object> saveAddress(
-
 			@RequestParam("user_id") Long userId,
 			@RequestParam("addr_id") Long addrId,
 			@RequestParam("is_default") Short isDefault,
@@ -117,10 +116,8 @@ public class UserAddressController extends BaseController {
 			@RequestParam("longitude") String longitude,
 			@RequestParam("latitude") String latitude,
 			@RequestParam("city") String city,
-
 			@RequestParam(value = "address", required = false, defaultValue = "") String address, // 百度地图详细地址
 			@RequestParam(value = "uid", required = false, defaultValue = "") String uid, // 百度地图uid
-
 			@RequestParam(value = "poi_type", required = false, defaultValue = "0") Short poiType,
 			@RequestParam(value = "phone", required = false, defaultValue = "") String phone,
 			@RequestParam(value = "post_code", required = false, defaultValue = "") String postCode,
@@ -248,5 +245,19 @@ public class UserAddressController extends BaseController {
 
 		return result;
 	}
+	
+	//查询地址
+	@RequestMapping(value = "get_addr.json", method = RequestMethod.GET)
+	public AppResultData<Object> getAddr(@RequestParam("addr_id") Long addrId) {
 
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		UserAddrs userAddrs = userAddrsService.selectByPrimaryKey(addrId);
+		
+		result.setData(userAddrs);
+
+		return result;
+	}
+	
+	
 }

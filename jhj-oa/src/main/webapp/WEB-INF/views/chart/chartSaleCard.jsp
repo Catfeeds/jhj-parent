@@ -42,7 +42,7 @@
 							<form:option value="1">最近一个月</form:option>
 							<form:option value="3">最近三个月</form:option>
 							<form:option value="6">最近半年</form:option>
-							<form:option value="12">按季度统计</form:option>
+							<form:option value="12">最近一年</form:option>
 						</form:select> 
 						<form:hidden path="searchType" value="0"/>
 						<input type="submit"  value="搜索"  >

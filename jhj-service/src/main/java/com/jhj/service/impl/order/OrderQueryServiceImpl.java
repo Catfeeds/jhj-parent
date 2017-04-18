@@ -863,6 +863,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			searchVo.setOrderNo(orderNo);
 		}
 		
+		if(searchVo.getRemarks()!=null && !"".equals(searchVo.getRemarks())){
+			String remarks = searchVo.getRemarks();
+			try {
+				searchVo.setRemarks(new String(remarks.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return searchVo;
 	}
 

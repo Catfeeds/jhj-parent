@@ -476,5 +476,10 @@ public class UsersServiceImpl implements UsersService {
 	public List<Users> listUserRestMoneyGtZero() {
 		return usersMapper.listUserRestMoneyGtZero();
 	}
+
+	@Override
+	public Double countUserRestMoney() {
+		return usersMapper.countUserRestMoney();
+	}
 	
 }

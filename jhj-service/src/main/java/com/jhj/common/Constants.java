@@ -160,6 +160,8 @@ public class Constants {
 	
 	public static Short PAY_ORDER_TYPE_3 = 3;  //订单差价
 	
+	public static Short PAY_PERIOD_ORDER_TYPE_4 = 4;  //定制支付
+	
 	
 
 	//服务类型：在此列出，便于查看管理，对应 dict_service_types 表
@@ -406,6 +408,7 @@ public class Constants {
 	 public static Short USER_DETAIL_ORDER_TYPE_3 = 3;  //订单补差价支付
 	 public static Short USER_DETAIL_ORDER_TYPE_4 = 4;  //订单加时 
 	 public static Short USER_DETAIL_ORDER_TYPE_5 = 5;  //订单取消
+	 public static Short USER_DETAIL_ORDER_TYPE_10 = 10;  //定制
 	 
 	 //服务人员消费明细类型
 	 public static Short STAFF_DETAIL_ORDER_TYPE_0 = 0;  //订单收入
@@ -439,6 +442,7 @@ public class Constants {
 	 public static String ORDER_ACTION_UPDATE_SERVICE_DATETIME ="修改服务时间";
 	 public static String ORDER_ACTION_UPDATE_DISPATCHS_STAFF = "调整派工人员";
 	 public static String ORDER_ACTION_RATES = "订单评价";
+	 public static String PERIOD_ORDER_ACTION_PAY = "定制支付";
 	 
 	 
 	 //优惠券

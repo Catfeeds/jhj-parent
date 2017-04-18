@@ -10,6 +10,7 @@ import com.jhj.po.dao.order.OrderLogMapper;
 import com.jhj.po.model.admin.AdminAccount;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.admin.AdminAccountService;
 import com.jhj.service.order.OrderLogService;
@@ -79,6 +80,23 @@ public class OrderLogServiceImpl implements OrderLogService {
 			
 		}
 		return orderLogVo;
+	}
+
+	@Override
+	public OrderLog initOrderLog(PeriodOrder periodOrder) {
+		OrderLog orderLog = new OrderLog();
+		orderLog.setAddTime(TimeStampUtil.getNow()/1000);
+		orderLog.setMobile(periodOrder.getMobile());
+		orderLog.setOrderId(periodOrder.getId().longValue());
+		orderLog.setOrderNo(periodOrder.getOrderNo());
+		orderLog.setOrderStatus(periodOrder.getOrderStatus().shortValue());
+		orderLog.setRemarks(periodOrder.getRemarks());
+		orderLog.setId(0L);
+		orderLog.setUserId(0L);
+		orderLog.setUserName("");
+		orderLog.setUserType((short)2);
+		orderLog.setAction("");
+		return orderLog;
 	}
 
 }

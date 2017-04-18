@@ -17,6 +17,7 @@ import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.order.OrderCardsService;
@@ -26,6 +27,7 @@ import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
@@ -68,6 +70,9 @@ public class OrderOnlinePayController extends BaseController {
 	
 	@Autowired
 	private OrderCardsService orderCardsService;
+	
+	@Autowired
+	private PeriodOrderService periodOrderService;
 
 	// 7. 订单在线支付成功同步接口
 	/**
@@ -357,6 +362,79 @@ public class OrderOnlinePayController extends BaseController {
 		String[] paySuccessForUser = new String[] {serviceTime,value.toString()};
 		
 		SmsUtil.SendSms(u.getMobile(),  Constants.MESSAGE_CHARGE_PAY_SUCCESS, paySuccessForUser);
+
+		return result;
+
+	}
+	
+	//定制支付
+	@RequestMapping(value = "online_pay_period_notify", method = RequestMethod.POST)
+	public AppResultData<Object> OnlinePayPeriodOrder(@RequestParam(value = "user_id", defaultValue = "0") Long userId,
+			@RequestParam(value = "mobile", defaultValue = "0") String mobile, @RequestParam("order_no") String orderNo,
+			@RequestParam("pay_type") Short payType, @RequestParam(value = "pay_order_type", required = false, defaultValue = "1") int payOrderType,
+			@RequestParam("notify_id") String notifyId, @RequestParam("notify_time") String notifyTime, @RequestParam("trade_no") String tradeNo,
+			@RequestParam("trade_status") String tradeStatus, @RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount) {
+
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+		// 判断如果不是正确支付状态，则直接返回.
+		Boolean paySuccess = OneCareUtil.isPaySuccess(tradeStatus);
+		if (paySuccess == false) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ORDER_PAY_NOT_SUCCESS_MSG);
+			return result;
+		} else if (tradeStatus.equals("WAIT_BUYER_PAY")) {
+			result.setStatus(Constants.SUCCESS_0);
+			result.setMsg(ConstantMsg.ORDER_PAY_WAIT_MSG);
+			return result;
+		}
+
+		// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价 4=定制
+		PeriodOrder periodOrder = periodOrderService.selectByOrderNo(orderNo);
+
+		if (periodOrder == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ORDER_PAY_NOT_SUCCESS_MSG);
+			return result;
+		}
+
+		Users u = userService.selectByPrimaryKey(periodOrder.getUserId().longValue());
+
+		// 判断是否为注册用户，非注册用户返回 999
+		if (u == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
+			return result;
+		}
+
+		if (periodOrder != null ) {
+			if ( !periodOrder.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)) {
+				// 更新付款用户账号名
+				if (payAccount != null && !payAccount.equals("")) {
+					userDetailPayService.updateByPayAccount(tradeNo, payAccount);
+				}
+	
+				return result;// 订单已支付
+			}
+		}
+
+		Long updateTime = TimeStampUtil.getNow() / 1000;
+
+		OrderPrices orderPrice = orderPricesService.selectByOrderId(periodOrder.getId().longValue());
+
+		// 2016年4月29日11:13:04 钟点工订单，已支付状态为 2
+		periodOrder.setOrderStatus((int)Constants.ORDER_HOUR_STATUS_2);
+		periodOrder.setUpdateTime(updateTime);
+		periodOrderService.updateByPrimaryKeySelective(periodOrder);
+		// 插入订单日志
+		OrderLog orderLog = orderLogService.initOrderLog(periodOrder);
+		orderLog.setAction(Constants.PERIOD_ORDER_ACTION_PAY);
+		orderLog.setUserId(userId);
+		orderLog.setUserName(u.getMobile());
+		orderLog.setUserType((short)0);
+		orderLogService.insert(orderLog);
+		// 记录用户消费明细
+		userDetailPayService.addUserDetailPayForOrder(u, periodOrder, orderPrice, tradeStatus, tradeNo, payAccount);
 
 		return result;
 
