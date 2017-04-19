@@ -5365,6 +5365,156 @@ i.toolbar-icon-tixing {
 
 
 
+/*家务定制*/
+.housework{
+  width:100%;
+  height:180px;
+  background: #fff;
+  margin-top: 15px;
+}
+.housework1{
+  width:100%;
+  height:60px;
+  position: fixed;
+  bottom:50px;
+  z-index: 999;
+}
+.housework1-1{
+  width:70%;
+  height:60px;
+  background: #FF0066;
+  float: left;
+}
+.housework1-1-one{
+  width:95%;
+  margin-left: 5%;
+  color: #fff;
+  line-height: 30px;
+  font-size: 20px;
+}
+.housework1-1-two{
+  width:95%;
+  margin-left: 5%;
+}
+.housework1-1-two p{
+  margin:0;
+  float: left;
+  line-height: 30px;
+  color:#fff;
+  font-size: 12px;
+  width:50%;
+}
+.housework1-1-two-1{
+  color:#D3D8D6!important;
+  text-decoration: line-through;
+}
+.housework1-2{
+  width:30%;
+  height:60px;
+  background: #FFD800;
+  float: right;
+  text-align: center;
+  line-height: 60px;
+  font-size: 24px;
+  color:#000;
+  font-weight: bold;
+}
+.housework-1{
+  width:30%;
+  margin-left: 10px;
+}
+.housework-1 img{
+  width:100%;
+  margin-top: 5px;
+}
+.housework-2{
+  color:#FF0066!important;
+}
+.housework-3{
+  border-bottom: 1px solid #C7C7C7;
+}
+label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkbox, label.label-checkbox input[type=radio]:checked+.item-media i.icon-form-checkbox{
+  border: none;
+  background-color: #ff0066;
+}
+.housework-4{
+  width:100;
+  padding: 0!important;
+  padding-top: 5px!important;
+}
+.housework-4 li{
+  width:50%;
+  float: left;
+  font-size: 14px;
+  color:#858585;
+  text-align: left;
+}
+.housework-4 li b{
+  font-size: 14px;
+  color:#fff;
+  background: #ff0066;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.housework-5{
+  width:100;
+  padding: 0!important;
+  padding-top: 5px!important;
+}
+.housework-5 li{
+  width:50%;
+  float: left;
+  font-size: 14px;
+  color:#858585;
+  text-align: left;
+}
+.housework-6{
+  width:100;
+  padding: 0!important;
+  padding-top: 5px!important;
+}
+.housework-6 li{
+  width:50%;
+  float: left;
+  font-size: 14px;
+  color:#858585;
+  text-align: left;
+}
+.housework-5-1{
+  text-decoration: line-through;
+}
+.housework-7{
+  margin-bottom: 70px;
+}
+.housework-8{
+  float: left;
+  background: #C7C7C7;
+  width:24px;
+  height:24px;
+  font-size: 24px;
+  color:#fff;
+  line-height: 24px;
+  text-align: center;
+}
+.housework-9{
+  width:40px;
+  height:24px;
+  font-size: 18px;
+  background: #fff;
+  color:#000;
+  border-top:1px solid #C7C7C7;
+  border-bottom:1px solid #C7C7C7;
+  text-align: center;
+  line-height: 24px;
+}
+
+
+
+
+
+
+
+
 
 
 
