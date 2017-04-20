@@ -334,6 +334,9 @@
 		<if test="staffName!=null and staffName!=''">
 			and referee in (select staff_code from org_staffs where name like concat('%',#{staffName},'%'))
 		</if>
+		<if test="referee != null">
+			and referee like concat ('%',#{referee},'%')
+		</if>
 	</sql>
 
 	<select id="countTotal" resultType="java.util.HashMap" parameterType="com.jhj.vo.order.OrderCardsVo">

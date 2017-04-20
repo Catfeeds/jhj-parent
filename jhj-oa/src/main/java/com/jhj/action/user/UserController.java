@@ -1,5 +1,12 @@
 package com.jhj.action.user;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -9,7 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +52,7 @@ import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.jhjSetting.JhjSettingService;
 import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.users.FinanceRechargeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
@@ -63,6 +73,7 @@ import com.meijia.utils.RandomUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
+import com.meijia.utils.poi.POIUtils;
 import com.meijia.utils.vo.AppResultData;
 import com.sun.tools.internal.ws.processor.model.Request;
 
@@ -99,6 +110,9 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private PoiExportExcelService poiExcelService;
 
 	@AuthPassport
 	@RequestMapping(value = "/update_name", method = { RequestMethod.POST })
@@ -727,6 +741,7 @@ public class UserController extends BaseController {
 		return "user/chargeList";
 	}
 	
+<<<<<<< HEAD
 	@RequestMapping(value = "/updateUserRestMoney", method = RequestMethod.GET)
 	public String updateUserRestMoney(Model model,@RequestParam("userId") Long userId){
 		Users user = usersService.selectByPrimaryKey(userId);
@@ -757,4 +772,82 @@ public class UserController extends BaseController {
 		
 		return "redirect:user-list";
 	}
+=======
+	@RequestMapping(value = "/export",method = RequestMethod.GET)
+	public void chargeExport(HttpServletRequest request,HttpServletResponse response, OrderCardsVo orderCardsVo) throws IOException{
+		
+		UserSearchVo userVo=new UserSearchVo();
+		userVo.setIsVip((short) 1);
+		String mobile = orderCardsVo.getMobile();
+		if(mobile!=null && !mobile.equals("")){
+			userVo.setMobile(mobile);
+		}
+		List<Users> userList = usersService.selectBySearchVo(userVo);
+		if(userList!=null && userList.size()>0){
+			List<Long> userIds=new ArrayList<Long>();
+			for(int i=0;i<userList.size();i++){
+				Users users = userList.get(i);
+				userIds.add(users.getId());
+			}
+			orderCardsVo.setUserIds(userIds);
+		}
+		String staffName = orderCardsVo.getStaffName();
+		if(staffName!=null && !staffName.equals("")){
+			orderCardsVo.setStaffName(new String(staffName.getBytes("ISO-8859-1") ,"UTF-8"));
+		}
+		String addStartTimeStr = request.getParameter("addStartTimeStr");
+		if(addStartTimeStr!=null && !addStartTimeStr.equals("")){
+			orderCardsVo.setAddStartTime(TimeStampUtil.getMillisOfDayFull(addStartTimeStr+" 00:00:00")/1000);
+		}
+		String addEndTimeStr = request.getParameter("addEndTimeStr");
+		if(addEndTimeStr!=null && !addEndTimeStr.equals("")){
+			orderCardsVo.setAddEndTime(TimeStampUtil.getMillisOfDayFull(addEndTimeStr+" 23:59:59")/1000);
+		}
+		orderCardsVo.setOrderStatus((short)1);
+		List<OrderCards> orderCardsList = orderCardsService.selectBySearchVo(orderCardsVo);
+		List<OrderCardsVo> orderCardsVoList = new ArrayList<>();
+		for(int i=0;i<orderCardsList.size();i++){
+			OrderCards orderCards = orderCardsList.get(i);
+			OrderCardsVo orderCard = orderCardsService.transVo(orderCards);
+			orderCardsVoList.add(orderCard);
+		}
+		
+		String fileName = "充值列表";
+		List<Map<String, Object>> list = poiExcelService.chargeExport(orderCardsVoList);
+		
+		String[] columnKey = {"mobile","cardMoney","staffCode","staffName","addTime"};
+		String[] columnNames = {"会员手机号","充值金额","员工编号","员工名称","充值时间"};
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		BufferedInputStream bufferedInputStream = null;
+		BufferedOutputStream bufferedOutputStream = null;
+		try {
+			POIUtils.createWorkBook(list, columnKey, columnNames).write(os);
+			byte[] byteArray = os.toByteArray();
+			
+			InputStream in = new ByteArrayInputStream(byteArray);
+			response.reset();
+			response.setContentType("application/vnd.ms-excel;charset=utf-8");
+			response.setHeader("Content-Disposition", "attachment;filename=" + new String((fileName + ".xls").getBytes(), "iso-8859-1"));
+			ServletOutputStream outputStream = response.getOutputStream();
+			
+			bufferedInputStream = new BufferedInputStream(in);
+			bufferedOutputStream = new BufferedOutputStream(outputStream);
+			byte[] buff = new byte[2048];
+			int bytesRead;
+			while (-1 != (bytesRead = bufferedInputStream.read(buff, 0, buff.length))) {
+				bufferedOutputStream.write(buff, 0, bytesRead);
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			if (bufferedInputStream != null)
+				bufferedInputStream.close();
+			if (bufferedOutputStream != null)
+				bufferedOutputStream.close();
+		}
+	}
+	
+>>>>>>> release
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jhj.vo.order.OaOrderListVo;
+import com.jhj.vo.order.OrderCardsVo;
 
 /**
  *
@@ -15,4 +16,6 @@ import com.jhj.vo.order.OaOrderListVo;
 public interface PoiExportExcelService {
 	
 	List<Map<String,Object>>  createExcelRecord(List<OaOrderListVo> voList);
+	
+	List<Map<String,Object>>  chargeExport(List<OrderCardsVo> orderCardsList);
 }
