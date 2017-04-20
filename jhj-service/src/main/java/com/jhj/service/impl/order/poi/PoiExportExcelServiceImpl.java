@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.vo.order.OaOrderListVo;
+import com.jhj.vo.order.OrderCardsVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -63,6 +64,32 @@ public class PoiExportExcelServiceImpl implements PoiExportExcelService {
 
 			listmap.add(mapValue);
 		}
+		return listmap;
+	}
+
+	@Override
+	public List<Map<String, Object>> chargeExport(List<OrderCardsVo> orderCardsList) {
+		
+		List<Map<String, Object>> listmap = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sheetName", "sheet1");
+		listmap.add(map);
+		
+		for (int j = 0; j < orderCardsList.size(); j++) {
+
+			OrderCardsVo vo = orderCardsList.get(j);
+
+			Map<String, Object> mapValue = new HashMap<String, Object>();
+			
+			mapValue.put("mobile", vo.getMobile());
+			mapValue.put("cardMoney", vo.getCardMoney());
+			mapValue.put("staffCode", vo.getReferee());
+			mapValue.put("staffName", vo.getStaffName());
+			mapValue.put("addTime", TimeStampUtil.timeStampToDateStr(vo.getAddTime()*1000,"YYYY-mm-dd"));
+
+			listmap.add(mapValue);
+		}
+		
 		return listmap;
 	}
 

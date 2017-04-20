@@ -23,3 +23,8 @@
      }  
      return true;  
  }
+ 
+ $("#btn-export").on('click',function(){
+	 form.action = "export",
+	 form.submit();
+ });

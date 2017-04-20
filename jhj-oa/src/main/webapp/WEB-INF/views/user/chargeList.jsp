@@ -44,7 +44,7 @@
                       <section class="panel">
                           <header class="panel-heading">
                           	<h4>会员充值列表</h4>
-                          	<form:form class="form-inline" 
+                          	<form:form class="form-inline" name="form"
                           		modelAttribute="orderCardsVo" action="user-charge-list" method="GET">
                           		
 	                         	<div class="form-group">	
@@ -74,7 +74,8 @@
 									<form:input path="addEndTimeStr" class="form-control form_datetime" 
 									style="width:110px; margin-bottom:0" readonly="true" />
 								</div> 
-								<button type="submit" class="btn btn-primary" >搜索</button>						
+								<button type="submit" class="btn btn-primary" >搜索</button>
+								<button type="button" id="btn-export" class="btn btn-primary" >导出</button>						
 	                 		</form:form> 
                           </header>
                           <div>
@@ -82,7 +83,6 @@
                           	<span>${chargeMoney }元</span>
                           </div>
                           <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-
                           <table class="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
@@ -108,7 +108,6 @@
 					            <td>
 					            	<c:if test="${item.isVip==0 }">普通用户</c:if>
 					            	<c:if test="${item.isVip==1 }">金牌会员</c:if>
-					            	<%-- <userTypeTag:userTypeId userTypeId="${ item.userType }"/> --%>
 					            </td>
 					          
 					            <td>
