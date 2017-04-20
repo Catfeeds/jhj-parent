@@ -85,7 +85,7 @@ public class PoiExportExcelServiceImpl implements PoiExportExcelService {
 			mapValue.put("cardMoney", vo.getCardMoney());
 			mapValue.put("staffCode", vo.getReferee());
 			mapValue.put("staffName", vo.getStaffName());
-			mapValue.put("addTime", TimeStampUtil.timeStampToDateStr(vo.getAddTime()*1000,"YYYY-mm-dd"));
+			mapValue.put("addTime", TimeStampUtil.timeStampToDateStr(vo.getAddTime()*1000,"yyyy-MM-dd"));
 
 			listmap.add(mapValue);
 		}
