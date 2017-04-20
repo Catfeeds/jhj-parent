@@ -508,8 +508,36 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		//会员价套餐价格
 		BigDecimal mpprice = type.getMpprice();
 		
-		BigDecimal orderOriginHourPay = price;
-		BigDecimal orderOriginPay = pprice;
+		//不管是不是会有，都会计算会员价和非会员价的价格，并且分别记录
+		
+		//原价
+		BigDecimal orderOriginHourPay = price;   //单价
+		BigDecimal orderOriginPay = pprice;      //会员价
+		
+		//会员价
+		
+		BigDecimal orderPrimeHourPay = mprice;  //单价
+		BigDecimal orderPrimePay = mpprice;		//会员价
+		
+		int staffNums = order.getStaffNums();
+		double serviceHour = order.getServiceHour();
+		
+		//超过初始价格的计算
+		if (staffNums > 1 || serviceHour > type.getServiceHour()) {
+			//按原价进行计算
+			BigDecimal tmpOriginPrice = orderOriginHourPay.multiply(new BigDecimal(serviceHour - type.getServiceHour()));
+			tmpOriginPrice = orderOriginPay.add(tmpOriginPrice);
+			tmpOriginPrice = tmpOriginPrice.multiply(new BigDecimal(staffNums));
+			orderOriginPay = tmpOriginPrice;
+			
+			//按会员价进行计划
+			BigDecimal tmpPrimePrice =  orderPrimeHourPay.multiply(new BigDecimal(serviceHour - type.getServiceHour()));
+			tmpPrimePrice = orderPrimePay.add(tmpPrimePrice);
+			tmpPrimePrice = tmpPrimePrice.multiply(new BigDecimal(staffNums));
+			orderPrimePay = tmpPrimePrice;
+		}
+		
+		//实际价格
 		BigDecimal orderHourPay = price;
 		BigDecimal orderPay = pprice;
 		
@@ -517,28 +545,18 @@ public class OrderHourAddServiceImpl implements OrderHourAddService {
 		Users u = usersService.selectByPrimaryKey(userId);
 		
 		int isVip = u.getIsVip();
+		if (isVip == 0) {
+			orderHourPay = orderOriginPay;
+			orderPay = orderOriginPay;
+		} 
+		
 		if (isVip == 1) {
-			orderHourPay = mprice;
-			orderPay = mpprice;
-		}
-		
-		int staffNums = order.getStaffNums();
-		double serviceHour = order.getServiceHour();
-		
-		if (staffNums > 1 || serviceHour > type.getServiceHour()) {
-			BigDecimal tmpPrice =  orderHourPay.multiply(new BigDecimal(serviceHour - type.getServiceHour()));
-			tmpPrice = orderPay.add(tmpPrice);
-			tmpPrice = tmpPrice.multiply(new BigDecimal(staffNums));
-			orderPay = tmpPrice;
-			
-			BigDecimal tmpOriginPrice = orderOriginHourPay.multiply(new BigDecimal(serviceHour - type.getServiceHour()));
-			tmpOriginPrice = orderOriginPay.add(tmpOriginPrice);
-			tmpOriginPrice = tmpOriginPrice.multiply(new BigDecimal(staffNums));
-			orderOriginPay = tmpOriginPrice;
-			
-		}
+			orderHourPay = orderPrimeHourPay;
+			orderPay = orderPrimePay;
+		} 
+
 		prices.setOrderOriginPrice(orderOriginPay);
-		prices.setOrderPrimePrice(orderPay);
+		prices.setOrderPrimePrice(orderPrimePay);
 		prices.setOrderMoney(orderPay);
 		prices.setOrderPay(orderPay);
 		

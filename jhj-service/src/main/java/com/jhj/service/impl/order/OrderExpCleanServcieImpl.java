@@ -51,12 +51,6 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 	public OrderPrices getOrderPriceOfOrderExpClean(Long userId, Long serviceType, String serviceAddonsDatas) {
 		
 		OrderPrices orderPrices = orderPricesService.initOrderPrices();
-
-		Users u = userService.selectByPrimaryKey(userId);
-		
-		int isVip = 0 ;
-		if (u != null) isVip = u.getIsVip();
-
 		
 		Gson gson = new Gson();
 
@@ -65,10 +59,13 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 
 		// 通过JsonParser对象可以把json格式的字符串解析成一个JsonElement对象
 		JsonElement el = parser.parse(serviceAddonsDatas);
+
+		//原价
+		BigDecimal orderOriginPay = new BigDecimal(0.0);
+		//会员价
+		BigDecimal orderPrimePay = new BigDecimal(0.0);
 		
 		//订单总价 = 订单单价（price） * 订单数量（itemNum）
-		BigDecimal orderMoney =  new BigDecimal(0.0);
-		BigDecimal orderOriginMoney =  new BigDecimal(0.0);
 		// 把JsonElement对象转换成JsonArray
 		if (el.isJsonArray()) {// 数组
 			JsonArray jsonArray = el.getAsJsonArray();
@@ -83,15 +80,10 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
 				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
-				
-				if (isVip == 1) {
-					price = dictServiceAddons.getDisPrice();
-				}
-				
+				BigDecimal disPrice = dictServiceAddons.getDisPrice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
-			    orderMoney =orderMoney.add(price.multiply(itemNumBigDecimal));
-			    
-			    orderOriginMoney = orderOriginMoney.add(dictServiceAddons.getPrice().multiply(itemNumBigDecimal));
+				orderOriginPay = orderOriginPay.add(price.multiply(itemNumBigDecimal));
+				orderPrimePay = orderPrimePay.add(disPrice.multiply(itemNumBigDecimal));
 			}
 		} else {// 单个对象
 			// 把JsonElement对象转换成JsonObject
@@ -103,20 +95,36 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				Short itemNum = JsonServiceAddonsItemVo.getItemNum();
 				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
-				
-				if (isVip == 1) {
-					price = dictServiceAddons.getDisPrice();
-				}
+				BigDecimal disPrice = dictServiceAddons.getDisPrice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
-			    orderMoney =price.multiply(itemNumBigDecimal);
-			    
-			    orderOriginMoney = orderOriginMoney.add(dictServiceAddons.getPrice().multiply(itemNumBigDecimal));
+				orderOriginPay = orderOriginPay.add(price.multiply(itemNumBigDecimal));
+				orderPrimePay = orderPrimePay.add(disPrice.multiply(itemNumBigDecimal));
 			}
 		}
+		
+		Users u = userService.selectByPrimaryKey(userId);
+		
+		int isVip = 0 ;
+		if (u != null) isVip = u.getIsVip();
+		
+		BigDecimal orderMoney =  new BigDecimal(0.0);
+		BigDecimal orderPay =  new BigDecimal(0.0);
+		
+		if (isVip == 0) {
+			orderMoney = orderOriginPay;
+			orderPay = orderOriginPay;
+		}
+		
+		if (isVip == 1) {
+			orderMoney = orderPrimePay;
+			orderPay = orderPrimePay;
+		}
+		
+		
 		orderPrices.setOrderMoney(orderMoney);
-		orderPrices.setOrderPay(orderMoney);
-		orderPrices.setOrderOriginPrice(orderOriginMoney);
-		orderPrices.setOrderPrimePrice(orderMoney);
+		orderPrices.setOrderPay(orderPay);
+		orderPrices.setOrderOriginPrice(orderOriginPay);
+		orderPrices.setOrderPrimePrice(orderPrimePay);
 		return orderPrices;
 	}
 
