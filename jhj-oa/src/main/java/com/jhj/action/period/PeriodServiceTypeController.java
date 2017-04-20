@@ -19,6 +19,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AuthPassport;
 import com.jhj.oa.vo.PeriodServiceTypeVo;
 import com.jhj.po.model.period.PeriodServiceType;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -43,6 +44,7 @@ public class PeriodServiceTypeController extends BaseController{
 		return "redirect:getList";
 	}
 
+	@AuthPassport
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String add(Model model,@RequestParam(value="id",required=false) Integer id) {
 		PeriodServiceTypeVo periodServiceTypeVo = new PeriodServiceTypeVo();
@@ -67,6 +69,7 @@ public class PeriodServiceTypeController extends BaseController{
 		return "period/periodServiceType";
 	}
 
+	@AuthPassport
 	@RequestMapping(value = "/save",method = RequestMethod.POST)
 	public String save(@ModelAttribute PeriodServiceTypeVo periodServiceTypeVo) {
 		
@@ -93,7 +96,12 @@ public class PeriodServiceTypeController extends BaseController{
 			init.setPrice(periodServiceTypeVo.getPrice());
 			init.setPunit(periodServiceTypeVo.getPunit());
 			init.setRemarks(periodServiceTypeVo.getRemarks());
-			init.setServiceAddonId(periodServiceTypeVo.getServiceAddonId());
+			if(periodServiceTypeVo.getServiceAddonId()!=null){
+				init.setServiceAddonId(periodServiceTypeVo.getServiceAddonId());
+			}else{
+				init.setServiceAddonId(0);
+			}
+			
 			init.setServiceTypeId(periodServiceTypeVo.getServiceTypeId());
 			init.setTotal(periodServiceTypeVo.getTotal());
 			init.setVipPrice(periodServiceTypeVo.getVipPrice());
@@ -106,6 +114,7 @@ public class PeriodServiceTypeController extends BaseController{
 		return "redirect:getList";
 	}
 
+	@AuthPassport
 	@RequestMapping(value = "/getServiceType/{id}",method = RequestMethod.GET)
 	public String selectByPrimaryKey(Model model,@PathVariable("id") Integer id) {
 		PeriodServiceType periodServiceType = periodServiceTypeService.selectByPrimaryKey(id);
@@ -113,6 +122,7 @@ public class PeriodServiceTypeController extends BaseController{
 		return "period/periodServiceType";
 	}
 	
+	@AuthPassport
 	@RequestMapping(value = "/getList",method = {RequestMethod.GET,RequestMethod.POST})
 	public String getList(Model model, HttpServletRequest request, PeriodServiceType periodServiceType) {
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);

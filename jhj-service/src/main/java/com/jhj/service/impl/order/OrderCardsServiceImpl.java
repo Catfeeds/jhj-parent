@@ -324,7 +324,7 @@ public class OrderCardsServiceImpl implements OrderCardsService {
 			if(staffList.size()>0){
 				OrgStaffs staff = staffList.get(0);
 				if(staff!=null){
-					orderCoardVo.setStaffName(staff.getName());
+					orderCoardVo.setStaffName(staff.getName()+"("+orderCards.getReferee()+")");
 				}
 			}else{
 				orderCoardVo.setStaffName(orderCards.getReferee());

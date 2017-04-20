@@ -9,6 +9,7 @@
     <result column="addr_id" property="addrId" jdbcType="INTEGER" />
     <result column="order_type" property="orderType" jdbcType="INTEGER" />
     <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
     <result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
     <result column="order_price" property="orderPrice" jdbcType="DECIMAL" />
     <result column="user_coupons_id" property="userCouponsId" jdbcType="INTEGER" />
@@ -19,7 +20,7 @@
     <result column="update_time" property="updateTime" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, order_no, user_id, mobile, addr_id, order_type, order_status, order_money, order_price, 
+    id, order_no, user_id, mobile, addr_id, order_type, order_status, pay_type, order_money, order_price, 
     user_coupons_id, service_type_id, order_from, remarks, add_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -35,13 +36,13 @@
   <insert id="insert" parameterType="com.jhj.po.model.period.PeriodOrder" >
     insert into period_order (id, order_no, user_id, 
       mobile, addr_id, order_type, 
-      order_status, order_money, order_price, 
+      order_status, pay_type, order_money, order_price, 
       user_coupons_id, service_type_id, order_from, 
       remarks, add_time, update_time
       )
     values (#{id,jdbcType=INTEGER}, #{orderNo,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{mobile,jdbcType=CHAR}, #{addrId,jdbcType=INTEGER}, #{orderType,jdbcType=INTEGER}, 
-      #{orderStatus,jdbcType=INTEGER}, #{orderMoney,jdbcType=DECIMAL}, #{orderPrice,jdbcType=DECIMAL}, 
+      #{orderStatus,jdbcType=INTEGER}, #{payType,jdbcType=INTEGER}, #{orderMoney,jdbcType=DECIMAL}, #{orderPrice,jdbcType=DECIMAL}, 
       #{userCouponsId,jdbcType=INTEGER}, #{serviceTypeId,jdbcType=INTEGER}, #{orderFrom,jdbcType=INTEGER}, 
       #{remarks,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}
       )
@@ -69,6 +70,9 @@
       </if>
       <if test="orderStatus != null" >
         order_status,
+      </if>
+       <if test="payType != null" >
+        pay_type,
       </if>
       <if test="orderMoney != null" >
         order_money,
@@ -117,6 +121,9 @@
       <if test="orderStatus != null" >
         #{orderStatus,jdbcType=INTEGER},
       </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
       <if test="orderMoney != null" >
         #{orderMoney,jdbcType=DECIMAL},
       </if>
@@ -164,6 +171,9 @@
       <if test="orderStatus != null" >
         order_status = #{orderStatus,jdbcType=INTEGER},
       </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=INTEGER},
+      </if>
       <if test="orderMoney != null" >
         order_money = #{orderMoney,jdbcType=DECIMAL},
       </if>
@@ -199,6 +209,7 @@
       addr_id = #{addrId,jdbcType=INTEGER},
       order_type = #{orderType,jdbcType=INTEGER},
       order_status = #{orderStatus,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=INTEGER},
       order_money = #{orderMoney,jdbcType=DECIMAL},
       order_price = #{orderPrice,jdbcType=DECIMAL},
       user_coupons_id = #{userCouponsId,jdbcType=INTEGER},

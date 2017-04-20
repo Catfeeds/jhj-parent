@@ -1,6 +1,7 @@
 package com.jhj.service.period;
 
-import com.github.pagehelper.PageInfo;
+import java.util.List;
+
 import com.jhj.po.model.period.PeriodServiceType;
 
 public interface PeriodServiceTypeService {
@@ -16,7 +17,7 @@ public interface PeriodServiceTypeService {
 
     int updateByPrimaryKey(PeriodServiceType record);
     
-    PageInfo<PeriodServiceType> getListPage(PeriodServiceType record, int pageNo, int pageSize);
+    List<PeriodServiceType> getList(PeriodServiceType periodServiceType);
     
     PeriodServiceType init();
 }

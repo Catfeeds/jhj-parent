@@ -161,7 +161,7 @@ function getAddrByMobile(addrId) {
 							var userAddr = result.data;
 							var selectid = document.getElementById("addrId");
 							for (var i = 0; i < userAddr.length; i++) {
-								selectid[i + 1] = new Option(userAddr[i].name, userAddr[i].id,
+								selectid[i + 1] = new Option(userAddr[i].name+" "+userAddr[i].addr, userAddr[i].id,
 										false, false);
 							}
 							
@@ -1054,38 +1054,38 @@ function delAddress(){
 	});
 }
 
-function updateAddress(){
-	var addrId = $("#addrId").val();
-	if(addrId==undefined || addrId==null || addrId==''){
-		alert("请先选择地址，再点击修改按钮！！");
-		return false;
-	} 
-	
-	var param = {};
-	param.user_id = $("#userId").val();
-	param.addr_id = addrId;
-	param.is_default = 1;
-	param.name = $("#suggestId").val();
-	param.addr = $("#recipient-addr");
-	param.longitude = $("#poiLongitude").val();
-	param.latitude = $("#poiLatitude").val();
-	param.city = "北京市";
-	param.phone = $("#mobile").val();
-	
-	$.ajax({
-		type:"post",
-		url:"/jhj-app/app/user/post_user_addrs.json",
-		data:param,
-		dataType:"json",
-		success:function(data){
-			if(data.status=='0'){
-				$("#addrId option[value='"+addrId+"']").text(name+ addr);
-				alert("地址修改成功！");
-			}
-		}
-	});
-	
-}
+//function updateAddress(){
+//	var addrId = $("#addrId").val();
+//	if(addrId==undefined || addrId==null || addrId==''){
+//		alert("请先选择地址，再点击修改按钮！！");
+//		return false;
+//	} 
+//	
+//	var param = {};
+//	param.user_id = $("#userId").val();
+//	param.addr_id = addrId;
+//	param.is_default = 1;
+//	param.name = $("#suggestId").val();
+//	param.addr = $("#recipient-addr");
+//	param.longitude = $("#poiLongitude").val();
+//	param.latitude = $("#poiLatitude").val();
+//	param.city = "北京市";
+//	param.phone = $("#mobile").val();
+//	
+//	$.ajax({
+//		type:"post",
+//		url:"/jhj-app/app/user/post_user_addrs.json",
+//		data:param,
+//		dataType:"json",
+//		success:function(data){
+//			if(data.status=='0'){
+//				$("#addrId option[value='"+addrId+"']").text(name+ addr);
+//				alert("地址修改成功！");
+//			}
+//		}
+//	});
+//	
+//}
 
 function getAddress(){
 	var addrId = $("#addrId").val();
@@ -1093,7 +1093,7 @@ function getAddress(){
 		alert("请先选择地址，再点击修改按钮！！");
 		return false;
 	} 
-	$("#from-add-addr").show();
+	$("#from-add-addr").css("display","block");
 	$.ajax({
 		type:"get",
 		url:"/jhj-app/app/user/get_addr.json?addr_id="+addrId,

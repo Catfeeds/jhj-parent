@@ -50,12 +50,10 @@ public class PeriodServiceTypeServiceImpl implements PeriodServiceTypeService{
 	}
 
 	@Override
-	public PageInfo<PeriodServiceType> getListPage(PeriodServiceType record,int pageNo, int pageSize) {
+	public List<PeriodServiceType> getList(PeriodServiceType periodServiceType) {
 		
-		PageHelper.startPage(pageNo, pageSize);
-		List<PeriodServiceType> list = periodServiceTypeMapper.getListPage(record);
-		PageInfo<PeriodServiceType> page = new PageInfo<PeriodServiceType>(list);
-		return page;
+		List<PeriodServiceType> list = periodServiceTypeMapper.getListPage(periodServiceType);
+		return list;
 	}
 
 	@Override
