@@ -59,7 +59,10 @@
 									手机号:<form:input path="mobile" class="form-control" autocomplete="off" maxlengt="11"/>
 								</div>
 								<div class="form-group">	
-									推荐人:<form:input path="staffName" class="form-control" autocomplete="off" maxlengt="11"/>
+									推荐人:<form:input path="staffName" class="form-control" autocomplete="off" />
+								</div>
+								<div class="form-group">	
+									推荐码:<form:input path="referee" class="form-control" autocomplete="off" />
 								</div>
 								<div class="form-group">
 	                          		开始时间：
