@@ -5,7 +5,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
 
     $$.ajax({
         type:"get",
-        url:siteAPIPath+"period/get-periodServiceType-list.json?packageTypeId="+packageTypeId+"&pageNo=1",
+        url:siteAPIPath+"period/get-periodServiceType-list.json?packageTypeId="+packageTypeId,
         dataType:"json",
         success:function(data){
     		var periodOrderList = data.data;

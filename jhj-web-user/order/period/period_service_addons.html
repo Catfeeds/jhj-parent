@@ -7,9 +7,9 @@
                 </ul>
             </div>
             
-            <li id="service-type-addons-temp" style="display:none;">
+            <li class="service-type-addons-temp" style="display:none;">
               <label class="label-checkbox item-content">
-                  <input type="radio" name="serviceTypeAddons" value="{serviceTypeAddonsId}" checked="checked">
+                  <input type="radio" name="serviceTypeAddons" value="{serviceTypeAddonsId}" >
                   <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
                   <div class="housework-1">
                       <img src="img/taocan/jiawu-3.png" alt="">
@@ -17,13 +17,11 @@
                   <div class="item-inner">
                       <div class="item-title-row housework-3">
                           <div class="item-title">{name}</div>
-                          <a href="">
-                              <div class="item-after housework-2">
-                                  <div class="housework-8 sub-num">-</div>
-                                  <div class="housework-9">1</div>
-                                  <div class="housework-8 add-num">＋</div>
-                              </div>
-                          </a>
+                          <div class="item-after housework-2">
+                              <div class="housework-8 sub-num">-</div>
+                              <input id="service-num" class="housework-9" value="1" disabled="disabled"/>
+                              <div class="housework-8 add-num">+</div>
+                          </div>
                       </div>
                       <div class="item-subtitle">
                           <ul class="housework-4">
@@ -33,8 +31,8 @@
                       </div>
                       <div class="item-subtitle">
                           <ul class="housework-5">
-                              <li class="housework-5-1">原价:￥{price}</li>
-                              <li>优惠单价:￥{pprice}</li>
+                              <li class="housework-5-1">原价:￥<span class="price">{price}</span></li>
+                              <li>优惠单价:￥<span class="pprice">{pprice}</span></li>
                           </ul>
                       </div>
                       <div class="item-subtitle">

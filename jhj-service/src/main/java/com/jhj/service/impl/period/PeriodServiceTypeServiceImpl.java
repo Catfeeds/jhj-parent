@@ -72,5 +72,14 @@ public class PeriodServiceTypeServiceImpl implements PeriodServiceTypeService{
 		pt.setAddTime(TimeStampUtil.getNowSecond());
 		return pt;
 	}
+
+	@Override
+	public PageInfo<PeriodServiceType> getListPage(
+			PeriodServiceType periodServiceType, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<PeriodServiceType> list = periodServiceTypeMapper.getListPage(periodServiceType);
+		PageInfo<PeriodServiceType> page = new PageInfo<PeriodServiceType>(list);
+		return page;
+	}
     
 }

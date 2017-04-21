@@ -741,7 +741,6 @@ public class UserController extends BaseController {
 		return "user/chargeList";
 	}
 	
-<<<<<<< HEAD
 	@RequestMapping(value = "/updateUserRestMoney", method = RequestMethod.GET)
 	public String updateUserRestMoney(Model model,@RequestParam("userId") Long userId){
 		Users user = usersService.selectByPrimaryKey(userId);
@@ -772,7 +771,6 @@ public class UserController extends BaseController {
 		
 		return "redirect:user-list";
 	}
-=======
 	@RequestMapping(value = "/export",method = RequestMethod.GET)
 	public void chargeExport(HttpServletRequest request,HttpServletResponse response, OrderCardsVo orderCardsVo) throws IOException{
 		
@@ -849,5 +847,4 @@ public class UserController extends BaseController {
 		}
 	}
 	
->>>>>>> release
 }
