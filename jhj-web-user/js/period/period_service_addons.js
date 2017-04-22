@@ -24,7 +24,7 @@ myApp.onPageBeforeInit("period_service_addons", function (page) {
     				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), serviceTypeAddons.dis_price);
     				html += htmlPart;
     			}
-    			$$("#service-type-addons-ul").html(html);
+    			$$("#service-type-addons-div").html(html);
     		}
         }
     });
@@ -39,7 +39,7 @@ myApp.onPageBeforeInit("period_service_addons", function (page) {
     	$$(obj).parents(".item-inner").find(".item-subtitle .housework-6").html(temp);
     }
     
-    $$(document).on("click",".add-num",function(){
+    $$(document).off("click",".add-num").on("click",".add-num",function(){
     	var serviceNum = parseInt($$(this).prev("#service-num").val());
     	serviceNum = serviceNum + 1;
     	$$(this).prev("#service-num").val(serviceNum);
@@ -57,10 +57,33 @@ myApp.onPageBeforeInit("period_service_addons", function (page) {
     	calc_price(this,serviceNum);
     });
     
-//    $$(document).on('click','',function(){
-//    	
-//    });
+
+    //调整服务类别
+    $$("#btn-ensure").on('click',function(){
+    	var serviceTypeArray = JSON.parse(sessionStorage.getItem("serviceTypeArray"));
+    	var serviceTypeAddonsId = $$("input[type='radio']:checked").val();
+    	var serviceNum = $$("input[type='radio']:checked").nextAll(".item-inner").find(".housework-3 .housework-2 #service-num").val();
+    	var price = $$("input[type='radio']:checked").prevAll("#price").val();
+    	var pprice = $$("input[type='radio']:checked").prev("#pprice").val();
+    	var name = $$("input[type='radio']:checked").nextAll(".item-inner").find(".housework-3 .item-title").text();
+    	if(serviceTypeArray.length>0){
+    		for(var i=0;i<serviceTypeArray.length;i++){
+    			var serviceType = serviceTypeArray[i];
+    			if(serviceTypeId == serviceType.serviceTypeId){
+    				serviceType.serviceTypeAddonsId = serviceTypeAddonsId;
+    				serviceType.serviceNum = serviceNum;
+    				serviceType.price = price;
+    				serviceType.pprice = pprice;
+    				serviceType.name = name;
+    				serviceTypeArray.splice(i,i+1,serviceType);
+    				break;
+    			}
+    		}
+			sessionStorage.setItem("serviceTypeArray",JSON.stringify(serviceTypeArray));
+			mainView.router.back();
+    	}
+    });
     
-    
+  
 });
 
