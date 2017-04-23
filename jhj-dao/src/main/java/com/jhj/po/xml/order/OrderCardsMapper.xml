@@ -334,7 +334,7 @@
 		<if test="staffName!=null and staffName!=''">
 			and referee in (select staff_code from org_staffs where name like concat('%',#{staffName},'%'))
 		</if>
-		<if test="referee != null">
+		<if test="referee != null and referee != ''">
 			and referee like concat ('%',#{referee},'%')
 		</if>
 	</sql>
