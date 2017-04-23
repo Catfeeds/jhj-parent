@@ -1,16 +1,16 @@
 <div data-page="period-order" class="page">
     <div id="indexPageContentDiv" class="page-content">
         <div class="beijing-index">
-        	<div id="period-order-div">
-        	
-        	</div>
-            
+            <div id="period-order-div">
+
+            </div>
+
             <div class="housework1">
                 <div class="housework1-1">
-                    <div class="housework1-1-one" id="period-price">定制价：0元</div>
+                    <div class="housework1-1-one" id="period-price">定制价：<span>0</span>元</div>
                     <div class="housework1-1-two">
-                        <p class="housework1-1-two-1" id="total-price">总价：0元</p>
-                        <p id="total-pprice">为您节省：0元</p>
+                        <p class="housework1-1-two-1" id="total-price">总价：<span>0</span>元</p>
+                        <p id="total-pprice">为您节省：<span>0</span>元</p>
                     </div>
                 </div>
                 <a href="#">
@@ -18,57 +18,102 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="period-order-temp" style="display:none;">
-        	<div class="list-block media-list">
-	           <ul>
-	              <li>
-		            <label class="label-checkbox item-content">
-		                <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}" />
-		                <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
-		                <div class="housework-1">
-		                    <img src="img/taocan/jiawu-3.png" alt="">
-		                </div>
-		                <div class="item-inner">
-		                    <div class="item-title-row housework-3">
-		                        <div class="item-title">{name}</div>
-		                        <a href="order/period/period_service_addons.html?service_type_id={serviceTypeId}" class="adjust">
-		                            <div class="item-after housework-2">调整</div>
-		                        </a>
-		                    </div>
-		                    <div class="item-subtitle">
-		                        <ul class="housework-4">
-		                            <li>半年次数<b>52</b>次</li>
-		                            <li>频次<b>2</b>次/周</li>
-		                        </ul>
-		                    </div>
-		                    <div class="item-subtitle">
-		                        <ul class="housework-5">
-			                        <input type="hidden" name="price" value="{price}" />
-			                        <input type="hidden" name="vipPrice" value="{vipPrice}" />
-		                            <li class="housework-5-1">原价:￥<span class="price">{price}</span></li>
-		                            <li id="price">优惠单价:￥<span class="vip-price">{vipPrice}</span></li>
-		                        </ul>
-		                    </div>
-		                    <div class="item-subtitle">
-		                        <ul class="housework-6">
-		                            <li>合计:￥<span class="total-price">{totalPrice}</span></li>
-		                            <li class="housework-2">优惠价:￥<span class="vip-total-price">{vipTotalPrice}</span></li>
-		                        </ul>
-		                    </div>
-		                    <div class="item-subtitle">
-		                        <ul class="housework-4">
-		                            <li>定制次数:<b>1</b>次</li>
-		                            <li></li>
-		                        </ul>
-		                    </div>
-		                </div>
-		            </label>
-		          </li>
-	           </ul>
-	        </div>
+            <div class="list-block media-list">
+                <ul>
+                    <li>
+                        <label class="label-checkbox item-content">
+                            <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}"/>
+                            <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
+                            <div class="housework-1">
+                                <img src="img/taocan/jiawu-3.png" alt="">
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title-row housework-3">
+                                    <div class="item-title">{name}</div>
+                                    <!-- order/period/period_service_addons.html?service_type_id={serviceTypeId} -->
+                                    <input type="hidden" value="{serviceTypeId}"/>
+                                    <a href="#" data-popup=".popup-about" class="open-popup adjust">
+                                        <div class="item-after housework-2">调整</div>
+                                    </a>
+                                </div>
+                                <div class="item-subtitle">
+                                    <ul class="housework-4">
+                                        <li>半年次数<b>52</b>次</li>
+                                        <li>频次<b>2</b>次/周</li>
+                                    </ul>
+                                </div>
+                                <div class="item-subtitle">
+                                    <ul class="housework-5">
+                                        <input type="hidden" name="price" value="{price}"/>
+                                        <input type="hidden" name="vipPrice" value="{vipPrice}"/>
+                                        <li class="housework-5-1">原价:￥<span class="price">{price}</span></li>
+                                        <li id="price">优惠单价:￥<span class="vip-price">{vipPrice}</span></li>
+                                    </ul>
+                                </div>
+                                <div class="item-subtitle">
+                                    <ul class="housework-6">
+                                        <li>合计:￥<span class="total-price">{totalPrice}</span></li>
+                                        <li class="housework-2">优惠价:￥<span
+                                                class="vip-total-price">{vipTotalPrice}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!--服务子类模板-->
+    <div class="service-type-addons-temp" style="display:none;">
+        <div class="list-block media-list">
+            <ul id="service-type-addons-ul">
+                <li>
+                    <label class="label-checkbox item-content">
+                        <input type="hidden" name="price1" id="price1" value="{price}"/>
+                        <input type="hidden" name="pprice" id="pprice" value="{pprice}"/>
+                        <input type="hidden" name="serviceTypeId" value="{serviceTypeId}"/>
+                        <input type="radio" name="serviceTypeAddons" value="{serviceTypeAddonsId}"/>
+                        <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
+                        <div class="housework-1">
+                            <img src="img/taocan/jiawu-3.png" alt="">
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title-row housework-3">
+                                <div class="item-title">{name}</div>
+                                <div class="item-after housework-2">
+                                    <div class="housework-8 sub-num">-</div>
+                                    <input name="serviceNum" id="service-num" class="housework-9" value="1"
+                                           disabled="disabled"/>
+                                    <div class="housework-8 add-num">+</div>
+                                </div>
+                            </div>
+                            <div class="item-subtitle">
+                                <ul class="housework-4">
+                                    <li>半年次数<b>52</b>次</li>
+                                    <li>频次<b>2</b>次/周</li>
+                                </ul>
+                            </div>
+                            <div class="item-subtitle">
+                                <ul class="housework-5">
+                                    <li class="housework-5-1">原价:￥<span class="price">{price}</span></li>
+                                    <li>优惠单价:￥<span class="pprice">{pprice}</span></li>
+                                </ul>
+                            </div>
+                            <div class="item-subtitle">
+                                <ul class="housework-6">
+                                    <li>合计:￥{totalPrice}</li>
+                                    <li class="housework-2">优惠价:￥{vipTotalPrice}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </label>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
-
-
