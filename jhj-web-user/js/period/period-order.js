@@ -30,6 +30,40 @@ myApp.onPageBeforeInit("period-order", function (page) {
         }
     });
     
+    //动态计算选中的服务总价格
+    $$(document).on('change','.label-checkbox',function(){
+    	var serviceTypeList = $$("input[name='serviceTypeId']:checked");
+    	if(serviceTypeList.length>0){
+    		var periodPrice = 0;
+    		var orginPrice = 0;
+    		var serviceArray = [];
+    		for(var i=0;i<serviceTypeList.length;i++){
+    			var serviceType = serviceTypeList[i];
+    			
+    			var serviceParam = {};
+           		var serviceTypeId = $$(serviceType).val();
+           		serviceParam.serviceTypeId = serviceTypeId;
+               	serviceParam.serviceTypeAddonsId = "";
+               	serviceParam.serviceNum = 1;
+               	serviceParam.price = 0;
+               	serviceParam.pprice = 0;
+               	serviceParam.name = "";
+               	serviceArray.push(serviceParam);
+    			
+    			var p = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text();
+				var pp = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text();
+				periodPrice += parseFloat(pp);
+				orginPrice += parseFloat(p);
+    		}
+    		
+            sessionStorage.setItem("serviceTypeArray",JSON.stringify(serviceArray));
+    		
+    		$$(".housework1 .housework1-1 #period-price span").text(periodPrice);
+	       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(orginPrice);
+	       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(orginPrice-periodPrice);
+    	}
+    });
+    
     $$("#balance-account").on('click',function(){
     	var serviceArray = [];
     	sessionStorage.removeItem("serviceArray");
@@ -38,37 +72,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        		myApp.alert("请至少选择一种服务！");
        		return false;
        	}
-       	for(var i=0;i<serviceTypeList.length;i++){
-       		var serviceParam = {};
-       		var serviceTypeId = $$(serviceTypeList[i]).val();
-       		serviceParam.serviceTypeId = serviceTypeId;
-           	serviceParam.serviceTypeAddonsId = "";
-           	serviceParam.serviceNum = 1;
-           	serviceParam.price = 0;
-           	serviceParam.pprice = 0;
-           	serviceParam.name = "";
-           	serviceArray.push(serviceParam);
-       	}
-       	var jsonServiceArray=JSON.stringify(serviceArray);
-        sessionStorage.setItem("serviceTypeArray",jsonServiceArray);
-        
-        var serviceList = $$("input[name='serviceTypeId']:checked");
-        var serviceTypeArray = sessionStorage.getItem("serviceTypeArray");
-    	if(serviceList.length==0) return false;
-    	for(var i=0;i<serviceList.length;i++){
-    		var service = serviceList[i];
-    		
-    		for(var j=0;j<serviceTypeArray.length;j++){
-        		var serviceType = serviceTypeArray[j];
-        		if($$(service).val()==serviceType.serviceTypeId){
-        			$$(service).nextAll(".item-inner").find(".housework-3 .item-title").text(serviceType.name);
-        			$$(service).nextAll(".item-inner").find(".item-subtitle .housework-5 .price").text(serviceType.price);
-        			$$(service).nextAll(".item-inner").find(".item-subtitle .housework-5 .vip-price").text(serviceType.vipPrice);
-        			$$(service).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text(serviceType.totalPrice);
-        			$$(service).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text(serviceType.vipTotalPrice);
-        		}
-        	}
-    	}
+       
     });
     
     
@@ -174,20 +178,21 @@ myApp.onPageBeforeInit("period-order", function (page) {
     		}
 			sessionStorage.setItem("serviceTypeArray",JSON.stringify(serviceTypeArray));
 			
-			var period_price = 0;
-			var total_price = 0;
 			var serviceTypeList = $$("input[name='serviceTypeId']:checked");
-	       	for(var k=0;k<serviceTypeList.length;k++){
-	       		var type = serviceTypeList[k];
-	       		var p = $$(type).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text();
-				var pp = $$(type).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text();
-				period_price += parseFloat(pp);
-				total_price += parseFloat(p);
-	       	}
-	       	$$(".housework1 .housework1-1 #period-price span").text(period_price);
-	       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(total_price);
-	       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(total_price-period_price);
-	        
+	    	if(serviceTypeList.length>0){
+	    		var periodPrice = 0;
+	    		var orginPrice = 0;
+	    		for(var i=0;i<serviceTypeList.length;i++){
+	    			var serviceType = serviceTypeList[i];
+	    			var p = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text();
+					var pp = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text();
+					periodPrice += parseFloat(pp);
+					orginPrice += parseFloat(p);
+	    		}
+	    		$$(".housework1 .housework1-1 #period-price span").text(periodPrice);
+		       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(orginPrice);
+		       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(orginPrice-periodPrice);
+	    	}
     	}
     });
     
