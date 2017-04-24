@@ -93,7 +93,7 @@
 						
 						<div class="form-group">
 							<label class="col-md-2 control-label">
-								<font color="red">*</font>次数
+								<font color="red">*</font>频次数
 							</label>
 							<div class="col-md-5">
 								<form:input path="num" class="form-control"/>
@@ -107,10 +107,10 @@
 							<div class="col-md-5">
 								<form:select path="punit" class="form-control">
 									<form:option value="">--请选择频率--</form:option>
-									<form:option value="week">周</form:option>
-									<form:option value="month">月</form:option>
-									<form:option value="half-year">半年</form:option>
-									<form:option value="year">年</form:option>
+									<form:option value="次/时">次/时</form:option>
+									<form:option value="次/周">次/周</form:option>
+									<form:option value="次/月">次/月</form:option>
+									<form:option value="次/年">次/年</form:option>
 								</form:select>
 							</div>
 						</div>

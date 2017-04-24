@@ -63,9 +63,6 @@ public class PeriodOrderController extends BaseController{
 		periodOrderService.insert(init);
 		
 		
-		
-		
-		
 		return result;
 	}
 

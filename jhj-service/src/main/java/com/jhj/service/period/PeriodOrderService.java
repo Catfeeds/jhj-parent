@@ -1,5 +1,7 @@
 package com.jhj.service.period;
 
+import java.util.List;
+
 import com.jhj.po.model.period.PeriodOrder;
 
 public interface PeriodOrderService {
@@ -18,4 +20,8 @@ public interface PeriodOrderService {
     PeriodOrder init();
     
     PeriodOrder selectByOrderNo(String orderNo);
+    
+    int insertBatch(List<PeriodOrder> periodOrderList);
+    
+    List<PeriodOrder> periodOrderListPage(PeriodOrder periodOrder,int pageNum, int pageSize);
 }

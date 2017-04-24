@@ -1,10 +1,12 @@
 package com.jhj.service.impl.period;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.period.PeriodOrderMapper;
 import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.service.period.PeriodOrderService;
@@ -71,6 +73,20 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 	@Override
 	public PeriodOrder selectByOrderNo(String orderNo) {
 		return periodOrderMapper.selectByOrderNo(orderNo);
+	}
+
+	@Override
+	public int insertBatch(List<PeriodOrder> periodOrderList) {
+		return periodOrderMapper.insertBatch(periodOrderList);
+	}
+
+	@Override
+	public List<PeriodOrder> periodOrderListPage(PeriodOrder periodOrder,
+			int pageNum, int pageSize) {
+		
+		PageHelper.startPage(pageNum, pageSize);
+		List<PeriodOrder> list = periodOrderMapper.periodOrderListPage(periodOrder);
+		return list;
 	}
 	
 	

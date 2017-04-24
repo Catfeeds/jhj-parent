@@ -224,4 +224,71 @@
   <select id="selectByOrderNo" parameterType="java.lang.String" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"/> from period_order where order_no = #{orderNo,jdbcType=VARCHAR}
   </select>
+  
+  <insert id="insertBatch" parameterType="com.jhj.po.model.period.PeriodOrder" >
+    insert into period_order (id, order_no, user_id, 
+      mobile, addr_id, order_type, 
+      order_status, pay_type, order_money, order_price, 
+      user_coupons_id, service_type_id, order_from, 
+      remarks, add_time, update_time
+      )
+    values 
+    <foreach collection="periodOrderList" item="item" separator=",">
+     (#{item.id,jdbcType=INTEGER}, #{item.orderNo,jdbcType=VARCHAR}, #{item.userId,jdbcType=INTEGER}, 
+      #{item.mobile,jdbcType=CHAR}, #{item.addrId,jdbcType=INTEGER}, #{item.orderType,jdbcType=INTEGER}, 
+      #{item.orderStatus,jdbcType=INTEGER}, #{item.payType,jdbcType=INTEGER}, #{item.orderMoney,jdbcType=DECIMAL}, #{item.orderPrice,jdbcType=DECIMAL}, 
+      #{item.userCouponsId,jdbcType=INTEGER}, #{item.serviceTypeId,jdbcType=INTEGER}, #{item.orderFrom,jdbcType=INTEGER}, 
+      #{item.remarks,jdbcType=VARCHAR}, #{item.addTime,jdbcType=INTEGER}, #{item.updateTime,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  
+  <select id="periodOrderListPage" resultMap="BaseResultMap" parameterType="com.jhj.po.model.period.PeriodOrder">
+  	select <include refid="Base_Column_List"/> from period_order
+  	<include refid="queryCondition"/>
+  </select>
+  
+  <sql id="queryCondition">
+  	<where>
+  	  <if test="orderNo != null" >
+        and order_no = {orderNo,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null" >
+        and user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="mobile != null" >
+        and mobile = #{mobile,jdbcType=CHAR}
+      </if>
+      <if test="addrId != null" >
+        and addrId = #{addrId,jdbcType=INTEGER}
+      </if>
+      <if test="orderType != null" >
+        and order_type = #{orderType,jdbcType=INTEGER}
+      </if>
+      <if test="orderStatus != null" >
+        and order_status = #{orderStatus,jdbcType=INTEGER}
+      </if>
+      <if test="payType != null" >
+        and pay_type = #{payType,jdbcType=INTEGER}
+      </if>
+      <if test="orderMoney != null" >
+        and order_money = #{orderMoney,jdbcType=DECIMAL}
+      </if>
+      <if test="orderPrice != null" >
+        and order_price = #{orderPrice,jdbcType=DECIMAL}
+      </if>
+      <if test="serviceTypeId != null" >
+        and service_type_id = #{serviceTypeId,jdbcType=INTEGER}
+      </if>
+      <if test="orderFrom != null" >
+        and order_from = #{orderFrom,jdbcType=INTEGER}
+      </if>
+      <if test="addTime != null" >
+        and add_time = #{addTime,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null" >
+        and update_time = #{updateTime,jdbcType=INTEGER}
+      </if>
+  	</where>
+  </sql>
+  
 </mapper>
