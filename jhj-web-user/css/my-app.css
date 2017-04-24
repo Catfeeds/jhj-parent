@@ -5468,6 +5468,9 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   color:#858585;
   text-align: left;
 }
+.housework-5 li span{
+  font-size: 14px;
+}
 .housework-6{
   width:100;
   padding: 0!important;
@@ -5869,6 +5872,15 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   margin-left: 30%;
   margin-top: 15px;
   margin-bottom: 15px;
+}
+.all-button17{
+  width:100%;
+  height:50px;
+  background: #FF0066;
+  text-align: center;
+  line-height: 50px;
+  color:#fff;
+  margin-top: 30px;
 }
 .beijingse{
   color:#FEB954;
