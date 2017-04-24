@@ -5526,7 +5526,6 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 .dingzhi-list1-1-1{
   width:90%;
   margin-left: 5%;
-  height:180px;
   background: #D3A372;
   border-radius: 5px;
 }
@@ -5546,7 +5545,7 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 .dingzhi-list2{
   width:50%;
   float: left;
-  height:100px;
+  height:150px;
 }
 
 
