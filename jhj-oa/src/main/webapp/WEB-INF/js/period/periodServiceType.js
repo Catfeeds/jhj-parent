@@ -15,11 +15,11 @@ var formVal = $('#form').validate({
 		},
 		price : {
 			required : true,
-			digits : true,
+			number : true,
 		},
 		vipPrice : {
 			required : true,
-			digits : true,
+			number : true,
 		},
 		num : {
 			required : true,
@@ -48,16 +48,15 @@ var formVal = $('#form').validate({
 		},
 		price : {
 			required : "原价不能为空",
-			digits : "总次数必须为数字",
+			digits : "原价必须为数字",
 		},
 		vipPrice : {
 			required : "会员价不能为空",
-			
-			digits : "总次数必须为数字",
+			number : "会员价必须为数字",
 		},
 		num : {
 			required : "次数不能为空",
-			digits : "总次数必须为数字",
+			number : "频次数必须为数字",
 		},
 		punit : {
 			required : "频率不能为空",

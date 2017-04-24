@@ -4,7 +4,7 @@
             <div id="period-order-div">
 
             </div>
-
+			<div class="kongdiv" />
             <div class="housework1">
                 <div class="housework1-1">
                     <div class="housework1-1-one" id="period-price">定制价：<span>0</span>元</div>
@@ -24,6 +24,7 @@
                 <ul>
                     <li>
                         <label class="label-checkbox item-content">
+                            <input type="hidden" name="serviceTypeAddonsId" value="{serviceTypeAddonsId}"/>
                             <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}"/>
                             <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
                             <div class="housework-1">
@@ -40,8 +41,8 @@
                                 </div>
                                 <div class="item-subtitle">
                                     <ul class="housework-4">
-                                        <li>半年次数<b>52</b>次</li>
-                                        <li>频次<b>2</b>次/周</li>
+                                        <li>总次数:<b>{total}</b></li>
+                                        <li>频次:<b>{num}</b>{punit}</li>
                                     </ul>
                                 </div>
                                 <div class="item-subtitle">
@@ -94,7 +95,7 @@
                             </div>
                             <div class="item-subtitle">
                                 <ul class="housework-4">
-                                    <li>半年次数<b>52</b>次</li>
+                                    <li>总次数<b>52</b>次</li>
                                     <li>频次<b>2</b>次/周</li>
                                 </ul>
                             </div>

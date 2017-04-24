@@ -1,7 +1,6 @@
 myApp.onPageBeforeInit("period-order", function (page) {
 
     var packageTypeId = page.query.package_type_id;
-    packageTypeId=1;
 
     $$.ajax({
         type:"get",
@@ -19,10 +18,14 @@ myApp.onPageBeforeInit("period-order", function (page) {
     				var htmlPart = temp;
     				htmlPart = htmlPart.replace(new RegExp('{name}', "gm"), periodOrder.name);
     				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.service_type_id);
+    				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), periodOrder.service_addon_id);
+    				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.total);
+    				htmlPart = htmlPart.replace(new RegExp('{num}', "gm"), periodOrder.num);
+    				htmlPart = htmlPart.replace(new RegExp('{punit}', "gm"), periodOrder.punit);
     				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), periodOrder.price);
     				htmlPart = htmlPart.replace(new RegExp('{vipPrice}', "gm"), periodOrder.vip_price);
-    				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), periodOrder.price*periodOrder.num);
-    				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), periodOrder.vip_price*periodOrder.num);
+    				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), periodOrder.price*periodOrder.total);
+    				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), periodOrder.vip_price*periodOrder.total);
     				html += htmlPart;
     			}
     			$$("#period-order-div").html(html);
@@ -43,7 +46,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
     			var serviceParam = {};
            		var serviceTypeId = $$(serviceType).val();
            		serviceParam.serviceTypeId = serviceTypeId;
-               	serviceParam.serviceTypeAddonsId = "";
+               	serviceParam.serviceTypeAddonsId = $$(serviceType).next().val();
                	serviceParam.serviceNum = 1;
                	serviceParam.price = 0;
                	serviceParam.pprice = 0;
@@ -72,6 +75,17 @@ myApp.onPageBeforeInit("period-order", function (page) {
        		myApp.alert("请至少选择一种服务！");
        		return false;
        	}
+       	
+       	var param = {};
+       	$$.ajax({
+       		type:"post",
+       		url:"",
+       		data:param,
+       		dataType:"json",
+       		success:function(data){
+       			
+       		}
+       	});
        
     });
     
@@ -97,13 +111,16 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), serviceTypeId);
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), serviceTypeAddons.service_addon_id);
         				htmlPart = htmlPart.replace(new RegExp('{name}', "gm"), serviceTypeAddons.name);
+        				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), serviceTypeAddons.total);
+        				htmlPart = htmlPart.replace(new RegExp('{num}', "gm"), serviceTypeAddons.num);
+        				htmlPart = htmlPart.replace(new RegExp('{punit}', "gm"), serviceTypeAddons.punit);
         				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), serviceTypeAddons.price);
         				htmlPart = htmlPart.replace(new RegExp('{pprice}', "gm"), serviceTypeAddons.dis_price);
         				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), serviceTypeAddons.price);
         				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), serviceTypeAddons.dis_price);
         				html += htmlPart;
         			}
-        			html += '<div><button type="button" id="btn-ensure" class="all-button9 close-popup">确定</button></div></div>';
+        			html += '<div><button type="button" id="btn-ensure" class="all-button17 close-popup">确定</button></div></div>';
         			myApp.popup(html);
         		}
             }
