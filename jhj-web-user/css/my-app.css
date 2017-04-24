@@ -5559,7 +5559,10 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 
 
 
-
+.kongdiv{
+  width:100%;
+  height:50px;
+}
 
 /*特殊颜色按钮分配*/
 .special-color1{
