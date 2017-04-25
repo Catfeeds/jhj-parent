@@ -25,7 +25,7 @@ public class PeriodOrder {
 
     private Integer userCouponsId;
 
-    private Integer serviceTypeId;
+    private Integer periodServiceTypeId;
 
     private Integer orderFrom;
 
@@ -123,12 +123,13 @@ public class PeriodOrder {
 		this.userCouponsId = userCouponsId;
 	}
 
-	public Integer getServiceTypeId() {
-		return serviceTypeId;
+	
+	public Integer getPeriodServiceTypeId() {
+		return periodServiceTypeId;
 	}
 
-	public void setServiceTypeId(Integer serviceTypeId) {
-		this.serviceTypeId = serviceTypeId;
+	public void setPeriodServiceTypeId(Integer periodServiceTypeId) {
+		this.periodServiceTypeId = periodServiceTypeId;
 	}
 
 	public Integer getOrderFrom() {

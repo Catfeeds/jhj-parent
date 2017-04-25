@@ -62,8 +62,9 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 		po.setOrderPrice(new BigDecimal(0));
 		po.setOrderStatus(0);
 		po.setOrderType(0);
+		po.setPayType(0);
 		po.setRemarks("");
-		po.setServiceTypeId(0);
+		po.setPeriodServiceTypeId(0);;
 		po.setUpdateTime(TimeStampUtil.getNowSecond());
 		po.setUserCouponsId(0);
 		po.setUserId(0);

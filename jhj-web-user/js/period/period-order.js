@@ -17,6 +17,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
     				var periodOrder = periodOrderList[i];
     				var htmlPart = temp;
     				htmlPart = htmlPart.replace(new RegExp('{name}', "gm"), periodOrder.name);
+    				htmlPart = htmlPart.replace(new RegExp('{id}', "gm"), periodOrder.id);
     				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.service_type_id);
     				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), periodOrder.service_addon_id);
     				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.total);
@@ -39,19 +40,8 @@ myApp.onPageBeforeInit("period-order", function (page) {
     	if(serviceTypeList.length>0){
     		var periodPrice = 0;
     		var orginPrice = 0;
-    		var serviceArray = [];
     		for(var i=0;i<serviceTypeList.length;i++){
     			var serviceType = serviceTypeList[i];
-    			
-    			var serviceParam = {};
-           		var serviceTypeId = $$(serviceType).val();
-           		serviceParam.serviceTypeId = serviceTypeId;
-               	serviceParam.serviceTypeAddonsId = $$(serviceType).next().val();
-               	serviceParam.serviceNum = 1;
-               	serviceParam.price = 0;
-               	serviceParam.pprice = 0;
-               	serviceParam.name = "";
-               	serviceArray.push(serviceParam);
     			
     			var p = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text();
 				var pp = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text();
@@ -59,11 +49,13 @@ myApp.onPageBeforeInit("period-order", function (page) {
 				orginPrice += parseFloat(p);
     		}
     		
-            sessionStorage.setItem("serviceTypeArray",JSON.stringify(serviceArray));
-    		
     		$$(".housework1 .housework1-1 #period-price span").text(periodPrice);
 	       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(orginPrice);
 	       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(orginPrice-periodPrice);
+    	}else{
+    		$$(".housework1 .housework1-1 #period-price span").text(0);
+	       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(0);
+	       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(0);
     	}
     });
     
@@ -76,14 +68,46 @@ myApp.onPageBeforeInit("period-order", function (page) {
        		return false;
        	}
        	
+       	var periodServiceAddonsArray = [];
+       	for(var i=0;i<serviceTypeList.length;i++){
+       		var serviceType = serviceTypeList[i];
+       		var serviceTypeObject = {};
+       		serviceTypeObject.periodServiceTypeId = $$(serviceType).prevAll("input[name='id']").val();
+       		serviceTypeObject.serviceTypeId = $$(serviceType).val();
+       		serviceTypeObject.serviceAddonId = $$(serviceType).prev().val();
+       		serviceTypeObject.price = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-5 .price").text();
+       		serviceTypeObject.vipPrice = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-5 .vip-price").text();
+       		serviceTypeObject.num = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-4 .total").text();
+       		
+       		periodServiceAddonsArray.push(serviceTypeObject);
+       	}
+       	
+       	
        	var param = {};
+       	param.user_id = localStorage.getItem("user_id");
+       	param.mobile = "15201023689";
+       	param.addr_id = 1;
+       	param.order_type = 3;
+       	param.order_status = 1;
+       	param.order_money = 0;
+       	param.order_price = 0;
+       	param.user_coupons_id = 0;
+       	param.period_service_type_id = 0;
+       	param.order_from = 1;
+       	param.remarks = "";
+       	param.period_service_addons_json = JSON.stringify(periodServiceAddonsArray);
        	$$.ajax({
        		type:"post",
-       		url:"",
+       		url:siteAPIPath+"period/save-period-order.json",
        		data:param,
        		dataType:"json",
        		success:function(data){
-       			
+       			if(data.status == '999'){
+       				myApp.alert(data.msg);
+       			}
+       			if(data.status == '0'){
+       				mainView.router.loadPage("");
+       			}
        		}
        	});
        
@@ -157,59 +181,41 @@ myApp.onPageBeforeInit("period-order", function (page) {
     
     //调整服务类别
     $$(document).on('click','#btn-ensure',function(){
-    	var serviceTypeArray = JSON.parse(sessionStorage.getItem("serviceTypeArray"));
     	var serviceTypeAddonsId = $$("input[type='radio']:checked").val();
     	var serviceTypeId = $$(this).parent().prev().find(".list-block .label-checkbox input[name='serviceTypeId']").val();
     	var serviceNum = $$("input[type='radio']:checked").nextAll(".item-inner").find(".housework-3 .housework-2 #service-num").val();
     	var price = $$("input[type='radio']:checked").prevAll("#price1").val();
     	var pprice = $$("input[type='radio']:checked").prevAll("#pprice").val();
     	var name = $$("input[type='radio']:checked").nextAll(".item-inner").find(".housework-3 .item-title").text();
-    	if(serviceTypeArray.length>0){
-    		for(var i=0;i<serviceTypeArray.length;i++){
-    			var serviceType = serviceTypeArray[i];
-    			if(serviceTypeId == serviceType.serviceTypeId){
-    				serviceType.serviceTypeAddonsId = serviceTypeAddonsId;
-    				serviceType.serviceNum = serviceNum;
-    				serviceType.price = price;
-    				serviceType.pprice = pprice;
-    				serviceType.name = name;
-    				serviceTypeArray.splice(i,i+1,serviceType);
-    				
-    				var input = $$("input[type='checkbox']:checked");
-    				if(input.length>0){
-    					for(var j=0;j<input.length;j++){
-    						var inp = input[j];
-    						if(serviceTypeId == $$(inp).val()){
-    							$$(inp).nextAll(".item-inner").find(".housework-3 .item-title").text(name);
-    							$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='price']").val(price);
-    							$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='pprice']").val(pprice);
-    							$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 .housework-5-1 .price").text(price);
-    							$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 #price .vip-price").text(pprice);
-    							$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text(price*serviceNum);
-    							$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text(pprice*serviceNum);
-    						}
-    					}
-    				}
-    				break;
-    			}
+		var input = $$("input[type='checkbox']:checked");
+		if(input.length>0){
+			for(var j=0;j<input.length;j++){
+				var inp = input[j];
+				if(serviceTypeId == $$(inp).val()){
+					$$(inp).nextAll(".item-inner").find(".housework-3 .item-title").text(name);
+					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='price']").val(price);
+					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='pprice']").val(pprice);
+					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 .housework-5-1 .price").text(price);
+					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 #price .vip-price").text(pprice);
+					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text(price*serviceNum);
+					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text(pprice*serviceNum);
+				}
+			}
+		}
+    	var serviceTypeList = $$("input[name='serviceTypeId']:checked");
+    	if(serviceTypeList.length>0){
+    		var periodPrice = 0;
+    		var orginPrice = 0;
+    		for(var i=0;i<serviceTypeList.length;i++){
+    			var serviceType = serviceTypeList[i];
+    			var p = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text();
+				var pp = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text();
+				periodPrice += parseFloat(pp);
+				orginPrice += parseFloat(p);
     		}
-			sessionStorage.setItem("serviceTypeArray",JSON.stringify(serviceTypeArray));
-			
-			var serviceTypeList = $$("input[name='serviceTypeId']:checked");
-	    	if(serviceTypeList.length>0){
-	    		var periodPrice = 0;
-	    		var orginPrice = 0;
-	    		for(var i=0;i<serviceTypeList.length;i++){
-	    			var serviceType = serviceTypeList[i];
-	    			var p = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text();
-					var pp = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text();
-					periodPrice += parseFloat(pp);
-					orginPrice += parseFloat(p);
-	    		}
-	    		$$(".housework1 .housework1-1 #period-price span").text(periodPrice);
-		       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(orginPrice);
-		       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(orginPrice-periodPrice);
-	    	}
+    		$$(".housework1 .housework1-1 #period-price span").text(periodPrice);
+	       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(orginPrice);
+	       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(orginPrice-periodPrice);
     	}
     });
     

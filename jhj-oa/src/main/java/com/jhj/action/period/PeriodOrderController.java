@@ -1,6 +1,5 @@
 package com.jhj.action.period;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
-import com.jhj.common.ConstantMsg;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
-import com.meijia.utils.vo.AppResultData;
 
 @Controller
 @RequestMapping("/period")
@@ -33,7 +30,7 @@ public class PeriodOrderController extends BaseController{
 	@Autowired
 	private PeriodOrderAddonsService periodOrderAddonsService;
 	
-	@RequestMapping(value = "periodOrderList", method = RequestMethod.GET)
+	@RequestMapping(value = "/periodOrderList", method = RequestMethod.GET)
 	public String periodOrderList(PeriodOrder periodOrder, Model model, HttpServletRequest request){
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		
@@ -46,6 +43,18 @@ public class PeriodOrderController extends BaseController{
 		return "period/periodOrderList";
 		
 	}
+	
+	@RequestMapping(value="/updatePeriodOrder", method = RequestMethod.GET)
+	public String updatePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId,Model model){
+		
+		PeriodOrder periodOrder = periodOrderService.selectByPrimaryKey(periodOrderId);
+		
+		model.addAttribute("periodOrder", periodOrder);
+		
+		return "period/periodOrder";
+	}
+	
+	
 	
 
 

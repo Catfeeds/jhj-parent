@@ -12,10 +12,11 @@
     <result column="vip_price" property="vipPrice" jdbcType="DECIMAL" />
     <result column="num" property="num" jdbcType="INTEGER" />
     <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="period_service_type_id" property="periodServiceTypeId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, user_id, period_order_id, period_order_no, service_type_id, service_addon_id, 
-    price, vip_price, num, add_time
+    price, vip_price, num, add_time, period_service_type_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -27,15 +28,14 @@
     delete from period_order_addons
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.period.PeriodOrderAddons" >
+  <insert id="insert" parameterType="com.jhj.po.model.period.PeriodOrderAddons" useGeneratedKeys="true" keyProperty="id">
     insert into period_order_addons (id, user_id, period_order_id, 
       period_order_no, service_type_id, service_addon_id, 
-      price, vip_price, num, 
-      add_time)
+      price, vip_price, num, add_time, period_service_type_id)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{periodOrderId,jdbcType=INTEGER}, 
       #{periodOrderNo,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER}, #{serviceAddonId,jdbcType=INTEGER}, 
       #{price,jdbcType=DECIMAL}, #{vipPrice,jdbcType=DECIMAL}, #{num,jdbcType=INTEGER}, 
-      #{addTime,jdbcType=TIMESTAMP})
+      #{addTime,jdbcType=TIMESTAMP}, #{periodServiceTypeId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.period.PeriodOrderAddons" >
     insert into period_order_addons
@@ -70,6 +70,9 @@
       <if test="addTime != null" >
         add_time,
       </if>
+      <if test="periodServiceTypeId != null" >
+        period_service_type_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -101,6 +104,9 @@
       </if>
       <if test="addTime != null" >
         #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="periodServiceTypeId != null" >
+        #{periodServiceTypeId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -134,6 +140,9 @@
       <if test="addTime != null" >
         add_time = #{addTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="periodServiceTypeId != null" >
+        period_service_type_id = #{periodServiceTypeId,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -147,20 +156,23 @@
       price = #{price,jdbcType=DECIMAL},
       vip_price = #{vipPrice,jdbcType=DECIMAL},
       num = #{num,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=TIMESTAMP}
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      period_service_type_id = #{periodServiceTypeId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
   <insert id="insertBatch" parameterType="java.util.List">
+  	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
   	insert into period_order_addons (id, user_id, period_order_id, 
       period_order_no, service_type_id, service_addon_id, 
-      price, vip_price, num, 
-      add_time) values 
-      <foreach collection="periodOrdeAddonsList" item="item" separator=",">
+      price, vip_price, num, add_time) values 
+      <foreach collection="list" item="item" separator=",">
       	(#{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.periodOrderId,jdbcType=INTEGER}, 
-      #{item.periodOrderNo,jdbcType=VARCHAR}, #{item.serviceTypeId,jdbcType=INTEGER}, #{item.serviceAddonId,jdbcType=INTEGER}, 
-      #{item.price,jdbcType=DECIMAL}, #{item.vipPrice,jdbcType=DECIMAL}, #{item.num,jdbcType=INTEGER}, 
-      #{item.addTime,jdbcType=TIMESTAMP})
+         #{item.periodOrderNo,jdbcType=VARCHAR}, #{item.serviceTypeId,jdbcType=INTEGER}, #{item.serviceAddonId,jdbcType=INTEGER}, 
+         #{item.price,jdbcType=DECIMAL}, #{item.vipPrice,jdbcType=DECIMAL}, #{item.num,jdbcType=INTEGER}, 
+         #{item.addTime,jdbcType=TIMESTAMP})
       </foreach>
   </insert>
 </mapper>

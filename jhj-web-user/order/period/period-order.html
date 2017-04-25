@@ -24,6 +24,7 @@
                 <ul>
                     <li>
                         <label class="label-checkbox item-content">
+                        	<input type="hidden" name="id" value="{id}"/>
                             <input type="hidden" name="serviceTypeAddonsId" value="{serviceTypeAddonsId}"/>
                             <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}"/>
                             <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
@@ -33,7 +34,6 @@
                             <div class="item-inner">
                                 <div class="item-title-row housework-3">
                                     <div class="item-title">{name}</div>
-                                    <!-- order/period/period_service_addons.html?service_type_id={serviceTypeId} -->
                                     <input type="hidden" value="{serviceTypeId}"/>
                                     <a href="#" data-popup=".popup-about" class="open-popup adjust">
                                         <div class="item-after housework-2">调整</div>
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="item-subtitle">
                                     <ul class="housework-4">
-                                        <li>总次数:<b>{total}</b></li>
+                                        <li>总次数:<b class="total">{total}</b></li>
                                         <li>频次:<b>{num}</b>{punit}</li>
                                     </ul>
                                 </div>

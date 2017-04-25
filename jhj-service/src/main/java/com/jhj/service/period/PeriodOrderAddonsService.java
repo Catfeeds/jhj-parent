@@ -2,6 +2,8 @@ package com.jhj.service.period;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.jhj.po.model.period.PeriodOrderAddons;
 
 public interface PeriodOrderAddonsService {
@@ -17,7 +19,7 @@ public interface PeriodOrderAddonsService {
 
     int updateByPrimaryKey(PeriodOrderAddons record);
     
-    int insertBatch(List<PeriodOrderAddons> periodOrdeAddonsList);
+    int insertBatch(@Param("periodOrdeAddonsList") List<PeriodOrderAddons> periodOrdeAddonsList);
     
     PeriodOrderAddons init();
 }

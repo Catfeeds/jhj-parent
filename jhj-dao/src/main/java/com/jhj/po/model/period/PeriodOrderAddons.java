@@ -23,6 +23,8 @@ public class PeriodOrderAddons {
     private Integer num;
 
     private Date addTime;
+    
+    private Integer periodServiceTypeId;
 
     public Integer getId() {
         return id;
@@ -103,4 +105,13 @@ public class PeriodOrderAddons {
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
     }
+
+	public Integer getPeriodServiceTypeId() {
+		return periodServiceTypeId;
+	}
+
+	public void setPeriodServiceTypeId(Integer periodServiceTypeId) {
+		this.periodServiceTypeId = periodServiceTypeId;
+	}
+    
 }
