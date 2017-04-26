@@ -831,14 +831,14 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 		}
 		
-		String addrName=searchVo.getAddrName();
-		if(addrName!=null && addrName!=""){
-			try {
-				searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1") , "utf-8"));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
+//		String addrName=searchVo.getAddrName();
+//		if(addrName!=null && addrName!=""){
+//			try {
+//				searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1") , "utf-8"));
+//			} catch (UnsupportedEncodingException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		if(searchVo.getOrderOpFrom()!=null && searchVo.getOrderOpFrom()==(short)11){
 			searchVo.setOrderFrom((short)1);
 			searchVo.setOrderOpFrom(null);
@@ -857,7 +857,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 				e.printStackTrace();
 			}
 		}
-		
+				
 		String orderNo = request.getParameter("orderNo");
 		if (!StringUtil.isEmpty(orderNo)) {
 			searchVo.setOrderNo(orderNo);

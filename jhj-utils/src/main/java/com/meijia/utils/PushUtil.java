@@ -159,6 +159,11 @@ public class PushUtil {
 	 */
 	public static boolean AndroidPushToSingle(HashMap<String, String> params) throws Exception {
 		
+		//如果为debug模式，则不需要真正推送消息
+		if (ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+			return true;
+		}
+		
 		String cid = "";
 		String transmissionContent = "";
 		

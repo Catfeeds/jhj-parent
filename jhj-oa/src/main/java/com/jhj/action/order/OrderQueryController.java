@@ -590,7 +590,7 @@ public class OrderQueryController extends BaseController {
 	}
 	
 	@AuthPassport
-	@RequestMapping(value = "/order-list",method=RequestMethod.GET)
+	@RequestMapping(value = "/order-list",method=RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	public String getOrderList(Model model, HttpServletRequest request, OrderSearchVo searchVo){
 		
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);

@@ -14,6 +14,8 @@ public class Orders {
     private Long orgId;
 
     private Long addrId;
+    
+    private String orderAddr;
 
     private String orderNo;
 
@@ -249,6 +251,14 @@ public class Orders {
 
 	public void setOrderDoneTime(Long orderDoneTime) {
 		this.orderDoneTime = orderDoneTime;
+	}
+
+	public String getOrderAddr() {
+		return orderAddr;
+	}
+
+	public void setOrderAddr(String orderAddr) {
+		this.orderAddr = orderAddr;
 	}
 
 }

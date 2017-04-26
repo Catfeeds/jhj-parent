@@ -22,6 +22,7 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
@@ -232,6 +233,12 @@ public class OrderAddController extends BaseController {
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);
+		
+		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
+        if (userAddrs != null) {
+           order.setOrderAddr(userAddrs.getName() + userAddrs.getAddress() + userAddrs.getAddr());
+        }
+		
 		order.setServiceHour(serviceHour);
 		order.setStaffNums(staffNums);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1); // 后台下单都是已支付

@@ -182,6 +182,12 @@ public class OrderHourAddController extends BaseController {
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);
+		
+		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
+		if (userAddrs != null) {
+			order.setOrderAddr(userAddrs.getName() + userAddrs.getAddress() + userAddrs.getAddr());
+		}
+		
 		order.setServiceHour(serviceHour);
 		order.setStaffNums(staffNums);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);//钟点工未支付

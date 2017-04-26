@@ -90,6 +90,7 @@ public class OrdersServiceImpl implements OrdersService {
 		record.setCityId(0L);
 		record.setOrgId(0L);
 		record.setAddrId(0L);
+		record.setOrderAddr("");
 		record.setOrderType(Constants.ORDER_TYPE_0);// 0 = 钟点工 1 = 深度保洁 2 =
 													// 助理预约单
 		record.setServiceType(0L);

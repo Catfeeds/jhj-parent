@@ -75,9 +75,10 @@ public class JobUserNoticeController extends BaseController {
 		// String reqHost = request.getRemoteAddr();
 		// 限定只有localhost能访问
 		if (reqHost.equals("localhost") || reqHost.equals("127.0.0.1")) {
-						
-			Date nowDate = DateUtil.parse(DateUtil.getBeginOfDay());
+			
 			String nowDateStr = DateUtil.getToday();
+			Date nowDate = DateUtil.parse(nowDateStr);
+			
 			String oneMonthDayStr = DateUtil.addDay(nowDate, -1, Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
 			String twoMonthDayStr = DateUtil.addDay(nowDate, -2, Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
 			String threeMonthDayStr = DateUtil.addDay(nowDate, -3, Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
@@ -94,8 +95,12 @@ public class JobUserNoticeController extends BaseController {
 			Date threeMonthDay = DateUtil.parse(threeMonthDayStr);
 			String endThreeMonthDayStr = DateUtil.addDay(threeMonthDay, -1, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
 			System.out.println("3个月内 = " + endThreeMonthDayStr + "---" );
+			
+			startAddTime = 1490976000L;
 			endAddTime = TimeStampUtil.getMillisOfDayFull(endThreeMonthDayStr + " 23:59:59")/1000;
+			
 			searchVo = new OrderSearchVo();
+			searchVo.setStartAddTime(startAddTime);
 			searchVo.setEndAddTime(endAddTime);
 			userIds = orderQueryService.getLastOrder(searchVo);
 			if (!userIds.isEmpty()) {
@@ -108,7 +113,10 @@ public class JobUserNoticeController extends BaseController {
 			
 			System.out.println("2个月内 = " + threeMonthDayStr + "---" + endTwoMonthDayStr);
 			startAddTime = TimeStampUtil.getMillisOfDayFull(threeMonthDayStr + " 00:00:00")/1000;
+			if (startAddTime < 1490976000L) startAddTime = 1490976000L;
+			
 			endAddTime = TimeStampUtil.getMillisOfDayFull(endTwoMonthDayStr + " 23:59:59")/1000;
+			
 			searchVo = new OrderSearchVo();
 			searchVo.setStartAddTime(startAddTime);
 			searchVo.setEndAddTime(endAddTime);
@@ -122,6 +130,8 @@ public class JobUserNoticeController extends BaseController {
 			String endOneMonthDayStr = DateUtil.addDay(oneMonthDay, -1, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
 			System.out.println("一个月内 = " + twoMonthDayStr + "---" + endOneMonthDayStr);
 			startAddTime = TimeStampUtil.getMillisOfDayFull(twoMonthDayStr + " 00:00:00")/1000;
+			if (startAddTime < 1490976000L) startAddTime = 1490976000L;
+
 			endAddTime = TimeStampUtil.getMillisOfDayFull(endOneMonthDayStr + " 23:59:59")/1000;
 			
 			searchVo.setStartAddTime(startAddTime);

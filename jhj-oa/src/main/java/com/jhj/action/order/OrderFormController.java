@@ -31,6 +31,7 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
@@ -46,6 +47,7 @@ import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
+import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
@@ -117,6 +119,9 @@ public class OrderFormController extends BaseController {
 	
 	@Autowired
 	private OrgStaffsService orgStaffService;
+	
+	@Autowired
+	private UserAddrsService userAddrService;
 
 	@AuthPassport
 	@RequestMapping(value = "/order-add", method = RequestMethod.GET)
@@ -266,6 +271,13 @@ public class OrderFormController extends BaseController {
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDate);
 		order.setAddrId(addrId);
+		
+		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
+        if (userAddrs != null) {
+           order.setOrderAddr(userAddrs.getName() + userAddrs.getAddress() + userAddrs.getAddr());
+        }
+		
+		
 		order.setServiceHour(serviceHour);
 		order.setStaffNums(staffNums);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1);  //后台下单都是已支付

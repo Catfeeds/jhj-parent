@@ -101,6 +101,8 @@ public class OrderSearchVo {
 	private	Short adminId;
 	
 	private String remarks;
+	
+	private String orderAddr;
 
 	public String getMobile() {
 		return mobile;
@@ -484,6 +486,14 @@ public class OrderSearchVo {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getOrderAddr() {
+		return orderAddr;
+	}
+
+	public void setOrderAddr(String orderAddr) {
+		this.orderAddr = orderAddr;
 	}
 	
 }

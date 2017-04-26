@@ -9,6 +9,7 @@
 		<result column="city_id" property="cityId" jdbcType="NUMERIC" />
 		<result column="org_id" property="orgId" jdbcType="NUMERIC" />
 		<result column="addr_id" property="addrId" jdbcType="NUMERIC" />
+		<result column="order_addr" property="orderAddr" jdbcType="VARCHAR" />
 		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
 		<result column="order_type" property="orderType" jdbcType="NUMERIC" />
 		<result column="service_type" property="serviceType" jdbcType="NUMERIC" />
@@ -30,7 +31,7 @@
 		<result column="remarks_bussiness_confirm" property="remarksBussinessConfirm" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_no, order_type,
+		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_addr, order_no, order_type,
 		service_type,service_content, service_date, service_hour, staff_nums, order_status,
 		order_rate,
 		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time,
@@ -286,8 +287,8 @@
 			and id in (select order_id from order_dispatchs where is_apply = #{isApply,jdbcType=NUMERIC} and dispatch_status = 1)
 		</if>
 
-		<if test="addrName !=null and addrName !=''">
-			and addr_id in ( select id from user_addrs where MATCH(name) AGAINST ('${addrName}' IN BOOLEAN MODE) )
+		<if test="orderAddr !=null and orderAddr !=''">
+			and  MATCH(order_addr) AGAINST ('*${orderAddr}*' IN BOOLEAN MODE)
 		</if>
 
 		<if test="payType!=null">
@@ -488,7 +489,7 @@
 			SELECT LAST_INSERT_ID() AS id
 		</selectKey>
 		insert into orders (id, am_id, user_id,
-		mobile, city_id, org_id, addr_id,
+		mobile, city_id, org_id, addr_id, order_addr,
 		order_no,
 		order_type, service_type,
 		service_content, service_date, service_hour, staff_nums,
@@ -502,7 +503,7 @@
 		#{amId,jdbcType=NUMERIC},
 		#{userId,jdbcType=NUMERIC},
 		#{mobile,jdbcType=CHAR}, #{cityId,jdbcType=NUMERIC}, #{orgId,jdbcType=NUMERIC},
-		#{addrId,jdbcType=NUMERIC},
+		#{addrId,jdbcType=NUMERIC}, #{orderAddr,jdbcType=VARCHAR},
 		#{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=NUMERIC},
 		#{serviceType,jdbcType=NUMERIC},
 		#{serviceContent,jdbcType=VARCHAR},
@@ -546,6 +547,9 @@
 			</if>
 			<if test="addrId != null">
 				addr_id,
+			</if>
+			<if test="orderAddr != null">
+				order_addr,
 			</if>
 			<if test="orderNo != null">
 				order_no,
@@ -624,6 +628,9 @@
 			<if test="addrId != null">
 				#{addrId,jdbcType=NUMERIC},
 			</if>
+			<if test="orderAddr != null">
+				#{orderAddr,jdbcType=VARCHAR},
+			</if>
 			<if test="orderNo != null">
 				#{orderNo,jdbcType=VARCHAR},
 			</if>
@@ -700,6 +707,9 @@
 			</if>
 			<if test="addrId != null">
 				addr_id = #{addrId,jdbcType=NUMERIC},
+			</if>
+			<if test="orderAddr != null">
+				order_addr = #{orderAddr,jdbcType=VARCHAR},
 			</if>
 			<if test="orderNo != null">
 				order_no = #{orderNo,jdbcType=VARCHAR},
@@ -798,6 +808,7 @@
 		city_id = #{cityId,jdbcType=NUMERIC},
 		org_id = #{orgId,jdbcType=NUMERIC},
 		addr_id = #{addrId,jdbcType=NUMERIC},
+		order_addr = #{orderAddr,jdbcType=VARCHAR},
 		order_no =
 		#{orderNo,jdbcType=VARCHAR},
 		order_type =

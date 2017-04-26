@@ -73,7 +73,7 @@
 											<td width="10%">用户手机号：</td>
 											<td width="23%"><form:input path="mobile" class="form-control" placeholder="请输入手机号" /></td>
 											<td width="10%">服务地址：</td>
-											<td width="23%"><form:input path="addrName" class="form-control" placeholder="请输入服务地址" /></td>
+											<td width="23%"><form:input path="orderAddr" class="form-control" placeholder="请输入服务地址" /></td>
 											<td width="10%">订单状态：</td>
 											<td width="23%"><c:if test="${loginOrgId == 0 }">
 													<form:select path="orderStatus" class="form-control">

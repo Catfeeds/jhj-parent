@@ -23,6 +23,7 @@ import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.ValidateService;
@@ -152,6 +153,12 @@ public class OrderExpCleanController extends BaseController {
 		order.setServiceHour(serviceHour);
 		order.setStaffNums(1);
 		order.setAddrId(addrId);
+		
+		UserAddrs userAddrs = userAddrsService.selectByPrimaryKey(addrId);
+        if (userAddrs != null) {
+             order.setOrderAddr(userAddrs.getName() + userAddrs.getAddress() + userAddrs.getAddr());
+        }
+		
 		order.setOrderFrom(orderFrom);
 		order.setOrderOpFrom(orderOpFrom);
 		order.setOrderNo(orderNo);

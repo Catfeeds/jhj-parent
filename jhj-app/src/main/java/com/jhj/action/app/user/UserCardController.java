@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.meijia.utils.ConfigUtil;
 import com.meijia.utils.vo.AppResultData;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.dict.DictCardType;
@@ -83,6 +84,17 @@ public class UserCardController extends BaseController {
 		}
 		record.setReferee(staffCode);
 		orderCardsService.insert(record);
+		
+		//如果为debug模式，则直接付款成功
+		if (ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+			record.setPayType(payType);
+			record.setOrderStatus(Constants.PAY_STATUS_1);
+			// 更新orders,orderPrices,Users,插入消费明细UserDetailPay
+			orderCardsService.updateOrderByOnlinePay(record, "", "success", "测试账号");
+			
+			//赠送相应的优惠劵到对于的用户账户
+			orderCardsService.sendCoupons(userId, record.getId());
+		}
 
 		result.setData(record);
 		

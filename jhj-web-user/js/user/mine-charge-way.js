@@ -59,6 +59,14 @@ myApp.onPageBeforeInit('mine-charge-way', function(page) {
 		var orderId = result.data.id;
 		var orderNo = result.data.card_order_no;
 		var orderPay = result.data.card_pay;
+		var orderStatus = result.data.order_status;
+		
+		//测试情况下，直接下单则会直接付款成功
+		if (orderStatus == 1) {
+			mainView.router.loadPage("user/charge/mine-charge-pay-success.html");
+			return false;
+		}
+		
 		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {
