@@ -49,6 +49,9 @@ myApp.onPageBeforeInit("period-order", function (page) {
 				orginPrice += parseFloat(p);
     		}
     		
+    		sessionStorage.setItem("periodOrderMoney",orginPrice);
+    		sessionStorage.setItem("periodPayMoney",periodPrice);
+    		
     		$$(".housework1 .housework1-1 #period-price span").text(periodPrice);
 	       	$$(".housework1 .housework1-1 .housework1-1-two #total-price span").text(orginPrice);
 	       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(orginPrice-periodPrice);
@@ -85,12 +88,12 @@ myApp.onPageBeforeInit("period-order", function (page) {
        	
        	var param = {};
        	param.user_id = localStorage.getItem("user_id");
-       	param.mobile = "15201023689";
+       	param.mobile = localStorage.getItem("user_mobile");
        	param.addr_id = 1;
-       	param.order_type = 3;
+       	param.order_type = 1;
        	param.order_status = 1;
-       	param.order_money = 0;
-       	param.order_price = 0;
+       	param.order_money = sessionStorage.getItem("periodOrderMoney");
+       	param.order_price = sessionStorage.getItem("periodPayMoney");
        	param.user_coupons_id = 0;
        	param.period_service_type_id = 0;
        	param.order_from = 1;
@@ -106,7 +109,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        				myApp.alert(data.msg);
        			}
        			if(data.status == '0'){
-       				mainView.router.loadPage("");
+       				mainView.router.loadPage("order/period/period-order-pay.html");
        			}
        		}
        	});
