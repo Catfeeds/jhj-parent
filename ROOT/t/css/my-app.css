@@ -5589,7 +5589,7 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   bottom: 0;
   left:0;
   height:60px;
-  z-index: 999;
+  z-index: 5005;
 }
 .dingzhi-huodong3 img{
   width:30%;
