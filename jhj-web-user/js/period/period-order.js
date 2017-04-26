@@ -96,7 +96,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        	param.order_price = sessionStorage.getItem("periodPayMoney");
        	param.user_coupons_id = 0;
        	param.period_service_type_id = 0;
-       	param.order_from = 1;
+       	param.order_from = 2;
        	param.remarks = "";
        	param.period_service_addons_json = JSON.stringify(periodServiceAddonsArray);
        	$$.ajax({
@@ -109,7 +109,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        				myApp.alert(data.msg);
        			}
        			if(data.status == '0'){
-       				mainView.router.loadPage("order/period/period-order-pay.html");
+       				mainView.router.loadPage("order/period/period-order-pay.html?period_order_id="+data.data.id);
        			}
        		}
        	});

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 
 
 public interface OrderPricesService {
@@ -56,7 +57,7 @@ public interface OrderPricesService {
 //
 //	BigDecimal getOrderPayStaff(Orders order, Long staffId);
 
-	
+	OrderPrices setPeriodOrderPrices(PeriodOrder periodOrder);
 
 	
 }

@@ -1,7 +1,6 @@
 package com.jhj.action.app.order;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -35,6 +35,7 @@ import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
@@ -42,8 +43,8 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderPriceExtVo;
 import com.jhj.vo.order.OrderViewVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
 import com.meijia.utils.BeanUtilsExp;
+import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
@@ -104,6 +105,9 @@ public class OrderPayController extends BaseController {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchService;
+	
+	@Autowired
+	private PeriodOrderService periodOrderService;
 	
 	// 17.订单支付前接口
 	/**
@@ -452,5 +456,118 @@ public class OrderPayController extends BaseController {
 			
 			return result;
 		}
+		
+		@RequestMapping(value = "/post_pay_period_order.json", method = RequestMethod.POST)
+		public AppResultData<Object> postPayPeriodOrder(
+				@RequestParam("user_id") Long userId, 
+				@RequestParam("period_order_id") Integer periodOrderId, 
+				@RequestParam("pay_type") Short payType,
+				@RequestParam(value = "user_coupon_id", required = false, defaultValue="0") Long userCouponId,
+				@RequestParam(value = "coupon_id", required = false, defaultValue="0") Long couponId) {
 
+			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+
+			Users u = userService.selectByPrimaryKey(userId);
+
+			// 判断是否为注册用户，非注册用户返回 999
+			if (u == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.USER_NOT_EXIST_MG);
+				return result;
+			}		
+			
+			PeriodOrder periodOrder = periodOrderService.selectByPrimaryKey(periodOrderId);
+			if (periodOrder == null){
+				return result;
+			}
+			
+			if(!periodOrder.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_2)){
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg(ConstantMsg.HAVE_PAY);
+				return result;
+			}
+
+			OrderPrices orderPrice = orderPricesService.selectByOrderId(periodOrderId.longValue());
+			
+			if (orderPrice == null) {
+				result.setStatus(Constants.ERROR_999);
+				result.setMsg("订单不存在");
+				return result;			
+			}
+			
+			//此时 orderPay 和 orderMoney 值是相等的
+			BigDecimal orderPay = orderPrice.getOrderMoney();
+			BigDecimal orderMoney = orderPrice.getOrderMoney();
+			BigDecimal orderOriginPay = orderPrice.getOrderOriginPrice();
+			
+			//只有余额支付才能使用会员价,并且不是后台下单的订单
+			if (periodOrder.getOrderFrom() == 1 ) {
+				orderPay = orderOriginPay;
+				orderMoney = orderOriginPay;
+				if (payType.equals(Constants.PAY_TYPE_0) && u.getIsVip() == 1) {
+					orderPay = orderPrice.getOrderPrimePrice();
+				}
+			}
+			
+			if (payType.equals(Constants.PAY_TYPE_0)) {
+				//1.先判断用户余额是否够支付
+				if(u.getRestMoney().compareTo(orderPay) < 0) {
+					result.setStatus(Constants.ERROR_999);
+					result.setMsg(ConstantMsg.ERROR_999_MSG_5);
+					return result;
+				}
+			}
+			
+			orderPrice.setOrderMoney(orderMoney);
+			orderPrice.setOrderPay(orderPay);
+			orderPrice.setPayType(payType);
+			orderPrice.setUpdateTime(TimeStampUtil.getNowSecond());
+			orderPrice.setCouponId(userCouponId);
+			orderPricesService.updateByPrimaryKey(orderPrice);
+			
+			/*
+			 * 	 对于 现金支付。  orderPayType == 6 ，不进行扣款操作。只更改 订单状态 
+			 */
+			//如果是余额支付或者需支付金额为0 
+			if (payType.equals(Constants.PAY_TYPE_0) || 
+					payType.equals(Constants.PAY_TYPE_6) ||
+					payType.equals(Constants.PAY_TYPE_7) ||
+					orderPay.compareTo(new BigDecimal(0)) == 0) {
+				// 1. 扣除用户余额.
+				// 2. 用户账号明细增加.
+				// 3. 订单状态变为已支付.
+				// 4. 订单日志
+				if (payType.equals(Constants.PAY_TYPE_0)) {
+					u.setRestMoney(u.getRestMoney().subtract(orderPay));
+					u.setUpdateTime(TimeStampUtil.getNowSecond());
+					userService.updateByPrimaryKeySelective(u);
+				}
+				
+				periodOrder.setPayType(payType.intValue());
+				periodOrder.setOrderStatus(2);//已支付
+				// 修改 24小时已支付 的助理单，需要用到这个 修改时间
+				periodOrder.setUpdateTime(TimeStampUtil.getNowSecond());
+				periodOrderService.updateByPrimaryKeySelective(periodOrder);
+				
+				//记录订单日志.
+				OrderLog orderLog = orderLogService.initOrderLog(periodOrder);
+				orderLog.setAction(Constants.PERIOD_ORDER_ACTION_PAY);
+				orderLog.setUserId(u.getId());
+				orderLog.setUserName(u.getMobile());
+				orderLog.setUserType((short)0);
+				orderLogService.insert(orderLog);
+				
+				//记录用户消费明细
+				userDetailPayService.addUserDetailPayForOrder(u, periodOrder, orderPrice, "", "", "");
+				
+				//服务类型名称
+				String[] paySuccessForUser = new String[] {DateUtil.getNow(DateUtil.DEFAULT_FULL_PATTERN),"定制服务"};
+				//订单支付成功后
+				SmsUtil.SendSms(u.getMobile(),  Constants.PAY_SUCCESS_ORDER_SMS, paySuccessForUser);
+			}
+			
+			result.setData(periodOrder);
+			
+			return result;
+		}
 }

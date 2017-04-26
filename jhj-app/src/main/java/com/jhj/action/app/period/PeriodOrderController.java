@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.period.PeriodOrderAddons;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.users.UserAddrsService;
@@ -36,10 +37,13 @@ public class PeriodOrderController extends BaseController{
 	@Autowired
 	private UserAddrsService userAddrService;
 	
+	@Autowired
+	private OrderPricesService orderPricesService;
+	
 	@RequestMapping(value="/save-period-order.json",method=RequestMethod.POST)
 	public AppResultData<Object> save(
 			@RequestParam(value="user_id") Integer userId,
-			@RequestParam(value="mobile") String mobile,
+			@RequestParam(value="mobile",defaultValue="") String mobile,
 			@RequestParam(value="addr_id") Long addrId,
 			@RequestParam(value="order_type") Integer orderType,
 			@RequestParam(value="order_status") Integer orderStatus,
@@ -59,12 +63,12 @@ public class PeriodOrderController extends BaseController{
 			return result;
 		}
 		
-//		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
-//		if(userAddrs==null){
-//			result.setStatus(Constants.ERROR_999);
-//			result.setMsg("您选择的服务地址不存在！");
-//			return result;
-//		}
+		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
+		if(userAddrs==null){
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("您选择的服务地址不存在！");
+			return result;
+		}
 		
 		PeriodOrder init = periodOrderService.init();
 		init.setUserId(userId);
@@ -82,6 +86,8 @@ public class PeriodOrderController extends BaseController{
 		
 		PeriodOrder periodOrder = periodOrderService.selectByOrderNo(init.getOrderNo());
 		
+		OrderPrices orderPrices = orderPricesService.setPeriodOrderPrices(periodOrder);
+		orderPricesService.insert(orderPrices);
 		
 		List<PeriodOrderAddons> periodOrderAddonsList = JSON.parseArray(periodServiceAddonsJson, PeriodOrderAddons.class);
 		if(periodOrderAddonsList!=null && periodOrderAddonsList.size()>0){
@@ -98,7 +104,7 @@ public class PeriodOrderController extends BaseController{
 			
 			periodOrderAddonsService.insertBatch(periodOrderAddonsList);
 		}
-		
+		result.setData(periodOrder);
 		
 		return result;
 	}
