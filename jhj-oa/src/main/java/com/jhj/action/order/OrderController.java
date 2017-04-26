@@ -356,14 +356,6 @@ public class OrderController extends BaseController {
 		Long orderOpFrom = orders.getOrderOpFrom();
 		orders.setOrderOpFrom(orderForm.getOrderOpFrom());
 		orderService.updateByPrimaryKeySelective(orders);
-		if(orders.getOrderType()==0)
-			url = "redirect:order-hour-list";
-		if(orders.getOrderType()==1){
-			if(orders.getServiceType()==62 || orders.getServiceType()==63 || orders.getServiceType()==64 ||orders.getServiceType()==65)
-				url = "redirect:order-exp-baby-list";
-			else
-				url = "redirect:order-exp-list";
-		}
 		
 		if(orderOpFrom!=orderForm.getOrderOpFrom()){
 			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
@@ -379,7 +371,7 @@ public class OrderController extends BaseController {
 			orderLogService.insert(initOrderLog);
 		}
 			
-		return url;
+		return "redirect:order-list";
 	}
 
 }
