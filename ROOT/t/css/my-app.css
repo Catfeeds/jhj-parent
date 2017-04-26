@@ -5585,7 +5585,7 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 }
 .dingzhi-huodong3{
   width:100%;
-  background: #fff;position: absolute;
+  background: #fff;position: fixed;
   bottom: 0;
   left:0;
   height:60px;
