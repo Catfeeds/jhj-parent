@@ -5587,12 +5587,13 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   width:100%;
   background: #fff;position: fixed;
   bottom: 0;
-  height:100px;
+  height:80px;
+  z-index: 999;
 }
 .dingzhi-huodong3 img{
   width:30%;
   margin-left: 2.5%;
-  margin-top: 30px;
+  margin-top: 20px;
   float: left;
 }
 
