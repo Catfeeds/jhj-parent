@@ -5553,8 +5553,48 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   float: left;
   height:150px;
 }
-
-
+.dingzhi-huodong1{
+  width:100%;
+  height:60px;
+  background: #fff;
+}
+.dingzhi-huodong1 p{
+  margin:0;
+  width:100%;
+  height:30px;
+  text-align: center;
+  line-height: 30px;
+  color:#42C4D1;
+}
+.dingzhi-huodong2{
+  width:25%;
+  float: left;
+}
+.dingzhi-huodong2 img{
+  width:70%;
+  margin-left: 15%;
+  margin-top: 15px;
+}
+.dingzhi-huodong2 p{
+  margin:0;
+  width:100%;
+  height:30px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 30px;
+}
+.dingzhi-huodong3{
+  width:100%;
+  background: #fff;
+  margin-top: 15px;
+  height:100px;
+}
+.dingzhi-huodong3 img{
+  width:30%;
+  margin-left: 2.5%;
+  margin-top: 30px;
+  float: left;
+}
 
 
 
