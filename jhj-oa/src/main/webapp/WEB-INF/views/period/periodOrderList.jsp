@@ -47,7 +47,7 @@
 							<td>${item.userCouponsId }</td>
 							<td>${item.orderFrom }</td>
 							<td>${item.addTime }</td>
-							<td><button type="button">修改</button></td>
+							<td><a href="updatePeriodOrder?periodOrderId=${item.id }"><button type="button">修改</button></a></td>
 						</tr>
 					</c:forEach>
 				</tbody> 

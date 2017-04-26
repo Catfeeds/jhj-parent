@@ -22,7 +22,6 @@
 				<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 				<div class="panel-body">
 					<form name="form" id="form" class="form-horizontal">
-						<form:hidden path="id"/>
 						<input type="hidden" name="id" value="${periodOrder.id }" />
 						<div class="form-group required">
 							<label class="col-md-2 control-label">
@@ -47,9 +46,9 @@
 								<font color="red">*</font>地址
 							</label>
 							<div class="col-md-5">
-								<form:select path="addrId" id="addrId" class="form-control">
-									<form:option value="">--请选择地址--</form:option>
-								</form:select>
+								<select name="addrId" id="addrId" class="form-control">
+									<option value="">--请选择地址--</option>
+								</select>
 							</div>
 						</div>
 						
