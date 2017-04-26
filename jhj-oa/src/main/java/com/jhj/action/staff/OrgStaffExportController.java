@@ -167,14 +167,15 @@ public class OrgStaffExportController extends BaseController {
 			
 			if (order == null) continue;
 			
+			
 			//导出的是完成服务和评价后的订单。
 			Short orderStatus = order.getOrderStatus();
 			if (!orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) && 
 				!orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) 
 				continue;
-			
+//			logger.info("order_no = " + order.getOrderNo());
 			//订单完成时间是否在查询条件范围之内
-			Long orderUpdateTime = order.getUpdateTime();
+			Long orderUpdateTime = order.getOrderDoneTime();
 			if (orderUpdateTime < startServiceTime || orderUpdateTime > endServiceTime) {
 				continue;
 			}
