@@ -57,18 +57,18 @@ public class PeriodOrderController extends BaseController{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-		if(addrId==null || addrId<=0){
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg("请选择服务地址");
-			return result;
-		}
-		
-		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
-		if(userAddrs==null){
-			result.setStatus(Constants.ERROR_999);
-			result.setMsg("您选择的服务地址不存在！");
-			return result;
-		}
+//		if(addrId==null || addrId<=0){
+//			result.setStatus(Constants.ERROR_999);
+//			result.setMsg("请选择服务地址");
+//			return result;
+//		}
+//		
+//		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
+//		if(userAddrs==null){
+//			result.setStatus(Constants.ERROR_999);
+//			result.setMsg("您选择的服务地址不存在！");
+//			return result;
+//		}
 		
 		PeriodOrder init = periodOrderService.init();
 		init.setUserId(userId);

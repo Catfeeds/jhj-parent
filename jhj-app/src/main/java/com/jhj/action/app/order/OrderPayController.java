@@ -460,7 +460,7 @@ public class OrderPayController extends BaseController {
 		@RequestMapping(value = "/post_pay_period_order.json", method = RequestMethod.POST)
 		public AppResultData<Object> postPayPeriodOrder(
 				@RequestParam("user_id") Long userId, 
-				@RequestParam("period_order_id") Integer periodOrderId, 
+				@RequestParam("order_no") String orderNo, 
 				@RequestParam("pay_type") Short payType,
 				@RequestParam(value = "user_coupon_id", required = false, defaultValue="0") Long userCouponId,
 				@RequestParam(value = "coupon_id", required = false, defaultValue="0") Long couponId) {
@@ -476,18 +476,21 @@ public class OrderPayController extends BaseController {
 				return result;
 			}		
 			
-			PeriodOrder periodOrder = periodOrderService.selectByPrimaryKey(periodOrderId);
+			PeriodOrder periodOrder = periodOrderService.selectByOrderNo(orderNo);
 			if (periodOrder == null){
 				return result;
 			}
+			//更新支付方式
+			periodOrder.setPayType(payType.intValue());
+			periodOrderService.updateByPrimaryKeySelective(periodOrder);
 			
-			if(!periodOrder.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_2)){
+			if(periodOrder.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_2)){
 				result.setStatus(Constants.ERROR_999);
 				result.setMsg(ConstantMsg.HAVE_PAY);
 				return result;
 			}
 
-			OrderPrices orderPrice = orderPricesService.selectByOrderId(periodOrderId.longValue());
+			OrderPrices orderPrice = orderPricesService.selectByOrderNo(orderNo);
 			
 			if (orderPrice == null) {
 				result.setStatus(Constants.ERROR_999);
@@ -543,9 +546,7 @@ public class OrderPayController extends BaseController {
 					userService.updateByPrimaryKeySelective(u);
 				}
 				
-				periodOrder.setPayType(payType.intValue());
 				periodOrder.setOrderStatus(2);//已支付
-				// 修改 24小时已支付 的助理单，需要用到这个 修改时间
 				periodOrder.setUpdateTime(TimeStampUtil.getNowSecond());
 				periodOrderService.updateByPrimaryKeySelective(periodOrder);
 				

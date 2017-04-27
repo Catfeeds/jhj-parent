@@ -1,7 +1,7 @@
 myApp.onPageInit('period-order-pay', function(page) {
 		
 	var userId = localStorage['user_id'];
-	var orderId = page.url.period_order_id;
+	var orderNo = page.query.order_no;
 	var userCouponId = sessionStorage.getItem('user_coupon_id');
 	var userCouponValue = sessionStorage.getItem('user_coupon_value');
 	if (userCouponValue == undefined || userCouponValue == "" || userCouponValue == null) {
@@ -12,7 +12,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 	var payOrderType = sessionStorage.getItem("pay_order_type");
 	
 	$$("#userId").val(userId);
-	$$("#orderId").val(orderId);
+	$$("#orderNo").val(orderNo);
 	$$("#orderPay").val(orderPay);
 	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
 	$$("#orderPayStrLi").html("￥"+orderPay+"元");
@@ -112,16 +112,16 @@ myApp.onPageInit('period-order-pay', function(page) {
 		
 		var params = {};
 		params.user_id = userId;
-		params.period_order_id = orderId;
+		params.order_no = orderNo;
 		var userCouponId = $$("#userCouponId").val();
 		if (userCouponId == undefined) userCouponId = 0;
 		params.user_coupon_id = userCouponId;
-		params.order_pay_type = $$("#orderPayType").val();
+		params.pay_type = $$("#orderPayType").val();
 		console.log(params);
 		
 		$$.ajax({
 			type: "post",
-			 url: siteAPIPath + "order/post_pay_period_order.json",
+			url: siteAPIPath + "order/post_pay_period_order.json",
 			data: params,
 			statusCode: {
 	         	200: postOrderPaySuccess,

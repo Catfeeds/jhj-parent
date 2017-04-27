@@ -96,7 +96,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        	param.order_price = sessionStorage.getItem("periodPayMoney");
        	param.user_coupons_id = 0;
        	param.period_service_type_id = 0;
-       	param.order_from = 2;
+       	param.order_from = 1;
        	param.remarks = "";
        	param.period_service_addons_json = JSON.stringify(periodServiceAddonsArray);
        	$$.ajax({
@@ -109,7 +109,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        				myApp.alert(data.msg);
        			}
        			if(data.status == '0'){
-       				mainView.router.loadPage("order/period/period-order-pay.html?period_order_id="+data.data.id);
+       				mainView.router.loadPage("order/period/period-order-pay.html?order_no="+data.data.order_no);
        			}
        		}
        	});
@@ -138,9 +138,9 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), serviceTypeId);
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), serviceTypeAddons.service_addon_id);
         				htmlPart = htmlPart.replace(new RegExp('{name}', "gm"), serviceTypeAddons.name);
-        				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), serviceTypeAddons.total);
-        				htmlPart = htmlPart.replace(new RegExp('{num}', "gm"), serviceTypeAddons.num);
-        				htmlPart = htmlPart.replace(new RegExp('{punit}', "gm"), serviceTypeAddons.punit);
+//        				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsNum}', "gm"), serviceTypeAddons.total);
+//        				htmlPart = htmlPart.replace(new RegExp('{addonsNum}', "gm"), serviceTypeAddons.default_num);
+//        				htmlPart = htmlPart.replace(new RegExp('{addonsUnit}', "gm"), serviceTypeAddons.item_unit);
         				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), serviceTypeAddons.price);
         				htmlPart = htmlPart.replace(new RegExp('{pprice}', "gm"), serviceTypeAddons.dis_price);
         				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), serviceTypeAddons.price);
