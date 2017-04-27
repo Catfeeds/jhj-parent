@@ -1,4 +1,4 @@
-package com.meijia.utils;
+package com.meijia.utils.redis;
 
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -8,22 +8,22 @@ import java.util.ResourceBundle;
  *
  */
 @SuppressWarnings("serial")
-public final class ConfigUtil extends Properties {
-	public static ConfigUtil instance;
+public final class RedisConfigUtil extends Properties {
+	public static RedisConfigUtil instance;
 	public ResourceBundle rb;
 
-	private ConfigUtil() {
-		this.rb = ResourceBundle.getBundle("config");
+	private RedisConfigUtil() {
+		this.rb = ResourceBundle.getBundle("redis");
 	}
 
 	// 保持对象同步
 	private static synchronized void makeInstance() {
 		if (instance == null) {
-			instance = new ConfigUtil();
+			instance = new RedisConfigUtil();
 		}
 	}
 
-	public static ConfigUtil getInstance() {
+	public static RedisConfigUtil getInstance() {
 		if (instance != null) {
 			return instance;
 		} else {
@@ -40,7 +40,7 @@ public final class ConfigUtil extends Properties {
 		this.rb = rb;
 	}
 
-	public static void setInstance(ConfigUtil instance) {
-		ConfigUtil.instance = instance;
+	public static void setInstance(RedisConfigUtil instance) {
+		RedisConfigUtil.instance = instance;
 	}
 }
