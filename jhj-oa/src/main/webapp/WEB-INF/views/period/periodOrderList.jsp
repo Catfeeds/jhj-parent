@@ -4,6 +4,9 @@
 <%@ include file="../shared/taglib.jsp"%>
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
+<%@ taglib prefix="payTypeName" uri="/WEB-INF/tags/payTypeName.tld"%>
+<%@ taglib prefix="orderFromName" uri="/WEB-INF/tags/orderFromName.tld"%>
+<%@ taglib prefix="addressName" uri="/WEB-INF/tags/addressName.tld"%>
 <html>
 <head>
 <!--common css for all pages-->
@@ -40,12 +43,18 @@
 						<tr>
 							<td>${item.userId }</td>
 							<td>${item.mobile }</td>
-							<td>${item.addrId }</td>
-							<td>${item.orderStatus }</td>
-							<td>${item.payType }</td>
+							<td><addressName:addr addrId="${item.addrId }" /></td>
+							<td>
+								<c:if test="${item.orderStatus==0 }">已取消</c:if>
+								<c:if test="${item.orderStatus==1 }">未支付</c:if> 
+								<c:if test="${item.orderStatus==2 }">已支付</c:if>  
+								<c:if test="${item.orderStatus==3 }">未完成</c:if>
+								<c:if test="${item.orderStatus==4 }">已完成</c:if> 
+							</td>
+							<td><payTypeName:payType payType="${item.payType }" orderStatus="2"/> </td>
 							<td>${item.orderMoney }</td>
 							<td>${item.userCouponsId }</td>
-							<td>${item.orderFrom }</td>
+							<td><orderFromName:orderfrom orderFrom="${item.orderFrom}"/></td>
 							<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime*1000 }"/></td> 
 							<td><a href="updatePeriodOrder?periodOrderId=${item.id }"><button type="button">修改</button></a></td>
 						</tr>
