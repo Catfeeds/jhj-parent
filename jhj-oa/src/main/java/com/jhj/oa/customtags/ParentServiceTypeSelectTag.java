@@ -11,9 +11,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.jhj.po.model.dict.DictServiceTypes;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.service.dict.DictUtil;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.PartnerServiceTypeSearchVo;
 
