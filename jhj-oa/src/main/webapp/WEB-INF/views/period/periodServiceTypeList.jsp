@@ -4,6 +4,7 @@
 <%@ include file="../shared/taglib.jsp"%>
 <!-- taglib for this page -->
 <%@ taglib prefix="timestampTag" uri="/WEB-INF/tags/timestamp.tld"%>
+<%@ taglib prefix="serviceTypeName" uri="/WEB-INF/tags/partnerServiceTypeName.tld"%>
 <html>
 <head>
 <!--common css for all pages-->
@@ -40,7 +41,7 @@
 					<c:forEach items="${page.list}" var="item">
 						<tr>
 							<td>${item.name }</td>
-							<td>${item.serviceTypeId }</td>
+							<td><serviceTypeName:typeId typeId="${item.serviceTypeId }"/> </td>
 							<td>${item.serviceAddonId }</td>
 							<td>${item.price }</td>
 							<td>${item.vipPrice }</td>

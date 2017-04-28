@@ -25,7 +25,7 @@
         String orderType = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
 		
         //服务品类
-        String serviceTypeId = new String(request.getParameter("serviceTypeId").getBytes("ISO-8859-1"),"UTF-8");
+        String periodServiceTypeId = new String(request.getParameter("periodServiceTypeId").getBytes("ISO-8859-1"),"UTF-8");
 		
      	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价 4=定制支付
         String payOrderType = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
@@ -41,7 +41,7 @@
         
         String notifyUrl = host + "/jhj-app/pay/notify_alipay_period_order.jsp";
         
-        String returnUrl = host + "/u/#!/order/order-pay-success.html?service_type_id="+serviceTypeId;
+        String returnUrl = host + "/u/#!/order/order-pay-success.html";
 		
 		//////////////////////////////////////////////////////////////////////////////////
 		

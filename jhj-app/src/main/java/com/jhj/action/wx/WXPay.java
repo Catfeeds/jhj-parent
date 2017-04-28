@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jhj.common.Constants;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.period.PeriodOrderService;
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -42,6 +44,9 @@ public class WXPay extends HttpServlet {
 	
 	@Autowired
 	private OrderPriceExtService orderPriceExtService;
+	
+	@Autowired
+	private PeriodOrderService periodOrderService;
 	
 	private String successUrl = "wx-pay-pre.jsp";
 
@@ -71,9 +76,9 @@ public class WXPay extends HttpServlet {
 		
 		Long orderId = Long.valueOf(orderIdStr);
 		
-		String orderNo = "";
+		String orderNo = request.getParameter("orderNo");
 		Long userId = 0L;
-		// 订单类型 0 = 订单支付 1= 充值卡充值  2=手机话费充值 7 = 订单补差价
+		// 订单类型 0 = 订单支付 1= 充值卡充值  2=手机话费充值 4=定制 7 = 订单补差价
 		String payOrderType = request.getParameter("pay_order_type");
 		
 		if (payOrderType == null) payOrderType = "0";
@@ -105,7 +110,7 @@ public class WXPay extends HttpServlet {
 			
 		}
 		
-		//TODO 处理 手机话费 充值的 情况
+		//处理 手机话费 充值的 情况
 		
 		if(payOrderType.equals("2")){
 			// 先做必要的验证
@@ -147,6 +152,28 @@ public class WXPay extends HttpServlet {
 			
 			BigDecimal p1 = new BigDecimal(100);
 			BigDecimal p2 = MathBigDecimalUtil.mul(orderPriceExt.getOrderPay(), p1);
+			BigDecimal orderPayNow = MathBigDecimalUtil.round(p2, 0);
+			wxPay = orderPayNow.toString();
+		}
+		
+		if(payOrderType.equals("4")) {
+			PeriodOrder periodOrder = periodOrderService.selectByOrderNo(orderNo);
+			
+			// 订单找不到的情况.
+			if (periodOrder == null || periodOrder.getId().equals(0)) {
+				request.setAttribute("tips", "无效的订单");
+				ServletUtil.forward(request, response, errorUrl);
+			}
+			
+			// 订单已经支付过，不需要重复支付
+			if (periodOrder.getOrderStatus() == 2) {
+				request.setAttribute("tips", "订单已经支付过，请不要重复支付!");
+				ServletUtil.forward(request, response, tipsUrl);
+			}
+			
+			// 实际支付金额
+			BigDecimal p1 = new BigDecimal(100);
+			BigDecimal p2 = MathBigDecimalUtil.mul(periodOrder.getOrderPrice(), p1);
 			BigDecimal orderPayNow = MathBigDecimalUtil.round(p2, 0);
 			wxPay = orderPayNow.toString();
 		}

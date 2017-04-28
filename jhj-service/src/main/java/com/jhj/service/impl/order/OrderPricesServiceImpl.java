@@ -20,6 +20,7 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -595,6 +596,25 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		}
 		
 		return incomingPercent;
+	}
+
+	@Override
+	public OrderPrices setPeriodOrderPrices(PeriodOrder periodOrder) {
+		
+		OrderPrices prices = this.initOrderPrices();
+		
+		prices.setMobile(periodOrder.getMobile());
+		prices.setUserId(Long.valueOf(periodOrder.getUserId()));
+		prices.setOrderId(periodOrder.getId().longValue());
+		prices.setOrderNo(periodOrder.getOrderNo());
+		prices.setOrderMoney(periodOrder.getOrderMoney());
+		prices.setOrderPay(periodOrder.getOrderPrice());
+		prices.setPayType(periodOrder.getPayType().shortValue());
+		prices.setOrderOriginPrice(periodOrder.getOrderMoney());
+		prices.setOrderPrimePrice(periodOrder.getOrderPrice());
+		
+		return prices;
+		
 	}
 
 }

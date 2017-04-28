@@ -56,6 +56,9 @@ public class WxUtil {
 			case (short)3 :
 				notifyUrl = WxConfig.getInstance().getRb().getString("wx_orderext_notify_url");
 				break;	
+			case (short)4:
+				notifyUrl = WxConfig.getInstance().getRb().getString("wx_period_order_notify_url");
+				break;
 			//TODO  话费充值和 订单 支付  此处 共用 一个 通知 类
 			case (short)6 :
 				notifyUrl = WxConfig.getInstance().getRb().getString("wx_order_notify_url");

@@ -100,7 +100,8 @@ function goBackToOrder(addrId, addrName){
 		if (historyPage == undefined) continue;
 		console.log("historyPage = " + historyPage);
 		if (historyPage.indexOf("order-hour-choose") >= 0 ||
-			historyPage.indexOf("order-deep-choose") >= 0 
+			historyPage.indexOf("order-deep-choose") >= 0 ||
+			historyPage.indexOf("period-order-confirm") >= 0
 		) {
 			returnPage = historyPage;
 			break;

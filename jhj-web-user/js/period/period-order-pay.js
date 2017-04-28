@@ -1,18 +1,7 @@
 myApp.onPageInit('period-order-pay', function(page) {
 		
 	var userId = localStorage['user_id'];
-	var serviceTypeId = sessionStorage.getItem('service_type_id');
-	var orderNo = sessionStorage.getItem('order_no');
-	var orderId = sessionStorage.getItem('order_id');
-	var orderPay = sessionStorage.getItem('order_pay');
-	var orderOriginPay = sessionStorage.getItem('order_origin_pay');
-	if(orderPay==undefined || orderPay==null || orderPay==''){
-		orderPay = 0;
-	}
-	if(orderOriginPay==undefined || orderOriginPay==null || orderOriginPay==''){
-		orderOriginPay = 0;
-	}
-	
+	var orderNo = page.query.order_no;
 	var userCouponId = sessionStorage.getItem('user_coupon_id');
 	var userCouponValue = sessionStorage.getItem('user_coupon_value');
 	if (userCouponValue == undefined || userCouponValue == "" || userCouponValue == null) {
@@ -22,10 +11,8 @@ myApp.onPageInit('period-order-pay', function(page) {
 	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价 4 = 定制支付
 	var payOrderType = sessionStorage.getItem("pay_order_type");
 	
-	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
-	$$("#orderId").val(orderId);
 	$$("#orderPay").val(orderPay);
 	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
 	$$("#orderPayStrLi").html("￥"+orderPay+"元");
@@ -78,19 +65,9 @@ myApp.onPageInit('period-order-pay', function(page) {
 		}
 
 		orderPayType = result.data.pay_type;
-		orderType = result.data.order_type;
-		serviceTypeId = result.data.service_type;
-		
-		//补差价需要单独处理订单ID 和 订单编号
-		if (payOrderType == 3) {
-			orderNo = result.data.order_no_ext;
-			orderId = result.data.id;
-			
-			sessionStorage.setItem('order_id_ext', orderId);
-			sessionStorage.setItem('order_no_ext', orderNo);
-		}
-		
-		console.log("orderPayType = " + orderPayType);
+		var orderType = result.data.order_type;
+		var periodServiceTypeId = result.data.period_service_type_id;
+		var orderNo = result.data.order_no;
 		
 		//如果为余额支付或者 现金支付，则直接跳到完成页面
 		if (orderPayType == 0) {
@@ -98,7 +75,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 			sessionStorage.removeItem("user_coupon_id");
 			sessionStorage.removeItem("user_coupon_value");
 			sessionStorage.removeItem("user_coupon_name");
-			mainView.router.loadPage("order/order-pay-success.html?service_type_id="+serviceTypeId);
+			mainView.router.loadPage("order/order-pay-success.html");
 		}
 		
 		
@@ -109,8 +86,8 @@ myApp.onPageInit('period-order-pay', function(page) {
 			alipayUrl +="?orderNo="+orderNo;
 			alipayUrl +="&orderPay="+orderPay;
 			alipayUrl +="&orderType="+orderType;
-			alipayUrl +="&serviceTypeId="+serviceTypeId;
-			alipayUrl +="&payOrderType="+payOrderType;
+			alipayUrl +="&periodServiceTypeId="+periodServiceTypeId;
+			alipayUrl +="&payOrderType=4";
 			location.href = alipayUrl;
 		}
 		
@@ -119,43 +96,32 @@ myApp.onPageInit('period-order-pay', function(page) {
 			 var userCouponId = $$("#userCouponId").val();
 			 if (userCouponId == undefined) userCouponId = 0;
 			 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
-			 wxPayUrl +="?orderId="+orderId;
+			 wxPayUrl +="?orderNo="+orderNo;
 			 wxPayUrl +="&userCouponId="+userCouponId;
 			 wxPayUrl +="&orderType=0";
 			 wxPayUrl +="&payOrderType="+payOrderType;
-			 wxPayUrl +="&serviceTypeId="+serviceTypeId;
+			 wxPayUrl +="&periodServiceTypeId="+periodServiceTypeId;
 			 location.href = wxPayUrl;
 		}
 		
-		if (orderPayType == 4) {
-			 var userCouponId = $$("#userCouponId").val();
-			 if (userCouponId == undefined) userCouponId = 0;
-			 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
-			 wxPayUrl +="?orderId="+orderId;
-			 wxPayUrl +="&userCouponId="+userCouponId;
-			 wxPayUrl +="&orderType=0";
-			 wxPayUrl +="&payOrderType="+payOrderType;
-			 wxPayUrl +="&serviceTypeId="+serviceTypeId;
-			 location.href = wxPayUrl;
-		}
 	};
 	
-	
-	function doOrderPay() {
+	//点击支付的处理
+	$$("#orderPaySubmit").click(function(){
+		$$("#orderPaySubmit").attr("disabled", true);
+		
 		var params = {};
 		params.user_id = userId;
 		params.order_no = orderNo;
 		var userCouponId = $$("#userCouponId").val();
 		if (userCouponId == undefined) userCouponId = 0;
 		params.user_coupon_id = userCouponId;
-		params.order_pay_type = $$("#orderPayType").val();
-		
+		params.pay_type = $$("#orderPayType").val();
 		console.log(params);
-
 		
 		$$.ajax({
 			type: "post",
-			 url: siteAPIPath + "order/post_pay.json",
+			url: siteAPIPath + "order/post_pay_period_order.json",
 			data: params,
 			statusCode: {
 	         	200: postOrderPaySuccess,
@@ -163,43 +129,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 	 	    	500: ajaxError
 	 	    }
 		});
-	}
-	
-	function doOrderPayExt() {
-		var params = {};
-		params.user_id = userId;
-		params.order_no = orderNo;
-		params.order_pay_ext = orderPay;
-		params.order_pay_type = $$("#orderPayType").val();
-		
-		console.log(params);
-
-		$$.ajax({
-			type: "post",
-			 url: siteAPIPath + "order/post_pay_ext.json",
-			data: params,
-			statusCode: {
-	         	200: postOrderPaySuccess,
-	 	    	400: ajaxError,
-	 	    	500: ajaxError
-	 	    }
-		});
-	}
-	
-	//点击支付的处理
-	$$("#orderPaySubmit").click(function(){
-		$$("#orderPaySubmit").attr("disabled", true);
-		
-		if (payOrderType == 0) {
-			doOrderPay();
-		}
-		
-		//补差价订单
-		if (payOrderType == 3) {
-			doOrderPayExt();
-		}
 	});
-	
 });
 
 function changePayType(imgPayType, orderPayType) {
@@ -217,20 +147,20 @@ function changePayType(imgPayType, orderPayType) {
 	});
 	
 	//更换价格
-	var orderPay = sessionStorage.getItem('order_pay');
-	var orderOriginPay = sessionStorage.getItem('order_origin_pay');
+	var orderPay = sessionStorage.getItem('periodPayMoney');
+	var orderOriginPay = sessionStorage.getItem('periodOrderMoney');
 	if(orderPay==undefined || orderPay==null || orderPay==''){
 		orderPay = 0;
 	}
 	if(orderOriginPay==undefined || orderOriginPay==null || orderOriginPay==''){
 		orderOriginPay = 0;
 	}
-	if (orderPayType == 0) {
-		$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
-		$$("#orderPayStrLi").html("￥"+orderPay+"元");
-	} else {
-		$$("#orderMoneyStrLi").html("￥"+orderOriginPay+"元");
-		$$("#orderPayStrLi").html("￥"+orderOriginPay+"元");
-	}
+//	if (orderPayType == 0) {
+	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
+	$$("#orderPayStrLi").html("￥"+orderPay+"元");
+//	} else {
+//		$$("#orderMoneyStrLi").html("￥"+orderOriginPay+"元");
+//		$$("#orderPayStrLi").html("￥"+orderOriginPay+"元");
+//	}
 	
 }
