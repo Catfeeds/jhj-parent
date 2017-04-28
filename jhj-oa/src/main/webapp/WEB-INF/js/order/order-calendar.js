@@ -143,6 +143,7 @@ function selectServiceDate(){
     		serviceDateStr = moment().format("YYYY-MM-DD");
     	}
     	param.service_date_str = serviceDateStr;
+    	param.staff_id = 0;
     	var host = window.location.host;
 		var appName = "jhj-app";
 		var localUrl = "http://" + host;

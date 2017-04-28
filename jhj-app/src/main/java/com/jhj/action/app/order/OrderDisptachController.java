@@ -1,5 +1,6 @@
 package com.jhj.action.app.order;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +27,19 @@ public class OrderDisptachController extends BaseController {
 	public AppResultData<Object> list(
 			@RequestParam("service_type_id") Long serviceTypeId,
 			@RequestParam("service_date_str") String serviceDateStr,
-			@RequestParam("addr_id") Long addrId
+			@RequestParam("addr_id") Long addrId,
+			@RequestParam("staff_id") Long staffId
 			) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
-		List<Map<String, String>> datas = orderDispatchsService.checkDispatchedDay(serviceTypeId, serviceDateStr, addrId);
+		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
+		if (staffId.equals(0L)) {
+			datas = orderDispatchsService.checkDispatchedDay(serviceTypeId, serviceDateStr, addrId);
+		}
+		
+		if (staffId > 0L) {
+			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, addrId, staffId);
+		}
 		
 		result.setData(datas);
 		
