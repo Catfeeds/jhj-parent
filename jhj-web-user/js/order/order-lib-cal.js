@@ -148,6 +148,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
     		serviceDateStr = moment().format("YYYY-MM-DD");
     	}
     	param.service_date_str = serviceDateStr;
+    	param.staff_id = staffId;
     	$$.ajax({
     		type:"POST",
     		url:siteAPIPath+"order/check_dispatch.json",
