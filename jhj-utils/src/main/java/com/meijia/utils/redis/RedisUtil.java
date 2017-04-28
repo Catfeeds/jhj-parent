@@ -3,12 +3,16 @@ package com.meijia.utils.redis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.meijia.utils.GsonUtil;
+import com.meijia.utils.JsonUtil;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.SortingParams;
 import redis.clients.util.SafeEncoder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -1529,10 +1533,22 @@ public class RedisUtil {
 	}
 
 	public static void main(String[] args) {
-	
-		String werwe = RedisUtil.getInstance().strings().set("test", "lnczx");
-		System.out.println(werwe);
-		String s = RedisUtil.getInstance().strings().get("test");
+		
+		Map<String, Object> accessTokes = new HashMap<String, Object>();
+		accessTokes.put("access_token", "aasdfasf");
+		accessTokes.put("expires_in", "7200");
+		
+		String result = GsonUtil.GsonString(accessTokes);
+		System.out.println(result);
+		
+		accessTokes = JsonUtil.stringToMap(result);
+		String accessToken = accessTokes.get("access_token").toString();
+		String expiresInStr = accessTokes.get("expires_in").toString();
+		int expires = Integer.valueOf(expiresInStr) - 10;
+		
+		String ss = RedisUtil.getInstance().strings().setEx("wx_access_token", expires, accessToken);
+		System.out.println(ss);
+		String s = RedisUtil.getInstance().strings().get("wx_access_token");
 		System.out.println(s);
 	}
 }
