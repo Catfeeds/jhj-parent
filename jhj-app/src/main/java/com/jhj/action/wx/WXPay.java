@@ -78,7 +78,7 @@ public class WXPay extends HttpServlet {
 		
 		String orderNo = request.getParameter("orderNo");
 		Long userId = 0L;
-		// 订单类型 0 = 订单支付 1= 充值卡充值  2=手机话费充值 7 = 订单补差价
+		// 订单类型 0 = 订单支付 1= 充值卡充值  2=手机话费充值 4=定制 7 = 订单补差价
 		String payOrderType = request.getParameter("pay_order_type");
 		
 		if (payOrderType == null) payOrderType = "0";

@@ -63,8 +63,6 @@ myApp.onPageBeforeInit("period-order", function (page) {
     });
     
     $$("#balance-account").on('click',function(){
-    	var serviceArray = [];
-    	sessionStorage.removeItem("serviceArray");
        	var serviceTypeList = $$("input[name='serviceTypeId']:checked");
        	if(serviceTypeList.length==0){
        		myApp.alert("请至少选择一种服务！");
@@ -75,6 +73,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        	for(var i=0;i<serviceTypeList.length;i++){
        		var serviceType = serviceTypeList[i];
        		var serviceTypeObject = {};
+       		serviceTypeObject.name = $$(serviceType).nextAll(".item-inner").find(".housework-3 .item-title").text();
        		serviceTypeObject.periodServiceTypeId = $$(serviceType).prevAll("input[name='id']").val();
        		serviceTypeObject.serviceTypeId = $$(serviceType).val();
        		serviceTypeObject.serviceAddonId = $$(serviceType).prev().val();
@@ -85,35 +84,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        		periodServiceAddonsArray.push(serviceTypeObject);
        	}
        	
-       	
-       	var param = {};
-       	param.user_id = localStorage.getItem("user_id");
-       	param.mobile = localStorage.getItem("user_mobile");
-       	param.addr_id = 1;
-       	param.order_type = 1;
-       	param.order_status = 1;
-       	param.order_money = sessionStorage.getItem("periodOrderMoney");
-       	param.order_price = sessionStorage.getItem("periodPayMoney");
-       	param.user_coupons_id = 0;
-       	param.period_service_type_id = 0;
-       	param.order_from = 1;
-       	param.remarks = "";
-       	param.period_service_addons_json = JSON.stringify(periodServiceAddonsArray);
-       	$$.ajax({
-       		type:"post",
-       		url:siteAPIPath+"period/save-period-order.json",
-       		data:param,
-       		dataType:"json",
-       		success:function(data){
-       			if(data.status == '999'){
-       				myApp.alert(data.msg);
-       			}
-       			if(data.status == '0'){
-       				mainView.router.loadPage("order/period/period-order-pay.html?order_no="+data.data.order_no);
-       			}
-       		}
-       	});
-       
+       	sessionStorage.setItem("periodOrder",JSON.stringify(periodServiceAddonsArray));
     });
     
     

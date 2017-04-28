@@ -155,12 +155,12 @@ function changePayType(imgPayType, orderPayType) {
 	if(orderOriginPay==undefined || orderOriginPay==null || orderOriginPay==''){
 		orderOriginPay = 0;
 	}
-	if (orderPayType == 0) {
-		$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
-		$$("#orderPayStrLi").html("￥"+orderPay+"元");
-	} else {
-		$$("#orderMoneyStrLi").html("￥"+orderOriginPay+"元");
-		$$("#orderPayStrLi").html("￥"+orderOriginPay+"元");
-	}
+//	if (orderPayType == 0) {
+	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
+	$$("#orderPayStrLi").html("￥"+orderPay+"元");
+//	} else {
+//		$$("#orderMoneyStrLi").html("￥"+orderOriginPay+"元");
+//		$$("#orderPayStrLi").html("￥"+orderOriginPay+"元");
+//	}
 	
 }

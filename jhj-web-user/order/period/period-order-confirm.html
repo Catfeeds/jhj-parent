@@ -1,0 +1,77 @@
+<div data-page="period-order-confirm" class="page">
+    <div id="indexPageContentDiv" class="page-content">
+        <div class="beijing-index">
+            <div id="period-order-list">
+
+            </div>
+			
+            <div class="order-pay">
+                <li>选择地址</li>
+            </div>
+            <div class="order-xiadan">
+                <a href="user/mine-addr-list.html" class="special-color7" id="addrSelect">
+                    <ul class="xiadan11" style="border: 0;">
+                        <li>
+                            <img src="img/rili/zuobiao.png" alt="">
+                        </li>
+                        <li style="width: 70%;">
+                            <div style="width: 25%; height: 60px; float: left;">地址：</div>
+                            <label id="orderChooseAddrName" class="tarea2"></label>
+                        </li>
+                        <li style="width: 10%;">
+                            <img src="img/rili/tianxie.png" alt="">
+                        </li>
+                    </ul>
+                </a>
+            </div>
+            <div class="kongdiv" />
+            <div class="housework10">
+				<div class="housework10-1">
+					总价:<span id="totalMoney">0</span>元
+				</div>
+				<div id="save-period-order" class="housework10-2">提交订单</div>
+			</div>
+        </div>
+
+        <div class="period-order-temp1" style="display:none;">
+            <div class="list-block media-list">
+                <ul>
+                    <li>
+                        <label class="item-content">
+                            <input type="hidden" name="id" value="{id}"/>
+                            <input type="hidden" name="serviceTypeAddonsId" value="{serviceTypeAddonsId}"/>
+                            <div class="housework-1">
+                                <img src="img/taocan/jiawu-3.png" alt="">
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title-row housework-3">
+                                    <div class="item-title">{name}</div>
+                                    <input type="hidden" value="{serviceTypeId}"/>
+                                </div>
+                                <div class="item-subtitle">
+                                    <ul class="housework-4">
+                                        <li>总次数:<b class="total">{total}</b></li>
+                                    </ul>
+                                </div>
+                                <div class="item-subtitle">
+                                    <ul class="housework-5">
+                                        <input type="hidden" name="price" value="{price}"/>
+                                        <input type="hidden" name="vipPrice" value="{vipPrice}"/>
+                                        <li class="housework-5-1">原价:￥<span class="price">{price}</span></li>
+                                        <li id="price">优惠单价:￥<span class="vip-price">{vipPrice}</span></li>
+                                    </ul>
+                                </div>
+                                <div class="item-subtitle">
+                                    <ul class="housework-6">
+                                        <li>合计:￥<span class="total-price">{totalPrice}</span></li>
+                                        <li class="housework-2">优惠价:￥<span class="vip-total-price">{vipTotalPrice}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
