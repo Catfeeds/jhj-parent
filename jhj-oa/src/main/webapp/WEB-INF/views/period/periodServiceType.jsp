@@ -109,6 +109,7 @@
 									<form:option value="">--请选择频率--</form:option>
 									<form:option value="次/时">次/时</form:option>
 									<form:option value="次/周">次/周</form:option>
+									<form:option value="次/半月">次/半月</form:option>
 									<form:option value="次/月">次/月</form:option>
 									<form:option value="次/年">次/年</form:option>
 								</form:select>

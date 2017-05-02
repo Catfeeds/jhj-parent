@@ -18,6 +18,7 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourListService;
@@ -26,6 +27,7 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
+import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderHourListVo;
 import com.jhj.vo.order.OrderSearchVo;
@@ -68,6 +70,10 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 	
 	@Autowired
 	private OrderDispatchsService orderDispatchService;
+	
+	@Autowired
+	private UsersService userService;
+	
 
 	/*
 	 * 统计有订单的日期
@@ -230,9 +236,22 @@ public class OrderHourListServiceImpl implements OrderHourListService {
 			
 			OrderPrices orderPrice = orderPriceService.selectByOrderId(orders.getId());
 			if (orderPrice != null) {
-				BigDecimal orderPay = orderPrice.getOrderPrimePrice();
-				orderHourListVo.setOrderPay(orderPay);
+				BigDecimal orderPrimePrice = orderPrice.getOrderPrimePrice();
+				BigDecimal orderOriginPrice = orderPrice.getOrderOriginPrice();
+				BigDecimal orderPay = orderPriceService.getTotalOrderPay(orderPrice);
 				
+				if (orders.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)) {
+					Users u = userService.selectByPrimaryKey(orders.getUserId());
+					int isVip = u.getIsVip();
+					if (isVip == 1 && orderPrice.getPayType().equals(Constants.PAY_TYPE_0)) {
+						orderHourListVo.setOrderPay(orderPrimePrice);
+					} else {
+						orderHourListVo.setOrderPay(orderOriginPrice);
+					}
+				} else {
+					orderHourListVo.setOrderPay(orderPay);
+				}
+							
 				BigDecimal orderOriginPay = orderPrice.getOrderOriginPrice();
 				
 				
