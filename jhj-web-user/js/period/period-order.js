@@ -123,7 +123,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				if(serviceTypeAddons.name=='金牌保洁' || serviceTypeAddons.name=='基础保洁'){//金牌保洁 30
         					continue;
         				}
-        				
+        					
         				var htmlPart = temp;
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), serviceTypeId);
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), serviceTypeAddons.service_addon_id);
@@ -133,6 +133,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), serviceTypeAddons.price);
         				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), serviceTypeAddons.dis_price);
         				html += htmlPart;
+        				
         			}
         			html += '<div><button type="button" id="btn-ensure" class="all-button17 close-popup">确定</button></div></div>';
         			myApp.popup(html);
@@ -188,6 +189,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
     	var pprice = $$("input[type='radio']:checked").prevAll("#pprice").val();
     	var name = $$("input[type='radio']:checked").nextAll(".item-inner").find(".housework-3 .item-title").text();
 		var input = $$("input[type='checkbox']:checked");
+		
 		if(input.length>0){
 			for(var j=0;j<input.length;j++){
 				var inp = input[j];
