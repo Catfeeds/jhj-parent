@@ -56,7 +56,7 @@ var formVal = $('#form').validate({
 		},
 		num : {
 			required : "次数不能为空",
-			number : "频次数必须为数字",
+			digits : "频次数必须为数字",
 		},
 		punit : {
 			required : "频率不能为空",

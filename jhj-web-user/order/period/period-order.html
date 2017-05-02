@@ -26,7 +26,7 @@
                         <label class="label-checkbox item-content">
                         	<input type="hidden" name="id" value="{id}"/>
                             <input type="hidden" name="serviceTypeAddonsId" value="{serviceTypeAddonsId}"/>
-                            <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}"/>
+                            <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}" {checked} />
                             <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
                             <div class="housework-1">
                                 <img src="img/taocan/jiawu-3.png" alt="">
@@ -36,7 +36,7 @@
                                     <div class="item-title">{name}</div>
                                     <input type="hidden" value="{serviceTypeId}"/>
                                     <a href="#" data-popup=".popup-about" class="open-popup adjust">
-                                        <div class="item-after housework-2">调整</div>
+                                        <div class="item-after housework-2">{adjust}</div>
                                     </a>
                                 </div>
                                 <div class="item-subtitle">
@@ -88,17 +88,10 @@
                                 <div class="item-title">{name}</div>
                                 <div class="item-after housework-2">
                                     <div class="housework-8 sub-num">-</div>
-                                    <input name="serviceNum" id="service-num" class="housework-9" value="1"
-                                           disabled="disabled"/>
+                                    <input name="serviceNum" class="housework-9 service-num" value="1" />
                                     <div class="housework-8 add-num">+</div>
                                 </div>
                             </div>
-                            <!-- <div class="item-subtitle">
-                                <ul class="housework-4">
-                                    <li>总次数<b>{serviceTypeAddonsNum}</b>次</li>
-                                    <li>频次<b>{addonsNum}</b>{addonsUnit}</li>
-                                </ul>
-                            </div> -->
                             <div class="item-subtitle">
                                 <ul class="housework-5">
                                     <li class="housework-5-1">原价:￥<span class="price">{price}</span></li>
