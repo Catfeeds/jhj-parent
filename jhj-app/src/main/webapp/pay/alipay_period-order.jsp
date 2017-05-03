@@ -20,7 +20,7 @@
         //付款金额，必填
         String total_fee = new String(request.getParameter("orderPrice").getBytes("ISO-8859-1"),"UTF-8");
 		//total_fee = "0.01";
-        System.out.println("total_fee = " + total_fee);
+        System.out.println("--------------total_fee = " + total_fee+"--------------");
         //订单类型
         String orderType = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
 		
