@@ -18,7 +18,7 @@
         String subject = "叮当到家家庭服务";
 		
         //付款金额，必填
-        String total_fee = new String(request.getParameter("orderPay").getBytes("ISO-8859-1"),"UTF-8");
+        String total_fee = new String(request.getParameter("orderPrice").getBytes("ISO-8859-1"),"UTF-8");
 		//total_fee = "0.01";
         System.out.println("total_fee = " + total_fee);
         //订单类型

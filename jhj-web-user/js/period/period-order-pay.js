@@ -81,10 +81,10 @@ myApp.onPageInit('period-order-pay', function(page) {
 		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {
-			var orderPay = result.data.order_pay;
+			var orderPrice = result.data.order_price;
 			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_period-order.jsp";
 			alipayUrl +="?orderNo="+orderNo;
-			alipayUrl +="&orderPay="+orderPay;
+			alipayUrl +="&orderPrice="+orderPrice;
 			alipayUrl +="&orderType="+orderType;
 			alipayUrl +="&periodServiceTypeId="+periodServiceTypeId;
 			alipayUrl +="&payOrderType=4";
