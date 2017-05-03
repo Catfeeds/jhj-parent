@@ -96,7 +96,7 @@
         <div id="period-order" style="display:none">
             <div class="period-order-temp dingdan-mokuai">
                 <p>定制订单明细</p>
-                <a href="#" onclick="orderView('{orderNo}')" class="special-color7">
+                <a href="#" class="special-color7">
                     <div class="order-dingdan">
                         <ul class="dingdan">
                             <li>订购项目：</li>
@@ -116,17 +116,19 @@
                         </ul>
                     </div>
                 </a>
-                <div class="all-button10" style="display:{periodOrderPayStyle}" onclick="doPeriodOrderPay($$(this).parent())">去支付</div>
+                <div class="all-button10" style="display:{periodOrderPayStyle}" onclick="doPeriodOrderPay(this)">去支付</div>
                 <a href="tel:010-53511197" id="" class="external">
                     <div class="all-button4">联系客服人员</div>
                 </a>
                 <div style="clear:both;"></div>
-                <input type="hidden" id="periodOrderStatus" name="orderStatus" value="{orderStatus}"/>
-                <input type="hidden" id="periodServiceTypeId" name="serviceTypeId" value="{serviceTypeId}"/>
-                <input type="hidden" id="periodOrderNo" name="orderNo" value="{orderNo}"/>
-                <input type="hidden" id="periodOrderId" name="orderId" value="{orderId}"/>
-                <input type="hidden" id="periodOrderMoney" name="orderMoney" value="{orderMoney}"/>
-                <input type="hidden" id="orderPrice" name="orderPrice" value="{orderPrice}"/>
+                <form id="period-form-{index}" class="list-block store-data">
+	                <input type="hidden" id="periodOrderStatus" name="orderStatus" value="{orderStatus}"/>
+	                <input type="hidden" id="periodServiceTypeId" name="serviceTypeId" value="{serviceTypeId}"/>
+	                <input type="hidden" id="periodOrderNo" name="orderNo" value="{orderNo}"/>
+	                <input type="hidden" id="periodOrderId" name="orderId" value="{orderId}"/>
+	                <input type="hidden" id="periodOrderMoney" name="orderMoney" value="{orderMoney}"/>
+	                <input type="hidden" id="orderPrice" name="orderPrice" value="{orderPrice}"/>
+	            </form>
                 <div class="chongzhi5-kong"></div>
             </div>
         </div>

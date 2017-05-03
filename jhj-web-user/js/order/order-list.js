@@ -269,6 +269,7 @@ function periodOrderListSuccess(data, textStatus, jqXHR,pageNum){
 		htmlPart = htmlPart.replace(new RegExp('{orderPrice}', "gm"), periodOrder.order_price);
 		htmlPart = htmlPart.replace(new RegExp('{orderPrice}', "gm"), periodOrder.order_price + "元");
 		htmlPart = htmlPart.replace(new RegExp('{addressName}', "gm"), periodOrder.addr_name);
+		htmlPart = htmlPart.replace(new RegExp('{index}', "gm"), periodOrder.order_no);
 		var orderStatusName ;
 		switch (periodOrder.order_status) {
 			case 0: orderStatusName="已取消"; break;
@@ -331,7 +332,13 @@ function getPeriodOrderList(userId,pageNum){
 
 //支付未完成的定制订单
 function doPeriodOrderPay(obj){
+	var formId = $$(obj).nextAll(".list-block").attr("id");
+	var formJSON = myApp.formToJSON("#"+formId);
+	myApp.formStoreData(formId, formJSON);
 	
+	mainView.router.loadPage("order/period/period-order-pay.html?order_no="+formJSON.orderNo +"&formId="+formId);
 }
+
+
 
 
