@@ -9,6 +9,7 @@ String serviceName = request.getServerName();
 if (serviceName.indexOf("www") < 0) serviceName = "www." + serviceName;
 //String basePath = httpScheme+"://"+serviceName+"/";
 String basePath = "http://test.jia-he-jia.com/";
+String orderId = request.getParameter("orderId");
 String orderNo = request.getParameter("orderNo");
 String userCouponId = request.getParameter("userCouponId");
 String orderType = request.getParameter("orderType");
@@ -18,6 +19,7 @@ String fromUrl = request.getParameter("fromUrl");
 String successUrl = request.getParameter("successUrl");
 
 String redirectUrl = basePath + "jhj-app/app/wxpay";
+redirectUrl += "?orderId=" + orderId;
 redirectUrl += "?orderNo=" + orderNo;
 redirectUrl += "&userCouponId=" + userCouponId;
 redirectUrl += "&orderType=" + orderType;

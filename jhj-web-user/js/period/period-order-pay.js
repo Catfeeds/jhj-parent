@@ -78,7 +78,6 @@ myApp.onPageInit('period-order-pay', function(page) {
 			mainView.router.loadPage("order/order-pay-success.html");
 		}
 		
-		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {
 			var orderPrice = result.data.order_price;
@@ -96,6 +95,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 			 var userCouponId = $$("#userCouponId").val();
 			 if (userCouponId == undefined) userCouponId = 0;
 			 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
+			 wxPayUrl +="?orderId="+result.data.id;
 			 wxPayUrl +="?orderNo="+orderNo;
 			 wxPayUrl +="&userCouponId="+userCouponId;
 			 wxPayUrl +="&orderType=0";
