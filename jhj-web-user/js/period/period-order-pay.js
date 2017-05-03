@@ -99,7 +99,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 			 wxPayUrl +="?orderNo="+orderNo;
 			 wxPayUrl +="&userCouponId="+userCouponId;
 			 wxPayUrl +="&orderType=0";
-			 wxPayUrl +="&payOrderType="+payOrderType;
+			 wxPayUrl +="&payOrderType=4";
 			 wxPayUrl +="&periodServiceTypeId="+periodServiceTypeId;
 			 location.href = wxPayUrl;
 		}
