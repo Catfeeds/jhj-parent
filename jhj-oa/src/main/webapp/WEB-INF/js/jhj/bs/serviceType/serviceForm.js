@@ -146,6 +146,8 @@ function validateServiceAddons() {
 		var serviceAddonStaffPrice = "";
 		var serviceAddonDisPrice = "";
 		var serviceAddonStaffDisPrice = ""
+		var serviceAddonAprice = "";
+		var serviceAddonStaffAprice = "";
 		var defaultNum = "";
 		var serviceAddonServiceHour = "";
 			
@@ -157,6 +159,8 @@ function validateServiceAddons() {
 			if($(this).attr("name") == "serviceAddonStaffPrice") serviceAddonStaffPrice = $(this).val();
 			if($(this).attr("name") == "serviceAddonDisPrice") serviceAddonDisPrice = $(this).val();
 			if($(this).attr("name") == "serviceAddonStaffDisPrice") serviceAddonStaffDisPrice = $(this).val();
+			if($(this).attr("name") == "serviceAddonAprice") serviceAddonAprice = $(this).val();
+			if($(this).attr("name") == "serviceAddonStaffAprice") serviceAddonStaffAprice = $(this).val();
 			if($(this).attr("name") == "defaultNum") defaultNum = $(this).val();
 			if($(this).attr("name") == "serviceAddonServiceHour") serviceAddonServiceHour = $(this).val();
 		});
@@ -172,6 +176,8 @@ function validateServiceAddons() {
 			(serviceAddonStaffPrice == "" || serviceAddonStaffPrice == "0")  && 
 			(serviceAddonDisPrice == "" || serviceAddonDisPrice == "0") &&
 			(serviceAddonStaffDisPrice == "" || serviceAddonStaffDisPrice == "0") &&
+			(serviceAddonAprice == "" || serviceAddonAprice == "0")  && 
+			(serviceAddonStaffAprice == "" || serviceAddonStaffAprice == "0")  && 
 			(defaultNum == "" || defaultNum == "0") &&
 			(serviceAddonServiceHour == "" || serviceAddonServiceHour == "0.0")
 			) {

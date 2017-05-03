@@ -22,6 +22,10 @@ public class DictServiceAddons {
     private BigDecimal disPrice;
     
     private BigDecimal staffDisPrice;
+    
+    private BigDecimal aprice;
+    
+    private BigDecimal staffAprice;
 
     private String descUrl;
 
@@ -163,5 +167,21 @@ public class DictServiceAddons {
 
 	public void setStaffDisPrice(BigDecimal staffDisPrice) {
 		this.staffDisPrice = staffDisPrice;
+	}
+
+	public BigDecimal getAprice() {
+		return aprice;
+	}
+
+	public void setAprice(BigDecimal aprice) {
+		this.aprice = aprice;
+	}
+
+	public BigDecimal getStaffAprice() {
+		return staffAprice;
+	}
+
+	public void setStaffAprice(BigDecimal staffAprice) {
+		this.staffAprice = staffAprice;
 	}
 }

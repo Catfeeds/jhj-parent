@@ -14,6 +14,11 @@
 		
 		<result column="staff_dis_price" property="staffDisPrice" jdbcType="DECIMAL" />
 		<result column="desc_url" property="descUrl" jdbcType="VARCHAR" />
+		
+		<result column="aprice" property="aprice" jdbcType="DECIMAL" />
+		<result column="staff_aprice" property="staffAprice" jdbcType="DECIMAL" />
+		
+		
 		<result column="item_unit" property="itemUnit" jdbcType="VARCHAR" />
 		<result column="default_num" property="defaultNum" jdbcType="SMALLINT" />
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
@@ -21,7 +26,9 @@
 		<result column="enable" property="enable" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		service_addon_id, service_type, service_hour, name, keyword, tips, price, staff_price, dis_price, staff_dis_price, desc_url, item_unit,default_num,
+		service_addon_id, service_type, service_hour, name, keyword, tips, 
+		price, staff_price, dis_price, staff_dis_price, aprice, staff_aprice,
+		desc_url, item_unit,default_num,
 		add_time, update_time, enable
 	</sql>
 	
@@ -89,13 +96,16 @@
 	<insert id="insert" parameterType="com.jhj.po.model.dict.DictServiceAddons">
 		insert into dict_service_addons (service_addon_id, service_type, service_hour, name,
 		keyword, tips, price, staff_price,
-		dis_price, staff_dis_price, desc_url,item_unit,default_num, add_time,
+		dis_price, staff_dis_price, aprice, staff_aprice,
+		desc_url,item_unit,default_num, add_time,
 		update_time, enable)
 		values (#{serviceAddonId,jdbcType=NUMERIC}, #{serviceType,jdbcType=NUMERIC}, 
 		#{serviceHour,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
 		#{keyword,jdbcType=VARCHAR}, #{tips,jdbcType=VARCHAR}, 
 		#{price,jdbcType=DECIMAL}, #{staffPrice,jdbcType=DECIMAL},
-		#{disPrice,jdbcType=DECIMAL}, #{staffDisPrice,jdbcType=DECIMAL}, #{descUrl,jdbcType=VARCHAR},#{itemUnit,jdbcType=VARCHAR},
+		#{disPrice,jdbcType=DECIMAL}, #{staffDisPrice,jdbcType=DECIMAL}, 
+		#{aprice,jdbcType=DECIMAL}, #{staffAprice,jdbcType=DECIMAL},
+		#{descUrl,jdbcType=VARCHAR},#{itemUnit,jdbcType=VARCHAR},
 		#{defaultNum,jdbcType=SMALLINT}, #{addTime,jdbcType=NUMERIC},
 		#{updateTime,jdbcType=NUMERIC}, #{enable,jdbcType=NUMERIC})
 	</insert>
@@ -133,6 +143,12 @@
 			</if>
 			<if test="staffDisPrice != null">
 				staff_dis_price,
+			</if>
+			<if test="aprice != null">
+				aprice,
+			</if>
+			<if test="staffAprice != null">
+				staff_aprice,
 			</if>
 			<if test="descUrl != null">
 				desc_url,
@@ -185,6 +201,12 @@
 			</if>
 			<if test="staffDisPrice != null">
 				#{staffDisPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="aprice != null">
+				#{aprice,jdbcType=DECIMAL},
+			</if>
+			<if test="staffAprice != null">
+				#{staffAprice,jdbcType=DECIMAL},
 			</if>
 			<if test="descUrl != null">
 				#{descUrl,jdbcType=VARCHAR},
@@ -239,6 +261,12 @@
 			<if test="staffDisPrice != null">
 				staff_dis_price = #{staffDisPrice,jdbcType=DECIMAL},
 			</if>
+			<if test="aprice != null">
+				aprice = #{aprice,jdbcType=DECIMAL},
+			</if>
+			<if test="staffAprice != null">
+				staff_aprice = #{staffAprice,jdbcType=DECIMAL},
+			</if>
 			<if test="descUrl != null">
 				desc_url = #{descUrl,jdbcType=VARCHAR},
 			</if>
@@ -271,6 +299,8 @@
 		staff_price = #{staffPrice,jdbcType=DECIMAL},
 		dis_price = #{disPrice,jdbcType=DECIMAL},
 		staff_dis_price = #{staffDisPrice,jdbcType=DECIMAL},
+		aprice = #{aprice,jdbcType=DECIMAL},
+		staff_aprice = #{staffAprice,jdbcType=DECIMAL},
 		desc_url = #{descUrl,jdbcType=VARCHAR},
 		item_unit = #{itemUnit,jdbcType=VARCHAR},
 		default_num = #{defaultNum,jdbcType=SMALLINT},
