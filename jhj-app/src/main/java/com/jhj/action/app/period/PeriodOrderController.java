@@ -1,6 +1,7 @@
 package com.jhj.action.app.period;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.vo.period.PeriodOrderVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -108,6 +111,42 @@ public class PeriodOrderController extends BaseController{
 		
 		return result;
 	}
-
-
+	
+	@RequestMapping(value="/get-period-order-list.json",method=RequestMethod.GET)
+	public AppResultData<Object> getPeriodOrderList(
+			@RequestParam("user_id") Integer userId,
+			@RequestParam(value = "page_num",defaultValue="1") Integer pageNum){
+		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0,ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		PeriodOrder periodOrder = new PeriodOrder();
+		periodOrder.setUserId(userId);
+		List<PeriodOrder> periodOrderListPage = periodOrderService.periodOrderListPage(periodOrder, pageNum, Constants.PAGE_MAX_NUMBER);
+		
+		List<PeriodOrderVo> list = new ArrayList<>();
+		if(periodOrderListPage!=null && periodOrderListPage.size()>0){
+			List<UserAddrs> addrList = userAddrService.selectByUserId(userId.longValue());
+			String addrName = null;
+			if(addrList!=null && addrList.size()>0){
+				for(int i=0;i<addrList.size();i++){
+					UserAddrs userAddrs = addrList.get(i);
+					int addrId = userAddrs.getId().intValue();
+					addrName = userAddrs.getName()+" "+ userAddrs.getAddr();
+					for(int j=0;j<periodOrderListPage.size();j++){
+						PeriodOrder periodOrder2 = periodOrderListPage.get(j);
+						if(addrId==periodOrder2.getAddrId()){
+							PeriodOrderVo vo = new PeriodOrderVo();
+							BeanUtilsExp.copyPropertiesIgnoreNull(periodOrder2, vo);
+							vo.setAddrName(addrName);
+							list.add(vo);
+						}
+					}
+				}
+			}
+		}
+		result.setData(list);
+		
+		return result;
+		
+	}
 }

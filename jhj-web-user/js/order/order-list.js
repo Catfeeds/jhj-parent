@@ -137,6 +137,20 @@ myApp.onPageBeforeInit('order-list', function(page) {
 	});
 	loadOrderList(userId, page);
 	
+	
+	$$("#tab-2").on("click",function(){
+		var userId = localStorage.getItem("user_id");
+		var pageNum = $$("#page-num").val();
+		
+		getPeriodOrderList(userId, pageNum);
+	});
+	
+	$$('#period-order-list-more').on('click', function() {
+		var pageNum = $$("#page-num").val();
+		var cpage = ++pageNum;
+		getPeriodOrderList(userId, cpage);
+	});
+	
 });
 
 function orderView(orderType, orderNo) {
@@ -208,7 +222,6 @@ function doOrderPayExt(obj) {
 	
 }
 
-
 function linkOrderRate(obj) {
 	
 	var orderStatus = obj.find('input[name=orderStatus]').val();
@@ -234,8 +247,91 @@ function linkOrderRate(obj) {
 	if (orderStatus == 8) {
 		mainView.router.loadPage("order/order-user-rate.html");
 	}
-	
 }
 
+
+function periodOrderListSuccess(data, textStatus, jqXHR,pageNum){
+	var result = JSON.parse(data.response);
+	
+	var periodOrderList = result.data;
+
+	var htmlTemplate = $$('#period-order').html();
+
+	var html = ''; // 当前订单
+
+	for (var i = 0; i < periodOrderList.length; i++) {
+		var periodOrder = periodOrderList[i];
+		var htmlPart = htmlTemplate;
+		htmlPart = htmlPart.replace(new RegExp('{orderId}', "gm"), periodOrder.id);
+		htmlPart = htmlPart.replace(new RegExp('{orderNo}', "gm"), periodOrder.order_no);
+		htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.service_type);
+		htmlPart = htmlPart.replace(new RegExp('{orderMoney}', "gm"), periodOrder.order_money);
+		htmlPart = htmlPart.replace(new RegExp('{orderPrice}', "gm"), periodOrder.order_price);
+		htmlPart = htmlPart.replace(new RegExp('{orderPrice}', "gm"), periodOrder.order_price + "元");
+		htmlPart = htmlPart.replace(new RegExp('{addressName}', "gm"), periodOrder.addr_name);
+		var orderStatusName ;
+		switch (periodOrder.order_status) {
+			case 0: orderStatusName="已取消"; break;
+			case 1: orderStatusName="未支付"; break;
+			case 2: orderStatusName="已支付"; break;
+			case 3: orderStatusName="未完成"; break;
+			case 4: orderStatusName="已完成"; break;
+			default:
+				break;
+		}
+		htmlPart = htmlPart.replace(new RegExp('{orderStatusName}', "gm"), orderStatusName);
+		
+		var orderStatus = periodOrder.order_status;
+		var payStyle = 'none';
+		if (orderStatus == 1) {
+			payStyle = 'block';
+		}
+		htmlPart = htmlPart.replace(new RegExp('{periodOrderPayStyle}', "gm"), payStyle);
+		
+		html+= htmlPart;
+	}
+	// 当前订单
+	if (pageNum == 1) {
+		$$("#period-order-list").html(html);
+	} else {
+		$$("#period-order-list").append(html);
+	}
+
+	loading = false;
+	
+	$$("#page-num").val(pageNum);
+	if (periodOrderList.length >= 10) {
+		$$('#period-order-list-more').css("display", "block");
+	} else {
+		$$('#period-order-list-more').css("display", "none");
+	}
+}
+
+function getPeriodOrderList(userId,pageNum){
+	var postdata = {};
+	var apiUrl = "period/get-period-order-list.json";
+	
+	postdata.user_id = userId;
+	postdata.page_num = pageNum;
+
+	$$.ajax({
+		type : "GET",
+		url : siteAPIPath + apiUrl,
+		dataType : "json",
+		cache : true,
+		data : postdata,
+		statusCode : {
+			200 : periodOrderListSuccess,
+			400 : ajaxError,
+			500 : ajaxError
+		},
+	});
+}
+
+
+//支付未完成的定制订单
+function doPeriodOrderPay(obj){
+	
+}
 
 

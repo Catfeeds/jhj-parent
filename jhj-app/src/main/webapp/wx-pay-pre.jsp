@@ -7,8 +7,8 @@ String path = request.getContextPath();
 String httpScheme = request.getScheme();
 String serviceName = request.getServerName();
 if (serviceName.indexOf("www") < 0) serviceName = "www." + serviceName;
-String basePath = httpScheme+"://"+serviceName+"/";
-
+//String basePath = httpScheme+"://"+serviceName+"/";
+String basePath = "http://test.jia-he-jia.com"
 String orderNo = request.getParameter("orderNo");
 String userCouponId = request.getParameter("userCouponId");
 String orderType = request.getParameter("orderType");
