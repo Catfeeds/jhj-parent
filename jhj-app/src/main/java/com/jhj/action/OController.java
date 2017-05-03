@@ -48,16 +48,12 @@ public class OController extends BaseController {
 			//检测来源ID是否存在
 			CooperativeBusiness record = cooperateBusinessService.selectByPrimaryKey(Long.valueOf(s));
 			if (record == null) return "";
+//			String url = "http://localhost:8080/u/#!/active/20170504.html?order_op_from=" + s;
+			String url = "http://test.jia-he-jia.com/u/#!/active/20170504.html?order_op_from=" + s;
+			return "redirect:"+url;
 		}
-		
-		String reqHost = request.getRemoteHost();
-		
-		String url = reqHost + "/u/";
-		
-		logger.info(url);
-		return "";
-//		return "redirect:"+url;
-		
+
+		return "";		
 	}
 	
 

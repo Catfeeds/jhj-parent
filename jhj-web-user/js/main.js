@@ -35,6 +35,13 @@ var myApp = new Framework7({
 		} else if (!isLogin() && options.url.indexOf('order/order-deep-choose.html') >= 0 ) {
 			view.router.loadPage('login.html');
 			return false;
+		} else if (!isLogin() && options.url.indexOf('order/order-custom-choose.html') >= 0 ) {
+			var serviceTypeId = GetUrlParamValue(options.url, 'service_type_id');
+			var nextUrl = "order/order-custom-choose.html?service_type_id="+serviceTypeId;
+			console.log("nextUrl = " + nextUrl);
+			sessionStorage.setItem("logined_next_url", nextUrl);
+			view.router.loadPage('login.html');
+			return false;
 		} else if (!isLogin() && options.url == 'order/order-list.html') {
 			view.router.loadPage('login.html');
 			return false;
@@ -91,12 +98,26 @@ function toolBarHref(url, toolbarName) {
 	mainView.router.loadPage(url);
 }
 
-var getParameterByName = function(name) {
-	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex
-			.exec(window.location.href);
-	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+
+
+function GetUrlParamValue(url, name) {   
+	console.log("GetUrlParamValue");
+	console.log("url = " + url);
+	var v  = "";
+   if (url.indexOf("?") != -1) {   
+      var str = url.substr(url.indexOf("?") + 1);   
+      strs = str.split("&");
+      
+      for(var i = 0; i < strs.length; i ++) { 
+    	  if (strs[i].split("=")[0] == name) {
+    		  v = strs[i].split("=")[1];
+    		  return v;
+    	  }
+      }   
+      
+   }   
+   return v;   
+}   
 
 function isWeiXin() {
 	var ua = window.navigator.userAgent.toLowerCase();

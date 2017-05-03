@@ -48,7 +48,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 	 * 获得深度保洁的总价
 	 */
 	@Override
-	public OrderPrices getOrderPriceOfOrderExpClean(Long userId, Long serviceType, String serviceAddonsDatas) {
+	public OrderPrices getOrderPriceOfOrderExpClean(Long userId, Long serviceType, String serviceAddonsDatas, Long orderOpFrom) {
 		
 		OrderPrices orderPrices = orderPricesService.initOrderPrices();
 		
@@ -81,9 +81,21 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
 				BigDecimal disPrice = dictServiceAddons.getDisPrice();
+				BigDecimal aprice = dictServiceAddons.getAprice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
-				orderOriginPay = orderOriginPay.add(price.multiply(itemNumBigDecimal));
-				orderPrimePay = orderPrimePay.add(disPrice.multiply(itemNumBigDecimal));
+				
+				
+				//线下扫码活动
+				if (orderOpFrom.equals(123L) || 
+					orderOpFrom.equals(124L) || 
+					orderOpFrom.equals(125L) || 
+					orderOpFrom.equals(126L)) {
+					orderOriginPay = orderOriginPay.add(aprice.multiply(itemNumBigDecimal));
+					orderPrimePay = orderPrimePay.add(aprice.multiply(itemNumBigDecimal));
+				} else {
+					orderOriginPay = orderOriginPay.add(price.multiply(itemNumBigDecimal));
+					orderPrimePay = orderPrimePay.add(disPrice.multiply(itemNumBigDecimal));
+				}
 			}
 		} else {// 单个对象
 			// 把JsonElement对象转换成JsonObject
@@ -96,9 +108,21 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				DictServiceAddons dictServiceAddons = serviceAddonsService.selectByPrimaryKey(serviceAddonId);
 				BigDecimal price = dictServiceAddons.getPrice();
 				BigDecimal disPrice = dictServiceAddons.getDisPrice();
+				BigDecimal aprice = dictServiceAddons.getAprice();
 				BigDecimal itemNumBigDecimal = new BigDecimal(itemNum);
-				orderOriginPay = orderOriginPay.add(price.multiply(itemNumBigDecimal));
-				orderPrimePay = orderPrimePay.add(disPrice.multiply(itemNumBigDecimal));
+				
+				//线下扫码活动
+				if (orderOpFrom.equals(123L) || 
+					orderOpFrom.equals(124L) || 
+					orderOpFrom.equals(125L) || 
+					orderOpFrom.equals(126L)) {
+					orderOriginPay = orderOriginPay.add(aprice.multiply(itemNumBigDecimal));
+					orderPrimePay = orderPrimePay.add(aprice.multiply(itemNumBigDecimal));
+				} else {
+					orderOriginPay = orderOriginPay.add(price.multiply(itemNumBigDecimal));
+					orderPrimePay = orderPrimePay.add(disPrice.multiply(itemNumBigDecimal));
+				}
+				
 			}
 		}
 		

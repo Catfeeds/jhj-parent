@@ -107,7 +107,7 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom,
 			@RequestParam(value = "order_pay", required = false, defaultValue = "0") BigDecimal orderPay,
-			@RequestParam(value = "order_op_from", required = false) Long orderOpFrom,
+			@RequestParam(value = "order_op_from", required = false, defaultValue = "0") Long orderOpFrom,
 			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId,
 			@RequestParam(value ="coupons_id",required =false) Long couponsId,
 			@RequestParam(value ="userid",required =false) Long user_id,
@@ -177,7 +177,7 @@ public class OrderExpCleanController extends BaseController {
 		/*
 		 * 2.设置订单总金额。插入 order_prices表
 		 */
-		OrderPrices orderPrices = orderExpCleanService.getOrderPriceOfOrderExpClean(userId, serviceType, serviceAddonsDatas);
+		OrderPrices orderPrices = orderExpCleanService.getOrderPriceOfOrderExpClean(userId, serviceType, serviceAddonsDatas, orderOpFrom);
 		
 		if (orderFrom.equals((short)2) && orderPay.compareTo(new BigDecimal(0)) == 1) {
 			orderPrices.setOrderMoney(orderPay);
