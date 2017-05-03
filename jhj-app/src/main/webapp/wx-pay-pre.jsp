@@ -20,7 +20,7 @@ String successUrl = request.getParameter("successUrl");
 
 String redirectUrl = basePath + "jhj-app/app/wxpay";
 redirectUrl += "?orderId=" + orderId;
-redirectUrl += "?orderNo=" + orderNo;
+redirectUrl += "&orderNo=" + orderNo;
 redirectUrl += "&userCouponId=" + userCouponId;
 redirectUrl += "&orderType=" + orderType;
 redirectUrl += "&payOrderType=" + payOrderType;
