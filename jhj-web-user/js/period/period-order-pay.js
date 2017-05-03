@@ -96,7 +96,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 			 if (userCouponId == undefined) userCouponId = 0;
 			 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
 			 wxPayUrl +="?orderId="+result.data.id;
-			 wxPayUrl +="?orderNo="+orderNo;
+			 wxPayUrl +="&orderNo="+orderNo;
 			 wxPayUrl +="&userCouponId="+userCouponId;
 			 wxPayUrl +="&orderType=0";
 			 wxPayUrl +="&payOrderType=4";
