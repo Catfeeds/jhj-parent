@@ -31,13 +31,13 @@ CREATE TABLE `period_order` (
   `order_money` decimal(10,2) unsigned NOT NULL COMMENT '原价',
   `order_price` decimal(10,2) unsigned NOT NULL COMMENT '会员价',
   `user_coupons_id` int(11) unsigned NOT NULL COMMENT '优惠劵',
-  `period_service_type_id` int(11) unsigned NOT NULL COMMENT '定制类型id',
+  `package_type` int(11) unsigned NOT NULL COMMENT '定制套餐id',
   `order_from` int(11) NOT NULL COMMENT '订单来源：0 = APP  1 = 微网站  2 = 管理后台',
   `remarks` varchar(500) NOT NULL COMMENT '备注',
   `add_time` int(11) unsigned NOT NULL,
   `update_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of period_order
@@ -58,10 +58,11 @@ CREATE TABLE `period_order_addons` (
   `vip_price` decimal(10,2) NOT NULL,
   `num` int(11) NOT NULL COMMENT '次数',
   `add_time` datetime NOT NULL COMMENT '添加时间',
-  `period_service_type_id` int(11) DEFAULT '0' COMMENT '套餐id',
+  `package_type` int(11) DEFAULT '0' COMMENT '套餐id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+ALTER TABLE `period_order_addons` ADD `period_service_addon_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '定制服务配置ID' AFTER `service_addon_id`;
 -- ----------------------------
 -- Records of period_order_addons
 -- ----------------------------
@@ -85,7 +86,7 @@ CREATE TABLE `period_service_type` (
   `add_time` int(11) unsigned NOT NULL COMMENT '添加时间',
   `package_type` varchar(50) NOT NULL COMMENT '套餐类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of period_service_type

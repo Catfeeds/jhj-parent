@@ -51,6 +51,7 @@
 				<thead>
 					<tr>
 						<th>下单时间</th>
+						<th>套餐</th>
 						<th>手机号</th>
 						<th>地址</th>
 						<th>订单状态</th>
@@ -66,6 +67,7 @@
 					<c:forEach items="${periodOrderListPage.list}" var="item">
 						<tr>
 							<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime*1000 }"/></td> 
+							<td>${item.packageTypeName }</td>
 							<td>${item.mobile }</td>
 							<td><addressName:addr addrId="${item.addrId }" /></td>
 							<td>
@@ -83,7 +85,7 @@
 							<td>
 								
 								<button id="btn_detail"
-									onClick="javascript:btn_select('/period/updatePeriodOrder?periodOrderId=${item.id }')"
+									onClick="javascript:btn_select('/period/periodOrderListDetail?periodOrderId=${item.id }')"
 									class="btn btn-primary btn-xs" title="订单详情">
 									<i class=" icon-ambulance"></i>
 								</button>

@@ -49,7 +49,7 @@ myApp.onPageInit("period-order-confirm", function (page) {
        	param.order_money = sessionStorage.getItem("periodOrderMoney");
        	param.order_price = sessionStorage.getItem("periodPayMoney");
        	param.user_coupons_id = 0;
-       	param.period_service_type_id = packageTypeId;
+       	param.package_type = packageTypeId;
        	param.order_from = 1;
        	param.remarks = "";
        	param.period_service_addons_json = periodOrderStr;

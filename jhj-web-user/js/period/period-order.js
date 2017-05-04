@@ -91,7 +91,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        		var serviceType = serviceTypeList[i];
        		var serviceTypeObject = {};
        		serviceTypeObject.name = $$(serviceType).nextAll(".item-inner").find(".housework-3 .item-title").text();
-       		serviceTypeObject.periodServiceTypeId = $$(serviceType).prevAll("input[name='id']").val();
+       		serviceTypeObject.periodServiceAddonId = $$(serviceType).prevAll("input[name='id']").val();
        		serviceTypeObject.serviceTypeId = $$(serviceType).val();
        		serviceTypeObject.serviceAddonId = $$(serviceType).prev().val();
        		serviceTypeObject.price = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-5 .price").text();

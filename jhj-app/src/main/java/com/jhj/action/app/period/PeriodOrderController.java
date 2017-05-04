@@ -59,7 +59,7 @@ public class PeriodOrderController extends BaseController{
 			@RequestParam(value="order_money") Double orderMoney,
 			@RequestParam(value="order_price") Double orderPay,
 			@RequestParam(value="user_coupons_id",defaultValue="0",required=false) Integer userCouponsId,
-			@RequestParam(value="period_service_type_id") Integer periodServiceTypeId,
+			@RequestParam(value="package_type") Integer packageType,
 			@RequestParam(value="order_from",defaultValue="1") Integer orderFrom,
 			@RequestParam(value="remarks",required=false,defaultValue="") String remarks,
 			@RequestParam(value="period_service_addons_json") String periodServiceAddonsJson){
@@ -92,7 +92,7 @@ public class PeriodOrderController extends BaseController{
 		init.setOrderMoney(new BigDecimal(orderMoney));
 		init.setOrderPrice(new BigDecimal(orderPay));
 		init.setUserCouponsId(userCouponsId);
-		init.setPeriodServiceTypeId(periodServiceTypeId);
+		init.setPackageType(packageType);
 		init.setOrderFrom(orderFrom);
 		init.setRemarks(remarks);
 		periodOrderService.insert(init);
@@ -111,7 +111,7 @@ public class PeriodOrderController extends BaseController{
 				periodOrderAddons.setPeriodOrderId(periodOrder.getId());
 				periodOrderAddons.setUserId(userId);
 				periodOrderAddons.setAddTime(DateUtil.getNowOfDate());
-				
+				periodOrderAddons.setPackageType(packageType);
 				periodOrderAddonsList.set(i, periodOrderAddons);
 			}
 			

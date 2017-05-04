@@ -27,6 +27,8 @@ import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.period.PeriodServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
+import com.jhj.vo.period.PeriodOrderAddonsVo;
+import com.jhj.vo.period.PeriodOrderDetailVo;
 import com.jhj.vo.period.PeriodOrderSearchVo;
 import com.jhj.vo.period.PeriodOrderVo;
 
@@ -76,17 +78,18 @@ public class PeriodOrderController extends BaseController{
 	}
 	
 	@AuthPassport
-	@RequestMapping(value="/updatePeriodOrder", method = RequestMethod.GET)
+	@RequestMapping(value="/periodOrderListDetail", method = RequestMethod.GET)
 	public String updatePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId,Model model){
 		
 		PeriodOrder periodOrder = periodOrderService.selectByPrimaryKey(periodOrderId);
-		model.addAttribute("periodOrder", periodOrder);
+		PeriodOrderDetailVo detailVo = periodOrderService.getDetailVo(periodOrder);
+		model.addAttribute("contentModel", detailVo);
 		
 		List<UserAddrs> userAddrsList = userAddresService.selectByUserId(periodOrder.getUserId().longValue());
 		model.addAttribute("userAddrsList", userAddrsList);
 		
 		
-		return "period/periodOrder";
+		return "period/periodOrderDetail";
 	}
 	
 	@AuthPassport

@@ -13,7 +13,7 @@
 		<result column="order_money" property="orderMoney" jdbcType="DECIMAL" />
 		<result column="order_price" property="orderPrice" jdbcType="DECIMAL" />
 		<result column="user_coupons_id" property="userCouponsId" jdbcType="INTEGER" />
-		<result column="period_service_type_id" property="periodServiceTypeId" jdbcType="INTEGER" />
+		<result column="package_type" property="packageType" jdbcType="INTEGER" />
 		<result column="order_from" property="orderFrom" jdbcType="INTEGER" />
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="add_time" property="addTime" jdbcType="INTEGER" />
@@ -21,7 +21,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, order_no, user_id, mobile, addr_id, order_type, order_status, pay_type, order_money, order_price,
-		user_coupons_id, period_service_type_id, order_from, remarks, add_time, update_time
+		user_coupons_id, package_type, order_from, remarks, add_time, update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
@@ -37,13 +37,13 @@
 		insert into period_order (id, order_no, user_id,
 		mobile, addr_id, order_type,
 		order_status, pay_type, order_money, order_price,
-		user_coupons_id, period_service_type_id, order_from,
+		user_coupons_id, package_type, order_from,
 		remarks, add_time, update_time
 		)
 		values (#{id,jdbcType=INTEGER}, #{orderNo,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER},
 		#{mobile,jdbcType=CHAR}, #{addrId,jdbcType=INTEGER}, #{orderType,jdbcType=INTEGER},
 		#{orderStatus,jdbcType=INTEGER}, #{payType,jdbcType=INTEGER}, #{orderMoney,jdbcType=DECIMAL}, #{orderPrice,jdbcType=DECIMAL},
-		#{userCouponsId,jdbcType=INTEGER}, #{periodServiceTypeId,jdbcType=INTEGER}, #{orderFrom,jdbcType=INTEGER},
+		#{userCouponsId,jdbcType=INTEGER}, #{packageType,jdbcType=INTEGER}, #{orderFrom,jdbcType=INTEGER},
 		#{remarks,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}
 		)
 	</insert>
@@ -83,8 +83,8 @@
 			<if test="userCouponsId != null">
 				user_coupons_id,
 			</if>
-			<if test="periodServiceTypeId != null">
-				period_service_type_id,
+			<if test="packageType != null">
+				package_type,
 			</if>
 			<if test="orderFrom != null">
 				order_from,
@@ -133,8 +133,8 @@
 			<if test="userCouponsId != null">
 				#{userCouponsId,jdbcType=INTEGER},
 			</if>
-			<if test="periodServiceTypeId != null">
-				#{periodServiceTypeId,jdbcType=INTEGER},
+			<if test="packageType != null">
+				#{packageType,jdbcType=INTEGER},
 			</if>
 			<if test="orderFrom != null">
 				#{orderFrom,jdbcType=INTEGER},
@@ -183,8 +183,8 @@
 			<if test="userCouponsId != null">
 				user_coupons_id = #{userCouponsId,jdbcType=INTEGER},
 			</if>
-			<if test="periodServiceTypeId != null">
-				period_service_type_id = #{periodServiceTypeId,jdbcType=INTEGER},
+			<if test="packageType != null">
+				package_type = #{packageType,jdbcType=INTEGER},
 			</if>
 			<if test="orderFrom != null">
 				order_from = #{orderFrom,jdbcType=INTEGER},
@@ -213,7 +213,7 @@
 		order_money = #{orderMoney,jdbcType=DECIMAL},
 		order_price = #{orderPrice,jdbcType=DECIMAL},
 		user_coupons_id = #{userCouponsId,jdbcType=INTEGER},
-		period_service_type_id = #{periodServiceTypeId,jdbcType=INTEGER},
+		package_type = #{packageType,jdbcType=INTEGER},
 		order_from = #{orderFrom,jdbcType=INTEGER},
 		remarks = #{remarks,jdbcType=VARCHAR},
 		add_time = #{addTime,jdbcType=INTEGER},
@@ -231,7 +231,7 @@
 		insert into period_order (id, order_no, user_id,
 		mobile, addr_id, order_type,
 		order_status, pay_type, order_money, order_price,
-		user_coupons_id, period_service_type_id, order_from,
+		user_coupons_id, package_type, order_from,
 		remarks, add_time, update_time
 		)
 		values
@@ -239,7 +239,7 @@
 			(#{item.id,jdbcType=INTEGER}, #{item.orderNo,jdbcType=VARCHAR}, #{item.userId,jdbcType=INTEGER},
 			#{item.mobile,jdbcType=CHAR}, #{item.addrId,jdbcType=INTEGER}, #{item.orderType,jdbcType=INTEGER},
 			#{item.orderStatus,jdbcType=INTEGER}, #{item.payType,jdbcType=INTEGER}, #{item.orderMoney,jdbcType=DECIMAL}, #{item.orderPrice,jdbcType=DECIMAL},
-			#{item.userCouponsId,jdbcType=INTEGER}, #{item.periodServiceTypeId,jdbcType=INTEGER}, #{item.orderFrom,jdbcType=INTEGER},
+			#{item.userCouponsId,jdbcType=INTEGER}, #{item.packageType,jdbcType=INTEGER}, #{item.orderFrom,jdbcType=INTEGER},
 			#{item.remarks,jdbcType=VARCHAR}, #{item.addTime,jdbcType=INTEGER}, #{item.updateTime,jdbcType=INTEGER})
 		</foreach>
 	</insert>

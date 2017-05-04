@@ -10,15 +10,22 @@ import com.jhj.po.dao.dict.DictServiceAddonsMapper;
 import com.jhj.po.dao.period.PeriodOrderAddonsMapper;
 import com.jhj.po.dao.university.PartnerServiceTypeMapper;
 import com.jhj.po.model.dict.DictServiceAddons;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.period.PeriodOrderAddons;
+import com.jhj.po.model.period.PeriodServiceType;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.period.PeriodOrderAddonsService;
+import com.jhj.service.period.PeriodOrderService;
+import com.jhj.service.period.PeriodServiceTypeService;
 import com.jhj.vo.period.PeriodOrderAddonsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 
 @Service
 public class PeriodOrderAddonsServiceImpl implements PeriodOrderAddonsService{
+	
+	@Autowired
+	private PeriodOrderService periodOrderService;
 	
 	@Autowired
 	private PeriodOrderAddonsMapper periodOrderAddonsMapper;
@@ -28,6 +35,9 @@ public class PeriodOrderAddonsServiceImpl implements PeriodOrderAddonsService{
 	
 	@Autowired
 	private PartnerServiceTypeMapper partnerServiceTypeMapper;
+	
+	@Autowired
+	private PeriodServiceTypeService periodServiceTypeService;
 
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
@@ -72,10 +82,12 @@ public class PeriodOrderAddonsServiceImpl implements PeriodOrderAddonsService{
 		poa.setPeriodOrderNo("");
 		poa.setPrice(new BigDecimal(0));
 		poa.setServiceAddonId(0);
+		poa.setPeriodServiceAddonId(0);
 		poa.setServiceTypeId(0);
 		poa.setUserId(0);
 		poa.setAddTime(DateUtil.getNowOfDate());
 		poa.setVipPrice(new BigDecimal(0));
+		poa.setPackageType(0);
 		return poa;
 	}
 
@@ -93,6 +105,13 @@ public class PeriodOrderAddonsServiceImpl implements PeriodOrderAddonsService{
 		if(periodOrderAddons==null) return vo;
 		
 		BeanUtilsExp.copyPropertiesIgnoreNull(periodOrderAddons, vo);
+		
+		Integer periodServiceAddonId = vo.getPeriodServiceAddonId();
+		PeriodServiceType periodServiceType = periodServiceTypeService.selectByPrimaryKey(periodServiceAddonId);
+		
+		vo.setPunit("");
+		if (periodServiceType != null) vo.setPunit(periodServiceType.getPunit());
+		
 		
 		if(periodOrderAddons.getServiceAddonId()>0){
 			DictServiceAddons serviceAddons = dictServiceAddonsMapper.selectByPrimaryKey(periodOrderAddons.getServiceAddonId().longValue());

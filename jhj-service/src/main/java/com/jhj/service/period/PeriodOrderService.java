@@ -3,6 +3,7 @@ package com.jhj.service.period;
 import java.util.List;
 
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.vo.period.PeriodOrderDetailVo;
 import com.jhj.vo.period.PeriodOrderSearchVo;
 import com.jhj.vo.period.PeriodOrderVo;
 
@@ -30,4 +31,8 @@ public interface PeriodOrderService {
 	List<PeriodOrder> selectBySearchVo(PeriodOrderSearchVo searchVo);
 
 	PeriodOrderVo getVos(PeriodOrder item);
+
+	PeriodOrderDetailVo getDetailVo(PeriodOrder item);
+
+	String getOrderStatusName(Integer orderStatus);
 }
