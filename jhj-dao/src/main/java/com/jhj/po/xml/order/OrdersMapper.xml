@@ -27,15 +27,15 @@
 		<result column="add_time" property="addTime" jdbcType="NUMERIC" />
 		<result column="update_time" property="updateTime" jdbcType="NUMERIC" />
 		<result column="order_done_time" property="orderDoneTime" jdbcType="NUMERIC" />
-
 		<result column="remarks_bussiness_confirm" property="remarksBussinessConfirm" jdbcType="VARCHAR" />
+		<result column="period_order_id" property="periodOrderId" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_addr, order_no, order_type,
 		service_type,service_content, service_date, service_hour, staff_nums, order_status,
 		order_rate,
 		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time,
-		order_done_time, remarks_bussiness_confirm
+		order_done_time, remarks_bussiness_confirm, period_order_id
 	</sql>
 
 	<!-- 在某个 门店 下过单 的 用户 -->
@@ -496,7 +496,7 @@
 		order_status,
 		order_rate, order_rate_content,
 		order_from,order_op_from, remarks,remarks_confirm,add_time, update_time, order_done_time,
-		remarks_bussiness_confirm
+		remarks_bussiness_confirm, period_order_id
 		)
 		values
 		(#{id,jdbcType=NUMERIC},
@@ -517,7 +517,8 @@
 		#{remarksConfirm,jdbcType=VARCHAR},
 		#{addTime,jdbcType=NUMERIC},
 		#{updateTime,jdbcType=NUMERIC},
-		#{orderDoneTime,jdbcType=NUMERIC}, #{remarksBussinessConfirm,jdbcType=VARCHAR}
+		#{orderDoneTime,jdbcType=NUMERIC}, #{remarksBussinessConfirm,jdbcType=VARCHAR},
+		#{periodOrderId,jdbcType=NUMERIC}}
 		)
 	</insert>
 	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jhj.po.model.order.Orders">
@@ -603,7 +604,10 @@
 				order_done_time,
 			</if>
 			<if test="remarksBussinessConfirm !=null">
-				remarks_bussiness_confirm
+				remarks_bussiness_confirm,
+			</if>
+			<if test="periodOrderId !=null">
+				period_order_id
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -683,7 +687,10 @@
 				#{orderDoneTime,jdbcType=NUMERIC},
 			</if>
 			<if test="remarksBussinessConfirm !=null">
-				#{remarksBussinessConfirm,jdbcType=VARCHAR}
+				#{remarksBussinessConfirm,jdbcType=VARCHAR},
+			</if>
+			<if test="periodOrderId !=null">
+				#{periodOrderId,jdbcType=NUMERIC}
 			</if>
 		</trim>
 	</insert>
@@ -767,7 +774,11 @@
 			</if>
 
 			<if test="remarksBussinessConfirm !=null and remarksBussinessConfirm !='' ">
-				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR}
+				remarks_bussiness_confirm = #{remarksBussinessConfirm,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="periodOrderId != null">
+				period_order_id = #{periodOrderId,jdbcType=NUMERIC}
 			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
@@ -837,7 +848,7 @@
 		order_done_time = #{orderDoneTime,jdbcType=NUMERIC},
 		remarks_bussiness_confirm =
 		#{remarksBussinessConfirm,jdbcType=VARCHAR},
-
+		period_order_id = #{periodOrderId,jdbcType=NUMERIC}
 		where id =
 		#{id,jdbcType=NUMERIC}
 	</update>

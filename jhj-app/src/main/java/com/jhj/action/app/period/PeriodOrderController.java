@@ -18,10 +18,12 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.period.PeriodOrderAddons;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.Users;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.service.users.UsersService;
 import com.jhj.vo.period.PeriodOrderVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -42,6 +44,9 @@ public class PeriodOrderController extends BaseController{
 	
 	@Autowired
 	private OrderPricesService orderPricesService;
+	
+	@Autowired
+	private UsersService usersService;
 	
 	@RequestMapping(value="/save-period-order.json",method=RequestMethod.POST)
 	public AppResultData<Object> save(
@@ -75,6 +80,10 @@ public class PeriodOrderController extends BaseController{
 		
 		PeriodOrder init = periodOrderService.init();
 		init.setUserId(userId);
+		if(!"".equals(mobile)){
+			Users users = usersService.selectByPrimaryKey(userId.longValue());
+			mobile = users.getMobile();
+		}
 		init.setMobile(mobile);
 		init.setAddrId(addrId.intValue());
 		init.setOrderType(orderType);

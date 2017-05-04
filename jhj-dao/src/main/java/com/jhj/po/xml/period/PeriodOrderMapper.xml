@@ -247,6 +247,11 @@
   	<include refid="queryCondition"/>
   </select>
   
+  <select id="selectByPeriodOrder" resultMap="BaseResultMap" parameterType="com.jhj.po.model.period.PeriodOrder">
+  	select <include refid="Base_Column_List"/> from period_order
+  	<include refid="queryCondition"/>
+  </select>
+  
   <sql id="queryCondition">
   	<where>
   	  <if test="orderNo != null" >

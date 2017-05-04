@@ -16,9 +16,7 @@ import="com.jhj.oa.common.UrlHelper"%>
           type="text/css"/>
     <link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/assets/fancybox/source/jquery.fancybox.css?v=2.1.3'/>" rel="stylesheet'/>"/>
-    <link rel="stylesheet" href='<c:url value='
-    /css/order-calendar.css'/>' type="text/css" />
-    <link href="<c:url value='/assets/icheck-1.x/skins/all.css'/>" rel="stylesheet'/>"/>
+
     <style>
         .tangram-suggestion-main {
             z-index: 1060;
@@ -78,7 +76,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                                         </label>
                                         <div class="col-md-5">
                                             <input type="text" name="mobile" id="mobile" class="form-control"
-                                                   onblur="getAddrByMobile()"/>
+                                                   onblur="getAddrByMobile()" onchange="getPeriodOrder()"/>
                                         </div>
                                         <div>
                                             <label class="control-label" id="userTypeStr"></label>
@@ -204,8 +202,7 @@ import="com.jhj.oa.common.UrlHelper"%>
                                     <div class="form-group">
                                         <label class="col-md-2 control-label"> 优惠券 </label>
                                         <div class="col-md-5">
-                                            <select name="couponsId" id="couponsId" class="form-control"
-                                                    onchange="selectCoupons()">
+                                            <select name="couponsId" id="couponsId" class="form-control" onchange="selectCoupons()">
                                                 <option value="">0元</option>
                                                 <option value="4176">3元</option>
                                                 <option value="4177">5元</option>
@@ -248,15 +245,22 @@ import="com.jhj.oa.common.UrlHelper"%>
                                     <div class="form-group has-error">
                                         <label class="col-md-2 control-label"></label>
                                         <div class="col-md-5">
-                                            <h2>
-                                                <form:errors path="remarks" class="help-block"></form:errors>
-                                            </h2>
+                                            <h2><form:errors path="remarks" class="help-block"></form:errors></h2>
                                         </div>
                                     </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">定制订单 </label>
+                                        <div class="col-md-5">
+                                            <select name="periodOrderId" id="periodOrderId" class="form-control" >
+                                                <option value="">--请选择定制订单--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="form-actions fluid">
                                         <div class="col-md-offset-3 col-md-3">
-                                            <input type="button" class="btn btn-success" onclick="saveForm()"
-                                                   value="保存"/>
+                                            <input type="button" class="btn btn-success" onclick="saveForm()" value="保存"/>
                                         </div>
                                     </div>
                                 </div>
@@ -396,7 +400,6 @@ import="com.jhj.oa.common.UrlHelper"%>
 <script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 <script src="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.js'/>" type="text/javascript"></script>
 <script src="<c:url value='/assets/fancybox/source/jquery.fancybox.pack.js'/>"></script>
-<script src="<c:url value='/assets/icheck-1.x/icheck.min.js'/>"></script>
 <script src="<c:url value='/js/modernizr.custom.js'/>"></script>
 <script src="<c:url value='/js/toucheffects.js'/>"></script>
 <script type="text/javascript">
@@ -406,9 +409,6 @@ import="com.jhj.oa.common.UrlHelper"%>
             openEffect: 'elastic',
             closeBtn: false
         });
-    });
-    $(document).ready(function () {
-        $('input').iCheck('radio');
     });
 </script>
 <script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>

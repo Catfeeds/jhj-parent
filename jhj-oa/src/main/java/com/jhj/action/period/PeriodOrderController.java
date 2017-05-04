@@ -16,11 +16,16 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.po.model.period.PeriodServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
+import com.jhj.service.period.PeriodServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 
 @Controller
 @RequestMapping("/period")
@@ -34,6 +39,12 @@ public class PeriodOrderController extends BaseController{
 	
 	@Autowired
 	private UserAddrsService userAddresService;
+	
+	@Autowired
+	private CooperateBusinessService cooperateBusinessService;
+	
+	@Autowired
+	private PeriodServiceTypeService periodServiceTypeService;
 	
 	@RequestMapping(value = "/periodOrderList", method = RequestMethod.GET)
 	public String periodOrderList(PeriodOrder periodOrder, Model model, HttpServletRequest request){
@@ -72,7 +83,30 @@ public class PeriodOrderController extends BaseController{
 		return "redirect:periodOrderList";
 	}
 	
+	@RequestMapping(value="/addPeriodOrder", method = RequestMethod.GET)
+	public String addPeriodOrder(Model model){
+		
+		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
+		vo.setEnable((short) 1);
+		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
+				.selectCooperativeBusinessVo(vo);
+		if (CooperativeBusinessList != null) {
+			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
+		}
+		PeriodServiceType periodServiceType = new PeriodServiceType();
+		periodServiceType.setPackageType("1");
+		List<PeriodServiceType> list = periodServiceTypeService.getList(periodServiceType);
+		model.addAttribute("serviceTypeList", list);
+		
+		return "period/addPeriodOrder";
+	}
 	
+	@RequestMapping(value="/savePeriodOrder", method = RequestMethod.POST)
+	public String savePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId){
+		
+		
+		return "redirect:periodOrderList";
+	}
 	
 	
 

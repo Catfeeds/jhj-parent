@@ -89,6 +89,12 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 		List<PeriodOrder> list = periodOrderMapper.periodOrderListPage(periodOrder);
 		return list;
 	}
+
+	@Override
+	public List<PeriodOrder> selectByPeriodOrder(PeriodOrder periodOrder) {
+	
+		return periodOrderMapper.selectByPeriodOrder(periodOrder);
+	}
 	
 	
    

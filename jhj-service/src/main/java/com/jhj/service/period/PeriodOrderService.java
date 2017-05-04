@@ -24,4 +24,6 @@ public interface PeriodOrderService {
     int insertBatch(List<PeriodOrder> periodOrderList);
     
     List<PeriodOrder> periodOrderListPage(PeriodOrder periodOrder,int pageNum, int pageSize);
+    
+    List<PeriodOrder> selectByPeriodOrder(PeriodOrder periodOrder);
 }

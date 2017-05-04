@@ -24,4 +24,6 @@ public interface PeriodOrderMapper {
     int insertBatch(@Param("periodOrderList") List<PeriodOrder> periodOrderList);
     
     List<PeriodOrder> periodOrderListPage(PeriodOrder periodOrder);
+    
+    List<PeriodOrder> selectByPeriodOrder(PeriodOrder periodOrder);
 }
