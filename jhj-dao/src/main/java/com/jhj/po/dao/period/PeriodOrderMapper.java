@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.vo.period.PeriodOrderSearchVo;
 
 public interface PeriodOrderMapper {
     int deleteByPrimaryKey(Integer id);
@@ -23,7 +24,7 @@ public interface PeriodOrderMapper {
     
     int insertBatch(@Param("periodOrderList") List<PeriodOrder> periodOrderList);
     
-    List<PeriodOrder> periodOrderListPage(PeriodOrder periodOrder);
+    List<PeriodOrder> selectByListPage(PeriodOrderSearchVo searchVo);
     
-    List<PeriodOrder> selectByPeriodOrder(PeriodOrder periodOrder);
+    List<PeriodOrder> selectBySearchVo(PeriodOrderSearchVo searchVo);
 }

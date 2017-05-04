@@ -103,6 +103,8 @@ public class OrderSearchVo {
 	private String remarks;
 	
 	private String orderAddr;
+	
+	private Integer periodOrderId;
 
 	public String getMobile() {
 		return mobile;
@@ -494,6 +496,14 @@ public class OrderSearchVo {
 
 	public void setOrderAddr(String orderAddr) {
 		this.orderAddr = orderAddr;
+	}
+
+	public Integer getPeriodOrderId() {
+		return periodOrderId;
+	}
+
+	public void setPeriodOrderId(Integer periodOrderId) {
+		this.periodOrderId = periodOrderId;
 	}
 	
 }

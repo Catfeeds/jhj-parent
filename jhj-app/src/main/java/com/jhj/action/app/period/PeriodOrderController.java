@@ -24,6 +24,7 @@ import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.period.PeriodOrderSearchVo;
 import com.jhj.vo.period.PeriodOrderVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
@@ -128,9 +129,9 @@ public class PeriodOrderController extends BaseController{
 		
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0,ConstantMsg.SUCCESS_0_MSG, new String());
 		
-		PeriodOrder periodOrder = new PeriodOrder();
+		PeriodOrderSearchVo periodOrder = new PeriodOrderSearchVo();
 		periodOrder.setUserId(userId);
-		List<PeriodOrder> periodOrderListPage = periodOrderService.periodOrderListPage(periodOrder, pageNum, Constants.PAGE_MAX_NUMBER);
+		List<PeriodOrder> periodOrderListPage = periodOrderService.selectByListPage(periodOrder, pageNum, Constants.PAGE_MAX_NUMBER);
 		
 		List<PeriodOrderVo> list = new ArrayList<>();
 		if(periodOrderListPage!=null && periodOrderListPage.size()>0){

@@ -111,3 +111,6 @@ INSERT INTO `period_service_type` VALUES ('22', '清洗洗衣机波轮', '60', '
 INSERT INTO `period_service_type` VALUES ('23', '清洗洗衣机波轮', '60', '21', '180.00', '150.00', '2', '次/年', '1', '0', '定制3,4', '1493198294', '3,4');
 INSERT INTO `period_service_type` VALUES ('24', '金牌保洁', '28', '0', '149.00', '130.00', '1', '次/月', '6', '0', '定制4', '1493707268', '4');
 INSERT INTO `period_service_type` VALUES ('25', '金牌保洁', '28', '0', '149.00', '130.00', '1', '次/半月', '13', '0', '定制3', '1493707687', '3');
+
+
+ALTER TABLE `orders` ADD `period_order_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '服务定制订单ID' AFTER `remarks_bussiness_confirm`;

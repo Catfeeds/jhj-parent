@@ -307,6 +307,10 @@
 			and MATCH(remarks) AGAINST ('${remarks}' IN BOOLEAN MODE)
 		</if>
 		
+		<if test="periodOrderId != null">
+			and period_order_id = #{periodOrderId,jdbcType=NUMERIC}
+		</if>
+		
 	</sql>
 
 	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">

@@ -8,8 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.jhj.po.dao.period.PeriodOrderMapper;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.po.model.user.UserAddrs;
+import com.jhj.service.order.OrderQueryService;
+import com.jhj.service.order.OrdersService;
 import com.jhj.service.period.PeriodOrderService;
+import com.jhj.service.users.UserAddrsService;
+import com.jhj.vo.order.OrderSearchVo;
+import com.jhj.vo.period.PeriodOrderSearchVo;
+import com.jhj.vo.period.PeriodOrderVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -19,6 +28,12 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 	
 	@Autowired
 	private PeriodOrderMapper periodOrderMapper;
+	
+	@Autowired
+	private UserAddrsService userAddrService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
@@ -82,20 +97,43 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 	}
 
 	@Override
-	public List<PeriodOrder> periodOrderListPage(PeriodOrder periodOrder,
+	public List<PeriodOrder> selectByListPage(PeriodOrderSearchVo searchVo,
 			int pageNum, int pageSize) {
 		
 		PageHelper.startPage(pageNum, pageSize);
-		List<PeriodOrder> list = periodOrderMapper.periodOrderListPage(periodOrder);
+		List<PeriodOrder> list = periodOrderMapper.selectByListPage(searchVo);
 		return list;
 	}
 
 	@Override
-	public List<PeriodOrder> selectByPeriodOrder(PeriodOrder periodOrder) {
+	public List<PeriodOrder> selectBySearchVo(PeriodOrderSearchVo searchVo) {
 	
-		return periodOrderMapper.selectByPeriodOrder(periodOrder);
+		return periodOrderMapper.selectBySearchVo(searchVo);
 	}
 	
-	
+	@Override
+	public PeriodOrderVo getVos(PeriodOrder item) {
+		PeriodOrderVo vo = new PeriodOrderVo();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+		
+		String addrName = "";
+		Long addrId = Long.valueOf(vo.getAddrId());
+		UserAddrs userAddr = userAddrService.selectByPrimaryKey(addrId);
+		if (userAddr != null) {
+			addrName = userAddr.getName() + " " + userAddr.getAddr();
+		}
+		vo.setAddrName(addrName);
+		
+		//获取已录入的订单
+		int totalOrder = 0;
+		OrderSearchVo orderSearchVo = new OrderSearchVo();
+		orderSearchVo.setPeriodOrderId(vo.getId());
+		List<Orders> list = orderQueryService.selectBySearchVo(orderSearchVo);
+		if (list.isEmpty()) totalOrder = list.size();
+		vo.setTotalOrder(totalOrder);
+		
+		return vo;
+	}
    
 }
