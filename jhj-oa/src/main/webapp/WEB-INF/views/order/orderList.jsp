@@ -202,23 +202,23 @@
 							<table class="table table-condensed table-hover table-striped" id="table2excel">
 								<thead>
 									<tr>
-										<th width="5%">门店</th>
-										<th width="10%">云店</th>
-										<th width="10%">服务人员</th>
-										<th>人数</th>
-										<th>下单时间</th>
-										<th>订单类型</th>
-										<th>服务日期</th>
-										<th>时长</th>
-										<th>手机号</th>
-										<th width="10%">地址</th>
-										<th>是否接单</th>
-										<th>订单来源</th>
-										<th>订单状态</th>
-										<th>支付方式</th>
-										<th>支付金额</th>
-										<th>补时/差价</th>
-										<th>操作</th>
+										<th width="4%">门店</th>
+										<th width="6%">云店</th>
+										<th width="7%">服务人员</th>
+										<th width="3%">人数</th>
+										<th width="6%">下单时间</th>
+										<th width="8%">订单类型</th>
+										<th width="10%">服务日期</th>
+										<th width="4%">时长</th>
+										<th width="5%">手机号</th>
+										<th width="12%">地址</th>
+										<!-- <th width="4%">是否接单</th> -->
+										<th width="4%">订单来源</th>
+										<th width="4%">订单状态</th>
+										<th width="5%">支付方式</th>
+										<th width="5%">支付金额</th>
+										<th width="4%">补时/差价</th>
+										<th width="10%">操作</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -239,7 +239,7 @@
 												<td>${ item.serviceHour }</td>
 												<td>${ item.mobile }</td>
 												<td>${ item.orderAddress }</td>
-												<td>${ item.applyStatus }</td>
+												<%-- <td>${ item.applyStatus }</td> --%>
 												<td>${item.orderOpFromName }</td>
 												<td><orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" orderType="${item.orderType }" /></td>
 												<td>${ item.payTypeName }</td>
