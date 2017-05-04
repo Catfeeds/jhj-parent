@@ -1,5 +1,4 @@
-ALTER TABLE `user_detail_pay` ADD `remarks` varchar(300) NOT NULL COMMENT '描述' before `add_time`;
-
+ALTER TABLE `user_detail_pay` ADD `remarks` varchar(300) NOT NULL COMMENT '描述';
 
 
 CREATE TABLE `user_sms_notice` (
@@ -43,7 +42,7 @@ alter table user_addrs add fulltext index(name,address) WITH PARSER ngram;
 
 ALTER TABLE `orders` ADD `order_addr` VARCHAR(128) NOT NULL COMMENT '详细地址' AFTER `addr_id`;
 
-update orders as a, user_addrs as b set a.order_addr = concat(b.name, b.address, b.addr) where a.addr_id = b.id
+update orders as a, user_addrs as b set a.order_addr = concat(b.name, b.address, b.addr) where a.addr_id = b.id;
 
 
 ALTER TABLE `orders` ADD FULLTEXT(`order_addr`)  WITH PARSER ngram;
