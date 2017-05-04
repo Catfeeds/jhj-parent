@@ -4,20 +4,11 @@ myApp.onPageInit('period-order-pay', function(page) {
 	var userId = localStorage['user_id'];
 	var orderNo = page.query.order_no;
 	
-	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
-//	$$("#orderPay").val(orderPay);
 	var orderPay = sessionStorage.getItem("periodPayMoney");
 	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
 	$$("#orderPayStrLi").html("￥"+orderPay+"元");
-	
-	var formId = page.query.formId;
-	if(formId!=null && formId!=''){
-		var formData = JSON.parse(localStorage.getItem("f7form-"+formId));
-		$$("#orderMoneyStrLi").html("￥"+560+"元");
-		$$("#orderPayStrLi").html("￥"+formData.orderPrice+"元");
-	}
 		
 	$$.ajax({
 		type : "GET",
@@ -124,33 +115,35 @@ myApp.onPageInit('period-order-pay', function(page) {
 	 	    }
 		});
 	});
+	
 });
 
-//function changePayType(imgPayType, orderPayType) {
-//	
-//	$$("#orderPayType").val(orderPayType);
-//	var imgPayTypes = ['img-restpay', 'img-wxpay', 'img-alipay'];
-//	
-//	$$.each(imgPayTypes,function(n,value) {  
-//		console.log("value = " + value + "=== imgPayType=" + imgPayType);
-//		if (value == imgPayType) {
-//			$$('#' + value).attr("src","img/dingdan-pay/dingdan-pay1.png");
-//		} else {
-//			$$('#' + value).attr("src","img/dingdan-pay/dingdan-pay2.png");
-//		}
-//	});
-//	
-//	//更换价格
-//	var orderPay = sessionStorage.getItem('periodPayMoney');
-//	var orderOriginPay = sessionStorage.getItem('periodOrderMoney');
-//	if(orderPay==undefined || orderPay==null || orderPay==''){
-//		orderPay = 0;
-//	}
-//	if(orderOriginPay==undefined || orderOriginPay==null || orderOriginPay==''){
-//		orderOriginPay = 0;
-//	}
-//	
-//	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
-//	$$("#orderPayStrLi").html("￥"+orderPay+"元");
-//	
-//}
+function changePayType(imgPayType, orderPayType) {
+	
+	$$("#orderPayType").val(orderPayType);
+	var imgPayTypes = ['img-restpay', 'img-wxpay', 'img-alipay'];
+	
+	$$.each(imgPayTypes,function(n,value) {  
+		console.log("value = " + value + "=== imgPayType=" + imgPayType);
+		if (value == imgPayType) {
+			$$('#' + value).attr("src","img/dingdan-pay/dingdan-pay1.png");
+		} else {
+			$$('#' + value).attr("src","img/dingdan-pay/dingdan-pay2.png");
+		}
+	});
+	
+	//更换价格
+	var orderPay = sessionStorage.getItem('periodPayMoney');
+	var orderOriginPay = sessionStorage.getItem('periodOrderMoney');
+	if(orderPay==undefined || orderPay==null || orderPay==''){
+		orderPay = 0;
+	}
+	if(orderOriginPay==undefined || orderOriginPay==null || orderOriginPay==''){
+		orderOriginPay = 0;
+	}
+	
+	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
+	$$("#orderPayStrLi").html("￥"+orderPay+"元");
+	
+}
+

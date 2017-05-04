@@ -100,6 +100,8 @@ myApp.onPageBeforeInit("period-order", function (page) {
        	}
        	
        	sessionStorage.setItem("periodOrder",JSON.stringify(periodServiceAddonsArray));
+       	
+       	mainView.router.loadPage("order/period/period-order-confirm.html?package_type_id"+packageTypeId);
     });
     
     

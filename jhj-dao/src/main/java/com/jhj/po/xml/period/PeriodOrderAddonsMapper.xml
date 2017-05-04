@@ -175,4 +175,9 @@
          #{item.addTime,jdbcType=TIMESTAMP})
       </foreach>
   </insert>
+  
+  <select id="selectByPeriodOrderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/> from period_order_addons
+  	where period_order_id = #{periodOrderId,jdbcType=INTEGER}
+  </select>
 </mapper>

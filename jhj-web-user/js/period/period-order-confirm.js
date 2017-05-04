@@ -1,4 +1,6 @@
 myApp.onPageInit("period-order-confirm", function (page) {
+	
+	var packageTypeId = page.query.package_type_id;
     
 	var periodOrderStr = sessionStorage.getItem("periodOrder");
 	var periodOrderJson = JSON.parse(periodOrderStr);
@@ -42,7 +44,7 @@ myApp.onPageInit("period-order-confirm", function (page) {
        	param.order_money = sessionStorage.getItem("periodOrderMoney");
        	param.order_price = sessionStorage.getItem("periodPayMoney");
        	param.user_coupons_id = 0;
-       	param.period_service_type_id = 0;
+       	param.period_service_type_id = packageTypeId;
        	param.order_from = 1;
        	param.remarks = "";
        	param.period_service_addons_json = periodOrderStr;

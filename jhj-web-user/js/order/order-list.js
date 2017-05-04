@@ -262,6 +262,17 @@ function periodOrderListSuccess(data, textStatus, jqXHR,pageNum){
 	for (var i = 0; i < periodOrderList.length; i++) {
 		var periodOrder = periodOrderList[i];
 		var htmlPart = htmlTemplate;
+		var periodName ;
+		switch (periodOrder.period_service_type_id) {
+			case 1: periodName="套餐一"; break;
+			case 2: periodName="套餐二"; break;
+			case 3: periodName="套餐三"; break;
+			case 4: periodName="套餐四"; break;
+			default:
+				break;
+		}
+		htmlPart = htmlPart.replace(new RegExp('{periodName}', "gm"), periodName);
+		htmlPart = htmlPart.replace(new RegExp('{periodOrderId}', "gm"), periodOrder.id);
 		htmlPart = htmlPart.replace(new RegExp('{orderId}', "gm"), periodOrder.id);
 		htmlPart = htmlPart.replace(new RegExp('{orderNo}', "gm"), periodOrder.order_no);
 		htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.service_type);
@@ -334,9 +345,11 @@ function getPeriodOrderList(userId,pageNum){
 function doPeriodOrderPay(obj){
 	var formId = $$(obj).nextAll(".list-block").attr("id");
 	var formJSON = myApp.formToJSON("#"+formId);
-	myApp.formStoreData(formId, formJSON);
+//	myApp.formStoreData(formId, formJSON);
+	sessionStorage.setItem("periodOrderMoney",formJSON.orderMoney);
+	sessionStorage.setItem("periodPayMoney",formJSON.orderPrice);
 	
-	mainView.router.loadPage("order/period/period-order-pay.html?order_no="+formJSON.orderNo +"&formId="+formId);
+	mainView.router.loadPage("order/period/period-order-pay.html?order_no="+formJSON.orderNo);
 }
 
 

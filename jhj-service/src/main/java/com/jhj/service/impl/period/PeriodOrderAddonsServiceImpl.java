@@ -6,17 +6,28 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jhj.po.dao.dict.DictServiceAddonsMapper;
 import com.jhj.po.dao.period.PeriodOrderAddonsMapper;
+import com.jhj.po.dao.university.PartnerServiceTypeMapper;
+import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.period.PeriodOrderAddons;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.period.PeriodOrderAddonsService;
+import com.jhj.vo.period.PeriodOrderAddonsVo;
+import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
-import com.meijia.utils.TimeStampUtil;
 
 @Service
 public class PeriodOrderAddonsServiceImpl implements PeriodOrderAddonsService{
 	
 	@Autowired
 	private PeriodOrderAddonsMapper periodOrderAddonsMapper;
+	
+	@Autowired
+	private DictServiceAddonsMapper dictServiceAddonsMapper;
+	
+	@Autowired
+	private PartnerServiceTypeMapper partnerServiceTypeMapper;
 
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
@@ -66,6 +77,34 @@ public class PeriodOrderAddonsServiceImpl implements PeriodOrderAddonsService{
 		poa.setAddTime(DateUtil.getNowOfDate());
 		poa.setVipPrice(new BigDecimal(0));
 		return poa;
+	}
+
+	@Override
+	public List<PeriodOrderAddons> selectByPeriodOrderId(Integer periodOrderId) {
+		
+		return periodOrderAddonsMapper.selectByPeriodOrderId(periodOrderId);
+	}
+
+	@Override
+	public PeriodOrderAddonsVo transVo(PeriodOrderAddons periodOrderAddons) {
+		
+		PeriodOrderAddonsVo vo = new PeriodOrderAddonsVo();
+		
+		if(periodOrderAddons==null) return vo;
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(periodOrderAddons, vo);
+		
+		if(periodOrderAddons.getServiceAddonId()>0){
+			DictServiceAddons serviceAddons = dictServiceAddonsMapper.selectByPrimaryKey(periodOrderAddons.getServiceAddonId().longValue());
+			vo.setServiceAddonsName(serviceAddons.getName());
+		}
+		
+		if(periodOrderAddons.getServiceAddonId()==0){
+			PartnerServiceType serviceType = partnerServiceTypeMapper.selectByPrimaryKey(periodOrderAddons.getServiceTypeId().longValue());
+			vo.setServiceAddonsName(serviceType.getName());
+		}
+		
+		return vo;
 	}
    
 }
