@@ -27,9 +27,14 @@ myApp.onPageInit("period-order-confirm", function (page) {
 		$$("#period-order-list").append(html);
     }
     
-    var addrId = sessionStorage.getItem("addr_id");
-    var addrName = sessionStorage.getItem("addr_name");
-    $$("#orderChooseAddrName").text(addrName);
+	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
+	var addrId = getItemAddrId();
+	var addrName = getItemAddrName();
+	
+	if (addrName != undefined || addrName != "") {
+		$$("#orderChooseAddrName").html(addrName);
+	}	
+
     var totalMoney = sessionStorage.getItem("periodPayMoney");
     if(totalMoney==undefined ||totalMoney==null ||totalMoney=='') totalMoney=0;
     $$("#totalMoney").text(totalMoney);

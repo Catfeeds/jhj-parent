@@ -26,11 +26,13 @@ myApp.onPageBeforeInit("period-order", function (page) {
     				if(periodOrder.service_type_id == 28){
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '');
     					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
+    					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), 'disabled');
     					total = periodOrder.price*periodOrder.total;
     					ptotal = periodOrder.vip_price*periodOrder.total;
     				}else{
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '调整');
     					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), '');
+    					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), '');
     				}
     				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.total);
     				htmlPart = htmlPart.replace(new RegExp('{num}', "gm"), periodOrder.num);
@@ -101,7 +103,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
        	
        	sessionStorage.setItem("periodOrder",JSON.stringify(periodServiceAddonsArray));
        	
-       	mainView.router.loadPage("order/period/period-order-confirm.html?package_type_id"+packageTypeId);
+       	mainView.router.loadPage("order/period/period-order-confirm.html?package_type_id="+packageTypeId);
     });
     
     
