@@ -100,7 +100,7 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 					 
 					 if (Number(defaultNum) > 0) {
 						 if (Number(defaultNum) > Number(itemNum)) {
-							 validateMsg = serviceAddonName + "最低数量为" + defaultNum;
+							 validateMsg = serviceAddonName + "需" + defaultNum + "平米起订.";
 							 validateSuccess = false;
 							 myApp.alert(validateMsg);
 							 return false;
@@ -113,7 +113,7 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 			if (validateSuccess == false) return false;
 			
 			if (parseFloat(selectedItemNum) < parseFloat(2) ) {
-				validateMsg = "服务子项数量至少为2个以上.";
+				validateMsg = "需两项服务起订";
 				myApp.alert(validateMsg);
 				return false;
 			}
