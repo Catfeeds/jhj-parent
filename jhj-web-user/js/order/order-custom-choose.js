@@ -78,6 +78,47 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 	
 	 $$("#chooseServiceTime").on("click",function() {
 		 
+		 //判断服务子项必须为2个以上
+
+			var hasDefaultNum = false;
+			
+			var selectedItemNum = 0;
+			var validateMsg = ""
+			var validateSuccess = true;
+			$$("input[name = itemNum]").each(function(key, index) {
+				itemNum = $$(this).val();
+				 
+				 if (itemNum == undefined || itemNum == "") {
+					 itemNum = 0;
+				 }
+				 
+				 if (Number(itemNum) > 0) {
+					 selectedItemNum = parseFloat(selectedItemNum) + parseFloat(itemNum);
+					 
+					 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
+					 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
+					 
+					 if (Number(defaultNum) > 0) {
+						 if (Number(defaultNum) > Number(itemNum)) {
+							 validateMsg = serviceAddonName + "最低数量为" + defaultNum;
+							 validateSuccess = false;
+							 myApp.alert(validateMsg);
+							 return false;
+						 }
+					 }
+					 
+				 }
+			});
+			
+			if (validateSuccess == false) return false;
+			
+			if (parseFloat(selectedItemNum) < parseFloat(2) ) {
+				validateMsg = "服务子项数量至少为2个以上.";
+				myApp.alert(validateMsg);
+				return false;
+			}
+		 
+		 
 		 var validateMsg = setCustomTotal();
 		 if (validateMsg != undefined && validateMsg != "") {
 			 myApp.alert(validateMsg);
@@ -175,46 +216,6 @@ function onCustomSubItemNum(obj) {
 	
 	var validateMsg = setCustomTotal();
 
-}
-
-function checkDefaultNum() {
-	//判断如果有起步数量 ，并且有多个，则只要有一个不超过起步数量即可.
-	console.log("checkDefaultNum");
-	var hasDefaultNum = false;
-	
-	var selectedItemNum = 0;
-	var validateMsg = ""
-	$$("input[name = itemNum]").each(function(key, index) {
-		itemNum = $$(this).val();
-		 
-		 if (itemNum == undefined || itemNum == "") {
-			 itemNum = 0;
-		 }
-		 
-		 if (Number(itemNum) > 0) {
-			 selectedItemNum = parseFloat(selectedItemNum) + parseFloat(itemNum);
-			 
-			 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
-			 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
-			 
-			 if (Number(defaultNum) > 0) {
-				 if (Number(defaultNum) > Number(itemNum)) {
-					 validateMsg = serviceAddonName + "最低数量为" + defaultNum;
-					 return validateMsg;
-				 }
-			 }
-			 
-		 }
-	});
-	
-	myApp.alert("selectedItemNum = " + selectedItemNum);
-	if (parseFloat(selectedItemNum) < parseFloat(2) ) {
-		validateMsg = "服务子项数量至少为2个以上.";
-	}
-	
-	console.log("validateMsg == " + validateMsg);
-	
-	return validateMsg;
 }
 
 function setItemNum(serviceAddonId, defaultNum) {
@@ -316,10 +317,5 @@ function setCustomTotal() {
 	sessionStorage.setItem("service_addons", JSON.stringify(serviceAddons));
 	sessionStorage.setItem("service_addons_json", JSON.stringify(serviceAddonsJson));
 	
-	var validateMsg = checkDefaultNum();
-	if (validateMsg != undefined && validateMsg != "") {
-		return validateMsg;
-	}
-	
-	return validateMsg;
+	return "";
 }
