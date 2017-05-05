@@ -46,6 +46,11 @@
 	if(verify_result){//验证成功
 		//////////////////////////////////////////////////////////////////////////////////////////
 		//请在这里加上商户的业务逻辑程序代码
+		
+		String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
+		if (com.meijia.utils.ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+			host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST_DEBUG;
+		}
 
 		//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
 		if(trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")){
@@ -54,7 +59,7 @@
 				//如果有做过处理，不执行商户的业务程序
 			String orderType = body;
 			String orderNo = out_trade_no;
-			String redirectUrl = "http://www.jia-he-jia.com/u/#!/";
+			String redirectUrl = host + "/u/#!/";
 			redirectUrl+= "order/order-pay-success.html?order_no="+orderNo+"&order_type="+orderType;
 			response.sendRedirect(redirectUrl); 
 		}

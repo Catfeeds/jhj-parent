@@ -27,6 +27,7 @@ import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.period.PeriodOrderService;
+import com.meijia.utils.ConfigUtil;
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -273,8 +274,13 @@ public class OrderWxPayController extends BaseController {
 			jumpParam.put("signType", "MD5");
 			jumpParam.put("userId", userId.toString());
 			// 下面为支付成功后的参数
-
-			String jumpUrl = Constants.PAY_CALLBACK_SERVICE_HOST + "/jhj-app/wx-pay.jsp?showwxpaytitle=1";
+			
+			String payCallBackServiceHost = Constants.PAY_CALLBACK_SERVICE_HOST;
+			if (ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+				payCallBackServiceHost = Constants.PAY_CALLBACK_SERVICE_HOST_DEBUG;
+			}
+			
+			String jumpUrl = payCallBackServiceHost + "/jhj-app/wx-pay.jsp?showwxpaytitle=1";
 			jumpUrl += "&appId=" + WxUtil.appId;
 			jumpUrl += "&package=" + prepayId;
 			jumpUrl += "&timeStamp=" + timeStamp;

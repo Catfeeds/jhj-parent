@@ -29,6 +29,9 @@
         String payOrderType = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
 		
         String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
+		if (com.meijia.utils.ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+			host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST_DEBUG;
+		}
         
         //收银台页面上，商品展示的超链接，必填
         String show_url = host + "/u/#!/user/mine-charge-way.html";

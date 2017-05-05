@@ -33,8 +33,12 @@
         //String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
         
         /* http://test.jia-he-jia.com 测试环境地址  */
-        String host = "http://test.jia-he-jia.com";
         
+        String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
+		if (com.meijia.utils.ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+			host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST_DEBUG;
+		}
+                
         //收银台页面上，商品展示的超链接，必填
         String show_url = host + "/u/#!/order/period-order-pay.html";
 		
