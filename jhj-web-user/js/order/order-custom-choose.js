@@ -192,7 +192,7 @@ function checkDefaultNum() {
 		 }
 		 
 		 if (Number(itemNum) > 0) {
-			 selectedItemNum = selectedItemNum + itemNum;
+			 selectedItemNum = Number(selectedItemNum) + Number(itemNum);
 			 
 			 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
 			 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
@@ -206,8 +206,8 @@ function checkDefaultNum() {
 			 
 		 }
 	});
-	
-	if (Number(selectedItemNum) < 2 ) {
+	console.log("selectedItemNum = " + selectedItemNum);
+	if (Number(selectedItemNum) < Number(2) ) {
 		validateMsg = "服务子项数量至少为2个以上.";
 	}
 	
