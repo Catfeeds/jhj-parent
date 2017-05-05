@@ -17,28 +17,49 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 		success : function(data) {
 			var serviceAddons = data.data;
 			
+			var serviceAddonContentBx = "";
+			var serviceAddonContentKt = "";
+			var serviceAddonContentYyj = "";
+			var serviceAddonContentXyj = "";
+			var serviceAddonContentJzbj = "";
 			$$.each(serviceAddons, function(i, item) {
 				var html = "";
 				var name = item.name;
+				var serviceAddonId = item.service_addon_id;
+				var html = "";
 				
-				html = "<ul class='order-rili'>";
-				html+= "<li>" + name + "</li>"
-				html+= '<li><span onclick="onCustomSubItemNum($$(this).parent())">-</span>';
+				//只能写死，针对不同的服务大类
+				//冰箱
+				if (serviceAddonId == 82 ||  serviceAddonId == 83 || serviceAddonId == 84 || serviceAddonId == 85 ) {
+					serviceAddonContentBx+= getSerivceAddonContentHtml(item);
+				}
 				
-				var n = setItemNum(item.service_addon_id, item.default_num);
-				html+= '<input name="itemNum" value="0" onkeyup="onItemNumKeyUp($$(this).parent())"  onafterpaste="onItemNumKeyUp($$(this).parent())"  maxLength="3" autocomplete="off">';
-				html+= '<input type="hidden" name="serviceAddonName" value="'+name+'" autocomplete="off">';
+				//空调
+				if (serviceAddonId == 79 ||  serviceAddonId == 80 || serviceAddonId == 81) {
+					serviceAddonContentKt+= getSerivceAddonContentHtml(item);
+				}
 				
-				html+= '<input type="hidden" name="defaultNum" value="'+item.default_num+'" autocomplete="off">';
-				html+= '<input type="hidden" name="serviceAddonServiceHour" value="'+item.service_hour+'" autocomplete="off">';
-				html+= '<input type="hidden" name="serviceAddonItemUnit" value="'+item.item_unit+'" autocomplete="off">';
-				html+= '<input type="hidden" name="serviceAddonAprice" value="'+item.aprice+'" autocomplete="off">';
-				html+= '<input type="hidden" name="serviceAddonId" value="'+item.service_addon_id+'" autocomplete="off">';
-				html+= '<span onclick="onCustomAddItemNum($$(this).parent())">+</span></li>';
-				html+= "</ul>";
-					
-				$$("#order-custom-content").append(html);
+				//油烟机
+				if (serviceAddonId == 75 ||  serviceAddonId == 76 || serviceAddonId == 77 || serviceAddonId == 78) {
+					serviceAddonContentYyj+= getSerivceAddonContentHtml(item);
+				}
+				
+				//洗衣机
+				if (serviceAddonId == 72 ||  serviceAddonId == 73 || serviceAddonId == 74) {
+					serviceAddonContentXyj+= getSerivceAddonContentHtml(item);
+				}
+				
+				//家政保洁
+				if (serviceAddonId == 69 ||  serviceAddonId == 70 || serviceAddonId == 71) {
+					serviceAddonContentJzbj+= getSerivceAddonContentHtml(item);
+				}
 			});
+			
+			$$("#service-addon-content-bx").append(serviceAddonContentBx);
+			$$("#service-addon-content-kt").append(serviceAddonContentKt);
+			$$("#service-addon-content-yyj").append(serviceAddonContentYyj);
+			$$("#service-addon-content-xyj").append(serviceAddonContentXyj);
+			$$("#service-addon-content-jzbj").append(serviceAddonContentJzbj);
 			
 		}
 	});
@@ -88,6 +109,30 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 	
 });
 
+
+function getSerivceAddonContentHtml(item) {
+	var html = "<ul class=\"appliance3\">";
+	
+	html+= "<li>" + item.name + "</li>"
+	html+= "<li>" + item.aprice + "</li>"
+	
+	html+= "<li>";
+	html+= '<input type="hidden" name="serviceAddonName" value="'+name+'" autocomplete="off">';
+	
+	html+= '<input type="hidden" name="defaultNum" value="'+item.default_num+'" autocomplete="off">';
+	html+= '<input type="hidden" name="serviceAddonServiceHour" value="'+item.service_hour+'" autocomplete="off">';
+	html+= '<input type="hidden" name="serviceAddonItemUnit" value="'+item.item_unit+'" autocomplete="off">';
+	html+= '<input type="hidden" name="serviceAddonAprice" value="'+item.aprice+'" autocomplete="off">';
+	html+= '<input type="hidden" name="serviceAddonId" value="'+item.service_addon_id+'" autocomplete="off">';
+	
+	html+= '<div class="appliance3-1" onclick="onCustomAddItemNum($$(this).parent())">＋</div>';
+	html+= '<input name="itemNum" value="0" onkeyup="onItemNumKeyUp($$(this).parent())"  onafterpaste="onItemNumKeyUp($$(this).parent())"  maxLength="3" autocomplete="off">';
+	html+= '<div class="appliance3-1" onclick="onCustomSubItemNum($$(this).parent())">一</div>';
+	
+	html+= '</li>';
+	html+= '</ul>';
+	return html;
+}
 
 function onItemNumKeyUp(obj) {
 	var itemNumObj = obj.find('input[name=itemNum]'); 
@@ -147,7 +192,7 @@ function checkDefaultNum() {
 		 }
 		 
 		 if (Number(itemNum) > 0) {
-			 selectedItemNum++;
+			 selectedItemNum = selectedItemNum + itemNum;
 			 
 			 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
 			 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
@@ -163,7 +208,7 @@ function checkDefaultNum() {
 	});
 	
 	if (Number(selectedItemNum) < 2 ) {
-		validateMsg = "请至少选择两种服务子项";
+		validateMsg = "服务子项数量至少为2个以上.";
 	}
 	
 	console.log("validateMsg == " + validateMsg);

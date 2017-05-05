@@ -145,3 +145,5 @@ INSERT INTO `period_service_type` VALUES ('31', '贴心家事', '80', '0', '100.
 INSERT INTO `period_service_type` VALUES ('32', '贴心家事', '80', '0', '100.00', '100.00', '2', '小时/年', '1', '0', '定制3', '1493968366', '3');
 INSERT INTO `period_service_type` VALUES ('33', '贴心家事', '80', '0', '100.00', '100.00', '1', '小时/年', '0.5', '0', '定制4', '1493968397', '4');
 INSERT INTO `period_service_type` VALUES ('34', '全屋掸尘清理死角', '81', '0', '150.00', '150.00', '1', '次/年', '1', '0', '定制1,2,3,4', '1493968765', '1,2,3,4');
+
+ALTER TABLE `orders` ADD `period_order_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '定制服务订单id' AFTER `remarks_bussiness_confirm`;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.cooperate.CooperateBusinessService;
+import com.meijia.utils.ConfigUtil;
 import com.meijia.utils.StringUtil;
 
 
@@ -48,8 +49,13 @@ public class OController extends BaseController {
 			//检测来源ID是否存在
 			CooperativeBusiness record = cooperateBusinessService.selectByPrimaryKey(Long.valueOf(s));
 			if (record == null) return "";
-//			String url = "http://localhost:8080/u/#!/active/20170504.html?order_op_from=" + s;
-			String url = "http://test.jia-he-jia.com/u/#!/active/20170504.html?order_op_from=" + s;
+			String url = "http://localhost:8080/u/#!/active/20170504.html?order_op_from=" + s;
+//			String url = "";
+//			if (ConfigUtil.getInstance().getRb().getString("debug").equals("false")) {
+//				url = "http://www.jia-he-jia.com/u/#!/active/20170504.html?order_op_from=" + s;
+//			} else {
+//				url = "http://test.jia-he-jia.com/u/#!/active/20170504.html?order_op_from=" + s;
+//			}
 			return "redirect:"+url;
 		}
 
