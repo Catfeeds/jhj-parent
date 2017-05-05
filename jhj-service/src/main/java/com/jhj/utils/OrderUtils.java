@@ -259,10 +259,8 @@ public class OrderUtils {
 		if (orderFrom == 0) {
 			vo.setOrderOpFromName("app");
 		}
-		if (orderFrom == 1) {
-			vo.setOrderOpFromName("微网站");
-		}
-		if (orderFrom == 2 && orderOpFrom != null) {
+		
+		if (orderOpFrom != null && !orderOpFrom.equals(0L)) {
 			if (orderOpFrom == 1) {
 				vo.setOrderOpFromName("来电订单");
 			} else {
@@ -271,6 +269,10 @@ public class OrderUtils {
 				} else {
 					vo.setOrderOpFromName("");
 				}
+			}
+		} else {
+			if (orderFrom == 1) {
+				vo.setOrderOpFromName("微网站");
 			}
 		}
 
