@@ -6,9 +6,9 @@ myApp.onPageInit('period-order-pay', function(page) {
 	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
-	var orderPay = sessionStorage.getItem("periodPayMoney");
-	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
-	$$("#orderPayStrLi").html("￥"+orderPay+"元");
+	var periodOrderPay = sessionStorage.getItem("periodPayMoney");
+	$$("#periodOrderMoneyStrLi").html("￥"+periodOrderPay+"元");
+	$$("#periodOrderPayStrLi").html("￥"+periodOrderPay+"元");
 		
 	$$.ajax({
 		type : "GET",
@@ -133,17 +133,17 @@ function changePayType(imgPayType, orderPayType) {
 	});
 	
 	//更换价格
-	var orderPay = sessionStorage.getItem('periodPayMoney');
-	var orderOriginPay = sessionStorage.getItem('periodOrderMoney');
-	if(orderPay==undefined || orderPay==null || orderPay==''){
-		orderPay = 0;
+	var periodOrderPay = sessionStorage.getItem('periodPayMoney');
+	var periodOrderOriginPay = sessionStorage.getItem('periodOrderMoney');
+	if(periodOrderPay==undefined || periodOrderPay==null || periodOrderPay==''){
+		periodOrderPay = 0;
 	}
-	if(orderOriginPay==undefined || orderOriginPay==null || orderOriginPay==''){
-		orderOriginPay = 0;
+	if(periodOrderOriginPay==undefined || periodOrderOriginPay==null || periodOrderOriginPay==''){
+		periodOrderOriginPay = 0;
 	}
 	
-	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
-	$$("#orderPayStrLi").html("￥"+orderPay+"元");
+	$$("#periodOrderMoneyStrLi").html("￥"+periodOrderPay+"元");
+	$$("#periodOrderPayStrLi").html("￥"+periodOrderPay+"元");
 	
 }
 
