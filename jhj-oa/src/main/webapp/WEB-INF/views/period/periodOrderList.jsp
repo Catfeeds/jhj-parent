@@ -53,11 +53,11 @@
 						<th>下单时间</th>
 						<th>套餐</th>
 						<th>手机号</th>
+						<th>订单号</th>
 						<th>地址</th>
 						<th>订单状态</th>
 						<th>支付类型</th>
 						<th>订单金额</th>
-						<th>优惠金额</th>
 						<th>订单来源</th>
 						<th>订单数</th>
 						<th>操作</th>
@@ -69,6 +69,7 @@
 							<td><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime*1000 }"/></td> 
 							<td>${item.packageTypeName }</td>
 							<td>${item.mobile }</td>
+							<td>${item.orderNo }</td>
 							<td><addressName:addr addrId="${item.addrId }" /></td>
 							<td>
 								<c:if test="${item.orderStatus==0 }">已取消</c:if>
@@ -79,7 +80,6 @@
 							</td>
 							<td><payTypeName:payType payType="${item.payType }" orderStatus="2"/> </td>
 							<td>${item.orderMoney }</td>
-							<td>${item.userCouponsId }</td>
 							<td><orderFromName:orderfrom orderFrom="${item.orderFrom}"/></td>
 							<td>${item.totalOrder }</td>
 							<td>
