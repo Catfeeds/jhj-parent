@@ -198,6 +198,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
 			for(var j=0;j<input.length;j++){
 				var inp = input[j];
 				if(serviceTypeId == $$(inp).val()){
+					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-4 .total").text(serviceNum);
 					$$(inp).nextAll(".item-inner").find(".housework-3 .item-title").text(name);
 					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='price']").val(price);
 					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='pprice']").val(pprice);

@@ -263,7 +263,7 @@ function periodOrderListSuccess(data, textStatus, jqXHR,pageNum){
 		var periodOrder = periodOrderList[i];
 		var htmlPart = htmlTemplate;
 		var periodName ;
-		switch (periodOrder.period_service_type_id) {
+		switch (periodOrder.package_type) {
 			case 1: periodName="套餐一"; break;
 			case 2: periodName="套餐二"; break;
 			case 3: periodName="套餐三"; break;
