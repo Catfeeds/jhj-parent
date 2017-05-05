@@ -112,6 +112,7 @@
 									<form:option value="次/半月">次/半月</form:option>
 									<form:option value="次/月">次/月</form:option>
 									<form:option value="次/年">次/年</form:option>
+									<form:option value="小时/年">小时/年</form:option>
 								</form:select>
 							</div>
 						</div>
