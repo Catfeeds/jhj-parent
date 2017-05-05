@@ -206,7 +206,8 @@ function checkDefaultNum() {
 			 
 		 }
 	});
-
+	
+	myApp.alert("selectedItemNum = " + selectedItemNum);
 	if (parseFloat(selectedItemNum) < parseFloat(2) ) {
 		validateMsg = "服务子项数量至少为2个以上.";
 	}
