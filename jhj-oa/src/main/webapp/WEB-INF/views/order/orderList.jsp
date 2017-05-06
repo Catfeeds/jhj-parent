@@ -260,7 +260,7 @@
 														<i class=" icon-ambulance"></i>
 													</button> <!-- 如果 运营人员备注为 空，可以添加，不为空，不让添加 --> 
 													<button id="btnremarks"
-														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-order-no="${item.orderNo}" data-target="#updateOrderRemark" onclick="showLog(this)">
+														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-order-no="${item.orderNo}" data-target="#updateOrderRemark" onclick="showLog(this, '${item.remarks}')">
 														<i class="icon-plus-sign-alt"></i>
 													</button>
 													<c:if test="${item.remarks ne ''}">
