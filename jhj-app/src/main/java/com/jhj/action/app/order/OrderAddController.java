@@ -122,7 +122,7 @@ public class OrderAddController extends BaseController {
 			@RequestParam(value = "adminId", required = false, defaultValue = "0") Long adminId,
 			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName,
 			@RequestParam(value = "sendSmsToUser", required = false, defaultValue = "0") int sendSmsToUser,
-			@RequestParam(value = "periodOrderId", required = false) int periodOrderId)
+			@RequestParam(value = "periodOrderId", required = false) Integer periodOrderId)
 			throws Exception {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
