@@ -212,7 +212,7 @@
 										<th width="4%">时长</th>
 										<th width="5%">手机号</th>
 										<th width="12%">地址</th>
-										<!-- <th width="4%">是否接单</th> -->
+										<th width="4%">是否接单</th>
 										<th width="4%">订单来源</th>
 										<th width="4%">订单状态</th>
 										<th width="5%">支付方式</th>
@@ -239,7 +239,7 @@
 												<td>${ item.serviceHour }</td>
 												<td>${ item.mobile }</td>
 												<td>${ item.orderAddress }</td>
-												<%-- <td>${ item.applyStatus }</td> --%>
+												<td>${ item.applyStatus }</td>
 												<td>${item.orderOpFromName }</td>
 												<td><orderVoStatusTag:orderstatus orderStatus="${item.orderStatus }" orderType="${item.orderType }" /></td>
 												<td>${ item.payTypeName }</td>
