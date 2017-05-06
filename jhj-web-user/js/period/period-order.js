@@ -23,16 +23,20 @@ myApp.onPageBeforeInit("period-order", function (page) {
     				htmlPart = htmlPart.replace(new RegExp('{id}', "gm"), periodOrder.id);
     				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.service_type_id);
     				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), periodOrder.service_addon_id);
-    				if(periodOrder.service_type_id == 28){
+    				if(periodOrder.service_type_id == 28 || periodOrder.service_type_id == 80 || periodOrder.service_type_id == 81){
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '');
     					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
-    					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), 'disabled');
+    					if(periodOrder.service_type_id == 28){
+    						htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), 'disabled');
+    					}
     					total = periodOrder.price*periodOrder.total;
     					ptotal = periodOrder.vip_price*periodOrder.total;
     				}else{
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '调整');
-    					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), '');
+    					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
     					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), '');
+    					total = periodOrder.price*periodOrder.total;
+    					ptotal = periodOrder.vip_price*periodOrder.total;
     				}
     				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.total);
     				htmlPart = htmlPart.replace(new RegExp('{num}', "gm"), periodOrder.num);
