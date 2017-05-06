@@ -274,7 +274,7 @@ function periodOrderListSuccess(data, textStatus, jqXHR,pageNum){
 		htmlPart = htmlPart.replace(new RegExp('{periodName}', "gm"), periodName);
 		htmlPart = htmlPart.replace(new RegExp('{periodOrderId}', "gm"), periodOrder.id);
 		htmlPart = htmlPart.replace(new RegExp('{orderId}', "gm"), periodOrder.id);
-		htmlPart = htmlPart.replace(new RegExp('{orderNo}', "gm"), periodOrder.order_no);
+		htmlPart = htmlPart.replace(new RegExp('{periodOrderNo}', "gm"), periodOrder.order_no);
 		htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.service_type);
 		htmlPart = htmlPart.replace(new RegExp('{orderMoney}', "gm"), periodOrder.order_money);
 		htmlPart = htmlPart.replace(new RegExp('{orderPrice}', "gm"), periodOrder.order_price);
@@ -345,7 +345,6 @@ function getPeriodOrderList(userId,pageNum){
 function doPeriodOrderPay(obj){
 	var formId = $$(obj).nextAll(".list-block").attr("id");
 	var formJSON = myApp.formToJSON("#"+formId);
-//	myApp.formStoreData(formId, formJSON);
 	sessionStorage.setItem("periodOrderMoney",formJSON.orderMoney);
 	sessionStorage.setItem("periodPayMoney",formJSON.orderPrice);
 	

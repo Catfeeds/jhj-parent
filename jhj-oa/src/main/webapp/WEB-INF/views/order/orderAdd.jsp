@@ -89,9 +89,9 @@
 												</select>
 											</div>
 											<div>
-												<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever=""
+												<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-whatever=""
 													onclick="address()">添加地址</button>
-												<button type="button" id="btn-update" class="btn btn-primary" onclick="getAddress()">修改地址</button>
+												<button type="button" id="btn-update" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="getAddress()">修改地址</button>
 												<button type="button" id="btn-del" class="btn btn-primary" onclick="delAddress()">删除地址</button>
 											</div>
 											<div id="from-add-addr" style="display: none">

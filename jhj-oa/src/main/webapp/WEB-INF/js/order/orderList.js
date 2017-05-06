@@ -99,7 +99,7 @@ function showLog(obj){
 
 $("#submit-remarks").on('click',function(){
 	var orderNo = $("#modal-orderNo").val();
-	var remarks = $("#remarks").val();
+	var remarks = $("#remarks1").val();
 	
 	if(remarks==undefined || remarks ==null || remarks=='') return false;
 	
