@@ -256,7 +256,7 @@
 						<li id="substranc-day">
 							<span>&lt;</span>
 						</li>
-						<li id="show-month">九月</li>
+						<li id="show-month" class="show-month">九月</li>
 						<li id="add-day">
 							<span>&gt;</span>
 						</li>
