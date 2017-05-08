@@ -224,11 +224,11 @@ function selectServiceDate(){
     }
 
     //日历减1天
-    $("#substranc-day").click(function(){
+    $(document).on('click','#substranc-day',function(){
     	$("#show-dateTime").find("li").removeClass("rili-time");
     	$("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
         dayTime="";
-        var service_date = getServiceDate(selectDay);
+        var service_date = date; //getServiceDate(selectDay);
         var comp_day = moment(service_date).add(-7,'days').format("YYYY-MM-DD");
         if(comp_day>=date){
 	         get7Day(service_date,-dayNum);
@@ -240,11 +240,11 @@ function selectServiceDate(){
     });
 
     //日历加1天
-    $("#add-day").click(function(){
+    $(document).on('click','#add-day',function(){
         $("#show-dateTime").find("li").removeClass("rili-time");
         $("#checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
         dayTime="";
-        var service_date = getServiceDate(selectDay);
+        var service_date = date //getServiceDate("#show-day li p");
         get7Day(service_date,dayNum);
     });
     
@@ -263,45 +263,37 @@ function selectServiceDate(){
     	}
         if(nyr==date){
             var lis = $("#show-dateTime").find("li");
-
-            if(nowHour>=0 && nowHour<=4){
-            	filterBackDate(lis,2);
-            }
-            if(nowHour>4 && nowHour<=6){
-            	filterBackDate(lis,4);
-            }
-            if(nowHour>=7 && nowHour<=8){
-            	filterBackDate(lis,5);
-            }
-            if(nowHour==9){
-            	filterBackDate(lis,6);
-            }
-            if(nowHour==10){
-            	filterBackDate(lis,10);
-            }
-            if(nowHour==11){
-            	filterBackDate(lis,11);
-            }
-            if(nowHour==12){
-            	filterBackDate(lis,13);
-            }
-            if(nowHour==13){
-            	filterBackDate(lis,15);
-            }
-            if(nowHour==14){
-            	filterBackDate(lis,17);
-            }
-            if(nowHour==15){
-            	filterBackDate(lis,19);
-            }
-            if(nowHour>=16 && nowHour<=19){
-                filterBackDate(lis,21);
-            }
-            if(nowHour>=20 && nowHour<=23){
-            	filterBackDate(lis,2);
-                $("#show-day li").removeClass("rili-time");
-                $("#show-day").find("li:nth-child(2)").addClass("rili-time");
-            }
+            switch (nowHour) {
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:filterBackDate(lis,2);break;
+				case 5:
+				case 6:filterBackDate(lis,4);break;
+				case 7:
+				case 8:filterBackDate(lis,5);break;
+				case 9:filterBackDate(lis,6);break;
+				case 10:filterBackDate(lis,10);break;
+				case 11:filterBackDate(lis,11);break;
+				case 12:filterBackDate(lis,13);break;
+				case 13:filterBackDate(lis,15);break;
+				case 14:filterBackDate(lis,17);break;
+				case 15:filterBackDate(lis,19);break;
+				case 16:
+				case 17:
+				case 18:
+				case 19: filterBackDate(lis,21);break;
+				case 20:
+				case 21:
+				case 22:
+				case 23:filterBackDate(lis,2);
+						$("#show-day li").removeClass("rili-time");
+						$("#show-day").find("li:nth-child(2)").addClass("rili-time");
+						break;
+				default:
+					break;
+			}
         }
     }
     
@@ -318,7 +310,7 @@ function selectServiceDate(){
     }
     
   //选择时间
-	 $("#show-dateTime li").on("click",function(obj){
+	 $(document).on("click",'#show-dateTime li', function(obj){
 	        $("#show-dateTime").find("li").removeClass("rili-time");
 	        $(this).addClass("rili-time");
 	        if($(this).hasClass("rili-time-no")){
@@ -332,17 +324,17 @@ function selectServiceDate(){
 	  });
 
     //获取选择的服务时间
-    $("#checkDate").click(function(){
+    $(document).on('click','#checkDate',function(){
         var selectDate = getServiceDate(selectDay);
         var st = selectDate+" "+dayTime+":00";
         if(dayTime!=""){
             $("#serviceDate").val(st);
-            $(this).attr("data-dismiss","modal");
+//            $(this).attr("data-dismiss","modal");
         }else{
-        	 $(this).attr("data-dismiss","");
+//        	 $(this).attr("data-dismiss","");
             return false;
         }
-        $("cancleForm").attr("data-dismiss","modal");
+//        $("cancleForm").attr("data-dismiss","modal");
     });
 }
 
@@ -357,6 +349,17 @@ function selectServiceDateTime(){
 		alert("请选择服务地址！");
 		return false;
 	}
-	document.getElementById('serviceDate').setAttribute("data-target","#orderCalendar");
+	
+	var html = $("#calendar-show").html();
+	
+	layer.open({
+		  type: 1,
+		  title: '日历',
+		  closeBtn: 1, //不显示关闭按钮
+		  shadeClose: true,
+		  shade: [0],
+		  area: ['700px', '550px'],
+		  content: html
+	});
 	selectServiceDate();
 }

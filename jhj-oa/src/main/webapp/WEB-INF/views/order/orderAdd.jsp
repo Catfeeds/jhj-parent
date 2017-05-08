@@ -248,39 +248,34 @@
 			</section>
 		</section>
 		<!-- 日期选择 -->
-		<div class="modal fade" id="orderCalendar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-			aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="rili">
-						<div class="rili1">
-							<div class="rili1-1" id="show-year">2016</div>
-							<ul class="rili1-2">
-								<li id="substranc-day">
-									<span>&lt;</span>
-								</li>
-								<li id="show-month">九月</li>
-								<li id="add-day">
-									<span>&gt;</span>
-								</li>
-							</ul>
-							<ul class="rili1-3" id="show-week">
-							</ul>
-						</div>
-						<ul class="rili1-4" id="show-day">
-						</ul>
-						<!-- 填充时间 -->
-						<ul class="rili1-5" id="show-dateTime">
-						</ul>
-						<div class="rili1-6">
-							<a href="#">
-								<p class="rili1-6-2" id="checkDate" data-dismiss="">确定</p>
-							</a>
-						</div>
-					</div>
+		<div id="calendar-show" style="display:none;">
+			<div class="rili">
+					<div class="rili1">
+					<div class="rili1-1" id="show-year">2016</div>
+					<ul class="rili1-2">
+						<li id="substranc-day">
+							<span>&lt;</span>
+						</li>
+						<li id="show-month">九月</li>
+						<li id="add-day">
+							<span>&gt;</span>
+						</li>
+					</ul>
+					<ul class="rili1-3" id="show-week">
+					</ul>
+				</div>
+				<ul class="rili1-4" id="show-day">
+				</ul>
+				<ul class="rili1-5" id="show-dateTime">
+				</ul>
+				<div class="rili1-6">
+					<a href="#">
+						<p class="rili1-6-2" id="checkDate" data-dismiss="">确定</p>
+					</a>
 				</div>
 			</div>
 		</div>
+		
 		<!-- 派工选择 -->
 		<div class="modal fade bs-example-modal-lg" id="modalDispatch" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
@@ -388,6 +383,7 @@
 	</script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
 </body>
 </html>
