@@ -32,10 +32,10 @@ $(document).ready(function(){
 								am=eventStrAM;
 							}
 							if(orderNo!=null && orderType==0){
-								am+="<a href='../order/order-hour-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
+								am+="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
 							}
 							if(orderNo!=null && orderType==1){
-								am+="<a href='../order/order-exp-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
+								am+="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
 							}
 						}else{
 							var eventStrPM="";
@@ -44,10 +44,10 @@ $(document).ready(function(){
 								pm=eventStrPM;
 							}
 							if(orderNo!=null && orderType==0){
-								pm +="<a href='../order/order-hour-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
+								pm +="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
 							}
 							if(orderNo!=null && orderType==1){
-								pm +="<a href='../order/order-exp-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
+								pm +="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
 							}
 						}
 					});
