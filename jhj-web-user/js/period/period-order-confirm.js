@@ -44,6 +44,10 @@ myApp.onPageInit("period-order-confirm", function (page) {
        	param.user_id = localStorage.getItem("user_id");
        	param.mobile = localStorage.getItem("user_mobile");
        	param.addr_id = addrId;
+       	if(addrId==undefined || addrId==null || addrId==''){
+       		myApp.alert("请您选择服务地址！");
+       		return false;
+       	}
        	param.order_type = 1;
        	param.order_status = 1;
        	param.order_money = sessionStorage.getItem("periodOrderMoney");

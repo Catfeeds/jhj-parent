@@ -11,7 +11,7 @@
 		<result column="period_service_addon_id" property="periodServiceAddonId" jdbcType="INTEGER" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
 		<result column="vip_price" property="vipPrice" jdbcType="DECIMAL" />
-		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="num" property="num" jdbcType="DOUBLE" />
 		<result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
 		<result column="package_type" property="packageType" jdbcType="INTEGER" />
 	</resultMap>
@@ -36,7 +36,7 @@
 		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{periodOrderId,jdbcType=INTEGER},
 		#{periodOrderNo,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER}, 
 		#{serviceAddonId,jdbcType=INTEGER},  #{periodServiceAddonId,jdbcType=INTEGER},
-		#{price,jdbcType=DECIMAL}, #{vipPrice,jdbcType=DECIMAL}, #{num,jdbcType=INTEGER},
+		#{price,jdbcType=DECIMAL}, #{vipPrice,jdbcType=DECIMAL}, #{num,jdbcType=DOUBLE},
 		#{addTime,jdbcType=TIMESTAMP}, #{packageType,jdbcType=INTEGER})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.period.PeriodOrderAddons">
@@ -108,7 +108,7 @@
 				#{vipPrice,jdbcType=DECIMAL},
 			</if>
 			<if test="num != null">
-				#{num,jdbcType=INTEGER},
+				#{num,jdbcType=DOUBLE},
 			</if>
 			<if test="addTime != null">
 				#{addTime,jdbcType=TIMESTAMP},
@@ -146,7 +146,7 @@
 				vip_price = #{vipPrice,jdbcType=DECIMAL},
 			</if>
 			<if test="num != null">
-				num = #{num,jdbcType=INTEGER},
+				num = #{num,jdbcType=DOUBLE},
 			</if>
 			<if test="addTime != null">
 				add_time = #{addTime,jdbcType=TIMESTAMP},
@@ -167,7 +167,7 @@
 		period_service_addon_id = #{periodServiceAddonId,jdbcType=INTEGER},
 		price = #{price,jdbcType=DECIMAL},
 		vip_price = #{vipPrice,jdbcType=DECIMAL},
-		num = #{num,jdbcType=INTEGER},
+		num = #{num,jdbcType=DOUBLE},
 		add_time = #{addTime,jdbcType=TIMESTAMP},
 		package_type = #{packageType,jdbcType=INTEGER}
 		where id = #{id,jdbcType=INTEGER}
@@ -184,7 +184,7 @@
 			(#{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.periodOrderId,jdbcType=INTEGER},
 			#{item.periodOrderNo,jdbcType=VARCHAR}, #{item.serviceTypeId,jdbcType=INTEGER}, #{item.serviceAddonId,jdbcType=INTEGER},
 			#{item.periodServiceAddonId,jdbcType=INTEGER},
-			#{item.price,jdbcType=DECIMAL}, #{item.vipPrice,jdbcType=DECIMAL}, #{item.num,jdbcType=INTEGER},
+			#{item.price,jdbcType=DECIMAL}, #{item.vipPrice,jdbcType=DECIMAL}, #{item.num,jdbcType=DOUBLE},
 			#{item.addTime,jdbcType=TIMESTAMP},  #{item.packageType,jdbcType=INTEGER})
 		</foreach>
 	</insert>

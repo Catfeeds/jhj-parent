@@ -60,6 +60,9 @@ var myApp = new Framework7({
 		}else if (!isLogin() && options.url == 'order/order-list.html') {
 			view.router.loadPage('login.html');
 			return false;
+		}else if (!isLogin() && options.url == 'user/mine-addr-list.html') {
+			view.router.loadPage('login.html');
+			return false;
 		}
 	}
 

@@ -22,7 +22,7 @@ public class PeriodOrderAddons {
 
     private BigDecimal vipPrice;
 
-    private Integer num;
+    private Double num;
 
     private Date addTime;
     
@@ -91,16 +91,16 @@ public class PeriodOrderAddons {
     public void setVipPrice(BigDecimal vipPrice) {
         this.vipPrice = vipPrice;
     }
+   
+    public Double getNum() {
+		return num;
+	}
 
-    public Integer getNum() {
-        return num;
-    }
+	public void setNum(Double num) {
+		this.num = num;
+	}
 
-    public void setNum(Integer num) {
-        this.num = num;
-    }
-
-    public Date getAddTime() {
+	public Date getAddTime() {
         return addTime;
     }
 

@@ -77,7 +77,7 @@ public class PeriodOrderAddonsServiceImpl implements PeriodOrderAddonsService{
 	@Override
 	public PeriodOrderAddons init() {
 		PeriodOrderAddons poa = new PeriodOrderAddons();
-		poa.setNum(0);
+		poa.setNum(0.0);
 		poa.setPeriodOrderId(0);
 		poa.setPeriodOrderNo("");
 		poa.setPrice(new BigDecimal(0));
