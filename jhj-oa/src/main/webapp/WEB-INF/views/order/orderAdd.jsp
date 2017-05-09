@@ -275,6 +275,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<!-- 派工选择 -->
 		<div class="modal fade bs-example-modal-lg" id="modalDispatch" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
@@ -382,6 +383,7 @@
 	</script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
 </body>
 </html>
