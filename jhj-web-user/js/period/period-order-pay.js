@@ -35,7 +35,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay2.png");
 		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay1.png");
 		$$("#orderPayType").val(2);
-		changePayType('img-wxpay', 2);
+		changePeriodPayType('img-wxpay', 2);
 	} else  {
 		$$("#select-wxpay").css("display", "none");
 		$$("#select-alipay").css("display", "block");
@@ -43,7 +43,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
 		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay1.png");
 		$$("#orderPayType").val(1);
-		changePayType('img-alipay', 1)
+		changePeriodPayType('img-alipay', 1)
 	}
 	
 	var postOrderPaySuccess =function(data, textStatus, jqXHR) {
@@ -118,7 +118,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 	
 });
 
-function changePayType(imgPayType, orderPayType) {
+function changePeriodPayType(imgPayType, orderPayType) {
 	
 	$$("#orderPayType").val(orderPayType);
 	var imgPayTypes = ['img-restpay', 'img-wxpay', 'img-alipay'];

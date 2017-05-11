@@ -99,22 +99,25 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务大类
-											</label>
-											<div class="col-md-5">
-												<parentServiceTypeSelectTag:select />
-											</div>
+												
+													<label class="col-lg-2 control-label">
+														<font color="red">*</font>服务大类
+													</label>
+													<div class="col-lg-2">
+														<parentServiceTypeSelectTag:select />
+													</div>
+
+													<label class="col-lg-2 control-label">
+														<font color="red">*</font>服务类型
+													</label>
+													<div class="col-lg-3">
+														<select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
+														</select>
+													</div>
+												
+
 										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务类型
-											</label>
-											<div class="col-md-5">
-												<select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
-												</select>
-											</div>
-										</div>
+										
 										<div class="form-group" id="divServiceAddons" style="display: none">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务子项
@@ -133,6 +136,17 @@
 												</table>
 											</div>
 										</div>
+										
+										<div class="form-group">
+											<label class="col-md-2 control-label">
+												<font color="red">*</font>服务时间
+											</label>
+											<div class="col-md-5" onclick="selectServiceDateTime()">
+												<input type="text" id="serviceDate" name="serviceDate" class="form-control form_datetime"
+													readonly="readonly" data-toggle="modal" data-target="" />
+												<!-- <input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" /> -->
+											</div>
+										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>订单来源
@@ -145,16 +159,6 @@
 														<option value="${src.id }">${src.businessName }</option>
 													</c:forEach>
 												</select>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务时间
-											</label>
-											<div class="col-md-5" onclick="selectServiceDateTime()">
-												<input type="text" id="serviceDate" name="serviceDate" class="form-control form_datetime"
-													readonly="readonly" data-toggle="modal" data-target="" />
-												<!-- <input type="text" id="serviceDate" name="serviceDate"  class="form-control form_datetime" readonly="readonly" /> -->
 											</div>
 										</div>
 										<div class="form-group">
