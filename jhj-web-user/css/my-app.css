@@ -1875,7 +1875,10 @@ i.toolbar-icon-tixing {
   line-height: 30px!important;
 }
 
-
+.views {
+  overflow: auto;
+  -webkit-overflow-scrolling: auto;
+}
 
 
 /*首页css*/
@@ -2358,6 +2361,12 @@ i.toolbar-icon-tixing {
   float: left;
   height:30px;
   font-size: 14px;
+}
+ul.order-tip li{
+  color: red;
+  font-size: 12px;
+  line-height: 24px;
+  padding-bottom: 14px;
 }
 
 
