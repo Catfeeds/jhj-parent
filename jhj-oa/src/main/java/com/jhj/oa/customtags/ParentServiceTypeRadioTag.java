@@ -56,7 +56,7 @@ public class ParentServiceTypeRadioTag extends SimpleTagSupport {
                 if (radioId != null && item.getServiceTypeId().toString().equals(radioId)) {
                 	checked = "checked=\"checked\"";
                 }
-                serviceTypeRadio.append("<label class='checkbox-inline'><input type='radio' name=\"parentServiceType\" value='"+item.getServiceTypeId()+"' class=\"form-control\">")
+                serviceTypeRadio.append("<label class='checkbox-inline'><input type='radio' name=\"parentServiceType\" value='"+item.getServiceTypeId()+"'>")
                 .append(item.getName()).append("</label>");
             }
 

@@ -284,7 +284,7 @@ function serviceTypeChange() {
 		return false;
 	}
 	
-	var parentServiceType = $("#parentServiceType").val();
+	var parentServiceType = $("input[name='parentServiceType']:checked").val();
 	
 	if (parentServiceType == 23 || parentServiceType == 24) {
 		$("#divServiceAddons").css("display", "none");
