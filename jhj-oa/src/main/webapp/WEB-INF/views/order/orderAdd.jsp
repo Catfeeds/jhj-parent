@@ -104,17 +104,18 @@ import="com.jhj.oa.common.UrlHelper"%>
                                             <font color="red">*</font>服务大类
                                         </label>
                                         <div class="col-lg-5">
-                                            <parentServiceTypeRadioTag:checked />
+                                            <parentServiceTypeRadioTag:checked  />
                                         </div>
 
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label">
+                                        <label class="col-lg-2 control-label" >
                                             <font color="red">*</font>服务类型
                                         </label>
-                                        <div class="col-lg-3">
-                                            <select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
-                                            </select>
+                                        <div class="col-lg-5" id="serviceType">
+                                            <!-- <select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
+                                            </select> -->
+                                            
                                         </div>
                                     </div>
 

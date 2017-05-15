@@ -337,12 +337,7 @@ $(function(){
 })
 
 function selectServiceDateTime(){
-	var service_type_id = $("#serviceType").val();
 	var addr_id = $("#addrId").val();
-	if(service_type_id==undefined || service_type_id==null || service_type_id==''){
-		alert("请选服务类型！");
-		return false;
-	}
 	if(addr_id==undefined || addr_id==null || addr_id==''){
 		alert("请选择服务地址！");
 		return false;
