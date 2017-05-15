@@ -1,0 +1,94 @@
+/***分享成功页面***/
+.share-bg{
+    background: url('../../img/share/share-bg.png') no-repeat center center;
+}
+.share-word{
+    width: 50%;
+    margin:0 auto;
+    padding-top:17%;
+}
+.share-word img{
+    width: 100%;
+
+}
+.return-button{
+    position: relative;
+    width: 68%;
+    margin:0 auto;
+    margin-top:4%;
+}
+.return-button img{
+    width:100%;
+}
+.return-button a{
+    width: 71%;
+    display: block;
+    height: 12%;
+    position: absolute;
+    top: 79%;
+    left:14.5%;
+    text-align: center;
+}
+.share-bottom{
+    width: 96%;
+    margin:0 auto;
+    margin-top: 4%;
+
+}
+.share-bottom img{
+    width: 100%;
+}
+/****分享专题页面*****/
+.share-top{
+    width: 100%;
+}
+.share-top img{
+    width: 100%;
+}
+.share-title{
+    font-size: 18px;
+    color: #e04b4a;
+    text-align: center;
+    background: url(../../img/share/line.png) no-repeat center center;
+    width: 86%;
+    margin: 0 auto;
+    padding:3.5% 0px;
+}
+.share-list{
+    width: 88%;
+    background-color: #d2e3f2;
+    margin: 0 auto;
+    border-radius: 3px;
+    -moz-border-radius:3px; /* 老的 Firefox */
+    -webkit-border-radius:3px;
+}
+.share-list .share-content{
+    width: 84%;
+    margin: 0 auto;
+    padding: 7px 0px;
+}
+
+.share-list .share-content li{
+    color:#555555;
+    font-size: 13px;
+    height: 48px;
+    line-height: 24px;
+}
+.share-btn{
+    position: relative;
+    width: 51%;
+    margin: 0 auto;
+    margin-top: 5%;
+}
+.share-btn img{
+    width: 100%;
+}
+.share-btn  a{
+    display: block;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    text-align: center;
+    height: 100%;
+
+}

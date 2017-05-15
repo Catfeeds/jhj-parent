@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>叮当到家</title>
+    <link rel="stylesheet" href="../css/framework7.ios.min.css">
+    <link rel="stylesheet" href="../css/mobiscroll.custom-2.16.1.min.css">
+    <link rel="stylesheet" href="../css/my-app.css">
+    <link rel="stylesheet" href="../css/share/share.css">
+</head>
+<body>
+<div class="views">
+
+    <div class="view view-main">
+
+        <div class="pages navbar-through toolbar-through">
+
+            <div data-page="order-xiadan"  class="page">
+
+                <div id="indexPageContentDiv" class="page-content">
+                    <div class="beijing-index">
+                        <div class="share-bg">
+                            <div class="share-word">
+                                <img src="../img/share/share-word.png">
+                            </div>
+                            <div class="return-button">
+                                <img src="../img/share/return-button.png" alt="">
+                            </div>
+                            <div class="share-bottom">
+                                <img src="../img/share/share-bottom.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="toolbar tabbar tabbar-labels">
+            <div class="toolbar-inner-jhj">
+                <a href="#" id="toolbar-index" class="no-animation link active" onclick="toolBarHref('index.html', 'toolbar-index');" style="color:#000;">
+                    <i class="icon toolbar-icon-index"></i>
+                    <span class="tabbar-label">首页</span>
+                </a>
+
+                <a href="#" id="toolbar-am" onclick="toolBarHref('user/user-am-list.html', 'toolbar-am');"  class="no-animation link" style="color:#000;">
+                    <i class="icon toolbar-icon-order"></i>
+                    <span class="tabbar-label">订单</span>
+                </a>
+
+                <a href="#" id="toolbar-huodong" onclick="toolBarHref('huodong-list.html', 'toolbar-huodong')" class="no-animation link" style="color:#000;">
+                    <i class="icon toolbar-icon-zhuli"></i>
+                    <span class="tabbar-label">充值</span>
+                </a>
+
+                <a href="#" id="toolbar-youzan" onclick="toolBarHref('youzan.html', 'toolbar-youzan')" class="no-animation link" style="color:#000;">
+                    <i class="icon toolbar-icon-my"></i>
+                    <span class="tabbar-label">我的</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script type="text/javascript" src="../js/framework7.min.js"></script>
+<script type="text/javascript" src="../js/share/my-app.js"></script>
+</body>
+</html>
