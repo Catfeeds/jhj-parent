@@ -208,11 +208,12 @@
 												<font color="red">*</font>支付方式
 											</label>
 											<div class="col-md-5">
-												<select id="orderPayType" name="orderPayType" class="form-control">
-													<option value="">--请选择支付方式--</option>
-													<option value="6">现金支付</option>
-													<option value="7">平台已支付</option>
-												</select>
+												<label class="checkbox-inline">
+                                                <input type="radio" name="orderPayType" id="orderPayType1" value="6" checked> 现金支付
+	                                            </label>
+	                                            <label class="checkbox-inline">
+	                                                <input type="radio" name="orderPayType" id="orderPayType2" value="7"> 平台已支付
+	                                            </label>
 											</div>
 										</div>
 										<div class="form-group">
