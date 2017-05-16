@@ -119,7 +119,7 @@
 								<font color="red">*</font>订单来源
 							</label>
 							<div class="col-md-5">
-								<input name="orderFrom" class="form-control" value="${periodOrder.orderFromName }" readonly="readonly"/>
+								<input name="orderFrom" class="form-control" value="${periodOrder.orderFrom }" readonly="readonly"/>
 							</div>
 						</div>
 						
