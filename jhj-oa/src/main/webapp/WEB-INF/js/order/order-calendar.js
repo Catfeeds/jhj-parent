@@ -325,8 +325,7 @@ $(function(){
 	
 	//获取选择的服务时间
 	$(document).on('click','#checkDate',function(){
-		var selectDate = getServiceDate(selectDay);
-		var st = selectDate+" "+dayTime+":00";
+		var st = date+" "+dayTime+":00";
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);
