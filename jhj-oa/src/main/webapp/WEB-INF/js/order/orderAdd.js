@@ -1110,7 +1110,7 @@ function getPeriodOrder(){
 			var selectid = document.getElementById("periodOrderId");
 			for (var i = 0; i < periodOrderList.length; i++) {
 				var periodName;
-				switch (periodOrderList[i].periodServiceTypeId) {
+				switch (periodOrderList[i].packageType) {
 					case 1: periodName="定制一"; break;
 					case 2: periodName="定制二"; break;
 					case 3: periodName="定制三"; break;
