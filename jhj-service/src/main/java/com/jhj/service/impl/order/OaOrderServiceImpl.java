@@ -31,7 +31,6 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -93,10 +92,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 
 	@Autowired
 	private OrgsService orgService;
-
-	// jhj2.1 派工service
-	@Autowired
-	private NewDispatchStaffService newDisStaService;
 
 	@Autowired
 	private PartnerServiceTypeService partnerService;

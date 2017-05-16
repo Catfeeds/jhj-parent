@@ -29,8 +29,6 @@ import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.service.impl.newDispatch.OrgStaffsNewVo;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.users.UserAddrsService;
@@ -118,9 +116,6 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	@Autowired
 	private UserTrailRealService trailRealService;
 	
-	@Autowired
-	private NewDispatchStaffService newDisStaService;
-
 	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return orderDispatchsMapper.deleteByPrimaryKey(id);
@@ -396,7 +391,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, canDispatchStaffIds);
 
 		for (OrgStaffs item : staffList) {
-			OrgStaffDispatchVo vo = this.initStaffsNew();
+			OrgStaffDispatchVo vo = orgStaffService.initOrgStaffDispatchVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			vo.setDispathStaFlag(1);
 			for (HashMap totalItem : totalStaffs) {
@@ -577,7 +572,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
 
 		for (OrgStaffs item : staffList) {
-			OrgStaffDispatchVo vo = this.initStaffsNew();
+			OrgStaffDispatchVo vo = orgStaffService.initOrgStaffDispatchVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			vo.setReason("");
 			vo.setDispathStaFlag(1);
@@ -586,7 +581,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			// 门店名称
 			for (Orgs o : orgParents) {
 				if (o.getOrgId().equals(vo.getParentOrgId())) {
-					vo.setStaffOrgName(o.getOrgName());
+					vo.setOrgName(o.getOrgName());
 					break;
 				}
 			}
@@ -594,7 +589,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			// 门店距离
 			for (OrgDispatchPoiVo poiVo : orgList) {
 				if (vo.getOrgId().equals(poiVo.getOrgId())) {
-					vo.setStaffCloudOrgName(poiVo.getOrgName());
+					vo.setParentOrgName(poiVo.getOrgName());
 					vo.setOrgDistanceValue(poiVo.getDistanceValue());
 					vo.setOrgDistanceText(poiVo.getDistanceText());
 					break;
@@ -657,7 +652,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Long> staffIds = new ArrayList<Long>();
 		List<Long> noSkillstaffIds = new ArrayList<Long>();
 		for (OrgStaffs staff : staffList) {
-			OrgStaffDispatchVo vo = this.initStaffsNew();
+			OrgStaffDispatchVo vo = orgStaffService.initOrgStaffDispatchVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(staff, vo);
 			vo.setDispathStaFlag(1);
 			vo.setDispathStaStr("可派工");
@@ -818,7 +813,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			// 门店名称
 			for (Orgs o : orgParents) {
 				if (o.getOrgId().equals(vo.getParentOrgId())) {
-					vo.setStaffOrgName(o.getOrgName());
+					vo.setOrgName(o.getOrgName());
 					break;
 				}
 			}
@@ -826,7 +821,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			// 门店距离
 			for (OrgDispatchPoiVo poiVo : orgList) {
 				if (vo.getOrgId().equals(poiVo.getOrgId())) {
-					vo.setStaffCloudOrgName(poiVo.getOrgName());
+					vo.setParentOrgName(poiVo.getOrgName());
 					vo.setOrgDistanceValue(poiVo.getDistanceValue());
 					vo.setOrgDistanceText(poiVo.getDistanceText());
 					break;
@@ -1012,27 +1007,6 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 
 	@Override
-	public OrgStaffDispatchVo initOrgStaffDispatchVo() {
-		OrgStaffs staffs = orgStaffService.initOrgStaffs();
-		OrgStaffDispatchVo vo = new OrgStaffDispatchVo();
-		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, vo);
-		vo.setLat("");
-		vo.setLat("");
-		vo.setDistanceValue(0);
-		vo.setDistanceText("");
-		vo.setDurationText("");
-		vo.setOrgDistanceText("");
-		vo.setOrgDistanceValue(0);
-		vo.setTodayOrderNum(0);
-		vo.setParentOrgName("");
-		vo.setOrgName("");
-		vo.setDispathStaFlag(0);
-		vo.setDispathStaStr("");
-		vo.setReason("");
-		return vo;
-	}
-
-	@Override
 	public boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId) {
 		
 		Long orderId = order.getId();
@@ -1067,7 +1041,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		
 		String longitude = userAddrs.getLongitude();
 		
-		int distance = newDisStaService.getLatestDistance(latitude, longitude, staffId);
+		int distance = this.getLatestDistance(latitude, longitude, staffId);
 		
 		orderDispatch.setUserAddrDistance(distance);
 		
@@ -1519,9 +1493,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	  * @throws
 	 */
 	@Override
-	public  List<OrgStaffsNewVo> getTheNearestStaff(String fromLat,String fromLng,List<Long> staIdList){
+	public  List<OrgStaffDispatchVo> getTheNearestStaff(String fromLat,String fromLng,List<Long> staIdList){
 		
-		List<OrgStaffsNewVo> staWithUserList = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> staWithUserList = new ArrayList<OrgStaffDispatchVo>();
 		
 		if(staIdList.size() == 0){
 			staIdList.add(0, 0L);
@@ -1571,12 +1545,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				Long staffId = item.getUserId();
 				
 				// 该 服务人员 当天 的 派单 数量
-				Long numTodayOrder = orderDispatchsService.totalStaffTodayOrders(staffId);
+				Long numTodayOrder = this.totalStaffTodayOrders(staffId);
 				
 				//派工页面 服务人员 相关 信息 VO
-				OrgStaffsNewVo staffsNewVo = initStaffsNew();
+				OrgStaffDispatchVo staffsNewVo = orgStaffService.initOrgStaffDispatchVo();
 				
-				OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
+				OrgStaffs staffs = orgStaffService.selectByPrimaryKey(staffId);
 				
 				BeanUtilsExp.copyPropertiesIgnoreNull(staffs, staffsNewVo);
 				
@@ -1592,13 +1566,13 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				Orgs cloudOrg = orgService.selectByPrimaryKey(orgId);
 				
 				if(cloudOrg !=null){
-					staffsNewVo.setStaffCloudOrgName(cloudOrg.getOrgName());
+					staffsNewVo.setParentOrgName(cloudOrg.getOrgName());
 				}
 				
 				Orgs orgs = orgService.selectByPrimaryKey(parentOrgId);
 				
 				if(orgs !=null){
-					staffsNewVo.setStaffOrgName(orgs.getOrgName());
+					staffsNewVo.setOrgName(orgs.getOrgName());
 				}
 				
 				// 设置 服务 人员 特色信息, 供派工参考
@@ -1616,9 +1590,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				staWithUserList.add(staffsNewVo);
 			}
 			
-			Collections.sort(staWithUserList, new Comparator<OrgStaffsNewVo>() {
+			Collections.sort(staWithUserList, new Comparator<OrgStaffDispatchVo>() {
 			    @Override
-				public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
 			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 			    }
 			}); 
@@ -1641,12 +1615,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Long> staIdList = new ArrayList<Long>();
 		staIdList.add(staffId);
 		
-		List<OrgStaffsNewVo> list = getTheNearestStaff(userLat, userLon, staIdList);
+		List<OrgStaffDispatchVo> list = getTheNearestStaff(userLat, userLon, staIdList);
 		
 		int distance = 0;
 		
 		if(list.size() > 0 ){
-			for (OrgStaffsNewVo orgStaffsNewVo : list) {
+			for (OrgStaffDispatchVo orgStaffsNewVo : list) {
 				distance = orgStaffsNewVo.getDistanceValue();
 			}
 		}

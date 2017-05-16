@@ -66,8 +66,6 @@ public interface OrderDispatchsService {
 
 	List<HashMap> getTotalStaffs(Long serviceDate, List<Long> staffIds);
 
-	OrgStaffDispatchVo initOrgStaffDispatchVo();
-
 	List<OrgStaffDispatchVo> getTheNearestStaff(String fromLat, String fromLng, List<Long> staIdList);
 
 	int getLatestDistance(String userLat, String userLon, Long staffId);

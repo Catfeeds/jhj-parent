@@ -25,7 +25,6 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -94,9 +93,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 	@Autowired
 	private UserPushBindService bindService;
-
-	@Autowired
-	private NewDispatchStaffService newDisStaService;
 
 	@Autowired
 	private PartnerServiceTypeService partnerServiceTypeService;

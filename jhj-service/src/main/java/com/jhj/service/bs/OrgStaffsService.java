@@ -60,10 +60,10 @@ public interface OrgStaffsService {
     
     Map<Long, String> selectSkillEntity();
         
-    OrgStaffDispatchVo initOrgStaffNewVo();
-
 	PageInfo selectByListPage(StaffSearchVo staffSearchVo, int pageNo, int pageSize);
 
 	OrderStaffRateVo getOrderStaffRateVo(OrgStaffs orgStaff);
+
+	OrgStaffDispatchVo initOrgStaffDispatchVo();
     	
 }
