@@ -407,7 +407,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
 
 		// 员工服务日期当天的订单数
-		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, canDispatchStaffIds);
+		List<HashMap> totalStaffs = this.getTotalStaffOrders(serviceDate, canDispatchStaffIds);
 
 		for (OrgStaffs item : staffList) {
 			OrgStaffDispatchVo vo = orgStaffService.initOrgStaffDispatchVo();
@@ -583,7 +583,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
 
 		// 员工服务日期的订单数
-		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, staffIds);
+		List<HashMap> totalStaffs = this.getTotalStaffOrders(serviceDate, staffIds);
 
 		// 门店名称
 		OrgSearchVo orgSearchVo = new OrgSearchVo();
@@ -825,7 +825,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
 
 		// 员工服务日期的订单数
-		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, staffIds);
+		List<HashMap> totalStaffs = this.getTotalStaffOrders(serviceDate, staffIds);
 
 		for (OrgStaffDispatchVo vo : list) {
 
@@ -1002,7 +1002,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 	
 	@Override
-	public List<HashMap> getTotalStaffs(Long serviceDate, List<Long> staffIds) {
+	public List<HashMap> getTotalStaffOrders(Long serviceDate, List<Long> staffIds) {
 		List<HashMap> totalStaffs = new ArrayList<HashMap>();
 
 		if (staffIds.isEmpty())
@@ -1512,7 +1512,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	  * @throws
 	 */
 	@Override
-	public  List<OrgStaffDispatchVo> getTheNearestStaff(String fromLat,String fromLng,List<Long> staIdList){
+	public  List<OrgStaffDispatchVo> getStaffDistance(String fromLat,String fromLng,List<Long> staIdList){
 		
 		List<OrgStaffDispatchVo> staWithUserList = new ArrayList<OrgStaffDispatchVo>();
 		
@@ -1634,7 +1634,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Long> staIdList = new ArrayList<Long>();
 		staIdList.add(staffId);
 		
-		List<OrgStaffDispatchVo> list = getTheNearestStaff(userLat, userLon, staIdList);
+		List<OrgStaffDispatchVo> list = getStaffDistance(userLat, userLon, staIdList);
 		
 		int distance = 0;
 		

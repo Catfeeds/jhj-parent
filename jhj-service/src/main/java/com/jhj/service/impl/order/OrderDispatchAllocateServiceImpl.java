@@ -227,12 +227,9 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 
 		// ---4. 在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
-
-		
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 		Date leaveDate = DateUtil.parse(serviceDateStr);
 		leaveSearchVo.setLeaveDate(leaveDate);
-		
 		leaveSearchVo.setLeaveStatus("1");
 		
 		// 服务时间内 ，同时也在 假期内的 员工
@@ -257,7 +254,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
 
 		// 员工服务日期的订单数
-		List<HashMap> totalStaffs = orderDispatchService.getTotalStaffs(serviceDate, staffIds);
+		List<HashMap> totalStaffs = orderDispatchService.getTotalStaffOrders(serviceDate, staffIds);
 
 		// 门店名称
 		OrgSearchVo orgSearchVo = new OrgSearchVo();

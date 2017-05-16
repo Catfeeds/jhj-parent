@@ -64,12 +64,12 @@ public interface OrderDispatchsService {
 
 	List<OrgDispatchPoiVo> getMatchOrgs(String fromLat, String fromLng, Long parentId, Long orgId, Boolean needMatchMaxDistance);
 
-	List<HashMap> getTotalStaffs(Long serviceDate, List<Long> staffIds);
-
-	List<OrgStaffDispatchVo> getTheNearestStaff(String fromLat, String fromLng, List<Long> staIdList);
-
 	int getLatestDistance(String userLat, String userLon, Long staffId);
 
 	void pushToStaff(Long staffId, String isShow, String action, Long orderId, String remindTitle, String remindContent);
+
+	List<HashMap> getTotalStaffOrders(Long serviceDate, List<Long> staffIds);
+
+	List<OrgStaffDispatchVo> getStaffDistance(String fromLat, String fromLng, List<Long> staIdList);
    	
 }

@@ -28,6 +28,9 @@ public class OrgStaffDispatchVo extends OrgStaffs {
 	// 云店距离(文本描述)
 	private String orgDistanceText;
 	
+	// 该员工前一天的派工单量
+	private int preDayOrderNum;
+	
 	//该人员当天的 派工单量
 	private int todayOrderNum; 		
 
@@ -168,6 +171,14 @@ public class OrgStaffDispatchVo extends OrgStaffs {
 
 	public void setTodayOrderNum(int todayOrderNum) {
 		this.todayOrderNum = todayOrderNum;
+	}
+
+	public int getPreDayOrderNum() {
+		return preDayOrderNum;
+	}
+
+	public void setPreDayOrderNum(int preDayOrderNum) {
+		this.preDayOrderNum = preDayOrderNum;
 	}
 
 }
