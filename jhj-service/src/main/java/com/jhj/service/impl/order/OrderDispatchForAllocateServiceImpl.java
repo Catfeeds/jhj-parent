@@ -85,7 +85,7 @@ import com.meijia.utils.vo.AppResultData;
 	9.  员工集合找出服务时间日期的订单数，优先选择订单数少的员工，如果相同则随机。
  */
 @Service
-public class OrderDispatchsServiceImpl implements OrderDispatchsService {
+public class OrderDispatchForAllocateServiceImpl implements OrderDispatchsService {
 
 	@Autowired
 	private OrderDispatchsMapper orderDispatchsMapper;
