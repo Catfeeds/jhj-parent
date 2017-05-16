@@ -987,7 +987,7 @@ function orderFormSubmit() {
 	params.adminId = $("#adminId").val();
 	params.adminName = $("#adminName").val();
 	params.orderFrom = 2;
-	params.orderOpFrom = $("#orderOpFrom").val();
+	params.orderOpFrom = $("input[name='orderOpFrom']:checked").val();
 	params.couponsId = $("#couponsId").val();
 	params.remarks = $("#remarks").val();
 	params.periodOrderId = $("#periodOrderId").val();
