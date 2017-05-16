@@ -121,6 +121,9 @@ public class UsersServiceImpl implements UsersService {
 			u.setProvinceName(provinceName);
 
 			usersMapper.insertSelective(u);
+			if(u.getId().equals(0L)){
+				u = this.selectByMobile(mobile);
+			}
 		}
 
 		return u;
