@@ -202,6 +202,7 @@ $(function(){
 					$(selectDay).find("p").addClass("rili-day");
 					$("#show-dateTime li").addClass("rili-time");
 				}
+				tomm(currentDate);
 			}
 			date = selectDate;
 			isFull(selectDate);
@@ -260,7 +261,7 @@ $(function(){
 	 * */
 	function tomm(val){
 		if(val==currentDate){
-			var lis = $("#show-dateTime").find("li");
+			var lis = $(".rili1-5").find("li");
 			switch (nowHour) {
 			case 0:
 			case 1:
@@ -325,8 +326,7 @@ $(function(){
 	
 	//获取选择的服务时间
 	$(document).on('click','#checkDate',function(){
-		var selectDate = getServiceDate(selectDay);
-		var st = selectDate+" "+dayTime+":00";
+		var st = date+" "+dayTime+":00";
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);

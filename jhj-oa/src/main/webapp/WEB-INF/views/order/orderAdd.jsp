@@ -153,11 +153,13 @@ import="com.jhj.oa.common.UrlHelper"%>
                                             <font color="red">*</font>订单来源
                                         </label>
                                         <div class="col-md-5">
-                                            <c:forEach items="${cooperativeBusiness }" var="src" varStatus="index">
-                                                <label class="checkbox-inline">
-                                                	<input type="radio" name="orderOpFrom" id="orderPayType${index.index}" value="${src.id }" > ${src.businessName }
-                                            	</label>
-                                            </c:forEach>
+                                            <select id="orderOpFrom" name="orderOpFrom" class="form-control">
+                                                <option value="">--请选择订单来源--</option>
+                                                <option value="1">来电订单</option>
+                                                <c:forEach items="${cooperativeBusiness }" var="src">
+                                                    <option value="${src.id }">${src.businessName }</option>
+                                                </c:forEach>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
