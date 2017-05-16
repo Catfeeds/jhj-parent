@@ -39,7 +39,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
@@ -154,7 +154,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_staff_by_change_service_date.json", method = RequestMethod.GET)
-	public List<OrgStaffsNewVo> loadProperStaffListForBase(HttpServletRequest request, 
+	public List<OrgStaffDispatchVo> loadProperStaffListForBase(HttpServletRequest request, 
 			Model model, 
 			@RequestParam("addrId") Long addrId,
 			@RequestParam("serviceTypeId") Long serviceTypeId,
@@ -163,7 +163,7 @@ public class OrderDispatchController extends BaseController {
 			@RequestParam("serviceHour") double serviceHour
 			) {
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
@@ -587,7 +587,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_staff_for_am_order.json", method = RequestMethod.POST)
-	public List<OrgStaffsNewVo> loadProperStaffListForAm(Model model, @RequestParam("orderId") Long orderId, @RequestParam("fromLat") String fromLat,
+	public List<OrgStaffDispatchVo> loadProperStaffListForAm(Model model, @RequestParam("orderId") Long orderId, @RequestParam("fromLat") String fromLat,
 			@RequestParam("fromLng") String fromLng) {
 
 		Orders orders = orderSevice.selectByPrimaryKey(orderId);
@@ -600,7 +600,7 @@ public class OrderDispatchController extends BaseController {
 		// 排除请假的员工
 		staIdList.removeAll(leaveStaffIdList);
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 
 		Short orderStatus = orders.getOrderStatus();
 
@@ -613,7 +613,7 @@ public class OrderDispatchController extends BaseController {
 			searchVo1.setStartServiceTime(orders.getServiceDate());
 			searchVo1.setStartServiceHourTime((long) (orders.getServiceDate() + orders.getServiceHour() * 3600));
 
-			for (OrgStaffsNewVo orgStaffsNewVo : list) {
+			for (OrgStaffDispatchVo orgStaffsNewVo : list) {
 
 				searchVo1.setStaffId(orgStaffsNewVo.getStaffId());
 
@@ -768,7 +768,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_staff_by_change_cloud_org.json", method = RequestMethod.GET)
-	public List<OrgStaffsNewVo> loadProperStaffListForBaseByCloudOrg(Model model, 
+	public List<OrgStaffDispatchVo> loadProperStaffListForBaseByCloudOrg(Model model, 
 			@RequestParam("parentId") Long parentId, 
 			@RequestParam("orgId") Long orgId, 
 			@RequestParam("addrId") Long addrId,
@@ -777,7 +777,7 @@ public class OrderDispatchController extends BaseController {
 			@RequestParam("serviceDate") Long serviceDate,
 			@RequestParam("serviceHour") double serviceHour) {
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {

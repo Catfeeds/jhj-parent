@@ -31,7 +31,7 @@ import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;

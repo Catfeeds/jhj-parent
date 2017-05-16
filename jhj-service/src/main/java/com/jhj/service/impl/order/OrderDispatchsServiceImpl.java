@@ -29,6 +29,7 @@ import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.impl.newDispatch.OrgStaffsNewVo;
 import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
@@ -38,7 +39,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.OrgDispatchPoiVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.org.LeaveSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
@@ -385,7 +386,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		// ---5.找出已匹配的员工列表，并统计当天的订单数，优先指派订单数少的员工，如果订单数相同，则随机
 	
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 		StaffSearchVo searchVo5 = new StaffSearchVo();
 		searchVo5.setStaffIds(canDispatchStaffIds);
 		searchVo5.setStatus(1);
@@ -395,7 +396,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, canDispatchStaffIds);
 
 		for (OrgStaffs item : staffList) {
-			OrgStaffsNewVo vo = this.initStaffsNew();
+			OrgStaffDispatchVo vo = this.initStaffsNew();
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			vo.setDispathStaFlag(1);
 			for (HashMap totalItem : totalStaffs) {
@@ -415,16 +416,16 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		// 进行排序，根据距离大小来正序.
 		if (list.size() > 0) {
-			Collections.sort(list, new Comparator<OrgStaffsNewVo>() {
+			Collections.sort(list, new Comparator<OrgStaffDispatchVo>() {
 				@Override
-				public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
 					return Integer.valueOf(s1.getTodayOrderNum()).compareTo(s2.getTodayOrderNum());
 				}
 			});
 
 			for (int i = 0; i < staffNums; i++) {
 				if(list.size()>0){
-					OrgStaffsNewVo orgStaffsNewVo = list.get(i);
+					OrgStaffDispatchVo orgStaffsNewVo = list.get(i);
 					if(orgStaffsNewVo!=null){
 						dispatchStaffIds.add(orgStaffsNewVo.getStaffId());
 					}
@@ -442,9 +443,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * 3. 包含员工的距离.
 	 */
 	@Override
-	public List<OrgStaffsNewVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId) {
+	public List<OrgStaffDispatchVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId) {
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
 		String fromLat = addrs.getLatitude();
 		String fromLng = addrs.getLongitude();
@@ -576,7 +577,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
 
 		for (OrgStaffs item : staffList) {
-			OrgStaffsNewVo vo = this.initStaffsNew();
+			OrgStaffDispatchVo vo = this.initStaffsNew();
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			vo.setReason("");
 			vo.setDispathStaFlag(1);
@@ -619,9 +620,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		// 进行排序，根据距离大小来正序.
 		if (list.size() > 0) {
-			Collections.sort(list, new Comparator<OrgStaffsNewVo>() {
+			Collections.sort(list, new Comparator<OrgStaffDispatchVo>() {
 				@Override
-				public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
 					return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 				}
 			});
@@ -636,13 +637,13 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * 3. 包含员工的距离.
 	 */
 	@Override
-	public List<OrgStaffsNewVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId) {
+	public List<OrgStaffDispatchVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId) {
 
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
 		String fromLat = addrs.getLatitude();
 		String fromLng = addrs.getLongitude();
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		staffSearchVo.setStatus(1);
@@ -656,7 +657,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<Long> staffIds = new ArrayList<Long>();
 		List<Long> noSkillstaffIds = new ArrayList<Long>();
 		for (OrgStaffs staff : staffList) {
-			OrgStaffsNewVo vo = this.initStaffsNew();
+			OrgStaffDispatchVo vo = this.initStaffsNew();
 			BeanUtilsExp.copyPropertiesIgnoreNull(staff, vo);
 			vo.setDispathStaFlag(1);
 			vo.setDispathStaStr("可派工");
@@ -681,7 +682,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 
 		for (Long maxOrgId : overMaxDistanceOrgIds) {
-			for (OrgStaffsNewVo vo : list) {
+			for (OrgStaffDispatchVo vo : list) {
 				if (vo.getOrgId().equals(maxOrgId)) {
 					vo.setDispathStaFlag(0);
 					vo.setDispathStaStr("不可派工");
@@ -709,7 +710,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		noSkillstaffIds.removeAll(skillStaffIds);
 
-		for (OrgStaffsNewVo vo : list) {
+		for (OrgStaffDispatchVo vo : list) {
 			for (Long item : noSkillstaffIds) {
 				if (vo.getStaffId().equals(item)) {
 					vo.setDispathStaFlag(0);
@@ -745,7 +746,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				haveDispatchStaffIds.add(item.getStaffId());
 		}
 
-		for (OrgStaffsNewVo vo : list) {
+		for (OrgStaffDispatchVo vo : list) {
 			for (Long item : haveDispatchStaffIds) {
 				if (vo.getStaffId().equals(item)) {
 					vo.setDispathStaFlag(0);
@@ -765,7 +766,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		searchVo2.setIsBlack((short) 1);
 		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);
 
-		for (OrgStaffsNewVo vo : list) {
+		for (OrgStaffDispatchVo vo : list) {
 			for (OrgStaffFinance os : blackList) {
 				if (vo.getStaffId().equals(os.getStaffId())) {
 					vo.setDispathStaFlag(0);
@@ -790,7 +791,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		
 		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
 
-		for (OrgStaffsNewVo vo : list) {
+		for (OrgStaffDispatchVo vo : list) {
 			for (OrgStaffLeave os : leaveList) {
 				if (vo.getStaffId().equals(os.getStaffId())) {
 					vo.setDispathStaFlag(0);
@@ -812,7 +813,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		// 员工服务日期的订单数
 		List<HashMap> totalStaffs = this.getTotalStaffs(serviceDate, staffIds);
 
-		for (OrgStaffsNewVo vo : list) {
+		for (OrgStaffDispatchVo vo : list) {
 
 			// 门店名称
 			for (Orgs o : orgParents) {
@@ -851,9 +852,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		// 进行排序，根据距离大小来正序.
 		if (list.size() > 0) {
-			Collections.sort(list, new Comparator<OrgStaffsNewVo>() {
+			Collections.sort(list, new Comparator<OrgStaffDispatchVo>() {
 				@Override
-				public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
 					return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
 				}
 			});
@@ -869,6 +870,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 *               找出符合 指定距离的云店
 	 * @throws
 	 */
+	@Override
 	public List<OrgDispatchPoiVo> getMatchOrgs(String fromLat, String fromLng, Long parentId, Long orgId, Boolean needMatchMaxDistance) {
 
 		List<OrgDispatchPoiVo> result = new ArrayList<OrgDispatchPoiVo>();
@@ -940,13 +942,13 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 
 	@Override
-	public List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng) {
+	public List<OrgStaffDispatchVo> getStaffDispatch(List<OrgStaffDispatchVo> list, String fromLat, String fromLng) {
 
 		// 计算出员工与目标位置的距离.
 		List<BaiduPoiVo> staffPoiList = new ArrayList<BaiduPoiVo>();
 
 		List<Long> staffIds = new ArrayList<Long>();
-		for (OrgStaffsNewVo item : list) {
+		for (OrgStaffDispatchVo item : list) {
 			if (!staffIds.contains(item.getStaffId()))
 				staffIds.add(item.getStaffId());
 		}
@@ -964,7 +966,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, staffPoiList);
 
-		for (OrgStaffsNewVo vo : list) {
+		for (OrgStaffDispatchVo vo : list) {
 			vo.setDistanceText("");
 			vo.setDurationText("");
 			vo.setDistanceValue(0);
@@ -984,8 +986,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 		return list;
 	}
-
-	private List<HashMap> getTotalStaffs(Long serviceDate, List<Long> staffIds) {
+	
+	@Override
+	public List<HashMap> getTotalStaffs(Long serviceDate, List<Long> staffIds) {
 		List<HashMap> totalStaffs = new ArrayList<HashMap>();
 
 		if (staffIds.isEmpty())
@@ -1009,31 +1012,24 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 
 	@Override
-	public OrgStaffsNewVo initStaffsNew() {
-
+	public OrgStaffDispatchVo initOrgStaffDispatchVo() {
 		OrgStaffs staffs = orgStaffService.initOrgStaffs();
-
-		OrgStaffsNewVo newVo = new OrgStaffsNewVo();
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, newVo);
-
-		newVo.setLat("");
-		newVo.setLat("");
-		newVo.setDistanceValue(0);
-		newVo.setDistanceText("");
-		newVo.setDurationValue(0);
-		newVo.setDurationText("");
-		newVo.setOrgDistanceText("");
-		newVo.setOrgDistanceValue(0);
-		newVo.setTodayOrderNum(0);
-
-		newVo.setStaffOrgName("");
-		newVo.setStaffCloudOrgName("");
-		newVo.setDispathStaFlag(0);
-		newVo.setDispathStaStr("");
-		newVo.setReason("");
-
-		return newVo;
+		OrgStaffDispatchVo vo = new OrgStaffDispatchVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, vo);
+		vo.setLat("");
+		vo.setLat("");
+		vo.setDistanceValue(0);
+		vo.setDistanceText("");
+		vo.setDurationText("");
+		vo.setOrgDistanceText("");
+		vo.setOrgDistanceValue(0);
+		vo.setTodayOrderNum(0);
+		vo.setParentOrgName("");
+		vo.setOrgName("");
+		vo.setDispathStaFlag(0);
+		vo.setDispathStaStr("");
+		vo.setReason("");
+		return vo;
 	}
 
 	@Override
@@ -1506,5 +1502,156 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		
 		return datas;
 	}
+	
+	/**
+	 * 
+	 *  @Title: getTheNearestStaff
+	  * @Description: 
+	  * 		助理订单 手动派工时, 
+	  * 			
+	  * 		得到 “可选  服务人员 ” 实时 位置距离 服务地址的 时间 、该服务人员当天的 派工 量	
+	  * 
+	  * 		可选服务人员,符合 基本派工条件（距离、黑名单。。）
+	  * 
+	  * @param fromLat		用户地址坐标
+	  * @param fromLng
+	  * @param staIdList    可用 服务人员 Id
+	  * @throws
+	 */
+	@Override
+	public  List<OrgStaffsNewVo> getTheNearestStaff(String fromLat,String fromLng,List<Long> staIdList){
+		
+		List<OrgStaffsNewVo> staWithUserList = new ArrayList<OrgStaffsNewVo>();
+		
+		if(staIdList.size() == 0){
+			staIdList.add(0, 0L);
+		}
+		
+		// 参数中传入服务人员     的 最新 位置   <服务人员：该服务人员的最新位置。。VO>
+		UserTrailSearchVo searchVo = new UserTrailSearchVo();
+		searchVo.setUserIds(staIdList);
+		List<UserTrailReal> list = trailRealService.selectBySearchVo(searchVo);
+		
+		List<BaiduPoiVo> orgAddrList = new ArrayList<BaiduPoiVo>();
+		
+		for (UserTrailReal userTrailReal : list) {
+			
+			BaiduPoiVo baiduPoiVo = new BaiduPoiVo();
+			
+			baiduPoiVo.setLat(userTrailReal.getLat());
+			baiduPoiVo.setLng(userTrailReal.getLng());
+			baiduPoiVo.setName(userTrailReal.getPoiName());
+			
+			orgAddrList.add(baiduPoiVo);
+			
+		}
+		
+		UserTrailReal item = null;
+		
+		try {
+			List<BaiduPoiVo> destList = MapPoiUtil.getMapRouteMatrix(fromLat, fromLng, orgAddrList);
+			
+			Collections.sort(destList, new Comparator<BaiduPoiVo>() {
+			    @Override
+				public int compare(BaiduPoiVo s1, BaiduPoiVo s2) {
+			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
+			    }
+			}); 
+			
+			for (int i =0; i < list.size(); i++) {
+				item = list.get(i);
+				
+				/**
+				 *  2016年3月24日14:37:20  
+				 *  
+				 * 	 可能会有  该 服务人员 不存在  位置信息的情况,
+				 * 		
+				 * 	但是 需要 显示 该 服务人员 可用！！
+				 */
+				Long staffId = item.getUserId();
+				
+				// 该 服务人员 当天 的 派单 数量
+				Long numTodayOrder = orderDispatchsService.totalStaffTodayOrders(staffId);
+				
+				//派工页面 服务人员 相关 信息 VO
+				OrgStaffsNewVo staffsNewVo = initStaffsNew();
+				
+				OrgStaffs staffs = staffService.selectByPrimaryKey(staffId);
+				
+				BeanUtilsExp.copyPropertiesIgnoreNull(staffs, staffsNewVo);
+				
+				staffsNewVo.setStaffId(item.getUserId());
+				staffsNewVo.setTodayOrderNum(numTodayOrder.intValue());
+				
+				//服务人员所在 云店 id
+				Long orgId = staffs.getOrgId();
+				
+				//服务人员所在 门店id （该云店 的 上级 门店）
+				Long parentOrgId = staffs.getParentOrgId();
+				
+				Orgs cloudOrg = orgService.selectByPrimaryKey(orgId);
+				
+				if(cloudOrg !=null){
+					staffsNewVo.setStaffCloudOrgName(cloudOrg.getOrgName());
+				}
+				
+				Orgs orgs = orgService.selectByPrimaryKey(parentOrgId);
+				
+				if(orgs !=null){
+					staffsNewVo.setStaffOrgName(orgs.getOrgName());
+				}
+				
+				// 设置 服务 人员 特色信息, 供派工参考
+				for (BaiduPoiVo baiduPoiVo : destList) {
+					if (baiduPoiVo.getLat().equals(item.getLat()) &&
+							baiduPoiVo.getLng().equals(item.getLng())) {
+						
+						// 合适的服务人员的最新位置    与  服务地址 的 距离、时间等信息
+						staffsNewVo.setDistanceText(baiduPoiVo.getDistanceText());
+						staffsNewVo.setDurationText(baiduPoiVo.getDurationText());
+						staffsNewVo.setDistanceValue(baiduPoiVo.getDistanceValue());
+					}
+				}
+				
+				staWithUserList.add(staffsNewVo);
+			}
+			
+			Collections.sort(staWithUserList, new Comparator<OrgStaffsNewVo>() {
+			    @Override
+				public int compare(OrgStaffsNewVo s1, OrgStaffsNewVo s2) {
+			        return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
+			    }
+			}); 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return staWithUserList;
+	}
+	
+	
+	
+	/*
+	 *  更新  用户与  “派工后选中”的 服务人员 的  最新距离
+	 */
+	@Override
+	public int getLatestDistance(String userLat,String userLon, Long staffId){
+		
+		List<Long> staIdList = new ArrayList<Long>();
+		staIdList.add(staffId);
+		
+		List<OrgStaffsNewVo> list = getTheNearestStaff(userLat, userLon, staIdList);
+		
+		int distance = 0;
+		
+		if(list.size() > 0 ){
+			for (OrgStaffsNewVo orgStaffsNewVo : list) {
+				distance = orgStaffsNewVo.getDistanceValue();
+			}
+		}
+		
+		return distance;
+	}	
 
 }

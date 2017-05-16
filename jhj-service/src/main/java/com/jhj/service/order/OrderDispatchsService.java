@@ -6,9 +6,10 @@ import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
+import com.jhj.vo.bs.OrgDispatchPoiVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -43,9 +44,7 @@ public interface OrderDispatchsService {
 
 	List<HashMap> totalByStaff(OrderDispatchSearchVo searchVo);
 	
-	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
-
-	OrgStaffsNewVo initStaffsNew();
+	List<OrgStaffDispatchVo> getStaffDispatch(List<OrgStaffDispatchVo> list, String fromLat, String fromLng);
 
 	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
 
@@ -55,12 +54,22 @@ public interface OrderDispatchsService {
 
 	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
 
-	List<OrgStaffsNewVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId);
+	List<OrgStaffDispatchVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId);
 
-	List<OrgStaffsNewVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
+	List<OrgStaffDispatchVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
 
 	List<Long> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
 
 	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, Long staffId);
+
+	List<OrgDispatchPoiVo> getMatchOrgs(String fromLat, String fromLng, Long parentId, Long orgId, Boolean needMatchMaxDistance);
+
+	List<HashMap> getTotalStaffs(Long serviceDate, List<Long> staffIds);
+
+	OrgStaffDispatchVo initOrgStaffDispatchVo();
+
+	List<OrgStaffDispatchVo> getTheNearestStaff(String fromLat, String fromLng, List<Long> staIdList);
+
+	int getLatestDistance(String userLat, String userLon, Long staffId);
    	
 }

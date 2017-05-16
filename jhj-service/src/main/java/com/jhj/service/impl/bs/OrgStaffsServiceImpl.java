@@ -51,7 +51,7 @@ import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
 import com.jhj.vo.order.OrderStaffRateVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffAuthSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
@@ -678,9 +678,9 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	}
 
 	@Override
-	public OrgStaffsNewVo initOrgStaffNewVo() {
+	public OrgStaffDispatchVo initOrgStaffNewVo() {
 
-		OrgStaffsNewVo newVo = new OrgStaffsNewVo();
+		OrgStaffDispatchVo newVo = new OrgStaffDispatchVo();
 		OrgStaffs staffs = initOrgStaffs();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, newVo);

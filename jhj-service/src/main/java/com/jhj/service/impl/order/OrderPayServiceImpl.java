@@ -43,7 +43,7 @@ import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
