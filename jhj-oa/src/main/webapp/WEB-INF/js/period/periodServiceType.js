@@ -30,7 +30,7 @@ var formVal = $('#form').validate({
 		},
 		total : {
 			required : true,
-			digits : true,
+			number : true,
 		},
 		enbale : {
 			required : true,
@@ -63,7 +63,7 @@ var formVal = $('#form').validate({
 		},
 		total : {
 			required : "总次数不能为空",
-			digits : "总次数必须为数字",
+			number : "总次数必须为数字",
 		},
 		enbale : {
 			required : "请选择支付方式",

@@ -16,6 +16,10 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.vo.PartnerServiceTypeSearchVo;
 
 
+/**
+ * @author hulj
+ *
+ */
 public class ParentServiceTypeRadioTag extends SimpleTagSupport {
 
     private String radioId = "0";
@@ -50,13 +54,17 @@ public class ParentServiceTypeRadioTag extends SimpleTagSupport {
             StringBuffer serviceTypeRadio = new StringBuffer();
             
             PartnerServiceType item = null;
-            String checked = "";
             for(int i = 0;  i<optionList.size();  i++) {
+            	String checked = "";
                 item = optionList.get(i);
                 if (radioId != null && item.getServiceTypeId().toString().equals(radioId)) {
                 	checked = "checked=\"checked\"";
                 }
-                serviceTypeRadio.append("<label class='checkbox-inline'><input type='radio' name=\"parentServiceType\" value='"+item.getServiceTypeId()+"' class=\"form-control\">")
+                if(item.getServiceTypeId().toString().equals("23")){
+                	checked = "checked=\"checked\"";
+                }
+         
+                serviceTypeRadio.append("<label class='checkbox-inline'><input type='radio' name=\"parentServiceType\" "+checked+" class='parentServiceType' value='"+item.getServiceTypeId()+"'>")
                 .append(item.getName()).append("</label>");
             }
 

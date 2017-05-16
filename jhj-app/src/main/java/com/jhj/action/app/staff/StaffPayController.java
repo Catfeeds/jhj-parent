@@ -36,6 +36,7 @@ import com.jhj.vo.staff.OrgStaffPayDeptVo;
 import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.jhj.vo.user.UserPushBindSearchVo;
+import com.meijia.utils.ConfigUtil;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.GsonUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -157,7 +158,13 @@ public class StaffPayController extends BaseController {
 		vo.setOrderId(orgstaffPayDept.getOrderId());
 		vo.setOrderNo(orderNo);
 		vo.setOrderMoney(orgstaffPayDept.getOrderMoney());
-		vo.setNotifyUrl(Constants.PAY_CALLBACK_SERVICE_HOST + "/jhj-app/pay/notify_alipay_dep.jsp");
+		
+		String payCallBackServiceHost = Constants.PAY_CALLBACK_SERVICE_HOST;
+		if (ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+			payCallBackServiceHost = Constants.PAY_CALLBACK_SERVICE_HOST_DEBUG;
+		}
+		
+		vo.setNotifyUrl(payCallBackServiceHost + "/jhj-app/pay/notify_alipay_dep.jsp");
 
 		result.setData(vo);
 		return result;

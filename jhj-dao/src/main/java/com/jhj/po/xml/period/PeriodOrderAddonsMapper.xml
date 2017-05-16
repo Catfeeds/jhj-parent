@@ -1,178 +1,198 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jhj.po.dao.period.PeriodOrderAddonsMapper" >
-  <resultMap id="BaseResultMap" type="com.jhj.po.model.period.PeriodOrderAddons" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="period_order_id" property="periodOrderId" jdbcType="INTEGER" />
-    <result column="period_order_no" property="periodOrderNo" jdbcType="VARCHAR" />
-    <result column="service_type_id" property="serviceTypeId" jdbcType="INTEGER" />
-    <result column="service_addon_id" property="serviceAddonId" jdbcType="INTEGER" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="vip_price" property="vipPrice" jdbcType="DECIMAL" />
-    <result column="num" property="num" jdbcType="INTEGER" />
-    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="period_service_type_id" property="periodServiceTypeId" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, user_id, period_order_id, period_order_no, service_type_id, service_addon_id, 
-    price, vip_price, num, add_time, period_service_type_id
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from period_order_addons
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from period_order_addons
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.jhj.po.model.period.PeriodOrderAddons" useGeneratedKeys="true" keyProperty="id">
-    insert into period_order_addons (id, user_id, period_order_id, 
-      period_order_no, service_type_id, service_addon_id, 
-      price, vip_price, num, add_time, period_service_type_id)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{periodOrderId,jdbcType=INTEGER}, 
-      #{periodOrderNo,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER}, #{serviceAddonId,jdbcType=INTEGER}, 
-      #{price,jdbcType=DECIMAL}, #{vipPrice,jdbcType=DECIMAL}, #{num,jdbcType=INTEGER}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{periodServiceTypeId,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="com.jhj.po.model.period.PeriodOrderAddons" >
-    insert into period_order_addons
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="periodOrderId != null" >
-        period_order_id,
-      </if>
-      <if test="periodOrderNo != null" >
-        period_order_no,
-      </if>
-      <if test="serviceTypeId != null" >
-        service_type_id,
-      </if>
-      <if test="serviceAddonId != null" >
-        service_addon_id,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-      <if test="vipPrice != null" >
-        vip_price,
-      </if>
-      <if test="num != null" >
-        num,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="periodServiceTypeId != null" >
-        period_service_type_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="periodOrderId != null" >
-        #{periodOrderId,jdbcType=INTEGER},
-      </if>
-      <if test="periodOrderNo != null" >
-        #{periodOrderNo,jdbcType=VARCHAR},
-      </if>
-      <if test="serviceTypeId != null" >
-        #{serviceTypeId,jdbcType=INTEGER},
-      </if>
-      <if test="serviceAddonId != null" >
-        #{serviceAddonId,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="vipPrice != null" >
-        #{vipPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="num != null" >
-        #{num,jdbcType=INTEGER},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="periodServiceTypeId != null" >
-        #{periodServiceTypeId,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.period.PeriodOrderAddons" >
-    update period_order_addons
-    <set >
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="periodOrderId != null" >
-        period_order_id = #{periodOrderId,jdbcType=INTEGER},
-      </if>
-      <if test="periodOrderNo != null" >
-        period_order_no = #{periodOrderNo,jdbcType=VARCHAR},
-      </if>
-      <if test="serviceTypeId != null" >
-        service_type_id = #{serviceTypeId,jdbcType=INTEGER},
-      </if>
-      <if test="serviceAddonId != null" >
-        service_addon_id = #{serviceAddonId,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="vipPrice != null" >
-        vip_price = #{vipPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="num != null" >
-        num = #{num,jdbcType=INTEGER},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="periodServiceTypeId != null" >
-        period_service_type_id = #{periodServiceTypeId,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jhj.po.model.period.PeriodOrderAddons" >
-    update period_order_addons
-    set user_id = #{userId,jdbcType=INTEGER},
-      period_order_id = #{periodOrderId,jdbcType=INTEGER},
-      period_order_no = #{periodOrderNo,jdbcType=VARCHAR},
-      service_type_id = #{serviceTypeId,jdbcType=INTEGER},
-      service_addon_id = #{serviceAddonId,jdbcType=INTEGER},
-      price = #{price,jdbcType=DECIMAL},
-      vip_price = #{vipPrice,jdbcType=DECIMAL},
-      num = #{num,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-      period_service_type_id = #{periodServiceTypeId,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <insert id="insertBatch" parameterType="java.util.List">
-  	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
-		SELECT LAST_INSERT_ID() AS id
-	</selectKey>
-  	insert into period_order_addons (id, user_id, period_order_id, 
-      period_order_no, service_type_id, service_addon_id, 
-      price, vip_price, num, add_time) values 
-      <foreach collection="list" item="item" separator=",">
-      	(#{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.periodOrderId,jdbcType=INTEGER}, 
-         #{item.periodOrderNo,jdbcType=VARCHAR}, #{item.serviceTypeId,jdbcType=INTEGER}, #{item.serviceAddonId,jdbcType=INTEGER}, 
-         #{item.price,jdbcType=DECIMAL}, #{item.vipPrice,jdbcType=DECIMAL}, #{item.num,jdbcType=INTEGER}, 
-         #{item.addTime,jdbcType=TIMESTAMP})
-      </foreach>
-  </insert>
+<mapper namespace="com.jhj.po.dao.period.PeriodOrderAddonsMapper">
+	<resultMap id="BaseResultMap" type="com.jhj.po.model.period.PeriodOrderAddons">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="period_order_id" property="periodOrderId" jdbcType="INTEGER" />
+		<result column="period_order_no" property="periodOrderNo" jdbcType="VARCHAR" />
+		<result column="service_type_id" property="serviceTypeId" jdbcType="INTEGER" />
+		<result column="service_addon_id" property="serviceAddonId" jdbcType="INTEGER" />
+		<result column="period_service_addon_id" property="periodServiceAddonId" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="vip_price" property="vipPrice" jdbcType="DECIMAL" />
+		<result column="num" property="num" jdbcType="DOUBLE" />
+		<result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="package_type" property="packageType" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_id, period_order_id, period_order_no, service_type_id, service_addon_id, period_service_addon_id,
+		price, vip_price, num, add_time, package_type
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from period_order_addons
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from period_order_addons
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.jhj.po.model.period.PeriodOrderAddons" useGeneratedKeys="true" keyProperty="id">
+		insert into period_order_addons (id, user_id, period_order_id,
+		period_order_no, service_type_id, service_addon_id, period_service_addon_id,
+		price, vip_price, num, add_time, package_type)
+		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{periodOrderId,jdbcType=INTEGER},
+		#{periodOrderNo,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER}, 
+		#{serviceAddonId,jdbcType=INTEGER},  #{periodServiceAddonId,jdbcType=INTEGER},
+		#{price,jdbcType=DECIMAL}, #{vipPrice,jdbcType=DECIMAL}, #{num,jdbcType=DOUBLE},
+		#{addTime,jdbcType=TIMESTAMP}, #{packageType,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jhj.po.model.period.PeriodOrderAddons">
+		insert into period_order_addons
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="periodOrderId != null">
+				period_order_id,
+			</if>
+			<if test="periodOrderNo != null">
+				period_order_no,
+			</if>
+			<if test="serviceTypeId != null">
+				service_type_id,
+			</if>
+			<if test="serviceAddonId != null">
+				service_addon_id,
+			</if>
+			<if test="periodServiceAddonId != null">
+				period_service_addon_id,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="vipPrice != null">
+				vip_price,
+			</if>
+			<if test="num != null">
+				num,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="packageType != null">
+				package_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="periodOrderId != null">
+				#{periodOrderId,jdbcType=INTEGER},
+			</if>
+			<if test="periodOrderNo != null">
+				#{periodOrderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="serviceTypeId != null">
+				#{serviceTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="serviceAddonId != null">
+				#{serviceAddonId,jdbcType=INTEGER},
+			</if>
+			<if test="periodServiceAddonId != null">
+				#{periodServiceAddonId,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="vipPrice != null">
+				#{vipPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="num != null">
+				#{num,jdbcType=DOUBLE},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="packageType != null">
+				#{packageType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jhj.po.model.period.PeriodOrderAddons">
+		update period_order_addons
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="periodOrderId != null">
+				period_order_id = #{periodOrderId,jdbcType=INTEGER},
+			</if>
+			<if test="periodOrderNo != null">
+				period_order_no = #{periodOrderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="serviceTypeId != null">
+				service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="serviceAddonId != null">
+				service_addon_id = #{serviceAddonId,jdbcType=INTEGER},
+			</if>
+			<if test="periodServiceAddonId != null">
+				period_service_addon_id = #{periodServiceAddonId,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="vipPrice != null">
+				vip_price = #{vipPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="num != null">
+				num = #{num,jdbcType=DOUBLE},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="packageType != null">
+				package_type = #{packageType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jhj.po.model.period.PeriodOrderAddons">
+		update period_order_addons
+		set user_id = #{userId,jdbcType=INTEGER},
+		period_order_id = #{periodOrderId,jdbcType=INTEGER},
+		period_order_no = #{periodOrderNo,jdbcType=VARCHAR},
+		service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+		service_addon_id = #{serviceAddonId,jdbcType=INTEGER},
+		period_service_addon_id = #{periodServiceAddonId,jdbcType=INTEGER},
+		price = #{price,jdbcType=DECIMAL},
+		vip_price = #{vipPrice,jdbcType=DECIMAL},
+		num = #{num,jdbcType=DOUBLE},
+		add_time = #{addTime,jdbcType=TIMESTAMP},
+		package_type = #{packageType,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into period_order_addons (id, user_id, period_order_id,
+		period_order_no, service_type_id, service_addon_id, period_service_addon_id,
+		price, vip_price, num, add_time, package_type) values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.periodOrderId,jdbcType=INTEGER},
+			#{item.periodOrderNo,jdbcType=VARCHAR}, #{item.serviceTypeId,jdbcType=INTEGER}, #{item.serviceAddonId,jdbcType=INTEGER},
+			#{item.periodServiceAddonId,jdbcType=INTEGER},
+			#{item.price,jdbcType=DECIMAL}, #{item.vipPrice,jdbcType=DECIMAL}, #{item.num,jdbcType=DOUBLE},
+			#{item.addTime,jdbcType=TIMESTAMP},  #{item.packageType,jdbcType=INTEGER})
+		</foreach>
+	</insert>
+
+	<select id="selectByPeriodOrderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from period_order_addons
+		where period_order_id = #{periodOrderId,jdbcType=INTEGER}
+	</select>
 </mapper>

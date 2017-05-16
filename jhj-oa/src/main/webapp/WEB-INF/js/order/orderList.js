@@ -89,17 +89,19 @@ function cleanForm(){
 	$("form :input").not(":button, :submit, :reset, :hidden, :checkbox").val("").remove("selected");
 }
 
-function showLog(obj){
+function showLog(obj, remarks){
 	$("#updateOrderRemark").show();
 	var orderNo = obj.getAttribute("data-order-no");
 	$("#modal-orderNo").attr("value",orderNo);
-	var remarks = $(obj).next().attr("title");
-	$("#remarks").val(remarks);
+	
+	var v = remarks;
+	if (v == undefined) v = ""; 
+	$("#remarks1").val(v);
 }
 
 $("#submit-remarks").on('click',function(){
 	var orderNo = $("#modal-orderNo").val();
-	var remarks = $("#remarks").val();
+	var remarks = $("#remarks1").val();
 	
 	if(remarks==undefined || remarks ==null || remarks=='') return false;
 	

@@ -84,7 +84,7 @@
 			</foreach>
 		</if>
 
-		<if test="staffMobile !=null ">
+		<if test="staffMobile !=null and staffMobile !=''">
 			and staff_mobile like concat("%",#{staffMobile,jdbcType=VARCHAR},"%")
 		</if>
 

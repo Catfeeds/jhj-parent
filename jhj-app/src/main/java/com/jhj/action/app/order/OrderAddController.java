@@ -121,7 +121,8 @@ public class OrderAddController extends BaseController {
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "adminId", required = false, defaultValue = "0") Long adminId,
 			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName,
-			@RequestParam(value = "sendSmsToUser", required = false, defaultValue = "0") int sendSmsToUser)
+			@RequestParam(value = "sendSmsToUser", required = false, defaultValue = "0") int sendSmsToUser,
+			@RequestParam(value = "periodOrderId", required = false, defaultValue = "0") Integer periodOrderId)
 			throws Exception {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -239,6 +240,8 @@ public class OrderAddController extends BaseController {
            order.setOrderAddr(userAddrs.getName() + userAddrs.getAddress() + userAddrs.getAddr());
         }
 		
+        order.setPeriodOrderId(periodOrderId);
+        
 		order.setServiceHour(serviceHour);
 		order.setStaffNums(staffNums);
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_1); // 后台下单都是已支付

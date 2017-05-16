@@ -189,6 +189,7 @@
   <select id="getListPage" parameterType="com.jhj.po.model.period.PeriodServiceType" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"/> from period_service_type
   	<include refid="queryCondition"/>
+  	order by add_time asc
   </select>
   
   <sql id="queryCondition">

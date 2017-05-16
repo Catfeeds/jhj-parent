@@ -28,7 +28,7 @@
 								<font color="red">*</font>订单号
 							</label>
 							<div class="col-md-5">
-								<input name="orderNo" class="form-control" value="${periodOrder.orderNo }" readonly="readonly"/>
+								<input name="orderNo" class="form-control" value="${contentModel.orderNo }" readonly="readonly"/>
 							</div>
 						</div>
 						
@@ -37,7 +37,7 @@
 								<font color="red">*</font>手机号
 							</label>
 							<div class="col-md-5">
-								<input name="mobile" class="form-control" value="${periodOrder.mobile }" readonly="readonly"/>
+								<input name="mobile" class="form-control" value="${contentModel.mobile }" readonly="readonly"/>
 							</div>
 						</div>
 						
@@ -46,27 +46,35 @@
 								<font color="red">*</font>地址
 							</label>
 							<div class="col-md-5">
-								<select name="addrId" id="addrId" class="form-control">
-									<option value="">--请选择地址--</option>
-								</select>
+								<input name="mobile" class="form-control" value="${contentModel.addrName }" readonly="readonly"/>
 							</div>
 						</div>
 						
-						<div class="form-group required">
-							<label class="col-md-2 control-label">
-								<font color="red">*</font>订单状态
-							</label>
+						<div class="form-group">
+							<label class="col-md-2 control-label">服务子项</label>
 							<div class="col-md-5">
-								<input name="orderStatus" class="form-control" value="${periodOrder.orderStatus }" readonly="readonly"/>
-							</div>
-						</div>
-						
-						<div class="form-group required">
-							<label class="col-md-2 control-label">
-								<font color="red">*</font>支付方式
-							</label>
-							<div class="col-md-5">
-								<input name="mobile" class="form-control" value="${periodOrder.orderStatus }" readonly="readonly"/>
+								<table id="serviceAddonTable" border='1' class="table table-bordered">
+									<thead>
+										<tr>
+											<td>名称</td>
+											<td>总次数</td>
+											<td>频次</td>
+											<td>原价格</td>
+											<td>会员价格</td>
+										</tr>
+									</thead>
+									<tbody id="service-content">
+										<c:forEach items="${contentModel.periodOrderAddons}" var="item">
+											<tr>
+												<td>${item.serviceAddonsName }</td>
+												<td>${item.num }</td>
+												<td>${item.punit }</td>
+												<td>${item.price }</td>
+												<td>${item.vipPrice }</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
 							</div>
 						</div>
 						
@@ -75,7 +83,7 @@
 								<font color="red">*</font>订单金额
 							</label>
 							<div class="col-md-5">
-								<input name="orderMoney" class="form-control" value="${periodOrder.orderMoney }" readonly="readonly"/>
+								<input name="orderMoney" class="form-control" value="${contentModel.orderMoney }" readonly="readonly"/>
 							</div>
 						</div>
 						
@@ -84,38 +92,47 @@
 								<font color="red">*</font>支付金额
 							</label>
 							<div class="col-md-5">
-								<input name="orderPrice" class="form-control" value="${periodOrder.orderPrice }" readonly="readonly"/>
+								<input name="orderPrice" class="form-control" value="${contentModel.orderPrice }" readonly="readonly"/>
 							</div>
 						</div>
 						
 						<div class="form-group required">
 							<label class="col-md-2 control-label">
-								<font color="red">*</font>优惠券
+								<font color="red">*</font>订单状态
 							</label>
 							<div class="col-md-5">
-								<input name="userCouponsId" class="form-control" value="${periodOrder.userCouponsId }" readonly="readonly"/>
+								<input name="orderStatus" class="form-control" value="${contentModel.orderStatusName }" readonly="readonly"/>
 							</div>
 						</div>
 						
+						<div class="form-group required">
+							<label class="col-md-2 control-label">
+								<font color="red">*</font>支付方式
+							</label>
+							<div class="col-md-5">
+								<input name="payType" class="form-control" value="${contentModel.payTypeName }" readonly="readonly"/>
+							</div>
+						</div>
+
 						<div class="form-group required">
 							<label class="col-md-2 control-label">
 								<font color="red">*</font>订单来源
 							</label>
 							<div class="col-md-5">
-								<input name="orderFrom" class="form-control" value="${periodOrder.orderFrom }" readonly="readonly"/>
+								<input name="orderFrom" class="form-control" value="${periodOrder.orderFromName }" readonly="readonly"/>
 							</div>
 						</div>
 						
 						<div class="form-group required">
 							<label class="col-md-2 control-label">
-								<font color="red">*</font>订单来源
+								<font color="red">*</font>订单描述
 							</label>
 							<div class="col-md-5">
-								<input name="remarks" class="form-control" value="${periodOrder.remarks }" readonly="readonly"/>
+								<input name="remarks" class="form-control" value="${contentModel.remarks }" readonly="readonly"/>
 							</div>
 						</div>
 					
-						<!-- <button type="button" id="btn-save" class="btn btn-success">保存</button> -->
+						
 					</form>
 				</div>
 			</section> 

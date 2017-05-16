@@ -53,6 +53,8 @@ public class Orders {
     
     private String remarksBussinessConfirm;
     
+    private Integer periodOrderId;
+    
     public String getRemarksBussinessConfirm() {
 		return remarksBussinessConfirm;
 	}
@@ -260,5 +262,14 @@ public class Orders {
 	public void setOrderAddr(String orderAddr) {
 		this.orderAddr = orderAddr;
 	}
+
+	public Integer getPeriodOrderId() {
+		return periodOrderId;
+	}
+
+	public void setPeriodOrderId(Integer periodOrderId) {
+		this.periodOrderId = periodOrderId;
+	}
+	
 
 }

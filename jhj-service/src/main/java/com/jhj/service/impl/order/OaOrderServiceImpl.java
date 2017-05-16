@@ -648,12 +648,8 @@ public class OaOrderServiceImpl implements OaOrderService {
 			oaOrderListVo.setOrderPay(orderPay);
 
 			// 支付方式
-			if (orders.getOrderStatus() >= Constants.ORDER_HOUR_STATUS_2) {
-				String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
-				oaOrderListVo.setPayTypeName(payTypeName);
-			} else {
-				oaOrderListVo.setPayTypeName("-");
-			}
+			String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
+			oaOrderListVo.setPayTypeName(payTypeName);
 
 			oaOrderListVo.setPayType(orderPrices.getPayType());
 		}

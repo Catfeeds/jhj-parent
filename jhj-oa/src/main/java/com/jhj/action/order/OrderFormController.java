@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jhj.action.BaseController;
 import com.jhj.common.Constants;
@@ -30,6 +31,7 @@ import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
@@ -46,6 +48,7 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
@@ -53,6 +56,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.period.PeriodOrderSearchVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
@@ -122,6 +126,9 @@ public class OrderFormController extends BaseController {
 	
 	@Autowired
 	private UserAddrsService userAddrService;
+	
+	@Autowired
+	private PeriodOrderService periodOrderService;
 
 	@AuthPassport
 	@RequestMapping(value = "/order-add", method = RequestMethod.GET)
@@ -137,8 +144,6 @@ public class OrderFormController extends BaseController {
 
 		AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
 		model.addAttribute("accountAuth", accountAuth);
-
-		
 
 		if (!model.containsAttribute("contentModel")) {
 			Orders order = orderService.initOrders();
@@ -382,4 +387,20 @@ public class OrderFormController extends BaseController {
 		returnUrl = returnUrl + nextUrl;
 		return "redirect:" + returnUrl;
 	}
+	
+	@RequestMapping(value = "/getPeriodOrder",method=RequestMethod.GET)
+	@ResponseBody
+	public List<PeriodOrder> getPeriodOrder(String mobile){
+		
+		Users users = usersService.selectByMobile(mobile);
+		
+		PeriodOrderSearchVo searchVo = new PeriodOrderSearchVo();
+		searchVo.setUserId(users.getId().intValue());
+		searchVo.setOrderStatus(2);
+		List<PeriodOrder> periodOrderList = periodOrderService.selectBySearchVo(searchVo);
+		
+		return periodOrderList;
+		
+	}
+	
 }

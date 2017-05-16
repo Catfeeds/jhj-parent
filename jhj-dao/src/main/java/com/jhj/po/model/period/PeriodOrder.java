@@ -25,7 +25,7 @@ public class PeriodOrder {
 
     private Integer userCouponsId;
 
-    private Integer periodServiceTypeId;
+    private Integer packageType;
 
     private Integer orderFrom;
 
@@ -123,15 +123,6 @@ public class PeriodOrder {
 		this.userCouponsId = userCouponsId;
 	}
 
-	
-	public Integer getPeriodServiceTypeId() {
-		return periodServiceTypeId;
-	}
-
-	public void setPeriodServiceTypeId(Integer periodServiceTypeId) {
-		this.periodServiceTypeId = periodServiceTypeId;
-	}
-
 	public Integer getOrderFrom() {
 		return orderFrom;
 	}
@@ -162,6 +153,14 @@ public class PeriodOrder {
 
 	public void setUpdateTime(Long updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public Integer getPackageType() {
+		return packageType;
+	}
+
+	public void setPackageType(Integer packageType) {
+		this.packageType = packageType;
 	}
 
    

@@ -150,7 +150,7 @@ function getAddrByMobile(addrId) {
 					$("#isVip").val(isVip);
 					if (isVip == 0) $("#userTypeStr").html("普通会员");
 					if (isVip == 1) $("#userTypeStr").html("金牌会员");
-					serviceTypeChange();
+//					serviceTypeChange();
 					// changePrice();
 					$.ajax({
 						type : "get",
@@ -262,7 +262,7 @@ function saveAddress() {
 }
 
 // ============服务类别相关=========================================================
-$("#parentServiceType").on('change', function() {
+$(".parentServiceType").on('change', function() {
 	var parentServiceTypeId = $(this).val();
 	if (0 == parentServiceTypeId) {
 		return false;
@@ -271,32 +271,18 @@ $("#parentServiceType").on('change', function() {
 	if (parentServiceTypeId == 23 || parentServiceTypeId == 24) {
 		$("#orderType").val(0);
 		$("#divServiceAddons").css("display", "none");
+		serviceTypeChangeHour();
 	} else {
 		$("#orderType").val(1);
 		$("#divServiceAddons").css("display", "block");
+		serviceTypeChangeExp();
 	}
 });
 
-function serviceTypeChange() {
-	var serviceType = $("select[name='serviceType']").val();
-	
-	if (serviceType == "" || serviceType == undefined) {
-		return false;
-	}
-	
-	var parentServiceType = $("#parentServiceType").val();
-	
-	if (parentServiceType == 23 || parentServiceType == 24) {
-		$("#divServiceAddons").css("display", "none");
-		serviceTypeChangeHour();
-	} else {
-		serviceTypeChangeExp();
-	}
-}
 
 // 金牌保洁服务类别
 function serviceTypeChangeHour() {
-	var id = $("select[name='serviceType'] option:selected").val();
+	var id = $("input[name='parentServiceType']:checked").val();
 	
 	if (id == "") return false;
 	
@@ -385,7 +371,6 @@ function serviceTypeChangeExp() {
 	});
 }
 
-serviceTypeChange();
 
 // =====================价格相关====================================================
 function changePrice(courponsValue) {
@@ -1002,9 +987,10 @@ function orderFormSubmit() {
 	params.adminId = $("#adminId").val();
 	params.adminName = $("#adminName").val();
 	params.orderFrom = 2;
-	params.orderOpFrom = $("#orderOpFrom").val();
+	params.orderOpFrom = $("input[name='orderOpFrom']:checked").val();
 	params.couponsId = $("#couponsId").val();
 	params.remarks = $("#remarks").val();
+	params.periodOrderId = $("#periodOrderId").val();
 	
 	if ($("#sendSmsToUser").is(":checked")) {
 		params.sendSmsToUser = 1;
@@ -1109,5 +1095,32 @@ function getAddress(){
 			}
 		}
 	});
-	
+}
+
+
+//获取定制信息
+function getPeriodOrder(){
+	var mobile = $("#mobile").val();
+	$.ajax({
+		type:"get",
+		url:"getPeriodOrder?mobile="+mobile,
+		dataType:"json",
+		success:function(data){
+			var periodOrderList = data;
+			var selectid = document.getElementById("periodOrderId");
+			for (var i = 0; i < periodOrderList.length; i++) {
+				var periodName;
+				switch (periodOrderList[i].periodServiceTypeId) {
+					case 1: periodName="定制一"; break;
+					case 2: periodName="定制二"; break;
+					case 3: periodName="定制三"; break;
+					case 4: periodName="定制四"; break;
+					default:
+						break;
+				}
+				
+				selectid[i + 1] = new Option(periodName, periodOrderList[i].id, false, false);
+			}
+		}
+	});
 }

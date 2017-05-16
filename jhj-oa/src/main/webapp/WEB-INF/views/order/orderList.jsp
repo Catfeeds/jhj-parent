@@ -202,23 +202,23 @@
 							<table class="table table-condensed table-hover table-striped" id="table2excel">
 								<thead>
 									<tr>
-										<th width="5%">门店</th>
-										<th width="10%">云店</th>
-										<th width="10%">服务人员</th>
-										<th>人数</th>
-										<th>下单时间</th>
-										<th>订单类型</th>
-										<th>服务日期</th>
-										<th>时长</th>
-										<th>手机号</th>
-										<th width="10%">地址</th>
-										<th>是否接单</th>
-										<th>订单来源</th>
-										<th>订单状态</th>
-										<th>支付方式</th>
-										<th>支付金额</th>
-										<th>补时/差价</th>
-										<th>操作</th>
+										<th width="4%">门店</th>
+										<th width="6%">云店</th>
+										<th width="7%">服务人员</th>
+										<th width="3%">人数</th>
+										<th width="6%">下单时间</th>
+										<th width="8%">订单类型</th>
+										<th width="10%">服务日期</th>
+										<th width="4%">时长</th>
+										<th width="5%">手机号</th>
+										<th width="12%">地址</th>
+										<th width="4%">是否接单</th>
+										<th width="4%">订单来源</th>
+										<th width="4%">订单状态</th>
+										<th width="5%">支付方式</th>
+										<th width="5%">支付金额</th>
+										<th width="4%">补时/差价</th>
+										<th width="10%">操作</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -260,7 +260,7 @@
 														<i class=" icon-ambulance"></i>
 													</button> <!-- 如果 运营人员备注为 空，可以添加，不为空，不让添加 --> 
 													<button id="btnremarks"
-														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-order-no="${item.orderNo}" data-target="#updateOrderRemark" onclick="showLog(this)">
+														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-order-no="${item.orderNo}" data-target="#updateOrderRemark" onclick="showLog(this, '${item.remarks}')">
 														<i class="icon-plus-sign-alt"></i>
 													</button>
 													<c:if test="${item.remarks ne ''}">
@@ -305,7 +305,7 @@
 	      <div class="modal-body">
 	        <form  name="cancleForms">
 	        	<input type="hidden" id="modal-orderNo" value=""/>
-	        	<textarea name="remarks" id="remarks" rows="3" cols="78" maxlength='200' placeholder="备注信息"></textarea>
+	        	<textarea name="remarks1" id="remarks1" rows="3" cols="78" maxlength='200' placeholder="备注信息"></textarea>
 	        	<span id="remark-error"></span>
 	        </form>
 	      </div>

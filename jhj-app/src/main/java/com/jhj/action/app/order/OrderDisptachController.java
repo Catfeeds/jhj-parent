@@ -28,7 +28,7 @@ public class OrderDisptachController extends BaseController {
 			@RequestParam("service_type_id") Long serviceTypeId,
 			@RequestParam("service_date_str") String serviceDateStr,
 			@RequestParam("addr_id") Long addrId,
-			@RequestParam("staff_id") Long staffId
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId
 			) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		

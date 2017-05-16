@@ -15,6 +15,10 @@
 		<result column="staff_pprice" property="staffPprice" jdbcType="DECIMAL" />
 		<result column="mpprice" property="mpprice" jdbcType="DECIMAL" />
 		<result column="staff_mpprice" property="staffMpprice" jdbcType="DECIMAL" />
+		<result column="aprice" property="aprice" jdbcType="DECIMAL" />
+		<result column="staff_aprice" property="staffAprice" jdbcType="DECIMAL" />
+		<result column="apprice" property="apprice" jdbcType="DECIMAL" />
+		<result column="staff_apprice" property="staffApprice" jdbcType="DECIMAL" />
 		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
 		<result column="view_type" property="viewType" jdbcType="NUMERIC" />
 		<result column="no" property="no" jdbcType="NUMERIC" />
@@ -29,9 +33,11 @@
 
 	</resultMap>
 	<sql id="Base_Column_List">
-		service_type_id, name, parent_id, unit, default_num, price, staff_price, mprice, staff_mprice, pprice, staff_pprice, mpprice, staff_mpprice, remarks, view_type, no,
-		service_img_url, enable,
-		service_property, service_times, service_content, is_auto, is_multi,service_hour
+		service_type_id, name, parent_id, unit, default_num, price, staff_price, mprice,
+		staff_mprice, pprice, staff_pprice, mpprice, staff_mpprice, aprice, staff_aprice, apprice, staff_apprice,
+		remarks, view_type, no, service_img_url, enable,
+		service_property, service_times,
+		service_content, is_auto, is_multi,service_hour
 	</sql>
 
 
@@ -105,45 +111,45 @@
 		<include refid="Base_Column_List" />
 		from partner_service_type where enable = 1
 	</select>
-	
+
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.PartnerServiceTypeSearchVo">
 		select
 		<include refid="Base_Column_List" />
-		from partner_service_type 
-		<include refid="bySearchVo"/>
+		from partner_service_type
+		<include refid="bySearchVo" />
 		order by service_type_id asc
 	</select>
-	
-	
+
+
 	<sql id="bySearchVo">
 		where 1 = 1
-		
+
 		<if test="serviceTypeId != null">
 			and service_type_id = #{serviceTypeId,jdbcType=NUMERIC}
 		</if>
-		
+
 		<if test="serviceTypeIds != null">
 			and service_type_id in
 			<foreach item="item" index="index" collection="serviceTypeIds" open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
-		
+
 		<if test="parentId != null">
 			and parent_id = #{parentId,jdbcType=NUMERIC}
 		</if>
-		
+
 		<if test="parentIds != null">
 			and parent_id in
 			<foreach item="item" index="index" collection="parentIds" open="(" separator="," close=")">
 				#{item}
 			</foreach>
-		</if>		
-		
+		</if>
+
 		<if test="isEnable != null">
 			and enable = #{isEnable,jdbcType=NUMERIC}
 		</if>
-		
+
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -163,25 +169,33 @@
 		insert into partner_service_type (service_type_id, name, parent_id,
 		unit, default_num,
 		price, staff_price, mprice, staff_mprice, pprice, staff_pprice, mpprice, staff_mpprice,
+		aprice, staff_aprice, apprice, staff_apprice,
 		remarks, view_type, no,
 		service_img_url,
 		enable, service_property,
 		service_times, service_content,
 		is_auto, is_multi,service_hour)
-		values (#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
+		values
+		(#{serviceTypeId,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR},
 		#{parentId,jdbcType=NUMERIC},
 		#{unit,jdbcType=VARCHAR},
 		#{defaultNum,jdbcType=NUMERIC},
-		#{price,jdbcType=DECIMAL}, #{staffPrice,jdbcType=DECIMAL},
+		#{price,jdbcType=DECIMAL},
+		#{staffPrice,jdbcType=DECIMAL},
 		#{mprice,jdbcType=DECIMAL}, #{staffMprice,jdbcType=DECIMAL},
 		#{pprice,jdbcType=DECIMAL}, #{staffPprice,jdbcType=DECIMAL},
 		#{mpprice,jdbcType=DECIMAL},#{staffMpprice,jdbcType=DECIMAL},
+		#{aprice,jdbcType=DECIMAL}, #{staffAprice,jdbcType=DECIMAL},
+		#{apprice,jdbcType=DECIMAL},
+		#{staffApprice,jdbcType=DECIMAL},
 		#{remarks,jdbcType=VARCHAR}, #{viewType,jdbcType=NUMERIC},
 		#{no,jdbcType=NUMERIC},
-		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, #{serviceProperty,jdbcType=NUMERIC},
+		#{serviceImgUrl,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC},
+		#{serviceProperty,jdbcType=NUMERIC},
 		#{serviceTimes,jdbcType=NUMERIC},
 		#{serviceContent,jdbcType=VARCHAR},
-		#{isAuto,jdbcType=NUMERIC}, #{isMulti,jdbcType=NUMERIC},#{serviceHour,jdbcType=NUMERIC})
+		#{isAuto,jdbcType=NUMERIC},
+		#{isMulti,jdbcType=NUMERIC},#{serviceHour,jdbcType=NUMERIC})
 	</insert>
 	<insert id="insertSelective" parameterType="com.jhj.po.model.university.PartnerServiceType">
 		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="serviceTypeId">
@@ -228,6 +242,21 @@
 			<if test="staffMpprice != null">
 				staff_mpprice,
 			</if>
+
+			<if test="aprice != null">
+				aprice,
+			</if>
+			<if test="staffAprice != null">
+				staff_aprice,
+			</if>
+
+			<if test="apprice != null">
+				apprice,
+			</if>
+			<if test="staffApprice != null">
+				staff_apprice,
+			</if>
+
 			<if test="remarks != null">
 				remarks,
 			</if>
@@ -302,6 +331,19 @@
 			</if>
 			<if test="staffMpprice != null">
 				#{staffMpprice,jdbcType=DECIMAL},
+			</if>
+			<if test="aprice != null">
+				#{aprice,jdbcType=DECIMAL},
+			</if>
+			<if test="staffAprice != null">
+				#{staffAprice,jdbcType=DECIMAL},
+			</if>
+
+			<if test="apprice != null">
+				#{apprice,jdbcType=DECIMAL},
+			</if>
+			<if test="staffApprice != null">
+				#{staffApprice,jdbcType=DECIMAL},
 			</if>
 			<if test="remarks != null">
 				#{remarks,jdbcType=VARCHAR},
@@ -378,6 +420,20 @@
 			<if test="staffMpprice != null">
 				staff_mpprice = #{staffMpprice,jdbcType=DECIMAL},
 			</if>
+
+			<if test="aprice != null">
+				aprice = #{aprice,jdbcType=DECIMAL},
+			</if>
+			<if test="staffAprice != null">
+				staff_aprice = #{staffAprice,jdbcType=DECIMAL},
+			</if>
+
+			<if test="apprice != null">
+				apprice = #{apprice,jdbcType=DECIMAL},
+			</if>
+			<if test="staffApprice != null">
+				staff_apprice = #{staffApprice,jdbcType=DECIMAL},
+			</if>
 			<if test="remarks != null">
 				remarks = #{remarks,jdbcType=VARCHAR},
 			</if>
@@ -433,6 +489,10 @@
 		mpprice =
 		#{mpprice,jdbcType=DECIMAL},
 		staff_mpprice = #{staffMpprice,jdbcType=DECIMAL},
+		aprice = #{aprice,jdbcType=DECIMAL},
+		staff_aprice = #{staffAprice,jdbcType=DECIMAL},
+		apprice = #{apprice,jdbcType=DECIMAL},
+		staff_apprice = #{staffApprice,jdbcType=DECIMAL},
 		remarks = #{remarks,jdbcType=VARCHAR},
 		view_type = #{viewType,jdbcType=NUMERIC},
 		no =

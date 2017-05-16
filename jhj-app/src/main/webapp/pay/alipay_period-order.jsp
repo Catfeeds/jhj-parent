@@ -18,9 +18,9 @@
         String subject = "叮当到家家庭服务";
 		
         //付款金额，必填
-        String total_fee = new String(request.getParameter("orderPay").getBytes("ISO-8859-1"),"UTF-8");
+        String total_fee = new String(request.getParameter("orderPrice").getBytes("ISO-8859-1"),"UTF-8");
 		//total_fee = "0.01";
-        System.out.println("total_fee = " + total_fee);
+        System.out.println("--------------total_fee = " + total_fee+"--------------");
         //订单类型
         String orderType = new String(request.getParameter("orderType").getBytes("ISO-8859-1"),"UTF-8");
 		
@@ -30,8 +30,15 @@
      	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价 4=定制支付
         String payOrderType = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
 		
-        String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
+        //String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
         
+        /* http://test.jia-he-jia.com 测试环境地址  */
+        
+        String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
+		if (com.meijia.utils.ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+			host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST_DEBUG;
+		}
+                
         //收银台页面上，商品展示的超链接，必填
         String show_url = host + "/u/#!/order/period-order-pay.html";
 		

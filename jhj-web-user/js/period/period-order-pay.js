@@ -1,24 +1,14 @@
 myApp.onPageInit('period-order-pay', function(page) {
-		
+	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价 4 = 定制支付
+	
 	var userId = localStorage['user_id'];
 	var orderNo = page.query.order_no;
-	var userCouponId = sessionStorage.getItem('user_coupon_id');
-	var userCouponValue = sessionStorage.getItem('user_coupon_value');
-	if (userCouponValue == undefined || userCouponValue == "" || userCouponValue == null) {
-		userCouponValue = 0;
-	}
-	
-	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价 4 = 定制支付
-	var payOrderType = sessionStorage.getItem("pay_order_type");
 	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
-	$$("#orderPay").val(orderPay);
-	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
-	$$("#orderPayStrLi").html("￥"+orderPay+"元");
-	$$("#userCouponId").val(userCouponId);
-	$$("#userCouponValue").val(userCouponValue);
-	$$("#userCouponValueStr").html(userCouponValue + "元");
+	var periodOrderPay = sessionStorage.getItem("periodPayMoney");
+	$$("#periodOrderMoneyStrLi").html("￥"+periodOrderPay+"元");
+	$$("#periodOrderPayStrLi").html("￥"+periodOrderPay+"元");
 		
 	$$.ajax({
 		type : "GET",
@@ -45,7 +35,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay2.png");
 		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay1.png");
 		$$("#orderPayType").val(2);
-		changePayType('img-wxpay', 2);
+		changePeriodPayType('img-wxpay', 2);
 	} else  {
 		$$("#select-wxpay").css("display", "none");
 		$$("#select-alipay").css("display", "block");
@@ -53,7 +43,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
 		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay1.png");
 		$$("#orderPayType").val(1);
-		changePayType('img-alipay', 1)
+		changePeriodPayType('img-alipay', 1)
 	}
 	
 	var postOrderPaySuccess =function(data, textStatus, jqXHR) {
@@ -78,13 +68,12 @@ myApp.onPageInit('period-order-pay', function(page) {
 			mainView.router.loadPage("order/order-pay-success.html");
 		}
 		
-		
 		//如果为支付宝支付，则跳转到支付宝手机网页支付页面
 		if (orderPayType == 1) {
-			var orderPay = result.data.order_pay;
+			var orderPrice = result.data.order_price;
 			var alipayUrl = localUrl + "/" + appName + "/pay/alipay_period-order.jsp";
 			alipayUrl +="?orderNo="+orderNo;
-			alipayUrl +="&orderPay="+orderPay;
+			alipayUrl +="&orderPrice="+orderPrice;
 			alipayUrl +="&orderType="+orderType;
 			alipayUrl +="&periodServiceTypeId="+periodServiceTypeId;
 			alipayUrl +="&payOrderType=4";
@@ -93,13 +82,12 @@ myApp.onPageInit('period-order-pay', function(page) {
 		
 		//如果为微信支付，则需要跳转到微信支付页面.
 		if (orderPayType == 2) {
-			 var userCouponId = $$("#userCouponId").val();
-			 if (userCouponId == undefined) userCouponId = 0;
 			 var wxPayUrl = localUrl + "/" + appName + "/wx-pay-pre.jsp";
-			 wxPayUrl +="?orderNo="+orderNo;
-			 wxPayUrl +="&userCouponId="+userCouponId;
+			 wxPayUrl +="?orderId="+result.data.id;
+			 wxPayUrl +="&orderNo="+orderNo;
+			 wxPayUrl +="&userCouponId=0";
 			 wxPayUrl +="&orderType=0";
-			 wxPayUrl +="&payOrderType="+payOrderType;
+			 wxPayUrl +="&payOrderType=4";
 			 wxPayUrl +="&periodServiceTypeId="+periodServiceTypeId;
 			 location.href = wxPayUrl;
 		}
@@ -113,9 +101,6 @@ myApp.onPageInit('period-order-pay', function(page) {
 		var params = {};
 		params.user_id = userId;
 		params.order_no = orderNo;
-		var userCouponId = $$("#userCouponId").val();
-		if (userCouponId == undefined) userCouponId = 0;
-		params.user_coupon_id = userCouponId;
 		params.pay_type = $$("#orderPayType").val();
 		console.log(params);
 		
@@ -130,9 +115,10 @@ myApp.onPageInit('period-order-pay', function(page) {
 	 	    }
 		});
 	});
+	
 });
 
-function changePayType(imgPayType, orderPayType) {
+function changePeriodPayType(imgPayType, orderPayType) {
 	
 	$$("#orderPayType").val(orderPayType);
 	var imgPayTypes = ['img-restpay', 'img-wxpay', 'img-alipay'];
@@ -147,20 +133,17 @@ function changePayType(imgPayType, orderPayType) {
 	});
 	
 	//更换价格
-	var orderPay = sessionStorage.getItem('periodPayMoney');
-	var orderOriginPay = sessionStorage.getItem('periodOrderMoney');
-	if(orderPay==undefined || orderPay==null || orderPay==''){
-		orderPay = 0;
+	var periodOrderPay = sessionStorage.getItem('periodPayMoney');
+	var periodOrderOriginPay = sessionStorage.getItem('periodOrderMoney');
+	if(periodOrderPay==undefined || periodOrderPay==null || periodOrderPay==''){
+		periodOrderPay = 0;
 	}
-	if(orderOriginPay==undefined || orderOriginPay==null || orderOriginPay==''){
-		orderOriginPay = 0;
+	if(periodOrderOriginPay==undefined || periodOrderOriginPay==null || periodOrderOriginPay==''){
+		periodOrderOriginPay = 0;
 	}
-//	if (orderPayType == 0) {
-	$$("#orderMoneyStrLi").html("￥"+orderPay+"元");
-	$$("#orderPayStrLi").html("￥"+orderPay+"元");
-//	} else {
-//		$$("#orderMoneyStrLi").html("￥"+orderOriginPay+"元");
-//		$$("#orderPayStrLi").html("￥"+orderOriginPay+"元");
-//	}
+	
+	$$("#periodOrderMoneyStrLi").html("￥"+periodOrderPay+"元");
+	$$("#periodOrderPayStrLi").html("￥"+periodOrderPay+"元");
 	
 }
+

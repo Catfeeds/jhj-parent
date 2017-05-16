@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.jhj.po.model.period.PeriodOrderAddons;
+import com.jhj.vo.period.PeriodOrderAddonsVo;
 
 public interface PeriodOrderAddonsService {
     int deleteByPrimaryKey(Integer id);
@@ -22,4 +23,8 @@ public interface PeriodOrderAddonsService {
     int insertBatch(@Param("periodOrdeAddonsList") List<PeriodOrderAddons> periodOrdeAddonsList);
     
     PeriodOrderAddons init();
+    
+    List<PeriodOrderAddons> selectByPeriodOrderId(Integer periodOrderId);
+    
+    PeriodOrderAddonsVo transVo(PeriodOrderAddons periodOrderAddons);
 }

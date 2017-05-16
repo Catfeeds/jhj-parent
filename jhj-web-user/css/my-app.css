@@ -1875,7 +1875,10 @@ i.toolbar-icon-tixing {
   line-height: 30px!important;
 }
 
-
+.views {
+  overflow: auto;
+  -webkit-overflow-scrolling: auto;
+}
 
 
 /*首页css*/
@@ -2358,6 +2361,12 @@ i.toolbar-icon-tixing {
   float: left;
   height:30px;
   font-size: 14px;
+}
+ul.order-tip li{
+  color: red;
+  font-size: 12px;
+  line-height: 24px;
+  padding-bottom: 14px;
 }
 
 
@@ -5619,6 +5628,75 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   margin-left: 2.5%;
   margin-top: 30px;
   float: left;
+}
+
+
+
+/*家电清洗价目表*/
+.appliance{
+  width:100%;
+  height:auto;
+  background: #fff;
+}
+.appliance1{
+  width:100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.appliance1 img{
+  float: left;
+  margin-left: 15%;
+  width:30%;
+  margin-top: 5px;
+}
+.appliance1 span{
+  color:#FF7900;
+  font-size: 24px;
+  margin-left: 5px;
+}
+.appliance2{
+  width:100%;
+}
+.appliance2 img{
+  width:100%;
+  margin-top: -7px;
+}
+.appliance3{
+  width:100%;
+  height:30px;
+}
+.appliance3 li{
+  width:32%;
+  float: left;
+  margin-left: 1%;
+  line-height: 30px;
+  text-align: center;
+  height:30px;
+  font-size:14px;
+}
+.appliance3 li:nth-child(2){
+  color:#EF7E00;
+}
+.appliance4{
+  width:90%;
+  margin-left: 10%;
+  line-height: 30px;
+  color:#EF7E00;
+}
+.appliance3-1{
+  width:32%;
+  border:1px solid #D1D1D1;
+  float: left;
+}
+.appliance3 li  input{
+  width:32%;
+  border-left: 0;
+  border-right: 0;
+  border-top: 1px solid #D1D1D1;
+  float: left;
+  text-align: center;
+  height:30px;
+  line-height: 30px;
 }
 
 

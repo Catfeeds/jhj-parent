@@ -16,11 +16,21 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
+import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.po.model.period.PeriodServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
+import com.jhj.service.period.PeriodServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
+import com.jhj.vo.period.PeriodOrderAddonsVo;
+import com.jhj.vo.period.PeriodOrderDetailVo;
+import com.jhj.vo.period.PeriodOrderSearchVo;
+import com.jhj.vo.period.PeriodOrderVo;
 
 @Controller
 @RequestMapping("/period")
@@ -35,33 +45,54 @@ public class PeriodOrderController extends BaseController{
 	@Autowired
 	private UserAddrsService userAddresService;
 	
+	@Autowired
+	private CooperateBusinessService cooperateBusinessService;
+	
+	@Autowired
+	private PeriodServiceTypeService periodServiceTypeService;
+	
+	@AuthPassport
 	@RequestMapping(value = "/periodOrderList", method = RequestMethod.GET)
-	public String periodOrderList(PeriodOrder periodOrder, Model model, HttpServletRequest request){
+	public String periodOrderList(Model model, HttpServletRequest request, PeriodOrderSearchVo searchVo){
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		
-		List<PeriodOrder> periodOrderListPage = periodOrderService.periodOrderListPage(periodOrder, pageNo, Constants.PAGE_MAX_NUMBER);
+		if (searchVo == null) searchVo = new PeriodOrderSearchVo();
+		
+		List<PeriodOrder> periodOrderListPage = periodOrderService.selectByListPage(searchVo, pageNo, Constants.PAGE_MAX_NUMBER);
 		
 		PageInfo<PeriodOrder> page = new PageInfo<PeriodOrder>(periodOrderListPage);
 		
+		List<PeriodOrder> list = page.getList();
+		
+		for (int i = 0 ; i < list.size(); i++) {
+			PeriodOrder item = list.get(i);
+			PeriodOrderVo vo = periodOrderService.getVos(item);
+			list.set(i, vo);
+		}
+		page = new PageInfo<PeriodOrder>(list);
 		model.addAttribute("periodOrderListPage", page);
+		model.addAttribute("periodSearchModel", searchVo);
 		
 		return "period/periodOrderList";
 		
 	}
 	
-	@RequestMapping(value="/updatePeriodOrder", method = RequestMethod.GET)
+	@AuthPassport
+	@RequestMapping(value="/periodOrderListDetail", method = RequestMethod.GET)
 	public String updatePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId,Model model){
 		
 		PeriodOrder periodOrder = periodOrderService.selectByPrimaryKey(periodOrderId);
-		model.addAttribute("periodOrder", periodOrder);
+		PeriodOrderDetailVo detailVo = periodOrderService.getDetailVo(periodOrder);
+		model.addAttribute("contentModel", detailVo);
 		
 		List<UserAddrs> userAddrsList = userAddresService.selectByUserId(periodOrder.getUserId().longValue());
 		model.addAttribute("userAddrsList", userAddrsList);
 		
 		
-		return "period/periodOrder";
+		return "period/periodOrderDetail";
 	}
 	
+	@AuthPassport
 	@RequestMapping(value="/updatePeriodOrder", method = RequestMethod.POST)
 	public String updatePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId){
 		
@@ -72,7 +103,32 @@ public class PeriodOrderController extends BaseController{
 		return "redirect:periodOrderList";
 	}
 	
+	@AuthPassport
+	@RequestMapping(value="/addPeriodOrder", method = RequestMethod.GET)
+	public String addPeriodOrder(Model model){
+		
+		CooperativeBusinessSearchVo vo = new CooperativeBusinessSearchVo();
+		vo.setEnable((short) 1);
+		List<CooperativeBusiness> CooperativeBusinessList = cooperateBusinessService
+				.selectCooperativeBusinessVo(vo);
+		if (CooperativeBusinessList != null) {
+			model.addAttribute("cooperativeBusiness", CooperativeBusinessList);
+		}
+		PeriodServiceType periodServiceType = new PeriodServiceType();
+		periodServiceType.setPackageType("1");
+		List<PeriodServiceType> list = periodServiceTypeService.getList(periodServiceType);
+		model.addAttribute("serviceTypeList", list);
+		
+		return "period/addPeriodOrder";
+	}
 	
+	@AuthPassport
+	@RequestMapping(value="/savePeriodOrder", method = RequestMethod.POST)
+	public String savePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId){
+		
+		
+		return "redirect:periodOrderList";
+	}
 	
 	
 

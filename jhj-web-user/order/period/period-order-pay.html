@@ -5,18 +5,16 @@
 			<input type="hidden" id="userId" name="userId" value="0">
 			<input type="hidden" id="restMoney" name="restMoney" value="0">
 			<input type="hidden" id="orderNo" name="orderNo" value="">
-			<input type="hidden" id="userCouponId" name="userCouponId" value="0">
-			<input type="hidden" id="userCouponValue" name="userCouponValue" value="0">
 			<input type="hidden" id="orderPay" name="orderPay" value="0">
 			<input type="hidden" id="orderPayType" name="orderPayType" value="2">
 			<div class="beijing-index">
-				<ul class="order-pay">
+				<!-- <ul class="order-pay">
 					<li>已优惠</li>
 					<li id="userCouponValueStr">0元</li>
-				</ul>
+				</ul> -->
 				<ul class="order-pay1">
 					<li class="special-color4">支付全款金额</li>
-					<li class="special-color3" id="orderMoneyStrLi">￥0元</li>
+					<li class="special-color3" id="periodOrderMoneyStrLi">￥0元</li>
 				</ul>
 				<ul class="order-pay">
 					<li>支付方式<font color="red" style="font-size:11px">(使用余额支付才能享受会员价)</font></li>
@@ -32,7 +30,7 @@
 							<p class="special-color3"><a href="user/charge/mine-charge-list.html" class="special-color2">充值立享优惠》</a></p>
 						</li>
 						<li style="width: 30%;">
-							<img id="img-restpay" onclick="changePayType('img-restpay', 0)" src="img/dingdan-pay/dingdan-pay2.png" alt="">
+							<img id="img-restpay" onclick="changePeriodPayType('img-restpay', 0)" src="img/dingdan-pay/dingdan-pay2.png" alt="">
 						</li>
 					</ul>
 					<ul id="select-wxpay" class="xiadan11">
@@ -41,7 +39,7 @@
 						</li>
 						<li>微信支付</li>
 						<li>
-							<img id="img-wxpay" onclick="changePayType('img-wxpay', 2)" src="img/dingdan-pay/dingdan-pay1.png" alt="">
+							<img id="img-wxpay" onclick="changePeriodPayType('img-wxpay', 2)" src="img/dingdan-pay/dingdan-pay1.png" alt="">
 						</li>
 					</ul>
 					<ul id="select-alipay" class="xiadan11" style="border: 0;">
@@ -50,13 +48,19 @@
 						</li>
 						<li style="width:30%">支付宝支付</li>
 						<li style="width:48%">
-							<img id="img-alipay" onclick="changePayType('img-alipay', 1)" src="img/dingdan-pay/dingdan-pay2.png" alt="">
+							<img id="img-alipay" onclick="changePeriodPayType('img-alipay', 1)" src="img/dingdan-pay/dingdan-pay2.png" alt="">
 						</li>
 					</ul>
 				</div>
+				<ul class="order-pay order-tip">
+					<li>
+						支付提示：
+						由于支付平台限制，单笔超过3000元需到充值页面进行分次充值，充值后使用余额支付
+					</li>
+				</ul>
 				<div class="order-xiadan">
 					<ul class="xiadan2">
-						<li class="special-color3" id="orderPayStrLi">￥0元</li>
+						<li class="special-color3" id="periodOrderPayStrLi">￥0元</li>
 					</ul>
 					<ul class="xiadan3">
 						<a href="#" id="orderPaySubmit">

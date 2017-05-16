@@ -18,4 +18,6 @@ public interface PeriodOrderAddonsMapper {
     int updateByPrimaryKey(PeriodOrderAddons record);
     
     int insertBatch(List<PeriodOrderAddons> periodOrdeAddonsList);
+    
+    List<PeriodOrderAddons> selectByPeriodOrderId(Integer periodOrderId);
 }

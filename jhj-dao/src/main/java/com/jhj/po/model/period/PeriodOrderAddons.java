@@ -15,16 +15,18 @@ public class PeriodOrderAddons {
     private Integer serviceTypeId;
 
     private Integer serviceAddonId;
+    
+    private Integer periodServiceAddonId;
 
     private BigDecimal price;
 
     private BigDecimal vipPrice;
 
-    private Integer num;
+    private Double num;
 
     private Date addTime;
     
-    private Integer periodServiceTypeId;
+    private Integer packageType;
 
     public Integer getId() {
         return id;
@@ -89,16 +91,16 @@ public class PeriodOrderAddons {
     public void setVipPrice(BigDecimal vipPrice) {
         this.vipPrice = vipPrice;
     }
+   
+    public Double getNum() {
+		return num;
+	}
 
-    public Integer getNum() {
-        return num;
-    }
+	public void setNum(Double num) {
+		this.num = num;
+	}
 
-    public void setNum(Integer num) {
-        this.num = num;
-    }
-
-    public Date getAddTime() {
+	public Date getAddTime() {
         return addTime;
     }
 
@@ -106,12 +108,20 @@ public class PeriodOrderAddons {
         this.addTime = addTime;
     }
 
-	public Integer getPeriodServiceTypeId() {
-		return periodServiceTypeId;
+	public Integer getPackageType() {
+		return packageType;
 	}
 
-	public void setPeriodServiceTypeId(Integer periodServiceTypeId) {
-		this.periodServiceTypeId = periodServiceTypeId;
+	public void setPackageType(Integer packageType) {
+		this.packageType = packageType;
+	}
+
+	public Integer getPeriodServiceAddonId() {
+		return periodServiceAddonId;
+	}
+
+	public void setPeriodServiceAddonId(Integer periodServiceAddonId) {
+		this.periodServiceAddonId = periodServiceAddonId;
 	}
     
 }

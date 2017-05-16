@@ -43,25 +43,46 @@ myApp.onPageInit('order-pay', function(page) {
 	//默认支付类型
 	var orderPayType = 0;
 	
+	//如果为isVip = 1, 则默认为余额支付.否则为微信支付.
+	var isVip = localStorage['is_vip'];
+	if (isVip == undefined || isVip == "") isVip = 0;
+	
+	
 	var isWx = isWeiXin();
 	
 	if (isWx) {
 		$$("#select-wxpay").css("display", "block");
 		$$("#select-alipay").css("display", "none");
-		$$('#img-restpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
-		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay2.png");
-		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay1.png");
-		$$("#orderPayType").val(2);
-		changePayType('img-wxpay', 2);
+		
 	} else  {
 		$$("#select-wxpay").css("display", "none");
 		$$("#select-alipay").css("display", "block");
-		$$('#img-restpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
-		$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
-		$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay1.png");
-		$$("#orderPayType").val(1);
-		changePayType('img-alipay', 1)
 	}
+	
+	if (isVip == 0) {
+		if (isWx) {
+			
+			$$('#img-restpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+			$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+			$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay1.png");
+			$$("#orderPayType").val(2);
+			changePayType('img-wxpay', 2);
+		} else  {
+			
+			$$('#img-restpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+			$$('#img-wxpay').attr("src","img/dingdan-pay/dingdan-pay2.png");
+			$$('#img-alipay').attr("src","img/dingdan-pay/dingdan-pay1.png");
+			$$("#orderPayType").val(1);
+			changePayType('img-alipay', 1)
+		}
+	} else {
+		changePayType('img-restpay', 0)
+		$$("#orderPayType").val(0);
+	}
+	
+	
+	
+	
 	
 	var postOrderPaySuccess =function(data, textStatus, jqXHR) {
 		$$("#orderPaySubmit").removeAttr('disabled');  

@@ -1,4 +1,6 @@
 myApp.onPageInit("period-order-confirm", function (page) {
+	
+	var packageTypeId = page.query.package_type_id;
     
 	var periodOrderStr = sessionStorage.getItem("periodOrder");
 	var periodOrderJson = JSON.parse(periodOrderStr);
@@ -25,9 +27,14 @@ myApp.onPageInit("period-order-confirm", function (page) {
 		$$("#period-order-list").append(html);
     }
     
-    var addrId = sessionStorage.getItem("addr_id");
-    var addrName = sessionStorage.getItem("addr_name");
-    $$("#orderChooseAddrName").text(addrName);
+	// 地址选择处理，1. 是否有默认地址， 2. 是否有选择的地址（最优先）
+	var addrId = getItemAddrId();
+	var addrName = getItemAddrName();
+	
+	if (addrName != undefined || addrName != "") {
+		$$("#orderChooseAddrName").html(addrName);
+	}	
+
     var totalMoney = sessionStorage.getItem("periodPayMoney");
     if(totalMoney==undefined ||totalMoney==null ||totalMoney=='') totalMoney=0;
     $$("#totalMoney").text(totalMoney);
@@ -37,12 +44,16 @@ myApp.onPageInit("period-order-confirm", function (page) {
        	param.user_id = localStorage.getItem("user_id");
        	param.mobile = localStorage.getItem("user_mobile");
        	param.addr_id = addrId;
+       	if(addrId==undefined || addrId==null || addrId==''){
+       		myApp.alert("请您选择服务地址！");
+       		return false;
+       	}
        	param.order_type = 1;
        	param.order_status = 1;
        	param.order_money = sessionStorage.getItem("periodOrderMoney");
        	param.order_price = sessionStorage.getItem("periodPayMoney");
        	param.user_coupons_id = 0;
-       	param.period_service_type_id = 0;
+       	param.package_type = packageTypeId;
        	param.order_from = 1;
        	param.remarks = "";
        	param.period_service_addons_json = periodOrderStr;
