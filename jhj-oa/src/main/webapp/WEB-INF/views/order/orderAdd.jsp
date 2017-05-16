@@ -73,7 +73,7 @@
 												<font color="red">*</font>用户手机号
 											</label>
 											<div class="col-md-5">
-												<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()" />
+												<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()" onchange="getPeriodOrder()"/>
 											</div>
 											<div>
 												<label class="control-label" id="userTypeStr"></label>
