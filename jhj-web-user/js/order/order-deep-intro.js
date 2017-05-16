@@ -23,6 +23,8 @@ myApp.onPageBeforeInit('order-deep-intro', function(page) {
 		case 54: getData(serviceTypeId);$$("#order-deep-img").attr("src","img/caboli/banner-54.png"); break;
 		case 56: getData(serviceTypeId);$$("#order-deep-img").attr("src","img/kaihuang/banner-56.png"); break;
 		case 60: getData(serviceTypeId);$$("#order-deep-img").attr("src","img/xiyiji/banner-60.png"); break;
+		case 78: getData(serviceTypeId);$$("#order-deep-img").attr("src","img/xiyiji/banner-78.png"); break;
+		case 79: getData(serviceTypeId);$$("#order-deep-img").attr("src","img/xiyiji/banner-79.png"); break;
 	}
 
 
