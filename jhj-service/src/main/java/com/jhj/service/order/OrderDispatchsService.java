@@ -69,5 +69,7 @@ public interface OrderDispatchsService {
 	List<OrgStaffDispatchVo> getTheNearestStaff(String fromLat, String fromLng, List<Long> staIdList);
 
 	int getLatestDistance(String userLat, String userLon, Long staffId);
+
+	void pushToStaff(Long staffId, String isShow, String action, Long orderId, String remindTitle, String remindContent);
    	
 }

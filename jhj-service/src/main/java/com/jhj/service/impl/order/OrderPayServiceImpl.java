@@ -25,7 +25,6 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
@@ -87,9 +86,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 	@Autowired
 	private UserCouponsService userCouponsService;
-
-	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 
 	@Autowired
 	private UserPushBindService bindService;
@@ -206,7 +202,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 
 		for (Long staffId : staffIds) {
 			staff = orgStaffService.selectByPrimaryKey(staffId);
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+			orderDispatchService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 			
 			//发送短信
@@ -333,7 +329,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 
 		if (doOrderDispatch.equals(true)) {
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+			orderDispatchService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 			
 			//发送短信

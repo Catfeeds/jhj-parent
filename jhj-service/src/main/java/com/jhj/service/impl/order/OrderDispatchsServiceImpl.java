@@ -20,8 +20,11 @@ import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
+import com.jhj.po.model.user.UserPushBind;
 import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffFinanceService;
@@ -30,8 +33,11 @@ import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
+import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.OrgDispatchPoiVo;
@@ -43,9 +49,13 @@ import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.user.UserPushBindSearchVo;
 import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.GsonUtil;
+import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.PushUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
@@ -100,6 +110,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 	@Autowired
 	private OrdersService orderService;
+	
+	@Autowired
+	private OrderPricesService orderPriceService;
 
 	@Autowired
 	private OrgStaffSkillService orgStaffSkillService;
@@ -115,6 +128,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 	@Autowired
 	private UserTrailRealService trailRealService;
+	
+	@Autowired
+	private UserPushBindService userPushBindService;
+	
+	@Autowired
+	PartnerServiceTypeService partnerServiceTypeService;
 	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -1628,4 +1647,104 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		return distance;
 	}	
 
+	/**
+	 * 派工成功，为员工发送推送消息
+	 */
+	@Override
+	public void pushToStaff(Long staffId,String isShow,String action,
+		Long orderId,String remindTitle,String remindContent){
+		
+		//1.下单成功，为员工推送消息
+		UserPushBind userPushBind = null;
+		UserPushBindSearchVo searchVo = new UserPushBindSearchVo();
+		searchVo.setUserId(staffId);
+		List<UserPushBind> list = userPushBindService.selectBySearchVo(searchVo);
+		if (!list.isEmpty()) userPushBind = list.get(0);
+
+		if(userPushBind!=null){
+			String clientId = userPushBind.getClientId();
+			PushUtil.getUserStatus(clientId);
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("cid", clientId);
+			/**
+			 * 订单派工透传消息格式：
+			 * is_show:是否在通知栏展示 true/false
+			 * action:diaptch(点击打开派工信息)，msg(点击打开app)
+			 * order_id:订单Id
+			 * remind_title:消息栏标题
+			 * remind_content:消息展示内容
+			 */
+			HashMap<String, String> tranParams = new HashMap<String, String>();
+			tranParams.put("is_show", isShow);	//true=展现,false=不显示	
+			tranParams.put("action", action);//=dispatch进入派工详情，=msg打开app		
+		    tranParams.put("order_id", orderId+"");
+		    tranParams.put("remind_title", remindTitle);
+		    tranParams.put("remind_content",remindContent);
+		    
+		    
+		    Orders order = orderService.selectByPrimaryKey(orderId);
+		    OrderPrices orderPrice = orderPriceService.selectByOrderId(orderId);
+		    
+		    OrderDispatchSearchVo searchVo3 = new OrderDispatchSearchVo();
+		    searchVo3.setOrderNo(order.getOrderNo());
+		    searchVo3.setDispatchStatus((short) 1);
+		    List<OrderDispatchs> orderDispatchs = this.selectBySearchVo(searchVo3);
+
+		    OrderDispatchs orderDispatch = null;
+		    if (!orderDispatchs.isEmpty()) {
+		    	orderDispatch = orderDispatchs.get(0);
+		    }
+		    
+		    //服务地址：
+		    String serviceAddr = "";
+		    if (order.getAddrId() > 0L) {
+				UserAddrs userAddr = userAddrService.selectByPrimaryKey(order.getAddrId());
+				serviceAddr = userAddr.getName() + userAddr.getAddr();
+			} 
+		    
+		    if (order.getOrderType().equals((short)2)) {
+		    	serviceAddr = orderDispatch.getPickAddrName() + orderDispatch.getPickAddr();
+			}
+		    
+		    tranParams.put("service_addr", serviceAddr);
+		
+		    //服务时间
+		    Long serviceDate = order.getServiceDate();
+		    
+		    if (order.getOrderType().equals((short)2)) {
+		    	serviceDate = order.getAddTime();
+		    }
+		    
+		    String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "MM-dd HH:mm");
+		    
+		    tranParams.put("service_time", serviceTime);
+		    
+		    //服务时长 
+		    String serviceHour = order.getServiceHour() + "小时";
+		    tranParams.put("service_hour", serviceHour);
+		    
+		    //服务项目
+		    String serviceContent = "";
+		    if (order.getServiceType() > 0L) {
+		    	PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(order.getServiceType());
+		    	serviceContent = serviceType.getName();
+			}
+		    tranParams.put("service_content", serviceContent);
+		    
+		    //服务金额
+		    String orderMoney = MathBigDecimalUtil.round2(orderPrice.getOrderMoney());
+		    tranParams.put("order_money", orderMoney);
+		    
+		    //订单类型
+		    tranParams.put("order_type", order.getOrderType().toString());
+		    
+			String jsonParams = GsonUtil.GsonString(tranParams);
+			params.put("transmissionContent", jsonParams);
+			try {
+				PushUtil.AndroidPushToSingle(params);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}		
+	}
 }

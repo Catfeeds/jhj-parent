@@ -24,7 +24,6 @@ import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
@@ -76,9 +75,6 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 	@Autowired
 	private UserTrailRealService trailRealService;
 	
-	@Autowired
-	private NewDispatchStaffService newDisStaService;
-
 	@Override
 	public int deleteByPrimaryKey(Long id) {
 		return orderDispatchPriceMapper.deleteByPrimaryKey(id);

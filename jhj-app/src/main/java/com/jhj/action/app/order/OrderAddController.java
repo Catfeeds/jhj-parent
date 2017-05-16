@@ -27,7 +27,6 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderLogService;
@@ -99,8 +98,6 @@ public class OrderAddController extends BaseController {
 	@Autowired
 	private UserDetailPayService userDetailPayService;
 	
-	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 
 	@RequestMapping(value = "post_order_add.json", method = RequestMethod.POST)
 	public AppResultData<Object> postOrderAdd(
@@ -331,7 +328,7 @@ public class OrderAddController extends BaseController {
 				Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
 	
 				OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
-				dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+				orderDispatchService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 						Constants.ALERT_STAFF_MSG);
 	
 				// 发送短信

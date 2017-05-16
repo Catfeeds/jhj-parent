@@ -29,7 +29,6 @@ import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
 import com.jhj.service.order.OrderDispatchAllocateService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
@@ -266,7 +265,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
 
 		for (OrgStaffs item : staffList) {
-			OrgStaffDispatchVo vo = orderDispatchService.initStaffsNew();
+			OrgStaffDispatchVo vo = orgStaffService.initOrgStaffDispatchVo();
 			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
 			vo.setReason("");
 			vo.setDispathStaFlag(1);
@@ -275,7 +274,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			// 门店名称
 			for (Orgs o : orgParents) {
 				if (o.getOrgId().equals(vo.getParentOrgId())) {
-					vo.setStaffOrgName(o.getOrgName());
+					vo.setOrgName(o.getOrgName());
 					break;
 				}
 			}
@@ -283,7 +282,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			// 门店距离
 			for (OrgDispatchPoiVo poiVo : orgList) {
 				if (vo.getOrgId().equals(poiVo.getOrgId())) {
-					vo.setStaffCloudOrgName(poiVo.getOrgName());
+					vo.setParentOrgName(poiVo.getOrgName());
 					vo.setOrgDistanceValue(poiVo.getDistanceValue());
 					vo.setOrgDistanceText(poiVo.getDistanceText());
 					break;

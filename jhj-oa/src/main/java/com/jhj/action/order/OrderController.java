@@ -33,7 +33,6 @@ import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderCancelService;
 import com.jhj.service.order.OrderDispatchsService;
@@ -70,8 +69,7 @@ public class OrderController extends BaseController {
 	private OrderPayService orderPayService;
 	@Autowired
 	private OrdersService orderService;
-	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
+
 	@Autowired
 	private UsersService usersService;
 
@@ -110,38 +108,6 @@ public class OrderController extends BaseController {
 	@Autowired
 	private OrderCancelService orderCancelService;
 	
-	/*
-	 * 深度保洁派工----固定派工人员
-	 * 
-	 * @param userId
-	 * 
-	 * @param id
-	 * 
-	 * @param staffId
-	 * 
-	 * @return
-	 */
-	@AuthPassport
-	@RequestMapping(value = "/disStaffByExpOrderNo", method = RequestMethod.POST)
-	public String disStaffForExpOrder(Long userId, Long id) {
-
-		OrgStaffs orgStaffs = orgStaService.selectByPrimaryKey(Long
-				.valueOf("17"));
-		Orders order = orderService.selectByPrimaryKey(id);
-		Users user = usersService.selectByPrimaryKey(userId);
-
-		// 如果订单为已支付=4，更新订单状态为服务中=5
-		if (order.getOrderStatus() == Constants.ORDER_DEP_STATUS_2) {// 已支付的订单才进行派工
-			order.setOrderStatus(Constants.ORDER_DEP_STATUS_3);
-			orderService.updateByPrimaryKeySelective(order);
-
-			// 更新派工表 + 日志表
-			dispatchStaffFromOrderService.disStaff(orgStaffs, order, user);
-
-		}
-		return "redirect:/order/order-exp-list";
-	}
-
 	/*
 	 * 订单换人操作
 	 * 

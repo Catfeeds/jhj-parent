@@ -24,8 +24,6 @@ import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
@@ -84,12 +82,6 @@ public class OrderPayController extends BaseController {
 	
 	@Autowired
 	private DictCouponsService dictCouponsService;	
-	
-	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
-
-	@Autowired
-	private NewDispatchStaffService newDisStaService;
 	
 	@Autowired
 	private OrgStaffsService orgStaService;
