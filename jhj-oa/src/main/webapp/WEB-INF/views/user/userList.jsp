@@ -76,6 +76,7 @@
 		                              <th >会员积分</th>
 		                              <th >会员类型</th>
 		                              <th >会员来源</th>
+		                              <th >注册时间</th>
 		                              <th >添加时间</th>
 		                              <th>操作</th>
                               </tr>
@@ -95,6 +96,7 @@
 					            <td>
 					            	<orderFromTag:orderfrom orderFrom="${item.addFrom }"/>
 					            </td>
+					            <td>${ item.registerDate }</td>
 					            <td>
 					            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 					            </td>

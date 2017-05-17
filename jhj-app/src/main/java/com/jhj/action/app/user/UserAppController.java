@@ -159,14 +159,15 @@ public class UserAppController extends BaseController {
 				Users u = usersService.selectByMobile(mobile);
 				if (u == null) {// 验证手机号是否已经注册，如果未注册，则自动注册用户，
 					u = usersService.genUser(mobile, Constants.USER_NET);
-
-					// 给新注册的用户发送优惠券
+				}
+				// 给新注册的用户发送优惠券
+				int countUserLogined = userLoginedService.countUserLogined(mobile);
+				if(countUserLogined==1){
 					DictCoupons dictCoupons = couponsService.selectByPrimaryKey(Constants.NEW_USER_REGISTER_COUPONS_ID);
 					if (dictCoupons != null) {
 						UserCoupons uc = userCouponService.initUserCoupons(u.getId(), dictCoupons);
 						userCouponService.insertSelective(uc);
 					}
-
 				}
 				// 返回用户是否保存有地址
 				UserAppVo userAppVo = new UserAppVo();

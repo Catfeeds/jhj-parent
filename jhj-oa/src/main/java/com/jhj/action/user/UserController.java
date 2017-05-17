@@ -67,6 +67,7 @@ import com.jhj.vo.user.UserCouponsVo;
 import com.jhj.vo.user.UserDetailSearchVo;
 import com.jhj.vo.user.UserSearchVo;
 import com.jhj.vo.user.UsersSmsTokenVo;
+import com.jhj.vo.user.UsersVo;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.RandomUtil;
@@ -147,6 +148,16 @@ public class UserController extends BaseController {
 		searchVo.setIsVip((short) 1);
 		searchVo.setOrderNum("2");
 		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
+		
+		List list = result.getList();
+		if(list!=null && list.size()>0){
+			for(int i=0;i<list.size();i++){
+				Users users = (Users)list.get(i);
+				UsersVo usersVo = usersService.transVo(users);
+				list.set(i,usersVo);
+			}
+		}
+		
 		model.addAttribute("userList", result);
 		model.addAttribute("userListSearchVoModel", searchVo);
 
