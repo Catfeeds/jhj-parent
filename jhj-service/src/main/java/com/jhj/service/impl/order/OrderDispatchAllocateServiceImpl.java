@@ -477,6 +477,16 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			item.setAllocate(allocate);
 			list.set(i, item);
 		}
+		
+		// 进行排序，根据员工距离大小来正序.
+		if (list.size() > 0) {
+			Collections.sort(list, new Comparator<OrgStaffDispatchVo>() {
+				@Override
+				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
+					return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
+				}
+			});
+		}
 
 		return list;
 	}

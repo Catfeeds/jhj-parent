@@ -54,11 +54,7 @@ public interface OrderDispatchsService {
 
 	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
 
-	List<OrgStaffDispatchVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId);
-
-	List<OrgStaffDispatchVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
-
-	List<Long> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
+	List<OrgStaffDispatchVo> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
 
 	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, Long staffId);
 
@@ -71,5 +67,7 @@ public interface OrderDispatchsService {
 	List<HashMap> getTotalStaffOrders(Long serviceDate, List<Long> staffIds);
 
 	List<OrgStaffDispatchVo> getStaffDistance(String fromLat, String fromLng, List<Long> staIdList);
+
+	List<OrgStaffDispatchVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long orgId);
    	
 }
