@@ -45,6 +45,8 @@ public class UserSearchVo {
 	
 	private List<String> mobileList;
 	
+	private String registerDate;
+	
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}
@@ -180,5 +182,15 @@ public class UserSearchVo {
 	public void setMobileList(List<String> mobileList) {
 		this.mobileList = mobileList;
 	}
+
+	public String getRegisterDate() {
+		return registerDate;
+	}
+
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
+	}
+	
+	
 
 }

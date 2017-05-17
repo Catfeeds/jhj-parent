@@ -1,8 +1,7 @@
-
-//根据服务大类获取服务子类
-$(".parentServiceType").on('change', function(){
+﻿//根据服务大类获取服务子类
+$("#parentServiceType").on('change', function(){
 	
-	var serviceTypeId = $("input[name='parentServiceType']:checked").val();
+	var serviceTypeId = $(this).val();
 	if(0 == serviceTypeId){
 		return;
 	}
@@ -24,14 +23,13 @@ $(".parentServiceType").on('change', function(){
 			if(0 == $result.status){
 				
 				//针对服务子项的下拉联动
-//				var selectServiceType = $("#selectServiceType").val();
-//				$serviceTypeOptions = '<option value="0">请选择服务子类</option>';
-				$serviceTypeOptions = "",
+				var selectServiceType = $("#selectServiceType").val();
+				$serviceTypeOptions = '<option value="0">请选择服务子类</option>';
 				$.each($result.data, function(i, obj) {
-					if (i==0) {
-						$serviceTypeOptions += '<label class="checkbox-inline"><input type="radio" value="'+obj.service_type_id+'" checked />' + obj.name +'</label>';
+					if (obj.service_type_id == selectServiceType) {
+						$serviceTypeOptions += '<option value="'+obj.service_type_id+'" selected>' + obj.name + "</option>";
 					} else {
-						$serviceTypeOptions += '<label class="checkbox-inline"><input type="radio" value="'+obj.service_type_id+'" />' + obj.name +'</label>';
+						$serviceTypeOptions += '<option value="'+obj.service_type_id+'">' + obj.name + "</option>";
 					}
 					
 				});
@@ -45,4 +43,4 @@ $(".parentServiceType").on('change', function(){
 	});
 });
 
-$(".parentServiceType").trigger("change");
+$("#parentServiceType").trigger("change");

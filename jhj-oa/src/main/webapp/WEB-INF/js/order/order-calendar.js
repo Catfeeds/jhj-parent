@@ -64,7 +64,7 @@ $(function(){
 //	        	}
 //	        }
 		});
-		tomm(date);
+		tomm(currentDate);
 	}
 	showTime();
 	
@@ -198,9 +198,9 @@ $(function(){
 			var selectDate = getServiceDate(selectDay);
 			if(selectDate==currentDate){
 				if(nowHour>=16){
-					$("#show-day li p").removeClass("rili-day");
-					$(selectDay).find("p").addClass("rili-day");
-					$("#show-dateTime li").addClass("rili-time");
+					$(".rili1-4 li p").removeClass("rili-day");
+					$(this).find("p").addClass("rili-day");
+//					$("#show-dateTime li").addClass("rili-time");
 				}
 				tomm(currentDate);
 			}
@@ -327,6 +327,7 @@ $(function(){
 	//获取选择的服务时间
 	$(document).on('click','#checkDate',function(){
 		var st = date+" "+dayTime+":00";
+		var st =moment(date).format("YYYY-MM-DD")+" "+dayTime+":00";
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);

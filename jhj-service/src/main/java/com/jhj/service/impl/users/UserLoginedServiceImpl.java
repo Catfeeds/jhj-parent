@@ -66,4 +66,9 @@ public class UserLoginedServiceImpl implements UserLoginedService{
 		return list;
 	}
 
+	@Override
+	public int countUserLogined(String mobile) {
+		return userLoginedMapper.countUserLogined(mobile);
+	}
+
 }
