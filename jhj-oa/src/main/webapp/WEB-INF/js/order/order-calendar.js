@@ -64,7 +64,7 @@ $(function(){
 //	        	}
 //	        }
 		});
-		tomm(date);
+		tomm(currentDate);
 	}
 	showTime();
 	
@@ -198,9 +198,9 @@ $(function(){
 			var selectDate = getServiceDate(selectDay);
 			if(selectDate==currentDate){
 				if(nowHour>=16){
-					$("#show-day li p").removeClass("rili-day");
-					$(selectDay).find("p").addClass("rili-day");
-					$("#show-dateTime li").addClass("rili-time");
+					$(".rili1-4 li p").removeClass("rili-day");
+					$(this).find("p").addClass("rili-day");
+//					$("#show-dateTime li").addClass("rili-time");
 				}
 				tomm(currentDate);
 			}
