@@ -1,29 +1,21 @@
 package com.jhj.service.impl.order;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.dao.order.OrderDispatchsMapper;
-import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffLeave;
-import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
-import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
-import com.jhj.po.model.user.UserTrailReal;
-import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
@@ -37,20 +29,13 @@ import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.bs.OrgDispatchPoiVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
-import com.jhj.vo.order.OrderDispatchVo;
 import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.org.LeaveSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
-import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
-import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
-import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.baidu.BaiduPoiVo;
-import com.meijia.utils.baidu.MapPoiUtil;
-import com.meijia.utils.vo.AppResultData;
 
 /**
  * 
@@ -126,14 +111,16 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 
 	/**
 	 * 订单类自动派工 , 隔日订单
-	 * @param orderId  订单ID
-	 * @param serviceDate 服务日期
-	 * @param serviceHour 服务时长
-	 * @param staffNums   预约服务人员数 支持多个服务人员.
-	 * @param appointStaffIds  已经指派的员工，需要排除掉
+	 * @param addrId   			地址ID
+	 * @param servcieTypeId 	服务类型ID
+	 * @param serviceDate 		服务日期
+	 * @param serviceHour 		服务时长
+	 * @param selectParentId	选择门店
+	 * @param selectOrgId		选择云店	
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public List<OrgStaffDispatchVo> manualDispatchNotToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId) {
+	public List<OrgStaffDispatchVo> manualDispatchNotToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long selectOrgId) {
 
 		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
@@ -150,80 +137,31 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		for (int i = 0; i < orgList.size(); i++) {
 			OrgDispatchPoiVo org = orgList.get(i);
 			Long orgId = org.getOrgId();
-			if (sessionOrgId > 0L) {
-				if (!org.getParentId().equals(sessionOrgId)) continue;
+			if (selectParentId > 0L) {
+				if (!org.getParentId().equals(selectParentId)) continue;
 			}
 			
-			//先找出云店下所有的员工
+			if (selectOrgId > 0L) {
+				if (!orgId.equals(selectOrgId)) continue;
+			}
+			
+			//先找出云店下所有的员工, 有技能，不在黑名单
 			StaffSearchVo staffSearchVo = new StaffSearchVo();
 			staffSearchVo.setOrgId(orgId);
 			staffSearchVo.setStatus(1);
+			staffSearchVo.setServiceTypeId(serviceTypeId);
+			staffSearchVo.setIsNotBlack(1);
 			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 			
 			if (staffList.isEmpty()) continue;
 			
-			List<Long> staffIdAlls = new ArrayList<Long>();
 			for (OrgStaffs s : staffList) {
-				if (!staffIdAlls.contains(s.getStaffId())) staffIdAlls.add(s.getStaffId());
+				if (!staffIds.contains(s.getStaffId())) staffIds.add(s.getStaffId());
 			}
 			
-			// ----1. 找出所有的符合此技能的员工 |
-			OrgStaffSkillSearchVo searchVo = new OrgStaffSkillSearchVo();
-			searchVo.setOrgId(orgId);
-			searchVo.setStaffIds(staffIdAlls);
-			searchVo.setServiceTypeId(serviceTypeId);
-			List<OrgStaffSkill> skillList = orgStaffSkillService.selectBySearchVo(searchVo);
-
-			if (!skillList.isEmpty()) {
-				for (OrgStaffSkill s : skillList) {
-					if (!staffIds.contains(s.getStaffId()))
-						staffIds.add(s.getStaffId());
-				}
-			}
-
-			if (staffIds.isEmpty())
-				continue;
-
-			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-			
-			// 注意结束时间也要服务结束后 1:59分钟
-			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
-			
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-//			searchVo1.setOrgId(orgId);
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStartServiceTime(startServiceTime);
-			searchVo1.setEndServiceTime(endServiceTime);
-			List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
-
-			for (OrderDispatchs orderDispatch : disList) {
-				if (staffIds.contains(orderDispatch.getStaffId())) {
-					staffIds.remove(orderDispatch.getStaffId());
-				}
-			}
-
-			if (staffIds.isEmpty())
-				continue;
+			if (staffIds.isEmpty()) continue;
 
 		}
-
-		// ---3.排除掉在黑名单中的服务人员
-		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
-		searchVo2.setStaffIds(staffIds);
-		searchVo2.setIsBlack((short) 1);
-		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);
-
-		if (!blackList.isEmpty()) {
-			for (OrgStaffFinance os : blackList) {
-				if (staffIds.contains(os.getStaffId())) {
-					staffIds.remove(os.getStaffId());
-				}
-			}
-		}
-
-		if (staffIds.isEmpty())
-			return list;
 
 		// ---4. 在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
@@ -245,17 +183,44 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 
 		if (staffIds.isEmpty())
 			return list;
+		
+		
+		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
+		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		
+		// 注意结束时间也要服务结束后 1:59分钟
+		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
+		
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStartServiceTime(startServiceTime);
+		searchVo1.setEndServiceTime(endServiceTime);
+		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
+
+		for (OrderDispatchs orderDispatch : disList) {
+			if (staffIds.contains(orderDispatch.getStaffId())) {
+				staffIds.remove(orderDispatch.getStaffId());
+			}
+		}
+
+		if (staffIds.isEmpty()) return list;
+		
 
 		// ---5.找出已匹配的员工列表，并统计当天的订单数，优先指派订单数少的员工，如果订单数相同，则随机
-
 		StaffSearchVo searchVo5 = new StaffSearchVo();
 		searchVo5.setStaffIds(staffIds);
 		searchVo5.setStatus(1);
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(searchVo5);
 
 		// 员工服务日期的订单数
-		List<HashMap> totalStaffs = orderDispatchService.getTotalStaffOrders(serviceDate, staffIds);
+		List<HashMap> totalStaffOrders = orderDispatchService.getTotalStaffOrders(serviceDate, staffIds);
 
+		// -- 6.找出已匹配的员工列表，并统计前一天的订单数. 优先指派订单数为0的员工.
+		Date serviceDateObj = DateUtil.parse(serviceDateStr);
+		String preServiceDateStr = DateUtil.addDay(serviceDateObj, -1, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
+		Long preServiceDate = TimeStampUtil.getMillisOfDay(preServiceDateStr); 
+		List<HashMap> preTotalStaffOrders = orderDispatchService.getTotalStaffOrders(preServiceDate, staffIds);
+		
 		// 门店名称
 		OrgSearchVo orgSearchVo = new OrgSearchVo();
 		orgSearchVo.setIsParent(1);
@@ -285,8 +250,9 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 					break;
 				}
 			}
-
-			for (HashMap totalItem : totalStaffs) {
+			
+			//当天有派工的人员
+			for (HashMap totalItem : totalStaffOrders) {
 				if (totalItem.get("staff_id") == null) continue;
 				if (totalItem.get("total") == null) continue;
 				Long staffId = (Long) totalItem.get("staff_id");
@@ -296,22 +262,222 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 					vo.setTodayOrderNum(total);
 				}
 			}
+			
+			//隔天有派工的人员
+			for (HashMap totalItem : preTotalStaffOrders) {
+				if (totalItem.get("staff_id") == null) continue;
+				if (totalItem.get("total") == null) continue;
+				Long staffId = (Long) totalItem.get("staff_id");
+				int total = Integer.valueOf(totalItem.get("total").toString());
+
+				if (staffId.equals(vo.getStaffId())) {
+					vo.setPreDayOrderNum(total);
+				}
+			}
 
 			list.add(vo);
 		}
 
 		// 员工距离
 		list = orderDispatchService.getStaffDispatch(list, fromLat, fromLng);
-
-		// 进行排序，根据距离大小来正序.
+		
+		
+		// 进行排序，根据云店距离大小来正序.
 		if (list.size() > 0) {
 			Collections.sort(list, new Comparator<OrgStaffDispatchVo>() {
 				@Override
 				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
-					return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
+					return Integer.valueOf(s1.getOrgDistanceValue()).compareTo(s2.getOrgDistanceValue());
 				}
 			});
 		}
+		
+		//派工依据. 0 = 合理分配  1 = 效率优先
+		for (int i = 0; i < list.size(); i++) {
+			OrgStaffDispatchVo item = list.get(i);
+			String allocateReason = "效率优先";
+			int allocate = 1;
+			int orgDistanceValue = item.getOrgDistanceValue();
+			int preDayOrderNum = item.getPreDayOrderNum();
+			if (orgDistanceValue <= 1000 && preDayOrderNum == 0) {
+				allocateReason = "合理分配";
+				allocate = 0;
+			}
+			item.setAllocateReason(allocateReason);
+			item.setAllocate(allocate);
+			list.set(i, item);
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * 订单类手动派工 , 当日订单
+	 * @param addrId   			地址ID
+	 * @param servcieTypeId 	服务类型ID
+	 * @param serviceDate 		服务日期
+	 * @param serviceHour 		服务时长
+	 * @param selectParentId	选择门店
+	 * @param selectOrgId		选择云店	
+	 */
+	@Override
+	public List<OrgStaffDispatchVo> manualDispatchToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long selectOrgId) {
+
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
+		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
+		String fromLat = addrs.getLatitude();
+		String fromLng = addrs.getLongitude();
+		
+		//获得当前预处理员工列表
+		StaffSearchVo staffSearchVo = new StaffSearchVo();
+		if (selectParentId > 0L) staffSearchVo.setParentId(selectParentId);
+		if (selectOrgId > 0L) staffSearchVo.setParentId(selectOrgId);
+		staffSearchVo.setStatus(1);
+		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		List<Long> orgIds = new ArrayList<Long>();
+		for (OrgStaffs staff : staffList) {
+			if (!staffIds.contains(staff.getStaffId()))
+				staffIds.add(staff.getStaffId());
+			
+			if (!orgIds.contains(staff.getOrgId())) orgIds.add(staff.getOrgId());
+			
+		}
+		
+		// ---在订单服务时间内请假的员工.
+		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		leaveSearchVo.setLeaveDate(leaveDate);
+		leaveSearchVo.setLeaveStatus("1");
+		
+		// 服务时间内 ，同时也在 假期内的 员工
+		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);
+
+		if (!leaveList.isEmpty()) {
+			for (OrgStaffLeave ol : leaveList) {
+				if (staffIds.contains(ol.getStaffId())) {
+					staffIds.remove(ol.getStaffId());
+				}
+			}
+		}
+
+		if (staffIds.isEmpty()) return list;
+		
+		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
+		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		
+		// 注意结束时间也要服务结束后 1:59分钟
+		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
+		
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStartServiceTime(startServiceTime);
+		searchVo1.setEndServiceTime(endServiceTime);
+		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
+
+		for (OrderDispatchs orderDispatch : disList) {
+			if (staffIds.contains(orderDispatch.getStaffId())) {
+				staffIds.remove(orderDispatch.getStaffId());
+			}
+		}
+
+		if (staffIds.isEmpty()) return list;
+		
+		// 员工服务日期的订单数
+		List<HashMap> totalStaffOrders = orderDispatchService.getTotalStaffOrders(serviceDate, staffIds);
+		
+		List<OrgStaffDispatchVo> prelist = new ArrayList<OrgStaffDispatchVo>();
+		//开始计算员工与服务地址的距离
+		staffSearchVo = new StaffSearchVo();
+		staffSearchVo.setStaffIds(staffIds);
+		staffSearchVo.setStatus(1);
+		staffList = orgStaffService.selectBySearchVo(staffSearchVo);
+		
+		for (OrgStaffs item : staffList) {
+			OrgStaffDispatchVo vo = orgStaffService.initOrgStaffDispatchVo();
+			BeanUtilsExp.copyPropertiesIgnoreNull(item, vo);
+			vo.setReason("");
+			vo.setDispathStaFlag(1);
+			vo.setDispathStaStr("可派工");
+			prelist.add(vo);
+		}
+		
+		prelist = orderDispatchService.getStaffDispatch(prelist, fromLat, fromLng);
+		
+		// 门店名称
+		OrgSearchVo orgSearchVo = new OrgSearchVo();
+		orgSearchVo.setIsParent(1);
+		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
+		
+		//匹配距离的门店
+		List<OrgDispatchPoiVo> orgList = orderDispatchService.getMatchOrgs(fromLat, fromLng, 0L, 0L, true);
+		
+		//当日订单最小值.
+		int minTotalOrders = 0;
+		
+		for (int i = 0; i < prelist.size(); i++) {
+			OrgStaffDispatchVo vo = prelist.get(i);
+			if (vo.getDistanceValue() > Constants.MAX_DISTANCE) continue;
+			
+			// 门店名称
+			for (Orgs o : orgParents) {
+				if (o.getOrgId().equals(vo.getParentOrgId())) {
+					vo.setOrgName(o.getOrgName());
+					break;
+				}
+			}
+
+			// 门店距离
+			for (OrgDispatchPoiVo poiVo : orgList) {
+				if (vo.getOrgId().equals(poiVo.getOrgId())) {
+					vo.setParentOrgName(poiVo.getOrgName());
+					vo.setOrgDistanceValue(poiVo.getDistanceValue());
+					vo.setOrgDistanceText(poiVo.getDistanceText());
+					break;
+				}
+			}
+			
+			//当天有派工的人员
+			for (HashMap totalItem : totalStaffOrders) {
+				if (totalItem.get("staff_id") == null) continue;
+				if (totalItem.get("total") == null) continue;
+				Long staffId = (Long) totalItem.get("staff_id");
+				int total = Integer.valueOf(totalItem.get("total").toString());
+
+				if (staffId.equals(vo.getStaffId())) {
+					vo.setTodayOrderNum(total);
+				}
+			}
+			
+			if (i == 0) {
+				minTotalOrders = vo.getTodayOrderNum();
+			} else {
+				if (vo.getTodayOrderNum() < minTotalOrders) {
+					minTotalOrders = vo.getTodayOrderNum();
+				}
+			}
+			
+			list.add(vo);
+		}
+		
+		//派工依据. 0 = 合理分配  1 = 效率优先
+		for (int i = 0; i < list.size(); i++) {
+			OrgStaffDispatchVo item = list.get(i);
+			String allocateReason = "效率优先";
+			int allocate = 1;
+			int orgDistanceValue = item.getDistanceValue();
+			int total = item.getTodayOrderNum();
+			if (orgDistanceValue <= 1000 && total == minTotalOrders) {
+				allocateReason = "合理分配";
+				allocate = 0;
+			}
+			item.setAllocateReason(allocateReason);
+			item.setAllocate(allocate);
+			list.set(i, item);
+		}
+
 		return list;
 	}
 

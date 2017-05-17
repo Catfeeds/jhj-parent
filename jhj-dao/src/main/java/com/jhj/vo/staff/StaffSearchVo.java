@@ -36,6 +36,8 @@ public class StaffSearchVo {
 	private List<Long> serviceTypeIds;
 	
 	private String staffCode;
+	
+	private Integer isNotBlack;
 
 	public Integer getStatus() {
 		return status;
@@ -173,6 +175,14 @@ public class StaffSearchVo {
 
 	public void setOrgIds(List<Long> orgIds) {
 		this.orgIds = orgIds;
+	}
+
+	public Integer getIsNotBlack() {
+		return isNotBlack;
+	}
+
+	public void setIsNotBlack(Integer isNotBlack) {
+		this.isNotBlack = isNotBlack;
 	}
 	
 

@@ -996,7 +996,6 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 					}
 				}
 			}
-
 		}
 		return list;
 	}
@@ -1010,7 +1009,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		OrderDispatchSearchVo searchVo6 = new OrderDispatchSearchVo();
 		searchVo6.setStaffIds(staffIds);
-
+		searchVo6.setDispatchStatus((short) 1);
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd");
 		// 得到服务日期的开始时间戳 00:00:00
 		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(DateUtil.getBeginOfDay(serviceDateStr)) / 1000;
@@ -1554,13 +1553,6 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			for (int i =0; i < list.size(); i++) {
 				item = list.get(i);
 				
-				/**
-				 *  2016年3月24日14:37:20  
-				 *  
-				 * 	 可能会有  该 服务人员 不存在  位置信息的情况,
-				 * 		
-				 * 	但是 需要 显示 该 服务人员 可用！！
-				 */
 				Long staffId = item.getUserId();
 				
 				// 该 服务人员 当天 的 派单 数量

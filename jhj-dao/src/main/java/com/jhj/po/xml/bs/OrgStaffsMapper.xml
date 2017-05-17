@@ -132,6 +132,10 @@
 		<if test="serviceTypeId !=null and serviceTypeId != 0">
 			and staff_id in (select staff_id from org_staff_skill where service_type_id = #{serviceTypeId,jdbcType=NUMERIC})
 		</if>
+		
+		<if test="isNotBlack !=null and isNotBlack != 0">
+			and staff_id in (select staff_id from org_staff_finance where is_blank = 0)
+		</if>
 		order by add_time desc
 	</sql>
 

@@ -20,7 +20,9 @@ import com.meijia.utils.vo.AppResultData;
  */
 public interface OrderDispatchAllocateService {
 
-	List<OrgStaffDispatchVo> manualDispatchNotToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId);
+	List<OrgStaffDispatchVo> manualDispatchToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId, Long selectedOrgId);
+
+	List<OrgStaffDispatchVo> manualDispatchNotToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long selectOrgId);
     
 
 }

@@ -49,6 +49,8 @@ public class OrgStaffDispatchVo extends OrgStaffs {
 	//无法派工原因
 	private String reason;     
 	
+	private int allocate;
+	
 	//派工依据. 合理分配  效率优先
 	private String allocateReason;  
 	
@@ -179,6 +181,14 @@ public class OrgStaffDispatchVo extends OrgStaffs {
 
 	public void setPreDayOrderNum(int preDayOrderNum) {
 		this.preDayOrderNum = preDayOrderNum;
+	}
+
+	public int getAllocate() {
+		return allocate;
+	}
+
+	public void setAllocate(int allocate) {
+		this.allocate = allocate;
 	}
 
 }

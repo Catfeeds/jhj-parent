@@ -690,6 +690,7 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		vo.setOrgDistanceText("");
 		vo.setOrgDistanceValue(0);
 		vo.setTodayOrderNum(0);
+		vo.setPreDayOrderNum(0);
 		vo.setParentOrgName("");
 		vo.setOrgName("");
 		vo.setDispathStaFlag(0);
