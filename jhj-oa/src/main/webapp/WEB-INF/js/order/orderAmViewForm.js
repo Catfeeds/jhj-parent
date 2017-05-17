@@ -196,8 +196,8 @@ function loadProperStaffForAmOrder(){
               			
 	                  				+"<input type='hidden' id='distanceValue' value="+item.distance_value+">"	
 							+"</td>"
-							+"<td>"+item.staff_org_name+"</td>"
-							+"<td>"+item.staff_cloud_org_name+"</td>"
+							+"<td>"+item.parent_org_name+"</td>"
+							+"<td>"+item.org_name+"</td>"
 							+"<td>"+item.name+"</td>"
 							+"<td>"+item.mobile+"</td>"
 							+"<td>"+item.distance_text+"</td>"

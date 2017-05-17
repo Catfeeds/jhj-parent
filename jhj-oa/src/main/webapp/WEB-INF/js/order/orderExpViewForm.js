@@ -148,19 +148,24 @@ var loadStaffDynamic = function(data, status, xhr) {
 			htmlStr+= selectInput;
 		}
 		
+		var sexName = "男";
+		if (item.sex == 1) sexName = "女";
+		
 		htmlStr+= "<input  type='hidden' id='selectStaffId' name='selectStaffId' value=" + item.staff_id+ ">"
 		+ "<input type='hidden' id='distanceValue' value=" + item.distance_value + ">" 
 		+ "<input type='hidden' id='selectStaffName' value=" + item.name + ">" 
 		+ "</td>" 
-		+ "<td>" + item.staff_org_name + "</td>" 
-		+ "<td>" + item.staff_cloud_org_name + "</td>" 
+		+ "<td>" + item.parent_org_name + "</td>" 
+		+ "<td>" + item.org_name + "</td>" 
 		+ "<td>" + item.org_distance_text + "</td>" 
 		+ "<td>" + item.name + "</td>" 
 		+ "<td>" + item.mobile + "</td>" 
+		+ "<td>" + sexName + "</td>" 
 		+ "<td>" + item.distance_text + "</td>" 
 		+ "<td>" + item.today_order_num + "</td>"
 		+ "<td>" + item.dispath_sta_str + "</td>"
 		+ "<td>" + item.reason + "</td>";
+		+ "<td>" + item.allocate_reason + "</td>";
 		htmlStr+="</tr>";
 		tdHtml += htmlStr;
 		
