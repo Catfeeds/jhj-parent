@@ -103,7 +103,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_auto_dispatch.json", method = RequestMethod.GET)
-	public List<OrgStaffs> loadAutoDispatch(
+	public List<OrgStaffDispatchVo> loadAutoDispatch(
 			@RequestParam("addrId") Long addrId,
 			@RequestParam("serviceTypeId") Long serviceTypeId,
 			@RequestParam("serviceDate") Long serviceDate,
@@ -111,7 +111,7 @@ public class OrderDispatchController extends BaseController {
 			@RequestParam("staffNums") int staffNums
 			) {
 		
-		List<OrgStaffs> list = new ArrayList<OrgStaffs>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 		
 		PartnerServiceType serviceType = partnerService.selectByPrimaryKey(serviceTypeId);
 
@@ -122,12 +122,8 @@ public class OrderDispatchController extends BaseController {
 			return list;
 		
 		
-		List<Long> staffIds = orderDispatchsService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, new ArrayList<Long>());
-		if (!staffIds.isEmpty()) {
-			StaffSearchVo searchVo = new StaffSearchVo();
-			searchVo.setStaffIds(staffIds);
-			list = orgStaffsService.selectBySearchVo(searchVo);
-		}
+		list = orderDispatchsService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, new ArrayList<Long>());
+
 		return list;
 	}
 	
@@ -162,7 +158,8 @@ public class OrderDispatchController extends BaseController {
 			return list;
 		}
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
-		list = orderDispatchsService.manualDispatch(addrId, serviceTypeId, serviceDate, serviceHour, sessionOrgId);
+		Long orgId = 0L;
+		list = orderDispatchsService.manualDispatch(addrId, serviceTypeId, serviceDate, serviceHour, sessionOrgId, orgId);
 		return list;
 	}
 
@@ -245,7 +242,7 @@ public class OrderDispatchController extends BaseController {
 		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
 
 		// 处理只更换派工时间，不更换派工人员的情况.
-		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
+		if (!oldServiceDateTime.equals(serviceDateTime)) {
 
 			// 先检测在新的服务时间，原派工服务人员时间是否有冲突.
 			for (OrderDispatchs op : disList) {
@@ -305,6 +302,7 @@ public class OrderDispatchController extends BaseController {
 		if (!disList.isEmpty()) {
 			for (OrderDispatchs d : disList) {
 				if (!staffIds.contains(d.getStaffId())) {
+					d.setServiceDate(serviceDateTime);
 					d.setDispatchStatus((short) 0);
 					d.setUpdateTime(TimeStampUtil.getNowSecond());
 					orderDispatchsService.updateByPrimaryKey(d);
@@ -318,7 +316,9 @@ public class OrderDispatchController extends BaseController {
 		Double serviceHour = (double) order.getServiceHour();
 		// 进行派工
 		for (Long staffId : newDispathStaffIds) {
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId);
+			int allocate = 0;
+			String allocateReason = "合理分配";
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
 		}
 
 		// 更新订单表
@@ -504,7 +504,9 @@ public class OrderDispatchController extends BaseController {
 
 		// 进行派工，兼容一人和多人
 		for (Long staffId : newDispathStaffIds) {
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId);
+			int allocate = 0;
+			String allocateReason = "合理分配";
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
 		}
 
 		// 如果为多人派工，需要对服务时间进行平均. 考虑到调整派工，人数变化的情况，所以要整体的更新.
@@ -589,7 +591,7 @@ public class OrderDispatchController extends BaseController {
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
 			return list;
 		}
-		list = orderDispatchsService.manualDispatchByOrg(addrId, serviceTypeId, serviceDate, serviceHour, parentId, orgId);
+		list = orderDispatchsService.manualDispatch(addrId, serviceTypeId, serviceDate, serviceHour, parentId, orgId);
 		return list;
 	}
 

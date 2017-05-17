@@ -52,6 +52,10 @@ public class OrderDispatchs {
     private Short isApply;
     
     private Long applyTime;
+    
+    private Short allocate;
+    
+    private String allocateReason;
 
     public Long getId() {
         return id;
@@ -259,6 +263,22 @@ public class OrderDispatchs {
 
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
+	}
+
+	public Short getAllocate() {
+		return allocate;
+	}
+
+	public void setAllocate(Short allocate) {
+		this.allocate = allocate;
+	}
+
+	public String getAllocateReason() {
+		return allocateReason;
+	}
+
+	public void setAllocateReason(String allocateReason) {
+		this.allocateReason = allocateReason;
 	}
 
 

@@ -40,6 +40,7 @@ import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
@@ -308,11 +309,13 @@ public class OrderAddController extends BaseController {
 
 		//如果为自动派工的服务品类，没有选择服务人员，则会自动派工.
 		if (staffIds.isEmpty()) {
-			
 			// 增加判断，是否可以自动派工.
 			if (partnerServiceType.getIsAuto().equals((short) 1)) {
 				List<Long> appointStaffIds = new ArrayList<Long>();
-				staffIds = orderDispatchService.autoDispatch(addrId, serviceType, serviceDate, serviceHour, staffNums, appointStaffIds);
+				List<OrgStaffDispatchVo> autoStaffs = orderDispatchService.autoDispatch(addrId, serviceType, serviceDate, serviceHour, staffNums, appointStaffIds);
+				for (OrgStaffDispatchVo item : autoStaffs) {
+					staffIds.add(item.getStaffId());
+				}
 			}
 				
 		}
@@ -325,7 +328,9 @@ public class OrderAddController extends BaseController {
 			String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 			String timeStr = beginTimeStr + "-" + endTimeStr;
 			for (Long staffId : staffIds) {
-				Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+				int allocate = 0;
+				String allocateReason = "合理分配";
+				Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId, allocate, allocateReason);
 	
 				OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 				orderDispatchService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),

@@ -48,8 +48,6 @@ public interface OrderDispatchsService {
 
 	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
 
-	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
-
 	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
 
 	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
@@ -69,5 +67,7 @@ public interface OrderDispatchsService {
 	List<OrgStaffDispatchVo> getStaffDistance(String fromLat, String fromLng, List<Long> staIdList);
 
 	List<OrgStaffDispatchVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long orgId);
+
+	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId, int allocate, String allocateReason);
    	
 }

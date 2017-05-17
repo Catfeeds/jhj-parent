@@ -32,6 +32,10 @@
 
 		<result column="is_apply" property="isApply" jdbcType="NUMERIC" />
 		<result column="apply_time" property="applyTime" jdbcType="NUMERIC" />
+		
+		<result column="allocate" property="allocate" jdbcType="NUMERIC" />
+		<result column="allocate_reason" property="allocateReason" jdbcType="NUMERIC" />
+		
 	</resultMap>
 	<resultMap id="statByUser" type="java.util.HashMap">
 		<result column="user_id" property="userId" jdbcType="NUMERIC" />
@@ -45,7 +49,7 @@
 		dispatch_status,
 		pick_addr_name,pick_addr_lat,pick_addr_lng,pick_addr,pick_distance,user_addr_distance,
 		add_time, update_time, is_apply,
-		apply_time
+		apply_time, allocate, allocate_reason
 	</sql>
 
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.order.OrderDispatchSearchVo">
@@ -273,7 +277,7 @@
 		staff_name, staff_mobile, remarks,
 		am_id, dispatch_status,
 		pick_addr_name,pick_addr_lat,pick_addr_lng,pick_addr,pick_distance,user_addr_distance,
-		add_time,update_time, is_apply, apply_time)
+		add_time,update_time, is_apply, apply_time, allocate, allocate_reason)
 		values
 		(#{id,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{mobile,jdbcType=CHAR},
 		#{orderId,jdbcType=NUMERIC}, #{orderNo,jdbcType=VARCHAR},
@@ -288,7 +292,8 @@
 		#{pickAddr,jdbcType=VARCHAR},#{pickDistance,jdbcType=NUMERIC},#{userAddrDistance,jdbcType=NUMERIC},
 		#{addTime,jdbcType=NUMERIC},
 		#{updateTime,jdbcType=NUMERIC},
-		#{isApply,jdbcType=NUMERIC}, #{applyTime,jdbcType=NUMERIC})
+		#{isApply,jdbcType=NUMERIC}, #{applyTime,jdbcType=NUMERIC},
+		#{allocate,jdbcType=NUMERIC}, #{allocateReason,jdbcType=VARCHAR})
 	</insert>
 
 	<insert id="insertSelective" parameterType="com.jhj.po.model.order.OrderDispatchs">
@@ -373,6 +378,12 @@
 			<if test="applyTime != null">
 				apply_time,
 			</if>
+			<if test="allocate != null">
+				allocate,
+			</if>
+			<if test="allocateReason != null">
+				allocate_reason,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -452,6 +463,12 @@
 			</if>
 			<if test="applyTime != null">
 				#{applyTime,jdbcType=NUMERIC},
+			</if>
+			<if test="allocate != null">
+				#{allocate,jdbcType=NUMERIC},
+			</if>
+			<if test="allocateReason != null">
+				#{allocateReason,jdbcType=VARCHAR},
 			</if>
 		</trim>
 
@@ -540,6 +557,12 @@
 			<if test="applyTime != null">
 				apply_time = #{applyTime,jdbcType=NUMERIC},
 			</if>
+			<if test="allocate != null">
+				allocate = #{allocate,jdbcType=NUMERIC},
+			</if>
+			<if test="allocateReason != null">
+				allocate_reason = #{allocateReason,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
@@ -577,7 +600,9 @@
 		update_time = #{updateTime,jdbcType=NUMERIC},
 		is_apply =
 		#{isApply,jdbcType=NUMERIC},
-		apply_time = #{applyTime,jdbcType=NUMERIC}
+		apply_time = #{applyTime,jdbcType=NUMERIC},
+		allocate = #{allocate,jdbcType=NUMERIC},
+		allocate_reason = #{allocateReason,jdbcType=VARCHAR},
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
 </mapper>

@@ -201,6 +201,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		dispatchs.setUpdateTime(0L);
 		dispatchs.setIsApply((short) 0);
 		dispatchs.setApplyTime(0L);
+		dispatchs.setAllocate((short) 1);
+		dispatchs.setAllocateReason("效率优先");
 		return dispatchs;
 	}
 
@@ -292,15 +294,27 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		if (preCanDispatchVos.isEmpty())
 			return dispatchStaffs;
+		
+		//指定员工
+		if (!appointStaffIds.isEmpty()) {
+			for (Long appointStaffId : appointStaffIds) {
+				for (int i = 0 ; i < preCanDispatchVos.size(); i++) {
+					OrgStaffDispatchVo item = preCanDispatchVos.get(i);
+					if (item.getStaffId().equals(appointStaffId)) {
+						dispatchStaffs.add(item);
+						break;
+					}
+				}
+			}
+			
+			if (dispatchStaffs.size() == staffNums) return dispatchStaffs;
+		}
+		
+		
 		if (preCanDispatchVos.size() < staffNums)
 			return dispatchStaffs;
 		
-		//如果有指派的员工，则需要判断是否在里面
-		if (!appointStaffIds.isEmpty()) {
-			for (Long appointStaffId : appointStaffIds) {
-				
-			}
-		}
+		
 
 		// 根据隔日和今日派工依据分别处理
 		// 合理分配的集合
@@ -515,16 +529,16 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 
 	@Override
-	public boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId) {
+	public boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId, int allocate , String allocateReason) {
 
 		Long orderId = order.getId();
 		String orderNo = order.getOrderNo();
 		Long userId = order.getUserId();
-
+		
 		Users u = userService.selectByPrimaryKey(userId);
 
 		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
-
+		
 		OrderDispatchs orderDispatch = this.initOrderDisp(); // 派工状态默认有效 1
 
 		orderDispatch.setUserId(userId);
@@ -542,9 +556,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		// 更新服务人员与用户地址距离
 
 		Long addrId = order.getAddrId();
-
 		UserAddrs userAddrs = userAddrService.selectByPrimaryKey(addrId);
-
 		String latitude = userAddrs.getLatitude();
 
 		String longitude = userAddrs.getLongitude();
@@ -554,10 +566,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		orderDispatch.setUserAddrDistance(distance);
 
 		// 工作人员相关
-		orderDispatch.setStaffId(staff.getStaffId());
+		orderDispatch.setStaffId(staffId);
 		orderDispatch.setStaffName(staff.getName());
 		orderDispatch.setStaffMobile(staff.getMobile());
-
+		
+		orderDispatch.setAllocate((short)allocate);
+		orderDispatch.setAllocateReason(allocateReason);
 		this.insertSelective(orderDispatch);
 
 		return true;

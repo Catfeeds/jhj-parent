@@ -351,7 +351,9 @@ public class OrderFormController extends BaseController {
 		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		for (Long staffId : staffIds) {
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+			int allocate = 0;
+			String allocateReason = "合理分配";
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDate, serviceHour, staffId, allocate, allocateReason);
 			
 			OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
 			orderDispatchsService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
