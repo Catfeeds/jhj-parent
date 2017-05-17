@@ -872,6 +872,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 		}
 		
+		if(searchVo.getAddrName()!=null && !"".equals(searchVo.getAddrName())){
+			String addrName = searchVo.getAddrName();
+			try {
+				searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return searchVo;
 	}
 
