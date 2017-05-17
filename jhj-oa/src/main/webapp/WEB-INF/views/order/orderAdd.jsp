@@ -5,7 +5,7 @@ import="com.jhj.oa.common.UrlHelper"%>
 <%@ taglib prefix="payTypeNameTag" uri="/WEB-INF/tags/payTypeName.tld"%>
 <%@ taglib prefix="orgSelectTag" uri="/WEB-INF/tags/OrgSelect.tld"%>
 <%@ taglib prefix="cloudOrgSelect" uri="/WEB-INF/tags/CloudOrgSelect.tld"%>
-<%@ taglib prefix="parentServiceTypeRadioTag" uri="/WEB-INF/tags/parentServiceTypeRadio.tld"%>
+<%@ taglib prefix="parentServiceTypeSelectTag" uri="/WEB-INF/tags/parentServiceTypeSelect.tld"%>
 <html>
 <head>
     <!--common css for all pages-->
@@ -16,6 +16,7 @@ import="com.jhj.oa.common.UrlHelper"%>
     <link href="<c:url value='/assets/bootstrap-tagsinput/bootstrap-tagsinput.css'/>" rel="stylesheet" />
     <link href="<c:url value='/assets/fancybox/source/jquery.fancybox.css?v=2.1.3'/>" rel="stylesheet'/>" />
     <link rel="stylesheet" href='<c:url value='/css/order-calendar.css'/>' type="text/css" />
+    
     <style>
         .tangram-suggestion-main {
             z-index: 1060;
@@ -30,98 +31,107 @@ import="com.jhj.oa.common.UrlHelper"%>
         .bootstrap-tagsinput .label {
             font-size: 100%;
         }
+        
     </style>
 </head>
 <body>
-	<section id="container">
-		<!--header start-->
-		<%@ include file="../shared/pageHeader.jsp"%>
-		<!--header end-->
-		<!--sidebar start-->
-		<%@ include file="../shared/sidebarMenu.jsp"%>
-		<!--sidebar end-->
-		<!--main content start-->
-		<section id="main-content">
-			<section class="wrapper">
-				<!-- page start-->
-				<div class="row">
-					<div class="col-lg-12">
-						<section class="panel">
-							<header class="panel-heading">
-								<h4>统一下单</h4>
-							</header>
-							<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
-							<div class="panel-body">
-								<form:form class="form-horizontal" modelAttribute="contentModel" method="POST" name="form" id="orderForm">
-									<input type="hidden" id="userId" name="userId" />
-									<input type="hidden" id="orderType" name="orderType" value="0" />
-									<input type="hidden" id="orderForm" name="orderFrom" value="2">
-									<input type="hidden" id="isVip" name="isVip" value="0">
-									<input type="hidden" id="price" name="price" value="50">
-									<input type="hidden" id="mprice" name="mprice" value="45">
-									<input type="hidden" id="pprice" name="pprice" value="149">
-									<input type="hidden" id="mpprice" name="pprice" value="135">
-									<input type="hidden" id="maxServiceHour" name="maxServiceHour" value="6">
-									<input type="hidden" id="minServiceHour" name="minServiceHour" value="3">
-									<input type="hidden" id="serviceAddonDatas" name="serviceAddonDatas" value="" />
-									<input type="hidden" id="selectStaffIds" name="selectStaffIds" value="" />
-									<input type="hidden" id="adminId" name="adminId" value="${accountAuth.id}" />
-									<input type="hidden" id="adminName" name="adminName" value="${accountAuth.name}" />
-									<div class="form-body">
-										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>用户手机号
-											</label>
-											<div class="col-md-5">
-												<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()" onchange="getPeriodOrder()"/>
-											</div>
-											<div>
-												<label class="control-label" id="userTypeStr"></label>
-											</div>
-										</div>
-										<div class="form-group required">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务地址
-											</label>
-											<div class="col-md-5">
-												<select id="addrId" name="addrId" class="form-control" onchange="addrChange()">
-													<option value="">--请选择服务地址--</option>
-												</select>
-											</div>
-											<div>
-												<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-whatever=""
-													onclick="address()">添加地址</button>
-												<button type="button" id="btn-update" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="getAddress()">修改地址</button>
-												<button type="button" id="btn-del" class="btn btn-primary" onclick="delAddress()">删除地址</button>
-											</div>
-											<div id="from-add-addr" style="display: none">
-												<%@include file="address.jsp"%>
-											</div>
-										</div>
-										<div class="form-group">
-												
-													<label class="col-lg-2 control-label">
-														<font color="red">*</font>服务大类
-													</label>
-													<div class="col-lg-2">
-														<parentServiceTypeSelectTag:select />
-													</div>
-                                        <label class="col-lg-2 control-label">
-                                            <font color="red">*</font>服务大类
+<section id="container">
+    <!--header start-->
+    <%@ include file="../shared/pageHeader.jsp"%>
+    <!--header end-->
+    <!--sidebar start-->
+    <%@ include file="../shared/sidebarMenu.jsp"%>
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <!-- page start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <h4>统一下单</h4>
+                        </header>
+                        <hr style="width: 100%; color: black; height: 1px; background-color: black;" />
+                        <div class="panel-body">
+                            <form:form class="form-horizontal" modelAttribute="contentModel" method="POST" name="form" id="orderForm">
+                                <input type="hidden" id="userId" name="userId" />
+                                <input type="hidden" id="orderType" name="orderType" value="0" />
+                                <input type="hidden" id="orderForm" name="orderFrom" value="2">
+                                <input type="hidden" id="isVip" name="isVip" value="0">
+                                <input type="hidden" id="price" name="price" value="50">
+                                <input type="hidden" id="mprice" name="mprice" value="45">
+                                <input type="hidden" id="pprice" name="pprice" value="149">
+                                <input type="hidden" id="mpprice" name="pprice" value="135">
+                                <input type="hidden" id="maxServiceHour" name="maxServiceHour" value="6">
+                                <input type="hidden" id="minServiceHour" name="minServiceHour" value="3">
+                                <input type="hidden" id="serviceAddonDatas" name="serviceAddonDatas" value="" />
+                                <input type="hidden" id="selectStaffIds" name="selectStaffIds" value="" />
+                                <input type="hidden" id="adminId" name="adminId" value="${accountAuth.id}" />
+                                <input type="hidden" id="adminName" name="adminName" value="${accountAuth.name}" />
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">
+                                            <font color="red">*</font>用户手机号
                                         </label>
-                                        <div class="col-lg-5">
-                                            <parentServiceTypeRadioTag:checked  />
+                                        <div class="col-md-5">
+                                            <input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()" onchange="getPeriodOrder()"/>
                                         </div>
-
+                                        <div>
+                                            <label class="control-label" id="userTypeStr"></label>
+                                        </div>
+                                    </div>
+                                                                        
+                                    <div class="form-group required">
+                                        <label class="col-md-2 control-label">
+                                            <font color="red">*</font>服务地址
+                                        </label>
+                                        <div id="from-add-addr">
+                                        	<div class="col-md-5">
+	                                           <select id="addrId" name="addrId" contenteditable="true"  class="form-control" onchange="addrChange()" style="float:left;">
+	                                                <option value="">--请选择服务地址--</option>
+	                                            </select>
+	                                             <input type="text" id="suggestId" size="20" placeholder="请输入位置" class="form-control" name="name"
+                                                        	style=" position: absolute;width: 85%;" />
+                                            </div>
+       
+                                            <form>
+                                                <input type="hidden" name="poiLatitude" id="poiLatitude" />
+                                                <input type="hidden" name="poiLongitude" id="poiLongitude" />
+                                                <input type="hidden" name="poiAddress" id="poiAddress" />
+                                                <input type="hidden" name="poiCity" id="poiCity" />
+                                                <div class="form-group required">
+                                                    <div id="searchResultPanel" style="border: 1px solid #C0C0C0; width: 150px; height: auto; display: none;"></div>
+                                                    <div style="margin-left: 30px; width: 450px; height: 240px; border: 1px solid gray;display: none;" id="containers"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="message-text" class="col-md-2 control-label"><font color="red">*</font>门牌号</label>
+                                                    <div class="col-md-5">
+                                                        <input type="text" class="form-control" id="recipient-addr" name="addr" onclick="javascript:select()" />
+                                                    </div>
+			                                        <div class="col-md-4">
+			                                            <button type="button" class="btn btn-primary" onclick="saveAddress()">添加地址</button>
+			                                            <button type="button" id="btn-del" class="btn btn-primary" onclick="delAddress()">删除地址</button>
+			                                        </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label" >
+                                        <label class="col-md-2 control-label">
+                                            <font color="red">*</font>服务大类
+                                        </label>
+                                        <div class="col-md-5">
+                                            <parentServiceTypeSelectTag:select />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">
                                             <font color="red">*</font>服务类型
                                         </label>
-                                        <div class="col-lg-5" id="serviceType">
-                                            <!-- <select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
-                                            </select> -->
-                                            
+                                        <div class="col-md-5">
+                                            <select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
+                                            </select>
                                         </div>
                                     </div>
 
@@ -227,12 +237,6 @@ import="com.jhj.oa.common.UrlHelper"%>
                                         <label class="col-md-2 control-label">用户备注:</label>
                                         <div class="col-md-5">
                                             <textarea id="remarks" name="remarks" rows="5" maxlength='200' cols="50" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group has-error">
-                                        <label class="col-md-2 control-label"></label>
-                                        <div class="col-md-5">
-                                            <h2><form:errors path="remarks" class="help-block"></form:errors></h2>
                                         </div>
                                     </div>
 
@@ -385,13 +389,13 @@ import="com.jhj.oa.common.UrlHelper"%>
 <script src="<c:url value='/js/modernizr.custom.js'/>"></script>
 <script src="<c:url value='/js/toucheffects.js'/>"></script>
 <script type="text/javascript">
-    $(function() {
-        $('.fancybox').fancybox({
-            padding : 0,
-            openEffect : 'elastic',
-            closeBtn : false
-        });
-    });
+   $(function() {
+       $('.fancybox').fancybox({
+           padding : 0,
+           openEffect : 'elastic',
+           closeBtn : false
+       });
+   });
 </script>
 <script type="text/javascript" src="<c:url value='/js/order/orderAdd.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
