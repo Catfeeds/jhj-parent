@@ -216,6 +216,7 @@
 										<th>是否接单</th>
 										<th>接单时间</th>
 										<th>派工类型</th>
+										<th>派工依据</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -229,6 +230,7 @@
 											<td>${item.applyStatus }</td>
 											<td>${item.applyTimeStr }</td>
 											<td>${item.dispatchActionStr }</td>
+											<td>${item.allocateReason }</td>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -325,10 +327,10 @@
 										<th>服务人员</th>
 										<th>手机号</th>
 										<th>性别</th>
-										<th>距用户距离</th>
-										<th>今日接单数</th>
+										<th>当日接单数</th>
+										<th>前一日接单数</th>
 										<th>是否可派工</th>
-										<th>原因</th>
+										<!-- <th>原因</th> -->
 										<th>派工依据</th>
 									</tr>
 								</thead>

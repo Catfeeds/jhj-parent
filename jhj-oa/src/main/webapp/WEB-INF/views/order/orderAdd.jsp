@@ -349,9 +349,10 @@ import="com.jhj.oa.common.UrlHelper"%>
                                 <th>手机号</th>
                                 <th>性别</th>
                                 <th>距用户距离</th>
-                                <th>今日接单数</th>
+                                <th>当日接单数</th>
+								<th>前一日接单数</th>
                                 <th>是否可派工</th>
-                                <th>原因</th>
+                               <!--  <th>原因</th> -->
                                 <th>派工依据</th>
                             </tr>
                             </thead>

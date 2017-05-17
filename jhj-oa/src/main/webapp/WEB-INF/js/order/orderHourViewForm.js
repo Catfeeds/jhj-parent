@@ -178,8 +178,9 @@ var loadStaffDynamic = function(data, status, xhr) {
 		htmlStr += "<td>" + sexName + "</td>";
 		htmlStr += "<td>" + item.distance_text + "</td>";
 		htmlStr += "<td>" + item.today_order_num + "</td>";
+		htmlStr += "<td>" + item.pre_day_order_num + "</td>";
 		htmlStr += "<td>" + item.dispath_sta_str + "</td>";
-		htmlStr += "<td>" + item.reason + "</td>";
+//		htmlStr += "<td>" + item.reason + "</td>";
 		htmlStr += "<td>" + item.allocate_reason + "</td>";
 		htmlStr += "</tr>";
 		

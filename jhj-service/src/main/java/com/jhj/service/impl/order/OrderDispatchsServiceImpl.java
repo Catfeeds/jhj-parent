@@ -282,7 +282,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		String today = DateUtil.getToday();
 
-		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, DateUtil.DEFAULT_PATTERN);
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, DateUtil.DEFAULT_PATTERN);
 
 		List<OrgStaffDispatchVo> preCanDispatchVos = new ArrayList<OrgStaffDispatchVo>();
 
@@ -369,12 +369,12 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		String today = DateUtil.getToday();
 
-		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate, DateUtil.DEFAULT_PATTERN);
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, DateUtil.DEFAULT_PATTERN);
 
 		if (serviceDateStr.equals(today)) {
-			list = orderDispatchAllocateService.manualDispatchToday(addrId, serviceTypeId, serviceDate, serviceHour, 0L, 0L);
+			list = orderDispatchAllocateService.manualDispatchToday(addrId, serviceTypeId, serviceDate, serviceHour, selectParentId, orgId);
 		} else {
-			list = orderDispatchAllocateService.manualDispatchNotToday(addrId, serviceTypeId, serviceDate, serviceHour, 0L, 0L);
+			list = orderDispatchAllocateService.manualDispatchNotToday(addrId, serviceTypeId, serviceDate, serviceHour, selectParentId, orgId);
 		}		
 		
 		

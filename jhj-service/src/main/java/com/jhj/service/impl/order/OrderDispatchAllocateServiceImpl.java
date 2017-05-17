@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ import com.jhj.vo.org.OrgSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.ListUtil;
 import com.meijia.utils.TimeStampUtil;
 
 /**
@@ -218,7 +220,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		// -- 6.找出已匹配的员工列表，并统计前一天的订单数. 优先指派订单数为0的员工.
 		Date serviceDateObj = DateUtil.parse(serviceDateStr);
 		String preServiceDateStr = DateUtil.addDay(serviceDateObj, -1, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
-		Long preServiceDate = TimeStampUtil.getMillisOfDay(preServiceDateStr); 
+		Long preServiceDate = TimeStampUtil.getMillisOfDay(preServiceDateStr) / 1000; 
 		List<HashMap> preTotalStaffOrders = orderDispatchService.getTotalStaffOrders(preServiceDate, staffIds);
 		
 		// 门店名称
@@ -281,17 +283,6 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		// 员工距离
 		list = orderDispatchService.getStaffDispatch(list, fromLat, fromLng);
 		
-		
-		// 进行排序，根据云店距离大小来正序.
-		if (list.size() > 0) {
-			Collections.sort(list, new Comparator<OrgStaffDispatchVo>() {
-				@Override
-				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
-					return Integer.valueOf(s1.getOrgDistanceValue()).compareTo(s2.getOrgDistanceValue());
-				}
-			});
-		}
-		
 		//派工依据. 0 = 合理分配  1 = 效率优先
 		for (int i = 0; i < list.size(); i++) {
 			OrgStaffDispatchVo item = list.get(i);
@@ -299,13 +290,20 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			int allocate = 1;
 			int orgDistanceValue = item.getOrgDistanceValue();
 			int preDayOrderNum = item.getPreDayOrderNum();
-			if (orgDistanceValue <= 1000 && preDayOrderNum == 0) {
+			if (orgDistanceValue <= 10000 && preDayOrderNum == 0) {
 				allocateReason = "合理分配";
 				allocate = 0;
 			}
 			item.setAllocateReason(allocateReason);
 			item.setAllocate(allocate);
 			list.set(i, item);
+		}
+		
+		// 进行排序，根据云店距离大小, 分配依据，员工距离 正序.
+		if (list.size() > 0) {
+			String[] sortNameArr = {"orgDistanceValue", "allocate", "distanceValue"};
+			boolean[] typeArr = {true, true, true};
+			ListUtil.sort(list, sortNameArr, typeArr);
 		}
 		
 		return list;
@@ -388,6 +386,11 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		// 员工服务日期的订单数
 		List<HashMap> totalStaffOrders = orderDispatchService.getTotalStaffOrders(serviceDate, staffIds);
 		
+		Date serviceDateObj = DateUtil.parse(serviceDateStr);
+		String preServiceDateStr = DateUtil.addDay(serviceDateObj, -1, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
+		Long preServiceDate = TimeStampUtil.getMillisOfDay(preServiceDateStr) / 1000; 
+		List<HashMap> preTotalStaffOrders = orderDispatchService.getTotalStaffOrders(preServiceDate, staffIds);
+		
 		List<OrgStaffDispatchVo> prelist = new ArrayList<OrgStaffDispatchVo>();
 		//开始计算员工与服务地址的距离
 		staffSearchVo = new StaffSearchVo();
@@ -451,6 +454,18 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 			
+			//隔天有派工的人员
+			for (HashMap totalItem : preTotalStaffOrders) {
+				if (totalItem.get("staff_id") == null) continue;
+				if (totalItem.get("total") == null) continue;
+				Long staffId = (Long) totalItem.get("staff_id");
+				int total = Integer.valueOf(totalItem.get("total").toString());
+
+				if (staffId.equals(vo.getStaffId())) {
+					vo.setPreDayOrderNum(total);
+				}
+			}
+			
 			if (i == 0) {
 				minTotalOrders = vo.getTodayOrderNum();
 			} else {
@@ -467,9 +482,9 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			OrgStaffDispatchVo item = list.get(i);
 			String allocateReason = "效率优先";
 			int allocate = 1;
-			int orgDistanceValue = item.getDistanceValue();
+			int distanceValue = item.getDistanceValue();
 			int total = item.getTodayOrderNum();
-			if (orgDistanceValue <= 1000 && total == minTotalOrders) {
+			if (distanceValue <= 10000 && total == minTotalOrders) {
 				allocateReason = "合理分配";
 				allocate = 0;
 			}
@@ -478,16 +493,13 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			list.set(i, item);
 		}
 		
-		// 进行排序，根据员工距离大小来正序.
+		
 		if (list.size() > 0) {
-			Collections.sort(list, new Comparator<OrgStaffDispatchVo>() {
-				@Override
-				public int compare(OrgStaffDispatchVo s1, OrgStaffDispatchVo s2) {
-					return Integer.valueOf(s1.getDistanceValue()).compareTo(s2.getDistanceValue());
-				}
-			});
+			String[] sortNameArr = {"allocate", "todayOrderNum", "distanceValue"};
+			boolean[] typeArr = {true, true, true};
+			ListUtil.sort(list, sortNameArr, typeArr);
 		}
-
+		
 		return list;
 	}
 
