@@ -53,4 +53,8 @@ public interface OrdersService {
 
 	// 在jhj-oa系统中取消订单
 //	int cancelByOrder(Orders order);
+	
+	//统计用户的下单数量
+	int countUserOrderNum(Long userId);
+	
 }

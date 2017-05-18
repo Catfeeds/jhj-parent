@@ -23,4 +23,6 @@ public interface UserLoginedService {
     UserLogined initUserLogined(UserSmsToken smsToken, int login_from, long ip);
     
     List<String>  selectDistinctAll();
+    
+    int countUserLogined(String mobile);
 }

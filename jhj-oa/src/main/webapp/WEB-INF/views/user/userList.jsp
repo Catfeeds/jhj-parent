@@ -76,6 +76,7 @@
 		                              <th >会员积分</th>
 		                              <th >会员类型</th>
 		                              <th >会员来源</th>
+		                              <th >注册时间</th>
 		                              <th >添加时间</th>
 		                              <th>操作</th>
                               </tr>
@@ -87,14 +88,11 @@
 					            <td>${ item.name }</td>
 					            <td>${ item.restMoney }</td>
 					            <td>${ item.score }</td>
-					            <td>
-					            	<c:if test="${item.isVip==0 }">银牌会员</c:if>
-					            	<c:if test="${item.isVip==1 }">金牌会员</c:if>
-					            </td>
-					          
+					            <td>${ item.vipName }</td>
 					            <td>
 					            	<orderFromTag:orderfrom orderFrom="${item.addFrom }"/>
 					            </td>
+					            <td>${ item.registerDate }</td>
 					            <td>
 					            	<timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}"/>
 					            </td>

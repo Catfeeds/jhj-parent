@@ -16,6 +16,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.bs.GiftCouponsMapper;
 import com.jhj.po.dao.dict.DictCardTypeMapper;
 import com.jhj.po.dao.user.UserAddrsMapper;
+import com.jhj.po.dao.user.UserLoginedMapper;
 import com.jhj.po.dao.user.UsersMapper;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.dict.DictCardType;
@@ -37,6 +38,7 @@ import com.jhj.vo.TagSearchVo;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.jhj.vo.user.UserSearchVo;
+import com.jhj.vo.user.UsersVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.TimeStampUtil;
@@ -79,6 +81,9 @@ public class UsersServiceImpl implements UsersService {
 	
 	@Autowired
 	private OrderCardsService orderCardsService;
+	
+	@Autowired
+	private UserLoginedMapper userLoginMapper;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -480,6 +485,34 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public Double countUserRestMoney() {
 		return usersMapper.countUserRestMoney();
+	}
+
+	@Override
+	public UsersVo transVo(Users users) {
+		UsersVo usersVo = new UsersVo();
+
+		BeanUtilsExp.copyPropertiesIgnoreNull(users, usersVo);
+		
+		String firstUserLoginedDate = userLoginMapper.getFirstUserLoginedDate(users.getMobile());
+		if(firstUserLoginedDate!=null && !"".equals(firstUserLoginedDate)){
+			usersVo.setRegisterDate(firstUserLoginedDate);
+		}else{
+			usersVo.setRegisterDate("");
+		}
+		
+		if(users.getIsVip()==1){
+			usersVo.setVipName("金牌会员");
+		}
+		if(users.getIsVip()==0){
+			int countUserOrderNum = ordersService.countUserOrderNum(users.getId());
+			if(countUserOrderNum>=10){
+				usersVo.setVipName("银牌会员");
+			}else{
+				usersVo.setVipName("普通会员");
+			}
+		}
+		
+		return usersVo;
 	}
 	
 }

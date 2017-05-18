@@ -205,5 +205,12 @@
 		ORDER BY series ASC
 	</select>
   
-  
+  	<select id="countUserLogined" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(*) from user_logined WHERE mobile = #{mobile} 
+	</select>
+	
+	<select id="getFirstUserLoginedDate" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT FROM_UNIXTIME(min(add_time),'%Y-%m-%d') from user_logined WHERE mobile = #{mobile}
+	</select>
+	
 </mapper>

@@ -37,5 +37,9 @@ public interface UserLoginedMapper {
 	//有过登录记录的用户 （无重复的集合）
 	List<String>  selectDistinctAll();
 	
+	//获取用户的登录次数
+	int countUserLogined(String mobile);
+
+	String getFirstUserLoginedDate(String mobile);
 	
 }
