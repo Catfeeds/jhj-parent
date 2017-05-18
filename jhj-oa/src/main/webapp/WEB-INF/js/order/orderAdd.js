@@ -1101,6 +1101,9 @@ function getAddress(){
 //获取定制信息
 function getPeriodOrder(){
 	var mobile = $("#mobile").val();
+	if(mobile==undefined || mobile ==null || mobile==''){
+		return false;
+	}
 	$.ajax({
 		type:"get",
 		url:"getPeriodOrder?mobile="+mobile,
