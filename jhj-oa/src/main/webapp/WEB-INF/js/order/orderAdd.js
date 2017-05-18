@@ -242,7 +242,9 @@ function saveAddress() {
 	
 	var lat = $("#poiLatitude").val();
 	
-	if (lng == undefined || lng == "" || lat == undefined || lat == "") {
+	var name = $("#suggestId").val();
+	
+	if (lng == undefined || lng == "" || lat == undefined || lat == "" || name == undefined || name == "") {
 		alert("请在服务地址下拉中选择!");
 		return false;
 	}
@@ -250,7 +252,7 @@ function saveAddress() {
 	form.longitude = $("#poiLongitude").val();
 	form.latitude = $("#poiLatitude").val();
 	
-	form.name = $("#suggestId").val();
+	form.name = name
 	form.addr = $("#recipient-addr").val();
 	form.addr_id = 0;
 	form.is_default = 1;
