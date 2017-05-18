@@ -10,6 +10,8 @@
 /*.swiper-container {
   height: 188px;
 }*/
+/****清楚浮动***/
+.clearfloat:after{display:block;clear:both;content:"";visibility:hidden;height:0}
 .swiper-container .swiper-pagination {
   bottom: 0px;
 }
@@ -1957,7 +1959,7 @@ i.toolbar-icon-tixing {
   width:49.5%;
   float:left;
   background:#fff;
-  height:90px;
+  height:100px;
 }
 .mincircle-one{
   width:70%;
