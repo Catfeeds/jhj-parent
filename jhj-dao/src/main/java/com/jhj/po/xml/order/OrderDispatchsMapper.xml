@@ -602,7 +602,7 @@
 		#{isApply,jdbcType=NUMERIC},
 		apply_time = #{applyTime,jdbcType=NUMERIC},
 		allocate = #{allocate,jdbcType=NUMERIC},
-		allocate_reason = #{allocateReason,jdbcType=VARCHAR},
+		allocate_reason = #{allocateReason,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=NUMERIC}
 	</update>
 </mapper>

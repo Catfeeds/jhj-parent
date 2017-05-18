@@ -325,9 +325,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		
 		// 10公里之内（以员工位置坐标），员工集合找出服务时间日期的订单数，优先选择订单数少的员工，如果相同则随机
 		for (OrgStaffDispatchVo vo : preCanDispatchVos) {
-			if (vo.getAllocate() == 1)
-				preFirstVos.add(vo);
 			if (vo.getAllocate() == 0)
+				preFirstVos.add(vo);
+			if (vo.getAllocate() == 1)
 				preSecondVos.add(vo);
 		}
 		
