@@ -37,6 +37,8 @@ public class UsersVo {
     private int isVip;
     
     private String registerDate;
+    
+    private String vipName;
 
 	public Long getId() {
 		return id;
@@ -173,6 +175,14 @@ public class UsersVo {
 	public void setRegisterDate(String registerDate) {
 		this.registerDate = registerDate;
 	}
-    
+
+	public String getVipName() {
+		return vipName;
+	}
+
+	public void setVipName(String vipName) {
+		this.vipName = vipName;
+	}
+	
 
 }

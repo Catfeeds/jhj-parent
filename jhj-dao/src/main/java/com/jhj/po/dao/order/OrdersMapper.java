@@ -177,4 +177,6 @@ public interface OrdersMapper {
 	
 	//查询用户的最后下单情况
 	List<Long> getLastOrder(OrderSearchVo searchVo);
+	
+	int countUserOrderNum(Long userId);
 }

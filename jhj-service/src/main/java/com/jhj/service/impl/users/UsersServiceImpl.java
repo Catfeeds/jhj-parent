@@ -492,7 +492,6 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public UsersVo transVo(Users users) {
-		
 		UsersVo usersVo = new UsersVo();
 
 		BeanUtilsExp.copyPropertiesIgnoreNull(users, usersVo);
@@ -502,6 +501,18 @@ public class UsersServiceImpl implements UsersService {
 			usersVo.setRegisterDate(firstUserLoginedDate);
 		}else{
 			usersVo.setRegisterDate("");
+		}
+		
+		if(users.getIsVip()==1){
+			usersVo.setVipName("金牌会员");
+		}
+		if(users.getIsVip()==0){
+			int countUserOrderNum = ordersService.countUserOrderNum(users.getId());
+			if(countUserOrderNum>=10){
+				usersVo.setVipName("银牌会员");
+			}else{
+				usersVo.setVipName("普通会员");
+			}
 		}
 		
 		return usersVo;

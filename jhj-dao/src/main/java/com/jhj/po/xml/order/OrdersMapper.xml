@@ -1480,4 +1480,8 @@
 			<![CDATA[ and add_time <= #{endAddTime}]]>
 		</if>
 	</select>
+	
+	<select id="countUserOrderNum" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		select count(*) from orders where user_id = #{userId} and order_status =7 or order_status =8;
+	</select>
 </mapper>

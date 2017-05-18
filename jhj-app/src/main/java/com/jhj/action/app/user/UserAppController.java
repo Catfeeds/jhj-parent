@@ -169,6 +169,7 @@ public class UserAppController extends BaseController {
 						userCouponService.insertSelective(uc);
 					}
 				}
+				
 				// 返回用户是否保存有地址
 				UserAppVo userAppVo = new UserAppVo();
 				try {

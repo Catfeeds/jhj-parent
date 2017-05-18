@@ -145,8 +145,8 @@ public class UserController extends BaseController {
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
 
 		searchVo.setOrgIds(getCouldId(request));
-		searchVo.setIsVip((short) 1);
-		searchVo.setOrderNum("2");
+		/*searchVo.setIsVip((short) 1);
+		searchVo.setOrderNum("2");*/
 		PageInfo<Users> result = usersService.selectByListPage(searchVo, pageNo, pageSize);
 		
 		List list = result.getList();

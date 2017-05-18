@@ -88,11 +88,7 @@
 					            <td>${ item.name }</td>
 					            <td>${ item.restMoney }</td>
 					            <td>${ item.score }</td>
-					            <td>
-					            	<c:if test="${item.isVip==0 }">银牌会员</c:if>
-					            	<c:if test="${item.isVip==1 }">金牌会员</c:if>
-					            </td>
-					          
+					            <td>${ item.vipName }</td>
 					            <td>
 					            	<orderFromTag:orderfrom orderFrom="${item.addFrom }"/>
 					            </td>
