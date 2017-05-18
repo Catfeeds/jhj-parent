@@ -125,6 +125,7 @@ var formVal = $('#orderForm').validate({
 	}
 });
 
+
 // ===============地址相关======================================================
 // 输入完手机号获取用户信息，根据用户的id获取用户的服务地址
 
@@ -699,12 +700,12 @@ var loadStaffDynamic = function(data, status, xhr) {
 		var sexName = "男";
 		if (item.sex == 1) sexName = "女";
 		
-		htmlStr+= "<input  type='hidden' id='selectStaffId' name='selectStaffId' value="+ item.staff_id + ">"；
-		htmlStr+= "<input type='hidden' id='distanceValue' value="+ item.distance_value + ">"；
-		htmlStr+= "<input type='hidden' id='selectStaffName' value="+ item.name + ">"；
-		htmlStr+= "</td>" + 
-		htmlStr+= "<td>" + item.parent_org_name + "</td>"；
-		htmlStr+= "<td>" + item.org_name + "</td>"；
+		htmlStr+= "<input  type='hidden' id='selectStaffId' name='selectStaffId' value="+ item.staff_id + ">";
+		htmlStr+= "<input type='hidden' id='distanceValue' value="+ item.distance_value + ">";
+		htmlStr+= "<input type='hidden' id='selectStaffName' value="+ item.name + ">";
+		htmlStr+= "</td>";
+		htmlStr+= "<td>" + item.parent_org_name + "</td>";
+		htmlStr+= "<td>" + item.org_name + "</td>";
 		htmlStr+= "<td>" + item.org_distance_text + "</td>";
 		htmlStr+= "<td>" + item.name + "</td>";
 		htmlStr+= "<td>" + item.mobile + "</td>";
