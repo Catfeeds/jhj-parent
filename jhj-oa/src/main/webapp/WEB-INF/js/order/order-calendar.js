@@ -137,12 +137,24 @@ $(function(){
 	
 	//是否约满
 	function isFull(serviceDateStr){
-		var param = {};
-		param.service_type_id = $("#serviceType").val();
-		param.addr_id = $("#addrId").val();
+		
 		if(serviceDateStr==undefined || serviceDateStr==null || serviceDateStr==''){
 			serviceDateStr = moment().format("YYYY-MM-DD");
 		}
+		var serviceTypeId = $("#serviceType").val();
+		var addrId = $("#addrId").val();
+		
+		if(serviceTypeId==undefined || serviceTypeId==null || serviceTypeId==''){
+			serviceTypeId = 0;
+		}
+		
+		if(addrId==undefined || addrId==null || addrId==''){
+			return false;
+		}
+		
+		var param = {};
+		param.service_type_id = serviceTypeId;
+		param.addr_id = addrId;
 		param.service_date_str = serviceDateStr;
 		param.staff_id = 0;
 		var host = window.location.host;
