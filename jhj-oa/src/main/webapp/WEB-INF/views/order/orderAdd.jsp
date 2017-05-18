@@ -118,7 +118,7 @@
 													</div>
 													<div class="form-group required">
 														<label class="col-lg-3 control-label">
-															<font color="red">*</font>服务地址
+															服务地址
 														</label>
 														<div class="col-lg-9">
 															<select id="addrId" name="addrId" class="form-control" onchange="addrChange()">

@@ -137,21 +137,42 @@ $(function(){
 	
 	//是否约满
 	function isFull(serviceDateStr){
+		
+		var host = window.location.host;
+		var appName = "jhj-app";
+		var localUrl = "http://" + host;
+		var siteAPIPath = localUrl + "/" + appName + "/app/";
+		var url = "";
+		
 		var param = {};
+		var serviceTypeId = $("#serviceType").val();
+		if (serviceTypeId == undefined || serviceTypeId == 0) return false;
 		param.service_type_id = $("#serviceType").val();
-		param.addr_id = $("#addrId").val();
+		
+		var addrId = $("#addrId").val();
+		if (addrId == undefined || addrId == 0) {
+			var lat = $("#poiLatitude").val();
+			var lng = $("#poiLatitude").val();
+			if (lat == undefined || lat == "" || lng == undefined || lng == "") return false;
+			param.lat = lat;
+			param.lng = lng;
+			url = siteAPIPath+"order/check_dispatch_by_poi.json";
+		} else {
+			param.addr_id = $("#addrId").val();
+			url = siteAPIPath+"order/check_dispatch.json";
+		}
+		
+		
+		
 		if(serviceDateStr==undefined || serviceDateStr==null || serviceDateStr==''){
 			serviceDateStr = moment().format("YYYY-MM-DD");
 		}
 		param.service_date_str = serviceDateStr;
 		param.staff_id = 0;
-		var host = window.location.host;
-		var appName = "jhj-app";
-		var localUrl = "http://" + host;
-		var siteAPIPath = localUrl + "/" + appName + "/app/";
+		
 		$.ajax({
 			type:"POST",
-			url:siteAPIPath+"order/check_dispatch.json",
+			url:url,
 			data:param,
 			success:function(data){
 				if(data.status=='0' && data.msg=='ok'){
@@ -340,7 +361,21 @@ $(function(){
 function selectServiceDateTime(){
 	var addr_id = $("#addrId").val();
 	if(addr_id==undefined || addr_id==null || addr_id==''){
-		alert("请选择服务地址！");
+		
+		var lat = $("#poiLatitude").val();
+		var lng = $("#poiLatitude").val();
+		var name = $("#suggestId").val();
+		if (lat == undefined || lat == "" || 
+			lng == undefined || lng == "" ||
+			name == undefined || name == "") {
+			alert("请选择服务地址！");
+			return false;
+		}
+	}
+	
+	var serviceTypeId = $("#serviceType").val();
+	if (serviceTypeId == undefined || serviceTypeId == "") {
+		alert("请选择服务类型!");
 		return false;
 	}
 	

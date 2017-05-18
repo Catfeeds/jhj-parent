@@ -50,11 +50,8 @@ public interface OrderDispatchsService {
 
 	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
 
-	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
 
 	List<OrgStaffDispatchVo> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
-
-	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, Long staffId);
 
 	List<OrgDispatchPoiVo> getMatchOrgs(String fromLat, String fromLng, Long parentId, Long orgId, Boolean needMatchMaxDistance);
 
@@ -69,5 +66,9 @@ public interface OrderDispatchsService {
 	List<OrgStaffDispatchVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long orgId);
 
 	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId, int allocate, String allocateReason);
+
+	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, String lat, String lng);
+
+	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, String lat, String lng);
    	
 }
