@@ -325,9 +325,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		
 		// 10公里之内（以员工位置坐标），员工集合找出服务时间日期的订单数，优先选择订单数少的员工，如果相同则随机
 		for (OrgStaffDispatchVo vo : preCanDispatchVos) {
-			if (vo.getAllocate() == 1)
-				preFirstVos.add(vo);
 			if (vo.getAllocate() == 0)
+				preFirstVos.add(vo);
+			if (vo.getAllocate() == 1)
 				preSecondVos.add(vo);
 		}
 		
@@ -642,7 +642,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * addrId 服务地址
 	 */
 	@Override
-	public List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId) {
+	public List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, String lat, String lng) {
 
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 
@@ -668,9 +668,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		}
 
-		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
+		
 
-		List<OrgDispatchPoiVo> orgList = getMatchOrgs(addrs.getLatitude(), addrs.getLongitude(), 0L, 0L, true);
+		List<OrgDispatchPoiVo> orgList = getMatchOrgs(lat, lng, 0L, 0L, true);
 
 		List<Long> orgIds = new ArrayList<Long>();
 
@@ -823,7 +823,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * addrId 服务地址
 	 */
 	@Override
-	public List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, Long staffId) {
+	public List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long staffId, String lat, String lng) {
 
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 
@@ -852,9 +852,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		Long staffOrgId = staff.getOrgId();
 
-		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
-
-		List<OrgDispatchPoiVo> orgList = getMatchOrgs(addrs.getLatitude(), addrs.getLongitude(), 0L, 0L, true);
+		List<OrgDispatchPoiVo> orgList = getMatchOrgs(lat, lng, 0L, 0L, true);
 
 		List<Long> orgIds = new ArrayList<Long>();
 
