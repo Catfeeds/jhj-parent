@@ -239,7 +239,7 @@ $(function(){
 					$(selectDay).find("p").addClass("rili-day");
 					$(".rili1-5 li").addClass("rili-time");
 				}
-				tomm(currentDate);
+//				tomm(currentDate);
 			}
 			date = selectDate;
 			isFull(selectDate);
