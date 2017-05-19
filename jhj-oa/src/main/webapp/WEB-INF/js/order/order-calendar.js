@@ -79,7 +79,7 @@ $(function(){
 //	        	}
 //	        }
 		});
-		tomm(currentDate);
+		tomm(date);
 	}
 	showTime();
 	
