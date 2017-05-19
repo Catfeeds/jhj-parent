@@ -65,19 +65,19 @@ $(function(){
 				$(this).parent().next(".rili1-6").find("a #checkDate").removeClass("rili1-6-2").addClass("rili1-6-1");
 			}
 			
-//	        var selectTime = dayTime.replace(":",".");
-//	        var selectTimeStart = parseFloat(selectTime)-2;
-//	        var selectTimeEnd = parseFloat(selectTime)+parseFloat(orderServiceHour)+1.5;
-//	        for(var k=0;k<val.length;k++){
-//	        	var valTime = val[k].service_hour;
-//	        	var parseTime = valTime.replace(":",".");
-//	        	if(parseTime>=selectTimeStart && parseTime<=selectTimeEnd){
-//	        		if(val[k].is_full==1){
-//	        			alert("这个时间不能选择");
-//	        			break;
-//	        		}
-//	        	}
-//	        }
+	        var selectTime = dayTime.replace(":",".");
+	        var selectTimeStart = parseFloat(selectTime);
+	        var selectTimeEnd = parseFloat(selectTime)+parseFloat(orderServiceHour)+2;
+	        for(var k=0;k<val.length;k++){
+	        	var valTime = val[k].service_hour;
+	        	var parseTime = valTime.replace(":",".");
+	        	if(parseTime>=selectTimeStart && parseTime<=selectTimeEnd){
+	        		if(val[k].is_full==1){
+	        			alert("这个时间不能选择");
+	        			break;
+	        		}
+	        	}
+	        }
 		});
 		tomm(date);
 	}
