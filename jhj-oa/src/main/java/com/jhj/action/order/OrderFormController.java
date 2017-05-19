@@ -40,7 +40,6 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderLogService;
@@ -117,9 +116,6 @@ public class OrderFormController extends BaseController {
 	
 	@Autowired
 	private UserDetailPayService userDetailPayService;
-	
-	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 	
 	@Autowired
 	private OrgStaffsService orgStaffService;
@@ -355,10 +351,12 @@ public class OrderFormController extends BaseController {
 		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
 		String timeStr = beginTimeStr + "-" + endTimeStr;
 		for (Long staffId : staffIds) {
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+			int allocate = 0;
+			String allocateReason = "合理分配";
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDate, serviceHour, staffId, allocate, allocateReason);
 			
 			OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+			orderDispatchsService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 			
 			

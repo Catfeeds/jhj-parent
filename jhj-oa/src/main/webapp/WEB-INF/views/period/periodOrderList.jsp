@@ -57,7 +57,7 @@
 						<th>地址</th>
 						<th>订单状态</th>
 						<th>支付类型</th>
-						<th>订单金额</th>
+						<th>支付金额</th>
 						<th>订单来源</th>
 						<th>订单数</th>
 						<th>操作</th>
@@ -83,7 +83,6 @@
 							<td><orderFromName:orderfrom orderFrom="${item.orderFrom}"/></td>
 							<td>${item.totalOrder }</td>
 							<td>
-								
 								<button id="btn_detail"
 									onClick="javascript:btn_select('/period/periodOrderListDetail?periodOrderId=${item.id }')"
 									class="btn btn-primary btn-xs" title="订单详情">
@@ -93,9 +92,8 @@
 								<button id="btn_detail"
 									onClick="javascript:btn_select('/order/order-list?periodOrderId=${item.id }')"
 									class="btn btn-primary btn-xs" title="关联订单">
-									<i class="  icon-search"></i>
+									<i class="icon-search"></i>
 								</button>
-							
 							</td>
 						</tr>
 					</c:forEach>

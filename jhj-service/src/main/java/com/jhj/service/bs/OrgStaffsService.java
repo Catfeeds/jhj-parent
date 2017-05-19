@@ -11,7 +11,7 @@ import com.jhj.vo.bs.NewStaffListVo;
 import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
 import com.jhj.vo.order.OrderStaffRateVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 
 /**
@@ -60,10 +60,10 @@ public interface OrgStaffsService {
     
     Map<Long, String> selectSkillEntity();
         
-    OrgStaffsNewVo initOrgStaffNewVo();
-
 	PageInfo selectByListPage(StaffSearchVo staffSearchVo, int pageNo, int pageSize);
 
 	OrderStaffRateVo getOrderStaffRateVo(OrgStaffs orgStaff);
+
+	OrgStaffDispatchVo initOrgStaffDispatchVo();
     	
 }

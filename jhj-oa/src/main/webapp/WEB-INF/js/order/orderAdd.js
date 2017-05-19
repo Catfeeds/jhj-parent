@@ -125,8 +125,35 @@ var formVal = $('#orderForm').validate({
 	}
 });
 
+
 // ===============地址相关======================================================
 // 输入完手机号获取用户信息，根据用户的id获取用户的服务地址
+
+function getAddressList(userId){
+	$.ajax({
+		type : "get",
+		dataType : "json",
+		async : false,
+		url : "/jhj-app/app/user/get_user_addrs.json?user_id=" + userId,
+		success : function(result) {
+			var userAddr = result.data;
+			var selectid = document.getElementById("addrId");
+			for (var i = 0; i < userAddr.length; i++) {
+				if(userAddr[i].is_default=='1'){
+					selectid[i + 1] = new Option(userAddr[i].name+" "+userAddr[i].addr, userAddr[i].id,true, true);
+					$("#suggestId").val(userAddr[i].name);
+					$("#recipient-addr").val(userAddr[i].addr);
+				}else{
+					selectid[i + 1] = new Option(userAddr[i].name+" "+userAddr[i].addr, userAddr[i].id,false, false);
+				}
+			}
+			if (addrId > 0) {
+				$("#addrId").val(addrId);
+			}
+		}
+	});
+}
+
 function getAddrByMobile(addrId) {
 	var mobile = $("#mobile").val();
 	$("#addrId").find(":nth-child(2)").remove();
@@ -152,24 +179,7 @@ function getAddrByMobile(addrId) {
 					if (isVip == 1) $("#userTypeStr").html("金牌会员");
 					serviceTypeChange();
 					// changePrice();
-					$.ajax({
-						type : "get",
-						dataType : "json",
-						async : false,
-						url : "/jhj-app/app/user/get_user_addrs.json?user_id=" + userId,
-						success : function(result) {
-							var userAddr = result.data;
-							var selectid = document.getElementById("addrId");
-							for (var i = 0; i < userAddr.length; i++) {
-								selectid[i + 1] = new Option(userAddr[i].name+" "+userAddr[i].addr, userAddr[i].id,
-										false, false);
-							}
-							
-							if (addrId > 0) {
-								$("#addrId").val(addrId);
-							}
-						}
-					});
+					getAddressList(userId);
 				} else {
 					var isResult = confirm("是否添加该用户？");
 					if (isResult) {
@@ -187,6 +197,7 @@ getAddrByMobile(0);
 function addrChange() {
 	var addrName = $("#addrId").find("option:selected").text();
 	$("#selectedAddrName").html(addrName);
+	$("#suggestId").val(addrName);
 }
 
 /*
@@ -232,7 +243,9 @@ function saveAddress() {
 	
 	var lat = $("#poiLatitude").val();
 	
-	if (lng == undefined || lng == "" || lat == undefined || lat == "") {
+	var name = $("#suggestId").val();
+	
+	if (lng == undefined || lng == "" || lat == undefined || lat == "" || name == undefined || name == "") {
 		alert("请在服务地址下拉中选择!");
 		return false;
 	}
@@ -240,7 +253,7 @@ function saveAddress() {
 	form.longitude = $("#poiLongitude").val();
 	form.latitude = $("#poiLatitude").val();
 	
-	form.name = $("#suggestId").val();
+	form.name = name
 	form.addr = $("#recipient-addr").val();
 	form.addr_id = 0;
 	form.is_default = 1;
@@ -252,17 +265,14 @@ function saveAddress() {
 		dataType : "json",
 		async : false,
 		success : function(data) {
-			$("#from-add-addr").hide();
 			alert("地址添加成功");
-			$("#userId").removeData("userId");
-			$("#mobile").removeData("mobile");
-			getAddrByMobile(addrId);
+			getAddressList(data.data.user_id);
 		}
 	});
 }
 
 // ============服务类别相关=========================================================
-$("#parentServiceType").on('change', function() {
+$(".parentServiceType").on('change', function() {
 	var parentServiceTypeId = $(this).val();
 	if (0 == parentServiceTypeId) {
 		return false;
@@ -294,9 +304,10 @@ function serviceTypeChange() {
 	}
 }
 
+
 // 金牌保洁服务类别
 function serviceTypeChangeHour() {
-	var id = $("select[name='serviceType'] option:selected").val();
+	var id = $("select[name='serviceType']").val();
 	
 	if (id == "") return false;
 	
@@ -385,7 +396,6 @@ function serviceTypeChangeExp() {
 	});
 }
 
-serviceTypeChange();
 
 // =====================价格相关====================================================
 function changePrice(courponsValue) {
@@ -689,14 +699,25 @@ var loadStaffDynamic = function(data, status, xhr) {
 			htmlStr += selectInput;
 		}
 		
-		htmlStr += "<input  type='hidden' id='selectStaffId' name='selectStaffId' value="
-				+ item.staff_id + ">" + "<input type='hidden' id='distanceValue' value="
-				+ item.distance_value + ">" + "<input type='hidden' id='selectStaffName' value="
-				+ item.name + ">" + "</td>" + "<td>" + item.staff_org_name + "</td>" + "<td>"
-				+ item.staff_cloud_org_name + "</td>" + "<td>" + item.org_distance_text + "</td>"
-				+ "<td>" + item.name + "</td>" + "<td>" + item.mobile + "</td>" + "<td>"
-				+ item.distance_text + "</td>" + "<td>" + item.today_order_num + "</td>" + "<td>"
-				+ item.dispath_sta_str + "</td>" + "<td>" + item.reason + "</td>";
+		var sexName = "男";
+		if (item.sex == 1) sexName = "女";
+		
+		htmlStr+= "<input  type='hidden' id='selectStaffId' name='selectStaffId' value="+ item.staff_id + ">";
+		htmlStr+= "<input type='hidden' id='distanceValue' value="+ item.distance_value + ">";
+		htmlStr+= "<input type='hidden' id='selectStaffName' value="+ item.name + ">";
+		htmlStr+= "</td>";
+		htmlStr+= "<td>" + item.parent_org_name + "</td>";
+		htmlStr+= "<td>" + item.org_name + "</td>";
+		htmlStr+= "<td>" + item.org_distance_text + "</td>";
+		htmlStr+= "<td>" + item.name + "</td>";
+		htmlStr+= "<td>" + item.mobile + "</td>";
+		htmlStr+= "<td>" + sexName + "</td>";
+		htmlStr+= "<td>" + item.distance_text + "</td>";
+		htmlStr+= "<td>" + item.today_order_num + "</td>"
+		htmlStr+= "<td>" + item.pre_day_order_num + "</td>"
+		htmlStr+= "<td>" + item.dispath_sta_str + "</td>";
+//		htmlStr+= "<td>" + item.reason + "</td>";
+		htmlStr+= "<td>" + item.allocate_reason + "</td>";
 		htmlStr += "</tr>";
 		tdHtml += htmlStr;
 		
@@ -998,7 +1019,7 @@ function orderFormSubmit() {
 	params.orderPay = $("#orderPay").val();
 	params.serviceAddonDatas = $("#serviceAddonDatas").val();
 	params.selectStaffIds = $("#selectStaffIds").val();
-	params.orderPayType = $("#orderPayType").val();
+	params.orderPayType = $("input[name='orderPayType']").val();
 	params.adminId = $("#adminId").val();
 	params.adminName = $("#adminName").val();
 	params.orderFrom = 2;
@@ -1013,8 +1034,6 @@ function orderFormSubmit() {
 		params.sendSmsToUser = 0;
 	}
 	
-//	 console.log(params);
-//	 return false;
 	$.ajax({
 		type : "post",
 		url : "/jhj-app/app/order/post_order_add.json",
@@ -1049,44 +1068,12 @@ function delAddress(){
 			}
 			if(data.status=='0'){
 				$("#addrId option[value='"+addrId+"']").remove();
+				$("#recipient-addr").val();
 				alert("地址删除成功！");
 			}
 		}
 	});
 }
-
-//function updateAddress(){
-//	var addrId = $("#addrId").val();
-//	if(addrId==undefined || addrId==null || addrId==''){
-//		alert("请先选择地址，再点击修改按钮！！");
-//		return false;
-//	} 
-//	
-//	var param = {};
-//	param.user_id = $("#userId").val();
-//	param.addr_id = addrId;
-//	param.is_default = 1;
-//	param.name = $("#suggestId").val();
-//	param.addr = $("#recipient-addr");
-//	param.longitude = $("#poiLongitude").val();
-//	param.latitude = $("#poiLatitude").val();
-//	param.city = "北京市";
-//	param.phone = $("#mobile").val();
-//	
-//	$.ajax({
-//		type:"post",
-//		url:"/jhj-app/app/user/post_user_addrs.json",
-//		data:param,
-//		dataType:"json",
-//		success:function(data){
-//			if(data.status=='0'){
-//				$("#addrId option[value='"+addrId+"']").text(name+ addr);
-//				alert("地址修改成功！");
-//			}
-//		}
-//	});
-//	
-//}
 
 function getAddress(){
 	var addrId = $("#addrId").val();
@@ -1116,6 +1103,9 @@ function getAddress(){
 //获取定制信息
 function getPeriodOrder(){
 	var mobile = $("#mobile").val();
+	if(mobile==undefined || mobile ==null || mobile==''){
+		return false;
+	}
 	$.ajax({
 		type:"get",
 		url:"getPeriodOrder?mobile="+mobile,
@@ -1125,7 +1115,7 @@ function getPeriodOrder(){
 			var selectid = document.getElementById("periodOrderId");
 			for (var i = 0; i < periodOrderList.length; i++) {
 				var periodName;
-				switch (periodOrderList[i].periodServiceTypeId) {
+				switch (periodOrderList[i].packageType) {
 					case 1: periodName="定制一"; break;
 					case 2: periodName="定制二"; break;
 					case 3: periodName="定制三"; break;

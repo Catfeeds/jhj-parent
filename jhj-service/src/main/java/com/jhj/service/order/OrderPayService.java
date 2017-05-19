@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.Orders;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 
 public interface OrderPayService {
 

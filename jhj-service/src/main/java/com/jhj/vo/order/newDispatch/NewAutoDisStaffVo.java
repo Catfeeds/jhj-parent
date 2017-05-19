@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jhj.po.model.order.OrderDispatchs;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 
 /**
  *
@@ -17,13 +17,13 @@ import com.jhj.vo.order.OrgStaffsNewVo;
 public class NewAutoDisStaffVo extends OrderDispatchs{
 	
 	
-	private List<OrgStaffsNewVo> staffList = new ArrayList<OrgStaffsNewVo>();
+	private List<OrgStaffDispatchVo> staffList = new ArrayList<OrgStaffDispatchVo>();
 
-	public List<OrgStaffsNewVo> getStaffList() {
+	public List<OrgStaffDispatchVo> getStaffList() {
 		return staffList;
 	}
 
-	public void setStaffList(List<OrgStaffsNewVo> staffList) {
+	public void setStaffList(List<OrgStaffDispatchVo> staffList) {
 		this.staffList = staffList;
 	}
 

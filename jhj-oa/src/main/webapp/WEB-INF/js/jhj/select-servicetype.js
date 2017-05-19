@@ -1,5 +1,4 @@
-
-//根据服务大类获取服务子类
+﻿//根据服务大类获取服务子类
 $("#parentServiceType").on('change', function(){
 	
 	var serviceTypeId = $(this).val();

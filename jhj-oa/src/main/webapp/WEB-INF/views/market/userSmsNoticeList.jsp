@@ -66,7 +66,7 @@
 			</section>
 			<c:import url="../shared/paging.jsp">
 				<c:param name="pageModelName" value="contentModel" />
-				<c:param name="urlAddress" value="/market/userSmsNoticeList" />
+				<c:param name="urlAddress" value="/market/sms-notice-list" />
 			</c:import>
 		</div>
 	</div>

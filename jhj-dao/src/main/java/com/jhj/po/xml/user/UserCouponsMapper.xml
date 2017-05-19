@@ -89,9 +89,6 @@
 		where id = #{id,jdbcType=NUMERIC}
 	</delete>
 	<insert id="insert" parameterType="com.jhj.po.model.user.UserCoupons">
-		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
 		insert into user_coupons (id, user_id, coupon_id, value, 
 		gift_id, service_type, from_date,to_date, is_used,
 		used_time, order_no, add_time

@@ -508,6 +508,12 @@ public class OrdersServiceImpl implements OrdersService {
 		return ordersMapper.getNewestOrder(order);
 	}
 
+	@Override
+	public int countUserOrderNum(Long userId) {
+		
+		return ordersMapper.countUserOrderNum(userId);
+	}
+
 	/**
 	 * 后台取消订单
 	 * 

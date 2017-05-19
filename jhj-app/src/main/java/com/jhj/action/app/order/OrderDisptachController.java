@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jhj.action.app.BaseController;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
+import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.users.UserAddrsService;
 import com.meijia.utils.vo.AppResultData;
 
 
@@ -22,6 +24,9 @@ import com.meijia.utils.vo.AppResultData;
 public class OrderDisptachController extends BaseController {
 	@Autowired
 	private OrderDispatchsService orderDispatchsService;
+	
+	@Autowired
+	private UserAddrsService userAddrService;
 	
 	@RequestMapping(value = "check_dispatch", method = RequestMethod.POST)
 	public AppResultData<Object> list(
@@ -32,13 +37,42 @@ public class OrderDisptachController extends BaseController {
 			) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 		
+		if (addrId.equals(0L)) return result;
+		
+		UserAddrs addrs = userAddrService.selectByPrimaryKey(addrId);
+		String lat = addrs.getLatitude();
+		String lng = addrs.getLongitude();
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 		if (staffId.equals(0L)) {
-			datas = orderDispatchsService.checkDispatchedDay(serviceTypeId, serviceDateStr, addrId);
+			datas = orderDispatchsService.checkDispatchedDay(serviceTypeId, serviceDateStr, lat, lng);
 		}
 		
 		if (staffId > 0L) {
-			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, addrId, staffId);
+			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, staffId, lat, lng);
+		}
+		
+		result.setData(datas);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "check_dispatch_by_poi", method = RequestMethod.POST)
+	public AppResultData<Object> checkDispatchByPoi(
+			@RequestParam("service_type_id") Long serviceTypeId,
+			@RequestParam("service_date_str") String serviceDateStr,
+			@RequestParam("lat") String lat,
+			@RequestParam("lng") String lng,
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId
+			) {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
+		if (staffId.equals(0L)) {
+			datas = orderDispatchsService.checkDispatchedDay(serviceTypeId, serviceDateStr, lat, lng);
+		}
+		
+		if (staffId > 0L) {
+			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, staffId, lat, lng);
 		}
 		
 		result.setData(datas);

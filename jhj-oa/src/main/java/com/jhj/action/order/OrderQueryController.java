@@ -40,7 +40,6 @@ import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPayService;
@@ -84,8 +83,7 @@ public class OrderQueryController extends BaseController {
 	private OrderPayService orderPayService;
 	@Autowired
 	private OrdersService orderService;
-	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
+
 	@Autowired
 	private UsersService usersService;
 

@@ -2,7 +2,7 @@ package com.jhj.vo.order;
 
 import com.jhj.po.model.bs.OrgStaffs;
 
-public class OrgStaffsNewVo extends OrgStaffs {
+public class OrgStaffDispatchVo extends OrgStaffs {
 
 	// 纬度
 	private String lat;
@@ -11,16 +11,13 @@ public class OrgStaffsNewVo extends OrgStaffs {
 	private String lng;
 
 	// 地址名称
-	private String locName;
+	private String addrName;
 
-	// 线路距离(单位是米)
+	// 员工距离(单位是米)
 	private int distanceValue;
 
-	// 线路距离(文本描述)
+	// 员工距离(文本描述)
 	private String distanceText;
-
-	// 距离时间(单位为秒)
-	private int durationValue;
 
 	// 距离时间(文本描述)
 	private String durationText;
@@ -28,24 +25,34 @@ public class OrgStaffsNewVo extends OrgStaffs {
 	// 云店距离(单位是米)
 	private int orgDistanceValue;
 	
-	// 线路距离(文本描述)
+	// 云店距离(文本描述)
 	private String orgDistanceText;
 	
-	/*
-	 * 后台手动派工 时。展示的 冗余字段
-	 */
+	// 该员工前一天的派工单量
+	private int preDayOrderNum;
 	
-	private int todayOrderNum; // 2016年3月23日19:13:05 该人员当天的 派工单量
+	//该人员当天的 派工单量
+	private int todayOrderNum; 		
 
-	private String staffOrgName; // 2016年3月30日16:45:11  该服务人员，所在 门店 的名称
-	private String staffCloudOrgName; //2016年3月30日16:45:14   该服务人员 所在 云店名称
-
+	//该服务人员，所在 门店 的名称
+	private String parentOrgName; 	
 	
-	private String dispathStaStr;	//2016年5月4日17:31:30   该服务人员 派工情况描述
+	//该服务人员 所在 云店名称
+	private String orgName; 		
 
-	private int dispathStaFlag;	// 派工情况 标识
+	//该服务人员 派工情况描述
+	private String dispathStaStr;	
+
+	// 派工情况 标识
+	private int dispathStaFlag;		
 	
-	private String reason;      //无法派工原因
+	//无法派工原因
+	private String reason;     
+	
+	private int allocate;
+	
+	//派工依据. 合理分配  效率优先
+	private String allocateReason;  
 	
 	
 	public int getDispathStaFlag() {
@@ -64,31 +71,6 @@ public class OrgStaffsNewVo extends OrgStaffs {
 		this.dispathStaStr = dispathStaStr;
 	}
 
-	public String getStaffOrgName() {
-		return staffOrgName;
-	}
-
-	public void setStaffOrgName(String staffOrgName) {
-		this.staffOrgName = staffOrgName;
-	}
-
-
-	public String getStaffCloudOrgName() {
-		return staffCloudOrgName;
-	}
-
-	public void setStaffCloudOrgName(String staffCloudOrgName) {
-		this.staffCloudOrgName = staffCloudOrgName;
-	}
-
-	public int getTodayOrderNum() {
-		return todayOrderNum;
-	}
-
-	public void setTodayOrderNum(int todayOrderNum) {
-		this.todayOrderNum = todayOrderNum;
-	}
-
 	public String getLat() {
 		return lat;
 	}
@@ -105,14 +87,6 @@ public class OrgStaffsNewVo extends OrgStaffs {
 		this.lng = lng;
 	}
 
-	public String getLocName() {
-		return locName;
-	}
-
-	public void setLocName(String locName) {
-		this.locName = locName;
-	}
-
 	public int getDistanceValue() {
 		return distanceValue;
 	}
@@ -127,14 +101,6 @@ public class OrgStaffsNewVo extends OrgStaffs {
 
 	public void setDistanceText(String distanceText) {
 		this.distanceText = distanceText;
-	}
-
-	public int getDurationValue() {
-		return durationValue;
-	}
-
-	public void setDurationValue(int durationValue) {
-		this.durationValue = durationValue;
 	}
 
 	public String getDurationText() {
@@ -167,6 +133,62 @@ public class OrgStaffsNewVo extends OrgStaffs {
 
 	public void setOrgDistanceText(String orgDistanceText) {
 		this.orgDistanceText = orgDistanceText;
+	}
+
+	public String getAllocateReason() {
+		return allocateReason;
+	}
+
+	public void setAllocateReason(String allocateReason) {
+		this.allocateReason = allocateReason;
+	}
+
+	public String getAddrName() {
+		return addrName;
+	}
+
+	public void setAddrName(String addrName) {
+		this.addrName = addrName;
+	}
+
+	public String getParentOrgName() {
+		return parentOrgName;
+	}
+
+	public void setParentOrgName(String parentOrgName) {
+		this.parentOrgName = parentOrgName;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public int getTodayOrderNum() {
+		return todayOrderNum;
+	}
+
+	public void setTodayOrderNum(int todayOrderNum) {
+		this.todayOrderNum = todayOrderNum;
+	}
+
+	public int getPreDayOrderNum() {
+		return preDayOrderNum;
+	}
+
+	public void setPreDayOrderNum(int preDayOrderNum) {
+		this.preDayOrderNum = preDayOrderNum;
+	}
+
+	public int getAllocate() {
+		return allocate;
+	}
+
+	public void setAllocate(int allocate) {
+		this.allocate = allocate;
 	}
 
 }

@@ -2,6 +2,21 @@
  * Created by hulj on 2016/10/20.
  */
 
+function showCalendar(){
+	var html = $("#calendar-show").html();
+	
+	layer.open({
+		  type: 1,
+		  title: '日历',
+		  closeBtn: 1, //不显示关闭按钮
+		  shadeClose: false,
+		  shade: [0],
+		  id:"layer-calendar1",
+		  area: ['700px', '550px'],
+		  content: html
+	});
+}
+
 $(function(){
 	var weekDay=['周日','周一','周二','周三','周四','周五','周六'];
 	var tempWeek=['周日','周一','周二','周三','周四','周五','周六'];
@@ -137,21 +152,42 @@ $(function(){
 	
 	//是否约满
 	function isFull(serviceDateStr){
+		
+		var host = window.location.host;
+		var appName = "jhj-app";
+		var localUrl = "http://" + host;
+		var siteAPIPath = localUrl + "/" + appName + "/app/";
+		var url = "";
+		
 		var param = {};
+		var serviceTypeId = $("#serviceType").val();
+		if (serviceTypeId == undefined || serviceTypeId == 0) return false;
 		param.service_type_id = $("#serviceType").val();
-		param.addr_id = $("#addrId").val();
+		
+		var addrId = $("#addrId").val();
+		if (addrId == undefined || addrId == 0) {
+			var lat = $("#poiLatitude").val();
+			var lng = $("#poiLatitude").val();
+			if (lat == undefined || lat == "" || lng == undefined || lng == "") return false;
+			param.lat = lat;
+			param.lng = lng;
+			url = siteAPIPath+"order/check_dispatch_by_poi.json";
+		} else {
+			param.addr_id = $("#addrId").val();
+			url = siteAPIPath+"order/check_dispatch.json";
+		}
+		
+		
+		
 		if(serviceDateStr==undefined || serviceDateStr==null || serviceDateStr==''){
 			serviceDateStr = moment().format("YYYY-MM-DD");
 		}
 		param.service_date_str = serviceDateStr;
 		param.staff_id = 0;
-		var host = window.location.host;
-		var appName = "jhj-app";
-		var localUrl = "http://" + host;
-		var siteAPIPath = localUrl + "/" + appName + "/app/";
+		
 		$.ajax({
 			type:"POST",
-			url:siteAPIPath+"order/check_dispatch.json",
+			url:url,
 			data:param,
 			success:function(data){
 				if(data.status=='0' && data.msg=='ok'){
@@ -191,23 +227,23 @@ $(function(){
 		
 		$(document).on("click",'#show-day li',function(){
 			selectDay = $(this);
-			$("#show-day li p").removeClass("rili-day");
-			$("#show-dateTime li").removeClass("rili-time");
+			$(".rili1-4 li p").removeClass("rili-day");
+			$(".rili1-5 li").removeClass("rili-time");
 			$(this).parent().nextAll(".rili1-6").find("a #checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
 			$(this).find("p").addClass("rili-day");
 			var selectDate = getServiceDate(selectDay);
 			if(selectDate==currentDate){
 				if(nowHour>=16){
-					$("#show-day li p").removeClass("rili-day");
+					$(".rili1-4 li p").removeClass("rili-day");
 					$(selectDay).find("p").addClass("rili-day");
-					$("#show-dateTime li").addClass("rili-time");
+					$(".rili1-5 li").addClass("rili-time");
 				}
 			}
 			date = selectDate;
 			isFull(selectDate);
 		});
-		$("#show-dateTime li").removeClass("rili-time-no");
-		$("#show-day").find(":first-child p").addClass("rili-day");
+		$(".rili1-5 li").removeClass("rili-time-no");
+		$(".rili1-4").find(":first-child p").addClass("rili-day");
 		var compareDate = date;
 		isFull(compareDate);
 	}
@@ -221,7 +257,7 @@ $(function(){
 		}else{
 			afterDay = moment(selectDay).add(countDay, 'days');
 		}
-		date = afterDay;
+		date = moment(afterDay).format("YYYY-MM-DD");
 		showYearMonth(afterDay);
 		getDay(afterDay);
 	}
@@ -298,15 +334,21 @@ $(function(){
 	}
 	
 	function filterBackDate(arrys,compNum){
-		for(var i=0;i<=arrys.length;i++){
+		var html = '';
+		for(var i=0;i<arrys.length;i++){
+			var listext = $(arrys[i]).text();
 			if(i<compNum){
 				if(!$(arrys[i]).hasClass('rili-time-no')){
 					$(arrys[i]).addClass("rili-time-no");
-					var listext = $(arrys[i]).text();
-					$(arrys[i]).html("<p>"+listext+"</p><p>约满</p>");
+					html += "<li class='rili-time-no'><p>"+listext+"</p><p>约满</p></li>";
+				}else{
+					html += $(arrys[i]).html();
 				}
+			}else{
+				html +="<li>"+listext+"</li>";
 			}
 		}
+		$(".rili1-5").html(html);
 	}
 	
 	//选择时间
@@ -325,8 +367,8 @@ $(function(){
 	
 	//获取选择的服务时间
 	$(document).on('click','#checkDate',function(){
-		var selectDate = getServiceDate(selectDay);
-		var st = selectDate+" "+dayTime+":00";
+		var st = date+" "+dayTime+":00";
+		var st =moment(date).format("YYYY-MM-DD")+" "+dayTime+":00";
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);
@@ -336,27 +378,27 @@ $(function(){
 	});
 })
 
+
 function selectServiceDateTime(){
-	var service_type_id = $("#serviceType").val();
 	var addr_id = $("#addrId").val();
-	if(service_type_id==undefined || service_type_id==null || service_type_id==''){
-		alert("请选服务类型！");
-		return false;
-	}
 	if(addr_id==undefined || addr_id==null || addr_id==''){
-		alert("请选择服务地址！");
+		
+		var lat = $("#poiLatitude").val();
+		var lng = $("#poiLatitude").val();
+		var name = $("#suggestId").val();
+		if (lat == undefined || lat == "" || 
+			lng == undefined || lng == "" ||
+			name == undefined || name == "") {
+			alert("请选择服务地址！");
+			return false;
+		}
+	}
+	
+	var serviceTypeId = $("#serviceType").val();
+	if (serviceTypeId == undefined || serviceTypeId == "") {
+		alert("请选择服务类型!");
 		return false;
 	}
 	
-	var html = $("#calendar-show").html();
-	
-	layer.open({
-		  type: 1,
-		  title: '日历',
-		  closeBtn: 1, //不显示关闭按钮
-		  shadeClose: false,
-		  shade: [0],
-		  area: ['700px', '550px'],
-		  content: html
-	});
+	showCalendar();
 }

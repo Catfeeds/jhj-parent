@@ -249,6 +249,7 @@
 		<include refid="Base_Column_List" />
 		from period_order
 		<include refid="bySearchVo" />
+		order by add_time desc
 	</select>
 
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.period.PeriodOrderSearchVo">

@@ -126,10 +126,15 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				if(serviceTypeAddons.name=='金牌保洁' || serviceTypeAddons.name=='基础保洁'){//金牌保洁 30
         					continue;
         				}
-        					
         				var htmlPart = temp;
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), serviceTypeId);
         				htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), serviceTypeAddons.service_addon_id);
+        				if(serviceTypeAddons.name=='擦玻璃'){
+        					htmlPart = htmlPart.replace(new RegExp('{number}', "gm"), 10);
+        				}else{
+        					htmlPart = htmlPart.replace(new RegExp('{number}', "gm"), 1);
+        				}
+        				
         				htmlPart = htmlPart.replace(new RegExp('{name}', "gm"), serviceTypeAddons.name);
         				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), serviceTypeAddons.price);
         				htmlPart = htmlPart.replace(new RegExp('{pprice}', "gm"), serviceTypeAddons.dis_price);
@@ -164,10 +169,19 @@ myApp.onPageBeforeInit("period-order", function (page) {
     
     $$(document).on("click",".sub-num",function(){
     	var serviceNum = parseInt($$(this).next(".service-num").val());
-    	if(serviceNum<=1){
-    		myApp.alert("服务数量不能小于1");
-    		return false;
+    	var name = $$(this).parent().prev().text();
+    	if(name=='擦玻璃'){
+    		if(serviceNum<=10){
+        		myApp.alert("服务数量不能小于10");
+        		return false;
+        	}
+    	}else{
+    		if(serviceNum<=1){
+        		myApp.alert("服务数量不能小于1");
+        		return false;
+        	}
     	}
+    	
     	serviceNum = serviceNum - 1;
     	$$(this).next(".service-num").val(serviceNum);
     	calc_price(this,serviceNum);

@@ -59,7 +59,8 @@
 											<td>名称</td>
 											<td>总次数</td>
 											<td>频次</td>
-											<td>价格</td>
+											<td>原价格</td>
+											<td>会员价格</td>
 										</tr>
 									</thead>
 									<tbody id="service-content">
@@ -69,6 +70,7 @@
 												<td>${item.num }</td>
 												<td>${item.punit }</td>
 												<td>${item.price }</td>
+												<td>${item.vipPrice }</td>
 											</tr>
 										</c:forEach>
 									</tbody>
@@ -117,7 +119,7 @@
 								<font color="red">*</font>订单来源
 							</label>
 							<div class="col-md-5">
-								<input name="orderFrom" class="form-control" value="${periodOrder.orderFromName }" readonly="readonly"/>
+								<input name="orderFrom" class="form-control" value="${periodOrder.orderFrom }" readonly="readonly"/>
 							</div>
 						</div>
 						

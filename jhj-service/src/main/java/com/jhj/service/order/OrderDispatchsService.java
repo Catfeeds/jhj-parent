@@ -6,9 +6,10 @@ import java.util.Map;
 
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
+import com.jhj.vo.bs.OrgDispatchPoiVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderDispatchVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -43,24 +44,31 @@ public interface OrderDispatchsService {
 
 	List<HashMap> totalByStaff(OrderDispatchSearchVo searchVo);
 	
-	List<OrgStaffsNewVo> getStaffDispatch(List<OrgStaffsNewVo> list, String fromLat, String fromLng);
-
-	OrgStaffsNewVo initStaffsNew();
+	List<OrgStaffDispatchVo> getStaffDispatch(List<OrgStaffDispatchVo> list, String fromLat, String fromLng);
 
 	OrderDispatchVo changeToOrderDispatchVo(OrderDispatchs item);
 
-	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId);
-
 	AppResultData<Object> checAppointDispatch(Long orderId, Long staffId);
 
-	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, Long addrId);
 
-	List<OrgStaffsNewVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId);
+	List<OrgStaffDispatchVo> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
 
-	List<OrgStaffsNewVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long parentId, Long orgId);
+	List<OrgDispatchPoiVo> getMatchOrgs(String fromLat, String fromLng, Long parentId, Long orgId, Boolean needMatchMaxDistance);
 
-	List<Long> autoDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, int staffNums, List<Long> appointStaffIds);
+	int getLatestDistance(String userLat, String userLon, Long staffId);
 
-	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, Long staffId);
+	void pushToStaff(Long staffId, String isShow, String action, Long orderId, String remindTitle, String remindContent);
+
+	List<HashMap> getTotalStaffOrders(Long serviceDate, List<Long> staffIds);
+
+	List<OrgStaffDispatchVo> getStaffDistance(String fromLat, String fromLng, List<Long> staIdList);
+
+	List<OrgStaffDispatchVo> manualDispatch(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long orgId);
+
+	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId, int allocate, String allocateReason);
+
+	List<Map<String, String>> checkDispatchedDay(Long serviceTypeId, String serviceDateStr, String lat, String lng);
+
+	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, String lat, String lng);
    	
 }

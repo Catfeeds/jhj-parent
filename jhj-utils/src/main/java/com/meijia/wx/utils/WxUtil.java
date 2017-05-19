@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Random;
 
 import com.meijia.utils.HttpClientUtil;
+import com.meijia.utils.StringUtil;
+import com.meijia.utils.redis.RedisUtil;
 
 /**
  * 微信支付配置
@@ -77,6 +79,12 @@ public class WxUtil {
 	public static Map<String, Object>  getAccessToken(String code) {
 		String result = "";
 		try {
+			
+			String cacheAccessTokenStr = RedisUtil.getInstance().strings().get("wx_access_token");
+			if (!StringUtil.isEmpty(cacheAccessTokenStr)) {
+				return JsonUtil.stringToMap(cacheAccessTokenStr);
+			}
+			
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("appid", WxUtil.appId);
 			map.put("secret", WxUtil.appSecret);

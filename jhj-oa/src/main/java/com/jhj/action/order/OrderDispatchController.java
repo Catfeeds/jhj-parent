@@ -25,8 +25,6 @@ import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffsService;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
@@ -39,7 +37,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
@@ -61,9 +59,6 @@ import com.meijia.utils.vo.AppResultData;
 public class OrderDispatchController extends BaseController {
 
 	@Autowired
-	private NewDispatchStaffService newDisService;
-
-	@Autowired
 	private OrderDispatchsService orderDispatchsService;
 
 	@Autowired
@@ -83,9 +78,6 @@ public class OrderDispatchController extends BaseController {
 
 	@Autowired
 	private OrderPayService orderPayService;
-
-	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
 
 	@Autowired
 	private PartnerServiceTypeService partnerService;
@@ -111,7 +103,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_auto_dispatch.json", method = RequestMethod.GET)
-	public List<OrgStaffs> loadAutoDispatch(
+	public List<OrgStaffDispatchVo> loadAutoDispatch(
 			@RequestParam("addrId") Long addrId,
 			@RequestParam("serviceTypeId") Long serviceTypeId,
 			@RequestParam("serviceDate") Long serviceDate,
@@ -119,7 +111,7 @@ public class OrderDispatchController extends BaseController {
 			@RequestParam("staffNums") int staffNums
 			) {
 		
-		List<OrgStaffs> list = new ArrayList<OrgStaffs>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 		
 		PartnerServiceType serviceType = partnerService.selectByPrimaryKey(serviceTypeId);
 
@@ -130,12 +122,8 @@ public class OrderDispatchController extends BaseController {
 			return list;
 		
 		
-		List<Long> staffIds = orderDispatchsService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, new ArrayList<Long>());
-		if (!staffIds.isEmpty()) {
-			StaffSearchVo searchVo = new StaffSearchVo();
-			searchVo.setStaffIds(staffIds);
-			list = orgStaffsService.selectBySearchVo(searchVo);
-		}
+		list = orderDispatchsService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, new ArrayList<Long>());
+
 		return list;
 	}
 	
@@ -154,7 +142,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_staff_by_change_service_date.json", method = RequestMethod.GET)
-	public List<OrgStaffsNewVo> loadProperStaffListForBase(HttpServletRequest request, 
+	public List<OrgStaffDispatchVo> loadProperStaffListForBase(HttpServletRequest request, 
 			Model model, 
 			@RequestParam("addrId") Long addrId,
 			@RequestParam("serviceTypeId") Long serviceTypeId,
@@ -163,14 +151,15 @@ public class OrderDispatchController extends BaseController {
 			@RequestParam("serviceHour") double serviceHour
 			) {
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
 			return list;
 		}
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
-		list = orderDispatchsService.manualDispatch(addrId, serviceTypeId, serviceDate, serviceHour, sessionOrgId);
+		Long orgId = 0L;
+		list = orderDispatchsService.manualDispatch(addrId, serviceTypeId, serviceDate, serviceHour, sessionOrgId, orgId);
 		return list;
 	}
 
@@ -253,7 +242,7 @@ public class OrderDispatchController extends BaseController {
 		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
 
 		// 处理只更换派工时间，不更换派工人员的情况.
-		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
+		if (!oldServiceDateTime.equals(serviceDateTime)) {
 
 			// 先检测在新的服务时间，原派工服务人员时间是否有冲突.
 			for (OrderDispatchs op : disList) {
@@ -313,6 +302,7 @@ public class OrderDispatchController extends BaseController {
 		if (!disList.isEmpty()) {
 			for (OrderDispatchs d : disList) {
 				if (!staffIds.contains(d.getStaffId())) {
+					d.setServiceDate(serviceDateTime);
 					d.setDispatchStatus((short) 0);
 					d.setUpdateTime(TimeStampUtil.getNowSecond());
 					orderDispatchsService.updateByPrimaryKey(d);
@@ -326,7 +316,9 @@ public class OrderDispatchController extends BaseController {
 		Double serviceHour = (double) order.getServiceHour();
 		// 进行派工
 		for (Long staffId : newDispathStaffIds) {
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId);
+			int allocate = 0;
+			String allocateReason = "合理分配";
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
 		}
 
 		// 更新订单表
@@ -348,7 +340,7 @@ public class OrderDispatchController extends BaseController {
 
 		// 2)派工成功，为服务人员发送推送消息---推送消息
 		for (OrgStaffs item : staffs) {
-			dispatchStaffFromOrderService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+			orderDispatchsService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 
 			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
@@ -512,7 +504,9 @@ public class OrderDispatchController extends BaseController {
 
 		// 进行派工，兼容一人和多人
 		for (Long staffId : newDispathStaffIds) {
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId);
+			int allocate = 0;
+			String allocateReason = "合理分配";
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
 		}
 
 		// 如果为多人派工，需要对服务时间进行平均. 考虑到调整派工，人数变化的情况，所以要整体的更新.
@@ -558,7 +552,7 @@ public class OrderDispatchController extends BaseController {
 		// 2)派工成功，为服务人员发送推送消息---推送消息
 
 		for (OrgStaffs item : staffs) {
-			dispatchStaffFromOrderService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+			orderDispatchsService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 
 			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
@@ -574,192 +568,6 @@ public class OrderDispatchController extends BaseController {
 
 	/**
 	 * 
-	 * @Title: loadProperStaffListForAm
-	 * @Description:
-	 *               助理类订单, 手动派工时,根据条件 加载 可用派工人员
-	 * 
-	 *               对于 此类订单, 服务时间 不可变。。但是 地址和 服务人员可以改变
-	 * 
-	 @param rderId
-	 * @param fromLat
-	 * @param fromLng
-	 * @return List<OrgStaffsNewVo> 返回类型
-	 * @throws
-	 */
-	@RequestMapping(value = "load_staff_for_am_order.json", method = RequestMethod.POST)
-	public List<OrgStaffsNewVo> loadProperStaffListForAm(Model model, @RequestParam("orderId") Long orderId, @RequestParam("fromLat") String fromLat,
-			@RequestParam("fromLng") String fromLng) {
-
-		Orders orders = orderSevice.selectByPrimaryKey(orderId);
-
-		List<Long> staIdList = newDisService.autoDispatchForAmOrder(fromLat, fromLng, orders.getServiceType());
-
-		// 请假的员工(服务类型 属于 深度养护 类别下 )
-		List<Long> leaveStaffIdList = newDisService.getLeaveStaffForDeepOrder(orderId, orders.getServiceType());
-
-		// 排除请假的员工
-		staIdList.removeAll(leaveStaffIdList);
-
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
-
-		Short orderStatus = orders.getOrderStatus();
-
-		// 对于 助理 类 订单，只有在 '已预约','已派工' 两种状态 可以 修改 派工人员
-		if (orderStatus == Constants.ORDER_AM_STATUS_2 || orderStatus == Constants.ORDER_AM_STATUS_3 || orderStatus == Constants.ORDER_AM_STATUS_4) {
-			list = newDisService.getTheNearestStaff(fromLat, fromLng, staIdList);
-
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStartServiceTime(orders.getServiceDate());
-			searchVo1.setStartServiceHourTime((long) (orders.getServiceDate() + orders.getServiceHour() * 3600));
-
-			for (OrgStaffsNewVo orgStaffsNewVo : list) {
-
-				searchVo1.setStaffId(orgStaffsNewVo.getStaffId());
-
-				// 对应当前订单的日期。。该员工是否 有 派工单
-				List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
-
-				int disNum = 0;
-				if (!orderDispatchs.isEmpty())
-					disNum = orderDispatchs.size();
-
-				if (disNum > 0) {
-					orgStaffsNewVo.setDispathStaStr("不可派工");
-					orgStaffsNewVo.setDispathStaFlag(0);
-				} else {
-					orgStaffsNewVo.setDispathStaStr("可派工");
-					orgStaffsNewVo.setDispathStaFlag(1);
-				}
-			}
-
-		}
-		return list;
-	}
-
-	/**
-	 * 
-	 * @Title: submitManuAmOrderResult
-	 * @Description:
-	 *               提交 助理 订单 手动派工结果
-	 * @param orderId
-	 *
-	 * @param fromLat
-	 *            用户的地址 经纬度
-	 * @param fromLng
-	 * 
-	 * @param staffId
-	 *            被选中的服务人员
-	 * @param distance
-	 *            被选中服务人员,距离用户地址的 距离 数字,(更新派工表字段使用)
-	 * 
-	 * @param userAddrName
-	 *            与用户沟通后确定的服务地址
-	 * @throws
-	 */
-	@RequestMapping(value = "/submit_manu_am_order_result.json", method = RequestMethod.POST)
-	public AppResultData<Object> submitManuAmOrderResult(@RequestParam("orderId") Long orderId, @RequestParam("fromLat") String fromLat,
-			@RequestParam("fromLng") String fromLng, @RequestParam("selectStaffId") Long staffId, @RequestParam("userAddrName") String userAddrName,
-			@RequestParam("distance") int distance) {
-
-		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
-
-		Orders order = orderSevice.selectByPrimaryKey(orderId);
-
-		// 修改的 只是 有效派工的订单
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderNo(order.getOrderNo());
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> list = orderDispatchsService.selectBySearchVo(searchVo);
-
-		OrderDispatchs dispatchs = orderDispatchsService.initOrderDisp();
-
-		// 如果可以查出记录。表示未 修改 派工, 否则是 手动新增派工
-		if (list.size() <= 0) {
-
-			// 如果没有派工记录。。表示是 新增派工
-
-			dispatchs.setUserId(order.getUserId());
-			dispatchs.setMobile(order.getMobile());
-			dispatchs.setOrderId(orderId);
-			dispatchs.setOrderNo(order.getOrderNo());
-			dispatchs.setServiceDate(order.getServiceDate());
-			dispatchs.setServiceDatePre(order.getServiceDate() - 3600);
-			dispatchs.setRemarks(order.getRemarks());
-			// 默认3小时服务时长
-			dispatchs.setServiceHours((short) 3);
-
-		} else {
-
-			// 有派工记录。表示 是 修改 派工
-			dispatchs = list.get(0);
-		}
-
-		dispatchs.setPickAddrName(userAddrName);
-		dispatchs.setPickAddrLat(fromLat);
-		dispatchs.setPickAddrLng(fromLng);
-
-		// 助理派工表。。。这里两个距离 : 距用户/取货地址 距离 设置 为同一个值了、、
-		dispatchs.setPickDistance(distance);
-		dispatchs.setUserAddrDistance(distance);
-
-		OrgStaffs staffs = orgStaffsService.selectByPrimaryKey(staffId);
-
-		dispatchs.setOrgId(staffs.getOrgId());
-		dispatchs.setStaffId(staffId);
-		dispatchs.setStaffMobile(staffs.getMobile());
-		dispatchs.setStaffName(staffs.getName());
-		dispatchs.setDispatchStatus(Constants.ORDER_DIS_ENABLE);
-
-		Short orderStatus = order.getOrderStatus();
-
-		// 对于 助理 类 订单，只有在 '已预约','已派工' 两种状态 可以 修改 派工人员
-
-		if (orderStatus == Constants.ORDER_AM_STATUS_3) {
-
-			// 如果订单状态是 已预约。 手动增加派工
-
-			// 插入 派工表
-			orderDispatchsService.insertSelective(dispatchs);
-
-			// 更新 order_status 为 已派工
-			order.setOrderStatus(Constants.ORDER_AM_STATUS_4);
-			order.setUpdateTime(TimeStampUtil.getNowSecond());
-
-			/*
-			 * 更新助理订单 门店 为 派工人员 所在的 云店
-			 */
-			OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
-
-			order.setOrgId(orgStaffs.getOrgId());
-
-			orderSevice.updateByPrimaryKeySelective(order);
-		}
-
-		if (orderStatus == Constants.ORDER_AM_STATUS_4) {
-			// 已派工。 修改派工表
-			dispatchs.setUpdateTime(TimeStampUtil.getNowSecond());
-			orderDispatchsService.updateByPrimaryKeySelective(dispatchs);
-		}
-
-		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
-		String timeStr = beginTimeStr + "-" + endTimeStr;
-
-		// 1) 用户收到派工通知---发送短信
-		String[] contentForUser = new String[] { timeStr };
-
-		// 2)派工成功，为服务人员发送推送消息---推送消息
-		dispatchStaffFromOrderService.pushToStaff(staffs.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-				Constants.ALERT_STAFF_MSG);
-
-		SmsUtil.SendSms(staffs.getMobile(), "114590", contentForUser);
-
-		return resultData;
-	}
-
-	/**
-	 * 
 	 * @Title: loadProperStaffListForBaseByCloudOrg
 	 * @Description:
 	 *               根据 云店 动态加载 该 云店下 可用的 派工
@@ -768,7 +576,7 @@ public class OrderDispatchController extends BaseController {
 	 * @throws
 	 */
 	@RequestMapping(value = "load_staff_by_change_cloud_org.json", method = RequestMethod.GET)
-	public List<OrgStaffsNewVo> loadProperStaffListForBaseByCloudOrg(Model model, 
+	public List<OrgStaffDispatchVo> loadProperStaffListForBaseByCloudOrg(Model model, 
 			@RequestParam("parentId") Long parentId, 
 			@RequestParam("orgId") Long orgId, 
 			@RequestParam("addrId") Long addrId,
@@ -777,13 +585,13 @@ public class OrderDispatchController extends BaseController {
 			@RequestParam("serviceDate") Long serviceDate,
 			@RequestParam("serviceHour") double serviceHour) {
 
-		List<OrgStaffsNewVo> list = new ArrayList<OrgStaffsNewVo>();
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
 
 		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
 			return list;
 		}
-		list = orderDispatchsService.manualDispatchByOrg(addrId, serviceTypeId, serviceDate, serviceHour, parentId, orgId);
+		list = orderDispatchsService.manualDispatch(addrId, serviceTypeId, serviceDate, serviceHour, parentId, orgId);
 		return list;
 	}
 

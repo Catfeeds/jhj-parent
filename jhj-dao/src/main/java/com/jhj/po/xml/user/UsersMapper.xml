@@ -40,13 +40,6 @@
 	
 	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserSearchVo">
 		<include refid="bySearchVo" />
-		<if test="orderNum!=null and orderNum!=''">
-			or id in (SELECT DISTINCT user_id from orders GROUP BY user_id HAVING COUNT(user_id)>=2) and is_vip=0
-			<if test="mobile != null">
-				and mobile like CONCAT('%','${mobile}','%' )
-			</if>
-			<include refid="charSearchVo" />
-		</if>
 		order by add_time desc
 	</select>
 	

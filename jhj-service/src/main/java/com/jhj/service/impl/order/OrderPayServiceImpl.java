@@ -2,7 +2,6 @@ package com.jhj.service.impl.order;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONException;
@@ -20,13 +19,10 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.dict.ServiceAddonsService;
-import com.jhj.service.newDispatch.NewDispatchStaffService;
-import com.jhj.service.order.DispatchStaffFromOrderService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderHourAddService;
@@ -43,8 +39,7 @@ import com.jhj.service.users.UserPushBindService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
-import com.jhj.vo.staff.StaffSearchVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.SmsUtil;
@@ -90,13 +85,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 	private UserCouponsService userCouponsService;
 
 	@Autowired
-	private DispatchStaffFromOrderService dispatchStaffFromOrderService;
-
-	@Autowired
 	private UserPushBindService bindService;
-
-	@Autowired
-	private NewDispatchStaffService newDisStaService;
 
 	@Autowired
 	private PartnerServiceTypeService partnerServiceTypeService;
@@ -139,11 +128,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 			return false;
 		
 		
-		List<Long> staffIds = new ArrayList<Long>();
-		List<Long> appointStaffIds = new ArrayList<Long>();
-		int staffNums = order.getStaffNums();
-		if (staffNums <= 0) staffNums = 1;
 		
+		List<Long> appointStaffIds = new ArrayList<Long>();
 		Long serviceDate = order.getServiceDate();
 		Double serviceHour = (double) order.getServiceHour();
 		
@@ -155,38 +141,30 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		if (!orderAppoints.isEmpty()) {
 			for (OrderAppoint oa : orderAppoints) {
-				staffIds.add(oa.getStaffId());
 				appointStaffIds.add(oa.getStaffId());
 			}
 		}
 		
-		
+		int staffNums = order.getStaffNums();
+		if (staffNums <= 0) staffNums = 1;
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
-		if (staffIds.size() != staffNums) {
-			staffNums = staffNums - staffIds.size();
-			List<Long> autoStaffIds = orderDispatchService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, appointStaffIds);
 		
-			for (Long autoStaffId : autoStaffIds) {
-				staffIds.add(autoStaffId);
-			}
-		}
-
-		if (staffIds.isEmpty())
-			return false;
+		List<OrgStaffDispatchVo> autoStaffs = orderDispatchService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, appointStaffIds);
+		
+		if (autoStaffs.isEmpty()) return false;
 
 		// 进行派工
 		OrgStaffs staff = null;
-		for (Long staffId : staffIds) {
-			staff = orgStaffService.selectByPrimaryKey(staffId);
-			Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+		for (OrgStaffDispatchVo item : autoStaffs) {
+			Long staffId = item.getStaffId();
+			int allocate = item.getAllocate();
+			String allocateReason = item.getAllocateReason();
+			Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId, allocate, allocateReason);
+			order.setOrgId(item.getOrgId());
 		}
 		
-		if (staff != null) {
-			order.setOrgId(staff.getOrgId());
-		}
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);// 更新订单状态---已派工
 		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付
-															// 的助理单，需要用到这个 修改时间
 		ordersService.updateByPrimaryKeySelective(order);
 
 		// 2.插入订单日志表 order_log
@@ -208,14 +186,14 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 2)派工成功，为服务人员发送推送消息---推送消息
 		
 
-		for (Long staffId : staffIds) {
-			staff = orgStaffService.selectByPrimaryKey(staffId);
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+		for (OrgStaffDispatchVo item : autoStaffs) {
+			Long staffId = item.getStaffId();
+			orderDispatchService.pushToStaff(staffId, "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 			
 			//发送短信
 			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
 		}
 
 		
@@ -275,7 +253,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 1);
 		}
 		
-		List<Long> staffIds = new ArrayList<Long>();
+		
 		List<Long> appointStaffIds = new ArrayList<Long>();
 		// 实现派工逻辑，找到 阿姨 id, 或者返回 错误标识符
 		Long serviceDate = order.getServiceDate();
@@ -288,30 +266,26 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		if (!orderAppoints.isEmpty()) {
 			for (OrderAppoint oa : orderAppoints) {
-				staffIds.add(oa.getStaffId());
 				appointStaffIds.add(oa.getStaffId());
 			}
 		}
 		
 		int staffNums = 1;
-		if (staffIds.size() != staffNums) {
-			List<Long> autoStaffIds = orderDispatchService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, appointStaffIds);
 		
-			for (Long autoStaffId : autoStaffIds) {
-				staffIds.add(autoStaffId);
-			}
-		}
-
-		if (staffIds.isEmpty())
-			return false;
+		List<OrgStaffDispatchVo> autoStaffs = orderDispatchService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, appointStaffIds);
+	
+		if (autoStaffs.isEmpty()) return false;
 		
-		Long staffId = staffIds.get(0);
+		
+		OrgStaffDispatchVo staffVo = autoStaffs.get(0);
+		
+		Long staffId = staffVo.getStaffId();
+		int allocate = staffVo.getAllocate();
+		String allocateReason = staffVo.getAllocateReason();
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId);
+		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId, allocate, allocateReason);
 
-		OrgStaffs staff = orgStaffService.selectByPrimaryKey(staffId);
-
-		order.setOrgId(staff.getOrgId());
+		order.setOrgId(staffVo.getOrgId());
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);// 更新订单状态---已派工
 		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付
 															// 的助理单，需要用到这个 修改时间
@@ -337,12 +311,12 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 
 		if (doOrderDispatch.equals(true)) {
-			dispatchStaffFromOrderService.pushToStaff(staff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+			orderDispatchService.pushToStaff(staffVo.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 			
 			//发送短信
 			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staff.getMobile(), "114590", smsContent);
+			SmsUtil.SendSms(staffVo.getMobile(), "114590", smsContent);
 		}
 		
 		return true;

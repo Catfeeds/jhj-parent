@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
  * 配置文件初始化类
  *
  */
+@SuppressWarnings("serial")
 public final class ConfigUtil extends Properties {
 	public static ConfigUtil instance;
 	public ResourceBundle rb;

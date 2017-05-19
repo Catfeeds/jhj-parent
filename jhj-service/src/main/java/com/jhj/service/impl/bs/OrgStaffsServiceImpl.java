@@ -51,7 +51,7 @@ import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
 import com.jhj.vo.order.OrderStaffRateVo;
-import com.jhj.vo.order.OrgStaffsNewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffAuthSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
@@ -678,27 +678,25 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	}
 
 	@Override
-	public OrgStaffsNewVo initOrgStaffNewVo() {
-
-		OrgStaffsNewVo newVo = new OrgStaffsNewVo();
-		OrgStaffs staffs = initOrgStaffs();
-
-		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, newVo);
-
-		newVo.setLat("");
-		newVo.setLng("");
-		newVo.setLocName("");
-		newVo.setDistanceValue(0);
-		newVo.setDistanceText("");
-		newVo.setDurationValue(0);
-		newVo.setDurationText("");
-		newVo.setTodayOrderNum(0);
-		newVo.setStaffOrgName("");
-		newVo.setStaffCloudOrgName("");
-		newVo.setDispathStaStr("");
-		newVo.setDispathStaFlag(0);
-
-		return newVo;
+	public OrgStaffDispatchVo initOrgStaffDispatchVo() {
+		OrgStaffs staffs = this.initOrgStaffs();
+		OrgStaffDispatchVo vo = new OrgStaffDispatchVo();
+		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, vo);
+		vo.setLat("");
+		vo.setLat("");
+		vo.setDistanceValue(0);
+		vo.setDistanceText("");
+		vo.setDurationText("");
+		vo.setOrgDistanceText("");
+		vo.setOrgDistanceValue(0);
+		vo.setTodayOrderNum(0);
+		vo.setPreDayOrderNum(0);
+		vo.setParentOrgName("");
+		vo.setOrgName("");
+		vo.setDispathStaFlag(0);
+		vo.setDispathStaStr("");
+		vo.setReason("");
+		return vo;
 	}
 	
 	@Override

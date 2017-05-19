@@ -11,6 +11,7 @@ import com.jhj.po.model.user.Users;
 import com.jhj.vo.user.UserAppVo;
 import com.jhj.vo.user.UserEditViewVo;
 import com.jhj.vo.user.UserSearchVo;
+import com.jhj.vo.user.UsersVo;
 
 public interface UsersService {
 	
@@ -63,4 +64,6 @@ public interface UsersService {
 	
 	//统计所有用户的余额
 	Double countUserRestMoney();
+	
+	UsersVo transVo(Users users);
 }

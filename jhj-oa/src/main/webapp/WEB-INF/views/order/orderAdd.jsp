@@ -68,56 +68,85 @@
 									<input type="hidden" id="adminId" name="adminId" value="${accountAuth.id}" />
 									<input type="hidden" id="adminName" name="adminName" value="${accountAuth.name}" />
 									<div class="form-body">
+										<div class="col-lg-6">
+											<section class="panel">
+												<header class="panel-heading"> 输入地址 </header>
+												<div class="panel-body">
+													<div class="form-group required">
+														<label class="col-lg-3 control-label">服务地址：</label>
+														<div class="col-lg-9">
+															<input type="text" id="suggestId" size="10" value="请输入位置" style="width: 240px;" name="name" />
+															<div id="searchResultPanel" style="border: 1px solid #C0C0C0; width: 150px; height: auto; display: none;"></div>
+															<div style="margin-left: 30px; width: 350px; height: 240px; border: 1px solid gray; display: none"
+																id="containers"></div>
+														</div>
+													</div>
+													<input type="hidden" name="poiLatitude" id="poiLatitude" />
+													<input type="hidden" name="poiLongitude" id="poiLongitude" />
+													<input type="hidden" name="poiAddress" id="poiAddress" />
+													<input type="hidden" name="poiCity" id="poiCity" />
+													<div class="form-group">
+														<label class="col-lg-3 control-label">
+															门牌号
+														</label>
+														<div class="col-lg-4">
+															<input type="text" class="form-control" id="recipient-addr" name="addr" onclick="javascript:select()" />
+														</div>
+														<div class="col-lg-4">
+															<button type="button" class="btn btn-primary" onclick="saveAddress()">添加地址</button>
+															<!-- <button type="button" id="btn-del" class="btn btn-primary" onclick="delAddress()">删除地址</button> -->
+														</div>
+													</div>
+												</div>
+											</section>
+										</div>
+										<div class="col-lg-6">
+											<section class="panel">
+												<header class="panel-heading"> 选择地址 </header>
+												<div class="panel-body">
+													<div class="form-group">
+														<label class="col-lg-3 control-label">
+															用户手机号
+														</label>
+														<div class="col-lg-5">
+															<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()"
+																onchange="getPeriodOrder()" />
+														</div>
+														<div class="col-lg-3">
+															<label class="control-label" id="userTypeStr"></label>
+														</div>
+													</div>
+													<div class="form-group required">
+														<label class="col-lg-3 control-label">
+															服务地址
+														</label>
+														<div class="col-lg-9">
+															<select id="addrId" name="addrId" class="form-control" onchange="addrChange()">
+																<option value="">--请选择服务地址--</option>
+															</select>
+														</div>
+														
+													</div>
+												</div>
+											</section>
+										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">
-												<font color="red">*</font>用户手机号
+												<font color="red">*</font>服务大类
 											</label>
 											<div class="col-md-5">
-												<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()" />
-											</div>
-											<div>
-												<label class="control-label" id="userTypeStr"></label>
+												<parentServiceTypeSelectTag:select />
 											</div>
 										</div>
-										<div class="form-group required">
+										<div class="form-group">
 											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务地址
+												<font color="red">*</font>服务类型
 											</label>
 											<div class="col-md-5">
-												<select id="addrId" name="addrId" class="form-control" onchange="addrChange()">
-													<option value="">--请选择服务地址--</option>
+												<select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
 												</select>
 											</div>
-											<div>
-												<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-whatever=""
-													onclick="address()">添加地址</button>
-												<button type="button" id="btn-update" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="getAddress()">修改地址</button>
-												<button type="button" id="btn-del" class="btn btn-primary" onclick="delAddress()">删除地址</button>
-											</div>
-											<div id="from-add-addr" style="display: none">
-												<%@include file="address.jsp"%>
-											</div>
 										</div>
-										<div class="form-group">
-												
-													<label class="col-lg-2 control-label">
-														<font color="red">*</font>服务大类
-													</label>
-													<div class="col-lg-2">
-														<parentServiceTypeSelectTag:select />
-													</div>
-
-													<label class="col-lg-2 control-label">
-														<font color="red">*</font>服务类型
-													</label>
-													<div class="col-lg-3">
-														<select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
-														</select>
-													</div>
-												
-
-										</div>
-										
 										<div class="form-group" id="divServiceAddons" style="display: none">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务子项
@@ -136,7 +165,6 @@
 												</table>
 											</div>
 										</div>
-										
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务时间
@@ -166,8 +194,8 @@
 												<font color="red">*</font>服务时长
 											</label>
 											<div class="col-md-5">
-												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePriceHourCheck()" onafterpaste="changePriceHourCheck"
-													class="form-control" value="3" />
+												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePriceHourCheck()"
+													onafterpaste="changePriceHourCheck" class="form-control" value="3" />
 											</div>
 										</div>
 										<div class="form-group">
@@ -208,11 +236,14 @@
 												<font color="red">*</font>支付方式
 											</label>
 											<div class="col-md-5">
-												<select id="orderPayType" name="orderPayType" class="form-control">
-													<option value="">--请选择支付方式--</option>
-													<option value="6">现金支付</option>
-													<option value="7">平台已支付</option>
-												</select>
+												<label class="checkbox-inline">
+													<input type="radio" name="orderPayType" id="orderPayType1" value="6" checked>
+													现金支付
+												</label>
+												<label class="checkbox-inline">
+													<input type="radio" name="orderPayType" id="orderPayType2" value="7">
+													平台已支付
+												</label>
 											</div>
 										</div>
 										<div class="form-group">
@@ -221,22 +252,14 @@
 												<textarea id="remarks" name="remarks" rows="5" maxlength='200' cols="50" class="form-control"></textarea>
 											</div>
 										</div>
-										<div class="form-group has-error">
-											<label class="col-md-2 control-label"></label>
+										<div class="form-group">
+											<label class="col-md-2 control-label">定制订单 </label>
 											<div class="col-md-5">
-												<h2><form:errors path="remarks" class="help-block"></form:errors></h2>
+												<select name="periodOrderId" id="periodOrderId" class="form-control">
+													<option value="">--请选择定制订单--</option>
+												</select>
 											</div>
 										</div>
-										
-										<div class="form-group">
-	                                        <label class="col-md-2 control-label">定制订单 </label>
-	                                        <div class="col-md-5">
-	                                            <select name="periodOrderId" id="periodOrderId" class="form-control" >
-	                                                <option value="">--请选择定制订单--</option>
-	                                            </select>
-	                                        </div>
-                                    	</div>
-										
 										<div class="form-actions fluid">
 											<div class="col-md-offset-3 col-md-3">
 												<input type="button" class="btn btn-success" onclick="saveForm()" value="保存" />
@@ -252,9 +275,9 @@
 			</section>
 		</section>
 		<!-- 日期选择 -->
-		<div id="calendar-show" style="display:none;">
+		<div id="calendar-show" style="display: none;">
 			<div class="rili">
-					<div class="rili1">
+				<div class="rili1">
 					<div class="rili1-1" id="show-year">2016</div>
 					<ul class="rili1-2">
 						<li id="substranc-day">
@@ -279,7 +302,6 @@
 				</div>
 			</div>
 		</div>
-		
 		<!-- 派工选择 -->
 		<div class="modal fade bs-example-modal-lg" id="modalDispatch" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
@@ -320,9 +342,9 @@
 							<div class="col-md-5">
 								<input type="text" id="selectedStaffs" data-role="tagsinput" readonly="true" />
 							</div>
-							
 							<div class="form-group col-md-5">
-								<input type="checkbox" id="sendSmsToUser" value="1" checked="checked" />发送短信通知给用户
+								<input type="checkbox" id="sendSmsToUser" value="1" checked="checked" />
+								发送短信通知给用户
 							</div>
 						</div>
 						<div id="staffList" class="col-sm-12">
@@ -335,10 +357,13 @@
 										<th>云店距用户距离</th>
 										<th>服务人员</th>
 										<th>手机号</th>
+										<th>性别</th>
 										<th>距用户距离</th>
-										<th>今日接单数</th>
+										<th>当日接单数</th>
+										<th>前一日接单数</th>
 										<th>是否可派工</th>
-										<th>原因</th>
+										<!--  <th>原因</th> -->
+										<th>派工依据</th>
 									</tr>
 								</thead>
 								<tbody id="allStaff">
@@ -385,7 +410,13 @@
 			});
 		});
 	</script>
-	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/orderAddForm.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/orderAddServiceType.js'/>"></script>
+	
+	<script type="text/javascript" src="<c:url value='/js/order/orderAddPrice.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/orderAddDispatch.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/orderAddPeriod.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/order/orderAddAddr.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>

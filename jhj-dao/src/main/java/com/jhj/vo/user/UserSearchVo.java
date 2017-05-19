@@ -3,6 +3,10 @@ package com.jhj.vo.user;
 import java.util.List;
 
 
+/**
+ * @author hulj
+ *
+ */
 public class UserSearchVo {
 	
 	private Long userId;
@@ -44,6 +48,10 @@ public class UserSearchVo {
 	private String orderNum;
 	
 	private List<String> mobileList;
+	
+	private String registerDate;
+    
+    private String vipName;
 	
 	public String getStartTimeStr() {
 		return startTimeStr;
@@ -180,5 +188,22 @@ public class UserSearchVo {
 	public void setMobileList(List<String> mobileList) {
 		this.mobileList = mobileList;
 	}
+
+	public String getRegisterDate() {
+		return registerDate;
+	}
+
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
+	}
+
+	public String getVipName() {
+		return vipName;
+	}
+
+	public void setVipName(String vipName) {
+		this.vipName = vipName;
+	}
+	
 
 }
