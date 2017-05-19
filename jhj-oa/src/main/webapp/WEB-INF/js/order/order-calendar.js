@@ -2,6 +2,21 @@
  * Created by hulj on 2016/10/20.
  */
 
+function showCalendar(){
+	var html = $("#calendar-show").html();
+	
+	layer.open({
+		  type: 1,
+		  title: '日历',
+		  closeBtn: 1, //不显示关闭按钮
+		  shadeClose: false,
+		  shade: [0],
+		  id:"layer-calendar1",
+		  area: ['700px', '550px'],
+		  content: html
+	});
+}
+
 $(function(){
 	var weekDay=['周日','周一','周二','周三','周四','周五','周六'];
 	var tempWeek=['周日','周一','周二','周三','周四','周五','周六'];
@@ -203,23 +218,23 @@ $(function(){
 		
 		$(document).on("click",'#show-day li',function(){
 			selectDay = $(this);
-			$("#show-day li p").removeClass("rili-day");
-			$("#show-dateTime li").removeClass("rili-time");
+			$(".rili1-4 li p").removeClass("rili-day");
+			$(".rili1-5 li").removeClass("rili-time");
 			$(this).parent().nextAll(".rili1-6").find("a #checkDate").removeClass("rili1-6-1").addClass("rili1-6-2");
 			$(this).find("p").addClass("rili-day");
 			var selectDate = getServiceDate(selectDay);
 			if(selectDate==currentDate){
 				if(nowHour>=16){
-					$("#show-day li p").removeClass("rili-day");
+					$(".rili1-4 li p").removeClass("rili-day");
 					$(selectDay).find("p").addClass("rili-day");
-					$("#show-dateTime li").addClass("rili-time");
+					$(".rili1-5 li").addClass("rili-time");
 				}
 			}
 			date = selectDate;
 			isFull(selectDate);
 		});
-		$("#show-dateTime li").removeClass("rili-time-no");
-		$("#show-day").find(":first-child p").addClass("rili-day");
+		$(".rili1-5 li").removeClass("rili-time-no");
+		$(".rili1-4").find(":first-child p").addClass("rili-day");
 		var compareDate = date;
 		isFull(compareDate);
 	}
@@ -310,15 +325,19 @@ $(function(){
 	}
 	
 	function filterBackDate(arrys,compNum){
-		for(var i=0;i<=arrys.length;i++){
+		var html = '';
+		for(var i=0;i<arrys.length;i++){
+			var listext = $(arrys[i]).text();
 			if(i<compNum){
 				if(!$(arrys[i]).hasClass('rili-time-no')){
 					$(arrys[i]).addClass("rili-time-no");
-					var listext = $(arrys[i]).text();
-					$(arrys[i]).html("<p>"+listext+"</p><p>约满</p>");
+					html+="<li class='rili-time-no'><p>"+listext+"</p><p>约满</p></li>";
 				}
+			}else{
+				html+="<li>"+listext+"</li>";
 			}
 		}
+		$(".rili1-5").html(html);
 	}
 	
 	//选择时间
@@ -347,6 +366,7 @@ $(function(){
 	});
 })
 
+
 function selectServiceDateTime(){
 	var service_type_id = $("#serviceType").val();
 	var addr_id = $("#addrId").val();
@@ -359,15 +379,5 @@ function selectServiceDateTime(){
 		return false;
 	}
 	
-	var html = $("#calendar-show").html();
-	
-	layer.open({
-		  type: 1,
-		  title: '日历',
-		  closeBtn: 1, //不显示关闭按钮
-		  shadeClose: false,
-		  shade: [0],
-		  area: ['700px', '550px'],
-		  content: html
-	});
+	showCalendar();
 }
