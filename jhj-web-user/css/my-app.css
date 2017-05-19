@@ -11,6 +11,9 @@
   height: 188px;
 }*/
 /****清楚浮动***/
+.clear-both{
+  clear: both;
+}
 .clearfloat:after{display:block;clear:both;content:"";visibility:hidden;height:0}
 .swiper-container .swiper-pagination {
   bottom: 0px;
@@ -6324,4 +6327,50 @@ p.special-p-2{
   color: #f0a346;
   font-size: 12px;
   line-height: 18px;
+}
+
+/***一厨一卫***/
+.recharge-favorable{
+   color:#4cc9c9;
+   font-size: 16px;
+   line-height: 42px;
+   float:right;
+   margin-right:5%;
+}
+.clean-shows{
+  width:95%;
+  margin:0 auto;
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+.clean-shows li{
+  float:left;
+  width:47%;
+  margin:10px 1.5%;
+}
+.clean-shows li img{
+  width:100%;
+}
+.top-align{
+  margin-top:10px;
+}
+.dingdang-logo{
+  width: 50%;
+  margin: 0 auto;
+  display: block;
+}
+.kitch-bathroom{
+  width: 100%;
+}
+.kitch-bathroom li{
+  width: 33.3%;
+  float: left;
+  text-align: center;
+}
+.kitch-bathroom li img{
+    width:80%;
+}
+.kitch-bath-word li{
+  line-height: 40px;
+  font-size: 14px;
 }
