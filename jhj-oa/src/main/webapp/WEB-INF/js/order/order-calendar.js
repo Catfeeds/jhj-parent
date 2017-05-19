@@ -257,7 +257,7 @@ $(function(){
 		}else{
 			afterDay = moment(selectDay).add(countDay, 'days');
 		}
-		date = afterDay;
+		date = moment(afterDay).format("YYYY-MM-DD");
 		showYearMonth(afterDay);
 		getDay(afterDay);
 	}
@@ -296,7 +296,7 @@ $(function(){
 	 * */
 	function tomm(val){
 		if(val==currentDate){
-			var lis = $(".rili1-5").find("li");
+			var lis = $("#show-dateTime").find("li");
 			switch (nowHour) {
 			case 0:
 			case 1:
@@ -347,9 +347,6 @@ $(function(){
 			}else{
 				html +="<li>"+listext+"</li>";
 			}
-		}
-		if($(".rili1-5").length>1){
-			$(".rili1-5").children().remove();
 		}
 		$(".rili1-5").html(html);
 	}
