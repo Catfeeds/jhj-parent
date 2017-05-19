@@ -39,6 +39,11 @@
 					</select>
 				</td>
 				<div class="form-group">
+					服务人员姓名：
+					<form:input path="staffName" class="form-control" />
+				</div>
+				
+				<div class="form-group">
 					订单号：
 					<form:input path="orderNo" class="form-control" />
 				</div>
