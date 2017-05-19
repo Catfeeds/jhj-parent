@@ -1,4 +1,15 @@
 myApp.onPageBeforeInit("period-order", function (page) {
+    var pageContainer=$$(page.container);
+
+    /*//兼容ios position:fixed
+   pageContainer.find('.page-content').on('scroll',function(){
+// 重点就是下面这一条语句的实现var housework1Top=$$(window).height()-110;
+		var scrollTop=pageContainer.find('.page-content').scrollTop();
+        var housework1Top=$$(window).height()+scrollTop-110;
+        //$$('.housework1').css('transform',translateY(housework1Top));
+       $$('.housework1').css({"top":housework1Top+"px"});
+		//({"top":housework1Top+"px"});
+    });*/
 
     var packageTypeId = page.query.package_type_id;
 
@@ -55,6 +66,9 @@ myApp.onPageBeforeInit("period-order", function (page) {
 	       	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(total-ptotal);
 	       	setPeriodPrice();
         }
+
+
+
     });
     
    
@@ -238,3 +252,5 @@ function setPeriodPrice() {
        	$$(".housework1 .housework1-1 .housework1-1-two #total-pprice span").text(0);
 	}
 }
+
+
