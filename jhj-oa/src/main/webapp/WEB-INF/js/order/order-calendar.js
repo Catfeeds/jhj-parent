@@ -235,11 +235,9 @@ $(function(){
 			if(selectDate==currentDate){
 				if(nowHour>=16){
 					$(".rili1-4 li p").removeClass("rili-day");
-//					$(this).find("p").addClass("rili-day");
 					$(selectDay).find("p").addClass("rili-day");
 					$(".rili1-5 li").addClass("rili-time");
 				}
-//				tomm(currentDate);
 			}
 			date = selectDate;
 			isFull(selectDate);
@@ -342,11 +340,16 @@ $(function(){
 			if(i<compNum){
 				if(!$(arrys[i]).hasClass('rili-time-no')){
 					$(arrys[i]).addClass("rili-time-no");
-					html+="<li class='rili-time-no'><p>"+listext+"</p><p>约满</p></li>";
+					html += "<li class='rili-time-no'><p>"+listext+"</p><p>约满</p></li>";
+				}else{
+					html += $(arrys[i]).html();
 				}
 			}else{
-				html+="<li>"+listext+"</li>";
+				html +="<li>"+listext+"</li>";
 			}
+		}
+		if($(".rili1-5").length>1){
+			$(".rili1-5").children().remove();
 		}
 		$(".rili1-5").html(html);
 	}
