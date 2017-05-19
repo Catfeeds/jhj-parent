@@ -6098,3 +6098,230 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 }
 
 /* --------------五重好礼样式   end ------------------------------ */
+
+/*包月初体验*/
+
+.each-title{
+  color: #FF9D00;
+  font-size: 22px;
+  font-weight: normal;
+  text-align: center;
+  background:url('../img/jiawubaoyue/bg-title.png') no-repeat center center;
+  line-height: 40px;
+}
+.clean-list{
+  width: 92.5%;
+  margin: 0 auto;
+}
+.clean-list li{
+  width: 42%;
+  margin: 0 4%;
+  margin-top: 18px;
+  position: relative;
+  float: left;
+}
+.clean-list img{
+  width: 100%;
+}
+.clean-list span{
+  font-size: 12px;
+  color: #FF9D00;
+  display: block;
+  position: absolute;
+  /* width: 41%; */
+  /* background-color: #000000; */
+  /* border-bottom-right-radius: 10px; */
+  /* -webkit-border-bottom-right-radius: 10px; */
+  -moz-border-bottom-right-radius: 10px;
+  line-height: 12px;
+  top: 3%;
+  /* text-align: center; */
+  /* vertical-align: middle; */
+  /* padding: 3% 0; */
+  left: 13%;
+
+}
+.clean-list p{
+  font-size: 12px;
+  color: #FF9D00;
+  line-height: 25px;
+
+}
+p.special-p{
+  margin-left: 7.5%;
+  padding:3px 0px;
+}
+p.special-p-2{
+  margin-left: 7.5%;
+  padding: 3px 0px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.serverspecial p{
+
+}
+.txt-center{
+  text-align: center;
+}
+.bright-colors{
+  color: #FF9D00;
+}
+.full-screen{
+  width: 100%;
+}
+.time{
+  width: 92%;
+  margin: 0 auto;
+
+}
+.time li{
+  float: left;
+  width: 24%;
+  margin:0 4%;
+}
+.time li span{
+  font-size: 14px;
+  margin: 0;
+  line-height: 25px;
+}
+.tool-list{
+  width: 95%;
+  height: 60px;
+  margin: 0 auto;
+}
+.tool-list li{
+  width: 25%;
+  float: left;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+  color: #FF9D00;
+}
+.logo-jiawu{
+  width: 48.5%;
+  margin: 0 auto;
+  display: block;
+}
+.shendu-bx p.server-sun{
+  width: 92%;
+  margin: 0 auto;
+}
+.zhanwei{
+  width: 24px;
+  display: inline-block;
+}
+.jiawu-bottom{
+  margin-top: 15px;
+}
+.jiawu-bottom img{
+  width: 5%;
+  display: block;
+  margin: 0 auto;
+}
+.time-w{
+  margin-top: 10px;
+}
+
+/****/
+/***分享成功页面***/
+.share-bg{
+  background: url('../img/share/share-bg.png') no-repeat center center;
+}
+.share-word{
+  width: 50%;
+  margin:0 auto;
+  padding-top:17%;
+}
+.share-word img{
+  width: 100%;
+
+}
+.return-button{
+  position: relative;
+  width: 68%;
+  margin:0 auto;
+  margin-top:4%;
+}
+.return-button img{
+  width:100%;
+}
+.return-button a{
+  width: 71%;
+  display: block;
+  height: 12%;
+  position: absolute;
+  top: 79%;
+  left:14.5%;
+  text-align: center;
+}
+.share-bottom{
+  width: 96%;
+  margin:0 auto;
+  margin-top: 4%;
+
+}
+.share-bottom img{
+  width: 100%;
+}
+/****分享专题页面*****/
+.share-top{
+  width: 100%;
+}
+.share-top img{
+  width: 100%;
+}
+.share-title{
+  font-size: 18px;
+  color: #e04b4a;
+  text-align: center;
+  background: url(../img/share/line.png) no-repeat center center;
+  width: 86%;
+  margin: 0 auto;
+  padding:3.5% 0px;
+}
+.share-list{
+  width: 88%;
+  background-color: #d2e3f2;
+  margin: 0 auto;
+  border-radius: 3px;
+  -moz-border-radius:3px; /* 老的 Firefox */
+  -webkit-border-radius:3px;
+}
+.share-list .share-content{
+  width: 84%;
+  margin: 0 auto;
+  padding: 7px 0px;
+}
+
+.share-list .share-content li{
+  color:#555555;
+  font-size: 13px;
+  height: 48px;
+  line-height: 24px;
+}
+.share-btn{
+  position: relative;
+  width: 51%;
+  margin: 0 auto;
+  margin-top: 5%;
+}
+.share-btn img{
+  width: 100%;
+}
+.share-btn  a{
+  display: block;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  text-align: center;
+  height: 100%;
+
+}
+
+/***母婴到家子菜单页面**/
+
+.shendu-circle p.chirld-p{
+  color: #f0a346;
+  font-size: 12px;
+  line-height: 18px;
+}
