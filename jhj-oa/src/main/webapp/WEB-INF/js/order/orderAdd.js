@@ -604,7 +604,7 @@ function saveForm() {
 	// return false;
 	if ($('#orderForm').validate().form()) {
 		
-		var parentServiceType = $("#parentServiceType").val();
+		var parentServiceType = $("#serviceTypeId").val();
 		
 		if (parentServiceType != 23 && parentServiceType != 24) {
 			var serviceAddonDatas = $("#serviceAddonDatas").val();
@@ -1138,6 +1138,7 @@ $("#order-type").on('mouseover','li span',function(){
 	var that = $(this).parent();
 	var serviceTypeId = $(this).parent().attr("data-order-type");
 	$("#order-type").find('div .chilrdMenu').css({"display":"none"});
+	$("#serviceTypeId").val(serviceTypeId);
 	$.ajax({
 		type: 'GET',
 		url: '/jhj-oa/newbs/get-service-types.json',

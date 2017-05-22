@@ -178,6 +178,7 @@
 											<div class="col-md-5">
 												<%-- <parentServiceTypeSelectTag:select /> --%>
 												<ul id='order-type' style="line-height: 30px;font-size: 13px;">
+													<input type="hidden" id="serviceTypeId" value=''/>
 													<li data-order-type='23' class="order-type-li">
 														<span>基础保洁</span>
 														<div style="z-index:1000"></div>
