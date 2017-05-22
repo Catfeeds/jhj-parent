@@ -287,7 +287,7 @@ $(".parentServiceType").on('change', function() {
 	}
 });
 
-function serviceTypeChange(orderTypeId,serviceTypeId) {
+function serviceTypeChange(orderTypeId,serviceTypeId,orderTypeName) {
 //	var serviceType = $("input[name='serviceType']").val();
 	
 	if (serviceTypeId == "" || serviceTypeId == undefined) {
@@ -299,8 +299,11 @@ function serviceTypeChange(orderTypeId,serviceTypeId) {
 	if (orderTypeId == 23 || orderTypeId == 24) {
 		$("#divServiceAddons").css("display", "none");
 		serviceTypeChangeHour(serviceTypeId);
+		$("#divServiceAddons1").css({"display":"block"});
+		$("#divServiceAddons2").val(orderTypeName);
 	} else {
 		serviceTypeChangeExp(serviceTypeId);
+		$("#divServiceAddons1").css({"display":"none"});
 	}
 }
 
@@ -1157,8 +1160,9 @@ $("#order-type").on('mouseover','li span',function(){
 $(document).on('click','.service-type-li',function(){
 	var serviceTypeId = $(this).attr("data-service-type");
 	var orderTypeId = $(this).parents(".order-type-li").attr("data-order-type");
+	var orderTypeName = $(this).text();
 	$(this).css({"background":"red"});
 	$("#serviceType").val(serviceTypeId);
-	$(this).parent().parent().remove();
-	serviceTypeChange(orderTypeId,serviceTypeId);
+	$(this).parent().remove();
+	serviceTypeChange(orderTypeId,serviceTypeId,orderTypeName);
 });

@@ -42,19 +42,19 @@
    color:#fff;
    
 }
-.chilrdMenu{
+ .chilrdMenu{
     background: #fff none repeat scroll 0 0;
     border: 1px solid #ff5647;
-    left: 180px;
+    left: 80px;
     padding: 6px 0px 6px 11px;
     position: absolute;
     top: -36px;
-    width: 420px;
+    width: 135px;
     z-index: 999;
     min-height: 144px;
     
    
-}
+} 
 .chilrdMenu li{
    color:#666;
    float:left;
@@ -211,6 +211,16 @@
 												</select>
 											</div>
 										</div> -->
+										
+										<div class="form-group" id="divServiceAddons1" style="display: none">
+											<label class="col-md-2 control-label">
+												<font color="red">*</font>服务子项
+											</label>
+											<div class="col-lg-5">
+												<input type="text" id="divServiceAddons2" value="" readonly="readonly" class="form-control"/>
+											</div>
+										</div>
+										
 										<div class="form-group" id="divServiceAddons" style="display: none">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务子项
