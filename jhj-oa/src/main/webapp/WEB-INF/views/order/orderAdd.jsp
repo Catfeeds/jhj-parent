@@ -495,7 +495,6 @@
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
-	
-	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js' />"></script>
+
 </body>
 </html>
