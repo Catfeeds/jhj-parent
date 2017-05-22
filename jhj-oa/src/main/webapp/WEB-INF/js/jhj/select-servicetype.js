@@ -23,7 +23,7 @@ $("#parentServiceType").on('change', function(){
 			if(0 == $result.status){
 				
 				//针对服务子项的下拉联动
-				var selectServiceType = $("#selectServiceType").val();
+				/*var selectServiceType = $("#selectServiceType").val();
 				$serviceTypeOptions = '<option value="0">请选择服务子类</option>';
 				$.each($result.data, function(i, obj) {
 					if (obj.service_type_id == selectServiceType) {
@@ -34,7 +34,7 @@ $("#parentServiceType").on('change', function(){
 					
 				});
 				
-				$("#serviceType").html($serviceTypeOptions);
+				$("#serviceType").html($serviceTypeOptions);*/
 			}
 		},
 		error:function(){

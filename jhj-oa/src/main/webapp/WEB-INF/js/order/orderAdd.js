@@ -287,27 +287,26 @@ $(".parentServiceType").on('change', function() {
 	}
 });
 
-function serviceTypeChange() {
-	var serviceType = $("select[name='serviceType']").val();
+function serviceTypeChange(orderTypeId,serviceTypeId) {
+//	var serviceType = $("input[name='serviceType']").val();
 	
-	if (serviceType == "" || serviceType == undefined) {
+	if (serviceTypeId == "" || serviceTypeId == undefined) {
 		return false;
 	}
 	
-	var parentServiceType = $("#parentServiceType").val();
+//	var parentServiceType = $("#parentServiceType").val();
 	
-	if (parentServiceType == 23 || parentServiceType == 24) {
+	if (orderTypeId == 23 || orderTypeId == 24) {
 		$("#divServiceAddons").css("display", "none");
-		serviceTypeChangeHour();
+		serviceTypeChangeHour(serviceTypeId);
 	} else {
-		serviceTypeChangeExp();
+		serviceTypeChangeExp(serviceTypeId);
 	}
 }
 
-
 // 金牌保洁服务类别
-function serviceTypeChangeHour() {
-	var id = $("select[name='serviceType']").val();
+function serviceTypeChangeHour(serviceTypeId) {
+	var id = serviceTypeId;
 	
 	if (id == "") return false;
 	
@@ -335,9 +334,9 @@ function serviceTypeChangeHour() {
 }
 
 // 深度养护服务类别
-function serviceTypeChangeExp() {
-	var serviceType = $("select[name='serviceType']").val();
-	
+function serviceTypeChangeExp(serviceTypeId) {
+//	var serviceType = $("select[name='serviceType']").val();
+	var serviceType = serviceTypeId;
 	if (serviceType == "" || serviceType == undefined) {
 		return false;
 	}
@@ -1129,3 +1128,37 @@ function getPeriodOrder(){
 		}
 	});
 }
+
+
+
+$("#order-type").on('mouseover','li span',function(){
+	var that = $(this).parent();
+	var serviceTypeId = $(this).parent().attr("data-order-type");
+	$("#order-type").find('div .chilrdMenu').css({"display":"none"});
+	$.ajax({
+		type: 'GET',
+		url: '/jhj-oa/newbs/get-service-types.json',
+		dataType: 'json',
+		cache: false,
+		data:{parentId:serviceTypeId},
+		success:function($result){
+			if(0 == $result.status){
+				var serviceTypeHtml = '<ul class="chilrdMenu" >';
+				$.each($result.data, function(i, obj) {
+					serviceTypeHtml += '<li class="service-type-li" data-service-type="'+obj.service_type_id+'">' + obj.name + "</li>";
+				});
+				serviceTypeHtml += "</ul>"
+				$(that).find("div").html(serviceTypeHtml);
+			}
+		}
+	});
+});
+
+$(document).on('click','.service-type-li',function(){
+	var serviceTypeId = $(this).attr("data-service-type");
+	var orderTypeId = $(this).parents(".order-type-li").attr("data-order-type");
+	$(this).css({"background":"red"});
+	$("#serviceType").val(serviceTypeId);
+	$(this).parent().parent().remove();
+	serviceTypeChange(orderTypeId,serviceTypeId);
+});

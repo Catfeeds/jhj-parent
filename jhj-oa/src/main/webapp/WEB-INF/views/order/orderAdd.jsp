@@ -30,6 +30,46 @@
 .bootstrap-tagsinput .label {
 	font-size: 100%;
 }
+#order-type>li{
+    cursor:pointer;
+    position:relative;
+    padding-left:10px;
+    width:80px;
+   
+}
+.current{
+   background-color:#fe675c;
+   color:#fff;
+   
+}
+.chilrdMenu{
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #ff5647;
+    left: 180px;
+    padding: 6px 0px 6px 11px;
+    position: absolute;
+    top: -36px;
+    width: 420px;
+    z-index: 999;
+    min-height: 144px;
+    
+   
+}
+.chilrdMenu li{
+   color:#666;
+   float:left;
+   line-height:14px;
+   height:14px;
+   margin:4px 0;
+   padding:0px 8px;
+   border-left:1px solid #ccc;
+  
+}
+
+.li-hidden{
+	display:none;
+}
+
 </style>
 </head>
 <body>
@@ -132,13 +172,37 @@
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务大类
+												<font color="red">*</font>服务类型
 											</label>
+											<input type="hidden" name="serviceType" id="serviceType" value='' />
 											<div class="col-md-5">
-												<parentServiceTypeSelectTag:select />
+												<%-- <parentServiceTypeSelectTag:select /> --%>
+												<ul id='order-type' style="line-height: 30px;font-size: 13px;">
+													<li data-order-type='23' class="order-type-li">
+														<span>基础保洁</span>
+														<div style="z-index:1000"></div>
+													</li>
+													<li data-order-type='24' class="order-type-li">
+													   <span>厨娘烧饭</span>
+													   <div style="z-index:1000"></div>
+													</li>
+													<li data-order-type='26' class="order-type-li">
+													   <span>深度养护</span>
+													   <div style="z-index:1000"></div>
+													</li>
+													<li data-order-type='57' class="order-type-li">
+													  <span>母婴到家</span>
+													  <div style="z-index:1000"></div>
+													</li>
+													<li data-order-type='66' class="order-type-li">
+													  <span>老年到家</span>
+													  <div style="z-index:1000"></div>
+													</li>
+												</ul>
+												<div></div>
 											</div>
 										</div>
-										<div class="form-group">
+										<!-- <div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务类型
 											</label>
@@ -146,7 +210,7 @@
 												<select name="serviceType" id="serviceType" class="form-control" onchange="serviceTypeChange()">
 												</select>
 											</div>
-										</div>
+										</div> -->
 										<div class="form-group" id="divServiceAddons" style="display: none">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务子项
@@ -420,5 +484,7 @@
 	<script type="text/javascript" src="<c:url value='/js/baidu-map.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/order-calendar.js' />"></script>
+	
+	<script type="text/javascript" src="<c:url value='/js/order/orderAdd.js' />"></script>
 </body>
 </html>
