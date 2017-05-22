@@ -872,22 +872,22 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			}
 		}
 		
-//		if(searchVo.getAddrName()!=null && !"".equals(searchVo.getAddrName())){
-//			String addrName = searchVo.getAddrName();
-//			try {
-//				searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1"),"UTF-8"));
-//			} catch (UnsupportedEncodingException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		if(searchVo.getOrderAddr()!=null && !"".equals(searchVo.getOrderAddr())){
-//			String orderAddr = searchVo.getOrderAddr();
-//			try {
-//				searchVo.setOrderAddr(new String(orderAddr.getBytes("ISO-8859-1"),"UTF-8"));
-//			} catch (UnsupportedEncodingException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		if(searchVo.getAddrName()!=null && !"".equals(searchVo.getAddrName())){
+			String addrName = searchVo.getAddrName();
+			try {
+				searchVo.setAddrName(new String(addrName.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		if(searchVo.getOrderAddr()!=null && !"".equals(searchVo.getOrderAddr())){
+			String orderAddr = searchVo.getOrderAddr();
+			try {
+				searchVo.setOrderAddr(new String(orderAddr.getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		return searchVo;
 	}
