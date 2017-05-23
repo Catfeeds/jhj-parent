@@ -172,6 +172,7 @@ public class OrderDispatchController extends BaseController {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 
+		
 		if (newServiceDate.length() == 16)
 			newServiceDate += ":00";
 
@@ -242,7 +243,7 @@ public class OrderDispatchController extends BaseController {
 		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
 
 		// 处理只更换派工时间，不更换派工人员的情况.
-		if (!oldServiceDateTime.equals(serviceDateTime)) {
+		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
 
 			// 先检测在新的服务时间，原派工服务人员时间是否有冲突.
 			for (OrderDispatchs op : disList) {
