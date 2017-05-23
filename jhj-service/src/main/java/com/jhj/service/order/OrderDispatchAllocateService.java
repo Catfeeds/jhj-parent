@@ -23,6 +23,14 @@ public interface OrderDispatchAllocateService {
 	List<OrgStaffDispatchVo> manualDispatchToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long sessionOrgId, Long selectedOrgId);
 
 	List<OrgStaffDispatchVo> manualDispatchNotToday(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long selectOrgId);
+
+	List<OrgStaffDispatchVo> manualDispatchTodayByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId,
+			Long selectOrgId);
+
+	List<OrgStaffDispatchVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long selectOrgId);
+
+	List<OrgStaffDispatchVo> manualDispatchNotTodayByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId,
+			Long selectOrgId);
     
 
 }

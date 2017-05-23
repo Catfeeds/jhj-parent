@@ -696,6 +696,8 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		vo.setDispathStaFlag(0);
 		vo.setDispathStaStr("");
 		vo.setReason("");
+		vo.setAllocate(0);
+		vo.setAllocateReason("");
 		return vo;
 	}
 	
