@@ -208,7 +208,7 @@ function orderFormSubmit() {
 	params.orderPay = $("#orderPay").val();
 	params.serviceAddonDatas = $("#serviceAddonDatas").val();
 	params.selectStaffIds = $("#selectStaffIds").val();
-	params.orderPayType = $("input[name='orderPayType']").val();
+	params.orderPayType = $("input[name='orderPayType']:checked").val();
 	params.adminId = $("#adminId").val();
 	params.adminName = $("#adminName").val();
 	params.orderFrom = 2;
