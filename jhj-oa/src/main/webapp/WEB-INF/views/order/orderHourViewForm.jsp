@@ -297,19 +297,19 @@
 												<table class="table table-striped table-advance table-hover">
 													<thead>
 														<tr>
-															<th>选派员工</th>
-															<th>地区门店</th>
-															<th>云店</th>
-															<th>云店距用户距离</th>
-															<th>服务人员</th>
-															<th>手机号</th>
-															<th>性别</th>
-															<th>距用户距离</th>
-															<th>当日接单数</th>
-															<th>前一日接单数</th>
-															<th>是否可派工</th>
-															<!-- <th>原因</th> -->
-															<th>派工依据</th>
+															<th width="5%">选派员工</th>
+															<th width="8%">门店</th>
+															<th width="8%">云店</th>
+															<th width="8%">云店距用户距离</th>
+															<th width="8%">服务人员</th>
+															<th width="8%">手机号</th>
+															<th width="5%">性别</th>
+															<th width="8%">距用户距离</th>
+															<th width="4%">当日接单数</th>
+															<th width="4%">前一日接单数</th>
+															<th width="8%">是否可派工</th>
+															<th width="10%">原因</th>
+															<th width="10%">派工依据</th>
 														</tr>
 													</thead>
 													<tbody id="allStaff">
@@ -430,15 +430,9 @@
 	<script>
 		<c:forEach items="${oaOrderListVoModel.orderDispatchs}" var="item">
 
-		var selectedStaffId = $
-		{
-			item.staffId
-		};
+		var selectedStaffId = ${item.staffId};
 		var selectedStaffName = "${item.staffName}";
-		var selectedDistanceValue = $
-		{
-			item.userAddrDistance
-		};
+		var selectedDistanceValue = ${item.userAddrDistance};
 		addSelectedStaffs(selectedStaffId, selectedStaffName, selectedDistanceValue);
 		</c:forEach>
 	</script>

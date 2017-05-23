@@ -165,7 +165,7 @@ var loadStaffDynamic = function(data, status, xhr) {
 		+ "<td>" + item.today_order_num + "</td>"
 		+ "<td>" + item.pre_day_order_num + "</td>"
 		+ "<td>" + item.dispath_sta_str + "</td>"
-//		+ "<td>" + item.reason + "</td>";
+		+ "<td>" + item.reason + "</td>"
 		+ "<td>" + item.allocate_reason + "</td>";
 		htmlStr+="</tr>";
 		tdHtml += htmlStr;

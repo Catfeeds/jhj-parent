@@ -280,6 +280,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 		// 1. 判断是当天还是隔日订单
 
+		
 		String today = DateUtil.getToday();
 
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, DateUtil.DEFAULT_PATTERN);
@@ -375,6 +376,33 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			list = orderDispatchAllocateService.manualDispatchToday(addrId, serviceTypeId, serviceDate, serviceHour, selectParentId, orgId);
 		} else {
 			list = orderDispatchAllocateService.manualDispatchNotToday(addrId, serviceTypeId, serviceDate, serviceHour, selectParentId, orgId);
+		}		
+		
+		
+		return list;
+	}
+	
+	/**
+	 * 订单类手动派工 ,需要返回List<OrgStaffsNewVo>,
+	 * 1. 找出符合派工逻辑的所有门店的员工
+	 * 2. 包含门店的距离
+	 * 3. 包含员工的距离.
+	 */
+	@Override
+	public List<OrgStaffDispatchVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long orgId) {
+
+		List<OrgStaffDispatchVo> list = new ArrayList<OrgStaffDispatchVo>();
+		
+		// 1. 判断是当天还是隔日订单
+
+		String today = DateUtil.getToday();
+
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, DateUtil.DEFAULT_PATTERN);
+
+		if (serviceDateStr.equals(today)) {
+			list = orderDispatchAllocateService.manualDispatchTodayByOrg(addrId, serviceTypeId, serviceDate, serviceHour, selectParentId, orgId);
+		} else {
+			list = orderDispatchAllocateService.manualDispatchNotTodayByOrg(addrId, serviceTypeId, serviceDate, serviceHour, selectParentId, orgId);
 		}		
 		
 		
@@ -678,6 +706,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			OrgDispatchPoiVo org = orgList.get(i);
 			Long orgId = org.getOrgId();
 			orgIds.add(orgId);
+//			System.out.println("符合yun'd = " + org.getName() + "--距离 =" + org.getDistanceText());
 		}
 
 		if (orgIds.isEmpty()) {
@@ -701,7 +730,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			if (!staffIds.contains(os.getStaffId()))
 				staffIds.add(os.getStaffId());
 		}
-		// System.out.println("总人数:" + staffIds.size());
+		 System.out.println("总人数:" + staffIds.size());
 		// 排除黑名单人员
 		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
 		searchVo2.setIsBlack((short) 1);
@@ -711,7 +740,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				staffIds.remove(osf.getStaffId());
 			}
 		}
-		// System.out.println("排除黑名单后总人数:" + staffIds.size());
+		 System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// 排除请假人员
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
 		Date leaveDate = DateUtil.parse(serviceDateStr);
@@ -725,7 +754,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 		}
-		// System.out.println("排除请假后总人数:" + staffIds.size());
+		 System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) {
 			// 如果人数都为0，则显示所有都为已约满.
 			for (int i = 0; i < datas.size(); i++) {

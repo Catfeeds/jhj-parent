@@ -81,18 +81,18 @@ $("#submitForm").on('click', function() {
 		}
 		
 		// 判断派工人员个数是否一致，用于派工调整，涉及到金额
-		if (orderStatus == 3) {
-			var staffNums = $("#staffNums").val();
-			if (staffNums != "" && staffNums != undefined && staffNums > 0) {
-				var staffAry = selectStaffIds.split(",");
-				
-				if (staffAry.length != staffNums) {
-					alert("派工人数应为2人，请确认派工人数是否正确");
-					$('#submitForm').removeAttr("disabled");
-					return false;
-				}
-			}
-		}
+//		if (orderStatus == 3) {
+//			var staffNums = $("#staffNums").val();
+//			if (staffNums != "" && staffNums != undefined && staffNums > 0) {
+//				var staffAry = selectStaffIds.split(",");
+//				
+//				if (staffAry.length != staffNums) {
+//					alert("派工人数应为2人，请确认派工人数是否正确");
+//					$('#submitForm').removeAttr("disabled");
+//					return false;
+//				}
+//			}
+//		}
 		
 		$.ajax({
 			type : 'post',
@@ -169,7 +169,7 @@ var loadStaffDynamic = function(data, status, xhr) {
 		
 		htmlStr += "<input  type='hidden' id='selectStaffId' name='selectStaffId' value="+ item.staff_id + ">";
 		htmlStr += "<input type='hidden' id='distanceValue' value="+ item.distance_value + ">";
-		htmlStr += "<input type='hidden' id='selectStaffName' value="+ item.name + ">";
+		htmlStr += "<input type='hidden' id='selectStaffName' value="+ item.name + "></td>";
 		htmlStr += "<td>" + item.parent_org_name + "</td>";
 		htmlStr += "<td>" + item.org_name + "</td>";
 		htmlStr += "<td>" + item.org_distance_text + "</td>";
@@ -180,7 +180,7 @@ var loadStaffDynamic = function(data, status, xhr) {
 		htmlStr += "<td>" + item.today_order_num + "</td>";
 		htmlStr += "<td>" + item.pre_day_order_num + "</td>";
 		htmlStr += "<td>" + item.dispath_sta_str + "</td>";
-//		htmlStr += "<td>" + item.reason + "</td>";
+		htmlStr += "<td>" + item.reason + "</td>";
 		htmlStr += "<td>" + item.allocate_reason + "</td>";
 		htmlStr += "</tr>";
 		
