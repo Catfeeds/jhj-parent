@@ -54,6 +54,7 @@ myApp.onPageBeforeInit('order-cus-hostwork-month', function(page) {
 			var result = data.data;
 			if(parseInt(result)>=1){
 				$$("#order-hour-click").attr("disabled","disabled");
+				myApp.alert("该服务只能体验一次");
 			}
 		}
 	});
