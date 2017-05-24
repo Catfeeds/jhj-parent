@@ -218,8 +218,9 @@ function checkDefaultNum() {
 	
 	console.log("validateMsg == " + validateMsg);
 	
-	
-	
+	if(Number(inputItemNum)<2){
+		validateMsg = "最低数量为2";
+	}
 	
 	return validateMsg;
 }
