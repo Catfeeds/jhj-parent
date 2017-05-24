@@ -57,4 +57,6 @@ public interface OrdersService {
 	//统计用户的下单数量
 	int countUserOrderNum(Long userId);
 	
+	int selectPackEarlyExperience(Long userId,Long serviceTypeId);
+	
 }

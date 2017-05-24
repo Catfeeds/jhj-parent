@@ -514,6 +514,11 @@ public class OrdersServiceImpl implements OrdersService {
 		return ordersMapper.countUserOrderNum(userId);
 	}
 
+	@Override
+	public int selectPackEarlyExperience(Long userId, Long serviceTypeId) {
+		return ordersMapper.selectPackEarlyExperience(userId,serviceTypeId);
+	}
+
 	/**
 	 * 后台取消订单
 	 * 

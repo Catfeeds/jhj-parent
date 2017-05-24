@@ -196,4 +196,24 @@ public class OrderHourListController extends BaseController {
 	}
 	
 	
+	/**
+	 * 验证用户是否有下过包月初体验订单
+	 * 
+	 * */
+	@RequestMapping(value = "validate-pack-early-experience.json", method = RequestMethod.GET)
+	public AppResultData<Object> validatePackEarlyExperience(
+			@RequestParam("user_id") Long userId,
+			@RequestParam("service_type_id") Long serviceTypeId){
+		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0,
+				ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		
+		int selectPackEarlyExperience = orderService.selectPackEarlyExperience(userId, serviceTypeId);
+		
+		result.setData(selectPackEarlyExperience);
+		
+		return result;
+	}
+	
 }

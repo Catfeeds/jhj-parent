@@ -1484,4 +1484,10 @@
 	<select id="countUserOrderNum" parameterType="java.lang.Long" resultType="java.lang.Integer">
 		select count(*) from orders where user_id = #{userId} and order_status =7 or order_status =8
 	</select>
+	
+	<select id="selectPackEarlyExperience" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		select count(*) from orders where user_id = #{userId} 
+		and service_type = #{serviceTypeId} 
+		<![CDATA[and order_status >= 7 and order_status <=8]]>
+	</select>
 </mapper>

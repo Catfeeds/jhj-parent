@@ -41,18 +41,22 @@ myApp.onPageBeforeInit('order-cus-hostwork-month', function(page) {
 			break;
 	}
 	
+	var userId = localStorage.getItem("user_id");
 	
 	//验证用户是否可以下包月初体验
 	$$.ajax({
 		type : "GET",
-		url : siteAPIPath + "dict/get_service_type.json?service_type_id=" + serviceTypeId,
+		url : siteAPIPath + "order/validate-pack-early-experience.json",
+		data:{"user_id":userId,"service_type_id":serviceTypeId},
 		dataType : "json",
 		async : false,
 		success : function(data) {
-	    	
+			var result = data.data;
+			if(parseInt(result)>=1){
+				$$("#order-hour-click").attr("disabled","disabled");
+			}
 		}
 	});
-	
 	
 	
 	$$("#order-hour-click").on("click", function() {
