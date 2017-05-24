@@ -196,6 +196,8 @@ public class OrderDispatchController extends BaseController {
 
 		// 已经派工的人员，遗留的信息
 		List<Long> oldDispatchStaffIds = new ArrayList<Long>();
+		int newStaffNum = 0;
+		int oldStaffNum = 0;
 
 		for (int i = 0; i < staffIdsAry.length; i++) {
 			String tmpStaffIdStr = staffIdsAry[i];
@@ -205,7 +207,9 @@ public class OrderDispatchController extends BaseController {
 			staffIds.add(tmpStaffId);
 			newDispathStaffIds.add(tmpStaffId);
 		}
-
+		newStaffNum = staffIdsAry.length;
+		
+		
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(order.getOrderNo());
 		searchVo.setDispatchStatus((short) 1);
@@ -213,6 +217,7 @@ public class OrderDispatchController extends BaseController {
 
 		// 去掉已有的派工人员，只保留新增的派工人员.
 		if (!disList.isEmpty()) {
+			oldStaffNum = disList.size();
 			for (OrderDispatchs d : disList) {
 				if (staffIds.contains(d.getStaffId())) {
 					newDispathStaffIds.remove(d.getStaffId());
@@ -222,7 +227,7 @@ public class OrderDispatchController extends BaseController {
 		}
 
 		// 派工时间相同，不更换派工人员的情况，不做任何操作
-		if (oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
+		if (oldServiceDateTime.equals(serviceDateTime) && newStaffNum == oldStaffNum && newDispathStaffIds.size() == 0) {
 			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("派工人员和服务时间都无变化，不做操作.");
 			return resultData;
@@ -385,7 +390,8 @@ public class OrderDispatchController extends BaseController {
 		List<Long> staffIds = new ArrayList<Long>();
 		// 本地派工人员与已经派工过的人员比较，只保留新的派工人员.
 		List<Long> newDispathStaffIds = new ArrayList<Long>();
-
+		int newStaffNum = 0;
+		int oldStaffNum = 0;
 		// 已经派工的人员，遗留的信息
 		List<Long> oldDispatchStaffIds = new ArrayList<Long>();
 
@@ -397,15 +403,17 @@ public class OrderDispatchController extends BaseController {
 			staffIds.add(tmpStaffId);
 			newDispathStaffIds.add(tmpStaffId);
 		}
+		newStaffNum = staffIdsAry.length;
 
 		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
 		searchVo.setOrderNo(order.getOrderNo());
 		searchVo.setDispatchStatus((short) 1);
 		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
-
+		
 		// 去掉已有的派工人员，只保留新增的派工人员.
 		if (!disList.isEmpty()) {
 			for (OrderDispatchs d : disList) {
+				oldStaffNum = disList.size();
 				if (staffIds.contains(d.getStaffId())) {
 					newDispathStaffIds.remove(d.getStaffId());
 					oldDispatchStaffIds.add(d.getStaffId());
@@ -414,7 +422,7 @@ public class OrderDispatchController extends BaseController {
 		}
 
 		// 派工时间相同，不更换派工人员的情况，不做任何操作
-		if (oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
+		if (oldServiceDateTime.equals(serviceDateTime) && newStaffNum == oldStaffNum && newDispathStaffIds.size() == 0) {
 			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("派工人员和服务时间都无变化，不做操作.");
 			return resultData;
@@ -484,7 +492,8 @@ public class OrderDispatchController extends BaseController {
 			return resultData;
 
 		}
-
+		
+		
 		OrderDispatchs oldDispatchs = null;
 		List<String> oldStaffMobiles = new ArrayList<String>();
 		// 将替换的派工人员状态置为 0
@@ -592,7 +601,9 @@ public class OrderDispatchController extends BaseController {
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
 			return list;
 		}
-		list = orderDispatchsService.manualDispatch(addrId, serviceTypeId, serviceDate, serviceHour, parentId, orgId);
+		
+		
+		list = orderDispatchsService.manualDispatchByOrg(addrId, serviceTypeId, serviceDate, serviceHour, parentId, orgId);
 		return list;
 	}
 
