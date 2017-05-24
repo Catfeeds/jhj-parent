@@ -218,7 +218,8 @@ function checkDefaultNum() {
 	
 	console.log("validateMsg == " + validateMsg);
 	
-	if(Number(inputItemNum)<2){
+	var serviceTypeId = sessionStorage.getItem("service_type_id");
+	if(serviceTypeId==51 && Number(inputItemNum)<2){
 		validateMsg = "最低数量为2";
 	}
 	
