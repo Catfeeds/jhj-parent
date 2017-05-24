@@ -6,6 +6,16 @@ myApp.onPageInit('order-hour-choose', function(page) {
 	
 	var serviceTypeId = page.query.service_type_id;
 	sessionStorage.setItem("service_type_id", serviceTypeId);
+	
+	//包月初体验隐藏页面
+	function hideContent(serviceTypeId){
+		if(serviceTypeId==61){
+			$$("#minServiceHour").val('4.5');
+			$$("#isShow").css("display","none");
+		}
+	}
+	hideContent(serviceTypeId);
+	
 		
 	//获取服务类别基本信息
 	var serviceTypeId = sessionStorage.getItem("service_type_id");
@@ -233,3 +243,4 @@ function initOrderHour() {
 	if (orderHourPay == undefined || orderHourPay == "") return false;
 	$$("#orderHourPayStr").html(orderHourPay + "元");
 }
+
