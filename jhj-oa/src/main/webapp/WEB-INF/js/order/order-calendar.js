@@ -32,6 +32,7 @@ $(function(){
 	
 	//展示时间 
 	function showTime(selectDate,val){
+		var result = val;
 		var dateTime='';
 		var orderServiceHour=0;
 		var html = $("#show-dateTime").html();
@@ -43,7 +44,11 @@ $(function(){
 				for(var j = 0 ; j < val.length;j++){
 					if(time[i]==val[j].service_hour){
 						if(val[j].is_full==0){
-							dateTime+="<li>"+time[i]+"</li>";
+							if(val[j+1].is_full==1 && val[j-1].is_full==1){
+								dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
+							}else{
+								dateTime+="<li>"+time[i]+"</li>";
+							}
 						}
 						if(val[j].is_full==1){
 							dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
@@ -53,7 +58,7 @@ $(function(){
 			}
 		}
 		$(".rili1-5").html(dateTime);
-		$(document).on("click",'#show-dateTime li',function(obj){
+		$(document).on("click",'.rili1-5 li',function(obj){
 			$("#show-dateTime li").removeClass("rili-time");
 			$(this).addClass("rili-time");
 			if($(this).hasClass("rili-time-no")){
@@ -64,24 +69,59 @@ $(function(){
 				dayTime=$(this).text();
 				$(this).parent().next(".rili1-6").find("a #checkDate").removeClass("rili1-6-2").addClass("rili1-6-1");
 			}
-			
-	        var selectTime = dayTime.replace(":",".");
-	        var selectTimeStart = parseFloat(selectTime);
-	        var selectTimeEnd = parseFloat(selectTime)+parseFloat(orderServiceHour)+2;
-	        for(var k=0;k<val.length;k++){
-	        	var valTime = val[k].service_hour;
-	        	var parseTime = valTime.replace(":",".");
-	        	if(parseTime>=selectTimeStart && parseTime<=selectTimeEnd){
-	        		if(val[k].is_full==1){
-	        			alert("这个时间不能选择");
-	        			break;
-	        		}
-	        	}
-	        }
 		});
 		tomm(date);
 	}
-	showTime();
+	showTime(currentDate);
+	
+	//是否约满
+	function isFull(serviceDateStr){
+		
+		var host = window.location.host;
+		var appName = "jhj-app";
+		var localUrl = "http://" + host;
+		var siteAPIPath = localUrl + "/" + appName + "/app/";
+		var url = "";
+		
+		var param = {};
+		var serviceTypeId = $("#serviceType").val();
+		if (serviceTypeId == undefined || serviceTypeId == 0) return false;
+		param.service_type_id = $("#serviceType").val();
+		
+		var addrId = $("#addrId").val();
+		if (addrId == undefined || addrId == 0) {
+			var lat = $("#poiLatitude").val();
+			var lng = $("#poiLatitude").val();
+			if (lat == undefined || lat == "" || lng == undefined || lng == "") return false;
+			param.lat = lat;
+			param.lng = lng;
+			url = siteAPIPath+"order/check_dispatch_by_poi.json";
+		} else {
+			param.addr_id = $("#addrId").val();
+			url = siteAPIPath+"order/check_dispatch.json";
+		}
+		
+		if(serviceDateStr==undefined || serviceDateStr==null || serviceDateStr==''){
+			serviceDateStr = moment().format("YYYY-MM-DD");
+		}
+		param.service_date_str = serviceDateStr;
+		param.staff_id = 0;
+		
+		$.ajax({
+			type:"POST",
+			url:url,
+			data:param,
+			async:false,
+			success:function(data){
+				if(data.status=='0' && data.msg=='ok'){
+					var result = data.data;
+					showTime(serviceDateStr,result);
+				}
+			}
+		});
+	}
+	isFull(currentDate);
+	
 	
 	//显示年月
 	function showYearMonth(date){
@@ -150,53 +190,6 @@ $(function(){
 		return  serviceDate;
 	}
 	
-	//是否约满
-	function isFull(serviceDateStr){
-		
-		var host = window.location.host;
-		var appName = "jhj-app";
-		var localUrl = "http://" + host;
-		var siteAPIPath = localUrl + "/" + appName + "/app/";
-		var url = "";
-		
-		var param = {};
-		var serviceTypeId = $("#serviceType").val();
-		if (serviceTypeId == undefined || serviceTypeId == 0) return false;
-		param.service_type_id = $("#serviceType").val();
-		
-		var addrId = $("#addrId").val();
-		if (addrId == undefined || addrId == 0) {
-			var lat = $("#poiLatitude").val();
-			var lng = $("#poiLatitude").val();
-			if (lat == undefined || lat == "" || lng == undefined || lng == "") return false;
-			param.lat = lat;
-			param.lng = lng;
-			url = siteAPIPath+"order/check_dispatch_by_poi.json";
-		} else {
-			param.addr_id = $("#addrId").val();
-			url = siteAPIPath+"order/check_dispatch.json";
-		}
-		
-		
-		
-		if(serviceDateStr==undefined || serviceDateStr==null || serviceDateStr==''){
-			serviceDateStr = moment().format("YYYY-MM-DD");
-		}
-		param.service_date_str = serviceDateStr;
-		param.staff_id = 0;
-		
-		$.ajax({
-			type:"POST",
-			url:url,
-			data:param,
-			success:function(data){
-				if(data.status=='0' && data.msg=='ok'){
-					var result = data.data;
-					showTime(serviceDateStr,result);
-				}
-			}
-		});
-	}
 	//日历天数显示
 	function getDay(cal){
 		var contentDay="";
@@ -337,15 +330,15 @@ $(function(){
 		var html = '';
 		for(var i=0;i<arrys.length;i++){
 			var listext = $(arrys[i]).text();
-			if(i<compNum){
-				if(!$(arrys[i]).hasClass('rili-time-no')){
+			if(!$(arrys[i]).hasClass('rili-time-no')){
+				if(i<compNum){
 					$(arrys[i]).addClass("rili-time-no");
 					html += "<li class='rili-time-no'><p>"+listext+"</p><p>约满</p></li>";
 				}else{
-					html += $(arrys[i]).html();
+					html +="<li>"+listext+"</li>";
 				}
 			}else{
-				html +="<li>"+listext+"</li>";
+				html += "<li class='rili-time-no'>" + arrys[i].innerHTML +"</li>";
 			}
 		}
 		$(".rili1-5").html(html);

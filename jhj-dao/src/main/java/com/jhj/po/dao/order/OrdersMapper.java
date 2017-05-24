@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
@@ -179,4 +181,7 @@ public interface OrdersMapper {
 	List<Long> getLastOrder(OrderSearchVo searchVo);
 	
 	int countUserOrderNum(Long userId);
+	
+	//查询是否下过包月初体验
+	int selectPackEarlyExperience(@Param("userId") Long userId, @Param("serviceTypeId") Long serviceTypeId);
 }
