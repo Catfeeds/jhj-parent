@@ -296,7 +296,7 @@ public class OrderAddController extends BaseController {
 
 		// 如果为深度养护，则需要存储服务子项
 		if (orderType.equals(Constants.ORDER_TYPE_1)) {
-			List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(userId, serviceType, serviceAddonDatas);
+			List<OrderServiceAddons> list = orderExpCleanService.updateOrderServiceAddons(userId, serviceType, serviceAddonDatas, orderOpFrom);
 			for (Iterator<OrderServiceAddons> iterator = list.iterator(); iterator.hasNext();) {
 				OrderServiceAddons orderServiceAddons = iterator.next();
 				orderServiceAddons.setOrderId(order.getId());
