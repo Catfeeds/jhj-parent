@@ -22,7 +22,7 @@
 		<div class="col-lg-12">
 			<section class="panel"> <header class="panel-heading">
 			<h4>服务人员财务明细列表</h4>
-			<form:form class="form-inline" id="searchForm" onsubmit="return checkEndTime()" modelAttribute="searchModel"
+			<form:form class="form-inline" name="from" id="searchForm" onsubmit="return checkEndTime()" modelAttribute="searchModel"
 				action="staffPay-list" method="GET">
 				
 				<td>门店:</td>
@@ -40,16 +40,16 @@
 				</td>
 				<div class="form-group">
 					服务人员姓名：
-					<form:input path="staffName" class="form-control" />
+					<form:input path="staffName" id="staffName" class="form-control" />
 				</div>
 				
 				<div class="form-group">
 					订单号：
-					<form:input path="orderNo" class="form-control" />
+					<form:input path="orderNo" id="orderNo" class="form-control" />
 				</div>
 					<div class="form-group">
 					支付方式：
-					<form:select path="payType" class="form-control" >
+					<form:select path="payType" id="payType" class="form-control" >
 						<form:option value="">--请选择支付方式--</form:option>
 						<form:option value="0">余额支付</form:option>
 						<form:option value="1">支付宝支付</form:option>
@@ -60,12 +60,12 @@
 				</div>
 				<div class="form-group">
 					开始时间：
-					<form:input path="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="startTimeStr" id="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
 				</div>
 				<div class="form-group">
 					结束时间：
-					<form:input path="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="endTimeStr" id="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" /> 
 				</div>
 				
@@ -73,7 +73,7 @@
 				<input type="button" id="cleanBtn" class="btn btn-primary"  value="清空"/>
 				<br>
 				<br>
-				<input type="button" id="exportOrder" class="btn btn-warning" onclick="exportStaffOrder()" value="导出财务明细"/>
+				<button type="button" id="exportOrder" class="btn btn-warning"  value="">导出财务明细</button>
 				<input type="button" id="exportPayDept" class="btn btn-warning" onclick="exportStaffPayDept()" value="导出还款明细"/>
 			</form:form> 
 			</header>
