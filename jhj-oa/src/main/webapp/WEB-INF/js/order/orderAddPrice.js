@@ -1,6 +1,6 @@
 // =====================价格相关====================================================
 function changePrice(courponsValue) {
-	var serviceType = $("select[name='serviceType']").val();
+	var serviceType = $("#serviceType").val();
 	
 	if (serviceType == "" || serviceType == undefined) {
 		return false;
@@ -10,14 +10,14 @@ function changePrice(courponsValue) {
 	
 	if (parentServiceType == 23 || parentServiceType == 24) {
 		$("#divServiceAddons").css("display", "none");
-		changePriceHour();
+		changePriceHour(courponsValue);
 	} else {
-		changePriceExp();
+		changePriceExp(courponsValue);
 	}
 }
 
 function changePriceHourCheck(courponsValue) {
-	var serviceType = $("select[name='serviceType']").val();
+	var serviceType = $("#serviceType").val();
 	
 	if (serviceType == "" || serviceType == undefined) {
 		return false;
@@ -27,7 +27,7 @@ function changePriceHourCheck(courponsValue) {
 	
 	if (parentServiceType == 23 || parentServiceType == 24) {
 		$("#divServiceAddons").css("display", "none");
-		changePriceHour();
+		changePriceHour(courponsValue);
 	}
 }
 
@@ -39,7 +39,7 @@ function changePriceHour(couponsValue) {
 	staffNums = staffNums.replace(/\D|^0/g, '');
 	
 	var minServiceHour = $("#minServiceHour").val();
-	var serviceType = $("select[name='serviceType'] option:selected").val();
+	var serviceType = $("#serviceType").val();
 	
 	var price = $("#price").val();
 	var mprice = $("#mprice").val();
@@ -64,7 +64,7 @@ function changePriceHour(couponsValue) {
 		var val = $("#couponsId").find(":selected").text();
 		couponsValue = parseInt(val);
 	}
-	
+	console.log("couponsValue ==" + couponsValue);
 	if (staffNums == 1 && serviceHours == minServiceHour) {
 		var val = sessionStorage.getItem("totalOrderPay");
 		if (parseFloat(val) > 0) {
@@ -187,6 +187,8 @@ function changePriceExp(couponsValue) {
 function selectCoupons() {
 	var couponsValue = $("#couponsId").find(":selected").text();
 	var value = parseInt(couponsValue);
+	console.log("selectCoupons");
+	console.log("couponsValue ==" + value);
 	changePrice(value);
 }
 
