@@ -1,27 +1,10 @@
 // ============服务类别相关=========================================================
-$(".parentServiceType").on('change', function() {
-	var parentServiceTypeId = $(this).val();
-	if (0 == parentServiceTypeId) {
-		return false;
-	}
-	
-	if (parentServiceTypeId == 23 || parentServiceTypeId == 24) {
-		$("#orderType").val(0);
-		$("#divServiceAddons").css("display", "none");
-	} else {
-		$("#orderType").val(1);
-		$("#divServiceAddons").css("display", "block");
-	}
-});
 
 function serviceTypeChange(orderTypeId,serviceTypeId,orderTypeName) {
-//	var serviceType = $("input[name='serviceType']").val();
-	
+
 	if (serviceTypeId == "" || serviceTypeId == undefined) {
 		return false;
 	}
-	
-//	var parentServiceType = $("#parentServiceType").val();
 	
 	if (orderTypeId == 23 || orderTypeId == 24) {
 		$("#divServiceAddons").css("display", "none");
@@ -155,6 +138,7 @@ $(document).on('click','.service-type-li',function(){
 	var orderTypeName = $(this).text();
 	$(this).css({"background":"red"});
 	$("#serviceType").val(serviceTypeId);
+	$("#parentServiceType").val(orderTypeId);
 	$(this).parent().remove();
 	serviceTypeChange(orderTypeId,serviceTypeId,orderTypeName);
 });
