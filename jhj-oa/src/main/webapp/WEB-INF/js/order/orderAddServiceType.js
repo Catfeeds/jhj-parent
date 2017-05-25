@@ -132,6 +132,10 @@ $("#order-type").on('mouseover','li span',function(){
 	});
 });
 
+$("#order-type li div").on("mouseleave",function(){
+	$(this).find(".chilrdMenu").remove();
+});
+
 $(document).on('click','.service-type-li',function(){
 	var serviceTypeId = $(this).attr("data-service-type");
 	var orderTypeId = $(this).parents(".order-type-li").attr("data-order-type");
