@@ -16,7 +16,9 @@
 			</div>
 			<ul class="waiter6" id="serviceTypeList">
 				{{#each data}}
+				{{#js_compare service_type_id!=69 && service_type_id!=70 && service_type_id!=71 && service_type_id!=73}}
 				<li class="waiter6-1" onclick="appoinSerivceType($$(this), {{service_type_id}})">{{service_type_name}}</li>
+				{{/js_compare}}
 				{{/each}}
 				<div class="chongzhi5-kong1"></div>
 				
