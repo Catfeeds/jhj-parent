@@ -9,6 +9,9 @@ myApp.onPageBeforeInit('order-hour-confirm', function(page) {
 	//获取服务类别基本信息
 	var serviceTypeId = sessionStorage.getItem("service_type_id");
 	$$("#serviceType").val(serviceTypeId);
+	if(serviceTypeId==61){
+		$$(".special-color7").css("display","none");
+	}
 	$$.ajax({
 	      type : "GET",
 	      url: siteAPIPath+"dict/get_service_type.json?service_type_id="+serviceTypeId,
@@ -74,93 +77,97 @@ myApp.onPageBeforeInit('order-hour-confirm', function(page) {
 	$$("#priceStr").html(orderHourMoney);
 	$$("#orderMoneyStr").html(orderHourMoney + "元");
 	
-	$$("#isMultiStr").html(staffNums + "位服务人员")
+	$$("#isMultiStr").html(staffNums + "位服务人员");
 	
-	//设置优惠劵
-	if (sessionStorage.getItem('user_coupon_id') != null) {
-		$$("#userCouponId").val(sessionStorage.getItem('user_coupon_id'));
-		
-		if (sessionStorage.getItem('user_coupon_name') != null) {
-			$$("#userCouponName").html(sessionStorage.getItem('user_coupon_name'));
-		}
-
-		if (sessionStorage.getItem('user_coupon_value') != null) {
-			var userCouponValue = sessionStorage.getItem('user_coupon_value');
-			if(userCouponValue==undefined || userCouponValue=="" ||userCouponValue==null){
-				userCouponValue=0;
-			}
-			$$("#userCouponValue").val(userCouponValue);
-			console.log("userCouponValue = " + $$("#userCouponValue").val())
-			var orderPayStr = $$("#orderMoney").val() - userCouponValue;
-			if (orderPayStr < 0) orderPayStr = 0;
-			sessionStorage.setItem("order_pay", orderPayStr);
+	
+	if(serviceTypeId!=61){
+		//设置优惠劵
+		if (sessionStorage.getItem('user_coupon_id') != null) {
+			$$("#userCouponId").val(sessionStorage.getItem('user_coupon_id'));
 			
-			var orderOriginPayStr = $$("#orderOriginMoney").val() - userCouponValue;
-			if (orderOriginPayStr < 0) orderOriginPayStr = 0;
-			sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
-		}
-	} else {
-		//读取用户可用的优惠劵
-		var params = {};
-		params.user_id = $$("#userId").val();
-		params.service_type = $$("#serviceType").val();
-		params.service_date = sessionStorage.getItem('service_date');
-		params.order_money = $$("#orderMoney").val();
-		
-		console.log(params);
-		$$.ajax({
-		      type : "GET",
-		      url: siteAPIPath+"user/get_validate_coupons.json",
-		      dataType: "json",
-		      cache : false,
-		      data : params,
-		      async : true,
-		      success: function(data) {
-		    	  var resultData = data.data;
-		    	  var nums = 0;
-		    	  var userCoupon = "";
-		    	  if (resultData == undefined || resultData == "") {
-		    		  nums = 0;
-		    	  } else {
-		    		  nums = resultData.total;
-		    		  userCoupon = resultData.coupon;
-		    	  }
-		    	  var userCouponNameStr = nums + "张可用";
-		    	  
-		    	  //如果有优惠劵，则默认选择最大面值的优惠劵.
-		    	  var userCouponValue = 0;
-	    		  var userCouponId = 0;
-	    		  var userCouponName = "";
-	    		  
-	    		  if (userCoupon != undefined && userCoupon != "") {
-	    			  userCouponValue = userCoupon.value;
-	    			  userCouponId = userCoupon.id;
-	    			  userCouponName = "￥" + userCouponValue;
-	    			  
-	    			  sessionStorage.setItem("user_coupon_id", userCouponId);
-	    			  sessionStorage.setItem("user_coupon_name", userCouponName);
-	    			  sessionStorage.setItem("user_coupon_value", userCouponValue);
-	    		  }
+			if (sessionStorage.getItem('user_coupon_name') != null) {
+				$$("#userCouponName").html(sessionStorage.getItem('user_coupon_name'));
+			}
 
-		    	  if (userCouponId != 0 && userCouponValue != 0) {
-		    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
-					  if (orderPayStr < 0) orderPayStr = 0;
-					  sessionStorage.setItem("order_pay", orderPayStr);
-					  
-					  var orderOriginPayStr = $$("#orderOriginMoney").val() - userCouponValue;
-					  if (orderOriginPayStr < 0) orderOriginPayStr = 0;
-					  sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
-					  
-					  userCouponNameStr = userCouponName;
-		    	  }
-		    	  
-		    	  console.log("order_pay = " + sessionStorage.getItem("order_pay"));
-		    	  $$("#userCouponName").html(userCouponNameStr);
-		    	  $$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
-		      }
-		});
+			if (sessionStorage.getItem('user_coupon_value') != null) {
+				var userCouponValue = sessionStorage.getItem('user_coupon_value');
+				if(userCouponValue==undefined || userCouponValue=="" ||userCouponValue==null){
+					userCouponValue=0;
+				}
+				$$("#userCouponValue").val(userCouponValue);
+				console.log("userCouponValue = " + $$("#userCouponValue").val())
+				var orderPayStr = $$("#orderMoney").val() - userCouponValue;
+				if (orderPayStr < 0) orderPayStr = 0;
+				sessionStorage.setItem("order_pay", orderPayStr);
+				
+				var orderOriginPayStr = $$("#orderOriginMoney").val() - userCouponValue;
+				if (orderOriginPayStr < 0) orderOriginPayStr = 0;
+				sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
+			}
+		} else {
+			//读取用户可用的优惠劵
+			var params = {};
+			params.user_id = $$("#userId").val();
+			params.service_type = $$("#serviceType").val();
+			params.service_date = sessionStorage.getItem('service_date');
+			params.order_money = $$("#orderMoney").val();
+			
+			console.log(params);
+			$$.ajax({
+			      type : "GET",
+			      url: siteAPIPath+"user/get_validate_coupons.json",
+			      dataType: "json",
+			      cache : false,
+			      data : params,
+			      async : true,
+			      success: function(data) {
+			    	  var resultData = data.data;
+			    	  var nums = 0;
+			    	  var userCoupon = "";
+			    	  if (resultData == undefined || resultData == "") {
+			    		  nums = 0;
+			    	  } else {
+			    		  nums = resultData.total;
+			    		  userCoupon = resultData.coupon;
+			    	  }
+			    	  var userCouponNameStr = nums + "张可用";
+			    	  
+			    	  //如果有优惠劵，则默认选择最大面值的优惠劵.
+			    	  var userCouponValue = 0;
+		    		  var userCouponId = 0;
+		    		  var userCouponName = "";
+		    		  
+		    		  if (userCoupon != undefined && userCoupon != "") {
+		    			  userCouponValue = userCoupon.value;
+		    			  userCouponId = userCoupon.id;
+		    			  userCouponName = "￥" + userCouponValue;
+		    			  
+		    			  sessionStorage.setItem("user_coupon_id", userCouponId);
+		    			  sessionStorage.setItem("user_coupon_name", userCouponName);
+		    			  sessionStorage.setItem("user_coupon_value", userCouponValue);
+		    		  }
+
+			    	  if (userCouponId != 0 && userCouponValue != 0) {
+			    		  var orderPayStr = $$("#orderMoney").val() - userCouponValue;
+						  if (orderPayStr < 0) orderPayStr = 0;
+						  sessionStorage.setItem("order_pay", orderPayStr);
+						  
+						  var orderOriginPayStr = $$("#orderOriginMoney").val() - userCouponValue;
+						  if (orderOriginPayStr < 0) orderOriginPayStr = 0;
+						  sessionStorage.setItem("order_origin_pay", orderOriginPayStr);
+						  
+						  userCouponNameStr = userCouponName;
+			    	  }
+			    	  
+			    	  console.log("order_pay = " + sessionStorage.getItem("order_pay"));
+			    	  $$("#userCouponName").html(userCouponNameStr);
+			    	  $$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
+			      }
+			});
+		}
 	}
 	$$("#orderHourPayStr").html(sessionStorage.getItem("order_pay") + "元");
+	
 	/*
 	 * 提交订单
 	 */
