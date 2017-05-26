@@ -20,6 +20,7 @@ import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
@@ -36,6 +37,7 @@ import com.jhj.service.bs.OrgStaffDetailDeptService;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPriceExtService;
@@ -117,6 +119,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	
 	@Autowired
 	private OrderDispatchPriceService orderDispatchPriceService;
+	
+	@Autowired
+	private CooperateBusinessService cooperateBusinessService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -471,7 +476,19 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		OrderPrices orderPrices = orderPricesService.selectByOrderId(orderId);
 		String payTypeName = OneCareUtil.getPayTypeName(orderPrices.getPayType());
 		vo.setPayTypeName(payTypeName);
+		
+		//订单来源
 
+		
+		Short orderFrom = order.getOrderFrom();
+		Long orderOpFrom = order.getOrderOpFrom();
+		CooperativeBusiness cooperativeBusiness = null;
+		if (orderOpFrom != null) {
+			cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+		}
+		
+		String orderFromStr = OrderUtils.getOrderFromName(orderFrom, orderOpFrom, cooperativeBusiness);
+		vo.setOrderFromStr(orderFromStr);
 		
 		//=========================订单金额相关
 		

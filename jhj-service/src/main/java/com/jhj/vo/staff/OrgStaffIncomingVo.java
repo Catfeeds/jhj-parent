@@ -23,6 +23,8 @@ public class OrgStaffIncomingVo {
 	
 	private String orderNo;
 	
+	private String orderFromStr;
+	
 	private String addTimeStr;
 	
 	private String orderTypeName;
@@ -353,5 +355,13 @@ public class OrgStaffIncomingVo {
 
 	public void setOrderPay(BigDecimal orderPay) {
 		this.orderPay = orderPay;
+	}
+
+	public String getOrderFromStr() {
+		return orderFromStr;
+	}
+
+	public void setOrderFromStr(String orderFromStr) {
+		this.orderFromStr = orderFromStr;
 	}
 }

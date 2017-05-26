@@ -30,10 +30,31 @@ function searchSubmit() {
 	$("#searchForm").submit();
 }
 
-$("#exportOrder").on("click",function() {
-	from.action = 'export-order';
-	from.submit();
-});
+function exportStaffOrder() {
+	console.log("exportStaffOrder");
+//	var selectStaff = $("#selectStaff").val();
+//	console.log("selectStaff = "+ selectStaff); 
+//	if (selectStaff == undefined || selectStaff == "" || selectStaff == 0) {
+//		alert("请选择服务人员.");
+//		return false;
+//	}
+
+	var startTimeStr = $("#startTimeStr").val();
+	if (startTimeStr == undefined || startTimeStr == "") {
+		alert("请选择开始时间.");
+		return false;
+	}
+	
+	var endTimeStr = $("#endTimeStr").val();
+	if (endTimeStr == undefined || endTimeStr == "") {
+		alert("请选择结束时间.");
+		return false;
+	}
+	
+	var exportUrl = "/jhj-oa/staff/export-order";
+	$("#searchForm").attr("action", exportUrl);
+	$("#searchForm").submit();
+}
 
 
 function exportStaffPayDept() {

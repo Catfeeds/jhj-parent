@@ -187,13 +187,14 @@ public class OrgStaffExportController extends BaseController {
 			
 			XSSFRow rowData = sh.createRow(rowNum);
 
-			for(int j = 0; j <= 26; j++) {
+			for(int j = 0; j <= 27; j++) {
 				rowData.createCell(j);
 				XSSFCell c = rowData.getCell(j);
 				c.setCellType(XSSFCell.CELL_TYPE_STRING);
 //				c.setCellValue("");  
 //				c.setCellStyle(contentStyle);
 			}
+			
 			
 			//序号
 			this.setCellValueForString(rowData, 0, String.valueOf(rowNum));
@@ -279,6 +280,9 @@ public class OrgStaffExportController extends BaseController {
 			totalOrderIncomingAll = totalOrderIncomingAll.add(vo.getTotalOrderIncoming());
 			//订单备注
 			this.setCellValueForString(rowData, 26, vo.getRemarks());
+			
+			//订单来源
+			this.setCellValueForString(rowData, 27, vo.getOrderFromStr());
 
 			rowNum++;
 		}

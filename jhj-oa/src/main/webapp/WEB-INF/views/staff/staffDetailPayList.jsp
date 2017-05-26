@@ -73,7 +73,7 @@
 				<input type="button" id="cleanBtn" class="btn btn-primary"  value="清空"/>
 				<br>
 				<br>
-				<button type="button" id="exportOrder" class="btn btn-warning"  value="">导出财务明细</button>
+				<button type="button" id="exportOrder" class="btn btn-warning"  value="" onclick="exportStaffOrder()">导出财务明细</button>
 				<input type="button" id="exportPayDept" class="btn btn-warning" onclick="exportStaffPayDept()" value="导出还款明细"/>
 			</form:form> 
 			</header>
