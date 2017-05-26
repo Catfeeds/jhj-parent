@@ -22,8 +22,8 @@ myApp.onPageBeforeInit('order-cus-hostwork-month', function(page) {
 	    		return false;
 	    	}
 	    	$$("#serviceTypeNameStr").html(serviceType.name);
-	    	$$("#ppriceStr").html(serviceType.pprice + "元/" + serviceType.service_hour + "小时");
-	    	$$("#mppriceStr").html(serviceType.mpprice + "元/" + serviceType.service_hour + "小时");
+	    	$$("#ppriceStr").html(serviceType.pprice + "" + serviceType.unit);
+	    	$$("#mppriceStr").html(serviceType.mpprice + "" + serviceType.unit);
 		}
 	});
 	
