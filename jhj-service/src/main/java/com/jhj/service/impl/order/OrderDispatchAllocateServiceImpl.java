@@ -805,9 +805,9 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 						vo.setDispathStaFlag(0);
 						vo.setDispathStaStr("不可派工");
 						if(vo.getReason()!=null){
-							vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_SERVICE_DATE_CONFLIT);
+							vo.setReason(vo.getReason() + ";" + ConstantMsg.NOT_DISPATCH_OVER_MAX_DISTANCE);
 						}else{
-							vo.setReason(ConstantMsg.NOT_DISPATCH_SERVICE_DATE_CONFLIT);
+							vo.setReason(ConstantMsg.NOT_DISPATCH_OVER_MAX_DISTANCE);
 						}
 					}
 					
