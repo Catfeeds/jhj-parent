@@ -85,5 +85,5 @@ function reStaffOrder(staffId, staffName) {
 		
 	sessionStorage.setItem("staff_id", staffId);
 	sessionStorage.setItem("staff_names", staffName);
-	mainView.router.loadPage("order/order-appoint.html");
+	mainView.router.loadPage("order/order-appoint.html?staff_id="+staffId);
 }
