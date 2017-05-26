@@ -1,12 +1,35 @@
 myApp.onPageBeforeInit('order-appoint', function(page) {
 	
-	var staffId = sessionStorage.getItem("staff_id");
+	var staffId = page.query.staff_id;
 	
 	var staffName = sessionStorage.getItem("staff_names");
 	
 	$$("#staffId").val(staffId);
 	$$("#staffName").val(staffName);
 	$$("#spanStaffName").html(staffName);
+	
+	$$.ajax({
+		type : "GET",
+		url : siteAPIPath + "staff/get_skills.json?staff_id="+staffId,
+		dataType : "json",
+		cache : true,
+		async : false,
+		success : function(data) {
+			var result = data.data;
+			var html='';
+			if(result.length>0){
+				for(var i=0;i<result.length;i++){
+					var serviceType = result[i];
+					if(serviceType.service_type_id!=69 && serviceType.service_type_id!=70 && serviceType.service_type_id!=71 && serviceType.service_type_id!=73){
+						html += '<li class="waiter6-1" onclick="appoinSerivceType($$(this), '+serviceType.service_type_id+')">'+serviceType.service_type_name+'</li>';
+					}
+				}
+			}
+			$$("#serviceTypeList-li").html(html);
+		}
+	})
+//	return result;
+	
 });
 
 
@@ -44,23 +67,23 @@ function doAppointOrder() {
 	
 }
 
-//列表显示，获取用户的信息
-myApp.template7Data['page:order-appoint']=function(){
-	var result="";
-	var staffId = sessionStorage.getItem("staff_id");
-
-	$$.ajax({
-		type : "GET",
-		url : siteAPIPath + "staff/get_skills.json?staff_id="+staffId,
-		dataType : "json",
-		cache : true,
-		async : false,
-		success : function(data) {
-			result = data;
-		}
-	})
-	return result;
-}
+////列表显示，获取用户的信息
+//myApp.template7Data['page:order-appoint']=function(){
+//	var result="";
+//	var staffId = sessionStorage.getItem("staff_id");
+//
+//	$$.ajax({
+//		type : "GET",
+//		url : siteAPIPath + "staff/get_skills.json?staff_id="+staffId,
+//		dataType : "json",
+//		cache : true,
+//		async : false,
+//		success : function(data) {
+//			result = data;
+//		}
+//	})
+//	return result;
+//}
 
 
 
