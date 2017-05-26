@@ -27,4 +27,6 @@ public interface PeriodOrderMapper {
     List<PeriodOrder> selectByListPage(PeriodOrderSearchVo searchVo);
     
     List<PeriodOrder> selectBySearchVo(PeriodOrderSearchVo searchVo);
+    
+    int selectPeriodOrderCount(@Param("userId") Integer userId, @Param("orderStatus")Integer orderStatus);
 }

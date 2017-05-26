@@ -19,6 +19,7 @@ import com.jhj.service.dict.ServiceTypeService;
 import com.jhj.service.order.OrderHourListService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.users.UserAddrsService;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -54,6 +55,9 @@ public class OrderHourListController extends BaseController {
 	
 	@Autowired
 	private ServiceTypeService dictServiceTypeSerivice;
+	
+	@Autowired
+	private PeriodOrderService periodOrderService;
 	
 	
 	// 按照年月查看卡片个数
@@ -209,9 +213,11 @@ public class OrderHourListController extends BaseController {
 				ConstantMsg.SUCCESS_0_MSG, new String());
 		
 		
-		int selectPackEarlyExperience = orderService.selectPackEarlyExperience(userId, serviceTypeId);
+		int count1 = orderService.selectPackEarlyExperience(userId, serviceTypeId);
 		
-		result.setData(selectPackEarlyExperience);
+		int count2 = periodOrderService.selectPeriodOrderCount(userId.intValue(),1);
+		
+		result.setData(count1+count2);
 		
 		return result;
 	}

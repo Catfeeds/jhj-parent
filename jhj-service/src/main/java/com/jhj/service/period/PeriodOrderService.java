@@ -35,4 +35,6 @@ public interface PeriodOrderService {
 	PeriodOrderDetailVo getDetailVo(PeriodOrder item);
 
 	String getOrderStatusName(Integer orderStatus);
+	
+	int selectPeriodOrderCount(Integer userId,Integer orderStatus);
 }

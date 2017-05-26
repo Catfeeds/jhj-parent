@@ -258,6 +258,10 @@
 		from period_order
 		<include refid="bySearchVo" />
 	</select>
+	
+	<select id="selectPeriodOrderCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		select count(*) from period_order where user_id =#{userId} and order_status >= #{orderStatus}
+	</select>
 
 	<sql id="bySearchVo">
 		<where>

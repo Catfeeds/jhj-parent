@@ -207,5 +207,11 @@ public class PeriodOrderServiceImpl implements PeriodOrderService{
 		}
 		return statusName;
 	}
+
+	@Override
+	public int selectPeriodOrderCount(Integer userId, Integer orderStatus) {
+		
+		return periodOrderMapper.selectPeriodOrderCount(userId, orderStatus);
+	}
    
 }
