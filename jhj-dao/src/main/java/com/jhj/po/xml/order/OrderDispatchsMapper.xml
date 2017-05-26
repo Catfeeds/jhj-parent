@@ -115,7 +115,7 @@
 			</foreach>
 		</if>
 
-		<if test="orderNo !=null">
+		<if test="orderNo !=null and orderNo != ''">
 			and order_no = #{orderNo,jdbcType=VARCHAR}
 		</if>
 
