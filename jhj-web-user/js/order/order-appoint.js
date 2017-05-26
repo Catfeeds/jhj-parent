@@ -28,8 +28,6 @@ myApp.onPageBeforeInit('order-appoint', function(page) {
 			$$("#serviceTypeList-li").html(html);
 		}
 	})
-//	return result;
-	
 });
 
 
