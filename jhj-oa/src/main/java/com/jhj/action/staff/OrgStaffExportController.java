@@ -105,9 +105,8 @@ public class OrgStaffExportController extends BaseController {
 	private UsersService userService;
 
 	//服务人员所有订单明细表
-	@AuthPassport
 	@RequestMapping(value = "/export-order", method = RequestMethod.GET)
-	public String exportOrder(Model model, HttpServletRequest request, HttpServletResponse response, OrderSearchVo searchVo) throws Exception {
+	public void exportOrder(Model model, HttpServletRequest request, HttpServletResponse response, OrderSearchVo searchVo) throws Exception {
 		
 		Long staffId = 0L;
 		if (searchVo.getStaffId() != null) {
@@ -129,15 +128,17 @@ public class OrgStaffExportController extends BaseController {
 		}
 		
 		
-		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
-		if (orgStaff == null) return null;
+//		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
+		//if (orgStaff == null) return ;
 		
 		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
-		orderDispatchSearchVo.setStaffId(staffId);
 		orderDispatchSearchVo.setDispatchStatus((short) 1);
 		
 		if (startServiceTime > 0L) orderDispatchSearchVo.setStartServiceTime(startServiceTime);
 		if (endServiceTime > 0L) orderDispatchSearchVo.setEndServiceTime(endServiceTime);
+		orderDispatchSearchVo.setStaffId(searchVo.getStaffId());
+		orderDispatchSearchVo.setStaffName(searchVo.getStaffName());
+		orderDispatchSearchVo.setOrderNo(searchVo.getOrderNo());
 		
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
 		
@@ -176,9 +177,11 @@ public class OrgStaffExportController extends BaseController {
 //			logger.info("order_no = " + order.getOrderNo());
 			//订单完成时间是否在查询条件范围之内
 			Long orderUpdateTime = order.getOrderDoneTime();
-			if (orderUpdateTime < startServiceTime || orderUpdateTime > endServiceTime) {
+			/*if (orderUpdateTime < startServiceTime || orderUpdateTime > endServiceTime) {
 				continue;
-			}
+			}*/
+			
+			OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(item.getStaffId());
 			
 			OrgStaffIncomingVo vo = orgStaffFinanceService.getStaffInComingDetail(orgStaff, order, item);
 			
@@ -302,13 +305,9 @@ public class OrgStaffExportController extends BaseController {
 //			sh.autoSizeColumn((short)j);
 //		}
 		
-		String fileName = orgStaff.getName() + "-订单收入明细表.xls";
-		excel.downloadExcel(response, fileName);
+//		String fileName = orgStaff.getName() + "-订单收入明细表.xls";
+		excel.downloadExcel(response, templateName);
 		
-		
-		
-		
-		return null;
 	}
 	
 	
@@ -421,7 +420,7 @@ public class OrgStaffExportController extends BaseController {
 		this.setCellValueForDouble(rowData, 8, Double.valueOf(MathBigDecimalUtil.round2(totalPayDept)));
 		
 		String fileName = orgStaff.getName() + "-还款明细表.xls";
-		excel.downloadExcel(response, fileName);
+		excel.downloadExcel(response, templateName);
 		
 		return null;
 	}

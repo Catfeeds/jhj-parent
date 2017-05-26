@@ -35,6 +35,7 @@
     position:relative;
     padding-left:10px;
     width:80px;
+    float:left;
    
 }
 .current{
@@ -45,10 +46,8 @@
  .chilrdMenu{
     background: #fff none repeat scroll 0 0;
     border: 1px solid #ff5647;
-    left: 80px;
     padding: 6px 0px 6px 11px;
     position: absolute;
-    top: -36px;
     width: 135px;
     z-index: 999;
     min-height: 144px;
@@ -175,6 +174,7 @@
 												<font color="red">*</font>服务类型
 											</label>
 											<input type="hidden" name="serviceType" id="serviceType" value='' />
+											<input type="hidden" name="parentServiceType" id="parentServiceType" value='' />
 											<div class="col-md-5">
 												<%-- <parentServiceTypeSelectTag:select /> --%>
 												<ul id='order-type' style="line-height: 30px;font-size: 13px;">

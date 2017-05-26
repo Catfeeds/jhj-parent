@@ -153,7 +153,7 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 	}
 
 	@Override
-	public List<OrderServiceAddons> updateOrderServiceAddons(Long userId, Long serviceType, String serviceAddonsDatas) {
+	public List<OrderServiceAddons> updateOrderServiceAddons(Long userId, Long serviceType, String serviceAddonsDatas, Long orderOpFrom) {
 		
 		Users u = userService.selectByPrimaryKey(userId);
 		
@@ -198,6 +198,12 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 					price = dictServiceAddons.getDisPrice();
 				}
 				
+				//线下活动，展现活动价格
+				if (orderOpFrom.equals(123L) || orderOpFrom.equals(124L) || 
+					orderOpFrom.equals(125L) || orderOpFrom.equals(126L)) {
+					price = dictServiceAddons.getAprice();
+				}
+				
 				orderServiceAddons.setPrice(price);
 				orderServiceAddons.setServiceAddonId(serviceAddonId);
 				
@@ -223,6 +229,12 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 				
 				if (isVip == 1) {
 					price = dictServiceAddons.getDisPrice();
+				}
+				
+				//线下活动，展现活动价格
+				if (orderOpFrom.equals(123L) || orderOpFrom.equals(124L) || 
+					orderOpFrom.equals(125L) || orderOpFrom.equals(126L)) {
+					price = dictServiceAddons.getAprice();
 				}
 				
 				orderServiceAddons.setPrice(price);
