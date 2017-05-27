@@ -133,7 +133,7 @@ function saveForm() {
 	// return false;
 	if ($('#orderForm').validate().form()) {
 		
-		var parentServiceType = $("#serviceTypeId").val();
+		var parentServiceType = $("#parentServiceType").val();
 		
 		if (parentServiceType != 23 && parentServiceType != 24) {
 			var serviceAddonDatas = $("#serviceAddonDatas").val();

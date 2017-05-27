@@ -163,6 +163,8 @@ public class MathBigDecimalUtil {
 		serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, 3);
 					
 		System.out.println(serviceHour);
-
+		
+		double totalServiceHour = 11.56;
+		System.out.println(Math.rint(totalServiceHour));
 	}
 }

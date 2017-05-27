@@ -22,6 +22,7 @@ import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderServiceAddonsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.dict.JsonServiceAddonsItemVo;
 
 /**
@@ -247,6 +248,45 @@ public class OrderExpCleanServcieImpl implements OrderExpCleanService {
 	}
 	
 	
-	
+	@Override
+	public Double mathOrderServiceHour(List<OrderServiceAddons> list) {
+		double totalServiceHour = 0;
+
+		if (list.isEmpty()) return totalServiceHour;
+		
+		List<Long> serviceAddonIds = new ArrayList<Long>();
+		
+		for (OrderServiceAddons item : list) {
+			if (!serviceAddonIds.contains(item.getServiceAddonId())) serviceAddonIds.add(item.getServiceAddonId());
+		}
+		
+		ServiceAddonSearchVo searchVo1 = new ServiceAddonSearchVo();
+		searchVo1.setServiceAddonIds(serviceAddonIds);
+		List<DictServiceAddons> dictServiceAddons = serviceAddonsService.selectBySearchVo(searchVo1);
+		
+		for (int i =0; i < list.size(); i++) {
+			
+			OrderServiceAddons item = list.get(i);
+			double serviceHour = 0;
+			double defaultServiceHour = 0;
+			int defaultNum = 0;
+			int itemNum = item.getItemNum();
+			for (DictServiceAddons dsa : dictServiceAddons) {
+				if (dsa.getServiceAddonId().equals(item.getServiceAddonId())) {
+					defaultServiceHour = dsa.getServiceHour();
+					defaultNum = dsa.getDefaultNum();
+					break;
+				}
+			}
+			
+			serviceHour = itemNum * defaultServiceHour;
+			if (defaultNum > 0) {
+				serviceHour = (defaultServiceHour / defaultNum) * itemNum;
+			}
+			totalServiceHour+= serviceHour;
+		}
+		totalServiceHour = Math.rint(totalServiceHour);
+		return totalServiceHour;
+	}
 
 }

@@ -41,6 +41,7 @@ import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrgStaffDispatchVo;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
@@ -211,6 +212,8 @@ public class OrderAddController extends BaseController {
 		if (!staffIds.isEmpty()) {
 			staffNums = staffIds.size();
 		}
+		
+		
 		/**
 		 * 开始写入
 		 * 1.订单表，
@@ -317,7 +320,13 @@ public class OrderAddController extends BaseController {
 					staffIds.add(item.getStaffId());
 				}
 			}
-				
+		}
+		
+		// 如果为多人派工，需要对服务时间进行平均, 仅对深度养护
+		if (staffNums > 1 && order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
+			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, staffNums);
+			order.setServiceHour(serviceHour);
+			orderService.updateByPrimaryKeySelective(order);
 		}
 		
 		

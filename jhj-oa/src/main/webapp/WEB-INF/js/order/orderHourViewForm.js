@@ -80,19 +80,20 @@ $("#submitForm").on('click', function() {
 			return false;
 		}
 		
+		
 		// 判断派工人员个数是否一致，用于派工调整，涉及到金额
-//		if (orderStatus == 3) {
-//			var staffNums = $("#staffNums").val();
-//			if (staffNums != "" && staffNums != undefined && staffNums > 0) {
-//				var staffAry = selectStaffIds.split(",");
-//				
-//				if (staffAry.length != staffNums) {
-//					alert("派工人数应为2人，请确认派工人数是否正确");
-//					$('#submitForm').removeAttr("disabled");
-//					return false;
-//				}
-//			}
-//		}
+		if (orderStatus == 3 || orderStatus == 5) {
+			var staffNums = $("#staffNums").val();
+			if (staffNums != "" && staffNums != undefined && staffNums > 0) {
+				var staffAry = selectStaffIds.split(",");
+				
+				if (staffAry.length != staffNums) {
+					alert("派工人数应为2人，请确认派工人数是否正确");
+					$('#submitForm').removeAttr("disabled");
+					return false;
+				}
+			}
+		}
 		
 		$.ajax({
 			type : 'post',

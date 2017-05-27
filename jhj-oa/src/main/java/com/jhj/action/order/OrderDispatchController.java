@@ -26,6 +26,7 @@ import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderExpCleanService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
 import com.jhj.service.order.OrderServiceAddonsService;
@@ -87,6 +88,9 @@ public class OrderDispatchController extends BaseController {
 
 	@Autowired
 	private OrderLogService orderLogService;
+	
+	@Autowired
+	private OrderExpCleanService orderExpCleanService;
 
 	
 	/**
@@ -511,18 +515,19 @@ public class OrderDispatchController extends BaseController {
 
 		// 计算派工时间
 		Double serviceHour = (double) order.getServiceHour();
-
-		// 进行派工，兼容一人和多人
-		for (Long staffId : newDispathStaffIds) {
-			int allocate = 0;
-			String allocateReason = "合理分配";
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
-		}
-
+		
 		// 如果为多人派工，需要对服务时间进行平均. 考虑到调整派工，人数变化的情况，所以要整体的更新.
 		// 平均值频度为30分钟，比如 2.1 小时则为 2.5小时， 2.6小时则为3小时.
 		if (staffIds.size() > 1) {
 			int totalStaffs = staffIds.size();
+			// 派工人数会变化，所以需要重新计算订单小时数.
+			List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+			if (!orderAddons.isEmpty()) {
+				serviceHour = orderExpCleanService.mathOrderServiceHour(orderAddons);
+			} else {
+				serviceHour = order.getServiceHour() * oldStaffNum;
+			}
+			
 			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, totalStaffs);
 
 			disList = orderDispatchsService.selectBySearchVo(searchVo);
@@ -535,7 +540,7 @@ public class OrderDispatchController extends BaseController {
 				orderDispatchsService.updateByPrimaryKey(d);
 			}
 		}
-
+		
 		// 更新订单表
 		order.setStaffNums(staffIds.size());
 		order.setServiceDate(serviceDateTime);
@@ -553,6 +558,20 @@ public class OrderDispatchController extends BaseController {
 			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
 			orderLogService.insert(orderLog);
 		}
+
+
+
+		// 进行派工，兼容一人和多人
+		for (Long staffId : newDispathStaffIds) {
+			int allocate = 0;
+			String allocateReason = "合理分配";
+			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
+		}
+
+		
+
+		
+		
 
 		/*
 		 * 派工 短信通知

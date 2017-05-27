@@ -17,6 +17,8 @@ public interface OrderExpCleanService {
 
 	List<OrderServiceAddons> updateOrderServiceAddons(Long userId, Long serviceType, String serviceAddonsDatas, Long orderOpFrom);
 
+	Double mathOrderServiceHour(List<OrderServiceAddons> list);
+
 	
 
 }
