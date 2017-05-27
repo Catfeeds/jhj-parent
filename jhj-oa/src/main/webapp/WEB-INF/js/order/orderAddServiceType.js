@@ -8,13 +8,16 @@ function serviceTypeChange(orderTypeId,serviceTypeId,orderTypeName) {
 	
 	if (orderTypeId == 23 || orderTypeId == 24) {
 		$("#divServiceAddons").css("display", "none");
+		$("#orderType").val(0);
 		serviceTypeChangeHour(serviceTypeId);
 		$("#divServiceAddons1").css({"display":"block"});
 		$("#divServiceAddons2").val(orderTypeName);
 	} else {
+		$("#orderType").val(1);
 		serviceTypeChangeExp(serviceTypeId);
 		$("#divServiceAddons1").css({"display":"none"});
 	}
+	console.log("orderTYpe ==" + $("#orderType").val());
 }
 
 // 金牌保洁服务类别
