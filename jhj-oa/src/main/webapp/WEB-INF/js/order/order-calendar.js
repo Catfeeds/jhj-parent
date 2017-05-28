@@ -91,7 +91,7 @@ $(function(){
 		var addrId = $("#addrId").val();
 		if (addrId == undefined || addrId == 0) {
 			var lat = $("#poiLatitude").val();
-			var lng = $("#poiLatitude").val();
+			var lng = $("#poiLongitude").val();
 			if (lat == undefined || lat == "" || lng == undefined || lng == "") return false;
 			param.lat = lat;
 			param.lng = lng;
@@ -377,7 +377,8 @@ function selectServiceDateTime(){
 	if(addr_id==undefined || addr_id==null || addr_id==''){
 		
 		var lat = $("#poiLatitude").val();
-		var lng = $("#poiLatitude").val();
+		var lng = $("#poiLongitude").val();
+		
 		var name = $("#suggestId").val();
 		if (lat == undefined || lat == "" || 
 			lng == undefined || lng == "" ||
