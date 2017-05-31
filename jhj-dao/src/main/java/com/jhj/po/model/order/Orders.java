@@ -55,6 +55,8 @@ public class Orders {
     
     private Integer periodOrderId;
     
+    private Short delFlag;
+    
     public String getRemarksBussinessConfirm() {
 		return remarksBussinessConfirm;
 	}
@@ -270,6 +272,13 @@ public class Orders {
 	public void setPeriodOrderId(Integer periodOrderId) {
 		this.periodOrderId = periodOrderId;
 	}
-	
+
+	public Short getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(Short delFlag) {
+		this.delFlag = delFlag;
+	}
 
 }

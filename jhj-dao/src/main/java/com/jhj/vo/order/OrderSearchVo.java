@@ -105,6 +105,9 @@ public class OrderSearchVo {
 	private String orderAddr;
 	
 	private Integer periodOrderId;
+	
+	//删除标识
+	private Short delFlag;
 
 	public String getMobile() {
 		return mobile;
@@ -505,5 +508,14 @@ public class OrderSearchVo {
 	public void setPeriodOrderId(Integer periodOrderId) {
 		this.periodOrderId = periodOrderId;
 	}
+
+	public Short getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(Short delFlag) {
+		this.delFlag = delFlag;
+	}
+	
 	
 }

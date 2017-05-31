@@ -135,6 +135,7 @@ public class OrderHourListController extends BaseController {
 		//用户当前订单
 		OrderSearchVo orderSearchVo = new OrderSearchVo();
 		orderSearchVo.setUserId(userId);
+		orderSearchVo.setDelFlag((short)0);
 		
 		if (!StringUtil.isEmpty(day)) {
 			Date cal = DateUtil.parse(day);
