@@ -63,6 +63,8 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			var orderRateStr='';
 			var orderRateStylePhone='none';
 			var url="#";
+			var orderagain = "none";
+			var urlLink = "#";
 			if(orderStatus>=3 && orderStatus<7) {
 				orderRateStyle = "none";
 				orderRateStylePhone = "block";
@@ -73,16 +75,31 @@ myApp.onPageBeforeInit('order-list', function(page) {
 				orderRateStr = "立即评价";
 				orderRateStyle = "block";
 				orderRateStylePhone = "none";
+				
 			}
 			if (orderStatus == 8) {
 				orderRateStr = "已评价";
 				orderRateStyle = "block";
 				orderRateStylePhone = "none";
 			}
+			
+			if(orderStatus == 7 || orderStatus == 8){
+				orderRateStylePhone = "none";
+				orderagain = "block";
+				if(order.order_type==0){
+					urlLink = "order/order-hour-choose.html?service_type_id="+order.service_type;
+				}
+				if(order.order_type==1){
+					urlLink = "order/order-deep-choose.html?service_type_id="+order.service_type;
+				}
+			}
+			
 			htmlPart = htmlPart.replace(new RegExp('{orderRateStr}', "gm"), orderRateStr);
 			htmlPart = htmlPart.replace(new RegExp('{orderRateStyle}', "gm"), orderRateStyle);
 			htmlPart = htmlPart.replace(new RegExp('{orderRateStylePhone}', "gm"), orderRateStylePhone);
+			htmlPart = htmlPart.replace(new RegExp('{orderagain}', "gm"), orderagain);
 			htmlPart = htmlPart.replace(new RegExp('{url}', "gm"), url);
+			htmlPart = htmlPart.replace(new RegExp('{urlLink}', "gm"), urlLink);
 			
 			html+= htmlPart;
 		}
