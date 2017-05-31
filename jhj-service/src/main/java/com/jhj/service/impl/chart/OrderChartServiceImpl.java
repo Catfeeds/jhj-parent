@@ -3,18 +3,14 @@ package com.jhj.service.impl.chart;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.jhj.common.Constants;
 import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
 import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
