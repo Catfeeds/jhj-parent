@@ -12,6 +12,7 @@ import com.jhj.vo.bs.OrgStaffVo;
 import com.jhj.vo.bs.SecInfoVo;
 import com.jhj.vo.order.OrderStaffRateVo;
 import com.jhj.vo.order.OrgStaffDispatchVo;
+import com.jhj.vo.staff.OrgStaffPoiListVo;
 import com.jhj.vo.staff.StaffSearchVo;
 
 /**
@@ -65,5 +66,7 @@ public interface OrgStaffsService {
 	OrderStaffRateVo getOrderStaffRateVo(OrgStaffs orgStaff);
 
 	OrgStaffDispatchVo initOrgStaffDispatchVo();
+
+	OrgStaffPoiListVo getOrgStaffPoiListVo(OrgStaffs staffs);
     	
 }

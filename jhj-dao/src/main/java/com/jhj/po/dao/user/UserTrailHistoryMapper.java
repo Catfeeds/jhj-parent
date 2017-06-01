@@ -19,4 +19,6 @@ public interface UserTrailHistoryMapper {
     int updateByPrimaryKey(UserTrailHistory record);
 
 	List<UserTrailHistory> selectBySearchVo(UserTrailSearchVo searchVo);
+
+	List<UserTrailHistory> selectByListPage(UserTrailSearchVo searchVo);
 }

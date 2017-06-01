@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jhj.po.dao.user.UserTrailHistoryMapper;
 import com.jhj.po.model.user.UserTrailHistory;
 import com.jhj.po.model.user.UserTrailReal;
@@ -79,6 +81,14 @@ public class UserTrailHistoryServiceImpl implements UserTrailHistoryService {
 	public List<UserTrailHistory> selectBySearchVo(UserTrailSearchVo searchVo) {
 
 		return userTrailHistoryMapper.selectBySearchVo(searchVo);
+	}
+	
+	@Override
+	public PageInfo selectByListPage(UserTrailSearchVo searchVo, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<UserTrailHistory> list =  userTrailHistoryMapper.selectByListPage(searchVo);
+		PageInfo result = new PageInfo(list);
+		return result;
 	}
 
 	
