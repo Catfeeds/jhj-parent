@@ -14,7 +14,7 @@
                 <!-- Tab 1, 默认激活 -->
                 <div id="tab1" class="tab active">
                     <div class="content-block">
-                        <div class="beijing-index list-block" id="order-list-div">
+                        <div class="beijing-index" id="order-list-div">
 
                         </div>
                         <div class="all-button5" id="order-list-more" style="display:none">加载更多</div>
@@ -36,8 +36,9 @@
         </div>
         <!-- tab1订单模板 -->
         <div id="order-list-part" style="display: none">
+        	<div class="list-block">
             <div class="swipeout">
-                <div class="dingdan-mokuai swipeout-content item-content">
+                <div class="dingdan-mokuai swipeout-content">
                     <p>订单明细</p>
                     <a href="#" onclick="orderView({orderType}, '{orderNo}')" class="special-color7">
                         <div class="order-dingdan">
@@ -99,10 +100,10 @@
                 </div>
 
                 <div class="swipeout-actions-right">
-                    <a href="#" class="swipeout-delete" data-confirm="是否删除订单?" onclick="delOrder({orderId})">删除</a>
+                    <a href="#" class="swipeout-delete order-delete-btn" data-confirm="是否删除订单?" onclick="delOrder({orderId})">删除</a>
                 </div>
             </div>
-
+</div>
         </div>
 
         <!--tab2订单模板-->
