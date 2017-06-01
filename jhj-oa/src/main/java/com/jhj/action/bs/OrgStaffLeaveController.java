@@ -1,18 +1,17 @@
 package com.jhj.action.bs;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,18 +21,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
+import com.jhj.common.Constants;
 import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffLeave;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
+import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
+import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.vo.bs.LeaveStaffVo;
+import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.org.LeaveSearchVo;
-import com.jhj.vo.staff.StaffSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.StringUtil;
@@ -59,6 +60,9 @@ public class OrgStaffLeaveController extends BaseController {
 
 	@Autowired
 	private OrgsService orgService;
+	
+	@Autowired
+	private OrderDispatchsService orderDispatchService;
 	
 	@AuthPassport
 	@RequestMapping(value = "/leave_list", method = { RequestMethod.GET })
@@ -112,7 +116,10 @@ public class OrgStaffLeaveController extends BaseController {
 	}
 
 	@RequestMapping(value = "/leave_form", method = { RequestMethod.GET })
-	public String adForm(Model model, @RequestParam(value = "id") Long id, HttpServletRequest request) {
+	public String leavelForm(HttpServletRequest request, Model model, 
+			@RequestParam(value = "id") Long id, 
+			@RequestParam(value = "errors", required = false, defaultValue = "") String errors) {
+				
 		Long sessionOrgId = AuthHelper.getSessionLoginOrg(request);
 
 		if (id == null) {
@@ -129,8 +136,9 @@ public class OrgStaffLeaveController extends BaseController {
 		model.addAttribute("logInParentOrgId", sessionOrgId);
 
 		// 如果是修改,则下拉列表为 回显的 门店
+
 		model.addAttribute("leaveModel", leaveStaffVo);
-		
+		model.addAttribute("errors", errors);
 		return "bs/leaveForm";
 	}
 	
@@ -151,6 +159,24 @@ public class OrgStaffLeaveController extends BaseController {
 		
 		String leaveDate = request.getParameter("leaveDate");
 		String leaveDateEnd = request.getParameter("leaveDateEnd");
+		
+		//判断日期内是否有派工的情况，如果有则提示不可修改
+		Long staffId = leave.getStaffId();
+		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDate + " 00:00:00") / 1000;
+		
+		// 注意结束时间也要服务结束后 1:59分钟
+		Long endServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDateEnd + " 23:59:59") / 1000;
+		
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setStaffId(staffId);
+		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStartServiceTime(startServiceTime);
+		searchVo1.setEndServiceTime(endServiceTime);
+		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
+		if (!disList.isEmpty()) {
+        	return leavelForm(request, model, id, "请假时间段内有派工.");
+		}
+		
 		leave.setLeaveDate(DateUtil.parse(leaveDate));
 		leave.setLeaveDateEnd(DateUtil.parse(leaveDateEnd));
 		long dublDate = TimeStampUtil.compareTimeStr(leave.getLeaveDate().getTime(),leave.getLeaveDateEnd().getTime());

@@ -34,7 +34,7 @@ var formVal = $('#orderForm').validate({
 		
 		serviceHour : {
 			required : true,
-			digits : true,
+			number : true,
 			min : 1,
 		
 		},
@@ -89,7 +89,7 @@ var formVal = $('#orderForm').validate({
 		
 		serviceHour : {
 			required : "服务时长不能为空",
-			digits : "服务时长必须为数字",
+			number : "服务时长必须为数字",
 			min : "服务时长必须超过1小时",
 		
 		},

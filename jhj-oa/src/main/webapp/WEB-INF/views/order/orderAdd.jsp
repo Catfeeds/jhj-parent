@@ -175,7 +175,7 @@
 											</label>
 											<input type="hidden" name="serviceType" id="serviceType" value='' />
 											<input type="hidden" name="parentServiceType" id="parentServiceType" value='' />
-											<div class="col-md-5">
+											<div class="col-md-8">
 												<%-- <parentServiceTypeSelectTag:select /> --%>
 												<ul id='order-type' style="line-height: 30px;font-size: 13px;">
 													<input type="hidden" id="serviceTypeId" value=''/>
