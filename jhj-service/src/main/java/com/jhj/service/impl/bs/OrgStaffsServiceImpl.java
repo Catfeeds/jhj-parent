@@ -2,6 +2,7 @@ package com.jhj.service.impl.bs;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.jhj.po.dao.order.OrdersMapper;
 import com.jhj.po.dao.university.PartnerServiceTypeMapper;
 import com.jhj.po.model.bs.AuthIdcard;
 import com.jhj.po.model.bs.OrgStaffAuth;
+import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffTags;
 import com.jhj.po.model.bs.OrgStaffs;
@@ -30,9 +32,11 @@ import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.bs.Tags;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserRefAm;
+import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.AuthIdCardService;
 import com.jhj.service.bs.OrgStaffAuthService;
+import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffSkillService;
 import com.jhj.service.bs.OrgStaffTagsService;
 import com.jhj.service.bs.OrgStaffsService;
@@ -42,6 +46,8 @@ import com.jhj.service.dict.DictService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.university.StudyStaffPassQueryService;
 import com.jhj.service.users.UserRefAmService;
+import com.jhj.service.users.UserTrailHistoryService;
+import com.jhj.service.users.UserTrailRealService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.AuthIdCardSearchVo;
 import com.jhj.vo.TagSearchVo;
@@ -52,10 +58,13 @@ import com.jhj.vo.bs.SecInfoVo;
 import com.jhj.vo.bs.staffAuth.StaffAuthVo;
 import com.jhj.vo.order.OrderStaffRateVo;
 import com.jhj.vo.order.OrgStaffDispatchVo;
+import com.jhj.vo.org.LeaveSearchVo;
+import com.jhj.vo.staff.OrgStaffPoiListVo;
 import com.jhj.vo.staff.OrgStaffSkillSearchVo;
 import com.jhj.vo.staff.StaffAuthSearchVo;
 import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserSearchVo;
+import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.IDCardAuth;
@@ -120,6 +129,16 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 	
 	@Autowired
 	private AuthIdCardService authIdCardService;
+	
+	@Autowired
+	private UserTrailRealService userTrailRealService;
+	
+	@Autowired
+	private UserTrailHistoryService userTrailHistoryService;
+	
+	@Autowired
+	private OrgStaffLeaveService orgStaffLeaveService;
+	
 
 	@Override
 	public int deleteByPrimaryKey(Long staffId) {
@@ -737,6 +756,81 @@ public class OrgStaffsServiceImpl implements OrgStaffsService {
 		if (level.equals((short)3)) skill = "金牌";
 		if (level.equals((short)4)) skill = "VIP";
 		vo.setSkill(skill);
+		
+		return vo;
+	}
+	
+	
+	@Override
+	public OrgStaffPoiListVo getOrgStaffPoiListVo(OrgStaffs staffs) {
+
+		OrgStaffPoiListVo vo = new OrgStaffPoiListVo();
+
+		BeanUtilsExp.copyPropertiesIgnoreNull(staffs, vo);
+		Long staffId = vo.getStaffId();
+		// 1. 门店名称
+		Long parentOrgId = staffs.getParentOrgId();
+		Orgs orgs = orgService.selectByPrimaryKey(parentOrgId);
+
+		if (orgs != null) {
+			vo.setParentOrgName(orgs.getOrgName());
+		}
+
+		// 2.云店名称
+		Long orgId = staffs.getOrgId();
+		Orgs orgs2 = orgService.selectByPrimaryKey(orgId);
+		vo.setOrgName("");
+		if (orgs2 != null) {
+			vo.setOrgName(orgs2.getOrgName());
+		}
+		// 3.籍贯
+		String cityName = dictService.getCityName(staffs.getCityId());
+		String provinceName = dictService.getProvinceName(staffs.getProvinceId());
+
+		vo.setHukou(provinceName + " " + cityName);
+		
+		// 4.最新的地理位置信息.
+		vo.setPoiName("");
+		vo.setPoiTime(0L);
+		vo.setPoiTimeStr("");
+		vo.setTodayPoiStatus(0);
+		vo.setLat("");
+		vo.setLng("");
+		
+		String today = DateUtil.getToday();
+		
+		UserTrailSearchVo searchVo1 = new UserTrailSearchVo();
+		searchVo1.setUserId(staffId);
+		searchVo1.setUserType((short) 0);
+		
+		List<UserTrailReal> userTrails = userTrailRealService.selectBySearchVo(searchVo1);
+		if (!userTrails.isEmpty()) {
+			UserTrailReal item = userTrails.get(0);
+			vo.setPoiName(item.getPoiName());
+			vo.setPoiTime(item.getAddTime());
+			
+			vo.setLat(item.getLat());
+			vo.setLng(item.getLng());
+			
+			Long addTime = item.getAddTime();
+			String poiDay = TimeStampUtil.timeStampToDateStr(addTime * 1000,  DateUtil.DEFAULT_PATTERN);
+			vo.setPoiTimeStr(TimeStampUtil.timeStampToDateStr(addTime * 1000, DateUtil.DEFAULT_FULL_PATTERN));
+			if (poiDay.equals(today)) {
+				vo.setTodayPoiStatus(1);
+			}
+		}
+		
+		//查看是否在请假范围内
+		vo.setStaffLeave("否");
+		LeaveSearchVo searchVo3 = new LeaveSearchVo();
+		Date leaveDate = DateUtil.parse(today);
+		searchVo3.setLeaveDate(leaveDate);
+		searchVo3.setLeaveStatus("1");
+		searchVo3.setStaffId(staffId);
+		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(searchVo3);
+		if (!leaveList.isEmpty()) {
+			vo.setStaffLeave("请假中");
+		}
 		
 		return vo;
 	}

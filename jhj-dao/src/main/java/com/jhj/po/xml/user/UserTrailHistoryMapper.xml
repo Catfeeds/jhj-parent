@@ -19,12 +19,26 @@
 		from user_trail_history
 		where id = #{id,jdbcType=NUMERIC}
 	</select>
+	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserTrailSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from
+		user_trail_history
+		<include refid="bySearchVo" />
+		order by add_time desc
+	</select>
 
 	<select id="selectBySearchVo" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserTrailSearchVo">
 		select
 		<include refid="Base_Column_List" />
 		from
 		user_trail_history
+		<include refid="bySearchVo" />
+		order by add_time asc
+	</select>
+	
+	<sql id="bySearchVo">
 		where 1 = 1
 
 		<if test="userId !=null">
@@ -49,10 +63,8 @@
 		<if test="endTime !=null">
 			<![CDATA[ and add_time  <= #{endTime,jdbcType=NUMERIC}]]>
 		</if>
-		order by add_time asc
-
-
-	</select>
+	
+	</sql>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from user_trail_history
 		where id = #{id,jdbcType=NUMERIC}

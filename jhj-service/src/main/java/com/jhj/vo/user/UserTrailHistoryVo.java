@@ -7,6 +7,8 @@ public class UserTrailHistoryVo extends UserTrailHistory {
 	
 	private String name;
 	
+	private String mobile;
+	
 	private String addTimeStr;
 
 	public String getName() {
@@ -23,6 +25,14 @@ public class UserTrailHistoryVo extends UserTrailHistory {
 
 	public void setAddTimeStr(String addTimeStr) {
 		this.addTimeStr = addTimeStr;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 	
 }
