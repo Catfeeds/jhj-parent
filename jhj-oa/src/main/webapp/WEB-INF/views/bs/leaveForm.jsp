@@ -154,6 +154,13 @@
 										</div>
 									</div>
 									
+									<div class="form-group required">
+										<label class="col-md-2 control-label"></label>
+										<div class="col-md-5">
+											<font color="red">${errors }</font>
+										</div>
+									</div>
+									
 									<div class="form-actions fluid">
 										<div class="col-md-offset-6 col-md-6" style="margin-left:315px">
 											<button type="submit"
