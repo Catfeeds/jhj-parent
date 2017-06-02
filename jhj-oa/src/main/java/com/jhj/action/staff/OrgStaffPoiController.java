@@ -21,6 +21,7 @@ import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.user.UserTrailHistory;
+import com.jhj.po.model.user.UserTrailReal;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.users.UserTrailHistoryService;
@@ -90,12 +91,12 @@ public class OrgStaffPoiController extends AdminController {
 		if (staffSearchVo.getStatus() == null)
 			staffSearchVo.setStatus(1);
 
-		PageInfo infoList = staffService.selectByListPage(staffSearchVo, pageNo, pageSize);
-		List<OrgStaffs> list = infoList.getList();
-		OrgStaffs orgStaff = null;
+		PageInfo infoList = userTrailRealService.selectByStaffListPage(staffSearchVo, pageNo, pageSize);
+		List<UserTrailReal> list = infoList.getList();
+		UserTrailReal item = null;
 		for (int i = 0; i < list.size(); i++) {
-			orgStaff = list.get(i);
-			OrgStaffPoiListVo vo = staffService.getOrgStaffPoiListVo(orgStaff);
+			item = list.get(i);
+			OrgStaffPoiListVo vo = userTrailRealService.getOrgStaffPoiListVo(item);
 
 			list.set(i, vo);
 		}

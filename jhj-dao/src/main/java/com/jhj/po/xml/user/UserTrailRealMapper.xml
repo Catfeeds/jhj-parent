@@ -25,6 +25,73 @@
 		<include refid="Base_Column_List" />
 		from
 		user_trail_real
+		<include refid="bySearchVo"/>
+		order by add_time desc
+	</select>
+	
+	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserTrailSearchVo">
+		select
+		<include refid="Base_Column_List" />
+		from
+		user_trail_real
+		<include refid="bySearchVo"/>
+		order by add_time desc
+		
+	</select>
+	
+	<select id="selectByStaffListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.staff.StaffSearchVo">
+		select
+		b.id, b.user_id, b.user_type, b.lat, b.lng, b.poi_name, b.add_time
+		from
+		org_staffs as a left join user_trail_real as b
+		on a.staff_id = b.user_id
+		where 1 = 1 
+		<if test="staffId !=null">
+			and a.staff_id = #{staffId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orgId !=null and orgId != 0">
+			and a.org_id = #{orgId,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orgIds !=null and orgIds.size() > 0 ">
+			and a.org_id in
+			<foreach item="item" index="index" collection="orgIds" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+
+		<if test="parentId !=null and parentId != 0">
+			and a.parent_org_id = #{parentId,jdbcType=NUMERIC}
+		</if>
+
+		<if test="cloudOrgList !=null and cloudOrgList.size() > 0 ">
+			and a.org_id in
+			<foreach item="item" index="index" collection="cloudOrgList" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+
+		<if test="staffType != null ">
+			and a.staff_type = #{staffType}
+		</if>
+		<if test="name != null and name !='' ">
+			and a.name like '%${name}%'
+		</if>
+
+		<if test="mobile !=null and mobile !='' ">
+			and a.mobile like concat("%",#{mobile},"%")
+		</if>
+		
+		<if test="status!=null">
+			and a.status =#{status,jdbcType=NUMERIC}
+		</if>
+
+		order by b.add_time asc
+		
+	</select>
+	
+	<sql id="bySearchVo">
 		where 1 = 1
 		
 		<if test="userId !=null">
@@ -49,35 +116,7 @@
 		<if test="endTime !=null">
 			<![CDATA[ and add_time  <= #{endTime,jdbcType=NUMERIC}]]>
 		</if>
-		order by add_time asc
-		
-		
-	</select>
-	
-	<select id="selectByListPage" resultMap="BaseResultMap" parameterType="com.jhj.vo.user.UserTrailSearchVo">
-		select
-		<include refid="Base_Column_List" />
-		from
-		user_trail_real
-		where 1 = 1
-		
-		<if test="userId !=null">
-			and user_id = #{userId,jdbcType=NUMERIC}
-		</if>
-		
-		<if test="userType !=null">
-			and user_type = #{userType,jdbcType=NUMERIC}
-		</if>
-		
-		<if test="userIds !=null and userIds.size() > 0 ">
-			and user_id in
-			<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
-				${item}
-			</foreach>
-		</if>
-		
-		
-	</select>
+	</sql>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from user_trail_real

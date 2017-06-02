@@ -66,7 +66,5 @@ public interface OrgStaffsService {
 	OrderStaffRateVo getOrderStaffRateVo(OrgStaffs orgStaff);
 
 	OrgStaffDispatchVo initOrgStaffDispatchVo();
-
-	OrgStaffPoiListVo getOrgStaffPoiListVo(OrgStaffs staffs);
     	
 }

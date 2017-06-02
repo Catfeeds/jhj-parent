@@ -3,6 +3,7 @@ package com.jhj.po.dao.user;
 import java.util.List;
 
 import com.jhj.po.model.user.UserTrailReal;
+import com.jhj.vo.staff.StaffSearchVo;
 import com.jhj.vo.user.UserTrailSearchVo;
 
 public interface UserTrailRealMapper {
@@ -21,4 +22,6 @@ public interface UserTrailRealMapper {
 	List<UserTrailReal> selectBySearchVo(UserTrailSearchVo searchVo);
 
 	List<UserTrailReal> selectByListPage(UserTrailSearchVo searchVo);
+	
+	List<UserTrailReal> selectByStaffListPage(StaffSearchVo searchVo);
 }

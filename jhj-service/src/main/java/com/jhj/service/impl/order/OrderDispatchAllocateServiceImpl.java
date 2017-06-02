@@ -423,6 +423,11 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		orgSearchVo.setIsParent(1);
 		List<Orgs> orgParents = orgService.selectBySearchVo(orgSearchVo);
 		
+		//云店名称
+		orgSearchVo = new OrgSearchVo();
+		orgSearchVo.setIsCloud((short) 1);
+		List<Orgs> orgs = orgService.selectBySearchVo(orgSearchVo);
+		
 		//匹配距离的门店
 		List<OrgDispatchPoiVo> orgList = orderDispatchService.getMatchOrgs(fromLat, fromLng, 0L, 0L, true);
 		
@@ -431,7 +436,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		
 		for (int i = 0; i < prelist.size(); i++) {
 			OrgStaffDispatchVo vo = prelist.get(i);
-			if (vo.getDistanceValue() > Constants.MAX_DISTANCE) continue;
+//			if (vo.getDistanceValue() > Constants.MAX_DISTANCE) continue;
 			
 			// 门店名称
 			for (Orgs o : orgParents) {
@@ -447,6 +452,13 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 					vo.setOrgName(poiVo.getOrgName());
 					vo.setOrgDistanceValue(poiVo.getDistanceValue());
 					vo.setOrgDistanceText(poiVo.getDistanceText());
+					break;
+				}
+			}
+			
+			for (Orgs o : orgs) {
+				if (vo.getOrgId().equals(o.getOrgId())) {
+					vo.setOrgName(o.getOrgName());
 					break;
 				}
 			}
