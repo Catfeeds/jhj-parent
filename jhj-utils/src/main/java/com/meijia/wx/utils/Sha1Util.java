@@ -1,6 +1,7 @@
 package com.meijia.wx.utils;
 
 import java.security.MessageDigest;
+import java.util.Formatter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -49,21 +50,26 @@ public class Sha1Util {
 				'a', 'b', 'c', 'd', 'e', 'f' };
 
 		try {
-			MessageDigest mdTemp = MessageDigest.getInstance("SHA1");
+			MessageDigest mdTemp = MessageDigest.getInstance("SHA-1");
+			mdTemp.reset();
 			mdTemp.update(str.getBytes("UTF-8"));
 
 			byte[] md = mdTemp.digest();
-			int j = md.length;
-			char buf[] = new char[j * 2];
-			int k = 0;
-			for (int i = 0; i < j; i++) {
-				byte byte0 = md[i];
-				buf[k++] = hexDigits[byte0 >>> 4 & 0xf];
-				buf[k++] = hexDigits[byte0 & 0xf];
-			}
-			return new String(buf);
+			return byteToHex(md);
 		} catch (Exception e) {
 			return null;
 		}
 	}
+	
+	private static String byteToHex(final byte[] hash) {
+        Formatter formatter = new Formatter();
+        for (byte b : hash)
+        {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
+    }
+
 }

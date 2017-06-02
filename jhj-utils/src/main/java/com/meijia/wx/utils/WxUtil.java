@@ -142,4 +142,5 @@ public class WxUtil {
 		Random random = new Random();
 		return MD5Util.MD5Encode(String.valueOf(random.nextInt(10000)), "GBK");
 	}	
+	
 }
