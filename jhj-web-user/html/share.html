@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../css/framework7.ios.min.css">
     <link rel="stylesheet" href="../css/mobiscroll.custom-2.16.1.min.css">
     <link rel="stylesheet" href="../css/my-app.css">
-    <link rel="stylesheet" href="../css/share/share.css">
 </head>
 <body>
 <div class="views">
@@ -40,6 +39,34 @@
                             <img src="../img/share/share-button.png" alt="">
                             <a href="#"></a>
                         </div>
+
+                    </div>
+                </div>
+                <div class="share-operation" style="display: none">
+                    <div class="share-opera-content">
+                        <ul class="clearfloat">
+                            <li class="share-ope-btn" id="wechat_friend">
+                                <a href="#">
+                                    <img src="../img/share/wechat.png" alt="">
+                                    <span>微信好友</span>
+                                </a>
+                            </li>
+                            <li class="share-ope-btn" id="friends_circle">
+                                <a href="#">
+                                    <img src="../img/share/friends_circle.png" alt="">
+                                    <span>朋友圈</span>
+                                </a>
+                            </li>
+                            <li class="share-ope-btn" id="weibo">
+                                <a href="#">
+                                    <img src="../img/share/weibo.png" alt="">
+                                    <span>微博</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="share-delete" id="share-delete">
+                            <a href="#">取消</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,12 +85,12 @@
                 </a>
 
                 <a href="#" id="toolbar-huodong" onclick="toolBarHref('huodong-list.html', 'toolbar-huodong')" class="no-animation link" style="color:#000;">
-                    <i class="icon toolbar-icon-zhuli"></i>
+                    <i class="icon toolbar-icon-charge"></i>
                     <span class="tabbar-label">充值</span>
                 </a>
 
                 <a href="#" id="toolbar-youzan" onclick="toolBarHref('youzan.html', 'toolbar-youzan')" class="no-animation link" style="color:#000;">
-                    <i class="icon toolbar-icon-my"></i>
+                    <i class="icon toolbar-icon-tixing"></i>
                     <span class="tabbar-label">我的</span>
                 </a>
             </div>
@@ -72,5 +99,22 @@
 </div>
 <script type="text/javascript" src="../js/framework7.min.js"></script>
 <script type="text/javascript" src="../js/share/my-app.js"></script>
+<script type="text/javascript" src="../js/active/share.js"></script>
+<script>
+    $$(document).on("click",'.share-ope-btn',function () {
+        var index=$$(this).index();
+        var shreId=$$(".share-ope-btn").eq(index).attr("id");
+        alert(shreId)
+    })
+    //隐藏 分享操作
+    $$(".share-delete").click(function () {
+        $$(".share-operation").hide();
+    })
+    //展示 分享操作
+    $$(".share-btn").click(function () {
+        $$(".share-operation").show();
+    })
+
+</script>
 </body>
 </html>

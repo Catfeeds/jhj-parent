@@ -6320,6 +6320,55 @@ p.special-p-2{
   height: 100%;
 
 }
+.share-operation{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.3);
+  z-index:22;
+  position: absolute;
+  top: 0px;
+}
+.share-opera-content{
+  position: absolute;
+  width: 100%;
+  bottom: 50px;
+}
+.share-operation ul{
+  padding-top:31px;
+  padding-bottom:20px;
+  background:#fff;
+}
+.share-operation ul li{
+  float: left;
+  width:33%;
+  text-align: center;
+}
+.share-operation ul li a{
+   display:inline-block;
+   width:100%;
+}
+.share-operation ul li a img{
+  width: 46%;
+  display: block;
+  margin: 0 auto;
+}
+.share-operation ul li a span{
+   color:#707070;
+   font-size:15px;
+   margin-top:11px;
+}
+.share-delete{
+  background:#fff;
+  text-align: center;
+
+}
+.share-delete a{
+   color:#333333;
+   font-size: 18px;
+   display: block;
+   line-height:56px;
+}
+
 
 /***母婴到家子菜单页面**/
 
