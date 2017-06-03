@@ -40,7 +40,7 @@ public class WxShare {
 		
 		
 		map.put("timestamp", timestamp);
-		map.put("nonceStr", nonceStr);
+		map.put("noncestr", nonceStr);
 		map.put("jsapi_ticket", jsapiTicket);
 		map.put("url", url);
 		

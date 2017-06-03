@@ -1,6 +1,6 @@
 myApp.onPageInit('share', function (page) {
 	
-	var url = "http://jia-he-jia.com/u/index.html?share_user_id="+localStorage.getItem("user_id");
+	var url = "http://jia-he-jia.com/u/index.html"//?share_user_id="+localStorage.getItem("user_id");
 	
 	$$("#share-btn").on('click',function(){
 		
@@ -10,7 +10,7 @@ myApp.onPageInit('share', function (page) {
 			wx.config({
 			  "appId": result.appId, // 必填，公众号的唯一标识
 			  "timestamp": result.timestamp, // 必填，生成签名的时间戳
-			  "nonceStr": result.nonceStr, // 必填，生成签名的随机串
+			  "nonceStr": result.noncestr, // 必填，生成签名的随机串
 			  "signature": result.signature,// 必填，签名，见附录1
 			  "jsApiList": [
 			     'onMenuShareTimeline',
