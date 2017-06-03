@@ -1,6 +1,6 @@
 myApp.onPageInit('share', function (page) {
 	
-	var url = "http://jia-he-jia.com/u/#!/index.html?share_user_id="+localStorage.getItem("user_id");
+	var url = "http://jia-he-jia.com/u/index.html?share_user_id="+localStorage.getItem("user_id");
 	
 	$$("#share-btn").on('click',function(){
 		
