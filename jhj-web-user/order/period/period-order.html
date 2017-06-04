@@ -26,7 +26,7 @@
                         <label class="label-checkbox item-content">
                         	<input type="hidden" name="id" value="{id}"/>
                         	<input type="hidden" name="serviceTypeAddonsId" value="{serviceTypeAddonsId}"/>
-                            <input type="hidden" name="serviceTypeAddonsJson" data-addons-json='{data-addons-json}'/>
+                            <input type="hidden" name="serviceTypeAddonsJson" data-addons-json = {data-addons-json} />
                             <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}" {checked} {disabled} />
                             <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
                             <div class="housework-1">
@@ -74,6 +74,7 @@
             <ul id="service-type-addons-ul">
                 <li>
                     <label class="label-checkbox item-content">
+                        <input type="hidden" name="periodServiceTypeId" value="{periodServiceTypeId}"/>
                         <input type="hidden" name="price1" id="price1" value="{price}"/>
                         <input type="hidden" name="pprice" id="pprice" value="{pprice}"/>
                         <input type="hidden" name="serviceTypeId" value="{serviceTypeId}"/>

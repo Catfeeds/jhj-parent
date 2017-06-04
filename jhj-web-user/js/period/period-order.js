@@ -26,7 +26,6 @@ myApp.onPageBeforeInit("period-order", function (page) {
     		var ptotal = 0;
     		
     		if(periodOrderList.length>0){
-    			var orderList = [];
     			for(var i=0;i<periodOrderList.length;i++){
     				var order = {};
     				var periodOrder = periodOrderList[i];
@@ -40,31 +39,31 @@ myApp.onPageBeforeInit("period-order", function (page) {
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '');
     					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
     					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), 'disabled');
-    					total = periodOrder.price*periodOrder.total;
-    					ptotal = periodOrder.vip_price*periodOrder.total;
+    					total = parseFloat(periodOrder.price) * parseFloat(periodOrder.total);
+    					ptotal = parseFloat(periodOrder.vip_price) * parseFloat(periodOrder.total);
     				}else{
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '调整');
     					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
     					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), '');
-    					total = periodOrder.price*periodOrder.total;
-    					ptotal = periodOrder.vip_price*periodOrder.total;
+						total = parseFloat(periodOrder.price) * parseFloat(periodOrder.total);
+						ptotal = parseFloat(periodOrder.vip_price) * parseFloat(periodOrder.total);
     				}
     				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.total);
     				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), periodOrder.price);
     				htmlPart = htmlPart.replace(new RegExp('{vipPrice}', "gm"), periodOrder.vip_price);
     				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), periodOrder.price*periodOrder.total);
     				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), periodOrder.vip_price*periodOrder.total);
-    				
-    				order.name = periodOrder.name;
-    				order.periodServiceAddonId = periodOrder.id;
+
+					order.periodServiceAddonId = periodOrder.id;
+					order.name = periodOrder.name;
     				order.serviceTypeId = periodOrder.service_type_id;
     				order.serviceAddonId = periodOrder.service_addon_id;
     				order.price = periodOrder.price;
     				order.vipPrice = periodOrder.vip_price;
     				order.num = periodOrder.total;
-    				htmlPart = htmlPart.replace(new RegExp('{data-addons-json}', "gm"), JSON.stringify(orderList.push(order)));
-    				
-    				html += htmlPart;
+					var ss = JSON.stringify(order).replace(/"/g, "\'");
+    				htmlPart = htmlPart.replace(new RegExp('{data-addons-json}', "gm"), ss);
+					html += htmlPart;
     			}
     			
     			$$("#period-order-div").html(html);
@@ -97,12 +96,15 @@ myApp.onPageBeforeInit("period-order", function (page) {
        		var serviceType = serviceTypeList[i];
        		
        		var periodOrder = $$(serviceType).prev().attr("data-addons-json");
-       		
-       		periodServiceAddonsArray.push(JSON.parse(periodOrder));
-       		
-       		
-       		
-       		
+			periodOrder = periodOrder.replace(/'/g, "\"");
+			var periodOrderObj = JSON.parse(periodOrder);
+			if(periodOrderObj instanceof Array){
+				Array.prototype.push.apply(periodServiceAddonsArray, periodOrderObj);
+			}else{
+				periodServiceAddonsArray.push(periodOrderObj);
+			}
+
+			setPeriodPrice();
 //       		var serviceTypeObject = {};
 //       		serviceTypeObject.name = $$(serviceType).nextAll(".item-inner").find(".housework-3 .item-title").text();
 //       		serviceTypeObject.periodServiceAddonId = $$(serviceType).prevAll("input[name='id']").val();
@@ -125,11 +127,13 @@ myApp.onPageBeforeInit("period-order", function (page) {
     
     $$(document).on('click','.adjust',function(){
     	var serviceTypeId = $$(this).prev("input[type='hidden']").val();
+		var periodServiceTypeId = $$(this).parents(".item-inner").prevAll("input[name='id']").val();
     	$$(this).parents(".item-inner").prevAll("input[name='serviceTypeId']").attr("checked",true);
     	
     	var dataAddonsJsonString = $$(this).parents(".item-inner").prevAll("input[name='serviceTypeAddonsJson']").attr("data-addons-json");
     	var dataAddonsJson = '';
     	if(dataAddonsJsonString!=null &&dataAddonsJsonString!=''&&dataAddonsJsonString!=undefined){
+			dataAddonsJsonString = dataAddonsJsonString.replace(/'/g, "\"");
     		dataAddonsJson = JSON.parse(dataAddonsJsonString);
     	}
     	
@@ -155,6 +159,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				htmlPart = htmlPart.replace(new RegExp('{name}', "gm"), serviceTypeAddons.name);
         				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), serviceTypeAddons.price);
         				htmlPart = htmlPart.replace(new RegExp('{pprice}', "gm"), serviceTypeAddons.dis_price);
+						htmlPart = htmlPart.replace(new RegExp('{periodServiceTypeId}', "gm"), periodServiceTypeId);
         				/**
         				 * 回显数据
         				 * */
@@ -163,10 +168,9 @@ myApp.onPageBeforeInit("period-order", function (page) {
         					if(serviceTypeAddons.service_addon_id==addons.serviceAddonId){
         						htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), "checked");
         						htmlPart = htmlPart.replace(new RegExp('{number}', "gm"), addons.num);
-        						htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), parseFloat(serviceTypeAddons.price)*parseFloat(addons.serviceNum));
-                				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), parseFloat(serviceTypeAddons.dis_price)*parseFloat(addons.serviceNum));
+        						htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), parseFloat(serviceTypeAddons.price)*parseFloat(addons.num));
+                				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), parseFloat(serviceTypeAddons.dis_price)*parseFloat(addons.num));
         					}
-        					
         				}
         				
         				if(serviceTypeAddons.name=='擦玻璃'){
@@ -267,21 +271,21 @@ myApp.onPageBeforeInit("period-order", function (page) {
 			var name = $$(serviceTypeAddons).nextAll(".item-inner").find(".housework-3 .item-title").text();
 			var serviceNum = $$(serviceTypeAddons).nextAll(".item-inner").find(".housework-3 .housework-2 .service-num").val();
 			var serviceTypeAddonsId = $$(serviceTypeAddons).val();
+			var periodServiceTypeId = $$(serviceTypeAddons).prevAll("input[name='periodServiceTypeId']").val();
 			
 			var serviceTypeAddonsObject = {};
 			serviceTypeAddonsObject.serviceTypeId = serviceTypeId;
 			serviceTypeAddonsObject.serviceAddonId = serviceTypeAddonsId;
 			serviceTypeAddonsObject.price = price;
-			serviceTypeAddonsObject.pprice = pprice;
+			serviceTypeAddonsObject.vipPrice = pprice;
 			serviceTypeAddonsObject.name = name;
 			serviceTypeAddonsObject.num = serviceNum;
+			serviceTypeAddonsObject.periodServiceAddonId = periodServiceTypeId;
 			serviceTypeAddonsArray.push(serviceTypeAddonsObject);
-			
 			
 			count += parseFloat(serviceNum);
 			totalPrice += parseFloat(price)*parseFloat(serviceNum);
 			totalVipPrice += parseFloat(pprice)*parseFloat(serviceNum);
-			
 		}
 		
 		var serviceTypeAddonsJson = JSON.stringify(serviceTypeAddonsArray);
