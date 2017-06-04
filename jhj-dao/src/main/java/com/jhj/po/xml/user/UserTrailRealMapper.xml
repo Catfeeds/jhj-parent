@@ -43,7 +43,8 @@
 		select
 		b.id, b.user_id, b.user_type, b.lat, b.lng, b.poi_name, b.add_time
 		from
-		org_staffs as a left join user_trail_real as b
+		org_staffs as a left join 
+		(SELECT id, user_id, user_type, lat, lng, poi_name, max(add_time) as add_time FROM `user_trail_real` group by user_id, user_type) as b
 		on a.staff_id = b.user_id
 		where 1 = 1 
 		<if test="staffId !=null">

@@ -150,32 +150,38 @@ public class OrgStaffLeaveController extends BaseController {
 
 		OrgStaffLeave leave = leaveService.initLeave();
 		
+		
+		String leaveStatus = leaveVo.getLeaveStatus();
+		
 		if (id > 0L) {
 			leave = leaveService.selectByPrimaryKey(id);
 			leaveVo.setOrgId(leave.getOrgId());
 			leaveVo.setParentId(leave.getParentId());
 		}
-
+		
 		BeanUtilsExp.copyPropertiesIgnoreNull(leaveVo, leave);
 		
 		String leaveDate = request.getParameter("leaveDate");
 		String leaveDateEnd = request.getParameter("leaveDateEnd");
 		
-		//判断日期内是否有派工的情况，如果有则提示不可修改
-		Long staffId = leave.getStaffId();
-		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDate + " 00:00:00") / 1000;
+		if (leaveStatus.equals("1")) {
+			//判断日期内是否有派工的情况，如果有则提示不可修改
+			Long staffId = leave.getStaffId();
+			Long startServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDate + " 00:00:00") / 1000;
+			
+			// 注意结束时间也要服务结束后 1:59分钟
+			Long endServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDateEnd + " 23:59:59") / 1000;
+			
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setStaffId(staffId);
+			searchVo1.setDispatchStatus((short) 1);
+			searchVo1.setStartServiceTime(startServiceTime);
+			searchVo1.setEndServiceTime(endServiceTime);
+			List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
+			if (!disList.isEmpty()) {
+	        	return leavelForm(request, model, id, "请假时间段内有派工.");
+			}
 		
-		// 注意结束时间也要服务结束后 1:59分钟
-		Long endServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDateEnd + " 23:59:59") / 1000;
-		
-		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-		searchVo1.setStaffId(staffId);
-		searchVo1.setDispatchStatus((short) 1);
-		searchVo1.setStartServiceTime(startServiceTime);
-		searchVo1.setEndServiceTime(endServiceTime);
-		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
-		if (!disList.isEmpty()) {
-        	return leavelForm(request, model, id, "请假时间段内有派工.");
 		}
 		
 		leave.setLeaveDate(DateUtil.parse(leaveDate));
@@ -185,8 +191,7 @@ public class OrgStaffLeaveController extends BaseController {
 		leave.setTotalDays(new Long(dayNum).intValue());
 
 		// 请假日期
-//		leave.setLeaveStatus();
-//		Short leaveStatus = leaveVo.getLeaveStatus();
+
 
 		Short leaveDuration = leaveVo.getLeaveDuration();
 
@@ -231,6 +236,7 @@ public class OrgStaffLeaveController extends BaseController {
 			}
 			
 		} else {
+			leave.setLeaveStatus(leaveVo.getLeaveStatus());
 			leaveService.updateByPrimaryKeySelective(leave);
 		}
 		

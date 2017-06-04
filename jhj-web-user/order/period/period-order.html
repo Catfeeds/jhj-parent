@@ -17,7 +17,6 @@
 
             </div>
 			<div class="kongdiv" />
-
         </div>
 
         <div class="period-order-temp" style="display:none;">
@@ -26,7 +25,8 @@
                     <li>
                         <label class="label-checkbox item-content">
                         	<input type="hidden" name="id" value="{id}"/>
-                            <input type="hidden" name="serviceTypeAddonsId" value="{serviceTypeAddonsId}"/>
+                        	<input type="hidden" name="serviceTypeAddonsId" value="{serviceTypeAddonsId}"/>
+                            <input type="hidden" name="serviceTypeAddonsJson" data-addons-json = {data-addons-json} />
                             <input type="checkbox" name="serviceTypeId" value="{serviceTypeId}" {checked} {disabled} />
                             <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
                             <div class="housework-1">
@@ -43,22 +43,20 @@
                                 <div class="item-subtitle">
                                     <ul class="housework-4">
                                         <li>总次数:<b class="total">{total}</b></li>
-                                        <li>频次:<b>{num}</b>{punit}</li>
                                     </ul>
                                 </div>
-                                <div class="item-subtitle">
+                               <!--  <div class="item-subtitle">
                                     <ul class="housework-5">
                                         <input type="hidden" name="price" value="{price}"/>
                                         <input type="hidden" name="vipPrice" value="{vipPrice}"/>
                                         <li class="housework-5-1">原价:￥<span class="price">{price}</span></li>
                                         <li id="price">优惠单价:￥<span class="vip-price">{vipPrice}</span></li>
                                     </ul>
-                                </div>
+                                </div> -->
                                 <div class="item-subtitle">
                                     <ul class="housework-6">
-                                        <li>合计:￥<span class="total-price">{totalPrice}</span></li>
-                                        <li class="housework-2">优惠价:￥<span
-                                                class="vip-total-price">{vipTotalPrice}</span></li>
+                                        <li>总价:￥<span class="total-price">{totalPrice}</span></li>
+                                        <li class="housework-2">优惠价:￥<span class="vip-total-price">{vipTotalPrice}</span></li>
                                     </ul>
                                 </div>
                             </div>
@@ -76,10 +74,11 @@
             <ul id="service-type-addons-ul">
                 <li>
                     <label class="label-checkbox item-content">
+                        <input type="hidden" name="periodServiceTypeId" value="{periodServiceTypeId}"/>
                         <input type="hidden" name="price1" id="price1" value="{price}"/>
                         <input type="hidden" name="pprice" id="pprice" value="{pprice}"/>
                         <input type="hidden" name="serviceTypeId" value="{serviceTypeId}"/>
-                        <input type="radio" name="serviceTypeAddons" value="{serviceTypeAddonsId}" {checked} />
+                        <input type="checkbox" name="serviceTypeAddons" value="{serviceTypeAddonsId}" {checked} />
                         <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
                         <div class="housework-1">
                             <img src="img/taocan/jiawu-3.png" alt="">
@@ -88,10 +87,10 @@
                             <div class="item-title-row housework-3">
                                 <div class="item-title">{name}</div>
                                 <div class="item-after housework-2">
-                                    <div class="housework-8 sub-num">-</div>
-                                    <input name="serviceNum" class="housework-9 service-num" value="{number}" />
-                                    <div class="housework-8 add-num">+</div>
-                                </div>
+			                        <div class="housework-8 sub-num">-</div>
+			                        <input name="serviceNum" class="housework-9 service-num" value="{number}" />
+			                        <div class="housework-8 add-num">+</div>
+			                    </div>
                             </div>
                             <div class="item-subtitle">
                                 <ul class="housework-5">
@@ -101,7 +100,7 @@
                             </div>
                             <div class="item-subtitle">
                                 <ul class="housework-6">
-                                    <li>合计:￥{totalPrice}</li>
+                                    <li>总价:￥{totalPrice}</li>
                                     <li class="housework-2">优惠价:￥{vipTotalPrice}</li>
                                 </ul>
                             </div>
