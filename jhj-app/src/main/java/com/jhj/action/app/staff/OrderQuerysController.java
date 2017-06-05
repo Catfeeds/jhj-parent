@@ -108,35 +108,37 @@ public class OrderQuerysController extends BaseController {
 		PageInfo list = orderQueryService.selectByListPage(searchVo, page, Constants.PAGE_MAX_NUMBER);
 		//PageInfo list = orderDispatchsService.selectByListVoPage();
 		List<Orders> orderList = list.getList();
-		for (Orders item : orderList) {
-			
-			OrderListVo vo = new OrderListVo(); 
-			vo = orderQueryService.getOrderListVo(item, staffId);
-			
-			//如果是未接单，则设置服务地址为 ******
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setOrderNo(vo.getOrderNo());
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStaffId(staffId);
-			List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
+		
+		if(orderList!=null && orderList.size()>0){
+			for (Orders item : orderList) {
+				
+				OrderListVo vo = new OrderListVo(); 
+				vo = orderQueryService.getOrderListVo(item, staffId);
+				
+				//如果是未接单，则设置服务地址为 ******
+				OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+				searchVo1.setOrderNo(vo.getOrderNo());
+				searchVo1.setDispatchStatus((short) 1);
+				searchVo1.setStaffId(staffId);
+				List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(searchVo1);
 
-			OrderDispatchs orderDispatch = null;
-			if (!orderDispatchs.isEmpty()) {
-				orderDispatch = orderDispatchs.get(0);
-			}
-
-			if (orderDispatch != null) {
-				Short isApply = orderDispatch.getIsApply();
-				if (isApply.equals((short)0)) {
-					vo.setServiceAddrDistance("**米");
-					vo.setServiceAddr("******");
+				OrderDispatchs orderDispatch = null;
+				if (!orderDispatchs.isEmpty()) {
+					orderDispatch = orderDispatchs.get(0);
 				}
+
+				if (orderDispatch != null) {
+					Short isApply = orderDispatch.getIsApply();
+					if (isApply.equals((short)0)) {
+						vo.setServiceAddrDistance("**米");
+						vo.setServiceAddr("******");
+					}
+				}
+				
+				orderListVo.add(vo);
 			}
-			
-			
-			
-			orderListVo.add(vo);
 		}
+		
 		result.setData(orderListVo);
 		
 		return result;

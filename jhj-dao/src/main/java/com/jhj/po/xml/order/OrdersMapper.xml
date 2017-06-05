@@ -1428,7 +1428,23 @@
 		<if test="endTime !=null">
 			<![CDATA[ and o.add_time <= #{endTime}]]>
 		</if>
-		and o.order_status between 1 and 9
+		<![CDATA[ and o.order_status >= 3 and o.order_status <=8 ]]>
+		GROUP BY o.order_from,o.order_op_from,series
+	</select>
+	
+	<select id="countOrderFrom" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT o.order_from as orderFrom,o.order_op_from as orderOpFrom,
+		FROM_UNIXTIME(o.add_time, #{formatParam}) AS series,
+		sum(order_money) as totalMoney,count(*) as total
+		from order_prices as op,orders as o
+		WHERE op.order_id = o.id
+		<if test="startTime !=null">
+			<![CDATA[ and o.add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and o.add_time <= #{endTime}]]>
+		</if>
+		<![CDATA[ and o.order_status >= 3 and o.order_status <=8 ]]>
 		GROUP BY o.order_from,o.order_op_from,series
 	</select>
 

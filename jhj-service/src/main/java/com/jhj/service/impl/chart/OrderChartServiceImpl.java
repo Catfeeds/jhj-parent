@@ -629,4 +629,89 @@ public class OrderChartServiceImpl implements OrderChartService {
 	}
 	
 	
+	
+	@Override
+	public ChartDataVo getOrderFromCount(ChartSearchVo chartSearchVo, List<String> timeSeries) {
+		ChartDataVo chartDataVo = new ChartDataVo();
+		
+		//订单来源
+		CooperativeBusinessSearchVo vo=new CooperativeBusinessSearchVo();
+		vo.setEnable((short)1);
+		List<CooperativeBusiness> businessList = businessMapper.selectCooperativeBusinessVo(vo);
+		
+		List<String> orderFromNameList = new ArrayList<>();
+		
+		for(int i=0;i<businessList.size();i++){
+			orderFromNameList.add(businessList.get(i).getBusinessName());
+		}
+		orderFromNameList.add("订单数量");
+		orderFromNameList.add("订单总金额");
+		
+		List<HashMap<String, String>> tableDatas = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> tableData = null;
+		for (int i =0; i < timeSeries.size(); i++) {
+			tableData = new HashMap<String, String>();
+			tableData.put("time", timeSeries.get(i));
+			
+			for (int j =0; j < orderFromNameList.size(); j++) {
+				tableData.put(orderFromNameList.get(j), "0");
+			}
+			tableDatas.add(tableData);
+		}
+		
+		chartSearchVo.setFormatParam("%Y-%c-%e");;
+		List<ChartMapVo> orderFrom = orderMapper.countOrderFrom(chartSearchVo);
+		
+		Map<String, String> countTableMap = new HashMap<String, String>();
+		
+		for(HashMap<String, String> tableItem:tableDatas){
+			String time = tableItem.get("time");
+			for(int i=0,len=businessList.size();i<len;i++){
+				BigDecimal totalMoney = new BigDecimal(0);
+				String businessName = businessList.get(i).getBusinessName();
+				String id = String.valueOf(businessList.get(i).getId());
+				
+				Integer count = 0;
+				Integer orderFromCount = 0;
+				
+				for(int j=0;j<orderFrom.size();j++){
+					ChartMapVo chartMapVo = orderFrom.get(j);
+					String series = chartMapVo.getSeries();
+					if(time.equals(series) && chartMapVo.getOrderOpFrom().equals(id)){
+						count += chartMapVo.getTotal();
+						totalMoney = totalMoney.add(chartMapVo.getTotalMoney());
+					}
+					
+					if(chartMapVo.getOrderOpFrom().equals(id)){
+						orderFromCount += chartMapVo.getTotal();
+					}
+				}
+				countTableMap.put(businessName+"数量", String.valueOf(orderFromCount));
+				tableItem.put(businessName, String.valueOf(count));
+				tableItem.put(businessName+"金额", String.valueOf(totalMoney));
+			}
+		}
+		
+		//计算各个来源的订单总和订单金额
+		for(HashMap<String, String> tableItem:tableDatas){
+			Integer count = 0;
+			BigDecimal countMoney = new BigDecimal(0);
+			
+			for(int i=0,len=businessList.size();i<len;i++){
+				String name = businessList.get(i).getBusinessName();
+				String value = tableItem.get(name);
+				count += Integer.valueOf(value);
+				countMoney.add(new BigDecimal(tableItem.get(name+"金额")));
+			}
+			tableItem.put("订单数量", String.valueOf(count));
+			tableItem.put("订单金额", String.valueOf(countMoney));
+		}
+		
+		chartDataVo.setTableDatas(tableDatas);
+		chartDataVo.setTableMap(countTableMap);
+		
+		return chartDataVo;
+	}
+	
+	
 }
