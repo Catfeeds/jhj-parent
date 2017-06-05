@@ -172,10 +172,10 @@ public class OrgStaffLeaveController extends BaseController {
 		if (leaveStatus.equals("1")) {
 			//判断日期内是否有派工的情况，如果有则提示不可修改
 			Long staffId = leave.getStaffId();
-			Long startServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDate + " 00:00:00") / 1000;
+			Long startServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDate + " 08:00:00") / 1000;
 			
 			// 注意结束时间也要服务结束后 1:59分钟
-			Long endServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDateEnd + " 23:59:59") / 1000;
+			Long endServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDateEnd + " 22:00:00") / 1000;
 			
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 			searchVo1.setStaffId(staffId);
