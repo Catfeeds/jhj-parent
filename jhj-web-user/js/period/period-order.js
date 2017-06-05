@@ -48,6 +48,11 @@ myApp.onPageBeforeInit("period-order", function (page) {
 						total = parseFloat(periodOrder.price) * parseFloat(periodOrder.total);
 						ptotal = parseFloat(periodOrder.vip_price) * parseFloat(periodOrder.total);
     				}
+    				if(periodOrder.name=='擦玻璃'){
+    					htmlPart = htmlPart.replace(new RegExp('{describle}', "gm"), '总面积');
+    				}else{
+    					htmlPart = htmlPart.replace(new RegExp('{describle}', "gm"), '总次数');
+    				}
     				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.total);
     				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), periodOrder.price);
     				htmlPart = htmlPart.replace(new RegExp('{vipPrice}', "gm"), periodOrder.vip_price);
@@ -183,7 +188,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				
         				html += htmlPart;
         			}
-        			html += '<div><button type="button" id="btn-ensure" class="all-button17 close-popup">返回</button></div></div>';
+        			html += '<p><a href="#" id="btn-ensure" class="button button-big all-button17 close-popup">返回</a></p></div>';
         			myApp.popup(html);
         		}
             }
