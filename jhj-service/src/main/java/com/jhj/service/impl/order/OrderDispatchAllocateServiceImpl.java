@@ -429,14 +429,14 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		List<Orgs> orgs = orgService.selectBySearchVo(orgSearchVo);
 		
 		//匹配距离的门店
-		List<OrgDispatchPoiVo> orgList = orderDispatchService.getMatchOrgs(fromLat, fromLng, 0L, 0L, true);
+		List<OrgDispatchPoiVo> orgList = orderDispatchService.getMatchOrgs(fromLat, fromLng, 0L, 0L, false);
 		
 		//当日订单最小值.
 		int minTotalOrders = 0;
 		
 		for (int i = 0; i < prelist.size(); i++) {
 			OrgStaffDispatchVo vo = prelist.get(i);
-//			if (vo.getDistanceValue() > Constants.MAX_DISTANCE) continue;
+			if (vo.getDistanceValue() > Constants.MAX_DISTANCE) continue;
 			
 			// 门店名称
 			for (Orgs o : orgParents) {
