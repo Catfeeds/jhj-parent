@@ -2,6 +2,7 @@ package com.jhj.action.bs;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,10 +29,12 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffLeave;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.Orders;
 import com.jhj.service.bs.OrgStaffLeaveService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrdersService;
 import com.jhj.vo.bs.LeaveStaffVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.org.LeaveSearchVo;
@@ -51,6 +54,9 @@ import com.meijia.utils.TimeStampUtil;
 @Controller
 @RequestMapping(value = "/newbs")
 public class OrgStaffLeaveController extends BaseController {
+	
+	@Autowired
+	private OrdersService orderService;
 
 	@Autowired
 	private OrgStaffLeaveService leaveService;
@@ -177,7 +183,21 @@ public class OrgStaffLeaveController extends BaseController {
 			searchVo1.setStartServiceTime(startServiceTime);
 			searchVo1.setEndServiceTime(endServiceTime);
 			List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
-			if (!disList.isEmpty()) {
+			
+			List<Long> orderIds = new ArrayList<Long>();
+			Boolean hasDispatch = false;
+			for (OrderDispatchs item : disList) {
+				Long orderId = item.getOrderId();
+				Orders order = orderService.selectByPrimaryKey(orderId);
+				Short orderStatus = order.getOrderStatus();
+				if (orderStatus.equals(Constants.ORDER_STATUS_3) || 
+					orderStatus.equals(Constants.ORDER_STATUS_5)) {
+					hasDispatch = true;
+					break;
+				}
+			}
+
+			if (hasDispatch) {
 	        	return leavelForm(request, model, id, "请假时间段内有派工.");
 			}
 		
