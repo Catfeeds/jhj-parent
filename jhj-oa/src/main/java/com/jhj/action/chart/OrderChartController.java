@@ -2,6 +2,7 @@ package com.jhj.action.chart;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.jhj.action.BaseController;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
+import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.chart.OrderChartService;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartSearchVo;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.meijia.utils.ChartUtil;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.TimeStampUtil;
 
 /**
  *
@@ -47,6 +52,8 @@ public class OrderChartController extends BaseController {
 	@Autowired
 	private OrderChartService orderChartService;
 	
+	@Autowired
+	private CooperativeBusinessMapper businessMapper;
 	
 	/*
 	 * 市场订单图表
@@ -288,6 +295,49 @@ public class OrderChartController extends BaseController {
 		
 		model.addAttribute("chartDatas", chartDatas);
 		return "chart/chartOrderSrc";
+	}
+	
+	
+	/*
+	 * 统计订单来源的数量，总订单数，总金额
+	 * 
+	 * */
+	@AuthPassport
+	@RequestMapping(value = "chartOrderFromCount",method = RequestMethod.GET)
+	public String chartOrderFromNum(Model model, HttpServletRequest request, ChartSearchVo chartSearchVo){
+		
+		Long startTime = 0L;
+		Long endTime = 0L;
+		
+		String startTimeStr = chartSearchVo.getStartTimeStr();
+		if(startTimeStr!=null && !startTimeStr.equals("")){
+			startTime = DateUtil.parseFull(startTimeStr+"-1 00:00:00").getTime()/1000;
+			Date date = DateUtil.parse(startTimeStr+"-1");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.MONTH, 1);
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+			String endTimeStr = DateUtil.formatDate(cal.getTime())+" 23:59:59";
+			endTime = DateUtil.parse(endTimeStr).getTime()/1000;
+			
+		}else{
+			startTime = DateUtil.curStartDate(0);
+//			endTime = DateUtil.curLastDate(0);
+			endTime = new Date().getTime()/1000;
+		}
+		chartSearchVo.setStartTime(startTime);
+		chartSearchVo.setEndTime(endTime);
+		
+		//获得时间周期的数组列表, 7月，8月，9月
+		List<String> timeSeries = new ArrayList<String>();		
+		timeSeries = ChartUtil.getTimeSeries("day", startTime, endTime);
+		
+		ChartDataVo chartDatas = orderChartService.getOrderFromCount(chartSearchVo, timeSeries);
+		
+		model.addAttribute("chartDatas", chartDatas);
+		model.addAttribute("searchVo", chartSearchVo);
+		
+		return "chart/chartOrderFromCount";
 	}
 	
 }

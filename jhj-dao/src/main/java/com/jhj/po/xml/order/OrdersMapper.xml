@@ -29,13 +29,14 @@
 		<result column="order_done_time" property="orderDoneTime" jdbcType="NUMERIC" />
 		<result column="remarks_bussiness_confirm" property="remarksBussinessConfirm" jdbcType="VARCHAR" />
 		<result column="period_order_id" property="periodOrderId" jdbcType="NUMERIC" />
+		<result column="del_flag" property="delFlag" jdbcType="NUMERIC" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, am_id, user_id, mobile, city_id, org_id, addr_id, order_addr, order_no, order_type,
 		service_type,service_content, service_date, service_hour, staff_nums, order_status,
 		order_rate,
 		order_rate_content, order_from,order_op_from, remarks,remarks_confirm, add_time, update_time,
-		order_done_time, remarks_bussiness_confirm, period_order_id
+		order_done_time, remarks_bussiness_confirm, period_order_id, del_flag
 	</sql>
 
 	<!-- 在某个 门店 下过单 的 用户 -->
@@ -311,6 +312,10 @@
 			and period_order_id = #{periodOrderId,jdbcType=NUMERIC}
 		</if>
 		
+		<if test="delFlag != null">
+			and del_flag = #{delFlag,jdbcType=NUMERIC}
+		</if>
+		
 	</sql>
 
 	<select id="totalUserAndOrder" resultMap="CoopUserOrderMap">
@@ -500,7 +505,7 @@
 		order_status,
 		order_rate, order_rate_content,
 		order_from,order_op_from, remarks,remarks_confirm,add_time, update_time, order_done_time,
-		remarks_bussiness_confirm, period_order_id
+		remarks_bussiness_confirm, period_order_id,del_flag
 		)
 		values
 		(#{id,jdbcType=NUMERIC},
@@ -522,7 +527,8 @@
 		#{addTime,jdbcType=NUMERIC},
 		#{updateTime,jdbcType=NUMERIC},
 		#{orderDoneTime,jdbcType=NUMERIC}, #{remarksBussinessConfirm,jdbcType=VARCHAR},
-		#{periodOrderId,jdbcType=NUMERIC}
+		#{periodOrderId,jdbcType=NUMERIC},
+		#{delFlag,jdbcType=NUMERIC}
 		)
 	</insert>
 	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.jhj.po.model.order.Orders">
@@ -611,7 +617,10 @@
 				remarks_bussiness_confirm,
 			</if>
 			<if test="periodOrderId !=null">
-				period_order_id
+				period_order_id,
+			</if>
+			<if test="delFlag !=null">
+				del_flag
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -694,7 +703,10 @@
 				#{remarksBussinessConfirm,jdbcType=VARCHAR},
 			</if>
 			<if test="periodOrderId !=null">
-				#{periodOrderId,jdbcType=NUMERIC}
+				#{periodOrderId,jdbcType=NUMERIC},
+			</if>
+			<if test="delFlag !=null">
+				#{delFlag,jdbcType=NUMERIC}
 			</if>
 		</trim>
 	</insert>
@@ -782,7 +794,10 @@
 			</if>
 			
 			<if test="periodOrderId != null">
-				period_order_id = #{periodOrderId,jdbcType=NUMERIC}
+				period_order_id = #{periodOrderId,jdbcType=NUMERIC},
+			</if>
+			<if test="delFlag !=null">
+				del_flag = #{delFlag,jdbcType=NUMERIC}
 			</if>
 		</set>
 		where id = #{id,jdbcType=NUMERIC}
@@ -1413,7 +1428,23 @@
 		<if test="endTime !=null">
 			<![CDATA[ and o.add_time <= #{endTime}]]>
 		</if>
-		and o.order_status between 1 and 9
+		<![CDATA[ and o.order_status >= 3 and o.order_status <=8 ]]>
+		GROUP BY o.order_from,o.order_op_from,series
+	</select>
+	
+	<select id="countOrderFrom" resultMap="ChartMap" parameterType="com.jhj.vo.chart.ChartSearchVo">
+		SELECT o.order_from as orderFrom,o.order_op_from as orderOpFrom,
+		FROM_UNIXTIME(o.add_time, #{formatParam}) AS series,
+		sum(order_money) as totalMoney,count(*) as total
+		from order_prices as op,orders as o
+		WHERE op.order_id = o.id
+		<if test="startTime !=null">
+			<![CDATA[ and o.add_time >= #{startTime}]]>
+		</if>
+		<if test="endTime !=null">
+			<![CDATA[ and o.add_time <= #{endTime}]]>
+		</if>
+		<![CDATA[ and o.order_status >= 3 and o.order_status <=8 ]]>
 		GROUP BY o.order_from,o.order_op_from,series
 	</select>
 

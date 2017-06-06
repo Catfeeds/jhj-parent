@@ -163,7 +163,7 @@ public class ChartUtil {
 		
 		
 		if (statType.equals("day")) {
-			for (i = 0; i < ago.intValue(); i++) {
+			for (i = 0; i <= ago.intValue(); i++) {
 				curDate = DateUtil.addDay(startDate, i, Calendar.DATE, "Y-M-d");
 				timeSeries.add(curDate);
 			}

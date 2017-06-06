@@ -368,6 +368,21 @@ function doPeriodOrderPay(obj){
 	mainView.router.loadPage("order/period/period-order-pay.html?order_no="+formJSON.orderNo);
 }
 
+function delOrder(orderId){
+	
+	$$.ajax({
+		type : "post",
+		url : siteAPIPath + "order/delete-order.json",
+		dataType : "json",
+		cache : true,
+		data : {'order_id':orderId},
+		success:function(){
+			
+		}
+	});
+	
+}
+
 
 
 

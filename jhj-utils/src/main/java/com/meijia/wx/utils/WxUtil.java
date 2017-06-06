@@ -1,8 +1,13 @@
 package com.meijia.wx.utils;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import org.json.JSONObject;
 
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.StringUtil;
@@ -141,5 +146,71 @@ public class WxUtil {
 	public static String getNonceStr() {
 		Random random = new Random();
 		return MD5Util.MD5Encode(String.valueOf(random.nextInt(10000)), "GBK");
-	}	
+	}
+	
+	public static String getAccess_token() {
+		
+//		Map<String,String> map = new HashMap<String,String>();
+		
+        String APP_ID = "wx1da3f16a433d8bd8";//微信id
+        String APP_SECRET="46a8b0480da4a2338072338478a84fb5";//微信秘钥
+        //微信令牌请求网址(由微信提供)
+        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+APP_ID+"&secret="+APP_SECRET;
+        
+        String accessToken = null;
+        try {
+            URL urlGet = new URL(url);
+            HttpURLConnection http = (HttpURLConnection) urlGet.openConnection();
+            http.setRequestMethod("GET"); // 必须是get方式请求
+            http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");// 连接超时30秒
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000"); // 读取超时30秒
+            http.connect();
+            InputStream is = http.getInputStream();
+            int size = is.available();
+            byte[] jsonBytes = new byte[size];
+            is.read(jsonBytes);
+            String message = new String(jsonBytes, "UTF-8");
+            JSONObject demoJson = new JSONObject(message);
+            accessToken = demoJson.getString("access_token");
+//            expiresIn = demoJson.getString("expires_in");
+            
+//            map.put("access_token", accessToken);
+//            map.put("expires_in", expiresIn);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(accessToken);
+        return accessToken;
+    }
+	
+	
+	 public static String getTicket(String access_token) {
+        String ticket = null;
+        //获取票据的网址(由微信提供)
+        String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+access_token+"&type=jsapi";
+        
+        try {
+            URL urlGet = new URL(url);
+            HttpURLConnection http = (HttpURLConnection) urlGet.openConnection();
+            http.setRequestMethod("GET"); // 必须是get方式请求
+            http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");// 连接超时30秒
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000"); // 读取超时30秒
+            http.connect();
+            InputStream is = http.getInputStream();
+            int size = is.available();
+            byte[] jsonBytes = new byte[size];
+            is.read(jsonBytes);
+            String message = new String(jsonBytes, "UTF-8");
+            JSONObject demoJson = new JSONObject(message);
+            ticket = demoJson.getString("ticket");
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ticket;
+    }
+	
 }

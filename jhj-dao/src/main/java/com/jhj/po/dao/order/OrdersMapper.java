@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.jhj.po.model.order.Orders;
+import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
 import com.jhj.vo.chart.CoopUserOrderVo;
@@ -169,6 +170,9 @@ public interface OrdersMapper {
 	//订单来源统计
 	List<ChartMapVo> getOrderSrc(ChartSearchVo chartSearchVo);
 	
+	//订单来源统计总数和总金额
+	List<ChartMapVo> countOrderFrom(ChartSearchVo chartSearchVo);
+	
 	//统计复购率
 	List<ChartMapVo> totalByRate(ChartSearchVo chartSearchVo);
 	
@@ -184,4 +188,5 @@ public interface OrdersMapper {
 	
 	//查询是否下过包月初体验
 	int selectPackEarlyExperience(@Param("userId") Long userId, @Param("serviceTypeId") Long serviceTypeId);
+	
 }

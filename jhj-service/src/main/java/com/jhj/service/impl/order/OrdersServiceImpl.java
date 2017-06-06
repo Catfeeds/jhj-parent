@@ -112,6 +112,7 @@ public class OrdersServiceImpl implements OrdersService {
 		record.setOrderDoneTime(0L);
 		record.setRemarksBussinessConfirm(""); // 运营人员在 后台 对订单详情添加的 备注
 		record.setPeriodOrderId(0);
+		record.setDelFlag((short)0);
 
 		return record;
 	}

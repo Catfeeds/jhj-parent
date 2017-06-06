@@ -14,8 +14,12 @@
                 <!-- Tab 1, 默认激活 -->
                 <div id="tab1" class="tab active">
                     <div class="content-block">
-                        <div class="beijing-index" id="order-list-div">
-
+                        <div class="beijing-index" >
+							<div class="list-block">
+					        	<ul id="order-list-div">
+					        	
+					        	</ul>
+					        	</div>
                         </div>
                         <div class="all-button5" id="order-list-more" style="display:none">加载更多</div>
                         <input type="hidden" id="page" name="page" value="1"/>
@@ -36,63 +40,72 @@
         </div>
         <!-- tab1订单模板 -->
         <div id="order-list-part" style="display: none">
-            <div class="dingdan-mokuai">
-                <p>订单明细</p>
-                <a href="#" onclick="orderView({orderType}, '{orderNo}')" class="special-color7">
-                    <div class="order-dingdan">
-                        <ul class="dingdan">
-                            <li>订购项目：</li>
-                            <li>{serviceTypeName}</li>
-                        </ul>
-                        <ul class="dingdan">
-                            <li>订单状态：</li>
-                            <li>{orderStatusStr}</li>
-                        </ul>
-                        <ul class="dingdan">
-                            <li>服务时间：</li>
-                            <li>{serviceDateStr}</li>
-                        </ul>
-                        <ul class="dingdan">
-                            <li>上门地址：</li>
-                            <li>{addrName}</li>
-                        </ul>
-                        <ul class="dingdan">
-                            <li>订单金额：</li>
-                            <li>{orderPayStr}</li>
-                        </ul>
-                        <ul class="dingdan">
-                            <li>服务人员：</li>
-                            <li>{staffNames}</li>
-                        </ul>
-                </a>
-                <div class="all-button10" style="display: {doOrderPayStyle}" onclick="doOrderPay($$(this).parent())">
-                    去支付
+        	<li class='media-list swipeout'>
+                <div class="dingdan-mokuai swipeout-content">
+                    <p>订单明细</p>
+                    <a href="#" onclick="orderView({orderType}, '{orderNo}')" class="special-color7">
+                        <div class="order-dingdan">
+                            <ul class="dingdan">
+                                <li>订购项目：</li>
+                                <li>{serviceTypeName}</li>
+                            </ul>
+                            <ul class="dingdan">
+                                <li>订单状态：</li>
+                                <li>{orderStatusStr}</li>
+                            </ul>
+                            <ul class="dingdan">
+                                <li>服务时间：</li>
+                                <li>{serviceDateStr}</li>
+                            </ul>
+                            <ul class="dingdan">
+                                <li>上门地址：</li>
+                                <li>{addrName}</li>
+                            </ul>
+                            <ul class="dingdan">
+                                <li>订单金额：</li>
+                                <li>{orderPayStr}</li>
+                            </ul>
+                            <ul class="dingdan">
+                                <li>服务人员：</li>
+                                <li>{staffNames}</li>
+                            </ul>
+                        </div>
+                    </a>
+
+
+                    <div class="all-button10" style="display: {doOrderPayStyle}" onclick="doOrderPay($$(this).parent())">
+                        去支付
+                    </div>
+                    <div class="all-button3" style="display: {priceExtendStyle}" onclick="doOrderPayExt($$(this).parent())">
+                        补交差价
+                    </div>
+                    <div class="all-button4" style="display: {orderRateStyle}" id="linkOrderRate"
+                         onclick="linkOrderRate($$(this).parent())">{orderRateStr}
+                    </div>
+                    <a href="{url}" id="staffPhone" class="external" style="display: {orderRateStylePhone}">
+                        <div class="all-button4">联系服务人员</div>
+                    </a>
+                    <a href="{urlLink}" class="all-button10" style="display: {orderagain}">
+                        <div>在来一单</div>
+                    </a>
+                    <div style="clear:both;"></div>
+                    <input type="hidden" id="orderStatus" name="orderStatus" value="{orderStatus}"/>
+                    <input type="hidden" id="serviceTypeId" name="serviceTypeId" value="{serviceTypeId}"/>
+                    <input type="hidden" id="orderType" name="orderType" value="{orderType}"/>
+                    <input type="hidden" id="orderNo" name="orderNo" value="{orderNo}"/>
+                    <input type="hidden" id="orderId" name="orderId" value="{orderId}"/>
+                    <input type="hidden" id="orderPay" name="orderPay" value="{orderPay}"/>
+                    <input type="hidden" id="orderOriginPay" name="orderOriginPay" value="{orderOriginPay}"/>
+                    <input type="hidden" id="userCouponId" name="userCouponId" value="{userCouponId}"/>
+                    <input type="hidden" id="userCouponValue" name="userCouponValue" value="{userCouponValue}"/>
+                    <input type="hidden" id="staffNames" name="staffNames" value="{staffNames}"/>
+                    <input type="hidden" id="staffMobile" name="staffMobile" value="{staffMobile}"/>
                 </div>
-                <div class="all-button3" style="display: {priceExtendStyle}" onclick="doOrderPayExt($$(this).parent())">
-                    补交差价
+
+                <div class="swipeout-actions-right">
+                    <a href="#" class="swipeout-delete order-delete-btn" data-confirm="是否删除订单?" onclick="delOrder({orderId})">删除</a>
                 </div>
-                <div class="all-button4" style="display: {orderRateStyle}" id="linkOrderRate"
-                     onclick="linkOrderRate($$(this).parent())">{orderRateStr}
-                </div>
-                <a href="{url}" id="staffPhone" class="external" style="display: {orderRateStylePhone}">
-                    <div class="all-button4">联系服务人员</div>
-                </a>
-                <a href="{urlLink}" class="all-button10" style="display: {orderagain}">
-                    <div>在来一单</div>
-                </a>
-                <div style="clear:both;"></div>
-                <input type="hidden" id="orderStatus" name="orderStatus" value="{orderStatus}"/>
-                <input type="hidden" id="serviceTypeId" name="serviceTypeId" value="{serviceTypeId}"/>
-                <input type="hidden" id="orderType" name="orderType" value="{orderType}"/>
-                <input type="hidden" id="orderNo" name="orderNo" value="{orderNo}"/>
-                <input type="hidden" id="orderId" name="orderId" value="{orderId}"/>
-                <input type="hidden" id="orderPay" name="orderPay" value="{orderPay}"/>
-                <input type="hidden" id="orderOriginPay" name="orderOriginPay" value="{orderOriginPay}"/>
-                <input type="hidden" id="userCouponId" name="userCouponId" value="{userCouponId}"/>
-                <input type="hidden" id="userCouponValue" name="userCouponValue" value="{userCouponValue}"/>
-                <input type="hidden" id="staffNames" name="staffNames" value="{staffNames}"/>
-                <input type="hidden" id="staffMobile" name="staffMobile" value="{staffMobile}"/>
-            </div>
+            </li>
         </div>
 
         <!--tab2订单模板-->
@@ -119,22 +132,22 @@
                         </ul>
                     </div>
                 </a>
-                <div class="all-button10" style="display:{periodOrderPayStyle}" onclick="doPeriodOrderPay(this)">去支付</div>
+                <div class="all-button10" style="display:{periodOrderPayStyle}" onclick="doPeriodOrderPay(this)">去支付
+                </div>
                 <a href="tel:010-53511197" id="" class="external">
                     <div class="all-button4">联系客服人员</div>
                 </a>
                 <div style="clear:both;"></div>
                 <form id="period-form-{index}" class="list-block store-data">
-	                <input type="hidden" id="periodOrderStatus" name="orderStatus" value="{orderStatus}"/>
-	                <input type="hidden" id="periodServiceTypeId" name="serviceTypeId" value="{serviceTypeId}"/>
-	                <input type="hidden" id="periodOrderNo" name="orderNo" value="{periodOrderNo}"/>
-	                <input type="hidden" id="periodOrderId" name="orderId" value="{orderId}"/>
-	                <input type="hidden" id="periodOrderMoney" name="orderMoney" value="{orderMoney}"/>
-	                <input type="hidden" id="orderPrice" name="orderPrice" value="{orderPrice}"/>
-	            </form>
+                    <input type="hidden" id="periodOrderStatus" name="orderStatus" value="{orderStatus}"/>
+                    <input type="hidden" id="periodServiceTypeId" name="serviceTypeId" value="{serviceTypeId}"/>
+                    <input type="hidden" id="periodOrderNo" name="orderNo" value="{periodOrderNo}"/>
+                    <input type="hidden" id="periodOrderId" name="orderId" value="{orderId}"/>
+                    <input type="hidden" id="periodOrderMoney" name="orderMoney" value="{orderMoney}"/>
+                    <input type="hidden" id="orderPrice" name="orderPrice" value="{orderPrice}"/>
+                </form>
                 <div class="chongzhi5-kong"></div>
             </div>
         </div>
     </div>
-</div>
 </div>

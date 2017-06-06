@@ -2,9 +2,11 @@ package com.meijia.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,6 +24,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 
 /**
  * HTTP工具类
@@ -114,7 +117,7 @@ public class HttpClientUtil {
 
 		return response;
 	}
-
+	
 	/**
 	 * GET方式提交数据
 	 *
@@ -244,9 +247,9 @@ public class HttpClientUtil {
 		return (strURL);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnsupportedEncodingException {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("merNo", "301100100001630");
+		/*params.put("merNo", "301100100001630");
 		params.put("signType", "MD5");
 		params.put("merBindAgrNo", "00003018007000006450000013866742");
 		params.put("interfaceVersion", "1.0.0.0");
@@ -258,9 +261,48 @@ public class HttpClientUtil {
 		params.put("goodsName", "中国联通交费充值");
 		params.put("userIdeMark", "3");
 		params.put("bankAgrMode", "9");
-		params.put("signMsg", "3ced24a118461043901d47815e6905a9");
-		System.out.println(HttpClientUtil.getUrl(params));
+		params.put("signMsg", "3ced24a118461043901d47815e6905a9");*/
+//		System.out.println(HttpClientUtil.getUrl(params));
 		// System.out.println(HttpClientUtil.post("xxxx", params));
+//		params.put("", "");
+//		String redirectUrl = "www.jia-he-jia.com";
+//		
+//		String encode = URLEncoder.encode(redirectUrl, "utf-8");
+//		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1da3f16a433d8bd8&redirect_uri="+encode+"&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
+//		String post = get(url,params);
+//		
+//		System.out.println(post);
+		getAccess_token();
 	}
+	
+	
+	public static String getAccess_token() {
+        String APP_ID = "wx1da3f16a433d8bd8";//微信id
+        String APP_SECRET="46a8b0480da4a2338072338478a84fb5";//微信秘钥
+        //微信令牌请求网址(由微信提供)
+        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APP_ID + "&secret=" + APP_SECRET;
+        String accessToken = null;
+        try {
+            URL urlGet = new URL(url);
+            HttpURLConnection http = (HttpURLConnection) urlGet.openConnection();
+            http.setRequestMethod("GET"); // 必须是get方式请求
+            http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");// 连接超时30秒
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000"); // 读取超时30秒
+            http.connect();
+            InputStream is = http.getInputStream();
+            int size = is.available();
+            byte[] jsonBytes = new byte[size];
+            is.read(jsonBytes);
+            String message = new String(jsonBytes, "UTF-8");
+            JSONObject demoJson = new JSONObject(message);
+            accessToken = demoJson.getString("access_token");
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(accessToken);
+        return accessToken;
+    }
 
 }

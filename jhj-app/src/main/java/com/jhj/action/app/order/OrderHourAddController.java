@@ -281,4 +281,15 @@ public class OrderHourAddController extends BaseController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "delete-order.json", method = RequestMethod.POST)
+	public AppResultData<Object> deleteOrder(@RequestParam("order_id") Long orderId){
+		Orders orders = ordersService.selectByPrimaryKey(orderId);
+		orders.setDelFlag((short)1);
+		ordersService.updateByPrimaryKeySelective(orders);
+		
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		return result;
+	}
+	
 }

@@ -48,7 +48,7 @@ var myApp = new Framework7({
 		} else if (!isLogin() && options.url == 'user/mine.html') {
 			view.router.loadPage('login.html');
 			return false;
-		} else if (!isLogin() && options.url == 'user/charge/mine-charge-list.html') {
+		} else if (!isLogin() && options.url.indexOf('user/charge/mine-charge-way.html')>=0) {
 			view.router.loadPage('login.html');
 			return false;
 		} else if (!isLogin() && options.url == 'user/serviceCharge/order-service-charge.html') {
