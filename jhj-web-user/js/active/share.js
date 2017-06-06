@@ -1,13 +1,33 @@
 myApp.onPageInit('share', function (page) {
 	
-	var url = "http://jia-he-jia.com/u/index.html"//?share_user_id="+localStorage.getItem("user_id");
+	var userId = localStorage.getItem("user_id");
+	var mobile = localStorage.getItem("user_mobile");
+	
+	var url = "http://jia-he-jia.com/u/index.html?share_user_id="+userId;
 	
 	$$("#share-btn").on('click',function(){
+		
+		$$(".share-operation").css("display","block");
+		
+		$$(".share-opera-content").on("click",'.share-ope-btn',function(){
+			var id = $$(this).attr("id");
+			if(id == "wechat_friend"){
+				appMessage();
+			}
+			if(id == "friends_circle"){
+				weixin();
+			}
+			if(id == "weibo"){
+				weibo();
+			}
+			saveShare();
+		});
 		
 		$$.post(siteAPIPath+"wxShare.json",{"url":url},function(data){
 			var result = JSON.parse(data).data;
 			console.log(data);
 			wx.config({
+//			  debug: true,
 			  "appId": result.appId, // 必填，公众号的唯一标识
 			  "timestamp": result.timestamp, // 必填，生成签名的时间戳
 			  "nonceStr": result.noncestr, // 必填，生成签名的随机串
@@ -21,21 +41,59 @@ myApp.onPageInit('share', function (page) {
 			  ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 			});
 			
-			wx.onMenuShareTimeline({
-				  title: '叮当到家', // 分享标题
-				  link: result.url, // 分享链接
-				  imgUrl: 'http://imgsrc.baidu.com/baike/pic/item/509b9fcb7bf335ab52664fdb.jpg', // 分享图标
-				  success: function () { 
-				      // 用户确认分享后执行的回调函数
-					  alert();
-				  },
-				  cancel: function () { 
-				      // 用户取消分享后执行的回调函数
-				  }
-				});
 		});
 		
 	});
+	
+	$$("#share-delete").on("click",function(){
+		$$(".share-operation").css("display","none");
+	});
+	
+	function saveShare(){
+		var param = {};
+		param.user_id = userId;
+		param.mobile = mobile;
+		$$.ajax({
+			type:"post",
+			url:siteAPIPath+"saveOrderShare.json",
+			data:param,
+			dataType:'json',
+			success:function(){
+				
+			}
+		});
+	}
+	
+	var shareParam = {
+		title: '叮当到家',
+	    desc: '叮当到家', // 分享描述
+	    link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+	    imgUrl: '', // 分享图标
+	    success: function () { 
+	        alert("分享成功");
+	    },
+	    cancel: function () { 
+	    	alert("分享失败");
+	    }
+	}
+	
+	//朋友圈
+	function weixin(){
+		alert("朋友圈")
+		wx.onMenuShareTimeline(shareParam);
+	}
+	
+	//分享好友
+	function appMessage(){
+		alert("好友")
+		wx.onMenuShareAppMessage(shareParam);
+	}
+	
+	//分享到微博
+	function weibo(){
+		alert("微博")
+		wx.onMenuShareWeibo(shareParam);
+	}
 	
 });
 

@@ -322,7 +322,8 @@ public class OrderChartController extends BaseController {
 			
 		}else{
 			startTime = DateUtil.curStartDate(0);
-			endTime = DateUtil.curLastDate(0);
+//			endTime = DateUtil.curLastDate(0);
+			endTime = new Date().getTime()/1000;
 		}
 		chartSearchVo.setStartTime(startTime);
 		chartSearchVo.setEndTime(endTime);
