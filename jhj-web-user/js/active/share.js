@@ -40,20 +40,6 @@ myApp.onPageInit('share', function (page) {
 			wx.onMenuShareWeibo(shareParam);
 		}
 		
-		$$(".share-opera-content").on("click",'.share-ope-btn',function(){
-			var id = $$(this).attr("id");
-			if(id == "wechat_friend"){
-				appMessage();
-			}
-			if(id == "friends_circle"){
-				weixin();
-			}
-			if(id == "weibo"){
-				weibo();
-			}
-			saveShare();
-		});
-		
 		$$.post(siteAPIPath+"wxShare.json",{"url":url},function(data){
 			var result = JSON.parse(data).data;
 			console.log(data);
@@ -72,6 +58,25 @@ myApp.onPageInit('share', function (page) {
 			  ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 			});
 		});
+		
+		$$(".share-opera-content").on("click",'.share-ope-btn',function(){
+			var id = $$(this).attr("id");
+			if(id == "wechat_friend"){
+//				appMessage();
+				wx.onMenuShareAppMessage(shareParam);
+			}
+			if(id == "friends_circle"){
+//				weixin();
+				wx.onMenuShareTimeline(shareParam);
+			}
+			if(id == "weibo"){
+//				weibo();
+				wx.onMenuShareWeibo(shareParam);
+			}
+			saveShare();
+		});
+		
+		
 		
 	});
 	
