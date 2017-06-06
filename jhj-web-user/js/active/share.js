@@ -22,24 +22,6 @@ myApp.onPageInit('share', function (page) {
 		
 		$$(".share-operation").css("display","block");
 		
-		//朋友圈
-		function weixin(){
-			alert("朋友圈")
-			wx.onMenuShareTimeline(shareParam);
-		}
-		
-		//分享好友
-		function appMessage(){
-			alert("好友")
-			wx.onMenuShareAppMessage(shareParam);
-		}
-		
-		//分享到微博
-		function weibo(){
-			alert("微博")
-			wx.onMenuShareWeibo(shareParam);
-		}
-		
 		$$.post(siteAPIPath+"wxShare.json",{"url":url},function(data){
 			var result = JSON.parse(data).data;
 			console.log(data);
@@ -62,21 +44,16 @@ myApp.onPageInit('share', function (page) {
 		$$(".share-opera-content").on("click",'.share-ope-btn',function(){
 			var id = $$(this).attr("id");
 			if(id == "wechat_friend"){
-//				appMessage();
 				wx.onMenuShareAppMessage(shareParam);
 			}
 			if(id == "friends_circle"){
-//				weixin();
 				wx.onMenuShareTimeline(shareParam);
 			}
 			if(id == "weibo"){
-//				weibo();
 				wx.onMenuShareWeibo(shareParam);
 			}
 			saveShare();
 		});
-		
-		
 		
 	});
 	
