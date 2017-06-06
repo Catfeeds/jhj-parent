@@ -5,17 +5,12 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
-import com.jhj.po.model.share.OrderShare;
-import com.jhj.service.share.OrderShareService;
-import com.meijia.utils.DateUtil;
 import com.meijia.utils.vo.AppResultData;
 import com.meijia.wx.utils.Sha1Util;
 import com.meijia.wx.utils.WxUtil;
@@ -24,8 +19,8 @@ import com.meijia.wx.utils.WxUtil;
 @RequestMapping("/app")
 public class WxShare {
 	
-	@Autowired
-	private OrderShareService orderShareService;
+//	@Autowired
+//	private OrderShareService orderShareService;
 	
 	@RequestMapping(value="/wxShare.json", method=RequestMethod.POST)
 	public AppResultData<Object> wxShare(String url,HttpServletRequest request) throws Exception{
@@ -52,7 +47,7 @@ public class WxShare {
 		return new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,map);
 	}
 	
-	@RequestMapping(value="/saveOrderShare.json", method=RequestMethod.POST)
+	/*@RequestMapping(value="/saveOrderShare.json", method=RequestMethod.POST)
 	public AppResultData<Object> saveOrderShare(
 			@RequestParam("user_id") Integer userId,
 			@RequestParam("mobile") String mobile){
@@ -65,6 +60,6 @@ public class WxShare {
 		
 		orderShareService.insert(orderShare);
 		return new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG,"");
-	}
+	}*/
 	
 }

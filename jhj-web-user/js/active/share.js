@@ -52,7 +52,7 @@ myApp.onPageInit('share', function (page) {
                 if (id == "weibo") {
                     wx.onMenuShareWeibo(shareParam);
                 }
-                saveShare();
+//                saveShare();
 
             });
 
