@@ -36,7 +36,6 @@ public class WxShare {
 		String nonceStr = Sha1Util.getNonceStr();
 		String jsapiTicket = WxUtil.getTicket(WxUtil.getAccess_token());
 		
-		
 		map.put("timestamp", timestamp);
 		map.put("noncestr", nonceStr);
 		map.put("jsapi_ticket", jsapiTicket);
