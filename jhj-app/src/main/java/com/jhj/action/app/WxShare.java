@@ -17,7 +17,7 @@ import com.meijia.wx.utils.WxUtil;
 
 @Controller
 @RequestMapping("/app")
-public class WxShare {
+public class WxShare extends BaseController{
 	
 //	@Autowired
 //	private OrderShareService orderShareService;
