@@ -39,21 +39,23 @@ myApp.onPageInit('share', function (page) {
 			     'onMenuShareQZone'
 			  ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 			});
+			
+			$$(".share-opera-content").on("click",'.share-ope-btn',function(){
+				var id = $$(this).attr("id");
+				if(id == "wechat_friend"){
+					wx.onMenuShareAppMessage(shareParam);
+				}
+				if(id == "friends_circle"){
+					wx.onMenuShareTimeline(shareParam);
+				}
+				if(id == "weibo"){
+					wx.onMenuShareWeibo(shareParam);
+				}
+				saveShare();
+			});
 		});
 		
-		$$(".share-opera-content").on("click",'.share-ope-btn',function(){
-			var id = $$(this).attr("id");
-			if(id == "wechat_friend"){
-				wx.onMenuShareAppMessage(shareParam);
-			}
-			if(id == "friends_circle"){
-				wx.onMenuShareTimeline(shareParam);
-			}
-			if(id == "weibo"){
-				wx.onMenuShareWeibo(shareParam);
-			}
-			saveShare();
-		});
+		
 		
 	});
 	
