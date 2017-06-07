@@ -2,6 +2,7 @@
 // 输入完手机号获取用户信息，根据用户的id获取用户的服务地址
 
 function getAddressList(userId, setAddrId){
+	if (userId == undefined || userId == "" || userId == 0) return false;
 	$.ajax({
 		type : "get",
 		dataType : "json",
@@ -167,6 +168,11 @@ function saveAddress() {
 		dataType : "json",
 		async : false,
 		success : function(data) {
+			var status = data.status;
+			if (status == "999") {
+				alert(data.msg);
+				return false;
+			}
 			alert("地址添加成功");
 			getAddressList(data.data.user_id, data.data.id);
 		}

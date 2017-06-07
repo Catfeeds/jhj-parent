@@ -22,12 +22,12 @@ import com.meijia.wx.utils.WxUtil;
 
 @Controller
 @RequestMapping("/app")
-public class WxShare {
+public class WxShare extends BaseController{
 	
 	@Autowired
 	private OrderShareService orderShareService;
 	
-	@RequestMapping(value="/wxShare.json", method=RequestMethod.POST)
+	@RequestMapping(value="/wx-share.json", method=RequestMethod.POST)
 	public AppResultData<Object> wxShare(String url,HttpServletRequest request) throws Exception{
 		
 		SortedMap<String, String> map = new TreeMap<String, String>();
@@ -35,7 +35,6 @@ public class WxShare {
 		String timestamp = String.valueOf(System.currentTimeMillis()/1000);
 		String nonceStr = Sha1Util.getNonceStr();
 		String jsapiTicket = WxUtil.getTicket(WxUtil.getAccess_token());
-		
 		
 		map.put("timestamp", timestamp);
 		map.put("noncestr", nonceStr);

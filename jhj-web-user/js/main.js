@@ -63,6 +63,9 @@ var myApp = new Framework7({
 		}else if (!isLogin() && options.url == 'user/mine-addr-list.html') {
 			view.router.loadPage('login.html');
 			return false;
+		}else if (!isLogin() && options.url == 'active/share.html') {
+			view.router.loadPage('login.html?next_url=active/share.html');
+			return false;
 		}
 	}
 
