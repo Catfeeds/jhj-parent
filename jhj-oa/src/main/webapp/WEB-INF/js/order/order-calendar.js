@@ -44,11 +44,7 @@ $(function(){
 				for(var j = 0 ; j < val.length;j++){
 					if(time[i]==val[j].service_hour){
 						if(val[j].is_full==0){
-							if(val[j+1].is_full==1 && val[j-1].is_full==1){
-								dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
-							}else{
-								dateTime+="<li>"+time[i]+"</li>";
-							}
+							dateTime+="<li>"+time[i]+"</li>";
 						}
 						if(val[j].is_full==1){
 							dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
