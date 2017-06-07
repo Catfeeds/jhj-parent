@@ -42,5 +42,5 @@ public class OrderShareServiceImpl implements OrderShareService{
 	public int updateByPrimaryKey(OrderShare record) {
 		return orderShareMapper.updateByPrimaryKey(record);
 	}
-
+	
 }

@@ -19,6 +19,7 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.Gifts;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.share.OrderShare;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -407,5 +408,19 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 	@Override
 	public List<UserCoupons> selectByUserCoupons(UserCoupons userCoupons) {
 		return userCouponsMapper.selectByUserCoupons(userCoupons);
+	}
+	
+	//用户分享成功，如果其他用户下单，则送优惠券
+	public boolean shareSuccessSendCoupons(OrderShare orderShare){
+		
+		if(orderShare==null) return Boolean.FALSE;
+		
+		Integer userId = orderShare.getUserId();
+		
+		UserCoupons initUserCoupons = initUserCoupons();
+		initUserCoupons.setUserId(userId.longValue());
+		userCouponsMapper.insert(initUserCoupons);
+		
+		return false;
 	}
 }

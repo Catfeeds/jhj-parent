@@ -60,6 +60,8 @@ myApp.onPageInit('share', function (page) {
         	wx.onMenuShareAppMessage(shareParam);
         	wx.onMenuShareWeibo(shareParam);
         	wx.onMenuShareTimeline(shareParam);
+        	wx.onMenuShareQQ(shareParam);
+        	wx.onMenuShareQZone(shareParam);
         });
 
         $$("#share-delete").on("click", function () {
