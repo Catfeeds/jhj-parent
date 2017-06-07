@@ -3,7 +3,7 @@ myApp.onPageInit('share', function (page) {
     var userId = localStorage.getItem("user_id");
     var mobile = localStorage.getItem("user_mobile");
 
-    var url = "http://jia-he-jia.com/u/index.html?share_user_id=" + userId;
+    var url = "http://jia-he-jia.com/u-test/index.html?share_user_id=" + userId;
 
     var shareParam = {
         title: '叮当到家',
