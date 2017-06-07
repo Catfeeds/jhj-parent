@@ -24,7 +24,7 @@ myApp.onPageInit('share', function (page) {
 
         $$(".share-opera-content").on("click", '.share-ope-btn', function () {
 
-            $$.post(siteAPIPath + "wxShare.json", {"url": url}, function (data) {
+            $$.post(siteAPIPath + "wx-share.json", {"url": url}, function (data) {
                 var result = JSON.parse(data).data;
                 console.log(data);
                 wx.config({
