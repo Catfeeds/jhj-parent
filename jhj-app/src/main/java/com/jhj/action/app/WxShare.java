@@ -32,7 +32,7 @@ public class WxShare extends BaseController{
 		
 		SortedMap<String, String> map = new TreeMap<String, String>();
 		
-		String timestamp = String.valueOf(System.currentTimeMillis()/1000);
+		String timestamp = String.valueOf(System.currentTimeMillis());
 		String nonceStr = Sha1Util.getNonceStr();
 		String jsapiTicket = WxUtil.getTicket(WxUtil.getAccess_token());
 		
