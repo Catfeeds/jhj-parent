@@ -85,10 +85,10 @@ myApp.onPageInit('share', function (page) {
     });
     
     wx.ready(function () {
-    	document.getElementById('#onMenuShareAppMessage').onclick = function () {
+    	$$("#onMenuShareAppMessage").on("click",function(){
     		alert();
     		wx.onMenuShareAppMessage();
-    	}
+    	});
     	document.querySelector('#onMenuShareTimeline').onclick = function () {
     		wx.onMenuShareTimeline(shareParam);	
     	}
