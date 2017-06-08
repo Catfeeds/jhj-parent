@@ -29,6 +29,8 @@ $(function(){
 	var nowHour=moment().hour();
 	var dayTime=""; 
 	var selectDay="#show-day li p[class='rili-day']";
+	//是否约满
+	var checkDispatchedList = {};
 	
 	//展示时间 
 	function showTime(selectDate,val){
@@ -74,8 +76,7 @@ $(function(){
 	}
 	showTime(currentDate);
 	
-	//是否约满
-	var checkDispatchedList;
+	
 	function isFull(serviceDateStr){
 		
 		var host = window.location.host;
@@ -365,7 +366,8 @@ $(function(){
 		var st = date+" "+dayTime+":00";
 		var st =moment(date).format("YYYY-MM-DD")+" "+dayTime+":00";
 		var isFull = checkSelectDateCanOrder(st);
-		if (isFull == false) return false;
+		console.log("isFull = " + isFull); 
+		if (isFull == true) return false;
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);
@@ -378,13 +380,13 @@ $(function(){
 		var serviceHour = $("#serviceHour").val();
 		//服务结束往后延2小时.
 		var fullServiceHour = parseFloat(serviceHour) + parseFloat(2);
-		console.log("serviceHour == " + serviceHour + " fullServiceHour = " + fullServiceHour);
+//		console.log("serviceHour == " + serviceHour + " fullServiceHour = " + fullServiceHour);
 		
 		//拆分成天（YYYY-MM-DD）和小时分钟（HH:mm）.
 		var selectDay = moment(selectDate).format("YYYY-MM-DD");
 		var selectHour = moment(selectDate).format("HH:mm");
 		
-		console.log("selectDay = " + selectDay + "===selectHour = " + selectHour);
+//		console.log("selectDay = " + selectDay + "===selectHour = " + selectHour);
 		var stepHour = 0;
 		
 		var seatServiceHourList = [];
@@ -393,7 +395,7 @@ $(function(){
 			seatServiceHourList.push(t);
 			stepHour+=0.5;
 		}
-		console.log(seatServiceHourList);
+//		console.log(seatServiceHourList);
 		var isFull = false;
 		(function () {
 			for(var i = 0; i < checkDispatchedList.length; i++) {
@@ -402,7 +404,7 @@ $(function(){
 				var isFull = item.is_full;
 				for (var j = 0; j < seatServiceHourList.length; j++) {
 					var t = seatServiceHourList[j];
-					console.log("t== " + t + "==== service_hour =" + service_hour + "== isFull = " + isFull);
+//					console.log("t== " + t + "==== service_hour =" + service_hour + "== isFull = " + isFull);
 					if (t == service_hour && isFull == 1) {
 						alert("选择时间段内没有派工人员，请选择其他时段.");
 						isFull = true;
