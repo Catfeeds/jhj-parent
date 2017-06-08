@@ -128,6 +128,9 @@ public class OaOrderListVo extends Orders {
 	//补差价和加时
 	private String orderExtTyePayStr;
 	
+	//团购卷
+	private String groupCode;
+	
 	
 	private List<Imgs> orderImgs;
 
@@ -521,6 +524,14 @@ public class OaOrderListVo extends Orders {
 
 	public void setOrderExtTyePayStr(String orderExtTyePayStr) {
 		this.orderExtTyePayStr = orderExtTyePayStr;
+	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
 	}
 
 }

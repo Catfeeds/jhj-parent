@@ -1,3 +1,50 @@
+
+//表单验证规则===================================================
+$('#orderViewForm').validate({
+	errorElement : 'span', // default input error message container
+	errorClass : 'help-block', // default input error message class
+	focusInvalid : false, // do not focus the last invalid input
+	rules : {
+
+		orderOpFrom : {
+			required : true,
+		},
+		
+		groupCode : {
+			digits : true,
+		}
+	},
+	
+	messages : {
+		
+		orderOpFrom : {
+			required : "请选择订单来源",
+		},
+		
+		groupCode : {
+			digits : "团购卷都为数字",
+		}
+	},
+	
+	highlight : function(element) { // hightlight error inputs
+		$(element).closest('.form-group').addClass('has-error'); // set error
+		// class to
+		// the
+		// control
+		// group
+	},
+	
+	success : function(label) {
+		label.closest('.form-group').removeClass('has-error');
+		label.remove();
+	},
+	
+	errorPlacement : function(error, element) {
+		error.insertAfter(element.parents(".col-md-5"));
+	}
+});
+
+
 $('.form_datetime').datetimepicker({
 	format : "yyyy-mm-dd hh:ii",
 	language : "zh-CN",
@@ -40,6 +87,9 @@ $('#selectedStaffs').on('itemRemoved', function(event) {
 		}
 	});
 });
+
+
+
 
 // 提交派工修改
 $("#submitForm").on('click', function() {

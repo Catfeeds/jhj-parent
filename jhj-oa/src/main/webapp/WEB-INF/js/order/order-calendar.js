@@ -75,6 +75,7 @@ $(function(){
 	showTime(currentDate);
 	
 	//是否约满
+	var checkDispatchedList;
 	function isFull(serviceDateStr){
 		
 		var host = window.location.host;
@@ -115,6 +116,7 @@ $(function(){
 			success:function(data){
 				if(data.status=='0' && data.msg=='ok'){
 					var result = data.data;
+					checkDispatchedList = result;
 					showTime(serviceDateStr,result);
 				}
 			}
@@ -362,6 +364,8 @@ $(function(){
 	$(document).on('click','#checkDate',function(){
 		var st = date+" "+dayTime+":00";
 		var st =moment(date).format("YYYY-MM-DD")+" "+dayTime+":00";
+		var isFull = checkSelectDateCanOrder(st);
+		if (isFull == false) return false;
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);
@@ -369,6 +373,48 @@ $(function(){
 			return false;
 		}
 	});
+	
+	function checkSelectDateCanOrder(selectDate) {
+		var serviceHour = $("#serviceHour").val();
+		//服务结束往后延2小时.
+		var fullServiceHour = parseFloat(serviceHour) + parseFloat(2);
+		console.log("serviceHour == " + serviceHour + " fullServiceHour = " + fullServiceHour);
+		
+		//拆分成天（YYYY-MM-DD）和小时分钟（HH:mm）.
+		var selectDay = moment(selectDate).format("YYYY-MM-DD");
+		var selectHour = moment(selectDate).format("HH:mm");
+		
+		console.log("selectDay = " + selectDay + "===selectHour = " + selectHour);
+		var stepHour = 0;
+		
+		var seatServiceHourList = [];
+		while (parseFloat(stepHour) < parseFloat(fullServiceHour)) {
+			var t = moment(selectDate).add(stepHour,'H').format("HH:mm");
+			seatServiceHourList.push(t);
+			stepHour+=0.5;
+		}
+		console.log(seatServiceHourList);
+		var isFull = false;
+		(function () {
+			for(var i = 0; i < checkDispatchedList.length; i++) {
+				var item = checkDispatchedList[i];
+				var service_hour = item.service_hour;
+				var isFull = item.is_full;
+				for (var j = 0; j < seatServiceHourList.length; j++) {
+					var t = seatServiceHourList[j];
+					console.log("t== " + t + "==== service_hour =" + service_hour + "== isFull = " + isFull);
+					if (t == service_hour && isFull == 1) {
+						alert("选择时间段内没有派工人员，请选择其他时段.");
+						isFull = true;
+						return;
+					}
+				}
+			}
+		})();
+		
+		console.log(seatServiceHourList);
+		return isFull;
+	}
 })
 
 
@@ -396,3 +442,5 @@ function selectServiceDateTime(){
 	
 	showCalendar();
 }
+
+

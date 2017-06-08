@@ -17,6 +17,7 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderExtend;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.OrderServiceAddons;
@@ -29,6 +30,7 @@ import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderExpCleanService;
+import com.jhj.service.order.OrderExtendService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
@@ -100,6 +102,9 @@ public class OrderAddController extends BaseController {
 	@Autowired
 	private UserDetailPayService userDetailPayService;
 	
+	@Autowired
+	private OrderExtendService orderExtendService;
+	
 
 	@RequestMapping(value = "post_order_add.json", method = RequestMethod.POST)
 	public AppResultData<Object> postOrderAdd(
@@ -121,7 +126,8 @@ public class OrderAddController extends BaseController {
 			@RequestParam(value = "adminId", required = false, defaultValue = "0") Long adminId,
 			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName,
 			@RequestParam(value = "sendSmsToUser", required = false, defaultValue = "0") int sendSmsToUser,
-			@RequestParam(value = "periodOrderId", required = false, defaultValue = "0") Integer periodOrderId)
+			@RequestParam(value = "periodOrderId", required = false, defaultValue = "0") Integer periodOrderId,
+			@RequestParam(value = "groupCode", required = false, defaultValue = "groupCode") String groupCode)
 			throws Exception {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -293,6 +299,24 @@ public class OrderAddController extends BaseController {
 		orderLog.setUserName(u.getMobile());
 		orderLog.setUserType((short) 0);
 		orderLogService.insert(orderLog);
+		
+		//订单扩展表,目前应用于团购劵.
+		if (!StringUtil.isEmpty(groupCode)) {
+			OrderExtend orderExtend = orderExtendService.selectByOrderId(orderId);
+			if (orderExtend == null) orderExtend = orderExtendService.initPo();
+			
+			orderExtend.setUserId(userId);
+			orderExtend.setOrderId(orderId);
+			orderExtend.setOrderNo(orderNo);
+			orderExtend.setGroupCode(groupCode);
+			
+			if (orderExtend.getId().equals(0L)) {
+				orderExtendService.insert(orderExtend);
+			} else {
+				orderExtendService.updateByPrimaryKey(orderExtend);
+			}
+			
+		}
 
 		// 记录用户消费明细
 		userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, "", "", "");

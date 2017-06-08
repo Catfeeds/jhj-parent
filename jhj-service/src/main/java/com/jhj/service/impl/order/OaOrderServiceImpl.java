@@ -19,6 +19,7 @@ import com.jhj.po.model.common.Imgs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderExtend;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
@@ -34,6 +35,7 @@ import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderAppointService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderExtendService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
@@ -113,6 +115,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 
 	@Autowired
 	private ImgService imgService;
+	
+	@Autowired
+	private OrderExtendService orderExtendService;
 
 	@Override
 	public OaOrderListVo completeVo(Orders orders) {
@@ -267,6 +272,9 @@ public class OaOrderServiceImpl implements OaOrderService {
 		oaOrderListVo.setOrderDoneTime(orderDoneTime);
 		oaOrderListVo.setOrderDoneTimeStr(orderDoneTimeStr);
 		oaOrderListVo.setOverworkTimeStr(overworkTimeStr);
+		
+		//设置团购卷
+		oaOrderListVo.setGroupCode(this.getOrderGroupCode(oaOrderListVo.getId()));
 		return oaOrderListVo;
 	}
 
@@ -387,7 +395,8 @@ public class OaOrderServiceImpl implements OaOrderService {
 		oaOrderListVo.setOrderTypeName("");// 订单类型名称。。实际具体到 某种服务类型的名称
 
 		oaOrderListVo.setDisWay((short) 0); // 派工方案， 方案一 = 0. 方案二 = 1
-
+		
+		oaOrderListVo.setGroupCode("");
 		return oaOrderListVo;
 	}
 
@@ -849,6 +858,18 @@ public class OaOrderServiceImpl implements OaOrderService {
 			}
 		}
 		return userAddrMap;
+	}
+	
+	@Override
+	public String getOrderGroupCode(Long orderId) {
+		String groupCode = "";
+		
+		OrderExtend orderExtend = orderExtendService.selectByOrderId(orderId);
+		if (orderExtend != null) {
+			groupCode = orderExtend.getGroupCode();
+		}
+		
+		return groupCode;
 	}
 
 }

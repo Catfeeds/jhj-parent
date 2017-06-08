@@ -34,7 +34,7 @@
 					<div class="col-lg-12">
 						<section class="panel">
 							<div class="panel-body">
-								<form:form modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
+								<form:form id="orderViewForm" modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
 									enctype="multipart/form-data">
 									<form:hidden path="id" />
 									<form:hidden path="userId" />
@@ -42,7 +42,7 @@
 									<form:hidden path="orderNo" />
 									<form:hidden path="orderStatus" />
 									<form:hidden path="staffId" />
-									<form:hidden path="serviceType"/>
+									<form:hidden path="serviceType" />
 									<div class="form-body">
 										<section class="panel">
 											<header class="panel-info">
@@ -102,7 +102,6 @@
 													<form:errors path="orderMoney" class="field-has-error"></form:errors>
 												</div>
 											</div>
-											<%-- <c:if test="${ oaOrderListVoModel.couponValue > 0 }"> --%>
 											<div class="form-group">
 												<label class="col-md-2 control-label">优惠券</label>
 												<div class="col-md-5">
@@ -110,14 +109,6 @@
 													<form:errors path="couponValue" class="field-has-error"></form:errors>
 												</div>
 											</div>
-											<%-- <div class="form-group">
-								<label class="col-md-2 control-label">优惠券名称</label>
-								<div class="col-md-5">
-									<form:input path="couponName" class="form-control" maxLength="32" readonly="true" />
-									<form:errors path="couponName" class="field-has-error"></form:errors>
-								</div>
-							</div> --%>
-											<%-- </c:if> --%>
 											<div class="form-group">
 												<label class="col-md-2 control-label">支付金额</label>
 												<div class="col-md-5">
@@ -156,6 +147,18 @@
 													<form:errors path="payTypeName" class="field-has-error"></form:errors>
 												</div>
 											</div>
+											<c:if test="${oaOrderListVoModel.orderFrom==1 }">
+											<input type="hidden" id="groupCode" name="groupCode" value="${oaOrderListVoModel. groupCode}"/>
+											</c:if>
+											<c:if test="${oaOrderListVoModel.orderFrom != 1 }">
+												<div class="form-group ">
+													<label class="col-md-2 control-label">团购劵</label>
+													<div class="col-md-5">
+														<form:input path="groupCode" class="form-control" maxLength="32"/>
+														<form:errors path="groupCode" class="field-has-error"></form:errors>
+													</div>
+												</div>
+											</c:if>
 											<div class="form-group">
 												<label class="col-md-2 control-label">用户备注:</label>
 												<div class="col-md-5">
@@ -164,9 +167,13 @@
 											</div>
 											<div class="col-md-offset-3 col-md-3">
 												<c:if
-													test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 or sessionScope.accountAuth.accountRole.id == 5 or sessionScope.accountAuth.accountRole.id == 14 }">
+													test="${sessionScope.accountAuth.accountRole.id == 1 or 
+															sessionScope.accountAuth.accountRole.id == 3 or 
+															sessionScope.accountAuth.accountRole.id == 5 or 
+															sessionScope.accountAuth.accountRole.id == 14 }">
 													<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
 														<input type="submit" value="修改" class="btn btn-danger" />
+														
 													</c:if>
 												</c:if>
 												<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal"
