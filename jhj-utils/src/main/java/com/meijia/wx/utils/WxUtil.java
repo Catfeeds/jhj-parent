@@ -9,6 +9,8 @@ import java.util.Random;
 
 import org.json.JSONObject;
 
+import redis.clients.jedis.Jedis;
+
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.redis.RedisUtil;
@@ -152,12 +154,16 @@ public class WxUtil {
 		
 //		Map<String,String> map = new HashMap<String,String>();
 		
+		String accessToken = RedisUtil.getInstance().strings().get("access_token");
+		if(accessToken!=null && !"".equals(accessToken)){
+			return accessToken;
+		}
+		
         String APP_ID = "wx1da3f16a433d8bd8";//微信id
         String APP_SECRET="46a8b0480da4a2338072338478a84fb5";//微信秘钥
         //微信令牌请求网址(由微信提供)
         String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+APP_ID+"&secret="+APP_SECRET;
         
-        String accessToken = null;
         try {
             URL urlGet = new URL(url);
             HttpURLConnection http = (HttpURLConnection) urlGet.openConnection();
@@ -182,12 +188,19 @@ public class WxUtil {
             e.printStackTrace();
         }
         System.out.println(accessToken);
+        
+        RedisUtil.getInstance().strings().set("access_token",accessToken);
+        RedisUtil.getInstance().keys().expire("access_token", 1800);
         return accessToken;
     }
 	
 	
 	 public static String getTicket(String access_token) {
-        String ticket = null;
+		 
+		String ticket = RedisUtil.getInstance().strings().get("ticket");
+		if(ticket!=null && !"".equals(ticket)){
+			return ticket;
+		}
         //获取票据的网址(由微信提供)
         String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+access_token+"&type=jsapi";
         
@@ -210,6 +223,8 @@ public class WxUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        RedisUtil.getInstance().strings().set("ticket",ticket);
+        RedisUtil.getInstance().keys().expire("ticket", 1800);
         return ticket;
     }
 	
