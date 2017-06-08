@@ -3,6 +3,7 @@ package com.jhj.service.users;
 import java.util.List;
 
 import com.jhj.po.model.bs.DictCoupons;
+import com.jhj.po.model.share.OrderShare;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.vo.user.UserCouponVo;
@@ -59,4 +60,6 @@ public interface UserCouponsService {
 	UserCoupons initUserCoupons(Long userId,DictCoupons coupons);
 	
 	List<UserCoupons> selectByUserCoupons(UserCoupons userCoupons);
+	
+	boolean shareSuccessSendCoupons(OrderShare orderShare);
 }

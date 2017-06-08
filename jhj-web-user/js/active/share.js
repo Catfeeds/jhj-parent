@@ -26,7 +26,7 @@ myApp.onPageInit('share', function (page) {
     //保存分享
     function saveShare() {
         var param = {};
-        param.user_id = userId;
+        param.share_user_id = userId;
         param.mobile = mobile;
         $$.ajax({
             type: "post",

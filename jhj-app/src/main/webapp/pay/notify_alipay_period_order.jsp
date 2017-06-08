@@ -54,6 +54,9 @@
 
 	//支付方式 0 = 余额支付 1 = 支付宝 2 = 微信支付 3 = 智慧支付 4 = 上门刷卡（保留，站位）
 	params.put("pay_type", "1");
+	
+	String shareUserId = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
+	params.put("body",shareUserId);
 
 	//通知参数
 	//params.put("notify_params", notify_params.toString());

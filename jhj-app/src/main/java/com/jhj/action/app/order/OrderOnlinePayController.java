@@ -2,6 +2,7 @@ package com.jhj.action.app.order;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.po.model.share.OrderShare;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.order.OrderCardsService;
@@ -28,6 +30,7 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.period.PeriodOrderService;
+import com.jhj.service.share.OrderShareService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
@@ -73,6 +76,9 @@ public class OrderOnlinePayController extends BaseController {
 	
 	@Autowired
 	private PeriodOrderService periodOrderService;
+	
+	@Autowired
+	private OrderShareService orderShareService;
 
 	// 7. 订单在线支付成功同步接口
 	/**
@@ -101,7 +107,8 @@ public class OrderOnlinePayController extends BaseController {
 			@RequestParam(value = "mobile", defaultValue = "0") String mobile, @RequestParam("order_no") String orderNo,
 			@RequestParam("pay_type") Short payType, @RequestParam(value = "pay_order_type", required = false, defaultValue = "0") int payOrderType,
 			@RequestParam("notify_id") String notifyId, @RequestParam("notify_time") String notifyTime, @RequestParam("trade_no") String tradeNo,
-			@RequestParam("trade_status") String tradeStatus, @RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount) {
+			@RequestParam("trade_status") String tradeStatus, @RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount,
+			@RequestParam(value = "body", required = false, defaultValue = "") String shareUserId) {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
@@ -186,7 +193,15 @@ public class OrderOnlinePayController extends BaseController {
 
 			orderPayService.orderPaySuccessToDoForDeep(order);
 		}
-
+		
+		if(shareUserId!=null && !shareUserId.equals("")){
+			List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+			if(orderShareList!=null && orderShareList.size()>0){
+				OrderShare orderShare = orderShareList.get(0);
+				userCouponService.shareSuccessSendCoupons(orderShare);
+			}
+		}
+		
 		return result;
 
 	}
@@ -224,7 +239,8 @@ public class OrderOnlinePayController extends BaseController {
 				@RequestParam("notify_time") String notifyTime,
 				@RequestParam("trade_no") String tradeNo,
 				@RequestParam("trade_status") String tradeStatus,
-				@RequestParam(value = "pay_account", required = false, defaultValue="") String payAccount) {
+				@RequestParam(value = "pay_account", required = false, defaultValue="") String payAccount,
+				@RequestParam(value = "body", required = false, defaultValue = "") String shareUserId) {
 			
 			AppResultData<Object> result = new AppResultData<Object>(
 					Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -285,6 +301,14 @@ public class OrderOnlinePayController extends BaseController {
 			
 			//更新通知服务人员.
 			orderPayService.orderPaySuccessToDoOrderPayExt(order, orderPriceExt);
+			
+			if(shareUserId!=null && !shareUserId.equals("")){
+				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+				if(orderShareList!=null && orderShareList.size()>0){
+					OrderShare orderShare = orderShareList.get(0);
+					userCouponService.shareSuccessSendCoupons(orderShare);
+				}
+			}
 			
 			return result;
 
@@ -373,7 +397,8 @@ public class OrderOnlinePayController extends BaseController {
 			@RequestParam(value = "mobile", defaultValue = "0") String mobile, @RequestParam("order_no") String orderNo,
 			@RequestParam("pay_type") Short payType, @RequestParam(value = "pay_order_type", required = false, defaultValue = "1") int payOrderType,
 			@RequestParam("notify_id") String notifyId, @RequestParam("notify_time") String notifyTime, @RequestParam("trade_no") String tradeNo,
-			@RequestParam("trade_status") String tradeStatus, @RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount) {
+			@RequestParam("trade_status") String tradeStatus, @RequestParam(value = "pay_account", required = false, defaultValue = "") String payAccount,
+			@RequestParam(value = "body", required = false, defaultValue = "") String shareUserId) {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
@@ -436,6 +461,14 @@ public class OrderOnlinePayController extends BaseController {
 		// 记录用户消费明细
 		userDetailPayService.addUserDetailPayForOrder(u, periodOrder, orderPrice, tradeStatus, tradeNo, payAccount);
 
+		if(shareUserId!=null && !shareUserId.equals("")){
+			List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+			if(orderShareList!=null && orderShareList.size()>0){
+				OrderShare orderShare = orderShareList.get(0);
+				userCouponService.shareSuccessSendCoupons(orderShare);
+			}
+		}
+		
 		return result;
 
 	}

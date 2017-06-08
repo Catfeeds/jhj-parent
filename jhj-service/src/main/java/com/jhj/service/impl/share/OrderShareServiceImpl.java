@@ -1,5 +1,7 @@
 package com.jhj.service.impl.share;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,12 @@ public class OrderShareServiceImpl implements OrderShareService{
 	@Override
 	public int updateByPrimaryKey(OrderShare record) {
 		return orderShareMapper.updateByPrimaryKey(record);
+	}
+
+	@Override
+	public List<OrderShare> selectByShareId(Integer id) {
+		
+		return orderShareMapper.selectByShareId(id);
 	}
 	
 }

@@ -16,6 +16,8 @@ myApp.onPageInit('order-pay', function(page) {
 	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
 	var payOrderType = sessionStorage.getItem("pay_order_type");
 	
+	var shareUserId = sessionStorage.getItem("share_user_id");
+	
 	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
@@ -126,6 +128,7 @@ myApp.onPageInit('order-pay', function(page) {
 			alipayUrl +="&orderType="+orderType;
 			alipayUrl +="&serviceTypeId="+serviceTypeId;
 			alipayUrl +="&payOrderType="+payOrderType;
+			alipayUrl +="&shareUserId="+shareUserId;
 			location.href = alipayUrl;
 		}
 		
@@ -139,6 +142,7 @@ myApp.onPageInit('order-pay', function(page) {
 			 wxPayUrl +="&orderType=0";
 			 wxPayUrl +="&payOrderType="+payOrderType;
 			 wxPayUrl +="&serviceTypeId="+serviceTypeId;
+			 wxPayUrl +="&shareUserId="+shareUserId;
 			 location.href = wxPayUrl;
 		}
 	};
@@ -152,6 +156,7 @@ myApp.onPageInit('order-pay', function(page) {
 		if (userCouponId == undefined) userCouponId = 0;
 		params.user_coupon_id = userCouponId;
 		params.order_pay_type = $$("#orderPayType").val();
+		params.share_user_id = shareUserId;
 		
 		console.log(params);
 
@@ -174,6 +179,7 @@ myApp.onPageInit('order-pay', function(page) {
 		params.order_no = orderNo;
 		params.order_pay_ext = orderPay;
 		params.order_pay_type = $$("#orderPayType").val();
+		params.share_user_id = shareUserId;
 		
 		console.log(params);
 

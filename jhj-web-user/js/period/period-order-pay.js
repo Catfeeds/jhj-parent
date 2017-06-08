@@ -102,6 +102,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 		params.user_id = userId;
 		params.order_no = orderNo;
 		params.pay_type = $$("#orderPayType").val();
+		params.share_user_id = shareUserId;
 		console.log(params);
 		
 		$$.ajax({

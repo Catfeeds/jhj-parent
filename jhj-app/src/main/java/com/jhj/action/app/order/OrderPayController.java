@@ -19,6 +19,7 @@ import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.po.model.share.OrderShare;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -34,6 +35,7 @@ import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.period.PeriodOrderService;
+import com.jhj.service.share.OrderShareService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
@@ -101,6 +103,9 @@ public class OrderPayController extends BaseController {
 	@Autowired
 	private PeriodOrderService periodOrderService;
 	
+	@Autowired
+	private OrderShareService ordershareService;
+	
 	// 17.订单支付前接口
 	/**
 	 * @param mobile true string 手机号 
@@ -115,7 +120,8 @@ public class OrderPayController extends BaseController {
 			@RequestParam("order_no") String orderNo, 
 			@RequestParam("order_pay_type") Short orderPayType,
 			@RequestParam(value = "user_coupon_id", required = false, defaultValue="0") Long userCouponId,
-			@RequestParam(value = "coupon_id", required = false, defaultValue="0") Long couponId) {
+			@RequestParam(value = "coupon_id", required = false, defaultValue="0") Long couponId,
+			@RequestParam(value = "share_user_id", required = false, defaultValue="0") Integer shareUserId) {
 
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
@@ -249,6 +255,13 @@ public class OrderPayController extends BaseController {
 				u.setRestMoney(u.getRestMoney().subtract(orderPay));
 				u.setUpdateTime(updateTime);
 				userService.updateByPrimaryKeySelective(u);
+				
+				List<OrderShare> orderShareList = ordershareService.selectByShareId(shareUserId);
+				if(orderShareList!=null && orderShareList.size()>0){
+					OrderShare orderShare = orderShareList.get(0);
+					userCouponsService.shareSuccessSendCoupons(orderShare);
+				}
+				
 			}
 						
 			if(order.getOrderType() == Constants.ORDER_TYPE_0 ||
@@ -340,8 +353,8 @@ public class OrderPayController extends BaseController {
 				@RequestParam("user_id") Long userId, 
 				@RequestParam("order_no") String orderNo, 
 				@RequestParam("order_pay_ext") BigDecimal orderPayExt, 
-				@RequestParam("order_pay_type") Short orderPayType
-				) {
+				@RequestParam("order_pay_type") Short orderPayType,
+				@RequestParam(value = "share_user_id", required = false, defaultValue="0") Integer shareUserId) {
 
 			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
@@ -424,6 +437,12 @@ public class OrderPayController extends BaseController {
 				
 				//更新通知服务人员.
 				orderPayService.orderPaySuccessToDoOrderPayExt(order, orderPriceExt);
+				
+				List<OrderShare> orderShareList = ordershareService.selectByShareId(shareUserId);
+				if(orderShareList!=null && orderShareList.size()>0){
+					OrderShare orderShare = orderShareList.get(0);
+					userCouponsService.shareSuccessSendCoupons(orderShare);
+				}
 			}
 			
 			//补差价日志
@@ -455,7 +474,8 @@ public class OrderPayController extends BaseController {
 				@RequestParam("order_no") String orderNo, 
 				@RequestParam("pay_type") Short payType,
 				@RequestParam(value = "user_coupon_id", required = false, defaultValue="0") Long userCouponId,
-				@RequestParam(value = "coupon_id", required = false, defaultValue="0") Long couponId) {
+				@RequestParam(value = "coupon_id", required = false, defaultValue="0") Long couponId,
+				@RequestParam(value = "share_user_id", required = false, defaultValue="0") Integer shareUserId) {
 
 			AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
 
@@ -536,6 +556,12 @@ public class OrderPayController extends BaseController {
 					u.setRestMoney(u.getRestMoney().subtract(orderPay));
 					u.setUpdateTime(TimeStampUtil.getNowSecond());
 					userService.updateByPrimaryKeySelective(u);
+					
+					List<OrderShare> orderShareList = ordershareService.selectByShareId(shareUserId);
+					if(orderShareList!=null && orderShareList.size()>0){
+						OrderShare orderShare = orderShareList.get(0);
+						userCouponsService.shareSuccessSendCoupons(orderShare);
+					}
 				}
 				
 				periodOrder.setOrderStatus(2);//已支付

@@ -35,6 +35,7 @@ import com.jhj.vo.user.UserCouponVo;
 import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -410,17 +411,32 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		return userCouponsMapper.selectByUserCoupons(userCoupons);
 	}
 	
-	//用户分享成功，如果其他用户下单，则送优惠券
+	//用户分享成功，如果其他用户下单，则送优惠券,最多赠送3涨
 	public boolean shareSuccessSendCoupons(OrderShare orderShare){
 		
 		if(orderShare==null) return Boolean.FALSE;
 		
-		Integer userId = orderShare.getUserId();
+		Long userId = orderShare.getUserId().longValue();
+		Long couponsId = orderShare.getSendCouponsId().longValue();
 		
-		UserCoupons initUserCoupons = initUserCoupons();
-		initUserCoupons.setUserId(userId.longValue());
-		userCouponsMapper.insert(initUserCoupons);
+		List<UserCoupons> userCouponsList = userCouponsMapper.selectByCouponIdAndUserId(orderShare.getSendCouponsId().longValue(), userId);
 		
-		return false;
+		if(userCouponsList.size()<=3){
+			
+			UserCoupons initUserCoupons = initUserCoupons();
+			initUserCoupons.setUserId(userId.longValue());
+			initUserCoupons.setCouponId(couponsId);
+			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
+			String toDateStr = DateUtil.addDay(coupons.getFromDate(), coupons.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+			initUserCoupons.setToDate(DateUtil.parse(toDateStr));
+			initUserCoupons.setValue(coupons.getValue());
+			initUserCoupons.setServiceType(coupons.getServiceType());
+			
+			userCouponsMapper.insert(initUserCoupons);
+			//170891  短信模板
+			SmsUtil.SendSms(orderShare.getMobile(), "170891", new String[] {});
+		}
+		
+		return Boolean.TRUE;
 	}
 }

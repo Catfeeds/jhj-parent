@@ -54,12 +54,12 @@ public class WxShare extends BaseController{
 	
 	@RequestMapping(value="/saveOrderShare.json", method=RequestMethod.POST)
 	public AppResultData<Object> saveOrderShare(
-			@RequestParam("user_id") Integer userId,
+			@RequestParam("share_user_id") Integer shareUserId,
 			@RequestParam("mobile") String mobile){
 		
 		OrderShare orderShare = new OrderShare();
-		orderShare.setUserId(userId);
-		orderShare.setSendCouponsId(0);
+		orderShare.setShareId(shareUserId);
+		orderShare.setSendCouponsId(Constants.SHARE_SEND_COUPONS_ID);
 		orderShare.setMobile(mobile);
 		orderShare.setAddTime(DateUtil.getNowOfDate());
 		

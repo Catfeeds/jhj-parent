@@ -16,6 +16,7 @@ String orderType = request.getParameter("orderType");
 String payOrderType = request.getParameter("payOrderType");
 String serviceTypeId = request.getParameter("serviceTypeId");
 String fromUrl = request.getParameter("fromUrl");
+String shareUserId = request.getParameter("shareUserId");
 String successUrl = request.getParameter("successUrl");
 
 String redirectUrl = basePath + "jhj-app/app/wxpay";
@@ -25,6 +26,7 @@ redirectUrl += "&userCouponId=" + userCouponId;
 redirectUrl += "&orderType=" + orderType;
 redirectUrl += "&payOrderType=" + payOrderType;
 redirectUrl += "&serviceTypeId=" + serviceTypeId;
+redirectUrl += "&shareUserId=" + shareUserId;
 redirectUrl = URLEncoder.encode(redirectUrl,"utf-8");
 
 String wxAccessUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+WxUtil.appId+"&redirect_uri="+redirectUrl+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";

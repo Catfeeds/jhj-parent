@@ -44,7 +44,9 @@
 		
         //商品描述，可空， 传递payOrderType
         
-        String body = payOrderType;
+        String shareUserId = new String(request.getParameter("shareUserId").getBytes("ISO-8859-1"),"UTF-8");
+        
+        String body = shareUserId;
         
         String notifyUrl = host + "/jhj-app/pay/notify_alipay_period_order.jsp";
         

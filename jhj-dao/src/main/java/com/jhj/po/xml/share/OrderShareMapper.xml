@@ -125,4 +125,8 @@
       add_time = #{addTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="selectByShareId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/> from order_share where share_id = #{shareId,jdbcType=INTEGER}
+  </select>
 </mapper>
