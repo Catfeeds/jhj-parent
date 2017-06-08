@@ -448,7 +448,7 @@ public class Constants {
 	 //注册送优惠券
 	 public static Long NEW_USER_REGISTER_COUPONS_ID = 4137L;
 	 
-	 public final static Integer SHARE_SEND_COUPONS_ID = 4137;
+	 public final static Integer SHARE_SEND_COUPONS_ID = 4201;
 
 }
 

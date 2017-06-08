@@ -69,12 +69,11 @@ myApp.onPageInit('share', function (page) {
     $$(".share-btn").on("click",function(){
     	$$(".share-operation").css("display","block");
     	
-    	$$(".share-opera-content").on("click",'.share-ope-btn',function(){
+    	/*$$(".share-opera-content").on("click",'.share-ope-btn',function(){
     		
     		var id = $$(this).attr("id");
     		if(id == "onMenuShareAppMessage"){
     			wx.onMenuShareAppMessage(shareParam);
-    			
     		}
 			if(id == "onMenuShareTimeline"){
 				wx.onMenuShareTimeline(shareParam);	
@@ -82,7 +81,20 @@ myApp.onPageInit('share', function (page) {
 			if(id == "onMenuShareWeibo"){
 				wx.onMenuShareWeibo(shareParam);
 			}
-        });
+        });*/
+    });
+    
+    wx.ready(function () {
+    	document.querySelector('#onMenuShareAppMessage').onclick = function () {
+    		wx.onMenuShareAppMessage(shareParam);
+    	}
+    	document.querySelector('#onMenuShareTimeline').onclick = function () {
+    		wx.onMenuShareTimeline(shareParam);	
+    	}
+    	document.querySelector('#onMenuShareWeibo').onclick = function () {
+    		wx.onMenuShareWeibo(shareParam);
+    	}
+    
     });
     
     
