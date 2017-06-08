@@ -30,17 +30,19 @@
      	// payOrderType 订单支付类型 0 = 订单支付 1= 充值支付 2 = 手机话费类充值 3 = 订单补差价
         String payOrderType = new String(request.getParameter("payOrderType").getBytes("ISO-8859-1"),"UTF-8");
 		
-        String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
+        String shareUserId = new String(request.getParameter("shareUserId").getBytes("ISO-8859-1"),"UTF-8");
+     	
+     	String host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST;
 		if (com.meijia.utils.ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
 			host = com.jhj.common.Constants.PAY_CALLBACK_SERVICE_HOST_DEBUG;
 		}
-        
+		
         //收银台页面上，商品展示的超链接，必填
         String show_url = host + "/u/#!/order/order-pay.html";
 		
         //商品描述，可空， 传递payOrderType
         
-        String body = payOrderType;
+        String body = shareUserId;
         
         String notifyUrl = host + "/jhj-app/pay/notify_alipay_order.jsp";
         

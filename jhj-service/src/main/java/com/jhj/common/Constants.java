@@ -445,8 +445,10 @@ public class Constants {
 	 public static String PERIOD_ORDER_ACTION_PAY = "定制支付";
 	 
 	 
-	 //优惠券
+	 //注册送优惠券
 	 public static Long NEW_USER_REGISTER_COUPONS_ID = 4137L;
+	 
+	 public final static Integer SHARE_SEND_COUPONS_ID = 4137;
 
 }
 

@@ -26,7 +26,7 @@ myApp.onPageInit('share', function (page) {
     //保存分享
     function saveShare() {
         var param = {};
-        param.user_id = userId;
+        param.share_user_id = userId;
         param.mobile = mobile;
         $$.ajax({
             type: "post",
@@ -60,6 +60,8 @@ myApp.onPageInit('share', function (page) {
         	wx.onMenuShareAppMessage(shareParam);
         	wx.onMenuShareWeibo(shareParam);
         	wx.onMenuShareTimeline(shareParam);
+        	wx.onMenuShareQQ(shareParam);
+        	wx.onMenuShareQZone(shareParam);
         });
 
         $$("#share-delete").on("click", function () {

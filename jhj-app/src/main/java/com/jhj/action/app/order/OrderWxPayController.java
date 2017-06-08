@@ -3,6 +3,7 @@ package com.jhj.action.app.order;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +22,15 @@ import com.jhj.po.model.order.OrderCards;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.period.PeriodOrder;
+import com.jhj.po.model.share.OrderShare;
 import com.jhj.service.dict.CardTypeService;
 import com.jhj.service.order.OrderCardsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.period.PeriodOrderService;
+import com.jhj.service.share.OrderShareService;
+import com.jhj.service.users.UserCouponsService;
 import com.meijia.utils.ConfigUtil;
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -65,6 +69,12 @@ public class OrderWxPayController extends BaseController {
 	
 	@Autowired
 	private PeriodOrderService periodOrderService;
+	
+	@Autowired
+	private UserCouponsService userCouponsService;
+	
+	@Autowired 
+	private OrderShareService orderShareService;
 
 	@RequestMapping(value = "wxpay", method = RequestMethod.GET)
 	public void jsPay(HttpServletRequest request, HttpServletResponse response,
@@ -87,6 +97,15 @@ public class OrderWxPayController extends BaseController {
 		System.out.println("code = " + code);
 		String orderNo = "";
 		Long userId = 0L;
+		
+		String shareUserId = request.getParameter("shareUserId");
+		if(shareUserId!=null && !"".equals(shareUserId)){
+			List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+			if(orderShareList!=null && orderShareList.size()>0){
+				OrderShare orderShare = orderShareList.get(0);
+				userCouponsService.shareSuccessSendCoupons(orderShare);
+			}
+		}
 		
 		if (userCouponId == null) userCouponId = 0L;
 

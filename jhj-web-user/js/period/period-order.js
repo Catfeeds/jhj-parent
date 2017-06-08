@@ -189,8 +189,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				html += htmlPart;
         			}
         			html += '<p><a href="#" id="btn-ensure" class="button button-big all-button17 close-popup">返回</a></p></div>';
-        			myApp.popup(html);
-        			//myApp.closeModal();
+        			myApp.popup(html,true);
         		}
             }
         });

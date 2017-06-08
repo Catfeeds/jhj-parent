@@ -19,6 +19,7 @@ import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.Gifts;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
+import com.jhj.po.model.share.OrderShare;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserCoupons;
 import com.jhj.po.model.user.Users;
@@ -34,6 +35,7 @@ import com.jhj.vo.user.UserCouponVo;
 import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -407,5 +409,34 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 	@Override
 	public List<UserCoupons> selectByUserCoupons(UserCoupons userCoupons) {
 		return userCouponsMapper.selectByUserCoupons(userCoupons);
+	}
+	
+	//用户分享成功，如果其他用户下单，则送优惠券,最多赠送3涨
+	public boolean shareSuccessSendCoupons(OrderShare orderShare){
+		
+		if(orderShare==null) return Boolean.FALSE;
+		
+		Long userId = orderShare.getUserId().longValue();
+		Long couponsId = orderShare.getSendCouponsId().longValue();
+		
+		List<UserCoupons> userCouponsList = userCouponsMapper.selectByCouponIdAndUserId(orderShare.getSendCouponsId().longValue(), userId);
+		
+		if(userCouponsList.size()<=3){
+			
+			UserCoupons initUserCoupons = initUserCoupons();
+			initUserCoupons.setUserId(userId.longValue());
+			initUserCoupons.setCouponId(couponsId);
+			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
+			String toDateStr = DateUtil.addDay(coupons.getFromDate(), coupons.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+			initUserCoupons.setToDate(DateUtil.parse(toDateStr));
+			initUserCoupons.setValue(coupons.getValue());
+			initUserCoupons.setServiceType(coupons.getServiceType());
+			
+			userCouponsMapper.insert(initUserCoupons);
+			//170891  短信模板
+			SmsUtil.SendSms(orderShare.getMobile(), "170891", new String[] {});
+		}
+		
+		return Boolean.TRUE;
 	}
 }
