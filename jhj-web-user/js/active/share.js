@@ -12,7 +12,7 @@ myApp.onPageInit('share', function (page) {
         link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         imgUrl: '', // 分享图标
         success: function (res) {
-            myApp.alert("分享成功", "好友下单成功会短信通知您");
+            myApp.alert("好友下单成功会短信通知您","分享成功");
             saveShare();
         },
         fail:function(res){
