@@ -66,13 +66,39 @@ myApp.onPageInit('share', function (page) {
 
     });
     
+    function shareFriend(){
+    	WeixinJSBridge.invoke('shareAppMessage',shareParam);
+    }
+    
+    function shareTimeline(){
+    	WeixinJSBridge.invoke('shareTimeline',shareParam);
+    }
+    
+    function shareWeibo(){
+    	WeixinJSBridge.invoke('shareWeibo',shareParam);
+    }
+    
     $$(".share-btn").on("click",function(){
     	$$(".share-operation").css("display","block");
     	
     	$$(".share-opera-content").on("click",'.share-ope-btn',function(){
-    		wx.showAllNonBaseMenuItem();
+    		
+    		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+    			// 发送给好友
+    			WeixinJSBridge.on('menu:share:appmessage', function(argv){
+    				shareFriend();
+    			});
+    			// 分享到朋友圈
+    			WeixinJSBridge.on('menu:share:timeline', function(argv){
+    				shareTimeline();
+    			});
+    			// 分享到微博
+    			WeixinJSBridge.on('menu:share:weibo', function(argv){
+    				shareWeibo();
+    			});
+    		},false);
         	
-    		var id = $$(this).attr("id");
+    		/*var id = $$(this).attr("id");
     		if(id == "wechat_friend"){
     			wx.onMenuShareAppMessage(shareParam);
     		}
@@ -81,7 +107,7 @@ myApp.onPageInit('share', function (page) {
 			}
 			if(id == "weibo"){
 				wx.onMenuShareWeibo(shareParam);
-			}
+			}*/
         });
     });
     
