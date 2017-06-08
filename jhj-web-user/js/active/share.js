@@ -38,7 +38,7 @@ myApp.onPageInit('share', function (page) {
             }
         });
     }
-
+    
     $$.post(siteAPIPath + "wx-share.json", {"url": curUrl}, function (data) {
         var result = JSON.parse(data).data;
         console.log(data);
@@ -56,18 +56,37 @@ myApp.onPageInit('share', function (page) {
             ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
                 
-        wx.ready(function(){
+       /* wx.ready(function(){
         	wx.onMenuShareAppMessage(shareParam);
         	wx.onMenuShareWeibo(shareParam);
         	wx.onMenuShareTimeline(shareParam);
         	wx.onMenuShareQQ(shareParam);
         	wx.onMenuShareQZone(shareParam);
-        });
+        });*/
 
-        $$("#share-delete").on("click", function () {
-            $$(".share-operation").css("display", "none");
+    });
+    
+    $$(".share-btn").on("click",function(){
+    	$$(".share-operation").css("display","block");
+    	
+    	$$(".share-opera-content").on("click",'.share-ope-btn',function(){
+        	
+    		var id = $$(this).attr("id");
+    		if(id == "wechat_friend"){
+    			wx.onMenuShareAppMessage(shareParam);
+    		}
+			if(id == "friends_circle"){
+				wx.onMenuShareTimeline(shareParam);		
+			}
+			if(id == "weibo"){
+				wx.onMenuShareWeibo(shareParam);
+			}
         });
-
+    });
+    
+    
+    $$("#share-delete").on("click", function () {
+        $$(".share-operation").css("display", "none");
     });
 
 });
