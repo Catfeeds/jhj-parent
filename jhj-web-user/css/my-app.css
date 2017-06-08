@@ -4802,7 +4802,11 @@ ul.order-tip li{
   color:#000;
 }
 
-
+.share-link{
+  color: red;
+  float: right;
+  margin: 10px 18px 10px 0px;
+}
 
 
 /*月子房*/
@@ -6368,8 +6372,24 @@ p.special-p-2{
    display: block;
    line-height:56px;
 }
-
-
+.share-tip{
+  color: #e04b4a;
+  font-size: 16px;
+  padding: 0px 7%;
+  line-height: 23px;
+  padding-top: 10px;
+}
+.share-tip i{
+  background-image: url(../img/share/share-tip.png);
+  width: 20px;
+  display: inline-block;
+  height: 19px;
+  background-position: center center;
+  background-size: 19px 19px;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  line-height: 19px;
+}
 /***母婴到家子菜单页面**/
 
 .shendu-circle p.chirld-p{
@@ -6427,7 +6447,9 @@ p.special-p-2{
 .order-delete-btn{
 	
 }
-
-.swipeout{
-	
+.liji-btn{
+  display: block;
+  margin: 0 auto;
+  width: 55%;
+  height: ;
 }
