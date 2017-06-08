@@ -7,12 +7,13 @@ myApp.onPageInit('share', function (page) {
     var curUrl = location.href.split('#')[0];
 
     var shareParam = {
-        title: '叮当到家',
-        desc: '叮当到家', // 分享描述
+        title: '惊到了！有洁癖的家政服务商竟然这样做保洁！',
+        desc: '', // 分享描述
         link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         imgUrl: '', // 分享图标
         success: function (res) {
-            alert("分享成功");
+            alert("分享成功"+ 
+                "好友下单成功会短信通知您");
             saveShare();
         },
         fail:function(res){
