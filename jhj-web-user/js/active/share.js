@@ -10,17 +10,16 @@ myApp.onPageInit('share', function (page) {
         title: '惊到了！有洁癖的家政服务商竟然这样做保洁！',
         desc: '', // 分享描述
         link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: '', // 分享图标
+        imgUrl: "http://" + window.location.host+"/u/img/active/share_img.jpg", // 分享图标
         success: function (res) {
-            alert("分享成功"+ 
-                "好友下单成功会短信通知您");
+            myApp.alert("好友下单成功会短信通知您","分享成功");
             saveShare();
         },
         fail:function(res){
-        	alert(JSON.stringify(res));	
+        	myApp.alert(JSON.stringify(res));	
         },
         cancel: function () {
-            alert("分享失败");
+        	myApp.alert("分享失败");
         }
     }
     
@@ -39,7 +38,7 @@ myApp.onPageInit('share', function (page) {
             }
         });
     }
-
+    
     $$.post(siteAPIPath + "wx-share.json", {"url": curUrl}, function (data) {
         var result = JSON.parse(data).data;
         console.log(data);
@@ -57,18 +56,51 @@ myApp.onPageInit('share', function (page) {
             ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
                 
-        wx.ready(function(){
+       /* wx.ready(function(){
         	wx.onMenuShareAppMessage(shareParam);
         	wx.onMenuShareWeibo(shareParam);
         	wx.onMenuShareTimeline(shareParam);
         	wx.onMenuShareQQ(shareParam);
         	wx.onMenuShareQZone(shareParam);
-        });
+        });*/
 
-        $$("#share-delete").on("click", function () {
-            $$(".share-operation").css("display", "none");
-        });
-
+    });
+    
+    $$(".share-btn").on("click",function(){
+    	$$(".share-operation").css("display","block");
+    	
+    	/*$$(".share-opera-content").on("click",'.share-ope-btn',function(){
+    		
+    		var id = $$(this).attr("id");
+    		if(id == "onMenuShareAppMessage"){
+    			wx.onMenuShareAppMessage(shareParam);
+    		}
+			if(id == "onMenuShareTimeline"){
+				wx.onMenuShareTimeline(shareParam);	
+			}
+			if(id == "onMenuShareWeibo"){
+				wx.onMenuShareWeibo(shareParam);
+			}
+        });*/
+    });
+    
+    wx.ready(function () {
+    	$$("#onMenuShareAppMessage").on("click",function(){
+    		alert();
+    		wx.onMenuShareAppMessage();
+    	});
+    	document.querySelector('#onMenuShareTimeline').onclick = function () {
+    		wx.onMenuShareTimeline(shareParam);	
+    	}
+    	document.querySelector('#onMenuShareWeibo').onclick = function () {
+    		wx.onMenuShareWeibo(shareParam);
+    	}
+    
+    });
+    
+    
+    $$("#share-delete").on("click", function () {
+        $$(".share-operation").css("display", "none");
     });
 
 });
