@@ -10,7 +10,7 @@ myApp.onPageInit('share', function (page) {
         title: '惊到了！有洁癖的家政服务商竟然这样做保洁！',
         desc: '', // 分享描述
         link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: '', // 分享图标
+        imgUrl: "http://" + window.location.host+"/u/img/active/share_img.jpg", // 分享图标
         success: function (res) {
             myApp.alert("好友下单成功会短信通知您","分享成功");
             saveShare();
@@ -66,51 +66,21 @@ myApp.onPageInit('share', function (page) {
 
     });
     
-    function shareFriend(){
-    	WeixinJSBridge.invoke('shareAppMessage',shareParam);
-    }
-    
-    function shareTimeline(){
-    	WeixinJSBridge.invoke('shareTimeline',shareParam);
-    }
-    
-    function shareWeibo(){
-    	WeixinJSBridge.invoke('shareWeibo',shareParam);
-    }
-    
     $$(".share-btn").on("click",function(){
     	$$(".share-operation").css("display","block");
     	
     	$$(".share-opera-content").on("click",'.share-ope-btn',function(){
     		
-    		/*document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-    			// 发送给好友
-    			WeixinJSBridge.on('menu:share:appmessage', function(argv){
-    				shareFriend();
-    			});
-    			// 分享到朋友圈
-    			WeixinJSBridge.on('menu:share:timeline', function(argv){
-    				shareTimeline();
-    			});
-    			// 分享到微博
-    			WeixinJSBridge.on('menu:share:weibo', function(argv){
-    				shareWeibo();
-    			});
-    		},false);*/
-        	
     		var id = $$(this).attr("id");
     		if(id == "onMenuShareAppMessage"){
-//    			wx.onMenuShareAppMessage(shareParam);
-    			shareFriend();
+    			wx.onMenuShareAppMessage(shareParam);
     			
     		}
 			if(id == "onMenuShareTimeline"){
-//				wx.onMenuShareTimeline(shareParam);	
-				shareTimeline();
+				wx.onMenuShareTimeline(shareParam);	
 			}
 			if(id == "onMenuShareWeibo"){
-//				wx.onMenuShareWeibo(shareParam);
-				shareWeibo();
+				wx.onMenuShareWeibo(shareParam);
 			}
         });
     });
