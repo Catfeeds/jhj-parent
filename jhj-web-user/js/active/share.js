@@ -85,59 +85,15 @@ myApp.onPageInit('share', function (page) {
     });
     
     wx.ready(function () {
-    	document.querySelector('#onMenuShareAppMessage').onclick = function () {
-    		wx.onMenuShareAppMessage({
-    	        title: '惊到了！有洁癖的家政服务商竟然这样做保洁！',
-    	        desc: '', // 分享描述
-    	        link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-    	        imgUrl: "http://" + window.location.host+"/u/img/active/share_img.jpg", // 分享图标
-    	        success: function (res) {
-    	            myApp.alert("好友下单成功会短信通知您","分享成功");
-    	            saveShare();
-    	        },
-    	        fail:function(res){
-    	        	myApp.alert(JSON.stringify(res));	
-    	        },
-    	        cancel: function () {
-    	        	myApp.alert("分享失败");
-    	        }
-    	    });
+    	document.getElementById('#onMenuShareAppMessage').onclick = function () {
+    		alert();
+    		wx.onMenuShareAppMessage();
     	}
     	document.querySelector('#onMenuShareTimeline').onclick = function () {
-    		wx.onMenuShareTimeline({
-    	        title: '惊到了！有洁癖的家政服务商竟然这样做保洁！',
-    	        desc: '', // 分享描述
-    	        link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-    	        imgUrl: "http://" + window.location.host+"/u/img/active/share_img.jpg", // 分享图标
-    	        success: function (res) {
-    	            myApp.alert("好友下单成功会短信通知您","分享成功");
-    	            saveShare();
-    	        },
-    	        fail:function(res){
-    	        	myApp.alert(JSON.stringify(res));	
-    	        },
-    	        cancel: function () {
-    	        	myApp.alert("分享失败");
-    	        }
-    	    });	
+    		wx.onMenuShareTimeline(shareParam);	
     	}
     	document.querySelector('#onMenuShareWeibo').onclick = function () {
-    		wx.onMenuShareWeibo({
-    	        title: '惊到了！有洁癖的家政服务商竟然这样做保洁！',
-    	        desc: '', // 分享描述
-    	        link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-    	        imgUrl: "http://" + window.location.host+"/u/img/active/share_img.jpg", // 分享图标
-    	        success: function (res) {
-    	            myApp.alert("好友下单成功会短信通知您","分享成功");
-    	            saveShare();
-    	        },
-    	        fail:function(res){
-    	        	myApp.alert(JSON.stringify(res));	
-    	        },
-    	        cancel: function () {
-    	        	myApp.alert("分享失败");
-    	        }
-    	    });
+    		wx.onMenuShareWeibo(shareParam);
     	}
     
     });
