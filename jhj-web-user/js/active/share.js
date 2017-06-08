@@ -70,6 +70,7 @@ myApp.onPageInit('share', function (page) {
     	$$(".share-operation").css("display","block");
     	
     	$$(".share-opera-content").on("click",'.share-ope-btn',function(){
+    		wx.showAllNonBaseMenuItem();
         	
     		var id = $$(this).attr("id");
     		if(id == "wechat_friend"){
