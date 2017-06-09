@@ -6326,7 +6326,7 @@ p.special-p-2{
 .share-operation{
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.6);
   z-index:22;
   position: absolute;
   top: 0px;
@@ -6388,6 +6388,14 @@ p.special-p-2{
   vertical-align: middle;
   background-repeat: no-repeat;
   line-height: 19px;
+}
+.share-operation .share-head{
+  text-align: right;
+  padding-top: 6px;
+  padding-right: 10px;
+}
+.share-operation .share-head img{
+  width: 46%;
 }
 /***母婴到家子菜单页面**/
 
