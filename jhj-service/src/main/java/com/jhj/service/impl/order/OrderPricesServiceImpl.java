@@ -471,7 +471,7 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		OrderPrices orderPrice = this.selectByOrderId(orderId);
 
 		// 订单支付金额
-		totalOrderPay = orderPrice.getOrderMoney();
+		totalOrderPay = orderPrice.getOrderPay();
 		totalOrderPay = totalOrderPay.multiply(incomingPercent);
 		incomingStr = "订单提成:" +  MathBigDecimalUtil.div(totalOrderPay, new BigDecimal(staffNum));
 
