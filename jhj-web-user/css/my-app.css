@@ -2842,7 +2842,6 @@ ul.order-tip li{
 .order-my1{
   width:100%;
   background: #fff;
-  height:180px;
 }
 .order-my1 ul{
   width:33.3%;
@@ -6446,10 +6445,4 @@ p.special-p-2{
 
 .order-delete-btn{
 	
-}
-.liji-btn{
-  display: block;
-  margin: 0 auto;
-  width: 55%;
-  height: ;
 }
