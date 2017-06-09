@@ -551,7 +551,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 		}
-		
+		//过滤掉当日派工，员工距离超出范围的员工
 		//派工依据. 0 = 合理分配  1 = 效率优先
 		for (int i = 0; i < list.size(); i++) {
 			OrgStaffDispatchVo item = list.get(i);
@@ -565,6 +565,13 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			}
 			item.setAllocateReason(allocateReason);
 			item.setAllocate(allocate);
+			
+			if (distanceValue > Constants.MAX_DISTANCE) {
+				item.setDispathStaFlag(0);
+				item.setDispathStaStr("不可派工");
+				item.setReason(item.getReason() + "员工距离超出");
+			}
+			
 			list.set(i, item);
 		}
 		

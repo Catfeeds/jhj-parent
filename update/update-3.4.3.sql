@@ -26,3 +26,7 @@ ALTER TABLE `order_extend`
 --
 ALTER TABLE `order_extend`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
+
+
+
+alter table orders add `del_flag` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标识：0：正常，1：删除';
