@@ -56,48 +56,15 @@ myApp.onPageInit('share', function (page) {
             ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
                 
-       /* wx.ready(function(){
+       wx.ready(function(){
         	wx.onMenuShareAppMessage(shareParam);
         	wx.onMenuShareWeibo(shareParam);
         	wx.onMenuShareTimeline(shareParam);
         	wx.onMenuShareQQ(shareParam);
         	wx.onMenuShareQZone(shareParam);
-        });*/
+        });
 
     });
-    
-    $$(".share-btn").on("click",function(){
-    	$$(".share-operation").css("display","block");
-    	
-    	/*$$(".share-opera-content").on("click",'.share-ope-btn',function(){
-    		
-    		var id = $$(this).attr("id");
-    		if(id == "onMenuShareAppMessage"){
-    			wx.onMenuShareAppMessage(shareParam);
-    		}
-			if(id == "onMenuShareTimeline"){
-				wx.onMenuShareTimeline(shareParam);	
-			}
-			if(id == "onMenuShareWeibo"){
-				wx.onMenuShareWeibo(shareParam);
-			}
-        });*/
-    });
-    
-    wx.ready(function () {
-    	$$("#onMenuShareAppMessage").on("click",function(){
-    		alert();
-    		wx.onMenuShareAppMessage();
-    	});
-    	document.querySelector('#onMenuShareTimeline').onclick = function () {
-    		wx.onMenuShareTimeline(shareParam);	
-    	}
-    	document.querySelector('#onMenuShareWeibo').onclick = function () {
-    		wx.onMenuShareWeibo(shareParam);
-    	}
-    
-    });
-    
     
     $$("#share-delete").on("click", function () {
         $$(".share-operation").css("display", "none");
