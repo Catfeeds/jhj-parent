@@ -3,7 +3,7 @@ myApp.onPageInit('share', function (page) {
     var userId = localStorage.getItem("user_id");
     var mobile = localStorage.getItem("user_mobile");
 
-    var url = "http://" + window.location.host + "/u/index.html?share_user_id=" + userId;
+    var url = "http://" + window.location.host + "/u/#!/active/share-success.html?share_user_id=" + userId;
     var curUrl = location.href.split('#')[0];
 
     var shareParam = {

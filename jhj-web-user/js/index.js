@@ -6,10 +6,7 @@ myApp.onPageInit('index', function(page) {
 		  autoplay:3000,
 		  spaceBetween: 50,
 		  loop:true
-		  
 	});
-	var shareUserId = page.query.share_user_id;
-	sessionStorage.setItem("share_user_id", shareUserId);
 })
 myApp.swiper('.swiper-1', {
   pagination:'.swiper-1 .swiper-pagination',
