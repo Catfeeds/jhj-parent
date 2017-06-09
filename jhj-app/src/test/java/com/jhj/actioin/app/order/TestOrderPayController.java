@@ -34,6 +34,7 @@ public class TestOrderPayController extends JUnitActionBase  {
 	    postRequest = postRequest.param("trade_no", "4004122001201702048653336536");
 	    postRequest = postRequest.param("trade_status", "SUCCESS");
 	    postRequest = postRequest.param("pay_account", "opyMAwe5UDPFV0CCMivsJoPH-_R0");
+	    postRequest = postRequest.param("body", "11383");
 	    
 	    ResultActions resultActions = mockMvc.perform(postRequest);
 
