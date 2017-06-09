@@ -432,7 +432,7 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 			initUserCoupons.setValue(coupons.getValue());
 			initUserCoupons.setServiceType(coupons.getServiceType());
 			
-			userCouponsMapper.insert(initUserCoupons);
+			userCouponsMapper.insertSelective(initUserCoupons);
 			//170891  短信模板
 			SmsUtil.SendSms(orderShare.getMobile(), "170891", new String[] {});
 		}
