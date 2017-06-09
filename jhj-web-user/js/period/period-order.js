@@ -131,6 +131,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
     /**---------------------------服务子类--------------------------------*/
     
     $$(document).on('click','.adjust',function(){
+    	$$(".popup-overlay").removeClass("modal-overlay-visible");
     	var serviceTypeId = $$(this).prev("input[type='hidden']").val();
 		var periodServiceTypeId = $$(this).parents(".item-inner").prevAll("input[name='id']").val();
     	$$(this).parents(".item-inner").prevAll("input[name='serviceTypeId']").attr("checked",true);
@@ -151,7 +152,6 @@ myApp.onPageBeforeInit("period-order", function (page) {
         		var temp = $$(".service-type-addons-temp").html();
         		var html = "";
         		if(serviceTypeAddonsList.length>0){
-        			html = '<div class="popup popup-about">';
         			for(var i=0;i<serviceTypeAddonsList.length;i++){
         				var serviceTypeAddons = serviceTypeAddonsList[i];
         				if(serviceTypeAddons.name=='金牌保洁' || serviceTypeAddons.name=='基础保洁'){//金牌保洁 30
@@ -188,14 +188,13 @@ myApp.onPageBeforeInit("period-order", function (page) {
         				
         				html += htmlPart;
         			}
-        			html += '<p><a href="#" id="btn-ensure" class="button button-big all-button17 close-popup">返回</a></p></div>';
-        			myApp.popup(html,true);
+        			$$("#popup-content").html(html,true);
         		}
             }
         });
     });
     
-    $$(document).on("click","#service-type-addons-ul .label-checkbox",function(){
+    $$(".page").on("click","#service-type-addons-ul .label-checkbox",function(){
     	$$(this).children(".item-inner").prevAll("input[name='serviceTypeAddons']").removeAttr("disabled");
     })
     
@@ -211,7 +210,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
     
     
     //数量加
-    $$(document).on("click",".add-num",function(){
+    $$(".page").on("click",".add-num",function(){
     	$$(this).parents(".item-inner").prevAll("input[name='serviceTypeAddons']").attr("disabled","disabled");
     	var serviceNum = parseInt($$(this).prev(".service-num").val());
     	serviceNum = serviceNum + 1;
@@ -220,7 +219,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
     });
     
     //数量减
-    $$(document).on("click",".sub-num",function(){
+    $$(".page").on("click",".sub-num",function(){
     	$$(this).parents(".item-inner").prevAll("input[name='serviceTypeAddons']").attr("disabled","disabled");
     	var serviceNum = parseInt($$(this).next(".service-num").val());
     	var name = $$(this).parent().prev().text();
@@ -241,7 +240,7 @@ myApp.onPageBeforeInit("period-order", function (page) {
     	calc_price(this,serviceNum);
     });
     
-    $$(document).on("change",".service-num",function(){
+    $$(".page").on("change",".service-num",function(){
     	var serviceNum = $$(this).val();
     	if(serviceNum<=1){
     		myApp.alert("服务数量不能小于1");
@@ -300,11 +299,6 @@ myApp.onPageBeforeInit("period-order", function (page) {
 				var inp = input[j];
 				if(serviceTypeId == $$(inp).val()){
 					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-4 .total").text(count);
-					/*$$(inp).nextAll(".item-inner").find(".housework-3 .item-title").text(name);*/
-					/*$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='price']").val(price);
-					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 input[name='pprice']").val(pprice);
-					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 .housework-5-1 .price").text(price);
-					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-5 #price .vip-price").text(pprice);*/
 					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-6 .total-price").text(totalPrice);
 					$$(inp).nextAll(".item-inner").find(".item-subtitle .housework-6 .vip-total-price").text(totalVipPrice);
 					
