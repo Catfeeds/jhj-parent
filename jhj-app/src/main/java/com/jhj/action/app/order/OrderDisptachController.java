@@ -16,6 +16,8 @@ import com.jhj.common.Constants;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.users.UserAddrsService;
+import com.meijia.utils.DateUtil;
+import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
 
@@ -44,7 +46,12 @@ public class OrderDisptachController extends BaseController {
 		String lng = addrs.getLongitude();
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 		if (staffId.equals(0L)) {
-			datas = orderDispatchsService.checkDispatchedDay(serviceTypeId, serviceDateStr, lat, lng);
+			String today = DateUtil.getToday();
+			if (serviceDateStr.equals(today)) {
+				datas = orderDispatchsService.checkDispatchedToday(serviceTypeId, serviceDateStr, lat, lng);
+			} else {
+				datas = orderDispatchsService.checkDispatchedNotToday(serviceTypeId, serviceDateStr, lat, lng);
+			}
 		}
 		
 		if (staffId > 0L) {
@@ -68,7 +75,13 @@ public class OrderDisptachController extends BaseController {
 		
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 		if (staffId.equals(0L)) {
-			datas = orderDispatchsService.checkDispatchedDay(serviceTypeId, serviceDateStr, lat, lng);
+			
+			String today = DateUtil.getToday();
+			if (serviceDateStr.equals(today)) {
+				datas = orderDispatchsService.checkDispatchedToday(serviceTypeId, serviceDateStr, lat, lng);
+			} else {
+				datas = orderDispatchsService.checkDispatchedNotToday(serviceTypeId, serviceDateStr, lat, lng);
+			}
 		}
 		
 		if (staffId > 0L) {
@@ -80,5 +93,13 @@ public class OrderDisptachController extends BaseController {
 		return result;
 	}
 	
+	
+	@RequestMapping(value = "get_someday_dispatched", method = RequestMethod.GET) 
+	public AppResultData<Object> getSomeDayDispathed(
+			@RequestParam("service_date_str") String serviceDateStr) {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+	
+		return result;
+	}
 
 }
