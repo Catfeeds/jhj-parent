@@ -19,6 +19,7 @@ import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffLeaveService;
@@ -351,6 +352,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			if (!orgIds.contains(staff.getOrgId())) orgIds.add(staff.getOrgId());
 			
 		}
+		 System.out.println("总人数:" + staffIds.size());
 		
 		// ---在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
@@ -369,7 +371,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 		}
-
+		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
 		
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
@@ -385,11 +387,17 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
 
 		for (OrderDispatchs orderDispatch : disList) {
+			Long orderId = orderDispatch.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) || order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)
+					|| order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)) {
+				continue;
+			}
 			if (staffIds.contains(orderDispatch.getStaffId())) {
 				staffIds.remove(orderDispatch.getStaffId());
 			}
 		}
-
+		System.out.println("排除时间冲突的人员后:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
 		
 		// 员工服务日期的订单数
