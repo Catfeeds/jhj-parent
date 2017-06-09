@@ -4802,9 +4802,11 @@ ul.order-tip li{
 }
 
 .share-link{
-  color: red;
   float: right;
-  margin: 10px 18px 10px 0px;
+  margin: 10px 18px 2px 0px;
+}
+.share-link img{
+  width:44%;
 }
 
 
