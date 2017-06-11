@@ -365,7 +365,7 @@ function calendar(serviceTypeId) {
 		var st =moment(date).format("YYYY-MM-DD")+" "+dayTime+":00";
 		var isFull = checkSelectDateCanOrder(st);
 		console.log("isFull = " + isFull); 
-		if (isFull == true) return false;
+		if (isFull == 1) return false;
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);
@@ -394,26 +394,29 @@ function calendar(serviceTypeId) {
 			stepHour+=0.5;
 		}
 //		console.log(seatServiceHourList);
-		var isFull = false;
-		(function () {
-			for(var i = 0; i < checkDispatchedList.length; i++) {
-				var item = checkDispatchedList[i];
-				var service_hour = item.service_hour;
-				var isFull = item.is_full;
-				for (var j = 0; j < seatServiceHourList.length; j++) {
-					var t = seatServiceHourList[j];
+//		var isFull = false;
+
+		for(var i = 0; i < checkDispatchedList.length; i++) {
+			var item = checkDispatchedList[i];
+			var service_hour = item.service_hour;
+			var isFull = item.is_full;
+
+			for (var j = 0; j < seatServiceHourList.length; j++) {
+				var t = seatServiceHourList[j];
 //					console.log("t== " + t + "==== service_hour =" + service_hour + "== isFull = " + isFull);
-					if (t == service_hour && isFull == 1) {
-						alert("选择时间段内没有派工人员，请选择其他时段.");
-						isFull = true;
-						return;
-					}
+				if (t == service_hour && isFull == 1) {
+					alert("选择时间段内没有派工人员，请选择其他时段.");
+					
+
+					return 1;
 				}
 			}
-		})();
-		
+
+		}
+
+
 		console.log(seatServiceHourList);
-		return isFull;
+		return 0;
 	}
 }
 
