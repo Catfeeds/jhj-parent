@@ -17,7 +17,7 @@ function showCalendar(){
 	});
 }
 
-$(function(){
+function calendar(serviceTypeId) {
 	var weekDay=['周日','周一','周二','周三','周四','周五','周六'];
 	var tempWeek=['周日','周一','周二','周三','周四','周五','周六'];
 	var time=['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
@@ -70,7 +70,7 @@ $(function(){
 		});
 		tomm(date);
 	}
-	showTime(currentDate);
+//	showTime(currentDate);
 	
 	
 	function isFull(serviceDateStr){
@@ -83,8 +83,10 @@ $(function(){
 		
 		var param = {};
 		var serviceTypeId = $("#serviceType").val();
-		if (serviceTypeId == undefined || serviceTypeId == 0) return false;
-		param.service_type_id = $("#serviceType").val();
+		if (serviceTypeId == undefined || serviceTypeId == 0 || serviceTypeId==null || serviceTypeId=='') {
+			serviceTypeId = serviceTypeId;
+		}
+		param.service_type_id = serviceTypeId;
 		
 		var addrId = $("#addrId").val();
 		if (addrId == undefined || addrId == 0) {
@@ -413,7 +415,7 @@ $(function(){
 		console.log(seatServiceHourList);
 		return isFull;
 	}
-})
+}
 
 
 function selectServiceDateTime(){
@@ -439,6 +441,7 @@ function selectServiceDateTime(){
 	}
 	
 	showCalendar();
+	calendar(serviceTypeId);
 }
 
 
