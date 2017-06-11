@@ -99,7 +99,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
         	 }else{
         		 for(var j=0;j<result.length;j++){
           			if(time[i]==result[j].service_hour){
-          				if(selectDate!='2017-05-13'){
+          				if(selectDate!='2017-06-11'){
 	      					if(result[j].is_full==0){
 	      						if(time[i]==notSelectTime[0] || time[i]==notSelectTime[1] || time[i]==notSelectTime[2]){
 	      							dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
