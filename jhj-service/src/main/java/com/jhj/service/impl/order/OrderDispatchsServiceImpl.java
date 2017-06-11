@@ -55,8 +55,10 @@ import com.jhj.vo.user.UserTrailSearchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.GsonUtil;
+import com.meijia.utils.ListUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.PushUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.baidu.BaiduPoiVo;
 import com.meijia.utils.baidu.MapPoiUtil;
@@ -684,6 +686,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			item1.put("service_hour", h + ":00");
 			item1.put("total", "0");
 			item1.put("total_dispatched", "0");
+			item1.put("staffs", "");
 			item1.put("is_full", "0");
 			datas.add(item1);
 
@@ -691,6 +694,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			item2.put("service_hour", h + ":30");
 			item2.put("total", "0");
 			item2.put("total_dispatched", "0");
+			item1.put("staffs", "");
 			item2.put("is_full", "0");
 			datas.add(item2);
 
@@ -740,6 +744,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				staffIds.remove(osf.getStaffId());
 			}
 		}
+		
 		 System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// 排除请假人员
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
@@ -754,7 +759,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 		}
-		 System.out.println("排除请假后总人数:" + staffIds.size());
+		Collections.sort(staffIds);
+		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) {
 			// 如果人数都为0，则显示所有都为已约满.
 			for (int i = 0; i < datas.size(); i++) {
@@ -776,20 +782,21 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		orderDispatchSearchVo.setStaffIds(staffIds);
 
 		double orderServiceHour = 0L;
+		
 		List<OrderDispatchs> orderDispatchs = this.selectBySearchVo(orderDispatchSearchVo);
 		for (OrderDispatchs orderDispatch : orderDispatchs) {
 			Long orderId = orderDispatch.getOrderId();
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			orderServiceHour = order.getServiceHour();
-
+			Long staffId = orderDispatch.getStaffId();
 			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) || order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)
 					|| order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)) {
 				continue;
 			}
 
 			// 已 排班的 阿姨, 时间跨度为 
-			Long serviceDate = orderDispatch.getServiceDate();
-//			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
+//			Long serviceDate = orderDispatch.getServiceDate();
+			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
 
 			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
 			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
@@ -800,11 +807,11 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 2;
+			Double serviceHour = orderDispatch.getServiceHours() + 4;
 			// Double serviceHour = orderDispatch.getServiceHours();
 
 			Double stepHour = (double) 0;
-			while (stepHour < serviceHour) {
+			while (stepHour <= serviceHour) {
 
 				String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + stepHour * 60 * 60) * 1000), "HH:mm");
 
@@ -813,13 +820,23 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 					String itemServiceHour = item.get("service_hour");
 
 					if (orderServiceDateStr.equals(itemServiceHour)) {
-						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
-						totalDispatched = totalDispatched + 1;
-						// System.out.println("order_id = " + orderId +
-						// "--orderServiceDateStr = " + orderServiceDateStr +
-						// " --itemServiceHour = " + itemServiceHour +
-						// "--totalDispatched =" + totalDispatched);
-						item.put("total_dispatched", String.valueOf(totalDispatched));
+//						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
+//						totalDispatched = totalDispatched + 1;
+						
+//						item.put("total_dispatched", String.valueOf(totalDispatched));
+						String staffs = "";
+						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
+//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+							staffs+= staffId.toString()+",";
+//						}
+							
+//						if (orderServiceDateStr.equals("09:00")) {
+//							 System.out.println("order_id = " + orderId +
+//							 "--orderServiceDateStr = " + orderServiceDateStr +
+//							 " --itemServiceHour = " + itemServiceHour +
+//							 "--staffs =" + staffs);
+//						}
+						item.put("staffs", staffs);
 						datas.set(i, item);
 						break;
 					}
@@ -831,7 +848,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		// 最后再进行循环，把是否约满字段补上.
 		for (int i = 0; i < datas.size(); i++) {
 			Map<String, String> item = datas.get(i);
-			int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
+			String staffs = "";
+			if (item.get("staffs") != null) staffs = item.get("staffs").toString();
+			int totalDispatched = 0;
+			
+			if (!StringUtil.isEmpty(staffs)) {
+				String[] arys = StringUtil.convertStrToArray(staffs);
+				totalDispatched = arys.length;
+			}
+			item.put("total_dispatched", String.valueOf(totalDispatched));
 			int isFull = 0;
 			if (total > 0 && totalDispatched >= 0 && totalDispatched >= total) {
 				isFull = 1;
@@ -866,6 +891,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			item1.put("service_hour", h + ":00");
 			item1.put("total", "0");
 			item1.put("total_dispatched", "0");
+			item1.put("staffs", "");
 			item1.put("is_full", "0");
 			datas.add(item1);
 
@@ -873,6 +899,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			item2.put("service_hour", h + ":30");
 			item2.put("total", "0");
 			item2.put("total_dispatched", "0");
+			item1.put("staffs", "");
 			item2.put("is_full", "0");
 			datas.add(item2);
 
@@ -967,7 +994,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			Long orderId = orderDispatch.getOrderId();
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			orderServiceHour = order.getServiceHour();
-
+			Long staffId = orderDispatch.getStaffId();
 			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) || order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)
 					|| order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)) {
 				continue;
@@ -997,15 +1024,22 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				for (int i = 0; i < datas.size(); i++) {
 					Map<String, String> item = datas.get(i);
 					String itemServiceHour = item.get("service_hour");
-
+					
 					if (orderServiceDateStr.equals(itemServiceHour)) {
-						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
-						totalDispatched = totalDispatched + 1;
+//						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
+//						totalDispatched = totalDispatched + 1;
 						// System.out.println("order_id = " + orderId +
 						// "--orderServiceDateStr = " + orderServiceDateStr +
 						// " --itemServiceHour = " + itemServiceHour +
 						// "--totalDispatched =" + totalDispatched);
-						item.put("total_dispatched", String.valueOf(totalDispatched));
+//						item.put("total_dispatched", String.valueOf(totalDispatched));
+						
+						String staffs = "";
+						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
+//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+							staffs+= staffId.toString()+",";
+//						}
+						item.put("staffs", staffs);
 						datas.set(i, item);
 						break;
 					}
@@ -1017,7 +1051,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		// 最后再进行循环，把是否约满字段补上.
 		for (int i = 0; i < datas.size(); i++) {
 			Map<String, String> item = datas.get(i);
-			int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
+			String staffs = "";
+			if (item.get("staffs") != null) staffs = item.get("staffs").toString();
+			int totalDispatched = 0;
+			
+			if (!StringUtil.isEmpty(staffs)) {
+				String[] arys = StringUtil.convertStrToArray(staffs);
+				totalDispatched = arys.length;
+			}
+			item.put("total_dispatched", String.valueOf(totalDispatched));
 			int isFull = 0;
 			if (total > 0 && totalDispatched >= 0 && totalDispatched >= total) {
 				isFull = 1;

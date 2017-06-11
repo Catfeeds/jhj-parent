@@ -157,6 +157,8 @@ myApp.onPageInit('order-lib-cal',function(page) {
     		type:"POST",
     		url:siteAPIPath+"order/check_dispatch.json",
     		data:param,
+    		cache: false,
+    		async: false,
     		success:function(data){
     			var result = JSON.parse(data);
     			result = result.data;

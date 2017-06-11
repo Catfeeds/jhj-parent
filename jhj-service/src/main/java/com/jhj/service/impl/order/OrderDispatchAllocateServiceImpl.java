@@ -142,14 +142,15 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			return list;
 
 		List<Long> staffIds = new ArrayList<Long>();
-
+		List<Long> orgIds = new ArrayList<Long>();
+		
 		for (int i = 0; i < orgList.size(); i++) {
 			OrgDispatchPoiVo org = orgList.get(i);
 			Long orgId = org.getOrgId();
 			if (selectParentId > 0L) {
 				if (!org.getParentId().equals(selectParentId)) continue;
 			}
-			
+			orgIds.add(orgId);
 			if (selectOrgId > 0L) {
 				if (!orgId.equals(selectOrgId)) continue;
 			}
@@ -159,7 +160,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			staffSearchVo.setOrgId(orgId);
 			staffSearchVo.setStatus(1);
 			staffSearchVo.setServiceTypeId(serviceTypeId);
-			staffSearchVo.setIsNotBlack(1);
+//			staffSearchVo.setIsNotBlack(1);
 			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 			
 			if (staffList.isEmpty()) continue;
@@ -171,7 +172,17 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			if (staffIds.isEmpty()) continue;
 
 		}
-
+		System.out.println("总人数:" + staffIds.size());
+		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
+		searchVo2.setIsBlack((short) 1);
+		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);		
+		for (OrgStaffFinance osf : blackList) {
+			if (staffIds.contains(osf.getStaffId())) {
+				staffIds.remove(osf.getStaffId());
+			}
+		}
+		
+		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// ---4. 在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
@@ -189,7 +200,8 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 		}
-
+		Collections.sort(staffIds);
+		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty())
 			return list;
 		
@@ -204,9 +216,19 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		searchVo1.setDispatchStatus((short) 1);
 		searchVo1.setStartServiceTime(startServiceTime);
 		searchVo1.setEndServiceTime(endServiceTime);
+		searchVo1.setStaffIds(staffIds);
 		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
-
+		
 		for (OrderDispatchs orderDispatch : disList) {
+			
+			Long orderId = orderDispatch.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+
+			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) || order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)
+					|| order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)) {
+				continue;
+			}
+
 			if (staffIds.contains(orderDispatch.getStaffId())) {
 				staffIds.remove(orderDispatch.getStaffId());
 			}
@@ -340,7 +362,6 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		if (selectOrgId > 0L) staffSearchVo.setParentId(selectOrgId);
 		staffSearchVo.setStatus(1);
 		staffSearchVo.setServiceTypeId(serviceTypeId);
-		staffSearchVo.setIsNotBlack(1);
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 		
 		List<Long> staffIds = new ArrayList<Long>();
@@ -352,7 +373,18 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			if (!orgIds.contains(staff.getOrgId())) orgIds.add(staff.getOrgId());
 			
 		}
-		 System.out.println("总人数:" + staffIds.size());
+		System.out.println("总人数:" + staffIds.size());
+		 
+		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
+		searchVo2.setIsBlack((short) 1);
+		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);		
+		for (OrgStaffFinance osf : blackList) {
+			if (staffIds.contains(osf.getStaffId())) {
+				staffIds.remove(osf.getStaffId());
+			}
+		}
+		
+		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		
 		// ---在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
@@ -384,6 +416,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		searchVo1.setDispatchStatus((short) 1);
 		searchVo1.setStartServiceTime(startServiceTime);
 		searchVo1.setEndServiceTime(endServiceTime);
+		searchVo1.setStaffIds(staffIds);
 		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
 
 		for (OrderDispatchs orderDispatch : disList) {
