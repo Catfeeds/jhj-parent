@@ -111,7 +111,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
 	      						dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</p></li>";
 	      					}
           				}
-          				if(selectDate=='2017-05-13'){
+          				if(selectDate=='2017-06-11'){
           					dateTime+="<li class='rilichange-no-time'><p>"+time[i]+"</p><p>约满</P></li>";
           		        }
           			}
