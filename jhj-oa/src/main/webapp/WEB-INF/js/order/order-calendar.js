@@ -17,7 +17,7 @@ function showCalendar(){
 	});
 }
 
-$(function(){
+function calendar(serviceTypeId) {
 	var weekDay=['周日','周一','周二','周三','周四','周五','周六'];
 	var tempWeek=['周日','周一','周二','周三','周四','周五','周六'];
 	var time=['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
@@ -29,6 +29,8 @@ $(function(){
 	var nowHour=moment().hour();
 	var dayTime=""; 
 	var selectDay="#show-day li p[class='rili-day']";
+	//是否约满
+	var checkDispatchedList = {};
 	
 	//展示时间 
 	function showTime(selectDate,val){
@@ -44,11 +46,7 @@ $(function(){
 				for(var j = 0 ; j < val.length;j++){
 					if(time[i]==val[j].service_hour){
 						if(val[j].is_full==0){
-							if(val[j+1].is_full==1 && val[j-1].is_full==1){
-								dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
-							}else{
-								dateTime+="<li>"+time[i]+"</li>";
-							}
+							dateTime+="<li>"+time[i]+"</li>";
 						}
 						if(val[j].is_full==1){
 							dateTime+="<li class='rili-time-no'><p>"+time[i]+"</p><p>约满</p></li>";
@@ -72,9 +70,9 @@ $(function(){
 		});
 		tomm(date);
 	}
-	showTime(currentDate);
+//	showTime(currentDate);
 	
-	//是否约满
+	
 	function isFull(serviceDateStr){
 		
 		var host = window.location.host;
@@ -85,8 +83,10 @@ $(function(){
 		
 		var param = {};
 		var serviceTypeId = $("#serviceType").val();
-		if (serviceTypeId == undefined || serviceTypeId == 0) return false;
-		param.service_type_id = $("#serviceType").val();
+		if (serviceTypeId == undefined || serviceTypeId == 0 || serviceTypeId==null || serviceTypeId=='') {
+			serviceTypeId = serviceTypeId;
+		}
+		param.service_type_id = serviceTypeId;
 		
 		var addrId = $("#addrId").val();
 		if (addrId == undefined || addrId == 0) {
@@ -115,6 +115,7 @@ $(function(){
 			success:function(data){
 				if(data.status=='0' && data.msg=='ok'){
 					var result = data.data;
+					checkDispatchedList = result;
 					showTime(serviceDateStr,result);
 				}
 			}
@@ -362,6 +363,9 @@ $(function(){
 	$(document).on('click','#checkDate',function(){
 		var st = date+" "+dayTime+":00";
 		var st =moment(date).format("YYYY-MM-DD")+" "+dayTime+":00";
+		var isFull = checkSelectDateCanOrder(st);
+		console.log("isFull = " + isFull); 
+		if (isFull == 1) return false;
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);
@@ -369,7 +373,52 @@ $(function(){
 			return false;
 		}
 	});
-})
+	
+	function checkSelectDateCanOrder(selectDate) {
+		var serviceHour = $("#serviceHour").val();
+		//服务结束往后延2小时.
+		var fullServiceHour = parseFloat(serviceHour) + parseFloat(2);
+//		console.log("serviceHour == " + serviceHour + " fullServiceHour = " + fullServiceHour);
+		
+		//拆分成天（YYYY-MM-DD）和小时分钟（HH:mm）.
+		var selectDay = moment(selectDate).format("YYYY-MM-DD");
+		var selectHour = moment(selectDate).format("HH:mm");
+		
+//		console.log("selectDay = " + selectDay + "===selectHour = " + selectHour);
+		var stepHour = 0;
+		
+		var seatServiceHourList = [];
+		while (parseFloat(stepHour) < parseFloat(fullServiceHour)) {
+			var t = moment(selectDate).add(stepHour,'H').format("HH:mm");
+			seatServiceHourList.push(t);
+			stepHour+=0.5;
+		}
+//		console.log(seatServiceHourList);
+//		var isFull = false;
+
+		for(var i = 0; i < checkDispatchedList.length; i++) {
+			var item = checkDispatchedList[i];
+			var service_hour = item.service_hour;
+			var isFull = item.is_full;
+
+			for (var j = 0; j < seatServiceHourList.length; j++) {
+				var t = seatServiceHourList[j];
+//					console.log("t== " + t + "==== service_hour =" + service_hour + "== isFull = " + isFull);
+				if (t == service_hour && isFull == 1) {
+					alert("选择时间段内没有派工人员，请选择其他时段.");
+					
+
+					return 1;
+				}
+			}
+
+		}
+
+
+		console.log(seatServiceHourList);
+		return 0;
+	}
+}
 
 
 function selectServiceDateTime(){
@@ -395,4 +444,7 @@ function selectServiceDateTime(){
 	}
 	
 	showCalendar();
+	calendar(serviceTypeId);
 }
+
+

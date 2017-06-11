@@ -29,5 +29,7 @@ public interface OaOrderService {
 	Map<String, String> getUserAddrMap(Long userId);
 
 	OaOrderListVo completeNewVo(Orders orders);
+
+	String getOrderGroupCode(Long orderId);
 	
 }

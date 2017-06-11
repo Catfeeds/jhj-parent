@@ -28,6 +28,10 @@ var formVal = $('#orderForm').validate({
 			required : true,
 		},
 		
+		groupCode : {
+			digits : true,
+		},
+		
 		serviceDate : {
 			required : true,
 		},
@@ -81,6 +85,10 @@ var formVal = $('#orderForm').validate({
 		
 		orderOpFrom : {
 			required : "请选择订单来源",
+		},
+		
+		groupCode : {
+			digits : "团购码请输入数字",
 		},
 		
 		serviceDate : {
@@ -216,6 +224,7 @@ function orderFormSubmit() {
 	params.couponsId = $("#couponsId").val();
 	params.remarks = $("#remarks").val();
 	params.periodOrderId = $("#periodOrderId").val();
+	params.groupCode = $("#groupCode").val();
 	
 	if ($("#sendSmsToUser").is(":checked")) {
 		params.sendSmsToUser = 1;

@@ -19,6 +19,7 @@ import com.jhj.po.model.bs.OrgStaffSkill;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffLeaveService;
@@ -141,14 +142,15 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			return list;
 
 		List<Long> staffIds = new ArrayList<Long>();
-
+		List<Long> orgIds = new ArrayList<Long>();
+		
 		for (int i = 0; i < orgList.size(); i++) {
 			OrgDispatchPoiVo org = orgList.get(i);
 			Long orgId = org.getOrgId();
 			if (selectParentId > 0L) {
 				if (!org.getParentId().equals(selectParentId)) continue;
 			}
-			
+			orgIds.add(orgId);
 			if (selectOrgId > 0L) {
 				if (!orgId.equals(selectOrgId)) continue;
 			}
@@ -158,7 +160,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			staffSearchVo.setOrgId(orgId);
 			staffSearchVo.setStatus(1);
 			staffSearchVo.setServiceTypeId(serviceTypeId);
-			staffSearchVo.setIsNotBlack(1);
+//			staffSearchVo.setIsNotBlack(1);
 			List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 			
 			if (staffList.isEmpty()) continue;
@@ -170,7 +172,17 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			if (staffIds.isEmpty()) continue;
 
 		}
-
+		System.out.println("总人数:" + staffIds.size());
+		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
+		searchVo2.setIsBlack((short) 1);
+		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);		
+		for (OrgStaffFinance osf : blackList) {
+			if (staffIds.contains(osf.getStaffId())) {
+				staffIds.remove(osf.getStaffId());
+			}
+		}
+		
+		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// ---4. 在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
@@ -188,7 +200,8 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 		}
-
+		Collections.sort(staffIds);
+		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty())
 			return list;
 		
@@ -203,9 +216,19 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		searchVo1.setDispatchStatus((short) 1);
 		searchVo1.setStartServiceTime(startServiceTime);
 		searchVo1.setEndServiceTime(endServiceTime);
+		searchVo1.setStaffIds(staffIds);
 		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
-
+		
 		for (OrderDispatchs orderDispatch : disList) {
+			
+			Long orderId = orderDispatch.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+
+			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) || order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)
+					|| order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)) {
+				continue;
+			}
+
 			if (staffIds.contains(orderDispatch.getStaffId())) {
 				staffIds.remove(orderDispatch.getStaffId());
 			}
@@ -339,7 +362,6 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		if (selectOrgId > 0L) staffSearchVo.setParentId(selectOrgId);
 		staffSearchVo.setStatus(1);
 		staffSearchVo.setServiceTypeId(serviceTypeId);
-		staffSearchVo.setIsNotBlack(1);
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 		
 		List<Long> staffIds = new ArrayList<Long>();
@@ -351,6 +373,18 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			if (!orgIds.contains(staff.getOrgId())) orgIds.add(staff.getOrgId());
 			
 		}
+		System.out.println("总人数:" + staffIds.size());
+		 
+		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
+		searchVo2.setIsBlack((short) 1);
+		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);		
+		for (OrgStaffFinance osf : blackList) {
+			if (staffIds.contains(osf.getStaffId())) {
+				staffIds.remove(osf.getStaffId());
+			}
+		}
+		
+		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		
 		// ---在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
@@ -369,7 +403,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 		}
-
+		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
 		
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
@@ -382,14 +416,21 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		searchVo1.setDispatchStatus((short) 1);
 		searchVo1.setStartServiceTime(startServiceTime);
 		searchVo1.setEndServiceTime(endServiceTime);
+		searchVo1.setStaffIds(staffIds);
 		List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
 
 		for (OrderDispatchs orderDispatch : disList) {
+			Long orderId = orderDispatch.getOrderId();
+			Orders order = orderService.selectByPrimaryKey(orderId);
+			if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) || order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)
+					|| order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)) {
+				continue;
+			}
 			if (staffIds.contains(orderDispatch.getStaffId())) {
 				staffIds.remove(orderDispatch.getStaffId());
 			}
 		}
-
+		System.out.println("排除时间冲突的人员后:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
 		
 		// 员工服务日期的订单数
@@ -551,7 +592,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 		}
-		
+		//过滤掉当日派工，员工距离超出范围的员工
 		//派工依据. 0 = 合理分配  1 = 效率优先
 		for (int i = 0; i < list.size(); i++) {
 			OrgStaffDispatchVo item = list.get(i);
@@ -565,6 +606,13 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			}
 			item.setAllocateReason(allocateReason);
 			item.setAllocate(allocate);
+			
+			if (distanceValue > Constants.MAX_DISTANCE) {
+				item.setDispathStaFlag(0);
+				item.setDispathStaStr("不可派工");
+				item.setReason(item.getReason() + "员工距离超出");
+			}
+			
 			list.set(i, item);
 		}
 		

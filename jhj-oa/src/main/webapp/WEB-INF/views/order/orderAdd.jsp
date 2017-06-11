@@ -264,6 +264,15 @@
 												</select>
 											</div>
 										</div>
+										
+										<div class="form-group ">
+											<label class="col-md-2 control-label">团购码</label>
+											<div class="col-md-5">
+												<input type="text" id="groupCode" name="groupCode" maxLength="32" class="form-control"/>
+												
+											</div>
+										</div>
+												
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务时长

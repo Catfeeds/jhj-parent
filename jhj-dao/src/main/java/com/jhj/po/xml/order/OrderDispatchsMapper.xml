@@ -212,8 +212,6 @@
 		  		(service_date >= #{startServiceTime}  and (service_date+ service_hours*3600) <= #{endServiceTime} )
 		  		or
 		  		(service_date < #{startServiceTime}  and (service_date+ service_hours*3600) > #{endServiceTime} )
-		  		or
-		  		( (service_date+ service_hours*3600) > #{startServiceTime}  and service_date < #{endServiceTime} )	
 		    ) 
 	  		]]>
 	  	</if>

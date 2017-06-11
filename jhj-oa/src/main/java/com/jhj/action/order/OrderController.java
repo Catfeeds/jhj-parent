@@ -25,6 +25,7 @@ import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
+import com.jhj.po.model.order.OrderExtend;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
@@ -36,6 +37,7 @@ import com.jhj.service.cooperate.CooperateBusinessService;
 import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderCancelService;
 import com.jhj.service.order.OrderDispatchsService;
+import com.jhj.service.order.OrderExtendService;
 import com.jhj.service.order.OrderHourAddService;
 import com.jhj.service.order.OrderLogService;
 import com.jhj.service.order.OrderPayService;
@@ -47,6 +49,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.PartnerServiceTypeVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.vo.AppResultData;
 
 /**
@@ -107,6 +110,9 @@ public class OrderController extends BaseController {
 	
 	@Autowired
 	private OrderCancelService orderCancelService;
+	
+	@Autowired
+	private OrderExtendService orderExtendService;
 	
 	/*
 	 * 订单换人操作
@@ -322,18 +328,53 @@ public class OrderController extends BaseController {
 		Long orderOpFrom = orders.getOrderOpFrom();
 		orders.setOrderOpFrom(orderForm.getOrderOpFrom());
 		orderService.updateByPrimaryKeySelective(orders);
-		
+
+		String remarks = "";
 		if(orderOpFrom!=orderForm.getOrderOpFrom()){
+			CooperativeBusiness cb1 = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+			if (cb1 != null) remarks+= cb1.getBusinessName();
+			CooperativeBusiness cb2 = cooperateBusinessService.selectByPrimaryKey(orderForm.getOrderOpFrom());
+			
+			if (cb2 != null) remarks+= "修改成"+cb2.getBusinessName();
+
+		}
+		
+		String groupCode = request.getParameter("groupCode");
+		if (!StringUtil.isEmpty(groupCode)) {
+			Long orderId = orders.getId();
+			OrderExtend orderExtend = orderExtendService.selectByOrderId(orderId);
+			String oldGroupCode = "";
+			if (orderExtend == null) {
+				orderExtend = orderExtendService.initPo();
+			} else {
+				oldGroupCode = orderExtend.getGroupCode();
+			}
+			
+			orderExtend.setUserId(orders.getUserId());
+			orderExtend.setOrderId(orders.getId());
+			orderExtend.setOrderNo(orders.getOrderNo());
+			orderExtend.setGroupCode(groupCode);
+			if (orderExtend.getId().equals(0L)) {
+				remarks+= ";团购卷修改成" + groupCode;
+				orderExtendService.insert(orderExtend);
+			} else {
+				if (!oldGroupCode.equals(groupCode)) {
+					remarks+= ";团购卷修改成" + groupCode;
+					orderExtendService.updateByPrimaryKeySelective(orderExtend);
+				}
+				
+			}
+			
+		}
+		
+		if (!StringUtil.isEmpty(remarks)) {
 			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
 			OrderLog initOrderLog = orderLogService.initOrderLog(orders);
 			initOrderLog.setAction(Constants.ORDER_ACTION_UPDATE);
 			initOrderLog.setUserId(accountAuth.getId());
 			initOrderLog.setUserName(accountAuth.getUsername());
 			initOrderLog.setUserType((short)2);
-			
-			CooperativeBusiness cb1 = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
-			CooperativeBusiness cb2 = cooperateBusinessService.selectByPrimaryKey(orderForm.getOrderOpFrom());
-			initOrderLog.setRemarks(cb1.getBusinessName()+"修改成"+cb2.getBusinessName());
+			initOrderLog.setRemarks(remarks);
 			orderLogService.insert(initOrderLog);
 		}
 			

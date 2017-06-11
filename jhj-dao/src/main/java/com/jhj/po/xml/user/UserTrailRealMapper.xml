@@ -24,8 +24,13 @@
 		select
 		<include refid="Base_Column_List" />
 		from
-		user_trail_real
+		(select 
+		id, user_id, user_type, lat, lng,poi_name, max(add_time) as add_time
+		FROM user_trail_real
 		<include refid="bySearchVo"/>
+		group by user_id) as T
+		
+		
 		order by add_time desc
 	</select>
 	
@@ -33,8 +38,12 @@
 		select
 		<include refid="Base_Column_List" />
 		from
-		user_trail_real
+		(select 
+		id, user_id, user_type, lat, lng,poi_name, max(add_time) as add_time
+		FROM user_trail_real
 		<include refid="bySearchVo"/>
+		group by user_id) as T
+
 		order by add_time desc
 		
 	</select>
