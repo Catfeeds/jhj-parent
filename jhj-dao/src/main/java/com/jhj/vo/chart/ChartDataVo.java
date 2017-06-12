@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class ChartDataVo {
 	
-	
 	private String legend;
 	
 	private String xAxis;

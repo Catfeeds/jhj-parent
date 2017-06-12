@@ -370,9 +370,12 @@ function doPeriodOrderPay(obj){
 
 function delOrder(orderId, orderStatus){
 	
-	if(orderStatus>=1 && orderStatus<5){
-		myApp.alert("订单未完成，不能删除");
-		return false;
+	if(orderStatus>=1 && orderStatus<7){
+		myApp.alert("订单未完成，不能删除",function(){
+			myApp.confirm = function(msg) {
+			    return false;
+			}
+		});
 	}
 	
 	$$.ajax({

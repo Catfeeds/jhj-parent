@@ -340,4 +340,46 @@ public class OrderChartController extends BaseController {
 		return "chart/chartOrderFromCount";
 	}
 	
+	/*
+	 * 统计订单来源的数量，总订单数，总金额
+	 * 
+	 * */
+	@AuthPassport
+	@RequestMapping(value = "chartUserOrderNum",method = RequestMethod.GET)
+	public String chartUserOrderNum(Model model, HttpServletRequest request, ChartSearchVo chartSearchVo){
+		
+		Long startTime = 0L;
+		Long endTime = 0L;
+		
+		String startTimeStr = chartSearchVo.getStartTimeStr();
+		if(startTimeStr!=null && !startTimeStr.equals("")){
+			startTime = DateUtil.parseFull(startTimeStr+"-1 00:00:00").getTime()/1000;
+			Date date = DateUtil.parse(startTimeStr+"-1");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.MONTH, 1);
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+			String endTimeStr = DateUtil.formatDate(cal.getTime())+" 23:59:59";
+			endTime = DateUtil.parse(endTimeStr).getTime()/1000;
+			
+		}else{
+			startTime = DateUtil.curStartDate(0);
+//			endTime = DateUtil.curLastDate(0);
+			endTime = new Date().getTime()/1000;
+		}
+		chartSearchVo.setStartTime(startTime);
+		chartSearchVo.setEndTime(endTime);
+		
+		//获得时间周期的数组列表, 7月，8月，9月
+		List<String> timeSeries = new ArrayList<String>();		
+		timeSeries = ChartUtil.getTimeSeries("day", startTime, endTime);
+		
+		ChartDataVo chartDatas = orderChartService.getOrderFromCount(chartSearchVo, timeSeries);
+		
+		model.addAttribute("chartDatas", chartDatas);
+		model.addAttribute("searchVo", chartSearchVo);
+		
+		return "chart/chartUserOrderCount";
+	}
+	
 }

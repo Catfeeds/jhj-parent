@@ -29,4 +29,7 @@ public interface OrderChartService {
 	
 	//统计订单数量和订单金额
 	ChartDataVo getOrderFromCount(ChartSearchVo chartSearchVo, List<String> timeSeries);
+	
+	//市场人员订单统计
+	ChartDataVo getUserOrderCount(ChartSearchVo chartSearchVo, List<String> timeSeries);
 }
