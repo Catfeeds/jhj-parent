@@ -2805,6 +2805,12 @@ ul.order-tip li{
   font-size: 14px;
 }
 
+.order-list-bg{
+  background-color:#efeff4;
+}
+order-list-bg:before{
+  height: 0px;
+}
 .list-block ul ul{
    padding-left: 0px;
 }
