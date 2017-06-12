@@ -419,23 +419,18 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		if(shareUserId==userId) return Boolean.FALSE;
 		Long couponsId = orderShare.getSendCouponsId().longValue();
 		
-		List<UserCoupons> userCouponsList = userCouponsMapper.selectByCouponIdAndUserId(orderShare.getSendCouponsId().longValue(), shareUserId);
+		UserCoupons initUserCoupons = initUserCoupons();
+		initUserCoupons.setUserId(shareUserId.longValue());
+		initUserCoupons.setCouponId(couponsId);
+		DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
+		String toDateStr = DateUtil.addDay(coupons.getFromDate(), coupons.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
+		initUserCoupons.setToDate(DateUtil.parse(toDateStr));
+		initUserCoupons.setValue(coupons.getValue());
+		initUserCoupons.setServiceType(coupons.getServiceType());
 		
-		if(userCouponsList.size()<=3){
-			
-			UserCoupons initUserCoupons = initUserCoupons();
-			initUserCoupons.setUserId(shareUserId.longValue());
-			initUserCoupons.setCouponId(couponsId);
-			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
-			String toDateStr = DateUtil.addDay(coupons.getFromDate(), coupons.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);
-			initUserCoupons.setToDate(DateUtil.parse(toDateStr));
-			initUserCoupons.setValue(coupons.getValue());
-			initUserCoupons.setServiceType(coupons.getServiceType());
-			
-			userCouponsMapper.insertSelective(initUserCoupons);
-			//170891  短信模板
-			SmsUtil.SendSms(orderShare.getMobile(), "170891", new String[] {});
-		}
+		userCouponsMapper.insertSelective(initUserCoupons);
+		//170891  短信模板
+		SmsUtil.SendSms(orderShare.getMobile(), "170891", new String[] {});
 		
 		return Boolean.TRUE;
 	}

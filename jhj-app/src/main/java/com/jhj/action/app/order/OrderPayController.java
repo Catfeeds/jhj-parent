@@ -257,11 +257,15 @@ public class OrderPayController extends BaseController {
 				userService.updateByPrimaryKeySelective(u);
 				
 				List<OrderShare> orderShareList = ordershareService.selectByShareId(shareUserId);
-				if(orderShareList!=null && orderShareList.size()>0){
+				OrderShare os = ordershareService.selectByShareIdAndUserId(shareUserId, userId.intValue());
+				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
 					userCouponsService.shareSuccessSendCoupons(orderShare,order.getUserId());
+					orderShare.setUserId(userId.intValue());
+					orderShare.setOrderNo(orderNo);
+					orderShare.setOrderId(orderId.intValue());
+					ordershareService.updateByPrimaryKeySelective(orderShare);
 				}
-				
 			}
 						
 			if(order.getOrderType() == Constants.ORDER_TYPE_0 ||
@@ -439,9 +443,14 @@ public class OrderPayController extends BaseController {
 				orderPayService.orderPaySuccessToDoOrderPayExt(order, orderPriceExt);
 				
 				List<OrderShare> orderShareList = ordershareService.selectByShareId(shareUserId);
-				if(orderShareList!=null && orderShareList.size()>0){
+				OrderShare os = ordershareService.selectByShareIdAndUserId(shareUserId, userId.intValue());
+				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
 					userCouponsService.shareSuccessSendCoupons(orderShare,order.getUserId());
+					orderShare.setUserId(userId.intValue());
+					orderShare.setOrderNo(orderNo);
+					orderShare.setOrderId(orderId.intValue());
+					ordershareService.updateByPrimaryKeySelective(orderShare);
 				}
 			}
 			
@@ -558,9 +567,14 @@ public class OrderPayController extends BaseController {
 					userService.updateByPrimaryKeySelective(u);
 					
 					List<OrderShare> orderShareList = ordershareService.selectByShareId(shareUserId);
-					if(orderShareList!=null && orderShareList.size()>0){
+					OrderShare os = ordershareService.selectByShareIdAndUserId(shareUserId, userId.intValue());
+					if(orderShareList!=null && orderShareList.size()>0 && os==null){
 						OrderShare orderShare = orderShareList.get(0);
 						userCouponsService.shareSuccessSendCoupons(orderShare,periodOrder.getUserId().longValue());
+						orderShare.setUserId(userId.intValue());
+						orderShare.setOrderNo(orderNo);
+						orderShare.setOrderId(periodOrder.getId().intValue());
+						ordershareService.updateByPrimaryKeySelective(orderShare);
 					}
 				}
 				

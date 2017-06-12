@@ -17,5 +17,7 @@ public interface OrderShareService {
 
     int updateByPrimaryKey(OrderShare record);
     
-    List<OrderShare> selectByShareId(Integer id);
+    List<OrderShare> selectByShareId(Integer shareId);
+    
+    OrderShare selectByShareIdAndUserId(Integer shareId,Integer userId);
 }

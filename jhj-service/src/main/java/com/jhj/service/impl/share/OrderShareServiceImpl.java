@@ -46,9 +46,14 @@ public class OrderShareServiceImpl implements OrderShareService{
 	}
 
 	@Override
-	public List<OrderShare> selectByShareId(Integer id) {
+	public List<OrderShare> selectByShareId(Integer shareId) {
 		
-		return orderShareMapper.selectByShareId(id);
+		return orderShareMapper.selectByShareId(shareId);
 	}
-	
+
+	@Override
+	public OrderShare selectByShareIdAndUserId(Integer shareId, Integer userId) {
+		return orderShareMapper.selectByShareIdAndUserId(shareId,userId);
+	}
+
 }

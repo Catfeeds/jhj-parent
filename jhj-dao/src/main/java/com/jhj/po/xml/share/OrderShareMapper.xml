@@ -129,4 +129,9 @@
   <select id="selectByShareId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"/> from order_share where share_id = #{shareId,jdbcType=INTEGER}
   </select>
+  
+  <select id="selectByShareIdAndUserId" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/> from order_share where share_id = #{shareId,jdbcType=INTEGER} 
+  	and user_id = #{userId,jdbcType=INTEGER}
+  </select>
 </mapper>

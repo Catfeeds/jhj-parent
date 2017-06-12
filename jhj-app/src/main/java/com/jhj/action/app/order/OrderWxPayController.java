@@ -118,9 +118,14 @@ public class OrderWxPayController extends BaseController {
 			String shareUserId = request.getParameter("shareUserId");
 			if(shareUserId!=null && !"".equals(shareUserId)){
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
-				if(orderShareList!=null && orderShareList.size()>0){
+				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
+				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
 					userCouponsService.shareSuccessSendCoupons(orderShare,userId);
+					orderShare.setUserId(userId.intValue());
+					orderShare.setOrderNo(orderNo);
+					orderShare.setOrderId(orders.getId().intValue());
+					orderShareService.updateByPrimaryKeySelective(orderShare);
 				}
 			}
 
@@ -179,9 +184,14 @@ public class OrderWxPayController extends BaseController {
 			String shareUserId = request.getParameter("shareUserId");
 			if(shareUserId!=null && !"".equals(shareUserId)){
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
-				if(orderShareList!=null && orderShareList.size()>0){
+				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
+				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
 					userCouponsService.shareSuccessSendCoupons(orderShare,userId);
+					orderShare.setUserId(userId.intValue());
+					orderShare.setOrderNo(orderNo);
+					orderShare.setOrderId(periodOrder.getId().intValue());
+					orderShareService.updateByPrimaryKeySelective(orderShare);
 				}
 			}
 

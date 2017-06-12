@@ -18,4 +18,6 @@ public interface OrderShareMapper {
     int updateByPrimaryKey(OrderShare record);
     
     List<OrderShare> selectByShareId(Integer id);
+    
+    OrderShare selectByShareIdAndUserId(Integer shareId, Integer userId);
 }
