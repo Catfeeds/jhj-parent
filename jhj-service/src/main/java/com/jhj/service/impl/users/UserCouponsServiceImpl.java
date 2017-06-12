@@ -30,7 +30,6 @@ import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
-import com.jhj.vo.dict.CouponSearchVo;
 import com.jhj.vo.user.UserCouponVo;
 import com.jhj.vo.user.UserCouponsVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -412,19 +411,20 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 	}
 	
 	//用户分享成功，如果其他用户下单，则送优惠券,最多赠送3涨
-	public boolean shareSuccessSendCoupons(OrderShare orderShare){
+	public boolean shareSuccessSendCoupons(OrderShare orderShare,Long userId){
 		
 		if(orderShare==null) return Boolean.FALSE;
 		
-		Long userId = orderShare.getShareId().longValue();
+		Long shareUserId = orderShare.getShareId().longValue();
+		if(shareUserId==userId) return Boolean.FALSE;
 		Long couponsId = orderShare.getSendCouponsId().longValue();
 		
-		List<UserCoupons> userCouponsList = userCouponsMapper.selectByCouponIdAndUserId(orderShare.getSendCouponsId().longValue(), userId);
+		List<UserCoupons> userCouponsList = userCouponsMapper.selectByCouponIdAndUserId(orderShare.getSendCouponsId().longValue(), shareUserId);
 		
 		if(userCouponsList.size()<=3){
 			
 			UserCoupons initUserCoupons = initUserCoupons();
-			initUserCoupons.setUserId(userId.longValue());
+			initUserCoupons.setUserId(shareUserId.longValue());
 			initUserCoupons.setCouponId(couponsId);
 			DictCoupons coupons = dictCouponsService.selectByPrimaryKey(couponsId);
 			String toDateStr = DateUtil.addDay(coupons.getFromDate(), coupons.getRangMonth().intValue(), Calendar.MONTH, DateUtil.DEFAULT_PATTERN);

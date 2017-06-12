@@ -98,15 +98,6 @@ public class OrderWxPayController extends BaseController {
 		String orderNo = "";
 		Long userId = 0L;
 		
-		String shareUserId = request.getParameter("shareUserId");
-		if(shareUserId!=null && !"".equals(shareUserId)){
-			List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
-			if(orderShareList!=null && orderShareList.size()>0){
-				OrderShare orderShare = orderShareList.get(0);
-				userCouponsService.shareSuccessSendCoupons(orderShare);
-			}
-		}
-		
 		if (userCouponId == null) userCouponId = 0L;
 
 		String wxPay = "0";
@@ -123,6 +114,15 @@ public class OrderWxPayController extends BaseController {
 
 			orderNo = orders.getOrderNo();
 			userId = orders.getUserId();
+			
+			String shareUserId = request.getParameter("shareUserId");
+			if(shareUserId!=null && !"".equals(shareUserId)){
+				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+				if(orderShareList!=null && orderShareList.size()>0){
+					OrderShare orderShare = orderShareList.get(0);
+					userCouponsService.shareSuccessSendCoupons(orderShare,userId);
+				}
+			}
 
 			BigDecimal orderPayNow = orderPricesService.getPayByOrder(orderId, userCouponId);
 			wxPay = orderPayNow.toString();
@@ -175,6 +175,15 @@ public class OrderWxPayController extends BaseController {
 			userId = periodOrder.getUserId().longValue();
 			orderNo = periodOrder.getOrderNo();
 			// 实际支付金额
+			
+			String shareUserId = request.getParameter("shareUserId");
+			if(shareUserId!=null && !"".equals(shareUserId)){
+				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+				if(orderShareList!=null && orderShareList.size()>0){
+					OrderShare orderShare = orderShareList.get(0);
+					userCouponsService.shareSuccessSendCoupons(orderShare,userId);
+				}
+			}
 
 			BigDecimal p1 = new BigDecimal(100);
 			BigDecimal p2 = MathBigDecimalUtil.mul(periodOrder.getOrderPrice(), p1);

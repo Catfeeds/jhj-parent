@@ -61,5 +61,5 @@ public interface UserCouponsService {
 	
 	List<UserCoupons> selectByUserCoupons(UserCoupons userCoupons);
 	
-	boolean shareSuccessSendCoupons(OrderShare orderShare);
+	boolean shareSuccessSendCoupons(OrderShare orderShare,Long userId);
 }

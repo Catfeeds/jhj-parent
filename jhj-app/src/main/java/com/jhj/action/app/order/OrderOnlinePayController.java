@@ -198,7 +198,7 @@ public class OrderOnlinePayController extends BaseController {
 			List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
 			if(orderShareList!=null && orderShareList.size()>0){
 				OrderShare orderShare = orderShareList.get(0);
-				userCouponService.shareSuccessSendCoupons(orderShare);
+				userCouponService.shareSuccessSendCoupons(orderShare,order.getUserId());
 			}
 		}
 		
@@ -306,7 +306,7 @@ public class OrderOnlinePayController extends BaseController {
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
 				if(orderShareList!=null && orderShareList.size()>0){
 					OrderShare orderShare = orderShareList.get(0);
-					userCouponService.shareSuccessSendCoupons(orderShare);
+					userCouponService.shareSuccessSendCoupons(orderShare,order.getUserId());
 				}
 			}
 			
@@ -465,7 +465,7 @@ public class OrderOnlinePayController extends BaseController {
 			List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
 			if(orderShareList!=null && orderShareList.size()>0){
 				OrderShare orderShare = orderShareList.get(0);
-				userCouponService.shareSuccessSendCoupons(orderShare);
+				userCouponService.shareSuccessSendCoupons(orderShare,periodOrder.getUserId().longValue());
 			}
 		}
 		
