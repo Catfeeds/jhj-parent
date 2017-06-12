@@ -19,6 +19,7 @@
 		<result column="am_id" property="amId" jdbcType="NUMERIC" />
 		<result column="dispatch_status" property="dispatchStatus" jdbcType="NUMERIC" />
 
+
 		<result column="pick_addr_name" property="pickAddrName" jdbcType="VARCHAR" />
 		<result column="pick_addr_lat" property="pickAddrLat" jdbcType="VARCHAR" />
 		<result column="pick_addr_lng" property="pickAddrLng" jdbcType="VARCHAR" />
@@ -209,9 +210,9 @@
 		<if test="startServiceTime !=null and endServiceTime != null">
 			<![CDATA[    
 		  	and (
-		  		(service_date >= #{startServiceTime}  and (service_date+ service_hours*3600) <= #{endServiceTime} )
+		  		(service_date >= #{startServiceTime}  and service_date <= #{endServiceTime} )
 		  		or
-		  		(service_date < #{startServiceTime}  and (service_date+ service_hours*3600) > #{endServiceTime} )
+		    	((service_date+ service_hours*3600) >= #{startServiceTime} and (service_date+ service_hours*3600) <= #{endServiceTime})
 		    ) 
 	  		]]>
 	  	</if>
