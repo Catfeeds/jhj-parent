@@ -309,6 +309,7 @@ myApp.onPageInit('order-lib-cal',function(page) {
             	filterPreCurrentTime(lis,2);
                 $$("#calendar-day li p").removeClass("rilichange-day");
                 $$("#calendar-day").find("li:nth-child(2) p").addClass("rilichange-day");
+                isFull(moment().add(1,'days').format("YYYY-MM-DD"));
             }
         }
     }
