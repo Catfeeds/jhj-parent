@@ -2804,6 +2804,10 @@ ul.order-tip li{
   line-height: 30px;
   font-size: 14px;
 }
+
+.list-block ul ul{
+   padding-left: 0px; 
+}
 .dingdan li:nth-child(1){
   width:25%;
   color:#505661;
