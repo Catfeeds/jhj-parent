@@ -67,7 +67,7 @@ myApp.onPageInit('share', function (page) {
     });
     
     $$("#share-delete").on("click", function () {
-        $$(".share-operation").css("display", "none");
+        $$(".share-operation").css("display", "block");
     });
 
 });

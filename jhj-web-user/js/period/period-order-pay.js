@@ -4,6 +4,8 @@ myApp.onPageInit('period-order-pay', function(page) {
 	var userId = localStorage['user_id'];
 	var orderNo = page.query.order_no;
 	
+	var shareUserId = sessionStorage.getItem("share_user_id");
+	
 	$$("#userId").val(userId);
 	$$("#orderNo").val(orderNo);
 	var periodOrderPay = sessionStorage.getItem("periodPayMoney");
