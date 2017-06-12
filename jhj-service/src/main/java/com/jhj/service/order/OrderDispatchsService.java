@@ -67,12 +67,15 @@ public interface OrderDispatchsService {
 
 	boolean doOrderDispatch(Orders order, Long serviceDate, Double serviceHour, Long staffId, int allocate, String allocateReason);
 
-	List<Map<String, String>> checkDispatchedNotToday(Long serviceTypeId, String serviceDateStr, String lat, String lng);
-
-	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long addrId, String lat, String lng);
-
 	List<OrgStaffDispatchVo> manualDispatchByOrg(Long addrId, Long serviceTypeId, Long serviceDate, Double serviceHour, Long selectParentId, Long orgId);
 
-	List<Map<String, String>> checkDispatchedToday(Long serviceTypeId, String serviceDateStr, String lat, String lng);
+	List<Map<String, String>> checkDispatchedToday(Long serviceTypeId, String serviceDateStr, String lat, String lng, double serviceHours, int staffNums, Short orderType);
+
+	List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long staffId, String lat, String lng, double serviceHours,
+			int staffNums, Short orderType);
+
+	List<Map<String, String>> checkDispatchedNotToday(Long serviceTypeId, String serviceDateStr, String lat, String lng, double serviceHours, int staffNums, Short orderType);
+
+	List<Map<String, String>> autoSetFull(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType);
    	
 }
