@@ -2,6 +2,8 @@ package com.jhj.po.dao.share;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.jhj.po.model.share.OrderShare;
 
 public interface OrderShareMapper {
@@ -19,5 +21,5 @@ public interface OrderShareMapper {
     
     List<OrderShare> selectByShareId(Integer id);
     
-    OrderShare selectByShareIdAndUserId(Integer shareId, Integer userId);
+    OrderShare selectByShareIdAndUserId(@Param("shareId") Integer shareId, @Param("userId")Integer userId);
 }
