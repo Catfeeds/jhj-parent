@@ -35,6 +35,9 @@ public class OrderDisptachController extends BaseController {
 			@RequestParam("service_type_id") Long serviceTypeId,
 			@RequestParam("service_date_str") String serviceDateStr,
 			@RequestParam("addr_id") Long addrId,
+			@RequestParam("service_hours") double serviceHours,
+			@RequestParam("staff_nums") int staffNums,
+			@RequestParam("order_type") Short orderType,
 			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId
 			) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -48,14 +51,14 @@ public class OrderDisptachController extends BaseController {
 		if (staffId.equals(0L)) {
 			String today = DateUtil.getToday();
 			if (serviceDateStr.equals(today)) {
-				datas = orderDispatchsService.checkDispatchedToday(serviceTypeId, serviceDateStr, lat, lng);
+				datas = orderDispatchsService.checkDispatchedToday(serviceTypeId, serviceDateStr, lat, lng, serviceHours, staffNums, orderType);
 			} else {
-				datas = orderDispatchsService.checkDispatchedNotToday(serviceTypeId, serviceDateStr, lat, lng);
+				datas = orderDispatchsService.checkDispatchedNotToday(serviceTypeId, serviceDateStr, lat, lng, serviceHours, staffNums, orderType);
 			}
 		}
 		
 		if (staffId > 0L) {
-			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, staffId, lat, lng);
+			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, staffId, lat, lng, serviceHours, staffNums, orderType);
 		}
 		
 		result.setData(datas);
@@ -69,6 +72,9 @@ public class OrderDisptachController extends BaseController {
 			@RequestParam("service_date_str") String serviceDateStr,
 			@RequestParam("lat") String lat,
 			@RequestParam("lng") String lng,
+			@RequestParam("service_hours") double serviceHours,
+			@RequestParam("staff_nums") int staffNums,
+			@RequestParam("order_type") Short orderType,
 			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId
 			) {
 		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
@@ -78,14 +84,14 @@ public class OrderDisptachController extends BaseController {
 			
 			String today = DateUtil.getToday();
 			if (serviceDateStr.equals(today)) {
-				datas = orderDispatchsService.checkDispatchedToday(serviceTypeId, serviceDateStr, lat, lng);
+				datas = orderDispatchsService.checkDispatchedToday(serviceTypeId, serviceDateStr, lat, lng, serviceHours, staffNums, orderType);
 			} else {
-				datas = orderDispatchsService.checkDispatchedNotToday(serviceTypeId, serviceDateStr, lat, lng);
+				datas = orderDispatchsService.checkDispatchedNotToday(serviceTypeId, serviceDateStr, lat, lng, serviceHours, staffNums, orderType);
 			}
 		}
 		
 		if (staffId > 0L) {
-			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, staffId, lat, lng);
+			datas = orderDispatchsService.checkDispatchedDayByStaffId(serviceTypeId, serviceDateStr, staffId, lat, lng, serviceHours, staffNums, orderType);
 		}
 		
 		result.setData(datas);

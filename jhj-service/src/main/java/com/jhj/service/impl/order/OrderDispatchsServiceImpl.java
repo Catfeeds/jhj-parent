@@ -672,7 +672,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * addrId 服务地址
 	 */
 	@Override
-	public List<Map<String, String>> checkDispatchedNotToday(Long serviceTypeId, String serviceDateStr, String lat, String lng) {
+	public List<Map<String, String>> checkDispatchedNotToday(Long serviceTypeId, String serviceDateStr, String lat, String lng, double serviceHours, int staffNums, Short orderType) {
 
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 
@@ -866,7 +866,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
-
+		
+		//进行判断，自动把不可用的填满约满
+		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
 		return datas;
 	}
 	
@@ -877,7 +879,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * addrId 服务地址
 	 */
 	@Override
-	public List<Map<String, String>> checkDispatchedToday(Long serviceTypeId, String serviceDateStr, String lat, String lng) {
+	public List<Map<String, String>> checkDispatchedToday(Long serviceTypeId, String serviceDateStr, String lat, String lng, double serviceHours, int staffNums, Short orderType) {
 
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 
@@ -1069,7 +1071,10 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
-
+		
+		//进行判断，自动把不可用的填满约满
+		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		
 		return datas;
 	}	
 
@@ -1080,7 +1085,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * addrId 服务地址
 	 */
 	@Override
-	public List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long staffId, String lat, String lng) {
+	public List<Map<String, String>> checkDispatchedDayByStaffId(Long serviceTypeId, String serviceDateStr, Long staffId, String lat, String lng, double serviceHours, int staffNums, Short orderType) {
 
 		List<Map<String, String>> datas = new ArrayList<Map<String, String>>();
 
@@ -1247,7 +1252,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
-
+		
+		//进行判断，自动把不可用的填满约满
+		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
 		return datas;
 	}
 
@@ -1492,5 +1499,66 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * 智能判断服务日期中间层是否需要约，举例：
+	 *   8 - 10：30 可约， 但是11点约满
+	 *   则如果可约时间点小于serviceHour, 则把所有的设置为已约满.
+	 */
+	@Override 
+	public List<Map<String, String>> autoSetFull(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType) {
+		
+		
+		if (staffNums > 1 && orderType.equals(Constants.ORDER_TYPE_1)) {
+			serviceHours = MathBigDecimalUtil.getValueStepHalf(serviceHours, staffNums);
+		}
+		serviceHours = serviceHours + 2;
+		List<Integer> autoSetMapIndex = new ArrayList<Integer>();
+		String beginServiceHour = "";
+		String endServiceHour = "";
+		double checkServiceHour = 0;
+
+		for (int i = 0 ; i < datas.size(); i++) {
+			Map<String, String> item = datas.get(i);
+			String serviceHour = item.get("service_hour").toString();
+			String hourStr = serviceHour.substring(0, 2);
+			int hour = Integer.valueOf(hourStr).intValue();
+			if (hour < 8) continue;
+			String isFull = item.get("is_full").toString();
+//			System.out.println("service_hour = " + serviceHour + " --- isFull = " + isFull);
+			if (isFull.equals("0")) {
+				checkServiceHour+=0.5;
+				autoSetMapIndex.add(i);
+			}
+			
+			if (isFull.equals("0") && StringUtil.isEmpty(beginServiceHour))  {
+				beginServiceHour = serviceHour;
+			} 
+			
+			if (isFull.equals("1") && StringUtil.isEmpty(endServiceHour)) {
+				endServiceHour = serviceHour;
+			}
+			
+			//做相应的判断.
+			if (!StringUtil.isEmpty(beginServiceHour) && !StringUtil.isEmpty(endServiceHour)) {
+				if (checkServiceHour < serviceHours) {
+					for (int j = 0; j < datas.size(); j++) {
+						for (int k = 0; k < autoSetMapIndex.size(); k++) {
+							if (j == autoSetMapIndex.get(k)) {
+								Map<String, String> setitem = datas.get(j);
+								setitem.put("is_full", "1");
+								datas.set(j, setitem);
+							}
+						}
+					}
+					
+					beginServiceHour = "";
+					endServiceHour = "";
+					autoSetMapIndex = new ArrayList<Integer>();
+				}
+			}	
+		}		
+		return datas;
 	}
 }

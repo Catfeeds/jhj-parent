@@ -107,6 +107,13 @@ function calendar(serviceTypeId) {
 		param.service_date_str = serviceDateStr;
 		param.staff_id = 0;
 		
+		var staffNums = $("#staffNums").val();
+		var serviceHours = $("#serviceHour").val();
+		var orderType = $("#orderType").val();
+		param.staff_nums = staffNums;
+		param.service_hours = serviceHours;
+		param.order_type = orderType;
+		console.log(param);
 		$.ajax({
 			type:"POST",
 			url:url,

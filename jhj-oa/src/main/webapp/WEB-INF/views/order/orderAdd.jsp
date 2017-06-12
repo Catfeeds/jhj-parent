@@ -242,6 +242,24 @@
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">
+												<font color="red">*</font>服务时长
+											</label>
+											<div class="col-md-5">
+												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePriceHourCheck()"
+													onafterpaste="changePriceHourCheck" class="form-control" value="3" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label">
+												<font color="red">*</font>服务人员数量
+											</label>
+											<div class="col-md-5">
+												<input type="text" id="staffNums" name="staffNums" onkeyup="changePrice()" onafterpaste="changePrice()"
+													class="form-control" value="1" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-2 control-label">
 												<font color="red">*</font>服务时间
 											</label>
 											<div class="col-md-5" onclick="selectServiceDateTime()">
@@ -273,24 +291,7 @@
 											</div>
 										</div>
 												
-										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务时长
-											</label>
-											<div class="col-md-5">
-												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePriceHourCheck()"
-													onafterpaste="changePriceHourCheck" class="form-control" value="3" />
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">
-												<font color="red">*</font>服务人员数量
-											</label>
-											<div class="col-md-5">
-												<input type="text" id="staffNums" name="staffNums" onkeyup="changePrice()" onafterpaste="changePrice()"
-													class="form-control" value="1" />
-											</div>
-										</div>
+										
 										<div class="form-group">
 											<label class="col-md-2 control-label">
 												<font color="red">*</font>价格

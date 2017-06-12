@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * String常用工具类..
@@ -202,8 +203,73 @@ public class StringUtil {
 	}
 	
 	public static void main(String[] args) throws ParseException {
-		Double m = StringUtil.getKilometre(3333);
-		System.out.println(m.toString());
+//		Double m = StringUtil.getKilometre(3333);
+//		System.out.println(m.toString());
+//		
+		//测试样例1    11点-13点为约满
+//		String json = "[{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"00:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"00:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"01:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"01:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"02:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"02:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"03:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"03:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"04:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"04:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"05:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"05:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"06:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"06:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"07:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"07:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"08:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"08:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"09:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"09:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"3\",\"service_hour\":\"10:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"3\",\"service_hour\":\"10:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"11:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"11:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"12:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"12:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"13:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"13:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"14:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"14:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"15:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"15:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"16:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"16:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"17:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"17:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"18:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"18:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"19:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"19:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"20:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"20:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"21:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"21:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"22:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"22:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"23:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"23:30\"}]";
+		
+		//测试样例2    11点-13点为约满  15 - 16约满
+		String json = "[{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"00:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"00:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"01:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"01:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"02:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"02:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"03:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"03:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"04:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"04:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"05:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"05:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"06:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"06:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"07:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"07:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"08:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"08:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"09:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"09:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"3\",\"service_hour\":\"10:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"215,100,215,\",\"is_full\":\"0\",\"total_dispatched\":\"3\",\"service_hour\":\"10:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"11:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"11:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"12:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"12:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,100,215,\",\"is_full\":\"1\",\"total_dispatched\":\"4\",\"service_hour\":\"13:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"13:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"14:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"14:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"1\",\"total_dispatched\":\"2\",\"service_hour\":\"15:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"1\",\"total_dispatched\":\"2\",\"service_hour\":\"15:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"1\",\"total_dispatched\":\"2\",\"service_hour\":\"16:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"16:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,215,\",\"is_full\":\"0\",\"total_dispatched\":\"2\",\"service_hour\":\"17:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"17:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"228,\",\"is_full\":\"0\",\"total_dispatched\":\"1\",\"service_hour\":\"18:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"18:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"19:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"19:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"20:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"20:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"21:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"21:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"22:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"22:30\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"staffs\":\"\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"23:00\"},{\"total\":\"4\",\"order_service_hour\":\"3.0\",\"is_full\":\"0\",\"total_dispatched\":\"0\",\"service_hour\":\"23:30\"}]";
+
+		List<Integer> autoSetMapIndex = new ArrayList<Integer>();
+		String serviceDateStr = "2017-06-13";
+		double serviceHours = 5;
+		String beginServiceHour = "";
+		String endServiceHour = "";
+		double checkServiceHour = 0;
+		List<Map> datas = GsonUtil.GsonToList(json, Map.class);
+		for (int i = 0 ; i < datas.size(); i++) {
+			Map<String, String> item = datas.get(i);
+			String serviceHour = item.get("service_hour").toString();
+			String hourStr = serviceHour.substring(0, 2);
+			int hour = Integer.valueOf(hourStr).intValue();
+			if (hour < 8) continue;
+			String isFull = item.get("is_full").toString();
+			System.out.println("service_hour = " + serviceHour + " --- isFull = " + isFull);
+			if (isFull.equals("0")) {
+				checkServiceHour+=0.5;
+				autoSetMapIndex.add(i);
+			}
+			
+			if (isFull.equals("0") && StringUtil.isEmpty(beginServiceHour))  {
+				beginServiceHour = serviceHour;
+			} 
+			
+			if (isFull.equals("1") && StringUtil.isEmpty(endServiceHour)) {
+				endServiceHour = serviceHour;
+			}
+			
+			//做相应的判断.
+			if (!StringUtil.isEmpty(beginServiceHour) && !StringUtil.isEmpty(endServiceHour)) {
+				if (checkServiceHour < serviceHours) {
+					for (int j = 0; j < datas.size(); j++) {
+						for (int k = 0; k < autoSetMapIndex.size(); k++) {
+							if (j == autoSetMapIndex.get(k)) {
+								Map<String, String> setitem = datas.get(j);
+								setitem.put("is_full", "1");
+								datas.set(j, setitem);
+							}
+						}
+					}
+					
+					beginServiceHour = "";
+					endServiceHour = "";
+					autoSetMapIndex = new ArrayList<Integer>();
+				}
+			}
+			
+			
+		}
+
+		System.out.println("-------------------------------------------------");
+		for (int i = 0 ; i < datas.size(); i++) {
+			Map<String, String> item = datas.get(i);
+			String serviceHour = item.get("service_hour").toString();
+			String isFull = item.get("is_full").toString();
+			System.out.println("service_hour = " + serviceHour + " --- isFull = " + isFull);
+		}
+		
 	}
 	
 }

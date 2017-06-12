@@ -153,6 +153,17 @@ myApp.onPageInit('order-lib-cal',function(page) {
     	}
     	param.service_date_str = serviceDateStr;
     	param.staff_id = staffId;
+    	
+    	
+    	var staffNums = sessionStorage.getItem("total_staff_nums");
+    	if (staffNums == undefined || staffNums == "" || staffNums == 0)
+    		staffNums = 1;
+    	
+    	var serviceHours = sessionStorage.getItem("total_service_hour");
+    	var orderType = sessionStorage.getItem("order_type");
+    	param.staff_nums = staffNums;
+    	param.service_hours = serviceHours;
+    	param.order_type = orderType;
     	$$.ajax({
     		type:"POST",
     		url:siteAPIPath+"order/check_dispatch.json",
