@@ -77,6 +77,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 			alipayUrl +="&orderType="+orderType;
 			alipayUrl +="&periodServiceTypeId="+periodServiceTypeId;
 			alipayUrl +="&payOrderType=4";
+			alipayUrl +="&shareUserId="+shareUserId;
 			location.href = alipayUrl;
 		}
 		
@@ -89,6 +90,7 @@ myApp.onPageInit('period-order-pay', function(page) {
 			 wxPayUrl +="&orderType=0";
 			 wxPayUrl +="&payOrderType=4";
 			 wxPayUrl +="&periodServiceTypeId="+periodServiceTypeId;
+			 wxPayUrl +="&shareUserId="+shareUserId;
 			 location.href = wxPayUrl;
 		}
 		

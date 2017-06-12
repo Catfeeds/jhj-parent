@@ -1,4 +1,6 @@
 myApp.onPageInit('order-pay-success', function(page) {
+	
+	sessionStorage.removeItem("share_user_id");
 	console.log("order-pay-success-page");
 	var orderNo = page.query.order_no;
 	
@@ -22,8 +24,6 @@ myApp.onPageInit('order-pay-success', function(page) {
 		
 		$$("#recoList").append(htmlStr);
 	}
-	
-	
 	
 });
 
