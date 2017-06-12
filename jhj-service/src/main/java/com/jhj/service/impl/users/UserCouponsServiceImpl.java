@@ -416,7 +416,7 @@ public class UserCouponsServiceImpl implements UserCouponsService {
 		
 		if(orderShare==null) return Boolean.FALSE;
 		
-		Long userId = orderShare.getUserId().longValue();
+		Long userId = orderShare.getShareId().longValue();
 		Long couponsId = orderShare.getSendCouponsId().longValue();
 		
 		List<UserCoupons> userCouponsList = userCouponsMapper.selectByCouponIdAndUserId(orderShare.getSendCouponsId().longValue(), userId);

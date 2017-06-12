@@ -26,7 +26,7 @@ public class TestOrderPayController extends JUnitActionBase  {
      	MockHttpServletRequestBuilder postRequest = post(url);
      	
 
-	    postRequest = postRequest.param("order_no", "827715205931728896");
+	    postRequest = postRequest.param("order_no", "874084344065425408");
 	    postRequest = postRequest.param("pay_type", "2");
 	    postRequest = postRequest.param("pay_order_type", "0");
 	    postRequest = postRequest.param("notify_id", "f30a31bcad7560324b3249ba66ccf7aa");
