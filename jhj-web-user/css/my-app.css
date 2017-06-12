@@ -4807,10 +4807,11 @@ ul.order-tip li{
 
 .share-link{
   float: right;
-  margin: 10px 18px 2px 0px;
+  margin: 9px 18px 0px 0;
+  width: 55%;
 }
 .share-link img{
-  width:44%;
+  width: 100%;
 }
 
 
