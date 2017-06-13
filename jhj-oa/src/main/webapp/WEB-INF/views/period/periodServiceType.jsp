@@ -49,6 +49,9 @@
 								<label>
 									<form:checkbox path="packageTypeList" value="4" />套餐四
 								</label>
+								<label>
+									<form:checkbox path="packageTypeList" value="5" />套餐五
+								</label>
 							</div>
 						</div>
 						

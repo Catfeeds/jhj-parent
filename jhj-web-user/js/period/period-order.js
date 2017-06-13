@@ -50,10 +50,12 @@ myApp.onPageBeforeInit("period-order", function (page) {
     				}
     				if(periodOrder.name=='擦玻璃'){
     					htmlPart = htmlPart.replace(new RegExp('{describle}', "gm"), '总面积');
+    					htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), 10);
     				}else{
     					htmlPart = htmlPart.replace(new RegExp('{describle}', "gm"), '总次数');
     				}
     				htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.total);
+    				htmlPart = htmlPart.replace(new RegExp('{num-punit}', "gm"), "频次:"+periodOrder.num+""+periodOrder.punit);
     				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), periodOrder.price);
     				htmlPart = htmlPart.replace(new RegExp('{vipPrice}', "gm"), periodOrder.vip_price);
     				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), periodOrder.price*periodOrder.total);
