@@ -86,20 +86,22 @@
                           <table class="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
-                                  <th >会员手机号</th>
+                              	  <th>充值订单号</th>
+                                  <th>会员手机号</th>
 	                              <th>充值金额</th>
-	                              <th >会员余额</th>
-	                              <th >会员积分</th>
+	                              <th>会员余额</th>
+	                              <th>会员积分</th>
 	                              <th>推荐人</th>
-	                              <th >会员类型</th>
-	                              <th >会员来源</th>
-	                              <th >充值时间</th>
+	                              <th>会员类型</th>
+	                              <th>会员来源</th>
+	                              <th>充值时间</th>
 	                              <th>操作</th>
                               </tr>
                               </thead>
                               <tbody>
                               <c:forEach items="${pageList.list}" var="item">
                               <tr>
+                                <td>${item.cardOrderNo }</td>
 					            <td>${ item.mobile }</td>
 					            <td>${item.cardMoney }</td>
 					            <td>${ item.userRestMoney }</td>
