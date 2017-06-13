@@ -15,6 +15,8 @@ public class ChartDataVo {
 	private List<HashMap<String, String>> tableDatas;
 	
 	private Map<String,String> tableMap;
+	
+	private List<HashMap<String,HashMap<String,String>>> data;
 
 
 	public String getLegend() {
@@ -57,5 +59,14 @@ public class ChartDataVo {
 		this.tableMap = tableMap;
 	}
 
+	public List<HashMap<String, HashMap<String, String>>> getData() {
+		return data;
+	}
+
+	public void setData(List<HashMap<String, HashMap<String, String>>> data) {
+		this.data = data;
+	}
+	
+	
 	
 }

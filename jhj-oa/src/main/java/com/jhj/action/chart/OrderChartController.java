@@ -341,7 +341,7 @@ public class OrderChartController extends BaseController {
 	}
 	
 	/*
-	 * 统计订单来源的数量，总订单数，总金额
+	 * 市场人员销量统计
 	 * 
 	 * */
 	@AuthPassport
@@ -374,7 +374,7 @@ public class OrderChartController extends BaseController {
 		List<String> timeSeries = new ArrayList<String>();		
 		timeSeries = ChartUtil.getTimeSeries("day", startTime, endTime);
 		
-		ChartDataVo chartDatas = orderChartService.getOrderFromCount(chartSearchVo, timeSeries);
+		ChartDataVo chartDatas = orderChartService.getUserOrderCount(chartSearchVo, timeSeries);
 		
 		model.addAttribute("chartDatas", chartDatas);
 		model.addAttribute("searchVo", chartSearchVo);

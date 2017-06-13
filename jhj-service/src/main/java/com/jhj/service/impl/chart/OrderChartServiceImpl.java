@@ -757,6 +757,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		
 		for(int i=0;i<businessList.size();i++){
 			if(businessIdList.contains(String.valueOf(businessList.get(i).getId()))) continue;
+			Map<String,String> map = new HashMap<String,String>();
 			orderFromNameList.add(businessList.get(i).getBusinessName());
 		}
 		orderFromNameList.add("订单数量");
