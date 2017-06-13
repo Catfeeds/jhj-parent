@@ -89,40 +89,40 @@ function cleanForm(){
 	$("form :input").not(":button, :submit, :reset, :hidden, :checkbox").val("").remove("selected");
 }
 
-function showLog(obj, remarks){
-	$("#updateOrderRemark").show();
-	var orderNo = obj.getAttribute("data-order-no");
-	$("#modal-orderNo").attr("value",orderNo);
-	
-	var v = remarks;
-	if (v == undefined) v = ""; 
-	$("#remarks1").val(v);
-}
-
-$("#submit-remarks").on('click',function(){
-	var orderNo = $("#modal-orderNo").val();
-	var remarks = $("#remarks1").val();
-	
-	if(remarks==undefined || remarks ==null || remarks=='') return false;
-	
-	$.ajax({
-		type:"POST",
-		url:"update-remarks",
-		data:{
-			"order_no":orderNo,
-			"remarks":remarks
-		},
-		dataType:"json",
-		success:function(data){
-			location.reload(true);
-		}
-	});
-	
-});
-
 /** 查询条件展开缩起*/
 function expand(){
 	$(".tr-hidden").toggleClass("showHide");
 	
 }
+
+function saveRemarks(orderNo,remarks){
+	
+	if(orderNo==null || orderNo=='' && orderNo==undefined) return false;
+	
+	layer.prompt({
+		title: '备注', 
+		formType: 2,
+		value:remarks,
+		area: ['400px', '140px']
+		}, 
+		function(value, index){
+			$.ajax({
+				type:"POST",
+				url:"update-remarks",
+				data:{
+					"order_no":orderNo,
+					"remarks":value
+				},
+				dataType:"json",
+				success:function(data){
+					location.reload(true);
+				}
+			});
+			layer.close(index);
+		}
+	);
+};
+
+
+
 

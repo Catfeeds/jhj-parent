@@ -259,8 +259,9 @@
 														class="btn btn-primary btn-xs" title="订单详情">
 														<i class=" icon-ambulance"></i>
 													</button> <!-- 如果 运营人员备注为 空，可以添加，不为空，不让添加 --> 
+													<!-- showLog(this, '${item.remarks}') -->
 													<button id="btnremarks"
-														class="btn btn-primary btn-xs" title="添加订单备注" data-toggle="modal" data-order-no="${item.orderNo}" data-target="#updateOrderRemark" onclick="showLog(this, '${item.remarks}')">
+														class="btn btn-primary btn-xs" title="添加订单备注" onclick="saveRemarks('${item.orderNo}','${item.remarks}')">
 														<i class="icon-plus-sign-alt"></i>
 													</button>
 													<c:if test="${item.remarks ne ''}">
@@ -295,26 +296,6 @@
 		<!--footer end-->
 	</section>
 	
-	<div class="modal fade" id="updateOrderRemark" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	        <h4 class="modal-title" id="myModalLabel"><b>订单备注</b></h4>
-	      </div>
-	      <div class="modal-body">
-	        <form  name="cancleForms">
-	        	<input type="hidden" id="modal-orderNo" value=""/>
-	        	<textarea name="remarks1" id="remarks1" rows="3" cols="78" maxlength='200' placeholder="备注信息"></textarea>
-	        	<span id="remark-error"></span>
-	        </form>
-	      </div>
-	     <div class="modal-footer">
-	        <button type="button" id="submit-remarks" class="btn btn-default" data-dismiss="modal" >添加/修改备注</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
 	<!-- js placed at the end of the document so the pages load faster -->
 	<!--common script for all pages-->
 	
@@ -326,6 +307,9 @@
 	<script src="<c:url value='/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js'/>"></script>
 	
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
+	
+	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js'/>"></script>
+	
 	<script src="<c:url value='/js/order/orderList.js'/>"></script>
 </body>
 </html>
