@@ -2704,15 +2704,12 @@ ul.order-tip li{
   font-size: 14px;
 }
 
-
-
-
-
-
-
-
-
-
+.order-list-bg{
+  background-color:#efeff4;
+}
+order-list-bg:before{
+  height: 0px;
+}
 .cankaotime-box{
   width:95%;
   height:210px;
