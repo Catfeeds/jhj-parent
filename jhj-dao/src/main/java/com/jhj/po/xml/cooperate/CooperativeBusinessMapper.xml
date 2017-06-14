@@ -11,19 +11,16 @@
     <result column="role_id" property="roleId" jdbcType="NUMERIC" />
     <result column="add_time" property="addTime" jdbcType="NUMERIC" />
     <result column="update_time" property="updateTime" jdbcType="NUMERIC" />
+    <result column="broker" property="broker" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, business_name, app_name, business_login_name, business_pass_word, enable, role_id, 
-    add_time, update_time
+    add_time, update_time, broker
   </sql>
   
   <select id="getAllCoopId" resultType="java.lang.Long">
-  	select
-  		id
-    from 
-    	cooperative_business
+  	select id from cooperative_business
   </select>
-  
   
   <select id="selectByUsernameAndPassword" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
 	select
@@ -55,25 +52,26 @@
   	order by add_time desc
   </select>
   
-  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from cooperative_business
     where id = #{id,jdbcType=NUMERIC}
   </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from cooperative_business
     where id = #{id,jdbcType=NUMERIC}
   </delete>
+  
   <insert id="insert" parameterType="com.jhj.po.model.cooperate.CooperativeBusiness" >
     insert into cooperative_business (id, business_name, app_name, 
       business_login_name, business_pass_word, enable, 
-      role_id, add_time, update_time
+      role_id, add_time, update_time, broker
       )
     values (#{id,jdbcType=NUMERIC}, #{businessName,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}, 
       #{businessLoginName,jdbcType=VARCHAR}, #{businessPassWord,jdbcType=VARCHAR}, #{enable,jdbcType=NUMERIC}, 
-      #{roleId,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}
+      #{roleId,jdbcType=NUMERIC}, #{addTime,jdbcType=NUMERIC}, #{updateTime,jdbcType=NUMERIC}, #{broker,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jhj.po.model.cooperate.CooperativeBusiness" >
@@ -106,6 +104,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="broker != null" >
+        broker,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -134,6 +135,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=NUMERIC},
+      </if>
+      <if test="broker != null" >
+        #{broker,jdbcType=VARCHAR}
       </if>
     </trim>
   </insert>
@@ -164,6 +168,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=NUMERIC},
       </if>
+       <if test="broker != null" >
+        broker = #{broker,jdbcType=VARCHAR}
+      </if>
     </set>
     where id = #{id,jdbcType=NUMERIC}
   </update>
@@ -176,7 +183,8 @@
       enable = #{enable,jdbcType=NUMERIC},
       role_id = #{roleId,jdbcType=NUMERIC},
       add_time = #{addTime,jdbcType=NUMERIC},
-      update_time = #{updateTime,jdbcType=NUMERIC}
+      update_time = #{updateTime,jdbcType=NUMERIC},
+      broker = #{broker,jdbcType=VARCHAR}
     where id = #{id,jdbcType=NUMERIC}
   </update>
   
@@ -201,6 +209,9 @@
   	</if>
   	<if test="enable!=null">
   		and enable = #{enable,jdbcType=NUMERIC}
+  	</if>
+  	<if test="broker != null">
+  	 	and broker = #{broker,jdbcType=VARCHAR}
   	</if>
   </select>
 </mapper>

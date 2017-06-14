@@ -18,6 +18,8 @@ public class CooperativeBusiness {
     private Long addTime;
 
     private Long updateTime;
+    
+    private String broker;
 
     public Long getId() {
         return id;
@@ -90,4 +92,13 @@ public class CooperativeBusiness {
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getBroker() {
+		return broker;
+	}
+
+	public void setBroker(String broker) {
+		this.broker = broker;
+	}
+    
 }

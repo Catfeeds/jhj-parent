@@ -750,27 +750,32 @@ public class OrderChartServiceImpl implements OrderChartService {
 		vo.setEnable((short)1);
 		List<CooperativeBusiness> businessList = businessMapper.selectCooperativeBusinessVo(vo);
 		
-		List<String> orderFromNameList = new ArrayList<>();
+		List<HashMap<String,String>> orderFromNameList = new ArrayList<>();
 		
 		String[] businessId = {"126","125","124","123","120","119","113","112","111"};
 		List<String> businessIdList = Arrays.asList(businessId);
 		
 		for(int i=0;i<businessList.size();i++){
 			if(businessIdList.contains(String.valueOf(businessList.get(i).getId()))) continue;
-			Map<String,String> map = new HashMap<String,String>();
-			orderFromNameList.add(businessList.get(i).getBusinessName());
+			HashMap<String,String> map = new HashMap<String,String>();
+			String businessName = businessList.get(i).getBusinessName();
+			map.put("name", businessList.get(i).getBroker());
+			map.put(businessName, "0");
+			orderFromNameList.add(map);
 		}
-		orderFromNameList.add("订单数量");
-		orderFromNameList.add("订单总金额");
+//		orderFromNameList.add("订单数量");
+//		orderFromNameList.add("订单总金额");
 		
-		List<HashMap<String, String>> tableDatas = new ArrayList<HashMap<String, String>>();
+		/*List<HashMap<String, Object>> tableDatas = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, String> tableData = null;
 		for (int i =0; i < timeSeries.size(); i++) {
 			tableData = new HashMap<String, String>();
 			tableData.put("time", timeSeries.get(i));
 			
 			for (int j =0; j < orderFromNameList.size(); j++) {
-				tableData.put(orderFromNameList.get(j), "0");
+				Map<String,String> map = new HashMap<String,String>();
+				map.put("name", orderFromNameList.get(j).get("name"));
+				map.put(orderFromNameList.get(j), "0");
 			}
 			tableDatas.add(tableData);
 		}
@@ -847,7 +852,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		tableDatas.add(tableMap1);
 		tableDatas.add(tableMap2);
 		
-		chartDataVo.setTableDatas(tableDatas);
+		chartDataVo.setTableDatas(tableDatas);*/
 		
 		return chartDataVo;
 	}
