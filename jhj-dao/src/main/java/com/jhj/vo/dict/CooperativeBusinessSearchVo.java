@@ -13,6 +13,8 @@ public class CooperativeBusinessSearchVo {
     private String businessPassWord;
 
     private Short enable;
+    
+    private String broker;
 
 	public Long getId() {
 		return id;
@@ -62,5 +64,12 @@ public class CooperativeBusinessSearchVo {
 		this.enable = enable;
 	}
 
+	public String getBroker() {
+		return broker;
+	}
+
+	public void setBroker(String broker) {
+		this.broker = broker;
+	}
 
 }
