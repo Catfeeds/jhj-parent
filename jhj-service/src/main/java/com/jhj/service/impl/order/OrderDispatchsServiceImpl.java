@@ -1611,7 +1611,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			String isFull = item.get("is_full").toString();
 //			System.out.println("service_hour = " + serviceHour + " --- isFull = " + isFull);
 			if (isFull.equals("0")) {
-				checkServiceHour+=0.5;
+				checkServiceHour = checkServiceHour + 0.5;
 				autoSetMapIndex.add(i);
 			}
 			
@@ -1638,6 +1638,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 					
 					beginServiceHour = "";
 					endServiceHour = "";
+					checkServiceHour = 0;
 					autoSetMapIndex = new ArrayList<Integer>();
 				}
 			}	
