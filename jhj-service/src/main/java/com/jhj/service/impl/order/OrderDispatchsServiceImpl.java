@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.druid.util.StringUtils;
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
@@ -671,6 +672,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * serviceDateStr 服务日期（单位:天）
 	 * addrId 服务地址
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Map<String, String>> checkDispatchedNotToday(Long serviceTypeId, String serviceDateStr, String lat, String lng, double serviceHours, int staffNums, Short orderType) {
 
@@ -772,6 +774,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 
 		int total = staffIds.size();
+		List<Long> canStaffIds = new ArrayList<Long>();
+		canStaffIds = (List<Long>) ((ArrayList<Long>) staffIds).clone();
 		// 找出当天所有的派工订单和人员.
 		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
 		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 00:00:00");
@@ -861,6 +865,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			if (total > 0 && totalDispatched >= 0 && totalDispatched >= total) {
 				isFull = 1;
 			}
+			
+			// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
+			int canStaffNum = total - totalDispatched;
+			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
+				String checkServiceHour = item.get("service_hour").toString();
+				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
+				if (checkIsFull == false) isFull = 1;
+			}
+			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
@@ -878,6 +891,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * serviceDateStr 服务日期（单位:天）
 	 * addrId 服务地址
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Map<String, String>> checkDispatchedToday(Long serviceTypeId, String serviceDateStr, String lat, String lng, double serviceHours, int staffNums, Short orderType) {
 
@@ -981,6 +995,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 		System.out.println("排除距离超出的人员后:" + staffIds.size());
 		int total = staffIds.size();
+		List<Long> canStaffIds = new ArrayList<Long>();
+		canStaffIds = (List<Long>) ((ArrayList<Long>) staffIds).clone();
 		// 找出当天所有的派工订单和人员.
 		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
 		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 00:00:00");
@@ -1051,6 +1067,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 
 		// 最后再进行循环，把是否约满字段补上.
+		// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
 		for (int i = 0; i < datas.size(); i++) {
 			Map<String, String> item = datas.get(i);
 			String staffs = "";
@@ -1066,6 +1083,15 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			if (total > 0 && totalDispatched >= 0 && totalDispatched >= total) {
 				isFull = 1;
 			}
+			
+			// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
+			int canStaffNum = total - totalDispatched;
+			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
+				String checkServiceHour = item.get("service_hour").toString();
+				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
+				if (checkIsFull == false) isFull = 1;
+			}
+			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
@@ -1077,6 +1103,63 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		
 		return datas;
 	}	
+	
+	/**
+	 * 判断是否跨越了剩余可派工人员的当日派工时段，步骤如下
+	 * @param serviceDateStr   ： 服务日期
+	 * @param serviceHours	   ： 服务小时
+	 * @param staffNums		   ： 服务人数
+	 * @param orderType		   ： 订单类型  0 = 基础保洁  1 = 深度养护
+	 * @param staffs		   :  当前时段（精确到半个小时）已派工人数
+	 * @param checkServiceHour :  当前时段，小时
+	 * @param canStaffIds      :  未检测派工时间冲突的总人员，为了找出当前时间还有可用的派工人员.
+	 * @return
+	 */
+	private Boolean checkIsFull(String serviceDateStr, double serviceHours, int staffNums, Short orderType, String staffs, String checkServiceHour, List<Long> canStaffIds) {
+		
+		//得出需要检测的派工人数.
+		String[] staffAry = StringUtil.convertStrToArray(staffs);
+		
+		for (int i = 0; i < staffAry.length; i++) {
+			if (canStaffIds.contains(Long.valueOf(staffAry[i]))) {
+				canStaffIds.remove(Long.valueOf(staffAry[i]));
+			}
+		}
+		
+		if (canStaffIds.isEmpty()) return false;
+		
+		if (staffNums > 1 && orderType.equals(Constants.ORDER_TYPE_1)) {
+			serviceHours = MathBigDecimalUtil.getValueStepHalf(serviceHours, staffNums);
+		}
+		//服务时间
+		String serviceDateTime = serviceDateStr + " " + checkServiceHour + ":00";
+		Long serviceDate = TimeStampUtil.getMillisOfDayFull(serviceDateTime) / 1000;
+		
+		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
+		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		
+		// 注意结束时间也要服务结束后 1:59分钟
+		Long endServiceTime = (long) (serviceDate + serviceHours * 3600 + Constants.SERVICE_PRE_TIME);
+		
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStartServiceTime(startServiceTime);
+		searchVo1.setEndServiceTime(endServiceTime);
+		searchVo1.setStaffIds(canStaffIds);
+		List<OrderDispatchs> disList = this.selectByMatchTime(searchVo1);
+		
+		for (OrderDispatchs orderDispatch : disList) {
+			
+			Long staffId = orderDispatch.getStaffId();
+			if (canStaffIds.contains(staffId)) canStaffIds.remove(staffId);
+		}
+		
+		if (!canStaffIds.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	/**
 	 * 检查是否已经约满了员工,特定员工
