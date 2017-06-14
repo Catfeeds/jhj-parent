@@ -1619,7 +1619,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				beginServiceHour = serviceHour;
 			} 
 			
-			if (isFull.equals("1") && StringUtil.isEmpty(endServiceHour)) {
+			if (isFull.equals("1") && !StringUtil.isEmpty(beginServiceHour)  && StringUtil.isEmpty(endServiceHour)) {
 				endServiceHour = serviceHour;
 			}
 			
