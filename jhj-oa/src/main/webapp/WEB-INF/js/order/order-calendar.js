@@ -370,9 +370,9 @@ function calendar(serviceTypeId) {
 	$(document).on('click','#checkDate',function(){
 		var st = date+" "+dayTime+":00";
 		var st =moment(date).format("YYYY-MM-DD")+" "+dayTime+":00";
-		var isFull = checkSelectDateCanOrder(st);
-		console.log("isFull = " + isFull); 
-		if (isFull == 1) return false;
+//		var isFull = checkSelectDateCanOrder(st);
+//		console.log("isFull = " + isFull); 
+//		if (isFull == 1) return false;
 		if(dayTime!=""){
 			$("#serviceDate").val(st);
 			layer.close(layer.index);
