@@ -5581,6 +5581,11 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   text-align: center;
   line-height: 30px;
 }
+.dingzhi-list1-full{
+  width:100%;
+  clear: both;
+
+}
 .dingzhi-list1-1-1{
   width:90%;
   margin-left: 5%;
@@ -5647,7 +5652,40 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   margin-top: 30px;
   float: left;
 }
+.taocan-title{
+  margin:18px 0px;
+}
+.taocan-title p{
+  color:#ef7e00;
+  font-size:16px;
+  text-align:center;
+  line-height:23px;
+}
+.taocan-title p icon{
+  display: inline-block;
+  width:5px;
+}
+.gongju-list{
+   width: 98%;
+  margin:0 auto;
+}
+.gongju-list li{
+  float:left;
+  width:25%;
+  text-align: center;
+}
 
+.gongju-list li img{
+  width: 90%;
+  display: block;
+  margin: 0 auto;
+}
+.gongju-list li span{
+  color: #ef7e00;
+  font-size: 14px;
+  padding-top: 9px;
+  display: inline-block;
+}
 
 
 /*家电清洗价目表*/
