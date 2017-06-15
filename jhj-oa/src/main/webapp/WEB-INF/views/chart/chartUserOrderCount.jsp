@@ -80,7 +80,7 @@
 						<td>${item.time}</td>
 						<%-- <td>${item.data}</td> --%>
 						<c:forEach items="${item.data }" var="data">
-							<td>${data.name}</td>
+							<td>${data.key}</td>
 						</c:forEach>
 						
 						<%-- <td>${item.data.美团 }</td>
