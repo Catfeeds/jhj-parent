@@ -830,9 +830,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 //						item.put("total_dispatched", String.valueOf(totalDispatched));
 						String staffs = "";
 						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
-//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+						if (staffs.indexOf(staffId.toString() + ",") < 0) {
 							staffs+= staffId.toString()+",";
-//						}
+						}
 							
 //						if (orderServiceDateStr.equals("09:00")) {
 //							 System.out.println("order_id = " + orderId +
@@ -1054,9 +1054,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 						
 						String staffs = "";
 						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
-//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+						if (staffs.indexOf(staffId.toString() + ",") < 0) {
 							staffs+= staffId.toString()+",";
-//						}
+						}
 						item.put("staffs", staffs);
 						datas.set(i, item);
 						break;
