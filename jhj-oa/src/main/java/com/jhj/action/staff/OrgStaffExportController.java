@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +56,11 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
+import com.jhj.service.order.poi.PoiExportExcelService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
+import com.jhj.vo.order.OaOrderListVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.org.OrgSearchVo;
@@ -72,6 +75,7 @@ import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.poi.ExcelTools;
 import com.meijia.utils.poi.HssExcelTools;
+import com.meijia.utils.poi.POIUtils;
 import com.meijia.utils.poi.XssExcelTools;
 
 @Controller
@@ -103,7 +107,7 @@ public class OrgStaffExportController extends BaseController {
 	
 	@Autowired
 	private UsersService userService;
-
+	
 	//服务人员所有订单明细表
 	@RequestMapping(value = "/export-order", method = RequestMethod.GET)
 	public void exportOrder(Model model, HttpServletRequest request, HttpServletResponse response, OrderSearchVo searchVo) throws Exception {

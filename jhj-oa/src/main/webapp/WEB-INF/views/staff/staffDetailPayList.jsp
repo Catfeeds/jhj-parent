@@ -120,11 +120,11 @@
 						<th>订单号</th>
 						<th>客户手机号</th>
 						<th>服务地址</th>
-						<th>订单金额</th>
+						<th>订单支付金额</th>
 						<th>订单收入</th>
 						<th>支付方式</th>
 						<th>订单状态</th>
-						<th>添加时间</th>
+						<th>服务完成时间</th>
 						<th>备注</th>
 					</tr>
 				</thead>
@@ -146,11 +146,11 @@
 							
 							<td style="width: 8%">${ item.userMobile }</td>
 							<td style="width: 15%">${ item.addr }</td>
-							<td style="width: 6%">${ item.orderMoney }</td>
-							<td style="width: 6%">${ item.orderPay }</td>
+							<td style="width: 6%">${ item.totalOrderPay }</td>
+							<td style="width: 6%">${ item.totalStaffIncoming }</td>
 							<td style="width: 12%">${item.payTypeName }</td>
 							<td style="width: 6%">${ item.orderStatusStr }</td>
-							<td style="width: 8%"><timestampTag:timestamp patten="yyyy-MM-dd" t="${item.addTime * 1000}" /></td>
+							<td style="width: 8%"><timestampTag:timestamp patten="yyyy-MM-dd HH:MM:ss" t="${item.serviceFinishTime * 1000}" /></td>
 							<td style="width: 25%">${ item.remarks }</td>
 						</tr>
 					</c:forEach>
