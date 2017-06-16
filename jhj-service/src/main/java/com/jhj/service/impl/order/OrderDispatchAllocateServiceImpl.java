@@ -687,7 +687,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		//获得当前预处理员工列表
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		if (selectParentId > 0L) staffSearchVo.setParentId(selectParentId);
-		if (selectOrgId > 0L) staffSearchVo.setParentId(selectOrgId);
+		if (selectOrgId > 0L) staffSearchVo.setOrgId(selectOrgId);
 		staffSearchVo.setStatus(1);
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 		
