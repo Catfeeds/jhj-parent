@@ -4,8 +4,6 @@ git pull
 
 sed -i "s#^debug=.*#debug=false#g"  /data/src/jhj-parent/jhj-app/src/main/resources/config.properties
 mvn clean package
-sed -i "s#^debug=.*#debug=false#g"  /data/src/jhj-parent/jhj-oa/src/main/resources/config.properties
-mvn clean package
 /data/tomcat/bin/shutdown.sh
 sleep 1
 rm -rf /data/tomcat/webapps/jhj-app
