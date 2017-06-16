@@ -869,11 +869,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 			// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
 			int canStaffNum = total - totalDispatched;
-			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
-				String checkServiceHour = item.get("service_hour").toString();
-				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
-				if (checkIsFull == false) isFull = 1;
+			if (canStaffNum < staffNums) {
+				isFull = 1;
 			}
+//			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
+//				String checkServiceHour = item.get("service_hour").toString();
+//				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
+//				if (checkIsFull == false) isFull = 1;
+//			}
 			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
@@ -1089,11 +1092,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 			// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
 			int canStaffNum = total - totalDispatched;
-			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
-				String checkServiceHour = item.get("service_hour").toString();
-				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
-				if (checkIsFull == false) isFull = 1;
+			if (canStaffNum < staffNums) {
+				isFull = 1;
 			}
+//			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
+//				String checkServiceHour = item.get("service_hour").toString();
+//				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
+//				if (checkIsFull == false) isFull = 1;
+//			}
 			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
@@ -1708,8 +1714,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 			
 			if (isLoginFull.equals("1")) {
-				item.put("is_full", "1");
 				String isFull = item.get("is_full").toString();
+				item.put("is_full", "1");
+				
 				item.put("is_real_full", isFull);
 				item.put("is_logic_full", "1");
 				datas.set(checkIndex, item);
