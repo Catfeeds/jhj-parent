@@ -116,7 +116,7 @@ public class OrderWxPayController extends BaseController {
 			userId = orders.getUserId();
 			
 			String shareUserId = request.getParameter("shareUserId");
-			if(shareUserId!=null && !"".equals(shareUserId)){
+			if(shareUserId!=null){
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
@@ -182,7 +182,7 @@ public class OrderWxPayController extends BaseController {
 			// 实际支付金额
 			
 			String shareUserId = request.getParameter("shareUserId");
-			if(shareUserId!=null && !"".equals(shareUserId)){
+			if(shareUserId!=null){
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
