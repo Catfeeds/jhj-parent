@@ -34,6 +34,7 @@ import com.jhj.service.users.UserCouponsService;
 import com.meijia.utils.ConfigUtil;
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.wx.utils.MD5Util;
 import com.meijia.wx.utils.ServletUtil;
@@ -101,6 +102,9 @@ public class OrderWxPayController extends BaseController {
 		if (userCouponId == null) userCouponId = 0L;
 
 		String wxPay = "0";
+		
+		String shareUserId = request.getParameter("shareUserId");
+		
 		// 处理订单支付的情况
 		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_0)) {
 			// 先做必要的验证
@@ -115,9 +119,9 @@ public class OrderWxPayController extends BaseController {
 			orderNo = orders.getOrderNo();
 			userId = orders.getUserId();
 			
-			String shareUserId = request.getParameter("shareUserId");
-			if(shareUserId!=null && !"".equals(shareUserId)){
-				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+			if(!shareUserId.equals(null) && StringUtil.isEmpty(shareUserId) && !"".equals(shareUserId)){
+				System.out.println("================="+shareUserId+"-------------------------");
+				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
@@ -181,9 +185,8 @@ public class OrderWxPayController extends BaseController {
 			orderNo = periodOrder.getOrderNo();
 			// 实际支付金额
 			
-			String shareUserId = request.getParameter("shareUserId");
-			if(shareUserId!=null && !"".equals(shareUserId)){
-				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+			if(!shareUserId.equals(null) && StringUtil.isEmpty(shareUserId) && !"".equals(shareUserId)){
+				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
@@ -338,5 +341,11 @@ public class OrderWxPayController extends BaseController {
 			// request.setAttribute("tips", "微信验证失败,请重新支付!");
 			// ServletUtil.forward(request, response, errorUrl);
 		}
+	}
+	
+	
+	public static void main(String[] args) {
+		String ss =null;
+		System.out.println(null==ss);
 	}
 }
