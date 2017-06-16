@@ -34,6 +34,7 @@ import com.jhj.service.users.UserCouponsService;
 import com.meijia.utils.ConfigUtil;
 import com.meijia.utils.HttpClientUtil;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.wx.utils.MD5Util;
 import com.meijia.wx.utils.ServletUtil;
@@ -118,7 +119,7 @@ public class OrderWxPayController extends BaseController {
 			orderNo = orders.getOrderNo();
 			userId = orders.getUserId();
 			
-			if(!shareUserId.equals(null) && !"".equals(shareUserId)){
+			if(!shareUserId.equals(null) && StringUtil.isEmpty(shareUserId) && !"".equals(shareUserId)){
 				System.out.println("================="+shareUserId+"-------------------------");
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
@@ -184,7 +185,7 @@ public class OrderWxPayController extends BaseController {
 			orderNo = periodOrder.getOrderNo();
 			// 实际支付金额
 			
-			if(!shareUserId.equals(null) && !"".equals(shareUserId)){
+			if(!shareUserId.equals(null) && StringUtil.isEmpty(shareUserId) && !"".equals(shareUserId)){
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
