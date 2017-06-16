@@ -117,7 +117,7 @@ public class OrderWxPayController extends BaseController {
 			
 			String shareUserId = request.getParameter("shareUserId");
 			if(shareUserId!=null && !"".equals(shareUserId)){
-				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
@@ -183,7 +183,7 @@ public class OrderWxPayController extends BaseController {
 			
 			String shareUserId = request.getParameter("shareUserId");
 			if(shareUserId!=null && !"".equals(shareUserId)){
-				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.parseInt(shareUserId));
+				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
 					OrderShare orderShare = orderShareList.get(0);
