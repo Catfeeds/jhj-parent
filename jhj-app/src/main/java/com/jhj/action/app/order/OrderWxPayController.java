@@ -101,6 +101,9 @@ public class OrderWxPayController extends BaseController {
 		if (userCouponId == null) userCouponId = 0L;
 
 		String wxPay = "0";
+		
+		String shareUserId = request.getParameter("shareUserId");
+		
 		// 处理订单支付的情况
 		if (payOrderType.equals(Constants.PAY_ORDER_TYPE_0)) {
 			// 先做必要的验证
@@ -115,8 +118,8 @@ public class OrderWxPayController extends BaseController {
 			orderNo = orders.getOrderNo();
 			userId = orders.getUserId();
 			
-			String shareUserId = request.getParameter("shareUserId");
-			if(shareUserId!=null){
+			if(shareUserId != null && !"".equals(shareUserId)){
+				System.out.println("================="+shareUserId+"-------------------------");
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
@@ -181,8 +184,7 @@ public class OrderWxPayController extends BaseController {
 			orderNo = periodOrder.getOrderNo();
 			// 实际支付金额
 			
-			String shareUserId = request.getParameter("shareUserId");
-			if(shareUserId!=null){
+			if(shareUserId != null && !"".equals(shareUserId)){
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
