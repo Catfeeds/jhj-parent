@@ -1,5 +1,6 @@
 package com.jhj.service.impl.order;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -830,9 +831,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 //						item.put("total_dispatched", String.valueOf(totalDispatched));
 						String staffs = "";
 						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
-//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+						if (staffs.indexOf(staffId.toString() + ",") < 0) {
 							staffs+= staffId.toString()+",";
-//						}
+						}
 							
 //						if (orderServiceDateStr.equals("09:00")) {
 //							 System.out.println("order_id = " + orderId +
@@ -876,12 +877,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
+			item.put("is_real_full", String.valueOf(isFull));
+			item.put("is_logic_full", "0");
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
 		
 		//进行判断，自动把不可用的填满约满
-		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		datas = this.autoSetFullForward(datas, serviceDateStr, serviceHours, staffNums, orderType);
 		return datas;
 	}
 	
@@ -1054,9 +1057,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 						
 						String staffs = "";
 						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
-//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+						if (staffs.indexOf(staffId.toString() + ",") < 0) {
 							staffs+= staffId.toString()+",";
-//						}
+						}
 						item.put("staffs", staffs);
 						datas.set(i, item);
 						break;
@@ -1094,12 +1097,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
+			item.put("is_real_full", String.valueOf(isFull));
+			item.put("is_logic_full", "0");
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
 		
 		//进行判断，自动把不可用的填满约满
-		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		datas = this.autoSetFullForward(datas, serviceDateStr, serviceHours, staffNums, orderType);
 		
 		return datas;
 	}	
@@ -1588,6 +1593,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	 * 智能判断服务日期中间层是否需要约，举例：
 	 *   8 - 10：30 可约， 但是11点约满
 	 *   则如果可约时间点小于serviceHour, 则把所有的设置为已约满.
+	 *   此方法为判断有中间有未约满的情况，少于可服务的时长，则设置为已约满.
 	 */
 	@Override 
 	public List<Map<String, String>> autoSetFull(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType) {
@@ -1642,7 +1648,74 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 					autoSetMapIndex = new ArrayList<Integer>();
 				}
 			}	
-		}		
+		}
+		
+		
+		
+		
+		return datas;
+	}
+	
+	/**
+	 * 智能判断服务日期中间层是否设置为约，
+	 * 1. 先找出 8 -18点未约满的集合A
+	 * 2. 循环集合A，每个点往前检查在serviceHours时间点内是否有约满的情况，如果有则置为约满.
+	 */
+	@Override 
+	public List<Map<String, String>> autoSetFullForward(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType) {
+		
+		
+		if (staffNums > 1 && orderType.equals(Constants.ORDER_TYPE_1)) {
+			serviceHours = MathBigDecimalUtil.getValueStepHalf(serviceHours, staffNums);
+		}
+		serviceHours = serviceHours + 2;
+		List<Integer> autoSetMapIndex = new ArrayList<Integer>();
+
+		for (int i = 0 ; i < datas.size(); i++) {
+			Map<String, String> item = datas.get(i);
+			String serviceHour = item.get("service_hour").toString();
+			String hourStr = serviceHour.substring(0, 2);
+			int hour = Integer.valueOf(hourStr).intValue();
+			if (hour< 8) continue;
+			if (hour > 18) continue;
+			String isFull = item.get("is_full").toString();
+//			System.out.println("service_hour = " + serviceHour + " --- isFull = " + isFull);
+			if (isFull.equals("0")) {
+				autoSetMapIndex.add(i);
+			}
+		}
+		
+		if (autoSetMapIndex.isEmpty()) return datas;
+		
+		
+		DecimalFormat df = new DecimalFormat("######0");
+		
+		int checkLength = (int) (serviceHours * 2);
+		
+		for (int i = 0; i < autoSetMapIndex.size(); i++) {
+			int checkIndex = autoSetMapIndex.get(i);
+			Map<String, String> item = datas.get(checkIndex);
+			String isLoginFull = "0"; 
+			for (int j = 0 ; j <=  checkLength; j++) {
+				int checkIndexNext = checkIndex + j;
+				if (checkIndexNext > datas.size()) continue;
+				Map<String, String> itemTmp = datas.get(checkIndexNext);
+				String isFullTmp = itemTmp.get("is_full").toString();
+				if (isFullTmp.equals("1")) {
+					isLoginFull = "1";
+					break;
+				}
+			}
+			
+			if (isLoginFull.equals("1")) {
+				item.put("is_full", "1");
+				String isFull = item.get("is_full").toString();
+				item.put("is_real_full", isFull);
+				item.put("is_logic_full", "1");
+				datas.set(checkIndex, item);
+			}
+		}
+
 		return datas;
 	}
 }
