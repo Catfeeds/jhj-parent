@@ -118,7 +118,7 @@ public class OrderWxPayController extends BaseController {
 			orderNo = orders.getOrderNo();
 			userId = orders.getUserId();
 			
-			if(shareUserId != null && !"".equals(shareUserId)){
+			if(!shareUserId.equals(null) && !"".equals(shareUserId)){
 				System.out.println("================="+shareUserId+"-------------------------");
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
@@ -184,7 +184,7 @@ public class OrderWxPayController extends BaseController {
 			orderNo = periodOrder.getOrderNo();
 			// 实际支付金额
 			
-			if(shareUserId != null && !"".equals(shareUserId)){
+			if(!shareUserId.equals(null) && !"".equals(shareUserId)){
 				List<OrderShare> orderShareList = orderShareService.selectByShareId(Integer.valueOf(shareUserId));
 				OrderShare os = orderShareService.selectByShareIdAndUserId(Integer.parseInt(shareUserId), userId.intValue());
 				if(orderShareList!=null && orderShareList.size()>0 && os==null){
@@ -340,5 +340,11 @@ public class OrderWxPayController extends BaseController {
 			// request.setAttribute("tips", "微信验证失败,请重新支付!");
 			// ServletUtil.forward(request, response, errorUrl);
 		}
+	}
+	
+	
+	public static void main(String[] args) {
+		String ss =null;
+		System.out.println(null==ss);
 	}
 }
