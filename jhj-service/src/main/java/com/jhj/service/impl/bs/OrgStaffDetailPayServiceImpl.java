@@ -18,7 +18,6 @@ import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchPriceService;
@@ -255,10 +254,10 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	}
 
 	@Override
-	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
+	public PageInfo<OrgStaffDetailPay> selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrgStaffDetailPay> list = orgStaffDetailPayMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
+		PageInfo<OrgStaffDetailPay> result = new PageInfo<>(list);
 		return result;
 
 	}

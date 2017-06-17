@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -160,7 +159,7 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 	}
 	
 	@Override
-	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo,int pageSize) {
+	public PageInfo<OrderDispatchPrices> selectByListPage(OrderSearchVo searchVo, int pageNo,int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrderDispatchPrices> list = orderDispatchPriceMapper.selectByListPage(searchVo);
 		PageInfo<OrderDispatchPrices> page =new PageInfo<OrderDispatchPrices>(list);
@@ -182,7 +181,7 @@ public class OrderDispatchPriceServiceImpl implements OrderDispatchPriceService 
 		OrderPrices orderPrice = orderPriceService.selectByOrderId(orderId);
 		
 		OrgStaffs orgStaff = orgStaffService.selectByPrimaryKey(staffId);
-		OrgStaffIncomingVo vo = orgStaffFinanceService.getStaffInComingDetail(orgStaff, order, orderDispatch);
+		OrgStaffIncomingVo vo = orgStaffFinanceService.calcStaffInComingDetail(orgStaff, order, orderDispatch);
 		
 		OrderDispatchPrices record = this.initOrderDisp();
 		record.setUserId(order.getUserId());

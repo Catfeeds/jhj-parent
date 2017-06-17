@@ -465,6 +465,15 @@ public class Constants {
 	 
 	 public final static BigDecimal COUPONS_PERCENTAGE = new BigDecimal(0.5);
 	 
+	 public final static BigDecimal JINPAIBAOJIE_VIP_PERCENTAGE = new BigDecimal(105);
+	 
+	 public final static BigDecimal JINPAIBAOJIE_NOT_VIP_PERCENTAGE = new BigDecimal(101);
+	 
+	 public final static BigDecimal JICHUBAOJIE_NOT_VIP_PERCENTAGE = new BigDecimal(91);
+	 
+	 public final static BigDecimal JICHUBAOJIE_VIP_PERCENTAGE = new BigDecimal(95);
+	 
+	 
 	 
 	 /**----------------------------------财务计算 end----------------------------------------------*/
 

@@ -59,14 +59,12 @@
 					</form:select>
 				</div>
 				<div class="form-group">
-					开始时间：
+					服务完成时间：
 					<form:input path="startTimeStr" id="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
-				</div>
-				<div class="form-group">
-					结束时间：
+					<span>至</span>
 					<form:input path="endTimeStr" id="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
-						readonly="true" /> 
+					readonly="true" /> 
 				</div>
 				
 				<input type="button" id="searchBtn" class="btn btn-primary" onclick="searchSubmit()" value="搜索"/>

@@ -140,7 +140,7 @@ public class CleanupStaffServiceImpl implements CleanupStaffService {
 			for (OrderDispatchs od : orderDispatchs) {
 				Long staffId = od.getStaffId();
 				OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
-				OrgStaffIncomingVo vo = orgStaffFinanceService.getStaffInComingDetail(orgStaff, order, od);
+				OrgStaffIncomingVo vo = orgStaffFinanceService.calcStaffInComingDetail(orgStaff, order, od);
 				
 				//1.写入消费明细
 				String orderStatusStr = OrderUtils.getOrderStatusName(order.getOrderType(), order.getOrderStatus());
