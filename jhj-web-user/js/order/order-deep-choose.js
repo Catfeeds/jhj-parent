@@ -25,7 +25,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				html+= '<li><span onclick="onDeepSubItemNum($$(this).parent())">-</span>';
 				
 				var n = setItemNum(item.service_addon_id, item.default_num);
-				html+= '<input name="itemNum" value="'+n+'" onkeyup="onItemNumKeyUp($$(this).parent())"  onafterpaste="onItemNumKeyUp($$(this).parent())"  maxLength="3" autocomplete="off">';
+				html+= '<input name="itemNum" value="'+n+'" onkeypress="onItemNumKeyUp($$(this).parent())"  onafterpaste="onItemNumKeyUp($$(this).parent())"  maxLength="3" autocomplete="off">';
 				html+= '<input type="hidden" name="serviceAddonName" value="'+name+'" autocomplete="off">';
 				
 				html+= '<input type="hidden" name="defaultNum" value="'+item.default_num+'" autocomplete="off">';
@@ -37,7 +37,9 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				html+= '<input type="hidden" name="serviceAddonId" value="'+item.service_addon_id+'" autocomplete="off">';
 				html+= '<span onclick="onDeepAddItemNum($$(this).parent())">+</span></li>';
 				html+= "</ul>";
-					
+				
+				changeDeepStaffNums(item.service_addon_id, item.default_num);
+				
 				$$("#order-deep-content").append(html);
 			});
 			
@@ -94,6 +96,7 @@ myApp.onPageBeforeInit('order-deep-choose', function(page) {
 				return false;
 			}
 		} 
+		 setDeepTotal();
 		 var url = "order/order-lib-cal.html?next_url=order/order-deep-confirm.html"
 			 
 	     var staffId = sessionStorage.getItem("staff_id");
@@ -319,8 +322,9 @@ function setDeepTotal() {
 		 serviceAddonJson.serviceAddonId = serviceAddonId;
 		 serviceAddonJson.itemNum = itemNum;
 		 
+		 changeDeepStaffNums(serviceAddonId, itemNum);
 		 
-		 serviceAddonsJson.push(serviceAddonJson); 
+		 serviceAddonsJson.push(serviceAddonJson);
 	});
 		
 	totalServiceHour = totalServiceHour.toFixed(0);
@@ -338,4 +342,18 @@ function setDeepTotal() {
 	}
 	
 	return validateMsg;
+}
+
+function changeDeepStaffNums(serviceAddonId, itemNum) {
+	if (serviceAddonId != 29 ) return false;
+	
+	if (itemNum == undefined || itemNum == "" || itemNum == 0) return false;
+	var staffNums = 1;
+	if (itemNum < 60) staffNums = 1;
+	if (itemNum >= 60 && itemNum <= 100) staffNums = 2;
+	if (itemNum > 100 && itemNum <= 140) staffNums = 3;
+	if (itemNum > 140 && itemNum <= 200) staffNums = 4;
+	if (itemNum > 200) staffNums = 5;
+	
+	sessionStorage.setItem("total_staff_nums", staffNums);
 }

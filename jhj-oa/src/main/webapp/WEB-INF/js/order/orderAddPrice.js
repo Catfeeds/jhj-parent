@@ -153,6 +153,7 @@ function changePriceExp(couponsValue) {
 							serviceAddonsJson.push(jQuery.parseJSON('{"serviceAddonId":'
 									+ serviceAddonId + ',"itemNum":' + itemNum + '}'));
 							
+							changeStaffNums(serviceAddonId, itemNum);
 						}
 					});
 	
