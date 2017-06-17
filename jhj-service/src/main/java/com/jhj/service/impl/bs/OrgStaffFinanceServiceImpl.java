@@ -10,26 +10,22 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffFinanceMapper;
 import com.jhj.po.model.bs.DictCoupons;
-import com.jhj.po.model.bs.OrgStaffBlack;
 import com.jhj.po.model.bs.OrgStaffDetailDept;
-import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.po.model.order.OrderDispatchPrices;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
-import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.po.model.user.UserCoupons;
-import com.jhj.po.model.user.UserDetailPay;
 import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.DictCouponsService;
 import com.jhj.service.bs.OrgStaffBlackService;
@@ -57,7 +53,6 @@ import com.jhj.vo.staff.OrgStaffIncomingVo;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.vo.AppResultData;
 
 /**
  *
@@ -122,6 +117,10 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	
 	@Autowired
 	private CooperateBusinessService cooperateBusinessService;
+	
+	@Autowired
+	private OrderDispatchPriceService orderDisppatchPriceService;
+	
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -185,10 +184,10 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	}
 
 	@Override
-	public PageInfo selectByListPage(OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize) {
+	public PageInfo<OrgStaffFinance> selectByListPage(OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrgStaffFinance> list = orgStaffFinanceMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
+		PageInfo<OrgStaffFinance> result = new PageInfo<>(list);
 		return result;
 	}
 
@@ -227,48 +226,8 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 		// =======================|订单收入组成，并生成备注
 
-		String remarks = orderIncomingMap.get("incomingStr");;
-//		int staffNum = orders.getStaffNums();
-//		BigDecimal incomingPercent = orderPricesService.getOrderPercent(orders, staffId);
-
-//		// 1.订单支付金额
-//		BigDecimal orderPay = orderPrices.getOrderPay();
-//		orderPay = MathBigDecimalUtil.div(orderPay, new BigDecimal(staffNum));
-//		orderPay = orderPay.multiply(incomingPercent);
-//		String orderPayStr = MathBigDecimalUtil.round2(orderPay);
-//		remarks = "订单收入:" + orderPayStr;
-//		// 2.订单优惠劵金额
-//		BigDecimal orderPayCoupon = new BigDecimal(0);
-//		Long userCouponId = orderPrices.getCouponId();
-//		if (userCouponId > 0L) {
-//			UserCoupons userCoupon = userCouponsService.selectByPrimaryKey(userCouponId);
-//			Long couponId = userCoupon.getCouponId();
-//			DictCoupons dictCoupon = dictCouponsService.selectByPrimaryKey(couponId);
-//			orderPayCoupon = dictCoupon.getValue();
-//			orderPayCoupon =  MathBigDecimalUtil.div(orderPayCoupon, new BigDecimal(staffNum));
-//			orderPayCoupon = orderPayCoupon.multiply(new BigDecimal(0.5));
-//			String orderPayCouponStr = MathBigDecimalUtil.round2(orderPayCoupon);
-//			remarks += " + 订单优惠劵补贴:" + orderPayCouponStr;
-//		}
-//
-//		// 3.订单补差价金额
-//		BigDecimal orderPayExtDiff = orderPriceExtService.getTotalOrderExtPay(orders, (short) 0);
-//		orderPayExtDiff = MathBigDecimalUtil.div(orderPayExtDiff, new BigDecimal(staffNum));
-//		orderPayExtDiff = orderPayExtDiff.multiply(incomingPercent);
-//		if (orderPayExtDiff.compareTo(BigDecimal.ZERO) == 1) {
-//			String orderPayExtDiffStr = MathBigDecimalUtil.round2(orderPayExtDiff);
-//			remarks += " + 订单补差价收入:" + orderPayExtDiffStr;
-//		}
-//
-//		// 4.订单加时金额
-//		BigDecimal orderPayExtOverWork = orderPriceExtService.getTotalOrderExtPay(orders, (short) 1);
-//		orderPayExtOverWork = MathBigDecimalUtil.div(orderPayExtOverWork, new BigDecimal(staffNum));
-//		orderPayExtOverWork = orderPayExtOverWork.multiply(incomingPercent);
-//		if (orderPayExtOverWork.compareTo(BigDecimal.ZERO) == 1) {
-//			String orderPayExtOverWorkStr = MathBigDecimalUtil.round2(orderPayExtOverWork);
-//			remarks += " + 订单加时收入:" + orderPayExtOverWorkStr;
-//		}
-
+		String remarks = orderIncomingMap.get("incomingStr");
+		
 		// 服务人员财务表
 		OrgStaffFinance orgStaffFinance = this.selectByStaffId(staffId);
 		if (orgStaffFinance == null) {
@@ -362,7 +321,6 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		Long orderId = orders.getId();
 		Long staffId = orgStaffs.getStaffId();
 
-		Short orderExtType = 1;
 		int staffNum = orders.getStaffNums();
 //		BigDecimal orderPay = orderPriceExtService.getTotalOrderExtPay(orders, orderExtType);
 		BigDecimal orderPay = orderPriceExt.getOrderPay();
@@ -413,6 +371,138 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	// 服务人员每单的详细情况VO
 	@Override
 	public OrgStaffIncomingVo getStaffInComingDetail(OrgStaffs orgStaff, Orders order, OrderDispatchs orderDispatch) {
+		OrgStaffIncomingVo vo = new OrgStaffIncomingVo();
+
+		Long orderId = order.getId();
+		Long staffId = orgStaff.getStaffId();
+
+		Long parentId = orgStaff.getParentOrgId();
+		Orgs parentOrg = orgService.selectByPrimaryKey(parentId);
+		vo.setParentId(parentId);
+		vo.setParentOrgName(parentOrg.getOrgName());
+
+		Long orgId = orgStaff.getOrgId();
+		Orgs org = orgService.selectByPrimaryKey(orgId);
+		vo.setOrgId(orgId);
+		vo.setOrgName(org.getOrgName());
+
+		vo.setStaffId(orgStaff.getStaffId());
+		vo.setStaffName(orgStaff.getName());
+		vo.setStaffMobile(orgStaff.getMobile());
+
+		vo.setOrderId(order.getId());
+		vo.setOrderNo(order.getOrderNo());
+		vo.setServiceHour(order.getServiceHour());
+		vo.setUserMobile(order.getMobile());
+		vo.setStaffNum(order.getStaffNums());
+
+		String addTimeStr = TimeStampUtil.timeStampToDateStr(order.getAddTime() * 1000, "yyyy-MM-dd HH:mm");
+		vo.setAddTimeStr(addTimeStr);
+		
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "yyyy-MM-dd HH:mm");
+		vo.setServiceDateStr(serviceDateStr);
+
+		Long serviceTypeId = order.getServiceType();
+		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		String orderTypeName = "";
+		if (serviceType != null)
+			orderTypeName = serviceType.getName();
+		vo.setOrderTypeName(orderTypeName);
+
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setOrderId(orderId);
+		searchVo.setOrderNo(order.getOrderNo());
+		List<OrderDispatchPrices> orderDispatchPricesList = orderDisppatchPriceService.selectBySearchVo(searchVo);
+
+		OrderDispatchPrices orderDispatchPrices = null;
+		String isVipStr = "否";
+		if(orderDispatchPricesList!=null && orderDispatchPricesList.size()>0){
+			orderDispatchPrices = orderDispatchPricesList.get(0);
+			vo.setAddr(orderDispatchPrices.getAddr());
+			
+			Short isVip = orderDispatchPrices.getIsVip();
+			if(isVip.equals("1")){
+				isVipStr = "是";
+			}
+			vo.setIsVip(isVip);
+			vo.setIsVipStr(isVipStr);
+			
+			vo.setPayTypeName(OneCareUtil.getPayTypeName(orderDispatchPrices.getPayType()));
+			
+			vo.setOrderMoney(orderDispatchPrices.getOrderMoney());
+			vo.setOrderPay(orderDispatchPrices.getOrderPay());
+			
+			vo.setTotalOrderMoney(orderDispatchPrices.getTotalOrderMoney());
+			vo.setTotalOrderPay(orderDispatchPrices.getTotalOrderPay());
+			vo.setTotalOrderDept(orderDispatchPrices.getTotalOrderDept());
+			
+			vo.setIncomingPercent(orderDispatchPrices.getIncomingPercent());
+			
+			//补差价
+			vo.setOrderPayExtDiff(orderDispatchPrices.getOrderPayExtDiff());
+			vo.setOrderPayExtDiffIncoming(orderDispatchPrices.getOrderPayExtDiffIncoming());
+			
+			//加时
+			vo.setOrderPayExtOverWork(orderDispatchPrices.getOrderPayExtOverwork());
+			vo.setOrderPayExtOverWorkIncoming(orderDispatchPrices.getOrderPayExtOverworkIncoming());
+			
+		}
+		
+		//订单来源
+		Short orderFrom = order.getOrderFrom();
+		Long orderOpFrom = order.getOrderOpFrom();
+		CooperativeBusiness cooperativeBusiness = null;
+		if (orderOpFrom != null) {
+			cooperativeBusiness = cooperateBusinessService.selectByPrimaryKey(orderOpFrom);
+		}
+		
+		String orderFromStr = OrderUtils.getOrderFromName(orderFrom, orderOpFrom, cooperativeBusiness);
+		vo.setOrderFromStr(orderFromStr);
+		
+		
+		//=========================订单金额相关
+		
+		Map<String, String> orderIncomingMap = null;
+		
+		if (serviceTypeId.equals(28L) || serviceTypeId.equals(68L) || serviceTypeId.equals(73L)) {
+			orderIncomingMap = orderPricesService.getTotalOrderIncomingHour(order, staffId);
+		} else {
+			orderIncomingMap = orderPricesService.getTotalOrderIncomingDeep(order, staffId);
+		}
+		
+		String remarks = orderIncomingMap.get("incomingStr");
+		
+		// 1.订单收入金额
+		BigDecimal orderPayIncoming = orderDispatchPrices.getOrderPayIncoming();
+		BigDecimal totalOrderIncoming = orderDispatchPrices.getTotalOrderIncoming();
+		remarks = "订单总收入:" + MathBigDecimalUtil.round2(orderDispatchPrices.getTotalOrderIncoming());
+		vo.setOrderIncoming(orderPayIncoming);
+		vo.setTotalOrderIncoming(totalOrderIncoming);
+		
+		BigDecimal orderPayCoupon = orderDispatchPrices.getOrderPayCoupon();
+		BigDecimal orderPayCouponIncoming = orderDispatchPrices.getOrderPayCouponIncoming();
+		remarks += " + 订单优惠劵补贴:" + MathBigDecimalUtil.round2(orderPayCoupon);
+		vo.setOrderPayCoupon(orderPayCoupon);
+		vo.setOrderPayCouponIncoming(orderPayCouponIncoming);
+		
+		vo.setRemarks(remarks);
+		
+		return vo;
+	}
+
+	// 统计服务人员欠款
+	public Map<String, Object> totalMoney(OrgStaffFinanceSearchVo searchVo) {
+		return orgStaffFinanceMapper.totalMoney(searchVo);
+	}
+
+	/**
+	 * 计算服务人员财物明细
+	 * 
+	 */
+	@Override
+	public OrgStaffIncomingVo calcStaffInComingDetail(OrgStaffs orgStaff,
+			Orders order, OrderDispatchs orderDispatch) {
+		
 		OrgStaffIncomingVo vo = new OrgStaffIncomingVo();
 
 		Long orderId = order.getId();
@@ -525,7 +615,27 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		// 1.订单支付金额
 		BigDecimal orderIncoming = orderPrices.getOrderPay();
 		orderIncoming = MathBigDecimalUtil.div(orderIncoming, new BigDecimal(staffNum));
-		orderIncoming = orderIncoming.multiply(incomingPercent);
+		if (order.getAddTime() >= 1476892800L && order.getAddTime() < 1479657600) {
+			orderIncoming = orderIncoming.multiply(incomingPercent);
+		}else{
+			if(serviceTypeId.equals(28L)){
+				if(u.getIsVip()==0){
+					orderIncoming = Constants.JINPAIBAOJIE_NOT_VIP_PERCENTAGE;
+				}
+				if(u.getIsVip()==1){
+					orderIncoming = Constants.JINPAIBAOJIE_VIP_PERCENTAGE;
+				}
+			}
+			
+			if(serviceTypeId.equals(68L)){
+				if(u.getIsVip()==0){
+					orderIncoming = Constants.JICHUBAOJIE_NOT_VIP_PERCENTAGE;
+				}
+				if(u.getIsVip()==1){
+					orderIncoming = Constants.JICHUBAOJIE_VIP_PERCENTAGE;
+				}
+			}
+		}
 		String orderPayStr = MathBigDecimalUtil.round2(orderIncoming);
 		remarks = "订单收入:" + orderPayStr;
 		// 2.订单优惠劵金额
@@ -606,11 +716,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		vo.setRemarks(remarks);
 		vo.setIncomingPercent(incomingPercent);
 		return vo;
-	}
-
-	// 统计服务人员欠款
-	public Map<String, Object> totalMoney(OrgStaffFinanceSearchVo searchVo) {
-		return orgStaffFinanceMapper.totalMoney(searchVo);
+		
 	}
 
 }

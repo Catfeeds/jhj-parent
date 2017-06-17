@@ -343,9 +343,4 @@ public class OrderWxPayController extends BaseController {
 		}
 	}
 	
-	
-	public static void main(String[] args) {
-		String ss =null;
-		System.out.println(null==ss);
-	}
 }

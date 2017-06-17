@@ -1,27 +1,12 @@
 package com.jhj.action.staff;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -29,26 +14,17 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
-import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
-import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
-import com.jhj.po.model.bs.OrgStaffFinance;
 import com.jhj.po.model.bs.OrgStaffPayDept;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.bs.Orgs;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.Orders;
-import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.UserAddrs;
-import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffPayDeptService;
 import com.jhj.service.bs.OrgStaffsService;
@@ -60,18 +36,11 @@ import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
-import com.jhj.vo.org.OrgSearchVo;
-import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
-import com.jhj.vo.staff.OrgStaffFinanceVo;
 import com.jhj.vo.staff.OrgStaffIncomingVo;
-import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.ExcelUtil;
 import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.TimeStampUtil;
-import com.meijia.utils.poi.ExcelTools;
-import com.meijia.utils.poi.HssExcelTools;
 import com.meijia.utils.poi.XssExcelTools;
 
 @Controller
@@ -103,7 +72,7 @@ public class OrgStaffExportController extends BaseController {
 	
 	@Autowired
 	private UsersService userService;
-
+	
 	//服务人员所有订单明细表
 	@RequestMapping(value = "/export-order", method = RequestMethod.GET)
 	public void exportOrder(Model model, HttpServletRequest request, HttpServletResponse response, OrderSearchVo searchVo) throws Exception {
@@ -139,6 +108,9 @@ public class OrgStaffExportController extends BaseController {
 		orderDispatchSearchVo.setStaffId(searchVo.getStaffId());
 		orderDispatchSearchVo.setStaffName(searchVo.getStaffName());
 		orderDispatchSearchVo.setOrderNo(searchVo.getOrderNo());
+		
+		Short[] orderStatusArry = {7,8};
+		orderDispatchSearchVo.setOrderStatusList(Arrays.asList(orderStatusArry));
 		
 		List<OrderDispatchs> orderDispatchs = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
 		
@@ -254,7 +226,7 @@ public class OrgStaffExportController extends BaseController {
 			this.setCellValueForDouble(rowData, 18, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayExtOverWork())));
 
 			//收入
-			this.setCellValueForDouble(rowData, 19, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderIncoming())));
+			/*this.setCellValueForDouble(rowData, 19, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderIncoming())));*/
 
 			//订单补贴
 			this.setCellValueForDouble(rowData, 20, Double.valueOf(MathBigDecimalUtil.round2(vo.getOrderPayCouponIncoming())));
@@ -423,7 +395,7 @@ public class OrgStaffExportController extends BaseController {
 
 		this.setCellValueForDouble(rowData, 8, Double.valueOf(MathBigDecimalUtil.round2(totalPayDept)));
 		
-		String fileName = orgStaff.getName() + "-还款明细表.xls";
+//		String fileName = orgStaff.getName() + "-还款明细表.xls";
 		excel.downloadExcel(response, templateName);
 		
 		return null;

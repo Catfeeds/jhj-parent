@@ -56,6 +56,8 @@ public class OrderDispatchSearchVo {
 	private Short isApply;
 	
 	private Long serviceTypeId;
+	
+	private List<Short> orderStatusList;
 
 	public String getMobile() {
 		return mobile;
@@ -263,6 +265,14 @@ public class OrderDispatchSearchVo {
 
 	public void setServiceTypeId(Long serviceTypeId) {
 		this.serviceTypeId = serviceTypeId;
+	}
+
+	public List<Short> getOrderStatusList() {
+		return orderStatusList;
+	}
+
+	public void setOrderStatusList(List<Short> orderStatusList) {
+		this.orderStatusList = orderStatusList;
 	}
 
 	

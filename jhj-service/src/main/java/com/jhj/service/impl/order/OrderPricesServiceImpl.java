@@ -12,12 +12,10 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderPricesMapper;
 import com.jhj.po.model.bs.DictCoupons;
 import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.dict.DictServiceAddons;
 import com.jhj.po.model.order.OrderAppoint;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
-import com.jhj.po.model.order.OrderServiceAddons;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.orderReview.JhjSetting;
 import com.jhj.po.model.period.PeriodOrder;
@@ -39,7 +37,6 @@ import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
-import com.jhj.vo.ServiceAddonSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.meijia.utils.BeanUtilsExp;
@@ -374,7 +371,6 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 	public Map<String, String> getTotalOrderIncomingHour(Orders order, Long staffId) {
 
 		Long orderId = order.getId();
-		Double serviceHour = order.getServiceHour();
 		int staffNum = order.getStaffNums();
 		
 		Long userId = order.getUserId();
@@ -389,7 +385,6 @@ public class OrderPricesServiceImpl implements OrderPricesService {
 		//套餐价格
 		BigDecimal mprice = serviceType.getPprice();
 
-		
 		//套餐服务人员提成
 		BigDecimal staffMprice = serviceType.getStaffPprice();
 		
