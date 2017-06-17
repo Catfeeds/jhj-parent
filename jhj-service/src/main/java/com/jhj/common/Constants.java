@@ -400,7 +400,7 @@ public class Constants {
 	 public static int MAX_DISTANCE = 20000;
 	 
 	 //派工服务前2小时占位
-	 public static Long SERVICE_PRE_TIME = (long) (119 * 60);
+	 public static Long SERVICE_PRE_TIME = (long) (90 * 60);
 	
 	 
 	 //用户消费明细类型
