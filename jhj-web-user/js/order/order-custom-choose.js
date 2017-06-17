@@ -279,7 +279,8 @@ function setCustomTotal() {
 		 var serviceAddonServiceHour = $$(this).parent().find('input[name=serviceAddonServiceHour]').val();
 		 
 		 var aprice = $$(this).parent().find('input[name=serviceAddonAprice]').val();
-
+		 if (aprice == undefined || aprice == "") return false;
+		 console.log("aprice ==" + aprice);
 		 var reg = /[1-9][0-9]*/g;
 		 itemPrice = aprice.match(reg);
 
