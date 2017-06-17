@@ -71,7 +71,7 @@
 			</if>
 	
 			<if test="endOrderDoneTime !=null">
-				<![CDATA[ and order_done_time <= #{endOrderDoneTime}]]>111
+				<![CDATA[ and order_done_time <= #{endOrderDoneTime}]]>
 			</if>
 			)
 		</if>
