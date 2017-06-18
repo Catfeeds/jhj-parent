@@ -145,8 +145,14 @@
 				${item}
 			</foreach>
 		</if>
-
 		
+		<if test="startServiceTime !=null">
+			<![CDATA[ and service_date >= #{startServiceTime}]]>
+		</if>
+
+		<if test="endServiceTime !=null">
+			<![CDATA[ and service_date <= #{endServiceTime}]]>
+		</if>
 
 		<if test="startServiceHourTime !=null">
 			<![CDATA[ and (service_date + service_hours *3600) >= #{startServiceHourTime}]]>
@@ -182,12 +188,12 @@
 				${item}
 			</foreach>
 			
-			<if test="startServiceTime !=null">
-				<![CDATA[ and order_done_time >= #{startServiceTime}]]>
+			<if test="startServiceFinishTime !=null">
+				<![CDATA[ and order_done_time >= #{startServiceFinishTime}]]>
 			</if>
 	
-			<if test="endServiceTime !=null">
-				<![CDATA[ and order_done_time <= #{endServiceTime}]]>
+			<if test="endServiceFinishTime !=null">
+				<![CDATA[ and order_done_time <= #{endServiceFinishTime}]]>
 			</if>
 			)
 		</if>

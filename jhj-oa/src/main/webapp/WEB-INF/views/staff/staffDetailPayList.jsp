@@ -60,10 +60,10 @@
 				</div>
 				<div class="form-group">
 					服务完成时间：
-					<form:input path="startTimeStr" id="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="startOrderDoneTimeStr" id="startTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 						readonly="true" />
 					<span>至</span>
-					<form:input path="endTimeStr" id="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
+					<form:input path="endOrderDoneTimeStr" id="endTimeStr" class="form-control form_datetime" style="width:110px; margin-bottom:0"
 					readonly="true" /> 
 				</div>
 				

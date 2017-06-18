@@ -84,16 +84,16 @@ public class OrgStaffExportController extends BaseController {
 			staffId = searchVo.getSelectStaff();
 		}
 		
-		String startTimeStr = searchVo.getStartTimeStr();
-		Long startServiceTime = 0L;
+		String startTimeStr = searchVo.getStartOrderDoneTimeStr();
+		Long startServiceFinishTime = 0L;
 		if (!StringUtil.isEmpty(startTimeStr)) {
-			startServiceTime = TimeStampUtil.getMillisOfDayFull(startTimeStr+" 00:00:00") / 1000;
+			startServiceFinishTime = TimeStampUtil.getMillisOfDayFull(startTimeStr+" 00:00:00") / 1000;
 		}
 
-		Long endServiceTime = 0L;
-		String endTimeStr = searchVo.getEndTimeStr();
+		Long endServiceFinishTime = 0L;
+		String endTimeStr = searchVo.getEndOrderDoneTimeStr();
 		if (!StringUtil.isEmpty(endTimeStr)) {
-			endServiceTime = TimeStampUtil.getMillisOfDayFull(endTimeStr+" 23:59:59") / 1000;
+			endServiceFinishTime = TimeStampUtil.getMillisOfDayFull(endTimeStr+" 23:59:59") / 1000;
 		}
 		
 		
@@ -103,8 +103,8 @@ public class OrgStaffExportController extends BaseController {
 		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
 		orderDispatchSearchVo.setDispatchStatus((short) 1);
 		
-		if (startServiceTime > 0L) orderDispatchSearchVo.setStartServiceTime(startServiceTime);
-		if (endServiceTime > 0L) orderDispatchSearchVo.setEndServiceTime(endServiceTime);
+		if (startServiceFinishTime > 0L) orderDispatchSearchVo.setStartServiceFinishTime(startServiceFinishTime);
+		if (endServiceFinishTime > 0L) orderDispatchSearchVo.setEndServiceFinishTime(endServiceFinishTime);
 		orderDispatchSearchVo.setStaffId(searchVo.getStaffId());
 		orderDispatchSearchVo.setStaffName(searchVo.getStaffName());
 		orderDispatchSearchVo.setOrderNo(searchVo.getOrderNo());
