@@ -794,6 +794,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			if (startOrderDoneTimeStr.length() == 10) startOrderDoneTimeStr = startOrderDoneTimeStr + " 00:00";
 			
 			searchVo.setStartUpdateTime(TimeStampUtil.getMillisOfDayFull(startOrderDoneTimeStr+":00") / 1000);
+			searchVo.setStartOrderDoneTime(TimeStampUtil.getMillisOfDayFull(startOrderDoneTimeStr+":00") / 1000);
 			
 		}
 		
@@ -804,6 +805,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 			if (endOrderDoneTimeStr.length() == 10) endOrderDoneTimeStr = endOrderDoneTimeStr + " 23:59";
 			
 			searchVo.setEndUpdateTime(TimeStampUtil.getMillisOfDayFull(endOrderDoneTimeStr+":59") / 1000);
+			searchVo.setEndOrderDoneTime(TimeStampUtil.getMillisOfDayFull(endOrderDoneTimeStr+":59") / 1000);
 		}
 		
 		// 处理查询时间条件--------------------------------结束
