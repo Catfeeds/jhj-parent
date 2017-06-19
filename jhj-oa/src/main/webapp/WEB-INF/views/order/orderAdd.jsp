@@ -245,7 +245,7 @@
 												<font color="red">*</font>服务人员数量
 											</label>
 											<div class="col-md-5">
-												<input type="text" id="staffNums" name="staffNums" onkeyup="changePrice()" onafterpaste="changePrice()"
+												<input type="text" id="staffNums" name="staffNums" onkeyup="changePrice(0, 3)" onafterpaste="changePrice()"
 													class="form-control" value="1" />
 											</div>
 										</div>
@@ -255,7 +255,7 @@
 											</label>
 											<div class="col-md-5">
 												<input type="text" id="serviceHour" name="serviceHour" onkeyup="changePriceHourCheck()"
-													onafterpaste="changePriceHourCheck" class="form-control" value="3" />
+													onafterpaste="changePriceHourCheck" class="form-control" value="3"/>
 											</div>
 										</div>
 										
