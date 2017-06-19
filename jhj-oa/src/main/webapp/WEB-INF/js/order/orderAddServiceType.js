@@ -98,7 +98,7 @@ function serviceTypeChangeExp(serviceTypeId) {
 				serviceContentHtml += "<td>" + serviceType[i].service_hour + "小时</td>";
 				serviceContentHtml += "<td><input type='text' name='itemNum' value='"
 						+ serviceType[i].default_num
-						+ "' onkeyup='changePriceExp()'  onafterpaste='changePriceExp()' ></td>";
+						+ "' onkeyup='changePriceExp(0, 2)'  onafterpaste='changePriceExp(0, 2)' ></td>";
 				serviceContentHtml += "</tr>";
 			}
 			
@@ -106,7 +106,7 @@ function serviceTypeChangeExp(serviceTypeId) {
 			
 			sessionStorage.removeItem("totalOrderPay");
 			$("#divServiceAddons").css("display", "block");
-			changePriceExp();
+			changePriceExp(0, 2);
 		}
 	});
 }

@@ -61,7 +61,6 @@ function getAddrByMobile(addrId) {
 					if (isVip == 0) $("#userTypeStr").html("普通会员");
 					if (isVip == 1) $("#userTypeStr").html("金牌会员");
 					serviceTypeChange();
-					// changePrice();
 					getAddressList(userId, 0);
 					
 				} else {
