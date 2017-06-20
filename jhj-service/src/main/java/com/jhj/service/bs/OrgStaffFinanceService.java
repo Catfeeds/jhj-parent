@@ -12,13 +12,11 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.vo.staff.OrgStaffFinanceSearchVo;
 import com.jhj.vo.staff.OrgStaffIncomingVo;
-import com.meijia.utils.vo.AppResultData;
 
 /**
  *
  * @author :hulj
  * @Date : 2015年7月1日上午11:16:44
- * @Description: TODO
  *
  */
 public interface OrgStaffFinanceService {
@@ -38,7 +36,7 @@ public interface OrgStaffFinanceService {
 
 	OrgStaffFinance selectByStaffId(Long userId);
 
-	PageInfo selectByListPage(OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize);
+	PageInfo<OrgStaffFinance> selectByListPage(OrgStaffFinanceSearchVo searchVo, int pageNo, int pageSize);
 
 	void orderDone(Orders orders, OrderPrices orderPrices, OrgStaffs orgStaffs);
 
@@ -49,6 +47,10 @@ public interface OrgStaffFinanceService {
 	//统计服务人员欠款
 	Map<String,Object> totalMoney(OrgStaffFinanceSearchVo searchVo);
 
+	//得到服务人员消费明细
 	OrgStaffIncomingVo getStaffInComingDetail(OrgStaffs orgStaff, Orders order, OrderDispatchs orderDispatch);
+	
+	//计算服务人员消费明细
+	OrgStaffIncomingVo calcStaffInComingDetail(OrgStaffs orgStaff, Orders order, OrderDispatchs orderDispatch);
 
 }

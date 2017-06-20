@@ -52,12 +52,28 @@
 		<if test="orderNo !=null and orderNo !=''">
 			and order_no like concat('%',#{orderNo,jdbcType=VARCHAR},'%')
 		</if>
-
+		
 		<if test="startAddTime !=null and startAddTime!='' ">
 			<![CDATA[ and add_time >= #{startAddTime, jdbcType=NUMERIC}]]>
 		</if>
 		<if test="endAddTime !=null and endAddTime !='' ">
 			<![CDATA[ and add_time <= #{endAddTime, jdbcType=NUMERIC}]]>
+		</if>
+
+		<if test="orderStatusList != null">
+			and order_id in (select id from orders where order_status in 
+			<foreach item="item" index="index" collection="orderStatusList" open="(" separator="," close=")">
+				${item}
+			</foreach>
+			
+			<if test="startOrderDoneTime !=null">
+				<![CDATA[ and order_done_time >= #{startOrderDoneTime}]]>
+			</if>
+	
+			<if test="endOrderDoneTime !=null">
+				<![CDATA[ and order_done_time <= #{endOrderDoneTime}]]>
+			</if>
+			)
 		</if>
 		
 		<if test="payType !=null">

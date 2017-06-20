@@ -1,6 +1,8 @@
 package com.jhj.service.impl.order;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -11,7 +13,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.druid.util.StringUtils;
+
+import org.springframework.util.StringUtils;
+
 import com.jhj.common.ConstantMsg;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.order.OrderDispatchsMapper;
@@ -714,7 +718,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			orgIds.add(orgId);
 //			System.out.println("符合yun'd = " + org.getName() + "--距离 =" + org.getDistanceText());
 		}
-
+		
 		if (orgIds.isEmpty()) {
 			// 如果匹配不到任何云店，则显示所有都为已约满.
 			for (int i = 0; i < datas.size(); i++) {
@@ -724,7 +728,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 			return datas;
 		}
-
+		Collections.sort(orgIds);
 		List<Long> staffIds = new ArrayList<Long>();
 		// 先找出云店下所有的员工,并且具有该项技能的人员.
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
@@ -747,7 +751,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 		}
 		
-		 System.out.println("排除黑名单后总人数:" + staffIds.size());
+//		 System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// 排除请假人员
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
 		Date leaveDate = DateUtil.parse(serviceDateStr);
@@ -762,7 +766,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 		}
 		Collections.sort(staffIds);
-		System.out.println("排除请假后总人数:" + staffIds.size());
+//		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) {
 			// 如果人数都为0，则显示所有都为已约满.
 			for (int i = 0; i < datas.size(); i++) {
@@ -799,8 +803,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 已 排班的 阿姨, 时间跨度为 
-//			Long serviceDate = orderDispatch.getServiceDate();
-			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
+			Long serviceDate = orderDispatch.getServiceDate();
+//			Long serviceDate = orderDispatch.getServiceDate() - Constants.SERVICE_PRE_TIME;
 
 			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
 			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
@@ -811,9 +815,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 4;
+			Double serviceHour = orderDispatch.getServiceHours() + 1.5;
 			// Double serviceHour = orderDispatch.getServiceHours();
-
+			
 			Double stepHour = (double) 0;
 			while (stepHour <= serviceHour) {
 
@@ -830,17 +834,20 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 //						item.put("total_dispatched", String.valueOf(totalDispatched));
 						String staffs = "";
 						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
-//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+						if (staffs.indexOf(staffId.toString() + ",") < 0) {
 							staffs+= staffId.toString()+",";
-//						}
+						}
 							
-//						if (orderServiceDateStr.equals("09:00")) {
-//							 System.out.println("order_id = " + orderId +
-//							 "--orderServiceDateStr = " + orderServiceDateStr +
-//							 " --itemServiceHour = " + itemServiceHour +
-//							 "--staffs =" + staffs);
-//						}
+						if (itemServiceHour.equals("08:30")) {
+							 System.out.println("order_id = " + orderId +
+							 "--realServiceDate = " +  TimeStampUtil.timeStampToDateStr( orderDispatch.getServiceDate() * 1000, DateUtil.DEFAULT_FULL_PATTERN) +
+							 "--realEndServiceDate =" + TimeStampUtil.timeStampToDateStr( (long) ((orderDispatch.getServiceDate() + orderDispatch.getServiceHours() * 3600)  * 1000), DateUtil.DEFAULT_FULL_PATTERN) +
+							 "--orderServiceDateStr = " + orderServiceDateStr +
+							 " --itemServiceHour = " + itemServiceHour +
+							 "--staffs =" + staffs);
+						}
 						item.put("staffs", staffs);
+						
 						datas.set(i, item);
 						break;
 					}
@@ -853,7 +860,19 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		for (int i = 0; i < datas.size(); i++) {
 			Map<String, String> item = datas.get(i);
 			String staffs = "";
-			if (item.get("staffs") != null) staffs = item.get("staffs").toString();
+//			item.put("staffs", staffs);
+			if (item.get("staffs") != null) {
+				staffs = item.get("staffs").toString();
+				List<String> result = Arrays.asList(staffs.split(","));  
+				List<Long> list1 = new ArrayList<Long>();
+				for (int j = 0; j < result.size(); j++) {
+					if (!StringUtil.isEmpty(result.get(j)))
+					list1.add(Long.valueOf(result.get(j)));
+				}
+				Collections.sort(list1);
+				staffs = StringUtils.collectionToDelimitedString(list1, ",");  
+				item.put("staffs", staffs);
+			}
 			int totalDispatched = 0;
 			
 			if (!StringUtil.isEmpty(staffs)) {
@@ -868,20 +887,29 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 			// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
 			int canStaffNum = total - totalDispatched;
-			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
-				String checkServiceHour = item.get("service_hour").toString();
-				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
-				if (checkIsFull == false) isFull = 1;
+			if (canStaffNum < staffNums) {
+				isFull = 1;
 			}
+//			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
+//				String checkServiceHour = item.get("service_hour").toString();
+//				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
+//				if (checkIsFull == false) isFull = 1;
+//			}
 			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
+			item.put("is_real_full", String.valueOf(isFull));
+			item.put("is_logic_full", "0");
+			item.put("total_staffs", canStaffIds.toString());
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
 		
-		//进行判断，自动把不可用的填满约满
-		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		//1.进行判断，自动把不可用的填满约满
+		datas = this.autoSetFullForward(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		
+		//2. 为约满的再进行一次过滤，把时间段范围内的staffId 都去掉，如果为空则约满
+		datas = this.autoSetFullByRemoveStaffs(datas, serviceDateStr, serviceHours, staffNums, orderType, canStaffIds);
 		return datas;
 	}
 	
@@ -940,7 +968,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 		}
 		
-		 System.out.println("总人数:" + staffIds.size());
+//		 System.out.println("总人数:" + staffIds.size());
 		
 		// 排除请假人员
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
@@ -955,7 +983,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 		}
-		 System.out.println("排除请假后总人数:" + staffIds.size());
+//		 System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) {
 			// 如果人数都为0，则显示所有都为已约满.
 			for (int i = 0; i < datas.size(); i++) {
@@ -993,7 +1021,19 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 				}
 			}
 		}
-		System.out.println("排除距离超出的人员后:" + staffIds.size());
+//		System.out.println("排除距离超出的人员后:" + staffIds.size());
+		
+		if (staffIds.isEmpty()) {
+			// 如果人数都为0，则显示所有都为已约满.
+			for (int i = 0; i < datas.size(); i++) {
+				Map<String, String> item = datas.get(i);
+				item.put("is_full", "1");
+				datas.set(i, item);
+			}
+			return datas;
+		}
+		
+		
 		int total = staffIds.size();
 		List<Long> canStaffIds = new ArrayList<Long>();
 		canStaffIds = (List<Long>) ((ArrayList<Long>) staffIds).clone();
@@ -1019,8 +1059,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 已 排班的 阿姨, 时间跨度为 
-//			Long serviceDate = orderDispatch.getServiceDate();
-			Long serviceDate = orderDispatch.getServiceDate() - (long) (120 * 60);
+			Long serviceDate = orderDispatch.getServiceDate();
+//			Long serviceDate = orderDispatch.getServiceDate() - Constants.SERVICE_PRE_TIME;
 
 			String serviceDateTmp = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "m");
 			int servcieDateTmpInt = Integer.valueOf(serviceDateTmp);
@@ -1031,7 +1071,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 4;
+			Double serviceHour = orderDispatch.getServiceHours() + 1.5;
 			// Double serviceHour = orderDispatch.getServiceHours();
 
 			Double stepHour = (double) 0;
@@ -1054,9 +1094,9 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 						
 						String staffs = "";
 						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
-//						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+						if (staffs.indexOf(staffId.toString() + ",") < 0) {
 							staffs+= staffId.toString()+",";
-//						}
+						}
 						item.put("staffs", staffs);
 						datas.set(i, item);
 						break;
@@ -1086,20 +1126,29 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			
 			// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
 			int canStaffNum = total - totalDispatched;
-			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
-				String checkServiceHour = item.get("service_hour").toString();
-				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
-				if (checkIsFull == false) isFull = 1;
+			if (canStaffNum < staffNums) {
+				isFull = 1;
 			}
+//			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
+//				String checkServiceHour = item.get("service_hour").toString();
+//				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
+//				if (checkIsFull == false) isFull = 1;
+//			}
 			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
+			item.put("is_real_full", String.valueOf(isFull));
+			item.put("is_logic_full", "0");
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
+			
 			datas.set(i, item);
 		}
 		
-		//进行判断，自动把不可用的填满约满
-		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		//1.进行判断，自动把不可用的填满约满
+		datas = this.autoSetFullForward(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		
+		//2. 为约满的再进行一次过滤，把时间段范围内的staffId 都去掉，如果为空则约满
+		datas = this.autoSetFullByRemoveStaffs(datas, serviceDateStr, serviceHours, staffNums, orderType, canStaffIds);
 		
 		return datas;
 	}	
@@ -1136,8 +1185,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		Long serviceDate = TimeStampUtil.getMillisOfDayFull(serviceDateTime) / 1000;
 		
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-		
+//		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		Long startServiceTime = serviceDate;
 		// 注意结束时间也要服务结束后 1:59分钟
 		Long endServiceTime = (long) (serviceDate + serviceHours * 3600 + Constants.SERVICE_PRE_TIME);
 		
@@ -1230,6 +1279,17 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			if (!staffIds.contains(os.getStaffId()))
 				staffIds.add(os.getStaffId());
 		}
+		
+		if (staffIds.isEmpty()) {
+			// 如果人数都为0，则显示所有都为已约满.
+			for (int i = 0; i < datas.size(); i++) {
+				Map<String, String> item = datas.get(i);
+				item.put("is_full", "1");
+				datas.set(i, item);
+			}
+			return datas;
+		}
+		
 		// System.out.println("总人数:" + staffIds.size());
 		// 排除黑名单人员
 		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
@@ -1238,6 +1298,18 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);
 		if (!blackList.isEmpty())
 			staffIds = new ArrayList<Long>();
+		
+		
+		if (staffIds.isEmpty()) {
+			// 如果人数都为0，则显示所有都为已约满.
+			for (int i = 0; i < datas.size(); i++) {
+				Map<String, String> item = datas.get(i);
+				item.put("is_full", "1");
+				datas.set(i, item);
+			}
+			return datas;
+		}
+		
 		// System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// 排除请假人员
 		LeaveSearchVo searchVo3 = new LeaveSearchVo();
@@ -1260,6 +1332,8 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		}
 
 		int total = staffIds.size();
+		List<Long> canStaffIds = new ArrayList<Long>();
+		canStaffIds = (List<Long>) ((ArrayList<Long>) staffIds).clone();
 		// 找出当天所有的派工订单和人员.
 		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
 		Long startServiceTime = TimeStampUtil.getMillisOfDayFull(serviceDateStr + " 00:00:00");
@@ -1294,7 +1368,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 2;
+			Double serviceHour = orderDispatch.getServiceHours() + 1.5;
 			// Double serviceHour = orderDispatch.getServiceHours();
 
 			Double stepHour = (double) 0;
@@ -1308,12 +1382,17 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 
 					if (orderServiceDateStr.equals(itemServiceHour)) {
 						int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
-						totalDispatched = totalDispatched + 1;
+//						totalDispatched = totalDispatched + 1;
 						// System.out.println("order_id = " + orderId +
 						// "--orderServiceDateStr = " + orderServiceDateStr +
 						// " --itemServiceHour = " + itemServiceHour +
 						// "--totalDispatched =" + totalDispatched);
-						item.put("total_dispatched", String.valueOf(totalDispatched));
+//						item.put("total_dispatched", String.valueOf(totalDispatched));
+						String staffs = "";
+						if (item.get("staffs") != null) staffs = item.get("staffs").toString();
+						if (staffs.indexOf(staffId.toString() + ",") < 0) {
+							staffs+= staffId.toString()+",";
+						}
 						datas.set(i, item);
 						break;
 					}
@@ -1322,22 +1401,59 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 		}
 
-		// 最后再进行循环，把是否约满字段补上.
 		for (int i = 0; i < datas.size(); i++) {
 			Map<String, String> item = datas.get(i);
-			int totalDispatched = Integer.valueOf(item.get("total_dispatched").toString());
+			String staffs = "";
+//			item.put("staffs", staffs);
+			if (item.get("staffs") != null) {
+				staffs = item.get("staffs").toString();
+				List<String> result = Arrays.asList(staffs.split(","));  
+				List<Long> list1 = new ArrayList<Long>();
+				for (int j = 0; j < result.size(); j++) {
+					if (!StringUtil.isEmpty(result.get(j)))
+					list1.add(Long.valueOf(result.get(j)));
+				}
+				Collections.sort(list1);
+				staffs = StringUtils.collectionToDelimitedString(list1, ",");  
+				item.put("staffs", staffs);
+			}
+			int totalDispatched = 0;
+			
+			if (!StringUtil.isEmpty(staffs)) {
+				String[] arys = StringUtil.convertStrToArray(staffs);
+				totalDispatched = arys.length;
+			}
+			item.put("total_dispatched", String.valueOf(totalDispatched));
 			int isFull = 0;
 			if (total > 0 && totalDispatched >= 0 && totalDispatched >= total) {
 				isFull = 1;
 			}
+			
+			// 补丁： 当判断只有一个人的时候，需要再去判断当前时间 + 小时是否跨越这个人当天的服务时间。如果跨越则置为约满
+			int canStaffNum = total - totalDispatched;
+			if (canStaffNum < staffNums) {
+				isFull = 1;
+			}
+//			if (isFull == 0 && canStaffNum > 0 && canStaffNum <= 2) {
+//				String checkServiceHour = item.get("service_hour").toString();
+//				Boolean checkIsFull = this.checkIsFull(serviceDateStr, serviceHours, staffNums, orderType, staffs, checkServiceHour, canStaffIds);
+//				if (checkIsFull == false) isFull = 1;
+//			}
+			
 			item.put("total", String.valueOf(total));
 			item.put("is_full", String.valueOf(isFull));
+			item.put("is_real_full", String.valueOf(isFull));
+			item.put("is_logic_full", "0");
+			item.put("total_staffs", canStaffIds.toString());
 			item.put("order_service_hour", String.valueOf(orderServiceHour));
 			datas.set(i, item);
 		}
 		
-		//进行判断，自动把不可用的填满约满
-		datas = this.autoSetFull(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		//1.进行判断，自动把不可用的填满约满
+		datas = this.autoSetFullForward(datas, serviceDateStr, serviceHours, staffNums, orderType);
+		
+		//2. 为约满的再进行一次过滤，把时间段范围内的staffId 都去掉，如果为空则约满
+		datas = this.autoSetFullByRemoveStaffs(datas, serviceDateStr, serviceHours, staffNums, orderType, canStaffIds);
 		return datas;
 	}
 
@@ -1585,64 +1701,138 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 	}
 	
 	/**
-	 * 智能判断服务日期中间层是否需要约，举例：
-	 *   8 - 10：30 可约， 但是11点约满
-	 *   则如果可约时间点小于serviceHour, 则把所有的设置为已约满.
+	 * 2. 为约满的再进行一次过滤，把时间段范围内的staffId 都去掉，如果为空则约满
 	 */
+	@SuppressWarnings("unchecked")
 	@Override 
-	public List<Map<String, String>> autoSetFull(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType) {
-		
+	public List<Map<String, String>> autoSetFullByRemoveStaffs(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType, List<Long> checkStaffIds) {
 		
 		if (staffNums > 1 && orderType.equals(Constants.ORDER_TYPE_1)) {
 			serviceHours = MathBigDecimalUtil.getValueStepHalf(serviceHours, staffNums);
 		}
-		serviceHours = serviceHours + 2;
+		serviceHours = serviceHours + 1.5;
 		List<Integer> autoSetMapIndex = new ArrayList<Integer>();
-		String beginServiceHour = "";
-		String endServiceHour = "";
-		double checkServiceHour = 0;
 
 		for (int i = 0 ; i < datas.size(); i++) {
 			Map<String, String> item = datas.get(i);
 			String serviceHour = item.get("service_hour").toString();
 			String hourStr = serviceHour.substring(0, 2);
 			int hour = Integer.valueOf(hourStr).intValue();
-			if (hour < 8) continue;
+			if (hour< 8) continue;
+			if (hour > 18) continue;
 			String isFull = item.get("is_full").toString();
 //			System.out.println("service_hour = " + serviceHour + " --- isFull = " + isFull);
 			if (isFull.equals("0")) {
-				checkServiceHour = checkServiceHour + 0.5;
 				autoSetMapIndex.add(i);
 			}
-			
-			if (isFull.equals("0") && StringUtil.isEmpty(beginServiceHour))  {
-				beginServiceHour = serviceHour;
-			} 
-			
-			if (isFull.equals("1") && !StringUtil.isEmpty(beginServiceHour)  && StringUtil.isEmpty(endServiceHour)) {
-				endServiceHour = serviceHour;
-			}
-			
-			//做相应的判断.
-			if (!StringUtil.isEmpty(beginServiceHour) && !StringUtil.isEmpty(endServiceHour)) {
-				if (checkServiceHour < serviceHours) {
-					for (int j = 0; j < datas.size(); j++) {
-						for (int k = 0; k < autoSetMapIndex.size(); k++) {
-							if (j == autoSetMapIndex.get(k)) {
-								Map<String, String> setitem = datas.get(j);
-								setitem.put("is_full", "1");
-								datas.set(j, setitem);
-							}
-						}
+		}
+		
+		if (autoSetMapIndex.isEmpty()) return datas;
+		
+		int checkLength = (int) (serviceHours * 2);
+		
+		for (int i = 0; i < autoSetMapIndex.size(); i++) {
+			int checkIndex = autoSetMapIndex.get(i);
+			Map<String, String> item = datas.get(checkIndex);
+			List<Long> itemStaffIds = new ArrayList<Long>();
+			itemStaffIds = (List<Long>) ((ArrayList<Long>) checkStaffIds).clone();
+			for (int j = 0 ; j <=  checkLength; j++) {
+				int checkIndexNext = checkIndex + j;
+				if (checkIndexNext >= datas.size()) continue;
+				if (itemStaffIds.isEmpty()) break;
+				Map<String, String> itemTmp = datas.get(checkIndexNext);
+				if (itemTmp.get("staffs") == null) continue;
+				String tmpStaffs = itemTmp.get("staffs").toString();
+				if (StringUtil.isEmpty(tmpStaffs)) continue;
+				String[] tmpStaffAry = StringUtil.convertStrToArray(tmpStaffs);
+				for (int k = 0; k < tmpStaffAry.length; k++) {
+					Long tmpStaffId = Long.valueOf(tmpStaffAry[k]);
+					if (itemStaffIds.contains(tmpStaffId)) {
+						itemStaffIds.remove(tmpStaffId);
 					}
 					
-					beginServiceHour = "";
-					endServiceHour = "";
-					checkServiceHour = 0;
-					autoSetMapIndex = new ArrayList<Integer>();
+					if (itemStaffIds.isEmpty()) break;
 				}
-			}	
-		}		
+			}
+			
+			if (itemStaffIds.isEmpty()) {
+				String isFull = item.get("is_full").toString();
+				item.put("is_full", "1");
+				
+				item.put("is_real_full", isFull);
+				item.put("is_logic_full", "1");
+				item.put("reason", "去掉时间段内已派工的人员，无人员可用");
+				item.put("can_staffs", "");
+				datas.set(checkIndex, item);
+			} else {
+				String canStaffs = StringUtils.collectionToDelimitedString(itemStaffIds, ",");
+				item.put("can_staffs", canStaffs);
+				datas.set(checkIndex, item);
+			}
+		}
+		
+		return datas;
+	}
+	
+	/**
+	 * 智能判断服务日期中间层是否设置为约，
+	 * 1. 先找出 8 -18点未约满的集合A
+	 * 2. 循环集合A，每个点往前检查在serviceHours时间点内是否有约满的情况，如果有则置为约满.
+	 */
+	@Override 
+	public List<Map<String, String>> autoSetFullForward(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType) {
+		
+		
+		if (staffNums > 1 && orderType.equals(Constants.ORDER_TYPE_1)) {
+			serviceHours = MathBigDecimalUtil.getValueStepHalf(serviceHours, staffNums);
+		}
+		serviceHours = serviceHours + 1.5;
+		List<Integer> autoSetMapIndex = new ArrayList<Integer>();
+
+		for (int i = 0 ; i < datas.size(); i++) {
+			Map<String, String> item = datas.get(i);
+			String serviceHour = item.get("service_hour").toString();
+			String hourStr = serviceHour.substring(0, 2);
+			int hour = Integer.valueOf(hourStr).intValue();
+			if (hour< 8) continue;
+			if (hour > 18) continue;
+			String isFull = item.get("is_full").toString();
+//			System.out.println("service_hour = " + serviceHour + " --- isFull = " + isFull);
+			if (isFull.equals("0")) {
+				autoSetMapIndex.add(i);
+			}
+		}
+		
+		if (autoSetMapIndex.isEmpty()) return datas;
+		
+		int checkLength = (int) (serviceHours * 2);
+		
+		for (int i = 0; i < autoSetMapIndex.size(); i++) {
+			int checkIndex = autoSetMapIndex.get(i) + 1;
+			Map<String, String> item = datas.get(checkIndex);
+			String isLoginFull = "0"; 
+			for (int j = 0 ; j <=  checkLength; j++) {
+				int checkIndexNext = checkIndex + j;
+				if (checkIndexNext >= datas.size()) continue;
+				Map<String, String> itemTmp = datas.get(checkIndexNext);
+				String isFullTmp = itemTmp.get("is_full").toString();
+				if (isFullTmp.equals("1")) {
+					isLoginFull = "1";
+					break;
+				}
+			}
+			
+			if (isLoginFull.equals("1")) {
+				String isFull = item.get("is_full").toString();
+				item.put("is_full", "1");
+				
+				item.put("is_real_full", isFull);
+				item.put("is_logic_full", "1");
+				item.put("reason", "服务时间段内有约满的情况");
+				datas.set(checkIndex, item);
+			}
+		}
+
 		return datas;
 	}
 }

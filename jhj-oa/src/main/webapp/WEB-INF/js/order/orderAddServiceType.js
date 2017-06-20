@@ -98,7 +98,7 @@ function serviceTypeChangeExp(serviceTypeId) {
 				serviceContentHtml += "<td>" + serviceType[i].service_hour + "小时</td>";
 				serviceContentHtml += "<td><input type='text' name='itemNum' value='"
 						+ serviceType[i].default_num
-						+ "' onkeyup='changePriceExp()'  onafterpaste='changePriceExp()' ></td>";
+						+ "' onkeyup='changePriceExp(0, 2)'  onafterpaste='changePriceExp(0, 2)' ></td>";
 				serviceContentHtml += "</tr>";
 			}
 			
@@ -106,7 +106,7 @@ function serviceTypeChangeExp(serviceTypeId) {
 			
 			sessionStorage.removeItem("totalOrderPay");
 			$("#divServiceAddons").css("display", "block");
-			changePriceExp();
+			changePriceExp(0, 2);
 		}
 	});
 }
@@ -149,3 +149,36 @@ $(document).on('click','.service-type-li',function(){
 	$(this).parent().remove();
 	serviceTypeChange(orderTypeId,serviceTypeId,orderTypeName);
 });
+
+/**
+ * 新居开荒和大扫除 调整到自动派工 
+ * 		最低两人起（能派一人就派一人）
+ * 		60平米两人 60-100 两人 
+ * 		101-140 3人 
+ * 		141-160 4人 
+ * 		160以上4人 
+ * 		200以上5人 （5人封顶） 自动派工后可以手动调整 
+   擦玻璃改为自动派工，派单人.
+ * @param serviceAddonId  = 29
+ * @param itemNum
+ * @returns {Boolean}
+ */
+function changeStaffNums(serviceAddonId, itemNum) {
+	console.log("changeStaffNums");
+	var orderTypeId = $("#orderType").val();
+	if (orderTypeId == 0) return false;
+	var serviceTypeId = $("#serviceType").val();	
+	console.log("orderTypeId ==" + orderTypeId);
+	console.log("serviceTypeId ==" + serviceTypeId);
+	if (serviceTypeId != 56) return false;
+	if (serviceAddonId != 29 ) return false;
+	if (itemNum == undefined || itemNum == "" || itemNum == 0) return false;
+	var staffNums = 1;
+	if (itemNum < 60) staffNums = 1;
+	if (itemNum >= 60 && itemNum <= 100) staffNums = 2;
+	if (itemNum > 100 && itemNum <= 140) staffNums = 3;
+	if (itemNum > 140 && itemNum <= 200) staffNums = 4;
+	if (itemNum > 200) staffNums = 5;
+	
+	$("#staffNums").val(staffNums);
+}

@@ -172,7 +172,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			if (staffIds.isEmpty()) continue;
 
 		}
-		System.out.println("总人数:" + staffIds.size());
+//		System.out.println("总人数:" + staffIds.size());
 		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
 		searchVo2.setIsBlack((short) 1);
 		List<OrgStaffFinance> blackList = orgStaffFinanceService.selectBySearchVo(searchVo2);		
@@ -182,7 +182,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			}
 		}
 		
-		System.out.println("排除黑名单后总人数:" + staffIds.size());
+//		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// ---4. 在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
@@ -201,14 +201,14 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			}
 		}
 		Collections.sort(staffIds);
-		System.out.println("排除请假后总人数:" + staffIds.size());
+//		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty())
 			return list;
 		
 		
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-		
+//		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		Long startServiceTime = serviceDate;
 		// 注意结束时间也要服务结束后 1:59分钟
 		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 		
@@ -233,7 +233,8 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				staffIds.remove(orderDispatch.getStaffId());
 			}
 		}
-
+		
+//		System.out.println("排除时间冲突后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
 		
 
@@ -373,7 +374,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			if (!orgIds.contains(staff.getOrgId())) orgIds.add(staff.getOrgId());
 			
 		}
-		System.out.println("总人数:" + staffIds.size());
+//		System.out.println("总人数:" + staffIds.size());
 		 
 		OrgStaffFinanceSearchVo searchVo2 = new OrgStaffFinanceSearchVo();
 		searchVo2.setIsBlack((short) 1);
@@ -384,7 +385,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 			}
 		}
 		
-		System.out.println("排除黑名单后总人数:" + staffIds.size());
+//		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		
 		// ---在订单服务时间内请假的员工.
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
@@ -403,12 +404,12 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				}
 			}
 		}
-		System.out.println("排除请假后总人数:" + staffIds.size());
+//		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
 		
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-		
+//		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		Long startServiceTime = serviceDate;
 		// 注意结束时间也要服务结束后 1:59分钟
 		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 		
@@ -430,7 +431,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 				staffIds.remove(orderDispatch.getStaffId());
 			}
 		}
-		System.out.println("排除时间冲突的人员后:" + staffIds.size());
+//		System.out.println("排除时间冲突的人员后:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
 		
 		// 员工服务日期的订单数
@@ -687,7 +688,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		//获得当前预处理员工列表
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		if (selectParentId > 0L) staffSearchVo.setParentId(selectParentId);
-		if (selectOrgId > 0L) staffSearchVo.setParentId(selectOrgId);
+		if (selectOrgId > 0L) staffSearchVo.setOrgId(selectOrgId);
 		staffSearchVo.setStatus(1);
 		List<OrgStaffs> staffList = orgStaffService.selectBySearchVo(staffSearchVo);
 		
@@ -788,8 +789,8 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 
 
 		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-		
+//		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+		Long startServiceTime = serviceDate;
 		// 注意结束时间也要服务结束后 1:59分钟
 		Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 		

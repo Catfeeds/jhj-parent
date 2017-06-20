@@ -76,6 +76,9 @@ public interface OrderDispatchsService {
 
 	List<Map<String, String>> checkDispatchedNotToday(Long serviceTypeId, String serviceDateStr, String lat, String lng, double serviceHours, int staffNums, Short orderType);
 
-	List<Map<String, String>> autoSetFull(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType);
+	List<Map<String, String>> autoSetFullForward(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums, Short orderType);
+
+	List<Map<String, String>> autoSetFullByRemoveStaffs(List<Map<String, String>> datas, String serviceDateStr, double serviceHours, int staffNums,
+			Short orderType, List<Long> checkStaffIds);
    	
 }

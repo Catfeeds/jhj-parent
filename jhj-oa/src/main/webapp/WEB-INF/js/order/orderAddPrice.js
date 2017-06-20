@@ -1,5 +1,6 @@
 // =====================价格相关====================================================
-function changePrice(courponsValue) {
+// eventFrom 触发标识  1 = 服务类型改变  2 = 服务子项数值改变 3 = 服务人员数量改变
+function changePrice(courponsValue, eventFrom) {
 	var serviceType = $("#serviceType").val();
 	
 	if (serviceType == "" || serviceType == undefined) {
@@ -12,7 +13,7 @@ function changePrice(courponsValue) {
 		$("#divServiceAddons").css("display", "none");
 		changePriceHour(courponsValue);
 	} else {
-		changePriceExp(courponsValue);
+		changePriceExp(courponsValue, eventFrom);
 	}
 }
 
@@ -86,7 +87,8 @@ function changePriceHour(couponsValue) {
 }
 
 // 深度养护类型价格计算
-function changePriceExp(couponsValue) {
+//eventFrom 触发标识  1 = 服务类型改变  2 = 服务子项数值改变 3 = 服务人员数量改变
+function changePriceExp(couponsValue, eventFrom) {
 	$("#orderPay").val(0);
 	$("#serviceHour").val(0);
 	$("#serviceAddonDatas").val("");
@@ -152,6 +154,10 @@ function changePriceExp(couponsValue) {
 							
 							serviceAddonsJson.push(jQuery.parseJSON('{"serviceAddonId":'
 									+ serviceAddonId + ',"itemNum":' + itemNum + '}'));
+							
+							if (eventFrom != 3) {
+								changeStaffNums(serviceAddonId, itemNum);
+							}
 							
 						}
 					});

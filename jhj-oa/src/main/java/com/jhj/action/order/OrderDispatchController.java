@@ -257,8 +257,8 @@ public class OrderDispatchController extends BaseController {
 			// 先检测在新的服务时间，原派工服务人员时间是否有冲突.
 			for (OrderDispatchs op : disList) {
 				// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-				Long startServiceTime = serviceDateTime - Constants.SERVICE_PRE_TIME;
-
+//				Long startServiceTime = serviceDateTime - Constants.SERVICE_PRE_TIME;
+				Long startServiceTime = serviceDateTime;
 				// 注意结束时间也要服务结束后 1:59分钟
 				Long endServiceTime = (long) (serviceDateTime + order.getServiceHour() * 3600 + Constants.SERVICE_PRE_TIME);
 
@@ -448,8 +448,8 @@ public class OrderDispatchController extends BaseController {
 		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
 
 			// 判断已派工的服务人员，在新的服务时间内，是否有时间冲突，如果有则返回错误信息.
-			Long startServiceTime = serviceDateTime - Constants.SERVICE_PRE_TIME;
-
+//			Long startServiceTime = serviceDateTime - Constants.SERVICE_PRE_TIME;
+			Long startServiceTime = serviceDateTime;
 			// 注意结束时间也要服务结束后 1:59分钟
 			Long endServiceTime = (long) (serviceDateTime + order.getServiceHour() * 3600 + Constants.SERVICE_PRE_TIME);
 

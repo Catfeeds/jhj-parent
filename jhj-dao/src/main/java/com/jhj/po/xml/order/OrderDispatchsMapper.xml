@@ -145,7 +145,7 @@
 				${item}
 			</foreach>
 		</if>
-
+		
 		<if test="startServiceTime !=null">
 			<![CDATA[ and service_date >= #{startServiceTime}]]>
 		</if>
@@ -178,9 +178,24 @@
 			<![CDATA[ and update_time <= #{endUpdateTime}]]>
 		</if>
 
-
 		<if test="dispatchStatus != null">
 			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
+		</if>
+		
+		<if test="orderStatusList != null">
+			and order_id in (select id from orders where order_status in 
+			<foreach item="item" index="index" collection="orderStatusList" open="(" separator="," close=")">
+				${item}
+			</foreach>
+			
+			<if test="startServiceFinishTime !=null">
+				<![CDATA[ and order_done_time >= #{startServiceFinishTime}]]>
+			</if>
+	
+			<if test="endServiceFinishTime !=null">
+				<![CDATA[ and order_done_time <= #{endServiceFinishTime}]]>
+			</if>
+			)
 		</if>
 	</sql>
 
@@ -192,6 +207,7 @@
 		<if test="orgId !=null and orgId != 0">
 			and org_id = #{orgId,jdbcType=NUMERIC}
 		</if>
+		
 		
 		<if test="staffId !=null ">
 			and staff_id =#{staffId,jdbcType=NUMERIC}
@@ -209,12 +225,10 @@
 		</if>
 		<if test="startServiceTime !=null and endServiceTime != null">
 			<![CDATA[    
-		  	and (
-		  		(service_date >= #{startServiceTime}  and service_date <= #{endServiceTime} )
-		  		or
-		    	((service_date+ service_hours*3600) >= #{startServiceTime} and (service_date+ service_hours*3600) <= #{endServiceTime})
-		    ) 
-	  		]]>
+            and (
+           		service_date <= #{endServiceTime} and (service_date+ service_hours*3600 + 1.5 * 3600) >= #{startServiceTime}
+            ) 	
+            ]]>
 	  	</if>
 	</select>
 
