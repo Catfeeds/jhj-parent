@@ -30,6 +30,8 @@ public class LeaveSearchVo {
 	
 	private Date rangeEndDate;
 	
+	private Date startDate;
+	
 	//请假状态  1= 请假中  2= 请假取消
     private String leaveStatus;
     
@@ -122,6 +124,14 @@ public class LeaveSearchVo {
 
 	public void setStaffName(String staffName) {
 		this.staffName = staffName;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
 

@@ -211,8 +211,6 @@ public class OrgStaffLeaveController extends BaseController {
 		leave.setTotalDays(new Long(dayNum).intValue());
 
 		// 请假日期
-
-
 		Short leaveDuration = leaveVo.getLeaveDuration();
 
 		// 默认选择 8~12点

@@ -80,7 +80,7 @@ $('.form-control.form_datetime').datepicker({
 	autoclose : true,
 	startView : 0,
 	todayBtn:true,
-	startDate:new Date()
+	startDate:new Date(),
 });
 
 function fn(){
@@ -91,3 +91,24 @@ function fn(){
 	}
 }
 fn();
+
+
+function leaveDateChange() {
+	var leaveDateStr = $("#leaveDate").val();
+	var leaveDateEndStr = $("#leaveDateEnd").val();
+	console.log(leaveDateStr + "---" + leaveDateEndStr);
+	
+	var leaveDateObj = moment(leaveDateStr);
+	var leaveDateEndObj = moment(leaveDateEndStr);
+	
+	var d = leaveDateEndObj.diff(leaveDateObj, "days");
+	console.log("d == " + d);
+	
+	if (d == 0) {
+		$("#halfDay").removeAttr("disabled"); 
+	} else {
+		$("#halfDay").attr("disabled", "true");
+		$("#halfDay").val(0);
+	}
+	
+}
