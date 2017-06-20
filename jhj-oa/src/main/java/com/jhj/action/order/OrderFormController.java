@@ -230,7 +230,8 @@ public class OrderFormController extends BaseController {
 				continue;
 			Long staffId = Long.valueOf(tmpStaffIdStr);
 			staffIds.add(staffId);
-			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+//			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+			Long startServiceTime = serviceDate;
 			// 注意结束时间也要服务结束后 1:59分钟
 			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();

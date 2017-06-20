@@ -446,8 +446,9 @@ public class OrgStaffsController extends BaseController {
 				Long serviceTime = item.getServiceDate();
 				Long staffId = item.getStaffId();
 				double serviceHour = item.getServiceHours();
-				Long servicePreTime = serviceTime - Constants.SERVICE_PRE_TIME;
-				Long serviceEndTime = (long) (serviceTime + serviceHour * 3600);
+//				Long servicePreTime = serviceTime - Constants.SERVICE_PRE_TIME;
+				Long servicePreTime = serviceTime;
+				Long serviceEndTime = (long) (serviceTime + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
 				
 				
 				for (int i = 0; i < onlines.size(); i++) {

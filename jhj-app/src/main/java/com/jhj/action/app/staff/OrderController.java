@@ -514,8 +514,8 @@ public class OrderController extends BaseController {
 		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
 		for (OrderDispatchs op : disList) {
 			// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-			
+//			Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
+			Long startServiceTime = serviceDate;
 			// 注意结束时间也要服务结束后 1:59分钟
 			Long endServiceTime = (long) (serviceDate + newServiceHour * 3600 + Constants.SERVICE_PRE_TIME);
 			
