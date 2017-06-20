@@ -226,10 +226,8 @@
 		<if test="startServiceTime !=null and endServiceTime != null">
 			<![CDATA[    
             and (
-                (service_date >= #{startServiceTime}  and service_date <= #{endServiceTime} )
-                or
-                ((service_date+ service_hours*3600 + 1.5 * 3600) >= #{startServiceTime} and (service_date+ service_hours*3600 + 1.5 * 3600) <= #{endServiceTime})
-            ) 
+           		service_date <= #{endServiceTime} and (service_date+ service_hours*3600 + 1.5 * 3600) >= #{startServiceTime}
+            ) 	
             ]]>
 	  	</if>
 	</select>
