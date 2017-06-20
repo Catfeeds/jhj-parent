@@ -815,7 +815,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 3;
+			Double serviceHour = orderDispatch.getServiceHours() + 1.5;
 			// Double serviceHour = orderDispatch.getServiceHours();
 			
 			Double stepHour = (double) 0;
@@ -1071,7 +1071,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 3;
+			Double serviceHour = orderDispatch.getServiceHours() + 1.5;
 			// Double serviceHour = orderDispatch.getServiceHours();
 
 			Double stepHour = (double) 0;
@@ -1368,7 +1368,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			}
 
 			// 时间跨度为结束时间 + 1小时59分钟被占用
-			Double serviceHour = orderDispatch.getServiceHours() + 2;
+			Double serviceHour = orderDispatch.getServiceHours() + 1.5;
 			// Double serviceHour = orderDispatch.getServiceHours();
 
 			Double stepHour = (double) 0;
