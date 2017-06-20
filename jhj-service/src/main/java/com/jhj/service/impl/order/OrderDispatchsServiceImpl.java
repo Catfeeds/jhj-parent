@@ -838,14 +838,14 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 							staffs+= staffId.toString()+",";
 						}
 							
-
-//							 System.out.println("order_id = " + orderId +
-//							 "--realServiceDate = " +  TimeStampUtil.timeStampToDateStr( orderDispatch.getServiceDate() * 1000, DateUtil.DEFAULT_FULL_PATTERN) +
-//							 "--realEndServiceDate =" + TimeStampUtil.timeStampToDateStr( (long) ((orderDispatch.getServiceDate() + orderDispatch.getServiceHours() * 3600)  * 1000), DateUtil.DEFAULT_FULL_PATTERN) +
-//							 "--orderServiceDateStr = " + orderServiceDateStr +
-//							 " --itemServiceHour = " + itemServiceHour +
-//							 "--staffs =" + staffs);
-
+						if (itemServiceHour.equals("08:30")) {
+							 System.out.println("order_id = " + orderId +
+							 "--realServiceDate = " +  TimeStampUtil.timeStampToDateStr( orderDispatch.getServiceDate() * 1000, DateUtil.DEFAULT_FULL_PATTERN) +
+							 "--realEndServiceDate =" + TimeStampUtil.timeStampToDateStr( (long) ((orderDispatch.getServiceDate() + orderDispatch.getServiceHours() * 3600)  * 1000), DateUtil.DEFAULT_FULL_PATTERN) +
+							 "--orderServiceDateStr = " + orderServiceDateStr +
+							 " --itemServiceHour = " + itemServiceHour +
+							 "--staffs =" + staffs);
+						}
 						item.put("staffs", staffs);
 						
 						datas.set(i, item);
@@ -1736,7 +1736,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			Map<String, String> item = datas.get(checkIndex);
 			List<Long> itemStaffIds = new ArrayList<Long>();
 			itemStaffIds = (List<Long>) ((ArrayList<Long>) checkStaffIds).clone();
-			for (int j = 0 ; j <  checkLength; j++) {
+			for (int j = 0 ; j <=  checkLength; j++) {
 				int checkIndexNext = checkIndex + j;
 				if (checkIndexNext >= datas.size()) continue;
 				if (itemStaffIds.isEmpty()) break;
