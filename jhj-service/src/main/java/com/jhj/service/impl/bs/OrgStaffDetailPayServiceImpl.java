@@ -197,6 +197,10 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 			Long orderId = orgStaffDetailPay.getOrderId();
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			oaVo.setUserMobile(order.getMobile());
+			oaVo.setValidateCodeName("否");
+			if(order.getValidateCode()==1){
+				oaVo.setValidateCodeName("是");
+			}
 			
 			OrderSearchVo searchVo = new OrderSearchVo();
 			searchVo.setOrderId(orderId);

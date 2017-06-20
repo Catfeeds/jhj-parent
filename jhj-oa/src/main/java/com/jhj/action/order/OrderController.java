@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,14 +21,12 @@ import com.jhj.common.Constants;
 import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderExtend;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -379,6 +376,36 @@ public class OrderController extends BaseController {
 		}
 			
 		return "redirect:order-list";
+	}
+	
+	/**
+	 * 
+	 * 验码功能，
+	 * @param validateCode = 1,是
+	 * 		  validateCode = 0,否
+	 * 
+	 * 
+	 * */
+	@AuthPassport
+	@RequestMapping(value = "/validate-code", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> updateOrder(
+			@RequestParam("orderId") Long orderId,
+			@RequestParam("validateCode") Short validateCode) {
+
+		Orders orders = orderService.selectByPrimaryKey(orderId);
+		orders.setValidateCode(validateCode);
+		orderService.updateByPrimaryKeySelective(orders);
+		Map<String,String> map = new HashMap<>();
+		if(validateCode==0){
+			map.put("validateCode", "0");
+			map.put("btnValue", "验码");
+		}else{
+			map.put("validateCode", "1");
+			map.put("btnValue", "解除");
+		}
+		return map;
+		
 	}
 
 }

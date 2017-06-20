@@ -57,6 +57,8 @@ public class Orders {
     
     private Short delFlag;
     
+    private Short validateCode;
+    
     public String getRemarksBussinessConfirm() {
 		return remarksBussinessConfirm;
 	}
@@ -280,5 +282,14 @@ public class Orders {
 	public void setDelFlag(Short delFlag) {
 		this.delFlag = delFlag;
 	}
+
+	public Short getValidateCode() {
+		return validateCode;
+	}
+
+	public void setValidateCode(Short validateCode) {
+		this.validateCode = validateCode;
+	}
+	
 
 }

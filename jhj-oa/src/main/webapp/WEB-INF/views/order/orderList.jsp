@@ -269,6 +269,9 @@
 													<c:if test="${item.overworkTimeStr ne null and item.overworkTimeStr ne '' }">
 														<i title="${item.overworkTimeStr }"><img alt="超" src="<c:url value='/img/over-time-icon.png' />" width="23px" height="20px"></i>
 													</c:if>
+													<c:if test="${item.validateCode =='1' }">
+														<i class="btn btn-success btn-xs glyphicon glyphicon-gift" title="验"></i>
+													</c:if>
 												</td>
 											</tr>
 									</c:forEach>
