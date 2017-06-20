@@ -13,25 +13,23 @@ import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffDetailPayMapper;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 import com.jhj.po.model.bs.OrgStaffs;
+import com.jhj.po.model.order.OrderDispatchPrices;
 import com.jhj.po.model.order.OrderPriceExt;
 import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffsService;
+import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
-import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
-import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.TimeStampUtil;
 
@@ -65,6 +63,9 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	
 	@Autowired
 	private PartnerServiceTypeService partnerService;
+	
+	@Autowired
+	private OrderDispatchPriceService orderDispatchPriceService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -188,8 +189,6 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 		oaVo.setUserMobile("");
 		oaVo.setAddr("");
 		
-		
-		
 		if (orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0 
 				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_1
 				|| orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_2
@@ -199,10 +198,18 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			oaVo.setUserMobile(order.getMobile());
 			
-			Long addrId = order.getAddrId();
-			UserAddrs userAddr = userAddrsService.selectByPrimaryKey(addrId);
-			if (userAddr != null) {
-				oaVo.setAddr(userAddr.getName() + userAddr.getAddr());
+			OrderSearchVo searchVo = new OrderSearchVo();
+			searchVo.setOrderId(orderId);
+			searchVo.setOrderNo(order.getOrderNo());
+			List<OrderDispatchPrices> orderDispatchPricesList = orderDispatchPriceService.selectBySearchVo(searchVo);
+			if(orderDispatchPricesList!=null && orderDispatchPricesList.size()>0){
+				OrderDispatchPrices orderDispatchPrices = orderDispatchPricesList.get(0);
+				oaVo.setTotalOrderPay(orderDispatchPrices.getTotalOrderPay());
+				oaVo.setTotalStaffIncoming(orderDispatchPrices.getTotalOrderIncoming());
+				oaVo.setAddr(orderDispatchPrices.getAddr());
+			}else{
+				oaVo.setTotalOrderPay(new BigDecimal(0));
+				oaVo.setTotalStaffIncoming(new BigDecimal(0));
 			}
 		}
 
@@ -235,24 +242,22 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 			Long orderId = orgStaffDetailPay.getOrderId();
 			Orders order = orderService.selectByPrimaryKey(orderId);
 			if (order != null) {
-				if (order.getOrderType().equals(Constants.ORDER_TYPE_0)) {
-					orderListLink = "/jhj-oa/order/order-hour-list?orderNo="+order.getOrderNo();
-				}
+				orderListLink = "/jhj-oa/order/order-list?orderNo="+order.getOrderNo();
 				
-				if (order.getOrderType().equals(Constants.ORDER_TYPE_1)) {
-					orderListLink = "/jhj-oa/order/order-exp-list?orderNo="+order.getOrderNo();
-				}
+				oaVo.setServiceFinishTime(order.getOrderDoneTime());
 			}
+			
 		}
+		
 		oaVo.setOrderListLink(orderListLink);
 		return oaVo;
 	}
 
 	@Override
-	public PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
+	public PageInfo<OrgStaffDetailPay> selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		List<OrgStaffDetailPay> list = orgStaffDetailPayMapper.selectByListPage(searchVo);
-		PageInfo result = new PageInfo(list);
+		PageInfo<OrgStaffDetailPay> result = new PageInfo<>(list);
 		return result;
 
 	}

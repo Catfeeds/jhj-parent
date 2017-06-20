@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -106,10 +107,11 @@ public class OrgStaffDetailPayController extends BaseController {
 		
 		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
 		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, null, sessionParentId);
+		Short[] orderStatusArry = {7,8};
+		searchVo.setOrderStatusList(Arrays.asList(orderStatusArry));
 				
 		List<OrgStaffDetailPay> orgStaffdetailPayList = new ArrayList<OrgStaffDetailPay>();
 
-	
 		PageInfo plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
 		orgStaffdetailPayList = plist.getList();
 		

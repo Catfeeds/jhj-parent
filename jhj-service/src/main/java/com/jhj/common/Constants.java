@@ -1,5 +1,7 @@
 package com.jhj.common;
 
+import java.math.BigDecimal;
+
 
 public class Constants {
 
@@ -428,6 +430,8 @@ public class Constants {
 
 	 //图片类型
 	 public static String IMG_LINK_TYPE_ORDER = "order";
+	 
+	 /**----------------------------------操作日志 start----------------------------------------------*/
 	 //订单操作
 	 public static String ORDER_ACTION_ADD = "订单添加";
 	 public static String ORDER_ACTION_PAY = "订单支付";
@@ -444,11 +448,34 @@ public class Constants {
 	 public static String ORDER_ACTION_RATES = "订单评价";
 	 public static String PERIOD_ORDER_ACTION_PAY = "定制支付";
 	 
+	 /**----------------------------------操作日志 end----------------------------------------------*/
 	 
+	 
+	 
+	 /**----------------------------------优惠券信息 start----------------------------------------------*/
 	 //注册送优惠券
-	 public static Long NEW_USER_REGISTER_COUPONS_ID = 4137L;
+	 public final static Long NEW_USER_REGISTER_COUPONS_ID = 4137L;
 	 
 	 public final static Integer SHARE_SEND_COUPONS_ID = 4201;
+	 
+	 /**----------------------------------优惠券信息 end----------------------------------------------*/
+	 
+	 
+	 /**----------------------------------财务计算 start----------------------------------------------*/
+	 
+	 public final static BigDecimal COUPONS_PERCENTAGE = new BigDecimal(0.5);
+	 
+	 public final static BigDecimal JINPAIBAOJIE_VIP_PERCENTAGE = new BigDecimal(105);
+	 
+	 public final static BigDecimal JINPAIBAOJIE_NOT_VIP_PERCENTAGE = new BigDecimal(101);
+	 
+	 public final static BigDecimal JICHUBAOJIE_NOT_VIP_PERCENTAGE = new BigDecimal(91);
+	 
+	 public final static BigDecimal JICHUBAOJIE_VIP_PERCENTAGE = new BigDecimal(95);
+	 
+	 
+	 
+	 /**----------------------------------财务计算 end----------------------------------------------*/
 
 }
 

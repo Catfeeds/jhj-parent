@@ -1,5 +1,7 @@
 package com.jhj.vo.staff;
 
+import java.math.BigDecimal;
+
 import com.jhj.po.model.bs.OrgStaffDetailPay;
 
 
@@ -19,6 +21,14 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	private String addr;
 	
 	private String orderListLink;
+	
+	private Long serviceFinishTime;
+	
+	//订单支付总金额，包括加时，补差价
+	private BigDecimal totalOrderPay;
+	
+	//服务人员订单收入
+	private BigDecimal totalStaffIncoming;
 	
 	public String getOrderTypeName() {
 		return orderTypeName;
@@ -67,5 +77,30 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	public void setOrderListLink(String orderListLink) {
 		this.orderListLink = orderListLink;
 	}
+
+	public Long getServiceFinishTime() {
+		return serviceFinishTime;
+	}
+
+	public void setServiceFinishTime(Long serviceFinishTime) {
+		this.serviceFinishTime = serviceFinishTime;
+	}
+
+	public BigDecimal getTotalOrderPay() {
+		return totalOrderPay;
+	}
+
+	public void setTotalOrderPay(BigDecimal totalOrderPay) {
+		this.totalOrderPay = totalOrderPay;
+	}
+
+	public BigDecimal getTotalStaffIncoming() {
+		return totalStaffIncoming;
+	}
+
+	public void setTotalStaffIncoming(BigDecimal totalStaffIncoming) {
+		this.totalStaffIncoming = totalStaffIncoming;
+	}
+	
 	
 }

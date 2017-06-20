@@ -60,14 +60,14 @@ public class TestOrderController extends JUnitActionBase{
 	@Test
     public void testPostOrderDone() throws Exception {
 
-		String url = "/app/staff/order/post_done.json?staff_id=50&order_id=12234";
+		String url = "/app/staff/order/post_done.json?staff_id=184&order_id=16609";
 
      	MockHttpServletRequestBuilder postRequest = post(url);
      	
      	HashMap<String, String> contentTypeParams = new HashMap<String, String>();
      	contentTypeParams.put("boundary", "265001916915724");
 	   
-	    MockMultipartFile image = new MockMultipartFile("imgs", "logo-yuan.png", "", imageToByteArray("/Users/lnczx/Pictures/logo-yuan.png"));
+	    MockMultipartFile image = new MockMultipartFile("imgs", "share_img.jpg", "", imageToByteArray("C:\\Users\\hulj\\Desktop\\share_img.jpg"));
 	    
 	    MediaType mediaType = new MediaType("multipart", "form-data", contentTypeParams);
 

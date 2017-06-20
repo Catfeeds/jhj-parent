@@ -56,6 +56,12 @@ public class OrderDispatchSearchVo {
 	private Short isApply;
 	
 	private Long serviceTypeId;
+	
+	private List<Short> orderStatusList;
+	
+	private Long startServiceFinishTime;
+	
+	private Long endServiceFinishTime;
 
 	public String getMobile() {
 		return mobile;
@@ -263,6 +269,30 @@ public class OrderDispatchSearchVo {
 
 	public void setServiceTypeId(Long serviceTypeId) {
 		this.serviceTypeId = serviceTypeId;
+	}
+
+	public List<Short> getOrderStatusList() {
+		return orderStatusList;
+	}
+
+	public void setOrderStatusList(List<Short> orderStatusList) {
+		this.orderStatusList = orderStatusList;
+	}
+
+	public Long getStartServiceFinishTime() {
+		return startServiceFinishTime;
+	}
+
+	public void setStartServiceFinishTime(Long startServiceFinishTime) {
+		this.startServiceFinishTime = startServiceFinishTime;
+	}
+
+	public Long getEndServiceFinishTime() {
+		return endServiceFinishTime;
+	}
+
+	public void setEndServiceFinishTime(Long endServiceFinishTime) {
+		this.endServiceFinishTime = endServiceFinishTime;
 	}
 
 	
