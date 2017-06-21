@@ -78,22 +78,33 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 	
 	 $$("#chooseServiceTime").on("click",function() {
 		 
-		 //判断服务子项必须为2个以上
+		
 
 			var hasDefaultNum = false;
-			
-			var selectedItemNum = 0;
+			 //如果为家政保洁类， 擦玻璃 = 69 ， 金牌保洁 = 70， 基础保洁 = 71 则需要一项服务接口
+			var validateSelectTwoItemNum = 0;
+			//如果不为家政保洁，则必须为数值为2以上才能验证通过
+			var validateSelectOneItemNum = 0;
 			var validateMsg = ""
 			var validateSuccess = true;
 			$$("input[name = itemNum]").each(function(key, index) {
 				itemNum = $$(this).val();
-				 
+				var serviceAddonId = $$(this).parent().find('input[name=serviceAddonId]').val();
+				
+				console.log("serviceAddonId == " + serviceAddonId);
 				 if (itemNum == undefined || itemNum == "") {
 					 itemNum = 0;
 				 }
 				 
 				 if (Number(itemNum) > 0) {
-					 selectedItemNum = parseFloat(selectedItemNum) + parseFloat(itemNum);
+					 
+					 if (serviceAddonId == 69 ||  serviceAddonId == 70 || serviceAddonId == 71) {
+						 validateSelectOneItemNum = parseFloat(validateSelectOneItemNum) + parseFloat(itemNum);
+					 } else {
+						 validateSelectTwoItemNum = parseFloat(validateSelectTwoItemNum) + parseFloat(itemNum);
+					 }
+					 
+//					 selectedItemNum = parseFloat(selectedItemNum) + parseFloat(itemNum);
 					 
 					 var serviceAddonName = $$(this).parent().find('input[name=serviceAddonName]').val();
 					 var defaultNum = $$(this).parent().find('input[name=defaultNum]').val();
@@ -111,14 +122,19 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 			});
 			
 			if (validateSuccess == false) return false;
-			
-			if (parseFloat(selectedItemNum) < parseFloat(2) ) {
+			console.log("validateSelectOneItemNum = " + validateSelectOneItemNum);
+			console.log("validateSelectTwoItemNum = " + validateSelectTwoItemNum);
+			if (validateSelectOneItemNum == 0 && validateSelectTwoItemNum == 0) {
 				validateMsg = "需两项服务起订";
 				myApp.alert(validateMsg);
 				return false;
+			} else if (validateSelectOneItemNum == 0 && validateSelectTwoItemNum > 0) {
+				if (parseFloat(validateSelectTwoItemNum) < parseFloat(2) ) {
+					validateMsg = "需两项服务起订";
+					myApp.alert(validateMsg);
+					return false;
+				}
 			}
-		 
-		 
 		 var validateMsg = setCustomTotal();
 		 if (validateMsg != undefined && validateMsg != "") {
 			 myApp.alert(validateMsg);
@@ -279,7 +295,8 @@ function setCustomTotal() {
 		 var serviceAddonServiceHour = $$(this).parent().find('input[name=serviceAddonServiceHour]').val();
 		 
 		 var aprice = $$(this).parent().find('input[name=serviceAddonAprice]').val();
-
+		 if (aprice == undefined || aprice == "") return false;
+		 console.log("aprice ==" + aprice);
 		 var reg = /[1-9][0-9]*/g;
 		 itemPrice = aprice.match(reg);
 

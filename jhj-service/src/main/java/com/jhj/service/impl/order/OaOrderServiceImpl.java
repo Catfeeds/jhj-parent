@@ -105,9 +105,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 	private CooperateBusinessService cooperateBusinessService;
 
 	@Autowired
-	private PartnerServiceTypeService partnerServiceTypeService;
-
-	@Autowired
 	private OrderPriceExtService orderPriceExtService;
 
 	@Autowired
@@ -158,8 +155,6 @@ public class OaOrderServiceImpl implements OaOrderService {
 		if (orgs != null) {
 			oaOrderListVo.setOrgName(orgs.getOrgName());
 		}
-
-		Map<String, String> statuNameMap = new Hashtable<String, String>();
 		
 		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
 		searchVo1.setOrderNo(orderNo);
@@ -415,7 +410,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		oaOrderListVo.setIsAuto((short) 1);
 		oaOrderListVo.setIsMulti((short) 0);
 		Long serviceTypeId = orders.getServiceType();
-		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		PartnerServiceType serviceType = partnerService.selectByPrimaryKey(serviceTypeId);
 		if (serviceType != null) {
 			oaOrderListVo.setServiceTypeName(serviceType.getName());
 			oaOrderListVo.setIsAuto(serviceType.getIsAuto());
@@ -541,7 +536,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		oaOrderListVo.setIsAuto((short) 1);
 		oaOrderListVo.setIsMulti((short) 0);
 		Long serviceTypeId = orders.getServiceType();
-		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);
+		PartnerServiceType serviceType = partnerService.selectByPrimaryKey(serviceTypeId);
 		if (serviceType != null) {
 			oaOrderListVo.setServiceTypeName(serviceType.getName());
 			oaOrderListVo.setIsAuto(serviceType.getIsAuto());
@@ -842,7 +837,12 @@ public class OaOrderServiceImpl implements OaOrderService {
 				String overworkTimeStr = DateUtil.formatDateTime(overworkMin);
 				oaOrderListVo.setOverworkTimeStr(overworkTimeStr);
 			}
-			
+		}
+		
+		oaOrderListVo.setGroupCode(getOrderGroupCode(orders.getId()));
+		oaOrderListVo.setValidateCodeName("否");
+		if(oaOrderListVo.getValidateCode().equals("1")){
+			oaOrderListVo.setValidateCodeName("是");
 		}
 
 		return oaOrderListVo;

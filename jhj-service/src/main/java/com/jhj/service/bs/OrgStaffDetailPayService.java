@@ -6,11 +6,8 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
-import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.order.Orders;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
-import com.jhj.vo.staff.OrgStaffPaySearchVo;
 import com.jhj.vo.staff.OrgStaffPayVo;
 
 /**
@@ -37,7 +34,7 @@ public interface OrgStaffDetailPayService {
 
 	OrgStaffPayVo getOrgStaffPayVo(OrgStaffDetailPay orgStaffDetailPay);
 
-	PageInfo selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
+	PageInfo<OrgStaffDetailPay> selectByListPage(OrderSearchVo searchVo, int pageNo, int pageSize);
 
 	List<OrgStaffDetailPay> selectBySearchVo(OrderSearchVo searchVo);
 

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,56 +22,27 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jhj.action.BaseController;
 import com.jhj.common.ConstantOa;
-import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
-import com.jhj.po.model.bs.OrgStaffs;
-import com.jhj.po.model.order.OrderPriceExt;
-import com.jhj.po.model.order.OrderPrices;
 import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffPayDeptService;
-import com.jhj.service.bs.OrgStaffsService;
-import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderDispatchPriceService;
-import com.jhj.service.order.OrderPriceExtService;
-import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrderQueryService;
-import com.jhj.service.order.OrderStatService;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffDetailPayOaVo;
-import com.jhj.vo.staff.OrgStaffPayVo;
-import com.meijia.utils.BeanUtilsExp;
-import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
-import com.meijia.utils.OneCareUtil;
-import com.meijia.utils.StringUtil;
-import com.meijia.utils.TimeStampUtil;
 
 @Controller
 @RequestMapping(value = "/staff")
 public class OrgStaffDetailPayController extends BaseController {
+	
 	@Autowired
 	private OrgStaffDetailPayService orgStaffDetailPayService;
 
 	@Autowired
-	private OrgStaffsService orgStaffsService;
-	
-	@Autowired
-	private OrgsService orgService;
-	
-	@Autowired
-	private OrderPricesService orderPriceService;
-	
-	@Autowired
-	private OrderPriceExtService orderPriceExtService;
-	
-	@Autowired
 	private OrderQueryService orderQueryService;
 	
-	@Autowired
-	private OrderStatService orderStatService;
-
 	@Autowired
 	private OrderDispatchPriceService orderDispatchPriceService;
 	
@@ -92,7 +62,7 @@ public class OrgStaffDetailPayController extends BaseController {
 	@RequestMapping(value = "/staffPay-list", method = RequestMethod.GET)
 	public String getStaffPayList(Model model, HttpServletRequest request, 
 			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId,
-			OrderSearchVo searchVo) throws ParseException, UnsupportedEncodingException {
+			OrderSearchVo searchVo) {
 
 		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
 		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
@@ -112,10 +82,9 @@ public class OrgStaffDetailPayController extends BaseController {
 				
 		List<OrgStaffDetailPay> orgStaffdetailPayList = new ArrayList<OrgStaffDetailPay>();
 
-		PageInfo plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
+		PageInfo<OrgStaffDetailPay> plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
 		orgStaffdetailPayList = plist.getList();
 		
-		List<OrgStaffDetailPayOaVo> orgStaffPayVoList = new ArrayList<OrgStaffDetailPayOaVo>();
 		for (int i = 0; i < orgStaffdetailPayList.size(); i++) {
 			OrgStaffDetailPay orgStaffDetailPay = orgStaffdetailPayList.get(i);
 			OrgStaffDetailPayOaVo oaVo = orgStaffDetailPayService.getOrgStaffPayOaVo(orgStaffDetailPay);

@@ -124,6 +124,7 @@
 						<th>订单状态</th>
 						<th>是否验码</th>
 						<th>服务完成时间</th>
+						<th>加时补差价</th>
 						<th>备注</th>
 					</tr>
 				</thead>
@@ -149,6 +150,7 @@
 							<td style="width: 6%">${ item.orderStatusStr }</td>
 							<td style="width: 6%">${ item.validateCodeName }</td>
 							<td style="width: 8%"><timestampTag:timestamp patten="yyyy-MM-dd HH:MM:ss" t="${item.serviceFinishTime * 1000}" /></td>
+							<td style="width: 6%">${ item.overtimeCompensation }</td>
 							<td style="width: 25%">${ item.remarks }</td>
 						</tr>
 					</c:forEach>

@@ -216,6 +216,22 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 				oaVo.setTotalStaffIncoming(new BigDecimal(0));
 			}
 		}
+		
+		//加时和补差价
+		BigDecimal overtimeCompensation = new BigDecimal(0);
+		if(orgStaffDetailPay.getOrderType() == Constants.STAFF_DETAIL_ORDER_TYPE_0){
+			OrderSearchVo searchVo = new OrderSearchVo();
+			searchVo.setOrderNo(orgStaffDetailPay.getOrderNo());
+			searchVo.setOrderStatus((short)2);
+			List<OrderPriceExt> orderPriceExtList = orderPriceExtService.selectBySearchVo(searchVo);
+			if(orderPriceExtList!=null && orderPriceExtList.size()>0){
+				for(int i=0;i<orderPriceExtList.size();i++){
+					OrderPriceExt orderPriceExt = orderPriceExtList.get(i);
+					overtimeCompensation = overtimeCompensation.add(orderPriceExt.getOrderPay());
+				}
+			}
+			oaVo.setOvertimeCompensation(overtimeCompensation);
+		}
 
 		OrderPrices orderPrices = orderPriceService.selectByOrderNo(orgStaffDetailPay.getOrderNo());
 		
@@ -224,7 +240,8 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 			oaVo.setPayTypeName(OneCareUtil.getPayTypeName(orderPrices.getPayType()));
 		}
 		
-		if (oaVo.getOrderType().equals((short)9)) {
+		if (oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_1) ||
+				oaVo.getOrderType().equals(Constants.STAFF_DETAIL_ORDER_TYPE_2)) {
 			OrderPriceExt orderPriceExt = orderPriceExtService.selectByOrderNoExt(oaVo.getOrderNo());
 			
 			if (orderPriceExt != null) {

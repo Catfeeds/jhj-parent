@@ -274,7 +274,7 @@
 		</if>
 
 		<if test="endOrderDoneTime !=null">
-			<![CDATA[ and order_done_time <= #{"endOrderDoneTime !=null"}]]>
+			<![CDATA[ and order_done_time <= #{endOrderDoneTime}]]>
 		</if>
 
 		<if test="parentId !=null">
