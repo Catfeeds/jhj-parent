@@ -126,11 +126,12 @@ $("#submitForm").on('click', function() {
 	
 	$.ajax({
 		type : 'post',
-		url : '/jhj-oa/new_dispatch/save_order_exp.json',
+		url : '/jhj-oa/new_dispatch/save_order_dispatch.json',
 		data : {
 			"selectStaffIds" : selectStaffIds,
 			"orderId" : orderId,
-			"newServiceDate" : orderDate
+			"newServiceDate" : orderDate,
+			"orderType" : 1,
 		},
 		dataType : 'json',
 		success : function(data, status, xhr) {

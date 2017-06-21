@@ -168,236 +168,48 @@ public class OrderDispatchController extends BaseController {
 	}
 
 	/*
-	 * 钟点工-- 提交修改结果
+	 * 调整派工接口
+	 * 兼容几种情况
+	 * 1. 未派工的进行派工
+	 * 2. 只修改派工时间.
+	 * 3. 派工时间不变，调整派工人员
+	 * 4. 派工时间变化，派工人员变化.
 	 */
-	@RequestMapping(value = "save_order_hour.json", method = RequestMethod.POST)
-	public AppResultData<Object> submitManuBaseOrder(Model model, @RequestParam("orderId") Long orderId, @RequestParam("selectStaffIds") String selectStaffIds,
-			@RequestParam("newServiceDate") String newServiceDate, @RequestParam("distanceValue") int distanceValue, HttpServletRequest request) {
-
-		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
-
-		
-		if (newServiceDate.length() == 16)
-			newServiceDate += ":00";
-
-		Orders order = orderSevice.selectByPrimaryKey(orderId);
-		Short orderStatus = order.getOrderStatus();
-		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
-		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
-			resultData.setStatus(Constants.ERROR_999);
-			resultData.setMsg("只有已支付或已派工的订单能进行派工,返回列表页");
-			return resultData;
-		}
-
-		Long serviceDateTime = TimeStampUtil.getMillisOfDayFull(newServiceDate) / 1000;
-		Long oldServiceDateTime = order.getServiceDate();
-
-		String[] staffIdsAry = StringUtil.convertStrToArray(selectStaffIds);
-		// 本次派工人员，可为多个.
-		List<Long> staffIds = new ArrayList<Long>();
-		// 本地派工人员与已经派工过的人员比较，只保留新的派工人员.
-		List<Long> newDispathStaffIds = new ArrayList<Long>();
-
-		// 已经派工的人员，遗留的信息
-		List<Long> oldDispatchStaffIds = new ArrayList<Long>();
-		int newStaffNum = 0;
-		int oldStaffNum = 0;
-
-		for (int i = 0; i < staffIdsAry.length; i++) {
-			String tmpStaffIdStr = staffIdsAry[i];
-			if (StringUtil.isEmpty(tmpStaffIdStr))
-				continue;
-			Long tmpStaffId = Long.valueOf(tmpStaffIdStr);
-			staffIds.add(tmpStaffId);
-			newDispathStaffIds.add(tmpStaffId);
-		}
-		newStaffNum = staffIdsAry.length;
-		
-		
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderNo(order.getOrderNo());
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
-
-		// 去掉已有的派工人员，只保留新增的派工人员.
-		if (!disList.isEmpty()) {
-			oldStaffNum = disList.size();
-			for (OrderDispatchs d : disList) {
-				if (staffIds.contains(d.getStaffId())) {
-					newDispathStaffIds.remove(d.getStaffId());
-					oldDispatchStaffIds.add(d.getStaffId());
-				}
-			}
-		}
-
-		// 派工时间相同，不更换派工人员的情况，不做任何操作
-		if (oldServiceDateTime.equals(serviceDateTime) && newStaffNum == oldStaffNum && newDispathStaffIds.size() == 0) {
-			resultData.setStatus(Constants.ERROR_999);
-			resultData.setMsg("派工人员和服务时间都无变化，不做操作.");
-			return resultData;
-		}
-
-		StaffSearchVo staffSearchVo = new StaffSearchVo();
-		staffSearchVo.setStaffIds(staffIds);
-		List<OrgStaffs> staffs = orgStaffsService.selectBySearchVo(staffSearchVo);
-
-		// 发送通知
-		String beginTimeStr = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDateTime + order.getServiceHour() * 3600) * 1000), "HH:mm");
-		String timeStr = beginTimeStr + "-" + endTimeStr;
-
-		// 用户收到派工通知---发送短信
-		String[] smsContent = new String[] { timeStr };
-
-		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
-
-		// 处理只更换派工时间，不更换派工人员的情况.
-		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
-
-			// 先检测在新的服务时间，原派工服务人员时间是否有冲突.
-			for (OrderDispatchs op : disList) {
-				// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-//				Long startServiceTime = serviceDateTime - Constants.SERVICE_PRE_TIME;
-				Long startServiceTime = serviceDateTime;
-				// 注意结束时间也要服务结束后 1:59分钟
-				Long endServiceTime = (long) (serviceDateTime + order.getServiceHour() * 3600 + Constants.SERVICE_PRE_TIME);
-
-				OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-				searchVo1.setStaffId(op.getStaffId());
-				searchVo1.setDispatchStatus((short) 1);
-				searchVo1.setStartServiceTime(startServiceTime);
-				searchVo1.setEndServiceTime(endServiceTime);
-				List<OrderDispatchs> ooDisList = orderDispatchsService.selectByMatchTime(searchVo1);
-
-				for (OrderDispatchs nop : ooDisList) {
-
-					if (nop.getOrderId().equals(orderId))
-						continue;
-
-					resultData.setStatus(Constants.ERROR_999);
-					resultData.setMsg(nop.getStaffName() + "在" + newServiceDate + "已有其他派工，不能修改服务时间，请进行换人操作.");
-					return resultData;
-				}
-			}
-
-			// 更新订单表
-			order.setServiceDate(serviceDateTime);
-			order.setUpdateTime(TimeStampUtil.getNowSecond());
-			orderSevice.updateByPrimaryKeySelective(order);
-
-			// 将服务人员的派工时间更新为新的派工时间.
-			for (OrderDispatchs op : disList) {
-				op.setServiceDate(serviceDateTime);
-				op.setServiceDatePre(serviceDateTime - Constants.SERVICE_PRE_TIME);
-				op.setUpdateTime(TimeStampUtil.getNowSecond());
-				orderDispatchsService.updateByPrimaryKey(op);
-
-				// 发送短信
-				SmsUtil.SendSms(op.getStaffMobile(), "114590", smsContent);
-			}
-
-			OrderLog orderLog = orderLogService.initOrderLog(order);
-			orderLog.setUserType((short) 2);
-			orderLog.setUserId(sessionAccountAuth.getId());
-			orderLog.setUserName(sessionAccountAuth.getUsername());
-			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_SERVICE_DATETIME);
-			orderLogService.insert(orderLog);
-
-			return resultData;
-		}
-
-		OrderDispatchs oldDispatchs = null;
-		List<String> oldStaffMobiles = new ArrayList<String>();
-		// 将替换的派工人员状态置为 0
-		if (!disList.isEmpty()) {
-			for (OrderDispatchs d : disList) {
-				if (!staffIds.contains(d.getStaffId())) {
-					d.setServiceDate(serviceDateTime);
-					d.setDispatchStatus((short) 0);
-					d.setUpdateTime(TimeStampUtil.getNowSecond());
-					orderDispatchsService.updateByPrimaryKey(d);
-					oldStaffMobiles.add(d.getStaffMobile());
-				}
-			}
-			oldDispatchs = disList.get(0);
-
-		}
-
-		Double serviceHour = (double) order.getServiceHour();
-		// 进行派工
-		for (Long staffId : newDispathStaffIds) {
-			int allocate = 0;
-			String allocateReason = "合理分配";
-			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
-		}
-
-		// 更新订单表
-		order.setStaffNums(staffIds.size());
-		order.setServiceDate(serviceDateTime);
-		order.setUpdateTime(TimeStampUtil.getNowSecond());
-		// 更新为 已派工
-		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
-		int updateByPrimaryKeySelective = orderSevice.updateByPrimaryKeySelective(order);
-		if (updateByPrimaryKeySelective > 0) {
-			OrderLog orderLog = orderLogService.initOrderLog(order);
-			AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
-			orderLog.setUserType((short) 2);
-			orderLog.setUserId(accountAuth.getId());
-			orderLog.setUserName(accountAuth.getUsername());
-			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
-			orderLogService.insert(orderLog);
-		}
-
-		// 2)派工成功，为服务人员发送推送消息---推送消息
-		for (OrgStaffs item : staffs) {
-			orderDispatchsService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
-
-			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
-		}
-
-		// 给原来派工人员发送短信提醒，派工订单被取消
-		for (String oldStaffMobile : oldStaffMobiles) {
-			SmsUtil.SendSms(oldStaffMobile, Constants.MESSAGE_ORDER_CANCLE,
-					new String[] { beginTimeStr, partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
-		}
-
-		return resultData;
-	}
-
-	/*
-	 * 深度服务-- 提交修改结果
-	 */
-	@RequestMapping(value = "save_order_exp.json", method = RequestMethod.POST)
-	public AppResultData<Object> saveExpOrder(Model model, @RequestParam("orderId") Long orderId, @RequestParam("selectStaffIds") String selectStaffIds,
+	@RequestMapping(value = "save_order_dispatch.json", method = RequestMethod.POST)
+	public AppResultData<Object> saveExpOrder(Model model, 
+			@RequestParam("orderType") Short orderType, 
+			@RequestParam("orderId") Long orderId, 
+			@RequestParam("selectStaffIds") String selectStaffIds,
 			@RequestParam("newServiceDate") String newServiceDate, HttpServletRequest request) {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
 
-		if (newServiceDate.length() == 16)
-			newServiceDate += ":00";
-
+		if (newServiceDate.length() == 16) newServiceDate += ":00";
+				
 		Orders order = orderSevice.selectByPrimaryKey(orderId);
 		Short orderStatus = order.getOrderStatus();
-		// 对于 钟点工订单, 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
+		// 只有订单状态为 "已支付" 或 "已派工",可以进行 调整派工
 		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 && orderStatus != Constants.ORDER_HOUR_STATUS_3) {
 			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("只有已支付或已派工的订单能进行派工,返回列表页");
 			return resultData;
 		}
-
+		
+		//新的派工时间
 		Long serviceDateTime = TimeStampUtil.getMillisOfDayFull(newServiceDate) / 1000;
+		
+		//老的派工时间
 		Long oldServiceDateTime = order.getServiceDate();
 
 		String[] staffIdsAry = StringUtil.convertStrToArray(selectStaffIds);
-		// 本次派工人员，可为多个.
+		// 新的派工人员
 		List<Long> staffIds = new ArrayList<Long>();
-		// 本地派工人员与已经派工过的人员比较，只保留新的派工人员.
+		// 新的派工人员与已经派工过的人员比较，只保留新的派工人员.
 		List<Long> newDispathStaffIds = new ArrayList<Long>();
-		int newStaffNum = 0;
-		int oldStaffNum = 0;
-		// 已经派工的人员，遗留的信息
+		// 已经派工的人员
 		List<Long> oldDispatchStaffIds = new ArrayList<Long>();
+		int newStaffNum = staffIdsAry.length;
+		int oldStaffNum = 0;
 
 		for (int i = 0; i < staffIdsAry.length; i++) {
 			String tmpStaffIdStr = staffIdsAry[i];
@@ -409,10 +221,10 @@ public class OrderDispatchController extends BaseController {
 		}
 		newStaffNum = staffIdsAry.length;
 
-		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
-		searchVo.setOrderNo(order.getOrderNo());
-		searchVo.setDispatchStatus((short) 1);
-		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+		OrderDispatchSearchVo orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderNo(order.getOrderNo());
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
 		
 		// 去掉已有的派工人员，只保留新增的派工人员.
 		if (!disList.isEmpty()) {
@@ -424,6 +236,12 @@ public class OrderDispatchController extends BaseController {
 				}
 			}
 		}
+		
+		if (orderType.equals(Constants.ORDER_TYPE_0) && newStaffNum != oldStaffNum) {
+			resultData.setStatus(Constants.ERROR_999);
+			resultData.setMsg("基础保洁订单不能修改人数，因为涉及到价格的变更.");
+			return resultData;
+		}
 
 		// 派工时间相同，不更换派工人员的情况，不做任何操作
 		if (oldServiceDateTime.equals(serviceDateTime) && newStaffNum == oldStaffNum && newDispathStaffIds.size() == 0) {
@@ -431,7 +249,68 @@ public class OrderDispatchController extends BaseController {
 			resultData.setMsg("派工人员和服务时间都无变化，不做操作.");
 			return resultData;
 		}
+		
+		List<Long> dispatchStaffIds = new ArrayList<Long>();
+		String orderLogRemarks = "";
+		//处理几种情况
+		//1. 如果为未派工，则 = staffIds;
+		if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_2)) {
+			dispatchStaffIds = staffIds;
+			orderLogRemarks = Constants.ORDER_ACTION_DISPATCHS;
+		} else {
+			//2. 只修改派工时间.
+			if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
+				dispatchStaffIds = staffIds;
+				orderLogRemarks = Constants.ORDER_ACTION_UPDATE_SERVICE_DATETIME;
+			}
+			//3. 派工时间不变，调整派工人员
+			if (oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() > 0) {
+				dispatchStaffIds = oldDispatchStaffIds;
+				orderLogRemarks = Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF;
+			}
+			//4. 派工时间变化，派工人员变化.
+			if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() > 0 ) {
+				dispatchStaffIds = staffIds;
+				orderLogRemarks = Constants.ORDER_ACTION_UPDATE_SERVICE_DATETIME + ";" + Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF;
+			}
+		}
+		
+		// 计算派工时间
+		Double serviceHour = (double) order.getServiceHour();
+				
+		// 如果为多人派工，需要对服务时间进行平均. 考虑到调整派工，人数变化的情况，所以要整体的更新.
+		// 平均值频度为30分钟，比如 2.1 小时则为 2.5小时， 2.6小时则为3小时.
+		if (orderType.equals(Constants.ORDER_TYPE_1) && staffIds.size() > 1 && newDispathStaffIds.size() > 0) {
+			int totalStaffs = staffIds.size();
+			// 派工人数会变化，所以需要重新计算订单小时数.
+			List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
+			if (!orderAddons.isEmpty()) {
+				serviceHour = orderExpCleanService.mathOrderServiceHour(orderAddons);
+			} else {
+				serviceHour = order.getServiceHour() * oldStaffNum;
+			}
+			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, totalStaffs);
+		}
 
+		//检测是否有时间冲突的情况
+		Long startServiceTime = serviceDateTime;
+		// 注意结束时间也要服务结束后 1:59分钟
+		Long endServiceTime = (long) (serviceDateTime + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
+
+		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+		searchVo1.setStaffIds(dispatchStaffIds);
+		searchVo1.setDispatchStatus((short) 1);
+		searchVo1.setStartServiceTime(startServiceTime);
+		searchVo1.setEndServiceTime(endServiceTime);
+		List<OrderDispatchs> ooDisList = orderDispatchsService.selectByMatchTime(searchVo1);
+
+		for (OrderDispatchs nop : ooDisList) {
+			if (nop.getOrderId().equals(orderId)) continue;
+			resultData.setStatus(Constants.ERROR_999);
+			resultData.setMsg(nop.getStaffName() + "在" + newServiceDate + "已有其他派工，不能修改服务时间，请进行换人操作.");
+			return resultData;
+		}
+				
 		StaffSearchVo staffSearchVo = new StaffSearchVo();
 		staffSearchVo.setStaffIds(staffIds);
 		List<OrgStaffs> staffs = orgStaffsService.selectBySearchVo(staffSearchVo);
@@ -444,64 +323,29 @@ public class OrderDispatchController extends BaseController {
 
 		AccountAuth sessionAccountAuth = AuthHelper.getSessionAccountAuth(request);
 
-		// 处理只更换派工时间，不更换派工人员的情况.
-		if (!oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() == 0) {
-
-			// 判断已派工的服务人员，在新的服务时间内，是否有时间冲突，如果有则返回错误信息.
-//			Long startServiceTime = serviceDateTime - Constants.SERVICE_PRE_TIME;
-			Long startServiceTime = serviceDateTime;
-			// 注意结束时间也要服务结束后 1:59分钟
-			Long endServiceTime = (long) (serviceDateTime + order.getServiceHour() * 3600 + Constants.SERVICE_PRE_TIME);
-
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setStaffIds(oldDispatchStaffIds);
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStartServiceTime(startServiceTime);
-			searchVo1.setEndServiceTime(endServiceTime);
-			List<OrderDispatchs> ooDisList = orderDispatchsService.selectByMatchTime(searchVo1);
-
-			for (OrderDispatchs nop : ooDisList) {
-
-				if (nop.getOrderId().equals(orderId))
-					continue;
-
-				resultData.setStatus(Constants.ERROR_999);
-				resultData.setMsg(nop.getStaffName() + "在" + newServiceDate + "已有其他派工，不能修改服务时间，请进行换人操作.");
-				return resultData;
-			}
-
-			// 更新订单表
-
-			order.setServiceDate(serviceDateTime);
-			order.setUpdateTime(TimeStampUtil.getNowSecond());
-			orderSevice.updateByPrimaryKeySelective(order);
-
-			// 更新派工人员的
-			if (!disList.isEmpty()) {
-				for (OrderDispatchs d : disList) {
-					d.setServiceDate(serviceDateTime);
-					d.setServiceDatePre(serviceDateTime - Constants.SERVICE_PRE_TIME);
-					d.setUpdateTime(TimeStampUtil.getNowSecond());
-					orderDispatchsService.updateByPrimaryKey(d);
-
-					SmsUtil.SendSms(d.getStaffMobile(), "114590", smsContent);
-				}
-			}
-			OrderLog orderLog = orderLogService.initOrderLog(order);
-			orderLog.setUserId(sessionAccountAuth.getId());
-			orderLog.setUserName(sessionAccountAuth.getUsername());
-			orderLog.setUserType((short) 2);
-			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_SERVICE_DATETIME);
-			orderLogService.insert(orderLog);
-			return resultData;
-
+		// 更新订单表信息
+		
+		if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_2)) {
+			order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
 		}
 		
+		order.setServiceDate(serviceDateTime);
+		order.setServiceHour(serviceHour);
+		order.setStaffNums(staffIds.size());
+		order.setUpdateTime(TimeStampUtil.getNowSecond());
+		orderSevice.updateByPrimaryKeySelective(order);
 		
-		OrderDispatchs oldDispatchs = null;
+		// 更新订单日志.
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLog.setUserId(sessionAccountAuth.getId());
+		orderLog.setUserName(sessionAccountAuth.getUsername());
+		orderLog.setUserType((short) 2);
+		orderLog.setAction(orderLogRemarks);
+		orderLogService.insert(orderLog);
+		
 		List<String> oldStaffMobiles = new ArrayList<String>();
-		// 将替换的派工人员状态置为 0
-		if (!disList.isEmpty()) {
+		//进行派工， 判断是否需要将老派工变为不可用.
+		if (newDispathStaffIds.size() > 0) {
 			for (OrderDispatchs d : disList) {
 				if (!staffIds.contains(d.getStaffId())) {
 					d.setDispatchStatus((short) 0);
@@ -510,81 +354,34 @@ public class OrderDispatchController extends BaseController {
 					oldStaffMobiles.add(d.getStaffMobile());
 				}
 			}
-			oldDispatchs = disList.get(0);
 		}
-
-		// 计算派工时间
-		Double serviceHour = (double) order.getServiceHour();
 		
-		// 如果为多人派工，需要对服务时间进行平均. 考虑到调整派工，人数变化的情况，所以要整体的更新.
-		// 平均值频度为30分钟，比如 2.1 小时则为 2.5小时， 2.6小时则为3小时.
-		if (staffIds.size() > 1) {
-			int totalStaffs = staffIds.size();
-			// 派工人数会变化，所以需要重新计算订单小时数.
-			List<OrderServiceAddons> orderAddons = orderServiceAddonsService.selectByOrderId(orderId);
-			if (!orderAddons.isEmpty()) {
-				serviceHour = orderExpCleanService.mathOrderServiceHour(orderAddons);
-			} else {
-				serviceHour = order.getServiceHour() * oldStaffNum;
+		orderDispatchSearchVo = new OrderDispatchSearchVo();
+		orderDispatchSearchVo.setOrderNo(order.getOrderNo());
+		orderDispatchSearchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> newDisList = orderDispatchsService.selectBySearchVo(orderDispatchSearchVo);
+		
+		// 进行派工，兼容一人和多人
+		for (Long staffId : staffIds) {
+			Boolean willDispatch = true;
+			for (OrderDispatchs d : newDisList) {
+				if (staffId.equals(d.getStaffId())) {
+					willDispatch = false;
+					break;
+				}
 			}
 			
-			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, totalStaffs);
-
-			disList = orderDispatchsService.selectBySearchVo(searchVo);
-
-			for (OrderDispatchs d : disList) {
-				d.setServiceDatePre(serviceDateTime - Constants.SERVICE_PRE_TIME);
-				d.setServiceDate(serviceDateTime);
-				d.setServiceHours(serviceHour);
-				d.setUpdateTime(TimeStampUtil.getNowSecond());
-				orderDispatchsService.updateByPrimaryKey(d);
-			}
-		}
-		
-		// 更新订单表
-		order.setStaffNums(staffIds.size());
-		order.setServiceDate(serviceDateTime);
-		order.setUpdateTime(TimeStampUtil.getNowSecond());
-		// 更新为 已派工
-		order.setServiceHour(serviceHour);
-		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);
-		int updateByPrimaryKeySelective = orderSevice.updateByPrimaryKeySelective(order);
-
-		if (updateByPrimaryKeySelective > 0) {
-			OrderLog orderLog = orderLogService.initOrderLog(order);
-			orderLog.setUserId(sessionAccountAuth.getId());
-			orderLog.setUserName(sessionAccountAuth.getUsername());
-			orderLog.setUserType((short) 2);
-			orderLog.setAction(Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF);
-			orderLogService.insert(orderLog);
-		}
-
-
-
-		// 进行派工，兼容一人和多人
-		for (Long staffId : newDispathStaffIds) {
+			if (!willDispatch) continue;
+			
 			int allocate = 0;
 			String allocateReason = "合理分配";
 			Boolean doOrderDispatch = orderDispatchsService.doOrderDispatch(order, serviceDateTime, serviceHour, staffId, allocate, allocateReason);
-		}
-
-		
-
-		
-		
-
-		/*
-		 * 派工 短信通知
-		 */
-		// 用户收到派工通知---发送短信
-
-		// 2)派工成功，为服务人员发送推送消息---推送消息
-
-		for (OrgStaffs item : staffs) {
-			orderDispatchsService.pushToStaff(item.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+			
+			OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
+			orderDispatchsService.pushToStaff(orgStaff.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
 					Constants.ALERT_STAFF_MSG);
 
-			SmsUtil.SendSms(item.getMobile(), "114590", smsContent);
+			SmsUtil.SendSms(orgStaff.getMobile(), "114590", smsContent);
 		}
 
 		// 给原来派工人员发送短信提醒，派工订单被取消

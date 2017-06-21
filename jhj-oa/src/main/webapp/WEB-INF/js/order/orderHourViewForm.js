@@ -147,12 +147,13 @@ $("#submitForm").on('click', function() {
 		
 		$.ajax({
 			type : 'post',
-			url : '/jhj-oa/new_dispatch/save_order_hour.json',
+			url : '/jhj-oa/new_dispatch/save_order_dispatch.json',
 			data : {
 				"selectStaffIds" : selectStaffIds,
 				"orderId" : orderId,
 				"newServiceDate" : orderDate,
-				"distanceValue" : distanceValue
+//				"distanceValue" : distanceValue,
+				"orderType" : 0
 			},
 			dataType : 'json',
 			success : function(data, status, xhr) {
