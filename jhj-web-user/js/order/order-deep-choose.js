@@ -345,7 +345,9 @@ function setDeepTotal() {
 }
 
 function changeDeepStaffNums(serviceAddonId, itemNum) {
-	if (serviceAddonId != 29 ) return false;
+	console.log("changeDeepStaffNums");
+	console.log("serviceAddonId == " + serviceAddonId + " --- itemNum =" + itemNum);
+	if (serviceAddonId != 29 && serviceAddonId != 27 ) return false;
 	
 	if (itemNum == undefined || itemNum == "" || itemNum == 0) return false;
 	var staffNums = 1;
@@ -354,6 +356,6 @@ function changeDeepStaffNums(serviceAddonId, itemNum) {
 	if (itemNum > 100 && itemNum <= 140) staffNums = 3;
 	if (itemNum > 140 && itemNum <= 200) staffNums = 4;
 	if (itemNum > 200) staffNums = 5;
-	
+	console.log("total_staff_nums = " + staffNums);
 	sessionStorage.setItem("total_staff_nums", staffNums);
 }

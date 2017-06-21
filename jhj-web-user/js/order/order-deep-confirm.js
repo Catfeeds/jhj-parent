@@ -184,6 +184,12 @@ myApp.onPageInit('order-deep-confirm', function(page) {
 		params.remarks = $$("#remarks").val();
 		params.order_from = $$("#orderFrom").val();
 		
+		var staffNums = sessionStorage.getItem("total_staff_nums");
+		if (staffNums == undefined || staffNums == "" || staffNums == null || staffNums == 0) {
+			staffNums = 1;
+		}
+		params.staff_nums = staffNums;
+		
 		var staffId = sessionStorage.getItem("staff_id");
 		if (staffId == undefined || staffId == "" || staffId == null) {
 			staffId = 0;

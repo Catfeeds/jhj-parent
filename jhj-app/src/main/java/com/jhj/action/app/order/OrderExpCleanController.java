@@ -45,6 +45,7 @@ import com.jhj.vo.order.DeepCleanVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderServiceAddonViewVo;
 import com.jhj.vo.order.OrderViewVo;
+import com.meijia.utils.MathBigDecimalUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.StringUtil;
 import com.meijia.utils.vo.AppResultData;
@@ -105,6 +106,7 @@ public class OrderExpCleanController extends BaseController {
 			@RequestParam("addr_id") Long addrId,
 			@RequestParam("serviceHour") double serviceHour,
 			@RequestParam("service_addons_datas") String serviceAddonsDatas,
+			@RequestParam(value = "staff_nums", required = false, defaultValue = "1") int staffNums,
 			@RequestParam(value = "remarks", required = false, defaultValue = "") String remarks,
 			@RequestParam(value = "order_from", required = false, defaultValue = "1") Short orderFrom,
 			@RequestParam(value = "order_pay", required = false, defaultValue = "0") BigDecimal orderPay,
@@ -130,6 +132,7 @@ public class OrderExpCleanController extends BaseController {
 		}
 		
 		
+		
 		Users u = userService.selectByPrimaryKey(userId);
 
 		
@@ -142,7 +145,12 @@ public class OrderExpCleanController extends BaseController {
 
 		// 1.2.保存订单信息
 		Orders order = ordersService.initOrders();
-
+		
+		if (staffNums > 1 ) {
+			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, staffNums);
+			order.setServiceHour(serviceHour);
+		}
+		
 		order.setMobile(mobile);
 		order.setUserId(userId);
 		order.setOrderStatus(Constants.ORDER_STATUS_1);
@@ -150,8 +158,7 @@ public class OrderExpCleanController extends BaseController {
 		order.setOrderType(Constants.ORDER_TYPE_1);
 		order.setServiceType(serviceType);
 		order.setServiceDate(serviceDateTable);
-		order.setServiceHour(serviceHour);
-		order.setStaffNums(1);
+		order.setStaffNums(staffNums);
 		order.setAddrId(addrId);
 		
 		UserAddrs userAddrs = userAddrsService.selectByPrimaryKey(addrId);
