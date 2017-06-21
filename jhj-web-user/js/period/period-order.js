@@ -39,15 +39,17 @@ myApp.onPageBeforeInit("period-order", function (page) {
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '');
     					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
     					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), 'disabled');
-    					total = parseFloat(periodOrder.price) * parseFloat(periodOrder.total);
-    					ptotal = parseFloat(periodOrder.vip_price) * parseFloat(periodOrder.total);
+    				}else if(periodOrder.service_type_id == 68){
+    					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '调整');
+    					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
+    					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), 'disabled');
     				}else{
     					htmlPart = htmlPart.replace(new RegExp('{adjust}', "gm"), '调整');
     					htmlPart = htmlPart.replace(new RegExp('{checked}', "gm"), 'checked');
     					htmlPart = htmlPart.replace(new RegExp('{disabled}', "gm"), '');
-						total = parseFloat(periodOrder.price) * parseFloat(periodOrder.total);
-						ptotal = parseFloat(periodOrder.vip_price) * parseFloat(periodOrder.total);
     				}
+    				total = parseFloat(periodOrder.price) * parseFloat(periodOrder.total);
+    				ptotal = parseFloat(periodOrder.vip_price) * parseFloat(periodOrder.total);
     				if(periodOrder.name=='擦玻璃'){
     					htmlPart = htmlPart.replace(new RegExp('{describle}', "gm"), '总面积');
     					htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), 10);
@@ -112,16 +114,6 @@ myApp.onPageBeforeInit("period-order", function (page) {
 			}
 
 			setPeriodPrice();
-//       		var serviceTypeObject = {};
-//       		serviceTypeObject.name = $$(serviceType).nextAll(".item-inner").find(".housework-3 .item-title").text();
-//       		serviceTypeObject.periodServiceAddonId = $$(serviceType).prevAll("input[name='id']").val();
-//       		serviceTypeObject.serviceTypeId = $$(serviceType).val();
-//       		serviceTypeObject.serviceAddonId = $$(serviceType).prev().prev().val();
-//       		serviceTypeObject.price = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-5 .price").text();
-//       		serviceTypeObject.vipPrice = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-5 .vip-price").text();
-//       		serviceTypeObject.num = $$(serviceType).nextAll(".item-inner").find(".item-subtitle .housework-4 .total").text();
-       		
-//       		periodServiceAddonsArray.push(serviceTypeObject);
        	}
        	
        	sessionStorage.setItem("periodOrder",JSON.stringify(periodServiceAddonsArray));
@@ -156,7 +148,10 @@ myApp.onPageBeforeInit("period-order", function (page) {
         		if(serviceTypeAddonsList.length>0){
         			for(var i=0;i<serviceTypeAddonsList.length;i++){
         				var serviceTypeAddons = serviceTypeAddonsList[i];
-        				if(serviceTypeAddons.name=='金牌保洁' || serviceTypeAddons.name=='基础保洁'){//金牌保洁 30
+        				if(serviceTypeAddons.name=='金牌保洁'){//金牌保洁 30
+        					continue;
+        				}
+        				if(serviceTypeId!='68' && serviceTypeAddons.name=='基础保洁'){
         					continue;
         				}
         				var htmlPart = temp;
@@ -179,14 +174,23 @@ myApp.onPageBeforeInit("period-order", function (page) {
                 				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), parseFloat(serviceTypeAddons.dis_price)*parseFloat(addons.num));
         					}
         				}
-        				
+        				var totalPrice = 0;
+        				var vipTotalPrice = 0;
         				if(serviceTypeAddons.name=='擦玻璃'){
         					htmlPart = htmlPart.replace(new RegExp('{number}', "gm"), 10);
+        					totalPrice = serviceTypeAddons.price * 10;
+        					vipTotalPrice = serviceTypeAddons.dis_price * 10;
+        				}else if(serviceTypeAddons.name=='基础保洁'){
+        					htmlPart = htmlPart.replace(new RegExp('{number}', "gm"), 5);
+        					totalPrice = serviceTypeAddons.price * 5;
+        					vipTotalPrice = serviceTypeAddons.dis_price * 5;
         				}else{
         					htmlPart = htmlPart.replace(new RegExp('{number}', "gm"), 1);
+        					totalPrice = serviceTypeAddons.price * 1;
+        					vipTotalPrice = serviceTypeAddons.dis_price * 1;
         				}
-        				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), serviceTypeAddons.price);
-        				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), serviceTypeAddons.dis_price);
+        				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), totalPrice);
+        				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), vipTotalPrice);
         				
         				html += htmlPart;
         			}
@@ -230,6 +234,11 @@ myApp.onPageBeforeInit("period-order", function (page) {
         		myApp.alert("服务数量不能小于10");
         		return false;
         	}
+    	}else if(name=='基础保洁'){
+    		if(serviceNum<=5){
+        		myApp.alert("服务数量不能小于5");
+        		return false;
+        	}
     	}else{
     		if(serviceNum<=1){
         		myApp.alert("服务数量不能小于1");
@@ -244,10 +253,21 @@ myApp.onPageBeforeInit("period-order", function (page) {
     
     $$(".page").on("change",".service-num",function(){
     	var serviceNum = $$(this).val();
-    	if(serviceNum<=1){
-    		myApp.alert("服务数量不能小于1");
-    		return false;
+    	var serviceTypeName = $$(this).parent().prev().text();
+    	if(serviceTypeName=='擦玻璃'){
+    		if(serviceNum<=10){
+        		serviceNum = 10;
+        	}
+    	}else if(serviceTypeName=='基础保洁'){
+    		if(serviceNum<=5){
+        		serviceNum = 5;
+        	}
+    	}else{
+    		if(serviceNum<=1){
+        		serviceNum = 1;
+        	}
     	}
+    	$$(this).val(serviceNum);
     	calc_price(this,serviceNum);
     })
     
@@ -257,10 +277,6 @@ myApp.onPageBeforeInit("period-order", function (page) {
     	if(serviceTypeAddonsList==undefined || serviceTypeAddonsList==null || serviceTypeAddonsList=='') return false;
     	
     	var serviceTypeId = $$(this).parent().prev().find(".list-block .label-checkbox input[name='serviceTypeId']").val();
-    	//var serviceNum = $$("input[name='serviceTypeAddons']:checked").nextAll(".item-inner").find(".housework-3 .housework-2 .service-num").val();
-    	//var price = $$("input[name='serviceTypeAddons']:checked").prevAll("#price1").val();
-    	//var pprice = $$("input[name='serviceTypeAddons']:checked").prevAll("#pprice").val();
-    	//var name = $$("input[name='serviceTypeAddons']:checked").nextAll(".item-inner").find(".housework-3 .item-title").text();
 		var input = $$("input[name='serviceTypeId']:checked");
 		
 		var serviceTypeAddonsArray = [];

@@ -520,3 +520,27 @@ $("#checkOrderLog").on('click',function(){
 	});
 });
 
+
+$("#btn-validate").on('click',function(){
+	var orderId = $("#id").val();
+	var validateCode = $("#validateCode").val();
+	if(validateCode=='0'){
+		validateCode = '1';
+	}else{
+		validateCode = '0';
+	}
+	$.ajax({
+		type:"POSt",
+		url:"validate-code",
+		data:{
+			"orderId":orderId,
+			"validateCode":validateCode
+		},
+		dataType:"json",
+		success:function(data){
+			$("#validateCode").val(data.validateCode);
+			$("#btn-validate").text(data.btnValue);
+		}
+	});
+});
+

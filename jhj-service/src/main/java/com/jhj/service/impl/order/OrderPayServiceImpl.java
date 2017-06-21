@@ -270,22 +270,36 @@ public class OrderPayServiceImpl implements OrderPayService {
 			}
 		}
 		
-		int staffNums = 1;
+		int staffNums = order.getStaffNums();
 		
 		List<OrgStaffDispatchVo> autoStaffs = orderDispatchService.autoDispatch(addrId, serviceTypeId, serviceDate, serviceHour, staffNums, appointStaffIds);
 	
 		if (autoStaffs.isEmpty()) return false;
 		
 		
-		OrgStaffDispatchVo staffVo = autoStaffs.get(0);
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
 		
-		Long staffId = staffVo.getStaffId();
-		int allocate = staffVo.getAllocate();
-		String allocateReason = staffVo.getAllocateReason();
+		for (int i = 0; i < autoStaffs.size(); i++) {
+			OrgStaffDispatchVo staffVo = autoStaffs.get(i);
+		
+			Long staffId = staffVo.getStaffId();
+			int allocate = staffVo.getAllocate();
+			String allocateReason = staffVo.getAllocateReason();
 		// 进行派工
-		Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId, allocate, allocateReason);
-
-		order.setOrgId(staffVo.getOrgId());
+			Boolean doOrderDispatch = orderDispatchService.doOrderDispatch(order, serviceDate, serviceHour, staffId, allocate, allocateReason);
+		
+			orderDispatchService.pushToStaff(staffVo.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
+					Constants.ALERT_STAFF_MSG);
+			
+			//发送短信
+			String[] smsContent = new String[] { timeStr };
+			SmsUtil.SendSms(staffVo.getMobile(), "114590", smsContent);
+			
+			order.setOrgId(staffVo.getOrgId());
+		}
+		
 		order.setOrderStatus(Constants.ORDER_HOUR_STATUS_3);// 更新订单状态---已派工
 		order.setUpdateTime(TimeStampUtil.getNowSecond());// 修改 24小时已支付
 															// 的助理单，需要用到这个 修改时间
@@ -299,26 +313,6 @@ public class OrderPayServiceImpl implements OrderPayService {
 		orderLog.setUserType((short)0);
 		orderLogService.insert(orderLog);
 
-		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
-		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
-		String timeStr = beginTimeStr + "-" + endTimeStr;
-
-		// 1) 用户收到派工通知---发送短信
-		// String[] contentForUser = new String[] { timeStr };
-		// SmsUtil.SendSms(u.getMobile(), "29152", contentForUser);
-
-		// 2)派工成功，为服务人员发送推送消息---推送消息
-		
-
-		if (doOrderDispatch.equals(true)) {
-			orderDispatchService.pushToStaff(staffVo.getStaffId(), "true", "dispatch", orderId, OneCareUtil.getJhjOrderTypeName(order.getOrderType()),
-					Constants.ALERT_STAFF_MSG);
-			
-			//发送短信
-			String[] smsContent = new String[] { timeStr };
-			SmsUtil.SendSms(staffVo.getMobile(), "114590", smsContent);
-		}
-		
 		return true;
 	}
 	
