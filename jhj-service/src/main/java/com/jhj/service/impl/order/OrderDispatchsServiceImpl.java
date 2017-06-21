@@ -359,6 +359,42 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		//如果可派工人数不足，则属于派工不成功.
 		if (dispatchStaffs.size() < staffNums) return new ArrayList<OrgStaffDispatchVo>();
 		
+		
+		//在进行一次时间冲突校验，去掉有时间冲突的员工.
+		List<OrgStaffDispatchVo> result = new ArrayList<OrgStaffDispatchVo>();
+		for (int i = 0; i < dispatchStaffs.size(); i++) {
+			OrgStaffDispatchVo c = dispatchStaffs.get(i);
+			Long staffId = c.getStaffId();
+			Long startServiceTime = serviceDate;
+			// 注意结束时间也要服务结束后 1:59分钟
+			Long endServiceTime = (long) (serviceDate + serviceHour * 3600 + Constants.SERVICE_PRE_TIME);
+			
+			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
+			searchVo1.setDispatchStatus((short) 1);
+			searchVo1.setStartServiceTime(startServiceTime);
+			searchVo1.setEndServiceTime(endServiceTime);
+			searchVo1.setStaffId(staffId);
+			List<OrderDispatchs> disList = this.selectByMatchTime(searchVo1);
+			
+			Boolean canDispatch = true;
+			
+			for (OrderDispatchs orderDispatch : disList) {
+				
+				Long orderId = orderDispatch.getOrderId();
+				Orders order = orderService.selectByPrimaryKey(orderId);
+
+				if (order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_0) || order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)
+						|| order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_9)) {
+					continue;
+				}
+				
+				canDispatch = false;
+				
+			}
+			if (canDispatch) result.add(c);
+		}
+		
+		
 		return dispatchStaffs;
 	}
 
