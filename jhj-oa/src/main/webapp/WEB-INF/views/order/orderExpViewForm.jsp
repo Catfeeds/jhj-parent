@@ -37,6 +37,8 @@
 			<div class="panel-body">
 				<form:form id="orderViewForm" modelAttribute="oaOrderListVoModel" class="form-horizontal"
 					enctype="multipart/form-data">
+					<input type="hidden" id="adminId" name="adminId" value="${sessionScope.accountAuth.id}"/>
+					<input type="hidden" id="adminName" name="adminName" value="${sessionScope.accountAuth.name}"/>
 					<form:hidden path="id" />
 					<form:hidden path="userId" />
 					<form:hidden path="addrId" />
