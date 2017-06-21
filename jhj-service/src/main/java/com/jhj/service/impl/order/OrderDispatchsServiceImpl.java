@@ -1075,7 +1075,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			// Double serviceHour = orderDispatch.getServiceHours();
 
 			Double stepHour = (double) 0;
-			while (stepHour < serviceHour) {
+			while (stepHour <= serviceHour) {
 
 				String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + stepHour * 60 * 60) * 1000), "HH:mm");
 
@@ -1153,62 +1153,6 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 		return datas;
 	}	
 	
-	/**
-	 * 判断是否跨越了剩余可派工人员的当日派工时段，步骤如下
-	 * @param serviceDateStr   ： 服务日期
-	 * @param serviceHours	   ： 服务小时
-	 * @param staffNums		   ： 服务人数
-	 * @param orderType		   ： 订单类型  0 = 基础保洁  1 = 深度养护
-	 * @param staffs		   :  当前时段（精确到半个小时）已派工人数
-	 * @param checkServiceHour :  当前时段，小时
-	 * @param canStaffIds      :  未检测派工时间冲突的总人员，为了找出当前时间还有可用的派工人员.
-	 * @return
-	 */
-	private Boolean checkIsFull(String serviceDateStr, double serviceHours, int staffNums, Short orderType, String staffs, String checkServiceHour, List<Long> canStaffIds) {
-		
-		//得出需要检测的派工人数.
-		String[] staffAry = StringUtil.convertStrToArray(staffs);
-		
-		for (int i = 0; i < staffAry.length; i++) {
-			if (canStaffIds.contains(Long.valueOf(staffAry[i]))) {
-				canStaffIds.remove(Long.valueOf(staffAry[i]));
-			}
-		}
-		
-		if (canStaffIds.isEmpty()) return false;
-		
-		if (staffNums > 1 && orderType.equals(Constants.ORDER_TYPE_1)) {
-			serviceHours = MathBigDecimalUtil.getValueStepHalf(serviceHours, staffNums);
-		}
-		//服务时间
-		String serviceDateTime = serviceDateStr + " " + checkServiceHour + ":00";
-		Long serviceDate = TimeStampUtil.getMillisOfDayFull(serviceDateTime) / 1000;
-		
-		// ---2.服务时间内 已 排班的 阿姨, 时间跨度为 服务开始前1:59分钟 - 服务结束时间
-//		Long startServiceTime = serviceDate - Constants.SERVICE_PRE_TIME;
-		Long startServiceTime = serviceDate;
-		// 注意结束时间也要服务结束后 1:59分钟
-		Long endServiceTime = (long) (serviceDate + serviceHours * 3600 + Constants.SERVICE_PRE_TIME);
-		
-		OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-		searchVo1.setDispatchStatus((short) 1);
-		searchVo1.setStartServiceTime(startServiceTime);
-		searchVo1.setEndServiceTime(endServiceTime);
-		searchVo1.setStaffIds(canStaffIds);
-		List<OrderDispatchs> disList = this.selectByMatchTime(searchVo1);
-		
-		for (OrderDispatchs orderDispatch : disList) {
-			
-			Long staffId = orderDispatch.getStaffId();
-			if (canStaffIds.contains(staffId)) canStaffIds.remove(staffId);
-		}
-		
-		if (!canStaffIds.isEmpty()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 
 	/**
 	 * 检查是否已经约满了员工,特定员工
@@ -1372,7 +1316,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			// Double serviceHour = orderDispatch.getServiceHours();
 
 			Double stepHour = (double) 0;
-			while (stepHour < serviceHour) {
+			while (stepHour <= serviceHour) {
 
 				String orderServiceDateStr = TimeStampUtil.timeStampToDateStr((long) ((serviceDate + stepHour * 60 * 60) * 1000), "HH:mm");
 
