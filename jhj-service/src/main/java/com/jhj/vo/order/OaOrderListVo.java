@@ -131,6 +131,8 @@ public class OaOrderListVo extends Orders {
 	//团购卷
 	private String groupCode;
 	
+	private String validateCodeName;
+	
 	
 	private List<Imgs> orderImgs;
 
@@ -533,5 +535,14 @@ public class OaOrderListVo extends Orders {
 	public void setGroupCode(String groupCode) {
 		this.groupCode = groupCode;
 	}
+
+	public String getValidateCodeName() {
+		return validateCodeName;
+	}
+
+	public void setValidateCodeName(String validateCodeName) {
+		this.validateCodeName = validateCodeName;
+	}
+	
 
 }
