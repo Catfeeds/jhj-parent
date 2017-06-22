@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartSearchVo;
+import com.jhj.vo.chart.ChartUserOrderVo;
 
 /**
  *
@@ -31,5 +32,5 @@ public interface OrderChartService {
 	ChartDataVo getOrderFromCount(ChartSearchVo chartSearchVo, List<String> timeSeries);
 	
 	//市场人员订单统计
-	ChartDataVo getUserOrderCount(ChartSearchVo chartSearchVo, List<String> timeSeries);
+	ChartUserOrderVo getUserOrderCount(ChartSearchVo chartSearchVo, List<String> timeSeries);
 }

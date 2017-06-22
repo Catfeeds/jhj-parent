@@ -123,14 +123,18 @@ $("#submitForm").on('click', function() {
 		
 		return false;
 	}
-	
+	var adminId = $("#adminId").val();
+	var adminName = $("#adminName").val();
 	$.ajax({
 		type : 'post',
-		url : '/jhj-oa/new_dispatch/save_order_exp.json',
+		url : '/jhj-app/app/order/save_order_dispatch.json',
 		data : {
 			"selectStaffIds" : selectStaffIds,
 			"orderId" : orderId,
-			"newServiceDate" : orderDate
+			"newServiceDate" : orderDate,
+			"orderType" : 1,
+			"adminId" : adminId,
+			"adminName" : adminName,
 		},
 		dataType : 'json',
 		success : function(data, status, xhr) {

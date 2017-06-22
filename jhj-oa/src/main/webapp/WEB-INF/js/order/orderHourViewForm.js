@@ -144,15 +144,19 @@ $("#submitForm").on('click', function() {
 				}
 			}
 		}
-		
+		var adminId = $("#adminId").val();
+		var adminName = $("#adminName").val();
 		$.ajax({
 			type : 'post',
-			url : '/jhj-oa/new_dispatch/save_order_hour.json',
+			url : '/jhj-app/app/order/save_order_dispatch.json',
 			data : {
 				"selectStaffIds" : selectStaffIds,
 				"orderId" : orderId,
 				"newServiceDate" : orderDate,
-				"distanceValue" : distanceValue
+//				"distanceValue" : distanceValue,
+				"orderType" : 0,
+				"adminId" : adminId,
+				"adminName" : adminName,
 			},
 			dataType : 'json',
 			success : function(data, status, xhr) {

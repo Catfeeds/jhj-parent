@@ -170,8 +170,8 @@ function changeStaffNums(serviceAddonId, itemNum) {
 	var serviceTypeId = $("#serviceType").val();	
 	console.log("orderTypeId ==" + orderTypeId);
 	console.log("serviceTypeId ==" + serviceTypeId);
-	if (serviceTypeId != 56) return false;
-	if (serviceAddonId != 29 ) return false;
+	if (serviceTypeId != 56 && serviceTypeId != 53) return false;
+	if (serviceAddonId != 29 && serviceAddonId != 27) return false;
 	if (itemNum == undefined || itemNum == "" || itemNum == 0) return false;
 	var staffNums = 1;
 	if (itemNum < 60) staffNums = 1;
