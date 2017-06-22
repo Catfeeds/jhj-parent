@@ -215,8 +215,8 @@ public class OrderDisptachController extends BaseController {
 				oldStaffNum = disList.size();
 				if (staffIds.contains(d.getStaffId())) {
 					newDispathStaffIds.remove(d.getStaffId());
-					oldDispatchStaffIds.add(d.getStaffId());
 				}
+				oldDispatchStaffIds.add(d.getStaffId());
 			}
 		}
 		
@@ -248,7 +248,7 @@ public class OrderDisptachController extends BaseController {
 			}
 			//3. 派工时间不变，调整派工人员
 			if (oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() > 0) {
-				dispatchStaffIds = oldDispatchStaffIds;
+				dispatchStaffIds = newDispathStaffIds;
 				orderLogRemarks = Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF;
 			}
 			//4. 派工时间变化，派工人员变化.
