@@ -184,8 +184,19 @@
 							<div class="form-group ">
 								<label class="col-md-2 control-label">团购劵</label>
 								<div class="col-md-5">
-									<form:input path="groupCode" class="form-control" maxLength="32"/>
+									<form:input path="groupCode" class="form-control" maxLength="32" />
 									<form:errors path="groupCode" class="field-has-error"></form:errors>
+								</div>
+								<div class="col-md-3">
+									<input type="hidden" id="validateCode" value="${oaOrderListVoModel.validateCode}" />
+									<button type="button" class="btn btn-danger" id="btn-validate" >
+										<c:if test="${oaOrderListVoModel.validateCode == '0' }">
+											验码
+										</c:if>
+										<c:if test="${oaOrderListVoModel.validateCode == '1' }">
+											解除
+										</c:if>
+									</button>
 								</div>
 							</div>
 						</c:if>

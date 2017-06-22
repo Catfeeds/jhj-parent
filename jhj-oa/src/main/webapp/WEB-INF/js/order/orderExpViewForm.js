@@ -515,3 +515,39 @@ $("#checkOrderLog").on('click',function(){
 		}
 	});
 });
+
+$(function(){
+	var validateCode = $("#validateCode").val();
+	if(validateCode=='1'){
+		document.getElementById("groupCode").disabled = true;
+	}
+});
+
+
+$("#btn-validate").on('click',function(){
+	var orderId = $("#id").val();
+	var validateCode = $("#validateCode").val();
+	if(validateCode=='0'){
+		validateCode = '1';
+	}else{
+		validateCode = '0';
+	}
+	$.ajax({
+		type:"POST",
+		url:"validate-code",
+		data:{
+			"orderId":orderId,
+			"validateCode":validateCode
+		},
+		dataType:"json",
+		success:function(data){
+			$("#validateCode").val(data.validateCode);
+			$("#btn-validate").text(data.btnValue);
+			if(data.validateCode=='1'){
+				$("#groupCode").attr("disabled","disabled");
+			}else{
+				document.getElementById("groupCode").disabled = false;
+			}
+		}
+	});
+});
