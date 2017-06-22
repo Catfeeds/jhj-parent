@@ -76,7 +76,8 @@ public class OrderLogServiceImpl implements OrderLogService {
 		if(orderLog.getUserType()==2){
 			orderLogVo.setUserTypeName("后台管理人员");
 			AdminAccount adminAccount = adminAccountService.selectByPrimaryKey(orderLog.getUserId());
-			orderLogVo.setRealName(adminAccount.getName());
+			if(adminAccount != null)
+				orderLogVo.setRealName(adminAccount.getName());
 			
 		}
 		return orderLogVo;

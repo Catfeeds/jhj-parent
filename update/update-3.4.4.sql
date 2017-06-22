@@ -24,3 +24,4 @@ update cooperative_business SET broker='任俊涛' WHERE id in (102,108,114);
 
 update cooperative_business SET broker='卢登辉' WHERE id in (116);
 
+alter table orders add `validate_code` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否验码，0：否，1：是';

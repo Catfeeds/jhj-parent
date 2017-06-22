@@ -70,36 +70,41 @@
 						<td>电梯广告 </td>
 						<td>建功北里 </td>
 						<td>社区 </td>
-						<td>订单数量 </td>
-						<td>订单金额 </td>
+						<!-- <td>订单数量 </td>
+						<td>订单金额 </td> -->
 					</tr>
 				</thead>
 				<tbody>
-				<c:forEach items="${chartDatas.tableDatas}" var="item">
+				<c:forEach items="${chartDatas.data}" var="item">
 					<tr>
 						<td>${item.time}</td>
-						<td>${item.美团 }</td>
-						<td>${item.大众点评 }</td>
-						<td>${item.到位 }</td>
-						<td>${item.国安社区 }</td>
-						<td>${item.千丁 }</td>
-						<td>${item.格格小区 }</td>
-						<td>${item.百度 }</td>
-						<td>${item['360'] }</td>
-						<td>${item.金色家园网 }</td>
-						<td>${item.电询 }</td>
-						<td>${item.糯米 }</td>
-						<td>${item.居然之家 }</td>
-						<td>${item.淘宝 }</td>
-						<td>${item.京东 }</td>
-						<td>${item.葡萄生活 }</td>
-						<td>${item.北科 }</td>
-						<td>${item['58同城']}</td>
-						<td>${item.电梯广告 }</td>
-						<td>${item.建功北里 }</td>
-						<td>${item.社区 }</td>
-						<td>${item.订单数量 }</td>
-						<td>${item.订单金额 }</td>
+						<%-- <td>${item.data}</td> --%>
+						<c:forEach items="${item.data }" var="data">
+							<td>${data.key}</td>
+						</c:forEach>
+						
+						<%-- <td>${item.data.美团 }</td>
+						<td>${item.data.大众点评 }</td>
+						<td>${item.data.到位 }</td>
+						<td>${item.data.国安社区 }</td>
+						<td>${item.data.千丁 }</td>
+						<td>${item.data.格格小区 }</td>
+						<td>${item.data.百度 }</td>
+						<td>${item.data['360'] }</td>
+						<td>${item.data.金色家园网 }</td>
+						<td>${item.data.电询 }</td>
+						<td>${item.data.糯米 }</td>
+						<td>${item.data.居然之家 }</td>
+						<td>${item.data.淘宝 }</td>
+						<td>${item.data.京东 }</td>
+						<td>${item.data.葡萄生活 }</td>
+						<td>${item.data.北科 }</td>
+						<td>${item.data['58同城']}</td>
+						<td>${item.data.电梯广告 }</td>
+						<td>${item.data.建功北里 }</td>
+						<td>${item.data.社区 }</td> --%>
+						<%-- <td>${item.data.订单数量 }</td>
+						<td>${item.data.订单金额 }</td> --%>
 					</tr>
 				</c:forEach>
 				</tbody>
