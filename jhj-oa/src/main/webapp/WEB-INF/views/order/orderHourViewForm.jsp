@@ -154,7 +154,7 @@
 												<div class="form-group ">
 													<label class="col-md-2 control-label">团购劵</label>
 													<div class="col-md-5">
-														<form:input path="groupCode" class="form-control" maxLength="32"/>
+														<form:input path="groupCode" class="form-control" maxLength="32" />
 														<form:errors path="groupCode" class="field-has-error"></form:errors>
 													</div>
 													<div class="col-md-3">

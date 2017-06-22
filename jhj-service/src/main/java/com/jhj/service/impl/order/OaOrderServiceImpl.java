@@ -841,7 +841,7 @@ public class OaOrderServiceImpl implements OaOrderService {
 		
 		oaOrderListVo.setGroupCode(getOrderGroupCode(orders.getId()));
 		oaOrderListVo.setValidateCodeName("否");
-		if(oaOrderListVo.getValidateCode().equals("1")){
+		if(orders.getValidateCode().equals((short)1)){
 			oaOrderListVo.setValidateCodeName("是");
 		}
 

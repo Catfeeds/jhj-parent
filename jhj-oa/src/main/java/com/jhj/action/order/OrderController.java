@@ -391,21 +391,34 @@ public class OrderController extends BaseController {
 	@ResponseBody
 	public Map<String,String> updateOrder(
 			@RequestParam("orderId") Long orderId,
-			@RequestParam("validateCode") Short validateCode) {
+			@RequestParam("validateCode") Short validateCode,
+			HttpServletRequest request) {
 
 		Orders orders = orderService.selectByPrimaryKey(orderId);
 		orders.setValidateCode(validateCode);
 		orderService.updateByPrimaryKeySelective(orders);
 		Map<String,String> map = new HashMap<>();
-		if(validateCode==0){
-			map.put("validateCode", "0");
-			map.put("btnValue", "验码");
-		}else{
+		String msg = "";
+		if(validateCode==1){
 			map.put("validateCode", "1");
 			map.put("btnValue", "解除");
+			msg = "已验码";
+		}else{
+			map.put("validateCode", "0");
+			map.put("btnValue", "验码");
+			msg = "解除验码";
 		}
-		return map;
 		
+		//修改记录
+		AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+		OrderLog initOrderLog = orderLogService.initOrderLog(orders);
+		initOrderLog.setAction(Constants.ORDER_ACTION_UPDATE);
+		initOrderLog.setUserId(accountAuth.getId());
+		initOrderLog.setUserName(accountAuth.getUsername());
+		initOrderLog.setUserType((short)2);
+		initOrderLog.setRemarks("修改成" + msg);
+		orderLogService.insert(initOrderLog);
+		return map;
 	}
 
 }

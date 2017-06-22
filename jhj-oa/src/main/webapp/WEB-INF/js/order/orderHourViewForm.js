@@ -530,7 +530,7 @@ $("#btn-validate").on('click',function(){
 		validateCode = '0';
 	}
 	$.ajax({
-		type:"POSt",
+		type:"POST",
 		url:"validate-code",
 		data:{
 			"orderId":orderId,
@@ -540,6 +540,11 @@ $("#btn-validate").on('click',function(){
 		success:function(data){
 			$("#validateCode").val(data.validateCode);
 			$("#btn-validate").text(data.btnValue);
+			if(data.validateCode=='1'){
+				$("#groupCode").attr("disabled","disabled");
+			}else{
+				document.getElementById("groupCode").disabled = false;
+			}
 		}
 	});
 });
