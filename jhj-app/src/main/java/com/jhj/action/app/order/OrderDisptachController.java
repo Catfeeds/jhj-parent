@@ -161,8 +161,8 @@ public class OrderDisptachController extends BaseController {
 			@RequestParam("orderId") Long orderId, 
 			@RequestParam("selectStaffIds") String selectStaffIds,
 			@RequestParam("newServiceDate") String newServiceDate, 
-			@RequestParam(value = "admin_id", required = false, defaultValue = "0") Long adminId,
-			@RequestParam(value = "admin_name", required = false, defaultValue = "") String adminName, 
+			@RequestParam(value = "adminId", required = false, defaultValue = "0") Long adminId,
+			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName, 
 			HttpServletRequest request) {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");

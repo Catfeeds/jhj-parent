@@ -146,6 +146,18 @@ $("#submitForm").on('click', function() {
 		}
 		var adminId = $("#adminId").val();
 		var adminName = $("#adminName").val();
+		
+		if (adminId == undefined || adminId == null || adminId == "" || adminId == 0) {
+			alert("由于你长时间未操作或者服务器更新, 请重新登录之后再操作.");
+			return false;
+		}
+		
+		if (adminName == undefined || adminName == null || adminName == "" || adminName == 0) {
+			alert("由于你长时间未操作或者服务器更新, 请重新登录之后再操作.");
+			return false;
+		}
+		
+		
 		$.ajax({
 			type : 'post',
 			url : '/jhj-app/app/order/save_order_dispatch.json',
