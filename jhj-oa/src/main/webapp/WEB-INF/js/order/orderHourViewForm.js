@@ -144,15 +144,19 @@ $("#submitForm").on('click', function() {
 				}
 			}
 		}
-		
+		var adminId = $("#adminId").val();
+		var adminName = $("#adminName").val();
 		$.ajax({
 			type : 'post',
-			url : '/jhj-oa/new_dispatch/save_order_hour.json',
+			url : '/jhj-app/app/order/save_order_dispatch.json',
 			data : {
 				"selectStaffIds" : selectStaffIds,
 				"orderId" : orderId,
 				"newServiceDate" : orderDate,
-				"distanceValue" : distanceValue
+//				"distanceValue" : distanceValue,
+				"orderType" : 0,
+				"adminId" : adminId,
+				"adminName" : adminName,
 			},
 			dataType : 'json',
 			success : function(data, status, xhr) {
@@ -520,7 +524,14 @@ $("#checkOrderLog").on('click',function(){
 	});
 });
 
+$(function(){
+	var validateCode = $("#validateCode").val();
+	if(validateCode=='1'){
+		document.getElementById("groupCode").disabled = true;
+	}
+});
 
+//验码
 $("#btn-validate").on('click',function(){
 	var orderId = $("#id").val();
 	var validateCode = $("#validateCode").val();
@@ -530,7 +541,7 @@ $("#btn-validate").on('click',function(){
 		validateCode = '0';
 	}
 	$.ajax({
-		type:"POSt",
+		type:"POST",
 		url:"validate-code",
 		data:{
 			"orderId":orderId,
@@ -540,6 +551,28 @@ $("#btn-validate").on('click',function(){
 		success:function(data){
 			$("#validateCode").val(data.validateCode);
 			$("#btn-validate").text(data.btnValue);
+			if(data.validateCode=='1'){
+				$("#groupCode").attr("disabled","disabled");
+			}else{
+				document.getElementById("groupCode").disabled = false;
+			}
+		}
+	});
+});
+
+$("#btn-submit").on('click',function(e){
+	e.preventDefault();
+	var param = {};
+	param.orderNo = $("#orderNo").val();
+	param.orderOpFrom = $("#orderOpFrom").val();
+	param.groupCode = $("#groupCode").val();
+	$.ajax({
+		type:"POST",
+		url:"update-order",
+		data:param,
+		dataType:"json",
+		success:function(data){
+			layer.alert("修改成功",{icon: 1});
 		}
 	});
 });

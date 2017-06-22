@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,7 @@ public class OrgStaffExportController extends BaseController {
 		XssExcelTools excel = new XssExcelTools(cpath + templateName, 0);
 		XSSFSheet sh = excel.getXssSheet();
 		
-		/*XSSFCellStyle contentStyle = excel.getContentStyle(excel.getXssWb());*/
+		XSSFCellStyle contentStyle = excel.getContentStyle(excel.getXssWb());
 		
 		int rowNum = 1;
 		
@@ -247,11 +248,11 @@ public class OrgStaffExportController extends BaseController {
 		//写入合计
 		XSSFRow rowData = sh.createRow(rowNum);
 
-		/*for(int j = 0; j <= 26; j++) {
+		for(int j = 0; j <= 29; j++) {
 			XSSFCell c = rowData.createCell(j);
 //			c.setCellStyle(contentStyle);
 //			sh.autoSizeColumn((short)j);
-		}*/
+		}
 		this.setCellValueForString(rowData, 22, "合计:");
 		
 		this.setCellValueForDouble(rowData, 23, Double.valueOf(MathBigDecimalUtil.round2(totalDeptAll)));
@@ -297,8 +298,21 @@ public class OrgStaffExportController extends BaseController {
 		Orgs org = orgService.selectByPrimaryKey(orgId);
 		String orgName = org.getOrgName();
 		
-		
 		searchVo.setOrderStatus((short) 2);
+		
+		String startTimeStr = searchVo.getStartOrderDoneTimeStr();
+		Long startAddTime = 0L;
+		if (!StringUtil.isEmpty(startTimeStr)) {
+			startAddTime = TimeStampUtil.getMillisOfDayFull(startTimeStr+" 00:00:00") / 1000;
+			searchVo.setStartAddTime(startAddTime);
+		}
+
+		Long endAddTime = 0L;
+		String endTimeStr = searchVo.getEndOrderDoneTimeStr();
+		if (!StringUtil.isEmpty(endTimeStr)) {
+			endAddTime = TimeStampUtil.getMillisOfDayFull(endTimeStr+" 23:59:59") / 1000;
+			searchVo.setEndAddTime(endAddTime);
+		}
 		
 		List<OrgStaffPayDept> list = orgStaffPayDeptService.selectBySearchVo(searchVo);
 		
@@ -371,11 +385,11 @@ public class OrgStaffExportController extends BaseController {
 		//写入合计
 		XSSFRow rowData = sh.createRow(rowNum);
 
-	/*	for(int j = 0; j <= 10; j++) {
+		for(int j = 0; j <= 10; j++) {
 			XSSFCell c = rowData.createCell(j);
 //					c.setCellStyle(contentStyle);
 //					sh.autoSizeColumn((short)j);
-		}*/
+		}
 		this.setCellValueForString(rowData, 7, "合计:");
 
 		this.setCellValueForDouble(rowData, 8, Double.valueOf(MathBigDecimalUtil.round2(totalPayDept)));

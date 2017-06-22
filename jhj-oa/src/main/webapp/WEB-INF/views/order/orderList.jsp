@@ -76,8 +76,8 @@
 											<td width="23%"><form:input path="orderAddr" class="form-control" placeholder="请输入服务地址" /></td>
 											<td width="10%">订单状态：</td>
 											<td width="23%"><c:if test="${loginOrgId == 0 }">
-												<form:select path="orderStatus" class="form-control">
-													<option value="">订单状态</option>
+												<form:select path="orderStatusList" multiple="true" size="1" class="form-control" >
+													<option value="">--请选择订单状态--</option>
 													<form:option value="0">已取消</form:option>
 													<form:option value="1">未支付</form:option>
 													<form:option value="2">已支付</form:option>
@@ -89,7 +89,7 @@
 												</form:select>
 												</c:if> <!-- 如果是 店长登录,则 只能选择 已派工之后的 订单状态 --> <c:if test="${loginOrgId > 0 }">
 													<form:select path="orderStatus" class="form-control">
-														<option value="">订单状态</option>
+														<option value="">--请选择订单状态--</option>
 														<form:option value="3">已派工</form:option>
 														<form:option value="5">开始服务</form:option>
 														<form:option value="7">完成服务</form:option>
@@ -271,7 +271,7 @@
 														<i title="${item.overworkTimeStr }"><img alt="超" src="<c:url value='/img/over-time-icon.png' />" width="23px" height="20px"></i>
 													</c:if>
 													<c:if test="${item.validateCode =='1' }">
-														<i class="btn btn-success btn-xs glyphicon glyphicon-gift" title="验"></i>
+														<i class="btn btn-danger btn-xs glyphicon glyphicon-gift" title="已验码"></i>
 													</c:if>
 												</td>
 											</tr>

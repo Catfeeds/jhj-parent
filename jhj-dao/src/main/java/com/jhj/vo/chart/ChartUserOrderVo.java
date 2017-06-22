@@ -1,40 +1,27 @@
 package com.jhj.vo.chart;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class ChartUserOrderVo {
 	
-	private String series;
+	private String time;
 	
-	private HashMap<String,HashMap<String,String>> data;
-	
-	private List<HashMap<String,HashMap<String,String>>> dataList;
+	private List<ChartUserOrderNumVo> data;
 
-	public String getSeries() {
-		return series;
+	public String getTime() {
+		return time;
 	}
 
-	public void setSeries(String series) {
-		this.series = series;
+	public void setTime(String time) {
+		this.time = time;
 	}
 
-	public HashMap<String, HashMap<String, String>> getData() {
+	public List<ChartUserOrderNumVo> getData() {
 		return data;
 	}
 
-	public void setData(HashMap<String, HashMap<String, String>> data) {
+	public void setData(List<ChartUserOrderNumVo> data) {
 		this.data = data;
 	}
 
-	public List<HashMap<String, HashMap<String, String>>> getDataList() {
-		return dataList;
-	}
-
-	public void setDataList(List<HashMap<String, HashMap<String, String>>> dataList) {
-		this.dataList = dataList;
-	}
-	
-
-	
 }

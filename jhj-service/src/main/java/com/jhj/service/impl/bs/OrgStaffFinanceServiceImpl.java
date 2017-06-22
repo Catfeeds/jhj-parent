@@ -487,7 +487,7 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		vo.setGroupCode(oaOrderService.getOrderGroupCode(order.getId()));
 		
 		vo.setValidateCodeName("否");
-		if(order.getValidateCode().equals("1")){
+		if(order.getValidateCode().equals((short)1)){
 			vo.setValidateCodeName("是");
 		}
 		

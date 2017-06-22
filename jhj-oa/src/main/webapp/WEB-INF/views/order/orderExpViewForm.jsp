@@ -35,8 +35,10 @@
 		<div class="col-lg-12">
 			<section class="panel">
 			<div class="panel-body">
-				<form:form id="orderViewForm" modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
+				<form:form id="orderViewForm" modelAttribute="oaOrderListVoModel" class="form-horizontal"
 					enctype="multipart/form-data">
+					<input type="hidden" id="adminId" name="adminId" value="${sessionScope.accountAuth.id}"/>
+					<input type="hidden" id="adminName" name="adminName" value="${sessionScope.accountAuth.name}"/>
 					<form:hidden path="id" />
 					<form:hidden path="userId" />
 					<form:hidden path="addrId" />
@@ -184,8 +186,19 @@
 							<div class="form-group ">
 								<label class="col-md-2 control-label">团购劵</label>
 								<div class="col-md-5">
-									<form:input path="groupCode" class="form-control" maxLength="32"/>
+									<form:input path="groupCode" class="form-control" maxLength="32" />
 									<form:errors path="groupCode" class="field-has-error"></form:errors>
+								</div>
+								<div class="col-md-3">
+									<input type="hidden" id="validateCode" value="${oaOrderListVoModel.validateCode}" />
+									<button type="button" class="btn btn-danger" id="btn-validate" >
+										<c:if test="${oaOrderListVoModel.validateCode == '0' }">
+											验码
+										</c:if>
+										<c:if test="${oaOrderListVoModel.validateCode == '1' }">
+											解除
+										</c:if>
+									</button>
 								</div>
 							</div>
 						</c:if>
@@ -202,7 +215,7 @@
 										sessionScope.accountAuth.accountRole.id == 5 or 
 										sessionScope.accountAuth.accountRole.id == 14 }">
 								<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
-									<input type="submit" value="修改" class="btn btn-danger" />
+									<input type="button" id="btn-submit" value="修改" class="btn btn-danger" />
 								</c:if>
 							</c:if>
 							<input type="button" id="checkOrderLog" class="btn btn-success" data-toggle="modal" data-target="#myModal"
@@ -451,6 +464,7 @@
 	</script>
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderExpViewForm.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<script>
