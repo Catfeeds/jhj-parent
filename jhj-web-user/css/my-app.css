@@ -2706,8 +2706,9 @@ ul.order-tip li{
 
 .order-list-bg{
   background-color:#efeff4;
+  margin-top:-10px;
 }
-order-list-bg:before{
+.order-list-bg:before{
   height: 0px;
 }
 .cankaotime-box{
@@ -2805,7 +2806,7 @@ order-list-bg:before{
 .order-list-bg{
   background-color:#efeff4;
 }
-order-list-bg:before{
+.list-block ul:before{
   height: 0px;
 }
 .list-block ul ul{
