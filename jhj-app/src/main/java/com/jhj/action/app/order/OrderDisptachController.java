@@ -349,6 +349,9 @@ public class OrderDisptachController extends BaseController {
 			for (OrderDispatchs d : newDisList) {
 				if (staffId.equals(d.getStaffId())) {
 					willDispatch = false;
+					d.setServiceDate(serviceDateTime);
+					d.setUpdateTime(TimeStampUtil.getNowSecond());
+					orderDispatchsService.updateByPrimaryKey(d);
 					break;
 				}
 			}
