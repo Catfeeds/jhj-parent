@@ -156,21 +156,6 @@ public class OrderController extends BaseController {
 	/**
 	 * 运营人员 为订单 添加 备注
 	 */
-//	@AuthPassport
-//	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.GET)
-//	public String toBussinessRemarkForm(Model model,
-//			@RequestParam("orderId") Long orderId) {
-//
-//		Orders orders = orderService.selectByPrimaryKey(orderId);
-//
-//		model.addAttribute("orderModel", orders);
-//
-//		return "order/OrderRemarksBussinessForm";
-//	}
-
-	/**
-	 * 运营人员 为订单 添加 备注
-	 */
 	@AuthPassport
 	@ResponseBody
 	@RequestMapping(value = "update-remarks", method = RequestMethod.POST)
@@ -218,7 +203,6 @@ public class OrderController extends BaseController {
 			@RequestParam("order_id") Long orderId,
 			@RequestParam("remarks") String remarks,HttpServletRequest request) {
 
-		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
 
 		AppResultData<Object> result = orderCancelService.cancleOrderDone(order);
@@ -317,10 +301,10 @@ public class OrderController extends BaseController {
 	}
 	
 	@AuthPassport
-	@RequestMapping(value = "/update_order", method = RequestMethod.POST)
-	public String updateOrder(Model model,@ModelAttribute("orderModel") Orders orderForm,HttpServletRequest request) {
+	@RequestMapping(value = "/update-order", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateOrder(@ModelAttribute("oaOrderListVoModel") Orders orderForm,HttpServletRequest request) {
 
-		String url=null;
 		Orders orders = orderService.selectByOrderNo(orderForm.getOrderNo());
 		Long orderOpFrom = orders.getOrderOpFrom();
 		orders.setOrderOpFrom(orderForm.getOrderOpFrom());
@@ -333,7 +317,6 @@ public class OrderController extends BaseController {
 			CooperativeBusiness cb2 = cooperateBusinessService.selectByPrimaryKey(orderForm.getOrderOpFrom());
 			
 			if (cb2 != null) remarks+= "修改成"+cb2.getBusinessName();
-
 		}
 		
 		String groupCode = request.getParameter("groupCode");
@@ -359,9 +342,7 @@ public class OrderController extends BaseController {
 					remarks+= ";团购卷修改成" + groupCode;
 					orderExtendService.updateByPrimaryKeySelective(orderExtend);
 				}
-				
 			}
-			
 		}
 		
 		if (!StringUtil.isEmpty(remarks)) {
@@ -375,7 +356,7 @@ public class OrderController extends BaseController {
 			orderLogService.insert(initOrderLog);
 		}
 			
-		return "redirect:order-list";
+		return "1" ;
 	}
 	
 	/**

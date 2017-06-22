@@ -527,7 +527,7 @@ $(function(){
 	}
 });
 
-
+//验码
 $("#btn-validate").on('click',function(){
 	var orderId = $("#id").val();
 	var validateCode = $("#validateCode").val();
@@ -552,6 +552,23 @@ $("#btn-validate").on('click',function(){
 			}else{
 				document.getElementById("groupCode").disabled = false;
 			}
+		}
+	});
+});
+
+$("#btn-submit").on('click',function(e){
+	e.preventDefault();
+	var param = {};
+	param.orderNo = $("#orderNo").val();
+	param.orderOpFrom = $("#orderOpFrom").val();
+	param.groupCode = $("#groupCode").val();
+	$.ajax({
+		type:"POST",
+		url:"update-order",
+		data:param,
+		dataType:"json",
+		success:function(data){
+			layer.alert("修改成功",{icon: 1});
 		}
 	});
 });
