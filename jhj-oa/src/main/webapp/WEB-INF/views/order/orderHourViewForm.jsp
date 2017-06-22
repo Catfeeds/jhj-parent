@@ -34,7 +34,7 @@
 					<div class="col-lg-12">
 						<section class="panel">
 							<div class="panel-body">
-								<form:form id="orderViewForm" modelAttribute="oaOrderListVoModel" class="form-horizontal" method="POST" action="update_order"
+								<form:form id="orderViewForm" modelAttribute="oaOrderListVoModel" class="form-horizontal" 
 									enctype="multipart/form-data">
 									<form:hidden path="id" />
 									<form:hidden path="userId" />
@@ -183,7 +183,7 @@
 															sessionScope.accountAuth.accountRole.id == 5 or 
 															sessionScope.accountAuth.accountRole.id == 14 }">
 													<c:if test="${oaOrderListVoModel.orderFrom!=1 }">
-														<input type="submit" value="修改" class="btn btn-danger" />
+														<input type="button" id="btn-submit" value="修改" class="btn btn-danger" />
 														
 													</c:if>
 												</c:if>
@@ -443,6 +443,7 @@
 	</script>
 	<!-- 时间戳类库 -->
 	<script type="text/javascript" src="<c:url value='/js/moment/moment-with-locales.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/order/orderHourViewForm.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	<script>
