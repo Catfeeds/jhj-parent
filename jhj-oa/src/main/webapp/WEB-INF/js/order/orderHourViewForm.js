@@ -520,6 +520,13 @@ $("#checkOrderLog").on('click',function(){
 	});
 });
 
+$(function(){
+	var validateCode = $("#validateCode").val();
+	if(validateCode=='1'){
+		document.getElementById("groupCode").disabled = true;
+	}
+});
+
 
 $("#btn-validate").on('click',function(){
 	var orderId = $("#id").val();
