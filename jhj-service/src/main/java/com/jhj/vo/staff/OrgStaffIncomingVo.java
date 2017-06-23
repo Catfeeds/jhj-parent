@@ -76,6 +76,10 @@ public class OrgStaffIncomingVo {
 	private BigDecimal incomingPercent;
 	
 	private String remarks;
+	
+	private String groupCode;
+	
+	private String validateCodeName;
 
 	public Long getParentId() {
 		return parentId;
@@ -364,4 +368,21 @@ public class OrgStaffIncomingVo {
 	public void setOrderFromStr(String orderFromStr) {
 		this.orderFromStr = orderFromStr;
 	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+	public String getValidateCodeName() {
+		return validateCodeName;
+	}
+
+	public void setValidateCodeName(String validateCodeName) {
+		this.validateCodeName = validateCodeName;
+	}
+	
 }

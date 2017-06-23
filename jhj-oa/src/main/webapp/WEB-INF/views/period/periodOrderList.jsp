@@ -79,7 +79,7 @@
 								<c:if test="${item.orderStatus==4 }">已完成</c:if> 
 							</td>
 							<td><payTypeName:payType payType="${item.payType }" orderStatus="2"/> </td>
-							<td>${item.orderMoney }</td>
+							<td>${item.orderPrice }</td>
 							<td><orderFromName:orderfrom orderFrom="${item.orderFrom}"/></td>
 							<td>${item.totalOrder }</td>
 							<td>

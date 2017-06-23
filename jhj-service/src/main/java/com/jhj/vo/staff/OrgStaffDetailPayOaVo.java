@@ -30,6 +30,11 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	//服务人员订单收入
 	private BigDecimal totalStaffIncoming;
 	
+	private String validateCodeName;
+	
+	//加时补差价
+	private BigDecimal overtimeCompensation;
+	
 	public String getOrderTypeName() {
 		return orderTypeName;
 	}
@@ -101,6 +106,21 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	public void setTotalStaffIncoming(BigDecimal totalStaffIncoming) {
 		this.totalStaffIncoming = totalStaffIncoming;
 	}
-	
+
+	public String getValidateCodeName() {
+		return validateCodeName;
+	}
+
+	public void setValidateCodeName(String validateCodeName) {
+		this.validateCodeName = validateCodeName;
+	}
+
+	public BigDecimal getOvertimeCompensation() {
+		return overtimeCompensation;
+	}
+
+	public void setOvertimeCompensation(BigDecimal overtimeCompensation) {
+		this.overtimeCompensation = overtimeCompensation;
+	}
 	
 }

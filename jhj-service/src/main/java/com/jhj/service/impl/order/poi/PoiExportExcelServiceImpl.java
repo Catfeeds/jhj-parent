@@ -61,6 +61,8 @@ public class PoiExportExcelServiceImpl implements PoiExportExcelService {
 			BigDecimal spreadMoeny = vo.getSpreadMoeny();
 			mapValue.put("spreadMoeny", spreadMoeny);
 			mapValue.put("orderExtTyePayStr", vo.getOrderExtTyePayStr());
+			mapValue.put("groupCode", vo.getGroupCode());
+			mapValue.put("validateCodeName", vo.getValidateCodeName());
 
 			listmap.add(mapValue);
 		}

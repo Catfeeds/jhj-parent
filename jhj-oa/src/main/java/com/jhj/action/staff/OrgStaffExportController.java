@@ -31,9 +31,6 @@ import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrdersService;
-import com.jhj.service.university.PartnerServiceTypeService;
-import com.jhj.service.users.UserAddrsService;
-import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.staff.OrgStaffIncomingVo;
@@ -64,25 +61,17 @@ public class OrgStaffExportController extends BaseController {
 	@Autowired
 	private OrdersService orderService;
 	
-	@Autowired
-	private PartnerServiceTypeService partnerServiceTypeService;
-	
-	@Autowired
-	private UserAddrsService userAddrService;
-	
-	@Autowired
-	private UsersService userService;
 	
 	//服务人员所有订单明细表
 	@RequestMapping(value = "/export-order", method = RequestMethod.GET)
 	public void exportOrder(Model model, HttpServletRequest request, HttpServletResponse response, OrderSearchVo searchVo) throws Exception {
 		
-		Long staffId = 0L;
-		if (searchVo.getStaffId() != null) {
+//		Long staffId = 0L;
+		/*if (searchVo.getStaffId() != null) {
 			staffId = searchVo.getStaffId();
 		} else {
 			staffId = searchVo.getSelectStaff();
-		}
+		}*/
 		
 		String startTimeStr = searchVo.getStartOrderDoneTimeStr();
 		Long startServiceFinishTime = 0L;
@@ -95,7 +84,6 @@ public class OrgStaffExportController extends BaseController {
 		if (!StringUtil.isEmpty(endTimeStr)) {
 			endServiceFinishTime = TimeStampUtil.getMillisOfDayFull(endTimeStr+" 23:59:59") / 1000;
 		}
-		
 		
 //		OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(staffId);
 		//if (orgStaff == null) return ;
@@ -140,18 +128,11 @@ public class OrgStaffExportController extends BaseController {
 			
 			if (order == null) continue;
 			
-			
 			//导出的是完成服务和评价后的订单。
 			Short orderStatus = order.getOrderStatus();
 			if (!orderStatus.equals(Constants.ORDER_HOUR_STATUS_7) && 
 				!orderStatus.equals(Constants.ORDER_HOUR_STATUS_8)) 
 				continue;
-//			logger.info("order_no = " + order.getOrderNo());
-			//订单完成时间是否在查询条件范围之内
-			Long orderUpdateTime = order.getOrderDoneTime();
-			/*if (orderUpdateTime < startServiceTime || orderUpdateTime > endServiceTime) {
-				continue;
-			}*/
 			
 			OrgStaffs orgStaff = orgStaffsService.selectByPrimaryKey(item.getStaffId());
 			
@@ -159,14 +140,13 @@ public class OrgStaffExportController extends BaseController {
 			
 			XSSFRow rowData = sh.createRow(rowNum);
 
-			for(int j = 0; j <= 27; j++) {
+			for(int j = 0; j <= 29; j++) {
 				rowData.createCell(j);
 				XSSFCell c = rowData.getCell(j);
 				c.setCellType(XSSFCell.CELL_TYPE_STRING);
 //				c.setCellValue("");  
 //				c.setCellStyle(contentStyle);
 			}
-			
 			
 			//序号
 			this.setCellValueForString(rowData, 0, String.valueOf(rowNum));
@@ -255,6 +235,12 @@ public class OrgStaffExportController extends BaseController {
 			
 			//订单来源
 			this.setCellValueForString(rowData, 27, vo.getOrderFromStr());
+			
+			//团购码
+			this.setCellValueForString(rowData, 28, vo.getGroupCode());
+			
+			//是否验码
+			this.setCellValueForString(rowData, 29, vo.getValidateCodeName());
 
 			rowNum++;
 		}
@@ -262,7 +248,7 @@ public class OrgStaffExportController extends BaseController {
 		//写入合计
 		XSSFRow rowData = sh.createRow(rowNum);
 
-		for(int j = 0; j <= 26; j++) {
+		for(int j = 0; j <= 29; j++) {
 			XSSFCell c = rowData.createCell(j);
 //			c.setCellStyle(contentStyle);
 //			sh.autoSizeColumn((short)j);
@@ -312,8 +298,21 @@ public class OrgStaffExportController extends BaseController {
 		Orgs org = orgService.selectByPrimaryKey(orgId);
 		String orgName = org.getOrgName();
 		
-		
 		searchVo.setOrderStatus((short) 2);
+		
+		String startTimeStr = searchVo.getStartOrderDoneTimeStr();
+		Long startAddTime = 0L;
+		if (!StringUtil.isEmpty(startTimeStr)) {
+			startAddTime = TimeStampUtil.getMillisOfDayFull(startTimeStr+" 00:00:00") / 1000;
+			searchVo.setStartAddTime(startAddTime);
+		}
+
+		Long endAddTime = 0L;
+		String endTimeStr = searchVo.getEndOrderDoneTimeStr();
+		if (!StringUtil.isEmpty(endTimeStr)) {
+			endAddTime = TimeStampUtil.getMillisOfDayFull(endTimeStr+" 23:59:59") / 1000;
+			searchVo.setEndAddTime(endAddTime);
+		}
 		
 		List<OrgStaffPayDept> list = orgStaffPayDeptService.selectBySearchVo(searchVo);
 		
@@ -323,7 +322,7 @@ public class OrgStaffExportController extends BaseController {
 		XssExcelTools excel = new XssExcelTools(cpath + templateName, 0);
 		XSSFSheet sh = excel.getXssSheet();
 		
-		XSSFCellStyle contentStyle = excel.getContentStyle(excel.getXssWb());
+//		XSSFCellStyle contentStyle = excel.getContentStyle(excel.getXssWb());
 		
 		int rowNum = 1;
 		

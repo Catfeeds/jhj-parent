@@ -118,37 +118,39 @@
 						<th>订单号</th>
 						<th>客户手机号</th>
 						<th>服务地址</th>
-						<th>订单支付金额</th>
+						<th>支付金额</th>
 						<th>订单收入</th>
 						<th>支付方式</th>
 						<th>订单状态</th>
+						<th>是否验码</th>
 						<th>服务完成时间</th>
+						<th>加时补差价</th>
 						<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${contentModel.list}" var="item">
 						<tr>
-							<td style="width: 8%">${ item.name }</td>
-							<td style="width: 10%">${ item.mobile }</td>
+							<td style="width: 6%">${ item.name }</td>
+							<td style="width: 9%">${ item.mobile }</td>
 							<td style="width: 8%">${ item.orderTypeName }</td>
 							<c:choose>
 								<c:when test="${item.orderListLink != '' }">
 									<td style="width: 8%"><a href="${item.orderListLink}" target="_blank">${ item.orderNo }</a></td>
 								</c:when>
-								
 								<c:otherwise>
 									<td style="width: 8%">${ item.orderNo }</td>
 								</c:otherwise>
 							</c:choose>
-							
 							<td style="width: 8%">${ item.userMobile }</td>
 							<td style="width: 15%">${ item.addr }</td>
 							<td style="width: 6%">${ item.totalOrderPay }</td>
 							<td style="width: 6%">${ item.totalStaffIncoming }</td>
-							<td style="width: 12%">${item.payTypeName }</td>
+							<td style="width: 6%">${item.payTypeName }</td>
 							<td style="width: 6%">${ item.orderStatusStr }</td>
+							<td style="width: 6%">${ item.validateCodeName }</td>
 							<td style="width: 8%"><timestampTag:timestamp patten="yyyy-MM-dd HH:MM:ss" t="${item.serviceFinishTime * 1000}" /></td>
+							<td style="width: 6%">${ item.overtimeCompensation }</td>
 							<td style="width: 25%">${ item.remarks }</td>
 						</tr>
 					</c:forEach>
