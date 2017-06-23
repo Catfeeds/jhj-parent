@@ -34,16 +34,15 @@ import com.jhj.service.bs.OrgStaffDetailPayService;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgsService;
 import com.jhj.service.cooperate.CooperateBusinessService;
+import com.jhj.service.order.OaOrderService;
 import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderDispatchsService;
 import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
-import com.jhj.service.orderReview.SettingService;
 import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.service.users.UserCouponsService;
-import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
 import com.jhj.utils.OrderUtils;
 import com.jhj.vo.order.OrderDispatchSearchVo;
@@ -80,9 +79,6 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	private OrgStaffDetailPayService orgStaffDetailPayService;
 
 	@Autowired
-	private SettingService settingService;
-
-	@Autowired
 	private OrgStaffBlackService orgStaffBlackService;
 
 	@Autowired
@@ -96,9 +92,6 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 
 	@Autowired
 	private UserCouponsService userCouponsService;
-
-	@Autowired
-	private UserDetailPayService userDetailPayService;
 
 	@Autowired
 	private DictCouponsService dictCouponsService;
@@ -120,6 +113,9 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 	
 	@Autowired
 	private OrderDispatchPriceService orderDisppatchPriceService;
+	
+	@Autowired
+	private OaOrderService oaOrderService;
 	
 
 	@Override
@@ -487,6 +483,14 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		vo.setRemarks(remarks);
 		
+		//团购码和是否验码
+		vo.setGroupCode(oaOrderService.getOrderGroupCode(order.getId()));
+		
+		vo.setValidateCodeName("否");
+		if(order.getValidateCode().equals((short)1)){
+			vo.setValidateCodeName("是");
+		}
+		
 		return vo;
 	}
 
@@ -568,7 +572,6 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		vo.setPayTypeName(payTypeName);
 		
 		//订单来源
-
 		
 		Short orderFrom = order.getOrderFrom();
 		Long orderOpFrom = order.getOrderOpFrom();

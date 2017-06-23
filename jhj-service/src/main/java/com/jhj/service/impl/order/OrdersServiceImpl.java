@@ -113,6 +113,7 @@ public class OrdersServiceImpl implements OrdersService {
 		record.setRemarksBussinessConfirm(""); // 运营人员在 后台 对订单详情添加的 备注
 		record.setPeriodOrderId(0);
 		record.setDelFlag((short)0);
+		record.setValidateCode((short)0);
 
 		return record;
 	}

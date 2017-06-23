@@ -209,6 +209,23 @@
 		<if test="dispatchStatus != null">
 			and dispatch_status = #{dispatchStatus,jdbcType=NUMERIC}
 		</if>
+		
+		<if test="orderStatusList != null">
+			and order_id in (select id from orders where order_status in 
+			<foreach item="item" index="index" collection="orderStatusList" open="(" separator="," close=")">
+				${item}
+			</foreach>
+			
+			<if test="startOrderDoneTime !=null">
+				<![CDATA[ and order_done_time >= #{startOrderDoneTime}]]>
+			</if>
+	
+			<if test="endOrderDoneTime !=null">
+				<![CDATA[ and order_done_time <= #{endOrderDoneTime}]]>
+			</if>
+			)
+		</if>
+		
 	</sql>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

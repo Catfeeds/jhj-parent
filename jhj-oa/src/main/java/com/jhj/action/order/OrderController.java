@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,14 +21,12 @@ import com.jhj.common.Constants;
 import com.jhj.oa.auth.AccountAuth;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
-import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.po.model.order.OrderDispatchs;
 import com.jhj.po.model.order.OrderExtend;
 import com.jhj.po.model.order.OrderLog;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
-import com.jhj.po.model.user.Users;
 import com.jhj.service.bs.OrgStaffFinanceService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.bs.OrgsService;
@@ -159,21 +156,6 @@ public class OrderController extends BaseController {
 	/**
 	 * 运营人员 为订单 添加 备注
 	 */
-//	@AuthPassport
-//	@RequestMapping(value = "remarks_bussiness_form", method = RequestMethod.GET)
-//	public String toBussinessRemarkForm(Model model,
-//			@RequestParam("orderId") Long orderId) {
-//
-//		Orders orders = orderService.selectByPrimaryKey(orderId);
-//
-//		model.addAttribute("orderModel", orders);
-//
-//		return "order/OrderRemarksBussinessForm";
-//	}
-
-	/**
-	 * 运营人员 为订单 添加 备注
-	 */
 	@AuthPassport
 	@ResponseBody
 	@RequestMapping(value = "update-remarks", method = RequestMethod.POST)
@@ -221,7 +203,6 @@ public class OrderController extends BaseController {
 			@RequestParam("order_id") Long orderId,
 			@RequestParam("remarks") String remarks,HttpServletRequest request) {
 
-		Map<String, Object> map = new HashMap<String, Object>();
 		Orders order = orderService.selectByPrimaryKey(orderId);
 
 		AppResultData<Object> result = orderCancelService.cancleOrderDone(order);
@@ -320,10 +301,10 @@ public class OrderController extends BaseController {
 	}
 	
 	@AuthPassport
-	@RequestMapping(value = "/update_order", method = RequestMethod.POST)
-	public String updateOrder(Model model,@ModelAttribute("orderModel") Orders orderForm,HttpServletRequest request) {
+	@RequestMapping(value = "/update-order", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateOrder(@ModelAttribute("oaOrderListVoModel") Orders orderForm,HttpServletRequest request) {
 
-		String url=null;
 		Orders orders = orderService.selectByOrderNo(orderForm.getOrderNo());
 		Long orderOpFrom = orders.getOrderOpFrom();
 		orders.setOrderOpFrom(orderForm.getOrderOpFrom());
@@ -336,7 +317,6 @@ public class OrderController extends BaseController {
 			CooperativeBusiness cb2 = cooperateBusinessService.selectByPrimaryKey(orderForm.getOrderOpFrom());
 			
 			if (cb2 != null) remarks+= "修改成"+cb2.getBusinessName();
-
 		}
 		
 		String groupCode = request.getParameter("groupCode");
@@ -362,9 +342,7 @@ public class OrderController extends BaseController {
 					remarks+= ";团购卷修改成" + groupCode;
 					orderExtendService.updateByPrimaryKeySelective(orderExtend);
 				}
-				
 			}
-			
 		}
 		
 		if (!StringUtil.isEmpty(remarks)) {
@@ -378,7 +356,50 @@ public class OrderController extends BaseController {
 			orderLogService.insert(initOrderLog);
 		}
 			
-		return "redirect:order-list";
+		return "1" ;
+	}
+	
+	/**
+	 * 
+	 * 验码功能，
+	 * @param validateCode = 1,是
+	 * 		  validateCode = 0,否
+	 * 
+	 * 
+	 * */
+	@AuthPassport
+	@RequestMapping(value = "/validate-code", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,String> updateOrder(
+			@RequestParam("orderId") Long orderId,
+			@RequestParam("validateCode") Short validateCode,
+			HttpServletRequest request) {
+
+		Orders orders = orderService.selectByPrimaryKey(orderId);
+		orders.setValidateCode(validateCode);
+		orderService.updateByPrimaryKeySelective(orders);
+		Map<String,String> map = new HashMap<>();
+		String msg = "";
+		if(validateCode==1){
+			map.put("validateCode", "1");
+			map.put("btnValue", "解除");
+			msg = "已验码";
+		}else{
+			map.put("validateCode", "0");
+			map.put("btnValue", "验码");
+			msg = "解除验码";
+		}
+		
+		//修改记录
+		AccountAuth accountAuth = AuthHelper.getSessionAccountAuth(request);
+		OrderLog initOrderLog = orderLogService.initOrderLog(orders);
+		initOrderLog.setAction(Constants.ORDER_ACTION_UPDATE);
+		initOrderLog.setUserId(accountAuth.getId());
+		initOrderLog.setUserName(accountAuth.getUsername());
+		initOrderLog.setUserType((short)2);
+		initOrderLog.setRemarks("修改成" + msg);
+		orderLogService.insert(initOrderLog);
+		return map;
 	}
 
 }
