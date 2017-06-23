@@ -12,16 +12,23 @@ myApp.onPageInit("period-order-confirm", function (page) {
 			var periodOrder = periodOrderJson[i];
 			var htmlPart = temp;
 			htmlPart = htmlPart.replace(new RegExp('{name}', "gm"), periodOrder.name);
-			htmlPart = htmlPart.replace(new RegExp('{id}', "gm"), periodOrder.id);
-			htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.service_type_id);
-			htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), periodOrder.service_addon_id);
+			htmlPart = htmlPart.replace(new RegExp('{serviceTypeId}', "gm"), periodOrder.serviceTypeId);
+			htmlPart = htmlPart.replace(new RegExp('{serviceTypeAddonsId}', "gm"), periodOrder.serviceAddonId);
 			htmlPart = htmlPart.replace(new RegExp('{total}', "gm"), periodOrder.num);
 			htmlPart = htmlPart.replace(new RegExp('{num}', "gm"), periodOrder.num);
 			htmlPart = htmlPart.replace(new RegExp('{punit}', "gm"), periodOrder.punit);
-			htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), periodOrder.price);
-			htmlPart = htmlPart.replace(new RegExp('{vipPrice}', "gm"), periodOrder.vipPrice);
-			htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), periodOrder.price*periodOrder.num);
-			htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), periodOrder.vipPrice*periodOrder.num);
+			if(packageTypeId == '6' && periodOrder.serviceTypeId == '61'){
+				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), periodOrder.price/periodOrder.num);
+				htmlPart = htmlPart.replace(new RegExp('{vipPrice}', "gm"), periodOrder.vipPrice/periodOrder.num);
+				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), periodOrder.price);
+				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), periodOrder.vipPrice);
+			}else{
+				htmlPart = htmlPart.replace(new RegExp('{price}', "gm"), periodOrder.price);
+				htmlPart = htmlPart.replace(new RegExp('{vipPrice}', "gm"), periodOrder.vipPrice);
+				htmlPart = htmlPart.replace(new RegExp('{totalPrice}', "gm"), periodOrder.price*periodOrder.num);
+				htmlPart = htmlPart.replace(new RegExp('{vipTotalPrice}', "gm"), periodOrder.vipPrice*periodOrder.num);
+			}
+			
 			html += htmlPart;
 		}
 		$$("#period-order-list").append(html);

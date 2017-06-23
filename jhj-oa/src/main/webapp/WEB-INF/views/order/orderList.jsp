@@ -24,6 +24,8 @@
 <link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>" rel="stylesheet"
 	type="text/css" />
 <link href="<c:url value='/assets/bootstrap-datetimepicker/css/datetimepicker.css'/>" rel="stylesheet" type="text/css" />
+<link href="<c:url value='/assets/bootstrap-select-1.12.2/dist/css/bootstrap-select.min.css'/>" rel="stylesheet" type="text/css" />
+
 <style type="text/css">
 	.showHide {
 		display:none;
@@ -76,8 +78,7 @@
 											<td width="23%"><form:input path="orderAddr" class="form-control" placeholder="请输入服务地址" /></td>
 											<td width="10%">订单状态：</td>
 											<td width="23%"><c:if test="${loginOrgId == 0 }">
-												<form:select path="orderStatusList" multiple="true" size="1" class="form-control" >
-													<option value="">--请选择订单状态--</option>
+												<form:select path="orderStatusList" multiple="true" class="selectpicker show-tick" data-live-search="false" >
 													<form:option value="0">已取消</form:option>
 													<form:option value="1">未支付</form:option>
 													<form:option value="2">已支付</form:option>
@@ -88,8 +89,7 @@
 													<form:option value="9">已关闭</form:option>
 												</form:select>
 												</c:if> <!-- 如果是 店长登录,则 只能选择 已派工之后的 订单状态 --> <c:if test="${loginOrgId > 0 }">
-													<form:select path="orderStatus" class="form-control">
-														<option value="">--请选择订单状态--</option>
+													<form:select path="orderStatusList" multiple="true" class="selectpicker show-tick">
 														<form:option value="3">已派工</form:option>
 														<form:option value="5">开始服务</form:option>
 														<form:option value="7">完成服务</form:option>
@@ -312,7 +312,10 @@
 	<script type="text/javascript" src="<c:url value='/js/jhj/select-org-cloud.js'/>"></script>
 	
 	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js'/>"></script>
+	<script src="<c:url value='/assets/bootstrap-select-1.12.2/dist/js/bootstrap-select.min.js'/>"></script>
 	
 	<script src="<c:url value='/js/order/orderList.js'/>"></script>
+	
+	
 </body>
 </html>
