@@ -161,8 +161,8 @@ public class OrderDisptachController extends BaseController {
 			@RequestParam("orderId") Long orderId, 
 			@RequestParam("selectStaffIds") String selectStaffIds,
 			@RequestParam("newServiceDate") String newServiceDate, 
-			@RequestParam(value = "admin_id", required = false, defaultValue = "0") Long adminId,
-			@RequestParam(value = "admin_name", required = false, defaultValue = "") String adminName, 
+			@RequestParam(value = "adminId", required = false, defaultValue = "0") Long adminId,
+			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName, 
 			HttpServletRequest request) {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
@@ -220,7 +220,7 @@ public class OrderDisptachController extends BaseController {
 			}
 		}
 		
-		if (orderType.equals(Constants.ORDER_TYPE_0) && newStaffNum != oldStaffNum) {
+		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 &&  orderType.equals(Constants.ORDER_TYPE_0) && newStaffNum != oldStaffNum) {
 			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("基础保洁订单不能修改人数，因为涉及到价格的变更.");
 			return resultData;
