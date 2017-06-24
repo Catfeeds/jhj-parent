@@ -3,6 +3,7 @@ git reset --hard HEAD
 git pull
 
 sed -i "s#^debug=.*#debug=true#g"  /data/src/jhj-parent/jhj-app/src/main/resources/config.properties
+sed -i "s#^debug=.*#debug=true#g"  /data/src/jhj-parent/jhj-oa/src/main/resources/config.properties
 mvn clean package
 /data/tomcat/bin/shutdown.sh
 sleep 1

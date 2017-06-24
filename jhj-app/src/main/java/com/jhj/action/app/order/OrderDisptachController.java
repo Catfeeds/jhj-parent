@@ -220,7 +220,7 @@ public class OrderDisptachController extends BaseController {
 			}
 		}
 		
-		if (orderType.equals(Constants.ORDER_TYPE_0) && newStaffNum != oldStaffNum) {
+		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 &&  orderType.equals(Constants.ORDER_TYPE_0) && newStaffNum != oldStaffNum) {
 			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("基础保洁订单不能修改人数，因为涉及到价格的变更.");
 			return resultData;
