@@ -12,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import com.jhj.common.Constants;
 import com.jhj.po.dao.bs.OrgStaffDetailPayMapper;
 import com.jhj.po.model.bs.OrgStaffDetailPay;
+import com.jhj.po.model.bs.OrgStaffPayDept;
 import com.jhj.po.model.bs.OrgStaffs;
 import com.jhj.po.model.order.OrderDispatchPrices;
 import com.jhj.po.model.order.OrderPriceExt;
@@ -19,6 +20,7 @@ import com.jhj.po.model.order.OrderPrices;
 import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.university.PartnerServiceType;
 import com.jhj.service.bs.OrgStaffDetailPayService;
+import com.jhj.service.bs.OrgStaffPayDeptService;
 import com.jhj.service.bs.OrgStaffsService;
 import com.jhj.service.order.OrderDispatchPriceService;
 import com.jhj.service.order.OrderPriceExtService;
@@ -66,6 +68,9 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 	
 	@Autowired
 	private OrderDispatchPriceService orderDispatchPriceService;
+	
+	@Autowired
+	private OrgStaffPayDeptService orgStaffPayDeptService;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -329,5 +334,30 @@ public class OrgStaffDetailPayServiceImpl implements OrgStaffDetailPayService {
 
 		return true;
 	}
+
+	@Override
+	public OrgStaffDetailPayOaVo getOrgStaffRepaymentVo(OrgStaffDetailPay orgStaffDetailPay) {
+		
+		OrgStaffDetailPayOaVo vo = new OrgStaffDetailPayOaVo();
+		
+		BeanUtilsExp.copyPropertiesIgnoreNull(orgStaffDetailPay, vo);
+		
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(orgStaffDetailPay.getStaffId());
+		vo.setName(orgStaffs.getName());
+		
+		OrgStaffPayDept staffPaydept = orgStaffPayDeptService.selectByOrderNo(orgStaffDetailPay.getOrderNo());
+		vo.setPayTypeName(OneCareUtil.getPayTypeName(staffPaydept.getPayType()));
+		vo.setAddTime(staffPaydept.getAddTime());
+		String orderTypeName = OneCareUtil.getOrderTypeForStaffDetailPay(orgStaffDetailPay.getOrderType());
+		vo.setOrderTypeName(orderTypeName);
+		
+		vo.setRepaymentMoney(staffPaydept.getOrderMoney());
+		vo.setPayAccount(staffPaydept.getPayAccount());
+		vo.setTrandId(staffPaydept.getTradeId());
+		
+		return vo;
+	}
+	
+	
 
 }

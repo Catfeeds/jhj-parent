@@ -114,4 +114,42 @@ public class OrgStaffDetailPayController extends BaseController {
 		
 		return "staff/staffDetailPayList";
 	}
+	
+	@AuthPassport
+	@RequestMapping(value = "/staff-repayment", method = RequestMethod.GET)
+	public String getStaffRepayment(Model model, HttpServletRequest request, 
+			@RequestParam(value = "staff_id", required = false, defaultValue = "0") Long staffId,
+			OrderSearchVo searchVo) {
+
+		int pageNo = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_NO_NAME, ConstantOa.DEFAULT_PAGE_NO);
+		int pageSize = ServletRequestUtils.getIntParameter(request, ConstantOa.PAGE_SIZE_NAME, ConstantOa.DEFAULT_PAGE_SIZE);
+
+		if (searchVo == null) {
+			searchVo = new OrderSearchVo();
+		}
+		if (staffId > 0L) searchVo.setStaffId(staffId);
+		
+		Long sessionParentId = AuthHelper.getSessionLoginOrg(request);
+		searchVo = orderQueryService.getOrderSearchVo(request, searchVo, null, sessionParentId);
+		searchVo.setOrderType((short)4);
+				
+		List<OrgStaffDetailPay> orgStaffdetailPayList = new ArrayList<OrgStaffDetailPay>();
+
+		PageInfo<OrgStaffDetailPay> plist = orgStaffDetailPayService.selectByListPage(searchVo, pageNo, pageSize);
+		orgStaffdetailPayList = plist.getList();
+		
+		for (int i = 0; i < orgStaffdetailPayList.size(); i++) {
+			OrgStaffDetailPay orgStaffDetailPay = orgStaffdetailPayList.get(i);
+			OrgStaffDetailPayOaVo oaVo = orgStaffDetailPayService.getOrgStaffRepaymentVo(orgStaffDetailPay);
+			orgStaffdetailPayList.set(i, oaVo);
+		}
+		PageInfo result = new PageInfo(orgStaffdetailPayList);
+
+		model.addAttribute("contentModel", result);
+		model.addAttribute("searchModel", searchVo);
+		
+		
+		return "staff/staffRepaymentList";
+	}
+	
 }

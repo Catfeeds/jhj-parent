@@ -80,6 +80,8 @@ public class OrgStaffIncomingVo {
 	private String groupCode;
 	
 	private String validateCodeName;
+	
+	private String orderDonetimeStr;
 
 	public Long getParentId() {
 		return parentId;
@@ -384,5 +386,14 @@ public class OrgStaffIncomingVo {
 	public void setValidateCodeName(String validateCodeName) {
 		this.validateCodeName = validateCodeName;
 	}
+
+	public String getOrderDonetimeStr() {
+		return orderDonetimeStr;
+	}
+
+	public void setOrderDonetimeStr(String orderDonetimeStr) {
+		this.orderDonetimeStr = orderDonetimeStr;
+	}
+	
 	
 }

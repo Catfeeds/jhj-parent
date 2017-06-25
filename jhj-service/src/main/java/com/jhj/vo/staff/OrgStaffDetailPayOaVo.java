@@ -35,6 +35,12 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	//加时补差价
 	private BigDecimal overtimeCompensation;
 	
+	private BigDecimal repaymentMoney;
+	
+	private String payAccount;
+	
+	private String trandId;
+	
 	public String getOrderTypeName() {
 		return orderTypeName;
 	}
@@ -122,5 +128,30 @@ public class OrgStaffDetailPayOaVo extends OrgStaffDetailPay{
 	public void setOvertimeCompensation(BigDecimal overtimeCompensation) {
 		this.overtimeCompensation = overtimeCompensation;
 	}
+
+	public BigDecimal getRepaymentMoney() {
+		return repaymentMoney;
+	}
+
+	public void setRepaymentMoney(BigDecimal repaymentMoney) {
+		this.repaymentMoney = repaymentMoney;
+	}
+
+	public String getPayAccount() {
+		return payAccount;
+	}
+
+	public void setPayAccount(String payAccount) {
+		this.payAccount = payAccount;
+	}
+
+	public String getTrandId() {
+		return trandId;
+	}
+
+	public void setTrandId(String trandId) {
+		this.trandId = trandId;
+	}
+	
 	
 }
