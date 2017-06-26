@@ -148,6 +148,10 @@ public class OrgStaffDetailPayController extends BaseController {
 		model.addAttribute("contentModel", result);
 		model.addAttribute("searchModel", searchVo);
 		
+		//还款金额
+		BigDecimal totalPayDept = orgStaffPayDeptService.totalBySearchVo(searchVo);
+		if (totalPayDept == null) totalPayDept = new BigDecimal(0);
+		model.addAttribute("totalPayDept", MathBigDecimalUtil.round2(totalPayDept));
 		
 		return "staff/staffRepaymentList";
 	}

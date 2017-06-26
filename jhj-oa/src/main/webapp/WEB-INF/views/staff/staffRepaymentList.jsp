@@ -25,7 +25,7 @@
 			<form:form class="form-inline" name="from" id="searchForm" onsubmit="return checkEndTime()" modelAttribute="searchModel"
 				action="staffPay-list" method="GET">
 				
-				<%-- <td>门店:</td>
+				<td>门店:</td>
 				<td><orgSelectTag:select selectId="${accountAuth.parentOrgId}" sessionOrgId="${accountAuth.parentOrgId}" /></td>
 				<td>云店:</td>
 				<td><select name="orgId" id="orgId" class="form-control">
@@ -37,7 +37,7 @@
 					<select name="selectStaff" id="selectStaff" class="form-control">
 						<option value="0">全部</option>
 					</select>
-				</td> --%>
+				</td>
 				<div class="form-group">
 					服务人员姓名：
 					<form:input path="staffName" id="staffName" class="form-control" />
@@ -66,9 +66,14 @@
 				
 				<input type="button" id="searchBtn" class="btn btn-primary" onclick="searchSubmit()" value="搜索"/>
 				<input type="button" id="cleanBtn" class="btn btn-primary"  value="清空"/>
+				<button type="button" id="exportPayDept" class="btn btn-warning" onclick="exportStaffPayDept()">导出还款明细</button>
 				<br>
 			</form:form> 
 			</header>
+			<div>
+				<label>还款总金额：</label>
+				<u style="color:red;">${totalPayDept }元</u>
+			</div>
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />
 			
 			<table class="table table-striped table-advance table-hover" id="table2excel">
