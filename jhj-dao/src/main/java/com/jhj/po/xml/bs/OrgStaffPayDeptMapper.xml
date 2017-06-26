@@ -99,6 +99,10 @@
 			and order_no in (select order_no from order_prices where pay_type = #{payType})
 		</if>
 		
+		<if test="repaymentType !=null">
+			and order_no in (select order_no from org_staff_pay_dept where pay_type = #{repaymentType})
+		</if>
+		
 	</sql>
 	
 	

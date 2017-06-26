@@ -124,5 +124,12 @@ function saveRemarks(orderNo,remarks){
 };
 
 
+$(function(){
+	//查询条件中的订单状态回显
+	var orderStatusList = $("#orderStatusList").val();
+	$('.selectpicker').selectpicker('val', orderStatusList);  
+})
+
+
 
 

@@ -44,5 +44,7 @@ public interface OrgStaffDetailPayService {
 
 	boolean setStaffDetailPay(Long staffId, String mobile, Short orderType, Long orderId, String orderNo, BigDecimal orderMoney, BigDecimal orderPay,
 			String orderStatusStr, String remarks, Long addTime);
+	
+	OrgStaffDetailPayOaVo getOrgStaffRepaymentVo(OrgStaffDetailPay orgStaffDetailPay);
 
 }
