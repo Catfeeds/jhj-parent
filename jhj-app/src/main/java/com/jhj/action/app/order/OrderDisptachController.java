@@ -161,8 +161,8 @@ public class OrderDisptachController extends BaseController {
 			@RequestParam("orderId") Long orderId, 
 			@RequestParam("selectStaffIds") String selectStaffIds,
 			@RequestParam("newServiceDate") String newServiceDate, 
-			@RequestParam(value = "admin_id", required = false, defaultValue = "0") Long adminId,
-			@RequestParam(value = "admin_name", required = false, defaultValue = "") String adminName, 
+			@RequestParam(value = "adminId", required = false, defaultValue = "0") Long adminId,
+			@RequestParam(value = "adminName", required = false, defaultValue = "") String adminName, 
 			HttpServletRequest request) {
 
 		AppResultData<Object> resultData = new AppResultData<Object>(Constants.SUCCESS_0, "", "");
@@ -215,12 +215,12 @@ public class OrderDisptachController extends BaseController {
 				oldStaffNum = disList.size();
 				if (staffIds.contains(d.getStaffId())) {
 					newDispathStaffIds.remove(d.getStaffId());
-					oldDispatchStaffIds.add(d.getStaffId());
 				}
+				oldDispatchStaffIds.add(d.getStaffId());
 			}
 		}
 		
-		if (orderType.equals(Constants.ORDER_TYPE_0) && newStaffNum != oldStaffNum) {
+		if (orderStatus != Constants.ORDER_HOUR_STATUS_2 &&  orderType.equals(Constants.ORDER_TYPE_0) && newStaffNum != oldStaffNum) {
 			resultData.setStatus(Constants.ERROR_999);
 			resultData.setMsg("基础保洁订单不能修改人数，因为涉及到价格的变更.");
 			return resultData;
@@ -248,7 +248,7 @@ public class OrderDisptachController extends BaseController {
 			}
 			//3. 派工时间不变，调整派工人员
 			if (oldServiceDateTime.equals(serviceDateTime) && newDispathStaffIds.size() > 0) {
-				dispatchStaffIds = oldDispatchStaffIds;
+				dispatchStaffIds = newDispathStaffIds;
 				orderLogRemarks = Constants.ORDER_ACTION_UPDATE_DISPATCHS_STAFF;
 			}
 			//4. 派工时间变化，派工人员变化.
@@ -349,6 +349,9 @@ public class OrderDisptachController extends BaseController {
 			for (OrderDispatchs d : newDisList) {
 				if (staffId.equals(d.getStaffId())) {
 					willDispatch = false;
+					d.setServiceDate(serviceDateTime);
+					d.setUpdateTime(TimeStampUtil.getNowSecond());
+					orderDispatchsService.updateByPrimaryKey(d);
 					break;
 				}
 			}

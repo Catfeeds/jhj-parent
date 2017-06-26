@@ -1,6 +1,7 @@
 package com.jhj.action.app.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderPriceExtVo;
 import com.jhj.vo.order.OrderViewVo;
+import com.jhj.vo.order.OrgStaffDispatchVo;
 import com.meijia.utils.BeanUtilsExp;
 import com.meijia.utils.DateUtil;
 import com.meijia.utils.MathBigDecimalUtil;
@@ -160,7 +162,7 @@ public class OrderPayController extends BaseController {
 		orderDispatchSearchVo.setOrderId(orderId);
 		
 		List<OrderAppoint> orderAppoints = orderAppointService.selectBySearchVo(orderDispatchSearchVo);
-		
+		List<Long> appointStaffIds = new ArrayList<Long>();
 		if (!orderAppoints.isEmpty()) {
 			for (OrderAppoint oa: orderAppoints) {
 				Long appointStaffID = oa.getStaffId();
@@ -228,6 +230,19 @@ public class OrderPayController extends BaseController {
 		
 		//判断当前是否有满足条件阿姨，没有则返回提示信息.
 //		List<OrgStaffsNewVo> orgStaffsNewVos = new ArrayList<OrgStaffsNewVo>();
+		Long addrId = order.getAddrId();
+		Long serviceType = order.getServiceType();
+		Long serviceDate = order.getServiceDate();
+		int staffNums = order.getStaffNums();
+		double serviceHour = order.getServiceHour();
+		List<OrgStaffDispatchVo> autoStaffs = orderDispatchService.autoDispatch(addrId, serviceType, serviceDate, serviceHour, staffNums, appointStaffIds);
+		if (autoStaffs.isEmpty()) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("你选择的服务时间服务人员都已经预约满了，请尝试更换服务时间，为你带来的不便，敬请谅解");
+			return result;
+		}
+		
+		
 		orderPrice.setOrderMoney(orderMoney);
 		orderPrice.setOrderPay(orderPay);
 		orderPrice.setPayType(orderPayType);
@@ -290,11 +305,10 @@ public class OrderPayController extends BaseController {
 			//记录用户消费明细
 			userDetailPayService.addUserDetailPayForOrder(u, order, orderPrice, "", "", "");
 			
-			Long serviceDate = order.getServiceDate();
 			//服务时间
 			String serviceTime = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy年MM月dd日HH:mm");
 			
-			Long serviceType = order.getServiceType();
+
 			PartnerServiceType type = partService.selectByPrimaryKey(serviceType);
 			//服务类型名称
 			String name = type.getName();

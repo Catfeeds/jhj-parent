@@ -148,9 +148,9 @@ public class OrderExpCleanController extends BaseController {
 		
 		if (staffNums > 1 ) {
 			serviceHour = MathBigDecimalUtil.getValueStepHalf(serviceHour, staffNums);
-			order.setServiceHour(serviceHour);
+			
 		}
-		
+		order.setServiceHour(serviceHour);
 		order.setMobile(mobile);
 		order.setUserId(userId);
 		order.setOrderStatus(Constants.ORDER_STATUS_1);

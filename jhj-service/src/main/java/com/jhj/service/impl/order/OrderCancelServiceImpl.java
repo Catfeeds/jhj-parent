@@ -35,6 +35,7 @@ import com.jhj.service.order.OrderPriceExtService;
 import com.jhj.service.order.OrderPricesService;
 import com.jhj.service.order.OrdersService;
 import com.jhj.service.orderReview.SettingService;
+import com.jhj.service.university.PartnerServiceTypeService;
 import com.jhj.service.users.UserCouponsService;
 import com.jhj.service.users.UserDetailPayService;
 import com.jhj.service.users.UsersService;
@@ -43,6 +44,7 @@ import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.user.UserDetailSearchVo;
 import com.meijia.utils.MathBigDecimalUtil;
+import com.meijia.utils.SmsUtil;
 import com.meijia.utils.TimeStampUtil;
 import com.meijia.utils.vo.AppResultData;
 
@@ -90,6 +92,9 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 	
 	@Autowired
 	private OrderDispatchPriceService orderDispatchPriceService;
+	
+	@Autowired
+	private PartnerServiceTypeService partnerService;
 
 	// 取消派工
 	@Override
@@ -289,11 +294,21 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 
 		if (orderDispatchs.isEmpty())
 			return true;
-
+		
+		// 发送通知
+		String beginTimeStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "MM月-dd日HH:mm");
+		String endTimeStr = TimeStampUtil.timeStampToDateStr((long) ((order.getServiceDate() + order.getServiceHour() * 3600) * 1000), "HH:mm");
+		String timeStr = beginTimeStr + "-" + endTimeStr;
+		String[] smsContent = new String[] { timeStr };
+		
+		
 		for (OrderDispatchs item : orderDispatchs) {
 			item.setDispatchStatus((short) 0);
 			item.setUpdateTime(TimeStampUtil.getNowSecond());
 			orderDispatchService.updateByPrimaryKey(item);
+			
+			SmsUtil.SendSms(item.getStaffMobile(), Constants.MESSAGE_ORDER_CANCLE,
+					new String[] { beginTimeStr, partnerService.selectByPrimaryKey(order.getServiceType()).getName() });
 		}
 		return true;
 	}
@@ -326,6 +341,7 @@ public class OrderCancelServiceImpl implements OrderCancelService {
 
 	// 5.服务人员收入减少 7.记录服务人员订单取消金额.
 	private boolean cancelOrderForStaffFinance(Orders order, OrderPrices orderPrice, OrgStaffs orgStaff) {
+		
 		
 		Long orderId = order.getId();
 		Long staffId = orgStaff.getStaffId();

@@ -44,4 +44,33 @@ public class TestOrderExpCleanController extends JUnitActionBase{
 	}
 	
 
+	@Test
+	public void testPostExp() throws Exception{
+		String url = "/app/order/post_exp.json";
+
+     	MockHttpServletRequestBuilder postRequest = post(url);
+     	
+     	
+     	postRequest = postRequest.param("service_addons_datas", "[{\"serviceAddonId\":\"27\",\"itemNum\":\"60\"}]");
+     	postRequest = postRequest.param("service_type", "53");
+     	postRequest = postRequest.param("staff_id", "0");
+     	postRequest = postRequest.param("user_id", "12385"); 
+     	postRequest = postRequest.param("order_from", "1");
+     	postRequest = postRequest.param("addr_id", "12799");
+     	postRequest = postRequest.param("service_date", "1498264200");
+     	postRequest = postRequest.param("serviceHour", "10"); 
+     	postRequest = postRequest.param("mobile", "15210605385");   
+     	
+ 	    
+ 	    ResultActions resultActions = mockMvc.perform(postRequest);
+
+ 	    resultActions.andExpect(content().contentType(this.mediaType));
+ 	    resultActions.andExpect(status().isOk());
+
+
+ 	    System.out.println("RestultActons: " + resultActions.andReturn().getResponse().getContentAsString());
+     	
+	}
+	
+
 }
