@@ -108,6 +108,8 @@ public class OrderSearchVo {
 	
 	//删除标识
 	private Short delFlag;
+	
+	private Short repaymentType;
 
 	public String getMobile() {
 		return mobile;
@@ -516,6 +518,13 @@ public class OrderSearchVo {
 	public void setDelFlag(Short delFlag) {
 		this.delFlag = delFlag;
 	}
-	
+
+	public Short getRepaymentType() {
+		return repaymentType;
+	}
+
+	public void setRepaymentType(Short repaymentType) {
+		this.repaymentType = repaymentType;
+	}
 	
 }

@@ -397,6 +397,8 @@ public class OrgStaffFinanceServiceImpl implements OrgStaffFinanceService {
 		
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(order.getServiceDate() * 1000, "yyyy-MM-dd HH:mm");
 		vo.setServiceDateStr(serviceDateStr);
+		String orderDonetimeStr = TimeStampUtil.timeStampToDateStr(order.getOrderDoneTime() * 1000, "yyyy-MM-dd HH:mm");
+		vo.setOrderDonetimeStr(orderDonetimeStr);
 
 		Long serviceTypeId = order.getServiceType();
 		PartnerServiceType serviceType = partnerServiceTypeService.selectByPrimaryKey(serviceTypeId);

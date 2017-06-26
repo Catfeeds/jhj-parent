@@ -140,7 +140,7 @@ public class OrgStaffExportController extends BaseController {
 			
 			XSSFRow rowData = sh.createRow(rowNum);
 
-			for(int j = 0; j <= 29; j++) {
+			for(int j = 0; j <= 30; j++) {
 				rowData.createCell(j);
 				XSSFCell c = rowData.getCell(j);
 				c.setCellType(XSSFCell.CELL_TYPE_STRING);
@@ -241,6 +241,9 @@ public class OrgStaffExportController extends BaseController {
 			
 			//是否验码
 			this.setCellValueForString(rowData, 29, vo.getValidateCodeName());
+			
+			//服务完成时间
+			this.setCellValueForString(rowData, 30, vo.getOrderDonetimeStr());
 
 			rowNum++;
 		}
@@ -248,7 +251,7 @@ public class OrgStaffExportController extends BaseController {
 		//写入合计
 		XSSFRow rowData = sh.createRow(rowNum);
 
-		for(int j = 0; j <= 29; j++) {
+		for(int j = 0; j <= 30; j++) {
 			XSSFCell c = rowData.createCell(j);
 //			c.setCellStyle(contentStyle);
 //			sh.autoSizeColumn((short)j);
