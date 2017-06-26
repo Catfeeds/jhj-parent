@@ -56,20 +56,6 @@ function exportStaffOrder() {
 	$("#searchForm").submit();
 }
 
-
-function exportStaffPayDept() {
-	var selectStaff = $("#selectStaff").val();
-	console.log("selectStaff = "+ selectStaff); 
-	if (selectStaff == undefined || selectStaff == "" || selectStaff == 0) {
-		alert("请选择服务人员.");
-		return false;
-	}
-	
-	var exportUrl = "/jhj-oa/staff/export-pay-dept";
-	$("#searchForm").attr("action", exportUrl);
-	$("#searchForm").submit();
-}
-
 $("#cleanBtn").on('click',function(){
 	$("form :input").not(":button, :submit, :reset, :hidden,:selected").val("");
 });
