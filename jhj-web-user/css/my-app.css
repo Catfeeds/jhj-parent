@@ -6183,18 +6183,21 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
   color: #FF9D00;
   display: block;
   position: absolute;
-  /* width: 41%; */
-  /* background-color: #000000; */
-  /* border-bottom-right-radius: 10px; */
-  /* -webkit-border-bottom-right-radius: 10px; */
-  -moz-border-bottom-right-radius: 10px;
-  line-height: 12px;
-  top: 3%;
-  /* text-align: center; */
-  /* vertical-align: middle; */
-  /* padding: 3% 0; */
-  left: 13%;
+   width: 41%;
 
+  line-height: 12px;
+  top: 0px;
+   text-align: center;
+   vertical-align: middle;
+   padding: 3% 2px;
+  left: 0px;
+
+}
+.clean-list span.span-title{
+  background:rgba(0,0,0,0.4);
+  border-bottom-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-bottom-right-radius: 10px;
 }
 .clean-list p{
   font-size: 12px;
@@ -6317,6 +6320,25 @@ p.special-p-2{
 }
 .share-bottom img{
   width: 100%;
+}
+/***分享成功之后跳转页面***/
+.logo-share{
+   display: block;
+   width: 83%;
+   margin: 0 auto;
+   padding-top:20px;
+   padding-bottom:15px;
+}
+.icon-space{
+  width: 28px;
+  display: inline-block;
+}
+.logo-big-share{
+  display: block;
+  width: 75%;
+  margin: 0 auto;
+  padding-top:10px;
+  padding-bottom:20px;
 }
 /****分享专题页面*****/
 .share-top{
