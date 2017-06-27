@@ -285,6 +285,8 @@ function periodOrderListSuccess(data, textStatus, jqXHR,pageNum){
 			case 2: periodName="套餐二"; break;
 			case 3: periodName="套餐三"; break;
 			case 4: periodName="套餐四"; break;
+			case 5: periodName="套餐五"; break;
+			case 6: periodName="套餐六"; break;
 			default:
 				break;
 		}

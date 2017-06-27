@@ -24,6 +24,24 @@ myApp.onPageBeforeInit('order-cus-hostwork-month', function(page) {
 	    	$$("#serviceTypeNameStr").html(serviceType.name);
 	    	$$("#ppriceStr").html(serviceType.pprice + "" + serviceType.unit);
 	    	$$("#mppriceStr").html(serviceType.mpprice + "" + serviceType.unit);
+	    	
+	    	sessionStorage.setItem("periodOrderMoney",serviceType.pprice);
+	    	sessionStorage.setItem("periodPayMoney",serviceType.mpprice);
+	    	
+	    	var periodOrder = {};
+	    	periodOrder.periodServiceAddonId = 0;
+	    	periodOrder.name = serviceType.name;
+	    	periodOrder.serviceTypeId = serviceTypeId;
+	    	periodOrder.serviceAddonId = 0;
+	    	periodOrder.price = serviceType.pprice;
+	    	periodOrder.vipPrice = serviceType.mpprice;
+	    	periodOrder.num = 4;
+	    	
+	    	var periodOrderList = [];
+	    	periodOrderList.push(periodOrder);
+	    	
+	    	sessionStorage.setItem("periodOrder",JSON.stringify(periodOrderList));
+	    	
 		}
 	});
 	
@@ -61,7 +79,8 @@ myApp.onPageBeforeInit('order-cus-hostwork-month', function(page) {
 	
 	
 	$$("#order-hour-click").on("click", function() {
-		var url = "order/order-hour-choose.html?service_type_id=" + serviceTypeId;
+//		var url = "order/order-hour-choose.html?service_type_id=" + serviceTypeId;
+		var url = "order/period/period-order-confirm.html?package_type_id=6";
 		mainView.router.loadPage(url);
 	});
 	
