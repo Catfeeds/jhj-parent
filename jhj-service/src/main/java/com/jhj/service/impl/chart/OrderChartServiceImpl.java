@@ -759,32 +759,11 @@ public class OrderChartServiceImpl implements OrderChartService {
 			}
 		}
 		
-		/*List<ChartUserOrderVo> tableDatas = new ArrayList<ChartUserOrderVo>();
+		List<Map<String,Object>> dataList = new ArrayList<>();
 		for (int i =0; i < timeSeries.size(); i++) {
-			ChartUserOrderVo charUserOrderVo = new ChartUserOrderVo();
-			charUserOrderVo.setTime(timeSeries.get(i));
-			
-			List<ChartUserOrderNumVo> data = new ArrayList<>();
-			
-			for(int k=0;k<nameList.size();k++){
-				String name = nameList.get(k);
-				List<Map<String,String>> mapList = new ArrayList<>();
-				Map<String,String> map = null;
-				ChartUserOrderNumVo numVo = new ChartUserOrderNumVo();
-				numVo.setName(name);
-				for (int j =0; j < businessList.size(); j++) {
-					CooperativeBusiness business = businessList.get(j);
-					if(business.getBroker().equals(name)){
-						map = new HashMap<String,String>();
-						map.put(businessList.get(j).getBusinessName(), "0");
-						mapList.add(map);
-					}
-				}
-				numVo.setOrderFromNum(mapList);
-				data.add(numVo);
-			}
-			charUserOrderVo.setData(data);
-			tableDatas.add(charUserOrderVo);
+			Map<String,Object> data = new HashMap<>();
+			data.put("time", timeSeries.get(i));
+			dataList.add(data);
 		}
 		
 		chartSearchVo.setFormatParam("%Y-%c-%e");
@@ -792,7 +771,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		
 		//总金额
 		BigDecimal total = new BigDecimal(0);
-		for(ChartUserOrderVo tableItem:tableDatas){
+		/*for(ChartUserOrderVo tableItem:tableDatas){
 			String time = tableItem.getTime();
 			List<ChartUserOrderNumVo> data = tableItem.getData();
 			
