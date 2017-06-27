@@ -341,7 +341,7 @@
 											<div class="col-md-offset-3 col-md-3">
 												<c:if
 													test="${sessionScope.accountAuth.accountRole.id == 1 or sessionScope.accountAuth.accountRole.id == 3 
-													or sessionScope.accountAuth.accountRole.id == 4 or sessionScope.accountAuth.accountRole.id == 5 }">
+													or sessionScope.accountAuth.accountRole.id == 4 or sessionScope.accountAuth.accountRole.id == 5 or sessionScope.accountAuth.accountRole.id == 9}">
 													<c:if test="${oaOrderListVoModel.orderStatus >=3 and oaOrderListVoModel.orderStatus < 7 }">
 														<button type="button" class="btn btn-success" id="submitForm">派工调整修改</button>
 													</c:if>
