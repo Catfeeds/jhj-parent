@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,6 @@ import com.jhj.service.chart.OrderChartService;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartMapVo;
 import com.jhj.vo.chart.ChartSearchVo;
-import com.jhj.vo.chart.ChartUserOrderNumVo;
-import com.jhj.vo.chart.ChartUserOrderVo;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.meijia.utils.ChartUtil;
 import com.meijia.utils.DateUtil;
@@ -762,37 +759,32 @@ public class OrderChartServiceImpl implements OrderChartService {
 			}
 		}
 		
-	/*	String[] businessId = {"126","125","124","123","120","119","113","112","111"};
-		List<String> businessIdList = Arrays.asList(businessId);*/
-		
-		List<ChartUserOrderVo> tableDatas = new ArrayList<ChartUserOrderVo>();
-		HashMap<String, Object> tableData = null;
+		/*List<ChartUserOrderVo> tableDatas = new ArrayList<ChartUserOrderVo>();
 		for (int i =0; i < timeSeries.size(); i++) {
 			ChartUserOrderVo charUserOrderVo = new ChartUserOrderVo();
 			charUserOrderVo.setTime(timeSeries.get(i));
-			
-			tableData = new HashMap<String, Object>();
-			tableData.put("time",timeSeries.get(i));
 			
 			List<ChartUserOrderNumVo> data = new ArrayList<>();
 			
 			for(int k=0;k<nameList.size();k++){
 				String name = nameList.get(k);
-				List<Map<String,String>> mapList = null;
+				List<Map<String,String>> mapList = new ArrayList<>();
 				Map<String,String> map = null;
+				ChartUserOrderNumVo numVo = new ChartUserOrderNumVo();
+				numVo.setName(name);
 				for (int j =0; j < businessList.size(); j++) {
 					CooperativeBusiness business = businessList.get(j);
 					if(business.getBroker().equals(name)){
-						ChartUserOrderNumVo numVo = new ChartUserOrderNumVo();
 						map = new HashMap<String,String>();
-						map.put("name", name);
 						map.put(businessList.get(j).getBusinessName(), "0");
 						mapList.add(map);
 					}
 				}
-				charUserOrderVo.setData(data);
-				tableDatas.add(charUserOrderVo);
+				numVo.setOrderFromNum(mapList);
+				data.add(numVo);
 			}
+			charUserOrderVo.setData(data);
+			tableDatas.add(charUserOrderVo);
 		}
 		
 		chartSearchVo.setFormatParam("%Y-%c-%e");
@@ -804,30 +796,25 @@ public class OrderChartServiceImpl implements OrderChartService {
 			String time = tableItem.getTime();
 			List<ChartUserOrderNumVo> data = tableItem.getData();
 			
-			for(int i=0,len=businessList.size();i<len;i++){
-				String businessName = businessList.get(i).getBusinessName();
-				String id = String.valueOf(businessList.get(i).getId());
-				Integer count = 0;
-				for(int j=0;j<orderFrom.size();j++){
-					ChartMapVo chartMapVo = orderFrom.get(j);
-					String series = chartMapVo.getSeries();
-					if(time.equals(series) && chartMapVo.getOrderOpFrom().equals(id)){
-						count += chartMapVo.getTotal();
+			Integer count = 0;
+			for(int j=0;j<orderFrom.size();j++){
+				ChartMapVo chartMapVo = orderFrom.get(j);
+				String series = chartMapVo.getSeries();
+				if(time.equals(series)){
+					count += chartMapVo.getTotal();
 //						totalMoney = totalMoney.add(chartMapVo.getTotalMoney());
-					}
 				}
-				/*for(int k=0;k<list.size();k++){
+			}
+				for(int k=0;k<list.size();k++){
 					HashMap<String, String> hashMap = list.get(k);
 					Set<String> keySet = hashMap.keySet();
 					
 					if(keySet.contains(businessName)){
 						hashMap.put(businessName, String.valueOf(count));
 					}
-				}*/
+				}
 //				tableItem.put("订单金额", String.valueOf(totalMoney));
-			}
-//			total = total.add(totalMoney);
-		}
+		}*/
 		
 		//计算每天的订单总和订单金额
 		/*Integer totalCount = 0;//总数量
