@@ -22,7 +22,7 @@ myApp.onPageBeforeInit('order-appoint', function(page) {
 					var serviceType = result[i];
 					if(serviceType.service_type_id!=69 && serviceType.service_type_id!=70 && serviceType.service_type_id!=71 && serviceType.service_type_id!=73){
 						var serviceTypeName = serviceType.service_type_name;
-						if(serviceTypeName != '初体验基础保洁'){
+						if(serviceTypeName != '初体验基础保洁' && order.service_type_name!='家务订制初体验套餐'){
 							html += '<li class="waiter6-1" onclick="appoinSerivceType($$(this), '+serviceType.service_type_id+')">'+serviceType.service_type_name+'</li>';
 						}
 					}
