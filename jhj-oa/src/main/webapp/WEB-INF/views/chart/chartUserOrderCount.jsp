@@ -47,66 +47,40 @@
 
 			<table class="table table-bordered table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
-					<tr><td colspan="23" >市场订单数据统计</td></tr>
 					<tr>
-						<td>日期</td>
-						<td>美团 </td>
-						<td>大众点评 </td>
-						<td>到位 </td>
-						<td>国安社区 </td>
-						<td>千丁 </td>
-						<td>格格小区 </td>
-						<td>百度 </td>
-						<td>360</td>
-						<td>金色家园网 </td>
-						<td>电询 </td>
-						<td>糯米 </td>
-						<td>居然之家 </td>
-						<td>淘宝 </td>
-						<td>京东 </td>
-						<td>葡萄生活 </td>
-						<td>北科 </td>
-						<td>58同城 </td>
-						<td>电梯广告 </td>
-						<td>建功北里 </td>
-						<td>社区 </td>
-						<!-- <td>订单数量 </td>
-						<td>订单金额 </td> -->
+						<td colspan="29" style="text-align:center">市场订单数据统计</td>
+					</tr>
+					<tr>
+						<td rowspan="2">时间</td>
+						<c:forEach items="${chartDatas.chartUserOrderVoList }" var="m">
+							<td colspan="${m.count }">${m.name }</td>
+						</c:forEach>
+					</tr>
+					<tr>
+						<c:forEach items="${chartDatas.chartUserOrderVoList}" var="m">
+							<c:forEach items="${m.bussineNameList }" var="business">
+								<td>${business }</td>
+							</c:forEach>
+						</c:forEach>
 					</tr>
 				</thead>
 				<tbody>
-				<c:forEach items="${chartDatas.data}" var="item">
+				<%-- <c:forEach items="${chartDatas.data}" var="item">
 					<tr>
-						<td>${item.time}</td>
-						<%-- <td>${item.data}</td> --%>
-						<c:forEach items="${item.data }" var="data">
-							<td>${data.key}</td>
+						<td>${item.time }</td>
+						<c:forEach items="${list}" var="m">
+							<c:forEach items="${m.bussineNameList }" var="business">
+								<c:forEach items="${item.dataList }" var="data">
+									<td>
+										<c:if test="${business eq data.orderFromName}">
+											${data.countNum }
+										</c:if>
+									</td>
+								</c:forEach>
+							</c:forEach>
 						</c:forEach>
-						
-						<%-- <td>${item.data.美团 }</td>
-						<td>${item.data.大众点评 }</td>
-						<td>${item.data.到位 }</td>
-						<td>${item.data.国安社区 }</td>
-						<td>${item.data.千丁 }</td>
-						<td>${item.data.格格小区 }</td>
-						<td>${item.data.百度 }</td>
-						<td>${item.data['360'] }</td>
-						<td>${item.data.金色家园网 }</td>
-						<td>${item.data.电询 }</td>
-						<td>${item.data.糯米 }</td>
-						<td>${item.data.居然之家 }</td>
-						<td>${item.data.淘宝 }</td>
-						<td>${item.data.京东 }</td>
-						<td>${item.data.葡萄生活 }</td>
-						<td>${item.data.北科 }</td>
-						<td>${item.data['58同城']}</td>
-						<td>${item.data.电梯广告 }</td>
-						<td>${item.data.建功北里 }</td>
-						<td>${item.data.社区 }</td> --%>
-						<%-- <td>${item.data.订单数量 }</td>
-						<td>${item.data.订单金额 }</td> --%>
 					</tr>
-				</c:forEach>
+				</c:forEach> --%>
 				</tbody>
 			</table>
 

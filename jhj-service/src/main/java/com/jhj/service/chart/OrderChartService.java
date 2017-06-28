@@ -3,6 +3,7 @@ package com.jhj.service.chart;
 import java.util.List;
 import java.util.Map;
 
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartSearchVo;
 

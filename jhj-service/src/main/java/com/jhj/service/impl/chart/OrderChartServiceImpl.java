@@ -5,6 +5,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -748,86 +750,121 @@ public class OrderChartServiceImpl implements OrderChartService {
 	public ChartDataVo getUserOrderCount(ChartSearchVo chartSearchVo, List<String> timeSeries) {
 		ChartDataVo chartDataVo = new ChartDataVo();
 		
-		//订单来源
-		CooperativeBusinessSearchVo vo=new CooperativeBusinessSearchVo();
-		vo.setEnable((short)1);
-		List<CooperativeBusiness> businessList = businessMapper.selectCooperativeBusinessVo(vo);
-		
-		List<String> nameList = new ArrayList<>();
-		for(int i=0;i<businessList.size();i++){
-			CooperativeBusiness business = businessList.get(i);
-			String broker = business.getBroker();
-			if(!broker.isEmpty()){
-				nameList.add(broker);
-			}
-		}
-		
-		String[] businessId = {"126","125","124","123","120","119","113","112","111"};
-		List<String> businessIdList = Arrays.asList(businessId);
-		
-		List<ChartUserOrderVo> tableDatas = new ArrayList<ChartUserOrderVo>();
-		HashMap<String, Object> tableData = null;
-		/*for (int i =0; i < timeSeries.size(); i++) {
-			
-			ChartUserOrderVo charUserOrderVo = new ChartUserOrderVo();
-			
-			charUserOrderVo.setTime(timeSeries.get(i));
-			
-			
-			tableData = new HashMap<String, Object>();
-			tableData.put("time",timeSeries.get(i));
-			
-			List<HashMap<String,String>> data = new ArrayList<HashMap<String,String>>();
-			Map<String,String> map = null;
-			for (int j =0; j < businessList.size(); j++) {
-				if(businessIdList.contains(String.valueOf(businessList.get(j).getId()))) continue;
-				
-				ChartUserOrderNumVo numVo = new ChartUserOrderNumVo();
-				
-//				map = new HashMap<String,String>();
-				map.put("name", businessList.get(j).getBroker());
-				map.put(businessList.get(j).getBusinessName(), "0");
-				data.add(map);
-			}
-			charUserOrderVo.setData(data);
-			tableDatas.add(charUserOrderVo);
-		}
-		
 		chartSearchVo.setFormatParam("%Y-%c-%e");
 		List<ChartMapVo> orderFrom = orderMapper.countOrderFrom(chartSearchVo);
 		
-		//总金额
-		BigDecimal total = new BigDecimal(0);
-//		for(HashMap<String, Object> tableItem:tableDatas){
-			String time = (String) tableItem.get("time");
-//			BigDecimal totalMoney = new BigDecimal(0);
+		//订单来源
+		CooperativeBusinessSearchVo businessVo=new CooperativeBusinessSearchVo();
+		businessVo.setEnable((short)1);
+		List<CooperativeBusiness> businessList = businessMapper.selectCooperativeBusinessVo(businessVo);
+		
+		List<Map<String, String>> mapList = businessMapper.selectByGroupBybroker();
+		List<ChartUserOrderVo> chartUserOrderVoList = new ArrayList<>();
+		for(int i=0;i<mapList.size();i++){
+			Map<String, String> map = mapList.get(i);
+			String name = map.get("broker");
+			if(name==null){
+				name = "-";
+			}
+			List<String> nameList = new ArrayList<>();
 			
-			List<HashMap<String,String>> list = (List) tableItem.get("data");
+			List<Map<String,String>> dataList = new ArrayList<>();
+			for(int j=0;j<businessList.size();j++){
+				CooperativeBusiness business = businessList.get(j);
+				String broker = business.getBroker();
+				if(broker==null){
+					broker = "-";
+				}
+				if(name.equals(broker)){
+					nameList.add(business.getBusinessName());
+				}
+				
+				for (int k =0; k < timeSeries.size(); k++) {
+					Map<String, String> datas = new HashMap<>();
+					String time = timeSeries.get(i);
+					datas.put("time", time);
+					int count = 0;
+					BigDecimal totalMoney = new BigDecimal(0);
+					
+					for(int n=0;n<orderFrom.size();n++){
+						ChartMapVo chartMapVo = orderFrom.get(j);
+						String series = chartMapVo.getSeries();
+						Long orderOpFrom = Long.valueOf(chartMapVo.getOrderOpFrom());
+						if(time.equals(series) && business.getId().equals(orderOpFrom)){
+							count += chartMapVo.getTotal();
+							totalMoney = totalMoney.add(chartMapVo.getTotalMoney());
+						}
+					}
+					datas.put(business.getBusinessName(), String.valueOf(count));
+					dataList.add(datas);
+				}
+			}
+			ChartUserOrderVo vo = new ChartUserOrderVo();
+			vo.setName(name);
+			vo.setCount(String.valueOf(map.get("count")));
+			vo.setBussineNameList(nameList);
+			vo.setDataList(dataList);
+			chartUserOrderVoList.add(vo);
 			
-			for(int i=0,len=businessList.size();i<len;i++){
-				String businessName = businessList.get(i).getBusinessName();
-				String id = String.valueOf(businessList.get(i).getId());
+		}
+		
+		/*Set<String> nameList = new HashSet<>();
+		for(int i=0;i<businessList.size();i++){
+			CooperativeBusiness business = businessList.get(i);
+			String broker = business.getBroker();
+			if(broker!=null && !broker.equals("null") && !"".equals(broker)){
+				nameList.add(broker);
+			}
+		}*/
+		
+//		List<Map<String,Object>> dataList = new ArrayList<>();
+//		
+//		for (int i =0; i < timeSeries.size(); i++) {
+//			Map<String,Object> datas = new HashMap<>();
+//			datas.put("time", timeSeries.get(i));
+//			dataList.add(datas);
+//		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*for(Map<String,Object> tableItem:dataList){
+			String time = (String)tableItem.get("time");
+			List<ChartUserOrderNumVo> list = new ArrayList<>();
+			
+			for(int k=0;k<businessList.size();k++){
+				CooperativeBusiness business = businessList.get(k);
+				Long id = business.getId();
+				
 				Integer count = 0;
+				BigDecimal totalMoney =new BigDecimal(0);
+				
 				for(int j=0;j<orderFrom.size();j++){
 					ChartMapVo chartMapVo = orderFrom.get(j);
 					String series = chartMapVo.getSeries();
-					if(time.equals(series) && chartMapVo.getOrderOpFrom().equals(id) 
-							&& !businessIdList.contains(String.valueOf(businessList.get(i).getId()))){
+					Long orderOpFrom = Long.valueOf(chartMapVo.getOrderOpFrom());
+					if(time.equals(series) && id.equals(orderOpFrom)){
 						count += chartMapVo.getTotal();
-//						totalMoney = totalMoney.add(chartMapVo.getTotalMoney());
+						totalMoney = totalMoney.add(chartMapVo.getTotalMoney());
 					}
 				}
-				for(int k=0;k<list.size();k++){
-					HashMap<String, String> hashMap = list.get(k);
-					Set<String> keySet = hashMap.keySet();
-					
-					if(keySet.contains(businessName)){
-						hashMap.put(businessName, String.valueOf(count));
-					}
-				}
-//				tableItem.put("订单金额", String.valueOf(totalMoney));
+				ChartUserOrderNumVo vo = new ChartUserOrderNumVo();
+				vo.setOrderFromId(id);
+				vo.setOrderFromName(business.getBusinessName());
+				vo.setName(business.getBroker());
+				vo.setCountNum(count);
+				vo.setCountMoney(totalMoney);
+				
+				list.add(vo);
 			}
-//			total = total.add(totalMoney);
+			tableItem.put("dataList", list);
 		}*/
 		
 		//计算每天的订单总和订单金额
@@ -874,7 +911,7 @@ public class OrderChartServiceImpl implements OrderChartService {
 		tableDatas.add(tableMap1);
 		tableDatas.add(tableMap2);*/
 		
-//		chartDataVo.setData(tableDatas);
+		chartDataVo.setChartUserOrderVoList(chartUserOrderVoList);
 		
 		return chartDataVo;
 	}

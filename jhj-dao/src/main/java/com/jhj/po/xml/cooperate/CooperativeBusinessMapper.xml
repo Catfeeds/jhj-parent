@@ -214,4 +214,8 @@
   	 	and broker = #{broker,jdbcType=VARCHAR}
   	</if>
   </select>
+  
+  <select id="selectByGroupBybroker" resultType="java.util.Map">
+  	SELECT broker,count(*) as count from cooperative_business GROUP BY broker
+  </select>
 </mapper>

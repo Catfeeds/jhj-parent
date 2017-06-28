@@ -16,8 +16,7 @@ public class ChartDataVo {
 	
 	private Map<String,String> tableMap;
 	
-	private List<HashMap<String,Object>> data;
-
+	private List<ChartUserOrderVo> chartUserOrderVoList;
 
 	public String getLegend() {
 		return legend;
@@ -59,12 +58,13 @@ public class ChartDataVo {
 		this.tableMap = tableMap;
 	}
 
-	public List<HashMap<String, Object>> getData() {
-		return data;
+	public List<ChartUserOrderVo> getChartUserOrderVoList() {
+		return chartUserOrderVoList;
 	}
 
-	public void setData(List<HashMap<String, Object>> data) {
-		this.data = data;
+	public void setChartUserOrderVoList(List<ChartUserOrderVo> chartUserOrderVoList) {
+		this.chartUserOrderVoList = chartUserOrderVoList;
 	}
+
 	
 }
