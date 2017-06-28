@@ -42,8 +42,6 @@
 				</div>
 			</form:form>
 			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />			
-			
-			<!-- <button id="exportExcel" class="btn btn-success">导出Excel</button></div> -->
 
 			<table class="table table-bordered table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
@@ -52,12 +50,12 @@
 					</tr>
 					<tr>
 						<td rowspan="2">时间</td>
-						<c:forEach items="${chartDatas.chartUserOrderVoList }" var="m">
+						<c:forEach items="${chartUserOrderVoList }" var="m">
 							<td colspan="${m.count }">${m.name }</td>
 						</c:forEach>
 					</tr>
 					<tr>
-						<c:forEach items="${chartDatas.chartUserOrderVoList}" var="m">
+						<c:forEach items="${chartUserOrderVoList}" var="m">
 							<c:forEach items="${m.bussineNameList }" var="business">
 								<td>${business }</td>
 							</c:forEach>
@@ -65,22 +63,16 @@
 					</tr>
 				</thead>
 				<tbody>
-				<%-- <c:forEach items="${chartDatas.data}" var="item">
-					<tr>
-						<td>${item.time }</td>
-						<c:forEach items="${list}" var="m">
-							<c:forEach items="${m.bussineNameList }" var="business">
-								<c:forEach items="${item.dataList }" var="data">
-									<td>
-										<c:if test="${business eq data.orderFromName}">
-											${data.countNum }
-										</c:if>
-									</td>
-								</c:forEach>
+					<c:forEach items="${chartDatas.tableDatas}" var="item">
+						<tr>
+							<td>${item.time }</td>
+							<c:forEach items="${list }" var="b">
+								<td>
+									${item[b] }
+								</td>
 							</c:forEach>
-						</c:forEach>
-					</tr>
-				</c:forEach> --%>
+					    </tr>
+					</c:forEach>
 				</tbody>
 			</table>
 
