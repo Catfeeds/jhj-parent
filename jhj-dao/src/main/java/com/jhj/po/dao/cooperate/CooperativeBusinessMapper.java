@@ -2,6 +2,7 @@ package com.jhj.po.dao.cooperate;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
@@ -28,4 +29,7 @@ public interface CooperativeBusinessMapper {
 	List<Long> getAllCoopId();
 	
 	List<CooperativeBusiness> selectCooperativeBusinessVo(CooperativeBusinessSearchVo vo);
+	
+	//统计各个负责人的平台数量
+	List<Map<String,String>> selectByGroupBybroker();
 }

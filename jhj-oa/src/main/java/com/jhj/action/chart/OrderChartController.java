@@ -1,10 +1,14 @@
 package com.jhj.action.chart;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,9 +22,12 @@ import com.jhj.action.BaseController;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.chart.OrderChartService;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartSearchVo;
+import com.jhj.vo.chart.ChartUserOrderVo;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.meijia.utils.ChartUtil;
 import com.meijia.utils.DateUtil;
 
@@ -370,10 +377,13 @@ public class OrderChartController extends BaseController {
 		List<String> timeSeries = new ArrayList<String>();		
 		timeSeries = ChartUtil.getTimeSeries("day", startTime, endTime);
 		
+		
 		ChartDataVo chartDatas = orderChartService.getUserOrderCount(chartSearchVo, timeSeries);
 		
 		model.addAttribute("chartDatas", chartDatas);
 		model.addAttribute("searchVo", chartSearchVo);
+		/*model.addAttribute("businessList", businessList);
+		model.addAttribute("list", list);*/
 		
 		return "chart/chartUserOrderCount";
 	}

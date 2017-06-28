@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 public class ChartUserOrderNumVo {
 	
+	private String name;
+	
 	private Long orderFromId;
 	
 	private String orderFromName;
@@ -11,6 +13,14 @@ public class ChartUserOrderNumVo {
 	private Integer countNum;
 	
 	private BigDecimal countMoney;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public Long getOrderFromId() {
 		return orderFromId;
@@ -43,5 +53,5 @@ public class ChartUserOrderNumVo {
 	public void setCountMoney(BigDecimal countMoney) {
 		this.countMoney = countMoney;
 	}
-	
+
 }
