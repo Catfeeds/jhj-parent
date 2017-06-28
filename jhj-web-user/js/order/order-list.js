@@ -85,7 +85,7 @@ myApp.onPageBeforeInit('order-list', function(page) {
 			
 			if(orderStatus == 7 || orderStatus == 8){
 				orderRateStylePhone = "none";
-				if(order.service_type_name!='初体验基础保洁'){
+				if(order.service_type_name!='初体验基础保洁' && order.service_type_name!='家务订制初体验套餐'){
 					orderagain = "block";
 					if(order.order_type==0){
 						urlLink = "order/order-hour-choose.html?service_type_id="+order.service_type;
