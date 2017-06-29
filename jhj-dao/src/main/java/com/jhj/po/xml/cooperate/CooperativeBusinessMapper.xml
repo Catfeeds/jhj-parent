@@ -218,4 +218,10 @@
   <select id="selectByGroupBybroker" resultType="java.util.Map">
   	SELECT broker,count(*) as count from cooperative_business GROUP BY broker
   </select>
+  
+  <select id="selectByBusinessName" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select <include refid="Base_Column_List"/> from cooperative_business 
+  	where business_name = #{businessName,jdbcType=VARCHAR}
+  </select>
+  
 </mapper>

@@ -32,4 +32,6 @@ public interface CooperativeBusinessMapper {
 	
 	//统计各个负责人的平台数量
 	List<Map<String,String>> selectByGroupBybroker();
+	
+	CooperativeBusiness selectByBusinessName(String businessName);
 }

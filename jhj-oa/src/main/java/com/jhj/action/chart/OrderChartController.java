@@ -391,7 +391,7 @@ public class OrderChartController extends BaseController {
 			Map<String, String> map = mapList.get(i);
 			String name = map.get("broker");
 			if(name==null){
-				name = "-";
+				name = "*";
 			}
 			List<String> nameList = new ArrayList<>();
 			
@@ -399,7 +399,7 @@ public class OrderChartController extends BaseController {
 				CooperativeBusiness business = businessList.get(j);
 				String broker = business.getBroker();
 				if(broker==null){
-					broker = "-";
+					broker = "*";
 				}
 				if(name.equals(broker)){
 					nameList.add(business.getBusinessName());
