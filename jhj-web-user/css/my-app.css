@@ -5803,6 +5803,9 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 .special-color10{
   color:#FD0908;
 }
+.special-color11{
+  color:#ef7e00;
+}
 /*图片处理*/
 .all-img{
    width:100%;padding:0;
@@ -6524,4 +6527,103 @@ p.special-p-2{
 
 .order-delete-btn{
 	
+}
+/********暑期促销************/
+.summer-cuxiao{
+  background: url("../img/cuxiao/summer_bg.png") no-repeat center center;
+  background-size: 100% 100%;
+}
+.cuxiao01 {
+  display: block;
+  margin: 0 auto;
+  width: 85%;
+  padding-top: 23px;
+
+}
+.clean-classification-w{
+   margin-left:4px;
+   margin-right:4px;
+   margin-top: 18px;
+}
+.clean-classification{
+  width: 100%;
+  border-right:1px solid #748cae;
+  border-bottom: 1px solid #748cae;
+ /* border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;*/
+
+}
+.clean-classification thead tr{
+    height: 22px;
+    font-weight: bold;
+}
+.clean-classification td{
+  text-align: center;
+  vertical-align: middle;
+  border-top: 1px solid #748cae;
+  border-left: 1px solid #748cae;
+  font-size: 12px;
+}
+.classifi01{
+  width: 24%;
+}
+.classifi02{
+  width: 30%;
+}
+.classifi03{
+  width: 13%;
+}
+.classifi04{
+  width: 13%;
+}
+.classifi05{
+  width: 17%;
+}
+.classifi01 div{
+
+}
+.classifi01 img{
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+
+}
+.classifi01 span{
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.classifi05 a{
+  display: block;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  background: url(../img/cuxiao/button.png) no-repeat center center;
+  background-size: 99% 99%;
+  font-size: 11px;
+  color: #fff;
+  line-height: 25px;
+  padding: 0px 2px;
+  width: 99%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.p-content{
+  margin-top: 15px;
+  padding-bottom:47px;
+}
+.p-content p{
+  margin: 0 10px;
+  font-size: 12px;
+  line-height: 17px;
+  height: 17px;
+
+}
+.p-content .activity{
+  margin-top: 17px;
+}
+.p-content .activity .acti-title{
+  font-size: 15px;
+  height: 19px;
 }
