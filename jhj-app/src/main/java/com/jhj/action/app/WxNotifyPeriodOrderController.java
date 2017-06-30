@@ -82,7 +82,7 @@ public class WxNotifyPeriodOrderController extends BaseController{
 			//通知参数
 			//params.put("notify_params", notify_params.toString());
 			System.out.println(params.toString());
-			String url = "http://localhost/jhj-app/app/user/online_pay_period_notify.json";
+			String url = "http://localhost/jhj-app/app/order/online_pay_period_notify.json";
 			
 			System.out.println(url);
 			AppSubmit.appAliay(url, params);		
