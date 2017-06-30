@@ -53,6 +53,27 @@ myApp.onPageBeforeInit('order-custom-choose', function(page) {
 				if (serviceAddonId == 69 ||  serviceAddonId == 70 || serviceAddonId == 71) {
 					serviceAddonContentJzbj+= getSerivceAddonContentHtml(item);
 				}
+				
+				if(serviceTypeId==84){
+					$$("#appliance4").css({"display":"none"});
+					
+					switch(serviceAddonId){
+						case 88:
+						case 89:serviceAddonContentXyj+= getSerivceAddonContentHtml(item);break;
+						case 90:
+						case 91:
+						case 92:
+						case 93:serviceAddonContentYyj+= getSerivceAddonContentHtml(item);break;
+						case 94:
+						case 95:
+						case 96:serviceAddonContentKt+= getSerivceAddonContentHtml(item);break;
+						case 97:
+						case 98:
+						case 99:
+						case 100:serviceAddonContentBx+= getSerivceAddonContentHtml(item);break;
+					}
+				}
+				
 			});
 			
 			$$("#service-addon-content-bx").append(serviceAddonContentBx);

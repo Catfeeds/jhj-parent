@@ -11,10 +11,7 @@
 <%@ include file="../shared/importCss.jsp"%>
 <!-- css for this page -->
 <link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>" rel="stylesheet" type="text/css" />
-
-<style>
-
-</style>
+<link href="<c:url value='/assets/layui-master/src/css/layui.css'/>" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -41,9 +38,33 @@
 					<input type="submit"  value="搜索"  >
 				</div>
 			</form:form>
-			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />			
 			
-			<!-- <button id="exportExcel" class="btn btn-success">导出Excel</button></div> -->
+			<!-- <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			  <ul class="layui-tab-title">
+			    <li class="layui-this">网站设置</li>
+			    <li>用户管理</li>
+			    <li>权限分配</li>
+			    <li>商品管理</li>
+			    <li>订单管理</li>
+			  </ul>
+			  <div class="layui-tab-content"></div>
+			</div>      --> 
+			
+			<form id="form2" name="form2" style="display:none">
+				<input type="hidden" id="businessName" value="" />
+				<div class="col-md-10">
+					<c:forEach items="${chartUserOrderVoList }" var="m">
+						<label class="checkbox-inline">
+							<input type="radio" name="name" value="${m.name }">
+							${m.name }
+						</label>
+					</c:forEach>
+				</div>
+				<div class="col-md-5">
+					<button type="button" id="btn-modify-name" class="layui-btn layui-btn-normal" onclick="modifyName()">修改人员</button>
+				</div>
+			</form>
+			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />			
 
 			<table class="table table-bordered table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
@@ -52,35 +73,29 @@
 					</tr>
 					<tr>
 						<td rowspan="2">时间</td>
-						<c:forEach items="${chartDatas.chartUserOrderVoList }" var="m">
-							<td colspan="${m.count }">${m.name }</td>
+						<c:forEach items="${chartUserOrderVoList }" var="m">
+							<td colspan="${m.count }" style="text-align:center">${m.name }</td>
 						</c:forEach>
 					</tr>
-					<tr>
-						<c:forEach items="${chartDatas.chartUserOrderVoList}" var="m">
+					<tr id="business">
+						<c:forEach items="${chartUserOrderVoList}" var="m">
 							<c:forEach items="${m.bussineNameList }" var="business">
-								<td>${business }</td>
+								<td class="modify-business">${business }</td>
 							</c:forEach>
 						</c:forEach>
 					</tr>
 				</thead>
 				<tbody>
-				<%-- <c:forEach items="${chartDatas.data}" var="item">
-					<tr>
-						<td>${item.time }</td>
-						<c:forEach items="${list}" var="m">
-							<c:forEach items="${m.bussineNameList }" var="business">
-								<c:forEach items="${item.dataList }" var="data">
-									<td>
-										<c:if test="${business eq data.orderFromName}">
-											${data.countNum }
-										</c:if>
-									</td>
-								</c:forEach>
+					<c:forEach items="${chartDatas.tableDatas}" var="item">
+						<tr>
+							<td>${item.time }</td>
+							<c:forEach items="${list }" var="b">
+								<td>
+									${item[b] }
+								</td>
 							</c:forEach>
-						</c:forEach>
-					</tr>
-				</c:forEach> --%>
+					    </tr>
+					</c:forEach>
 				</tbody>
 			</table>
 
@@ -98,9 +113,12 @@
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
 	
-	<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-	<script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script>
-	<%-- <script type="text/javascript" src="<c:url value='/js/chart/chartTypeRevenue.js' />"></script> --%>
+	<%-- <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+	<script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
+	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/assets/layui-master/src/layui.js'/>"></script>
+	<script src="<c:url value='/js/chart/chartUserOrderCount.js'/>"></script>
+	
 	<!-- <script>
 		var legend = ${chartDatas.legend};
 		var xAxis = ${chartDatas.xAxis};
@@ -119,5 +137,6 @@
 			todayBtn : true
 		});
 	</script>
+	
 </body>
 </html>

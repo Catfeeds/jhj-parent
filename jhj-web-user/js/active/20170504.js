@@ -8,4 +8,3 @@ function active_link_20170504(serviceTypeId, orderType) {
 	var url = "order/order-custom-choose.html?service_type_id="+serviceTypeId;
 	mainView.router.loadPage(url);
 }
-
