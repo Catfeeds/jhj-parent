@@ -15,6 +15,8 @@ function getPeriodOrder(){
 					case 2: periodName="定制二"; break;
 					case 3: periodName="定制三"; break;
 					case 4: periodName="定制四"; break;
+					case 5: periodName="定制五"; break;
+					case 6: periodName="定制六"; break;
 					default:
 						break;
 				}
