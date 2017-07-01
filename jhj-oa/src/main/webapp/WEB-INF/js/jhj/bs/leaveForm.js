@@ -93,6 +93,47 @@ function fn(){
 fn();
 
 
+function staffChange() {
+	var staffId = $("#staffId").val();
+	var params = {};
+	params.staffId = staffId;
+	$.ajax({
+		type: 'GET',
+		url: '/jhj-app/app/staff/get_leave.json',
+		dataType: 'json',
+		cache: false,
+		data: params,
+		success:function(result){
+			var data = result.data;
+			
+			if (data == undefined || data == "") return false;
+			var startDate = data.start_date;
+			var endDate = data.end_date;
+			
+			$("#leaveDate").val(startDate);
+			$("#endDate").val(endDate);
+			
+			var start = data.start;
+			var end = data.end;
+			
+			
+			if (start >= 14) {
+				$("#halfDay").val(2);
+			}
+			if (end <= 14) {
+				$("#halfDay").val(1);
+			} 
+			
+			if (start = 0 && end == 23) {
+				$("#halfDay").val(0);
+			}
+			
+			
+			
+		},
+	});
+}
+
 function leaveDateChange() {
 	var leaveDateStr = $("#leaveDate").val();
 	var leaveDateEndStr = $("#leaveDateEnd").val();

@@ -190,7 +190,7 @@ public class DateUtil {
 		Date endDate = parse(strEndDate, DEFAULT_PATTERN);
 		long startTime = TimeStampUtil.getMillisOfDate(startDate);
 		long endTime = TimeStampUtil.getMillisOfDate(endDate);
-		return endTime - startTime > 0;
+		return endTime - startTime >= 0;
 	}
 
 	/**
@@ -864,8 +864,31 @@ public class DateUtil {
 		return DateTimes;
 	}
 	
+	public static int daysOfTwo(Date fDate, Date oDate) {
+
+		Calendar aCalendar = Calendar.getInstance();
+
+		aCalendar.setTime(fDate);
+
+		int day1 = aCalendar.get(Calendar.DAY_OF_YEAR);
+
+		aCalendar.setTime(oDate);
+
+		int day2 = aCalendar.get(Calendar.DAY_OF_YEAR);
+
+		return day2 - day1;
+
+	}
+	
 	public static void main(String[] args) {
-		Long mss = 372200L;
-		System.out.println(DateUtil.formatDateTime(mss));
+//		Long mss = 372200L;
+//		System.out.println(DateUtil.formatDateTime(mss));
+		String startDateStr = "2017-06-20";
+		String endDateStr = "2017-06-20";
+		System.out.println(DateUtil.compare(startDateStr, endDateStr));
+		
+		Date startDate = DateUtil.parse(startDateStr);
+		Date endDate = DateUtil.parse(endDateStr);
+		System.out.println(DateUtil.daysOfTwo(startDate, endDate));
 	}
 }
