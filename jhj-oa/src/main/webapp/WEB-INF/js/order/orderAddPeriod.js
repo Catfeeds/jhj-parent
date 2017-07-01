@@ -10,6 +10,7 @@ function getPeriodOrder(){
 			var selectid = document.getElementById("periodOrderId");
 			for (var i = 0; i < periodOrderList.length; i++) {
 				var periodName;
+				var orderNo = periodOrderList[i].orderNo;
 				switch (periodOrderList[i].packageType) {
 					case 1: periodName="定制一"; break;
 					case 2: periodName="定制二"; break;
@@ -21,7 +22,7 @@ function getPeriodOrder(){
 						break;
 				}
 				
-				selectid[i + 1] = new Option(periodName, periodOrderList[i].id, false, false);
+				selectid[i + 1] = new Option(periodName+"|"+orderNo, periodOrderList[i].id, false, false);
 			}
 		}
 	});
