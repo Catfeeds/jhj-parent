@@ -455,7 +455,7 @@ public class OrderOnlinePayController extends BaseController {
 
 		Long updateTime = TimeStampUtil.getNow() / 1000;
 
-		OrderPrices orderPrice = orderPricesService.selectByOrderId(periodOrder.getId().longValue());
+		OrderPrices orderPrice = orderPricesService.selectByOrderNo(orderNo);
 
 		// 2016年4月29日11:13:04 钟点工订单，已支付状态为 2
 		periodOrder.setOrderStatus(2);
