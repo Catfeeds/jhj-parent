@@ -443,7 +443,7 @@ public class OrderOnlinePayController extends BaseController {
 		}
 
 		if (periodOrder != null ) {
-			if ( !periodOrder.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_1)) {
+			if (periodOrder.getOrderStatus()!=1) {
 				// 更新付款用户账号名
 				if (payAccount != null && !payAccount.equals("")) {
 					userDetailPayService.updateByPayAccount(tradeNo, payAccount);
@@ -458,7 +458,7 @@ public class OrderOnlinePayController extends BaseController {
 		OrderPrices orderPrice = orderPricesService.selectByOrderId(periodOrder.getId().longValue());
 
 		// 2016年4月29日11:13:04 钟点工订单，已支付状态为 2
-		periodOrder.setOrderStatus((int)Constants.ORDER_HOUR_STATUS_2);
+		periodOrder.setOrderStatus(2);
 		periodOrder.setUpdateTime(updateTime);
 		periodOrderService.updateByPrimaryKeySelective(periodOrder);
 		// 插入订单日志
