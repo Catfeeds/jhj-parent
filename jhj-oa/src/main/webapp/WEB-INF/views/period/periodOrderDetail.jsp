@@ -132,6 +132,21 @@
 							</div>
 						</div>
 					
+						<div class="form-group required">
+							<label class="col-md-2 control-label">
+								订单列表
+							</label>
+							<div class="col-md-5">
+								<c:if test="${orderList.size()>0 }">
+									<c:forEach items="${orderList }" var="order">
+										<div><a href="../order/order-list?orderNo=${order.orderNo }">${order.orderNo }</a> | ${order.orderAddr }</div>
+									</c:forEach>
+								</c:if>
+								<c:if test="${orderList.size()==0 }">
+									<font color="red">还未下单！</font>
+								</c:if>
+							</div>
+						</div>
 						
 					</form>
 				</div>
