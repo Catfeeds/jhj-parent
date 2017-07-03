@@ -21,7 +21,10 @@ myApp.onPageBeforeInit('order-appoint', function(page) {
 				for(var i=0;i<result.length;i++){
 					var serviceType = result[i];
 					if(serviceType.service_type_id!=69 && serviceType.service_type_id!=70 && serviceType.service_type_id!=71 && serviceType.service_type_id!=73){
-						html += '<li class="waiter6-1" onclick="appoinSerivceType($$(this), '+serviceType.service_type_id+')">'+serviceType.service_type_name+'</li>';
+						var serviceTypeName = serviceType.service_type_name;
+						if(serviceTypeName != '初体验基础保洁' && serviceTypeName != '家务订制初体验套餐'){
+							html += '<li class="waiter6-1" onclick="appoinSerivceType($$(this), '+serviceType.service_type_id+')">'+serviceType.service_type_name+'</li>';
+						}
 					}
 				}
 			}

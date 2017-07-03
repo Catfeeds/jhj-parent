@@ -56,6 +56,7 @@ import com.jhj.service.users.UsersService;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.jhj.vo.order.OrderDispatchSearchVo;
 import com.jhj.vo.period.PeriodOrderSearchVo;
+import com.jhj.vo.period.PeriodOrderVo;
 import com.meijia.utils.OneCareUtil;
 import com.meijia.utils.OrderNoUtil;
 import com.meijia.utils.SmsUtil;
@@ -397,6 +398,12 @@ public class OrderFormController extends BaseController {
 		searchVo.setUserId(users.getId().intValue());
 		searchVo.setOrderStatus(2);
 		List<PeriodOrder> periodOrderList = periodOrderService.selectBySearchVo(searchVo);
+		
+		for (int i = 0 ; i < periodOrderList.size(); i++) {
+			PeriodOrder item = periodOrderList.get(i);
+			PeriodOrderVo vo = periodOrderService.getVos(item);
+			periodOrderList.set(i, vo);
+		}
 		
 		return periodOrderList;
 		

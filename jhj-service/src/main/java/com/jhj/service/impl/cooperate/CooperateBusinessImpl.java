@@ -124,6 +124,11 @@ public class CooperateBusinessImpl implements CooperateBusinessService {
 			CooperativeBusinessSearchVo vo) {
 		return cooMapper.selectCooperativeBusinessVo(vo);
 	}
+
+	@Override
+	public CooperativeBusiness selectByBusinessName(String businessName) {
+		return cooMapper.selectByBusinessName(businessName);
+	}
 	
 	
 }

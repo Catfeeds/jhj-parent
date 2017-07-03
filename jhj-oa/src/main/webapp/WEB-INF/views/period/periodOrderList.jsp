@@ -84,7 +84,7 @@
 							<td>${item.totalOrder }</td>
 							<td>
 								<button id="btn_detail"
-									onClick="javascript:btn_select('/period/periodOrderListDetail?periodOrderId=${item.id }')"
+									onClick="javascript:btn_select('period/periodOrderListDetail?periodOrderId=${item.id }')"
 									class="btn btn-primary btn-xs" title="订单详情">
 									<i class=" icon-ambulance"></i>
 								</button>

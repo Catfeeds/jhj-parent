@@ -1,13 +1,18 @@
 package com.jhj.vo.chart;
 
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
 
 public class ChartUserOrderNumVo {
 	
 	private String name;
 	
-	private List<Map<String,String>> orderFromNum;
+	private Long orderFromId;
+	
+	private String orderFromName;
+	
+	private Integer countNum;
+	
+	private BigDecimal countMoney;
 
 	public String getName() {
 		return name;
@@ -17,12 +22,36 @@ public class ChartUserOrderNumVo {
 		this.name = name;
 	}
 
-	public List<Map<String, String>> getOrderFromNum() {
-		return orderFromNum;
+	public Long getOrderFromId() {
+		return orderFromId;
 	}
 
-	public void setOrderFromNum(List<Map<String, String>> orderFromNum) {
-		this.orderFromNum = orderFromNum;
+	public void setOrderFromId(Long orderFromId) {
+		this.orderFromId = orderFromId;
 	}
-	
+
+	public String getOrderFromName() {
+		return orderFromName;
+	}
+
+	public void setOrderFromName(String orderFromName) {
+		this.orderFromName = orderFromName;
+	}
+
+	public Integer getCountNum() {
+		return countNum;
+	}
+
+	public void setCountNum(Integer countNum) {
+		this.countNum = countNum;
+	}
+
+	public BigDecimal getCountMoney() {
+		return countMoney;
+	}
+
+	public void setCountMoney(BigDecimal countMoney) {
+		this.countMoney = countMoney;
+	}
+
 }

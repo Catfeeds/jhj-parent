@@ -47,59 +47,21 @@
 
 			<table class="table table-bordered table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
-					<tr><td colspan="23" >市场订单数据统计</td></tr>
+					<tr><td colspan="${tdCount+1 }" >市场订单数据统计</td></tr>
 					<tr>
 						<td>日期</td>
-						<td>美团 </td>
-						<td>大众点评 </td>
-						<td>到位 </td>
-						<td>国安社区 </td>
-						<td>千丁 </td>
-						<td>格格小区 </td>
-						<td>百度 </td>
-						<td>360</td>
-						<td>金色家园网 </td>
-						<td>电询 </td>
-						<td>糯米 </td>
-						<td>居然之家 </td>
-						<td>淘宝 </td>
-						<td>京东 </td>
-						<td>葡萄生活 </td>
-						<td>北科 </td>
-						<td>58同城 </td>
-						<td>电梯广告 </td>
-						<td>建功北里 </td>
-						<td>社区 </td>
-						<td>订单数量 </td>
-						<td>订单金额 </td>
+						<c:forEach items="${chartDatas.businessList }" var="b">
+							<td>${b }</td>
+						</c:forEach>
 					</tr>
 				</thead>
 				<tbody>
 				<c:forEach items="${chartDatas.tableDatas}" var="item">
 					<tr>
 						<td>${item.time}</td>
-						<td>${item.美团 }</td>
-						<td>${item.大众点评 }</td>
-						<td>${item.到位 }</td>
-						<td>${item.国安社区 }</td>
-						<td>${item.千丁 }</td>
-						<td>${item.格格小区 }</td>
-						<td>${item.百度 }</td>
-						<td>${item['360'] }</td>
-						<td>${item.金色家园网 }</td>
-						<td>${item.电询 }</td>
-						<td>${item.糯米 }</td>
-						<td>${item.居然之家 }</td>
-						<td>${item.淘宝 }</td>
-						<td>${item.京东 }</td>
-						<td>${item.葡萄生活 }</td>
-						<td>${item.北科 }</td>
-						<td>${item['58同城']}</td>
-						<td>${item.电梯广告 }</td>
-						<td>${item.建功北里 }</td>
-						<td>${item.社区 }</td>
-						<td>${item.订单数量 }</td>
-						<td>${item.订单金额 }</td>
+						<c:forEach items="${chartDatas.businessList }" var="b">
+							<td>${item[b] }</td>
+						</c:forEach>
 					</tr>
 				</c:forEach>
 				</tbody>

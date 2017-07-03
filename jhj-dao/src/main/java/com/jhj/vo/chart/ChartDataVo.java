@@ -16,9 +16,8 @@ public class ChartDataVo {
 	
 	private Map<String,String> tableMap;
 	
-	private List<HashMap<String,Object>> data;
-
-
+	private List<String> businessList;
+	
 	public String getLegend() {
 		return legend;
 	}
@@ -59,12 +58,12 @@ public class ChartDataVo {
 		this.tableMap = tableMap;
 	}
 
-	public List<HashMap<String, Object>> getData() {
-		return data;
+	public List<String> getBusinessList() {
+		return businessList;
 	}
 
-	public void setData(List<HashMap<String, Object>> data) {
-		this.data = data;
+	public void setBusinessList(List<String> businessList) {
+		this.businessList = businessList;
 	}
-	
+
 }

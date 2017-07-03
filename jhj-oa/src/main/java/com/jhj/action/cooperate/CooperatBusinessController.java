@@ -58,9 +58,6 @@ public class CooperatBusinessController extends BaseController {
 	private UsersService userService;
 	
 	@Autowired
-	private OrdersService orderService;
-	
-	@Autowired
 	private OrderStatService orderStatService;
 	/*
 	 * 合作商户列表
@@ -272,6 +269,18 @@ public class CooperatBusinessController extends BaseController {
 		model.addAttribute("userOrderModel", result);
 		
 		return "cooperate/coopUserOrderList";
+	}
+	
+	@RequestMapping(value = "/modifyBorker", method = RequestMethod.POST)
+	public String modifyBusinessBorker(
+			@RequestParam("businessName") String businessName,
+			@RequestParam("name") String name){
+		
+		CooperativeBusiness business = bussService.selectByBusinessName(businessName);
+		business.setBroker(name);
+		bussService.updateByPrimaryKeySelective(business);
+	
+		return "redirect:../chart/chartUserOrderNum";
 	}
 	
 	

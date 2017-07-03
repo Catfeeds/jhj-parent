@@ -1,10 +1,14 @@
 package com.jhj.action.chart;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,9 +22,12 @@ import com.jhj.action.BaseController;
 import com.jhj.oa.auth.AuthHelper;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.dao.cooperate.CooperativeBusinessMapper;
+import com.jhj.po.model.cooperate.CooperativeBusiness;
 import com.jhj.service.chart.OrderChartService;
 import com.jhj.vo.chart.ChartDataVo;
 import com.jhj.vo.chart.ChartSearchVo;
+import com.jhj.vo.chart.ChartUserOrderVo;
+import com.jhj.vo.dict.CooperativeBusinessSearchVo;
 import com.meijia.utils.ChartUtil;
 import com.meijia.utils.DateUtil;
 
@@ -332,6 +339,7 @@ public class OrderChartController extends BaseController {
 		
 		model.addAttribute("chartDatas", chartDatas);
 		model.addAttribute("searchVo", chartSearchVo);
+		model.addAttribute("tdCount", chartDatas.getBusinessList().size());
 		
 		return "chart/chartOrderFromCount";
 	}
@@ -370,10 +378,48 @@ public class OrderChartController extends BaseController {
 		List<String> timeSeries = new ArrayList<String>();		
 		timeSeries = ChartUtil.getTimeSeries("day", startTime, endTime);
 		
-		ChartDataVo chartDatas = orderChartService.getUserOrderCount(chartSearchVo, timeSeries);
+		//订单来源
+		CooperativeBusinessSearchVo businessVo=new CooperativeBusinessSearchVo();
+		businessVo.setEnable((short)1);
+		List<CooperativeBusiness> businessList = businessMapper.selectCooperativeBusinessVo(businessVo);
+		
+		List<Map<String, String>> mapList = businessMapper.selectByGroupBybroker();
+		List<ChartUserOrderVo> chartUserOrderVoList = new ArrayList<>();
+		
+		List<String> list = new ArrayList<>();
+		for(int i=0;i<mapList.size();i++){
+			Map<String, String> map = mapList.get(i);
+			String name = map.get("broker");
+			if(name==null){
+				name = "*";
+			}
+			List<String> nameList = new ArrayList<>();
+			
+			for(int j=0;j<businessList.size();j++){
+				CooperativeBusiness business = businessList.get(j);
+				String broker = business.getBroker();
+				if(broker==null){
+					broker = "*";
+				}
+				if(name.equals(broker)){
+					nameList.add(business.getBusinessName());
+					list.add(business.getBusinessName());
+				}
+			}
+			
+			ChartUserOrderVo vo = new ChartUserOrderVo();
+			vo.setName(name);
+			vo.setCount(String.valueOf(map.get("count")));
+			vo.setBussineNameList(nameList);
+			chartUserOrderVoList.add(vo);
+		}
+		
+		ChartDataVo chartDatas = orderChartService.getUserOrderCount(chartSearchVo, timeSeries, businessList, chartUserOrderVoList);
 		
 		model.addAttribute("chartDatas", chartDatas);
 		model.addAttribute("searchVo", chartSearchVo);
+		model.addAttribute("chartUserOrderVoList", chartUserOrderVoList);
+		model.addAttribute("list", list);
 		
 		return "chart/chartUserOrderCount";
 	}

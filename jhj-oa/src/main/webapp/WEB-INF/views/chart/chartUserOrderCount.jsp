@@ -11,10 +11,7 @@
 <%@ include file="../shared/importCss.jsp"%>
 <!-- css for this page -->
 <link href="<c:url value='/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'/>" rel="stylesheet" type="text/css" />
-
-<style>
-
-</style>
+<link href="<c:url value='/assets/layui-master/src/css/layui.css'/>" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -41,72 +38,64 @@
 					<input type="submit"  value="搜索"  >
 				</div>
 			</form:form>
-			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />			
 			
-			<!-- <button id="exportExcel" class="btn btn-success">导出Excel</button></div> -->
+			<!-- <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			  <ul class="layui-tab-title">
+			    <li class="layui-this">网站设置</li>
+			    <li>用户管理</li>
+			    <li>权限分配</li>
+			    <li>商品管理</li>
+			    <li>订单管理</li>
+			  </ul>
+			  <div class="layui-tab-content"></div>
+			</div>      --> 
+			
+			<form id="form2" name="form2" style="display:none">
+				<input type="hidden" id="businessName" value="" />
+				<div class="col-md-10">
+					<c:forEach items="${chartUserOrderVoList }" var="m">
+						<label class="checkbox-inline">
+							<input type="radio" name="name" value="${m.name }">
+							${m.name }
+						</label>
+					</c:forEach>
+				</div>
+				<div class="col-md-5">
+					<button type="button" id="btn-modify-name" class="layui-btn layui-btn-normal" onclick="modifyName()">修改人员</button>
+				</div>
+			</form>
+			<hr style="width: 100%; color: black; height: 1px; background-color: black;" />			
 
 			<table class="table table-bordered table-striped table-advance table-hover table2excel" id="table2excel">
 				<thead>
-					<tr><td colspan="23" >市场订单数据统计</td></tr>
 					<tr>
-						<td>日期</td>
-						<td>美团 </td>
-						<td>大众点评 </td>
-						<td>到位 </td>
-						<td>国安社区 </td>
-						<td>千丁 </td>
-						<td>格格小区 </td>
-						<td>百度 </td>
-						<td>360</td>
-						<td>金色家园网 </td>
-						<td>电询 </td>
-						<td>糯米 </td>
-						<td>居然之家 </td>
-						<td>淘宝 </td>
-						<td>京东 </td>
-						<td>葡萄生活 </td>
-						<td>北科 </td>
-						<td>58同城 </td>
-						<td>电梯广告 </td>
-						<td>建功北里 </td>
-						<td>社区 </td>
-						<!-- <td>订单数量 </td>
-						<td>订单金额 </td> -->
+						<td colspan="29" style="text-align:center">市场订单数据统计</td>
+					</tr>
+					<tr>
+						<td rowspan="2">时间</td>
+						<c:forEach items="${chartUserOrderVoList }" var="m">
+							<td colspan="${m.count }" style="text-align:center">${m.name }</td>
+						</c:forEach>
+					</tr>
+					<tr id="business">
+						<c:forEach items="${chartUserOrderVoList}" var="m">
+							<c:forEach items="${m.bussineNameList }" var="business">
+								<td class="modify-business">${business }</td>
+							</c:forEach>
+						</c:forEach>
 					</tr>
 				</thead>
 				<tbody>
-				<c:forEach items="${chartDatas.data}" var="item">
-					<tr>
-						<td>${item.time}</td>
-						<%-- <td>${item.data}</td> --%>
-						<c:forEach items="${item.data }" var="data">
-							<td>${data.key}</td>
-						</c:forEach>
-						
-						<%-- <td>${item.data.美团 }</td>
-						<td>${item.data.大众点评 }</td>
-						<td>${item.data.到位 }</td>
-						<td>${item.data.国安社区 }</td>
-						<td>${item.data.千丁 }</td>
-						<td>${item.data.格格小区 }</td>
-						<td>${item.data.百度 }</td>
-						<td>${item.data['360'] }</td>
-						<td>${item.data.金色家园网 }</td>
-						<td>${item.data.电询 }</td>
-						<td>${item.data.糯米 }</td>
-						<td>${item.data.居然之家 }</td>
-						<td>${item.data.淘宝 }</td>
-						<td>${item.data.京东 }</td>
-						<td>${item.data.葡萄生活 }</td>
-						<td>${item.data.北科 }</td>
-						<td>${item.data['58同城']}</td>
-						<td>${item.data.电梯广告 }</td>
-						<td>${item.data.建功北里 }</td>
-						<td>${item.data.社区 }</td> --%>
-						<%-- <td>${item.data.订单数量 }</td>
-						<td>${item.data.订单金额 }</td> --%>
-					</tr>
-				</c:forEach>
+					<c:forEach items="${chartDatas.tableDatas}" var="item">
+						<tr>
+							<td>${item.time }</td>
+							<c:forEach items="${list }" var="b">
+								<td>
+									${item[b] }
+								</td>
+							</c:forEach>
+					    </tr>
+					</c:forEach>
 				</tbody>
 			</table>
 
@@ -124,9 +113,12 @@
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js'/>"></script>
 	
-	<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-	<script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script>
-	<%-- <script type="text/javascript" src="<c:url value='/js/chart/chartTypeRevenue.js' />"></script> --%>
+	<%-- <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+	<script type="text/javascript" src="<c:url value='/assets/jquery.table2excel.js'/>"></script> --%>
+	<script type="text/javascript" src="<c:url value='/assets/layer-v3.0.3/layer/layer.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/assets/layui-master/src/layui.js'/>"></script>
+	<script src="<c:url value='/js/chart/chartUserOrderCount.js'/>"></script>
+	
 	<!-- <script>
 		var legend = ${chartDatas.legend};
 		var xAxis = ${chartDatas.xAxis};
@@ -145,5 +137,6 @@
 			todayBtn : true
 		});
 	</script>
+	
 </body>
 </html>

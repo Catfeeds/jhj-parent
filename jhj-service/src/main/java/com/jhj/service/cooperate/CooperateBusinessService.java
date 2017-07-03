@@ -42,4 +42,6 @@ public interface CooperateBusinessService {
     List<Long> getAllCoopId();
     
     List<CooperativeBusiness> selectCooperativeBusinessVo(CooperativeBusinessSearchVo vo);
+    
+    CooperativeBusiness selectByBusinessName(String businessName);
 }

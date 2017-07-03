@@ -148,8 +148,7 @@
 															用户手机号
 														</label>
 														<div class="col-lg-5">
-															<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()"
-																onchange="getPeriodOrder()" />
+															<input type="text" name="mobile" id="mobile" class="form-control" onblur="getAddrByMobile()" onchange="getPeriodOrder()" />
 														</div>
 														<div class="col-lg-3">
 															<label class="control-label" id="userTypeStr"></label>
@@ -341,7 +340,7 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">定制订单 </label>
 											<div class="col-md-5">
-												<select name="periodOrderId" id="periodOrderId" class="form-control">
+												<select name="periodOrderId" id="periodOrderId" class="form-control"  >
 													<option value="">--请选择定制订单--</option>
 												</select>
 											</div>
