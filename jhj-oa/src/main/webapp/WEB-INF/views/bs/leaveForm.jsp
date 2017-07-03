@@ -33,6 +33,7 @@
 								<form:form modelAttribute="leaveModel" class="form-horizontal" method="POST" action="leave_form" id="leaveForm"
 									enctype="multipart/form-data">
 									<form:hidden path="id" />
+									<input type="hidden" id="adminId" name="adminId" value="${accountAuth.id}" />
 									<input type="hidden" id="logInParentOrgId" value="${logInParentOrgId }">
 									<div class="form-body">
 										<div class="form-group ">
@@ -121,9 +122,10 @@
 											<label class="col-md-2 control-label">请假状态*</label>
 											<div class="col-md-5">
 												<div class="input-group date">
-													<input type="radio" name="leaveStatus" value="1" <c:if test='${leaveModel.leaveStatus==1 }'>checked</c:if> />
+													<input type="radio" id="leaveStatus" name="leaveStatus" value="1" <c:if test='${leaveModel.leaveStatus==1 }'>checked</c:if> />
+												
 													请假中
-													<input type="radio" name="leaveStatus" value="2" <c:if test='${leaveModel.leaveStatus==2 }'>checked</c:if> />
+													<input type="radio" id="leaveStatus" name="leaveStatus" value="2" <c:if test='${leaveModel.leaveStatus==2 }'>checked</c:if> />
 													请假取消
 												</div>
 											</div>
@@ -139,7 +141,7 @@
 										
 										<div class="form-actions fluid">
 											<div class="col-md-offset-6 col-md-6" style="margin-left: 315px">
-												<button type="submit" class="btn btn-success">保存</button>
+												<button type="button" class="btn btn-success" onclick="leaveSave()">保存</button>
 											</div>
 										</div>
 									</div>

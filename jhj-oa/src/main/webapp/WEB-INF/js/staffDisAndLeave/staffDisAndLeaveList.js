@@ -25,30 +25,27 @@ $(document).ready(function(){
 						var date = moment(s,'YYYY-MM-DD HH:mm:ss').unix();
 						var orderNo=eventVoV.orderNo;
 						var orderType=eventVoV.orderType;
-						if((serviceDate/1000)<date){
+						var allDay = eventVoV.allDay;
+						var allDayStr = eventVoV.allDayStr;
+						if (allDay == "" || allDay == "allDay" || allDay == "am") {
 							var eventStrAM = "";
-							eventStrAM +="<font color='red'>上午</font>"+ eventVoV.dateDuration +" "+ eventVoV.eventName+"<br/>";
+							eventStrAM +="<font color='red'>"+ allDayStr +"</font>"+ eventVoV.dateDuration +" "+ eventVoV.eventName+"<br/>";
 							if(orderNo==null){
 								am=eventStrAM;
 							}
-							if(orderNo!=null && orderType==0){
+							if(orderNo!=null){
 								am+="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
 							}
-							if(orderNo!=null && orderType==1){
-								am+="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrAM+"</b></a>"
-							}
-						}else{
+						} else {
 							var eventStrPM="";
-							eventStrPM +="<font color='green'>下午</font>"+ eventVoV.dateDuration +" "+ eventVoV.eventName+"<br/>";
+							eventStrPM +="<font color='green'>"+ allDayStr +"</font>"+ eventVoV.dateDuration +" "+ eventVoV.eventName+"<br/>";
 							if(orderNo==null){
 								pm=eventStrPM;
 							}
-							if(orderNo!=null && orderType==0){
+							if(orderNo!=null){
 								pm +="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
 							}
-							if(orderNo!=null && orderType==1){
-								pm +="<a href='../order/order-list?orderNo="+orderNo+"'><b>"+eventStrPM+"</b></a>"
-							}
+							
 						}
 					});
 					$("#resultTr").find("td div").eq(thk-1).html(am);

@@ -5,15 +5,14 @@ $('#leaveForm').validate({
 	rules: {
 		parentId:{
 			required: true,
-			parentId:"parentId"
+			
 		},
 		orgId: {
 			required: true,
-			orgId:"orgId"
+
 		},
 		staffId:{
 			required: true,
-			staffId:"staffId"
 		},
 		leaveDate:{
 			required: true,
@@ -111,4 +110,39 @@ function leaveDateChange() {
 		$("#halfDay").val(0);
 	}
 	
+}
+
+function leaveSave() {
+	if (confirm("确认要保存吗?")){
+		if ($('#leaveForm').validate().form()) {
+			var params ={};
+			params.id = $("#id").val();
+			params.staff_id = $("#staffId").val();
+			params.leaveDate = $("#leaveDate").val();
+			params.leaveDateEnd = $("#leaveDateEnd").val();
+			params.halfDay = $("#halfDay").val();
+			params.leaveStatus = $("#leaveStatus").val();
+			params.adminId = $("#adminId").val();
+			params.remarks = $("#remarks").val();
+			
+			console.log(params);
+			
+			$.ajax({
+				type : "post",
+				url : "/jhj-app/app/staff/do_leave.json",
+				data : params,
+				dataType : "json",
+				async : false,
+				success : function(data) {
+					console.log(data);
+					if (data.status == 999) {
+						alert(data.msg);
+						return false;
+					}
+					alert("请假添加成功！");
+					location.href = "leave_list";
+				}
+			});
+		}
+	};
 }

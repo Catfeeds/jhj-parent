@@ -111,13 +111,13 @@ public class StaffLeaveController extends BaseController {
 			start  = 0; end = 13;
 		}
 		if (halfDay == 2) {
-			start = 13; end = 23;
+			start = 14; end = 23;
 		}
 		
 		//校验2: 用户在请假范围内是否有相应的派工信息.
 		if (leaveStatus.equals("1")) {
-			String startTimeStr = leaveDateStr + String.valueOf(start) + ":00:00";
-			String endTimeStr = leaveDateEndStr + String.valueOf(end) + ":59:59";
+			String startTimeStr = leaveDateStr + " " + String.valueOf(start) + ":00:00";
+			String endTimeStr = leaveDateEndStr + " " + String.valueOf(end) + ":59:59";
 			
 			Long startServiceTime = TimeStampUtil.getMillisOfDayFull(startTimeStr) / 1000;
 			Long endServiceTime = TimeStampUtil.getMillisOfDayFull(endTimeStr) / 1000;
@@ -136,7 +136,7 @@ public class StaffLeaveController extends BaseController {
 				if (orderStatus.equals(Constants.ORDER_STATUS_3) || 
 					orderStatus.equals(Constants.ORDER_STATUS_5)) {
 					Long serviceDateTime = item.getServiceDate();
-					String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDateTime, "MM-dd HH:mm");
+					String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDateTime * 1000, "MM-dd HH:mm");
 					result.setStatus(Constants.ERROR_999);
 					result.setMsg(item.getStaffName() + "在" + serviceDateStr + "有派工，不能进行此时间段请假");
 					return result;
