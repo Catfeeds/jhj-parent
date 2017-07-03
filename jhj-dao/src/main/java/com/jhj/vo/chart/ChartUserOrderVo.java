@@ -3,6 +3,10 @@ package com.jhj.vo.chart;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author hulj
+ *
+ */
 public class ChartUserOrderVo {
 	
 	private String name;
@@ -12,6 +16,8 @@ public class ChartUserOrderVo {
 	private List<ChartUserOrderNumVo> list;
 	
 	private List<String> bussineNameList;
+	
+	private List<String> bussineIdList;
 	
 	private List<Map<String,String>> dataList;
 
@@ -45,6 +51,14 @@ public class ChartUserOrderVo {
 
 	public void setBussineNameList(List<String> bussineNameList) {
 		this.bussineNameList = bussineNameList;
+	}
+
+	public List<String> getBussineIdList() {
+		return bussineIdList;
+	}
+
+	public void setBussineIdList(List<String> bussineIdList) {
+		this.bussineIdList = bussineIdList;
 	}
 
 	public List<Map<String, String>> getDataList() {

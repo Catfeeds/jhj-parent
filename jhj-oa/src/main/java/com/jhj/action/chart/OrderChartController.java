@@ -394,6 +394,7 @@ public class OrderChartController extends BaseController {
 				name = "*";
 			}
 			List<String> nameList = new ArrayList<>();
+			List<String> idList = new ArrayList<>();
 			
 			for(int j=0;j<businessList.size();j++){
 				CooperativeBusiness business = businessList.get(j);
@@ -404,6 +405,7 @@ public class OrderChartController extends BaseController {
 				if(name.equals(broker)){
 					nameList.add(business.getBusinessName());
 					list.add(business.getBusinessName());
+					idList.add(String.valueOf(business.getId()));
 				}
 			}
 			
@@ -411,6 +413,7 @@ public class OrderChartController extends BaseController {
 			vo.setName(name);
 			vo.setCount(String.valueOf(map.get("count")));
 			vo.setBussineNameList(nameList);
+			vo.setBussineIdList(idList);
 			chartUserOrderVoList.add(vo);
 		}
 		
@@ -422,6 +425,12 @@ public class OrderChartController extends BaseController {
 		model.addAttribute("list", list);
 		
 		return "chart/chartUserOrderCount";
+	}
+	
+	@AuthPassport
+	@RequestMapping(value="/chartSelect", method = RequestMethod.GET)
+	public String chartSelect(){
+		return "chart/chartSelect";
 	}
 	
 }

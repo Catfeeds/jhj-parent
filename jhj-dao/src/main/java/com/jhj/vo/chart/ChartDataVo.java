@@ -18,6 +18,8 @@ public class ChartDataVo {
 	
 	private List<String> businessList;
 	
+	private List<Map<String,String>> dataList;
+	
 	public String getLegend() {
 		return legend;
 	}
@@ -64,6 +66,14 @@ public class ChartDataVo {
 
 	public void setBusinessList(List<String> businessList) {
 		this.businessList = businessList;
+	}
+
+	public List<Map<String, String>> getDataList() {
+		return dataList;
+	}
+
+	public void setDataList(List<Map<String, String>> dataList) {
+		this.dataList = dataList;
 	}
 
 }

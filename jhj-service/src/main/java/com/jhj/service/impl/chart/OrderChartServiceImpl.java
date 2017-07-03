@@ -651,6 +651,8 @@ public class OrderChartServiceImpl implements OrderChartService {
 			orderFromNameList.add(businessList.get(i).getBusinessName());
 		}
 		List<String> busList = new ArrayList<>(orderFromNameList);
+		busList.add("订单数量");
+		busList.add("订单金额");
 		chartDataVo.setBusinessList(busList);
 		
 		orderFromNameList.add("订单数量");
@@ -775,36 +777,35 @@ public class OrderChartServiceImpl implements OrderChartService {
 		}
 		
 		//计算每个来源的订单总数和总金额
+		List<Map<String,String>> list = new ArrayList<>();
 		HashMap<String, String> tableMap1 = new HashMap<>();
 		HashMap<String, String> tableMap2 = new HashMap<>();
-		
-		for(int i=0,len=businessList.size();i<len;i++){
-			String businessName = businessList.get(i).getBusinessName();
-			String id = String.valueOf(businessList.get(i).getId());
+		for(int n=0;n<chartUserOrderVoList.size();n++){
+			ChartUserOrderVo chartUserOrderVo = chartUserOrderVoList.get(n);
+			List<String> bussineIdList = chartUserOrderVo.getBussineIdList();
 			
 			Integer count = 0;
 			BigDecimal countMoney = new BigDecimal(0);
 			
 			for(int j=0;j<orderFrom.size();j++){
 				ChartMapVo chartMapVo = orderFrom.get(j);
-				if(chartMapVo.getOrderOpFrom().equals(id)){
+				String orderOpFrom = chartMapVo.getOrderOpFrom();
+				if(bussineIdList.contains(orderOpFrom)){
 					count += chartMapVo.getTotal();
 					countMoney = countMoney.add(chartMapVo.getTotalMoney());
 				}
 			}
-			
 			tableMap1.put("time", "数量累计");
-			tableMap1.put(businessName, String.valueOf(count));
-//			tableMap1.put("订单数量", String.valueOf(totalCount));
+			tableMap1.put(chartUserOrderVo.getName(), String.valueOf(count));
 			
 			tableMap2.put("time", "金额累计");
-			tableMap2.put(businessName, String.valueOf(countMoney));
-//			tableMap2.put("订单金额", String.valueOf(total));
+			tableMap2.put(chartUserOrderVo.getName(), String.valueOf(countMoney));
 		}
-		dataList.add(tableMap1);
-		dataList.add(tableMap2);
+		list.add(tableMap1);
+		list.add(tableMap2);
 		
 		chartDataVo.setTableDatas(dataList);
+		chartDataVo.setDataList(list);
 		
 		return chartDataVo;
 	}
