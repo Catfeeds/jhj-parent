@@ -73,7 +73,7 @@
 													<input name="staffName" readonly="readonly" class="form-control" value="${leaveModel.staffName }" />
 												</c:if>
 												<c:if test="${leaveModel.staffId==0 }">
-													<select name="staffId" path="staffId" id="staffId" onChange="staffChange()" class="form-control">
+													<select name="staffId" path="staffId" id="staffId" class="form-control">
 														<option value="">请选择服务人员</option>
 													</select>
 												</c:if>

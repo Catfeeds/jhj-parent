@@ -44,37 +44,6 @@ public class StaffLeaveController extends BaseController {
 	@Autowired
 	private OrdersService orderService;
 
-
-	/**
-	 * 获取员工即将或者正在进行的请假记录
-	 * 
-	 * @param request
-	 * @param staffId
-	 * @return
-	 * @throws ParseException
-	 */
-	@RequestMapping(value = "get_leave", method = RequestMethod.GET)
-	public AppResultData<Object> getLeave(HttpServletRequest request, @RequestParam("staff_id") Long staffId) throws ParseException {
-		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
-		
-		
-		Date today = DateUtil.parse(DateUtil.getToday());
-		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
-		leaveSearchVo.setStaffId(staffId);
-		leaveSearchVo.setLeaveStatus("1");
-//		leaveSearchVo.setRangeStartDate(rangeStartDate);
-		leaveSearchVo.setRangeStartDate(today);
-		leaveSearchVo.setRangeEndDate(today);
-		List<OrgStaffLeave> staffLeave = leaveService.selectBySearchVo(leaveSearchVo);
-		if (!staffLeave.isEmpty()) {
-			OrgStaffLeave item = staffLeave.get(0);
-			result.setData(item);
-		}
-		
-		return result;
-	}
-	
-	
 	/**
 	 * 获取员工即将或者正在进行的请假记录
 	 * 
@@ -106,6 +75,31 @@ public class StaffLeaveController extends BaseController {
 		if (!DateUtil.compare(leaveDateStr, leaveDateEndStr)) {
 			result.setStatus(Constants.ERROR_999);
 			result.setMsg("结束日期不能小于开始日期");
+			return result;
+		}
+		
+		//校验2. 员工是否有正在请假的情况
+		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
+		leaveSearchVo.setStaffId(staffId);
+		leaveSearchVo.setLeaveStatus("1");
+//		leaveSearchVo.setRangeStartDate(rangeStartDate);
+		leaveSearchVo.setRangeStartDate(startDate);
+		leaveSearchVo.setRangeEndDate(endDate);
+		List<OrgStaffLeave> staffLeave = leaveService.selectBySearchVo(leaveSearchVo);
+		if (!staffLeave.isEmpty()) {
+			OrgStaffLeave isExist = staffLeave.get(0);
+			Date existStartDate = isExist.getLeaveDate();
+			String existStartDateStr = DateUtil.formatDate(existStartDate);
+			Date existEndate = isExist.getLeaveDateEnd();
+			String existEndateStr = DateUtil.formatDate(existEndate);
+			int d = isExist.getTotalDays();
+			
+			String msg = "";
+			if (d > 1) msg = "该员工在" + existStartDateStr + "到" + existEndateStr + "已有请假记录，不能新增请假记录.";
+			if (d == 1) msg = "该员工在" + existStartDateStr +  "已有请假记录，不能新增请假记录.";
+			
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(msg);
 			return result;
 		}
 		
@@ -157,13 +151,13 @@ public class StaffLeaveController extends BaseController {
 		
 		if (id.equals(0L)) {
 
-			LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
+			leaveSearchVo = new LeaveSearchVo();
 			leaveSearchVo.setStaffId(staffId);
 			leaveSearchVo.setLeaveStatus("1");
 //			leaveSearchVo.setRangeStartDate(rangeStartDate);
 			leaveSearchVo.setRangeStartDate(startDate);
 			leaveSearchVo.setRangeEndDate(endDate);
-			List<OrgStaffLeave> staffLeave = leaveService.selectBySearchVo(leaveSearchVo);
+			staffLeave = leaveService.selectBySearchVo(leaveSearchVo);
 			if (!staffLeave.isEmpty()) {
 				record = staffLeave.get(0);
 			}
