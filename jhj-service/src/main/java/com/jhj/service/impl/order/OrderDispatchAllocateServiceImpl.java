@@ -184,22 +184,12 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		
 //		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		// ---4. 在订单服务时间内请假的员工.
-		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
-		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
-		Date leaveDate = DateUtil.parse(serviceDateStr);
-		leaveSearchVo.setLeaveDate(leaveDate);
-		leaveSearchVo.setLeaveStatus("1");
-		
-		// 服务时间内 ，同时也在 假期内的 员工
-		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);
-
-		if (!leaveList.isEmpty()) {
-			for (OrgStaffLeave ol : leaveList) {
-				if (staffIds.contains(ol.getStaffId())) {
-					staffIds.remove(ol.getStaffId());
-				}
-			}
+		List<Long> LeaveStaffIds = orgStaffLeaveService.checkLeaveConflict(serviceDate, serviceHour);
+		for (Long leaveStaffId : LeaveStaffIds) {
+			if (staffIds.contains(leaveStaffId)) staffIds.remove(leaveStaffId);
 		}
+		
+		
 		Collections.sort(staffIds);
 //		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty())
@@ -246,7 +236,7 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 
 		// 员工服务日期的订单数
 		List<HashMap> totalStaffOrders = orderDispatchService.getTotalStaffOrders(serviceDate, staffIds);
-
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 		// -- 6.找出已匹配的员工列表，并统计前一天的订单数. 优先指派订单数为0的员工.
 		Date serviceDateObj = DateUtil.parse(serviceDateStr);
 		String preServiceDateStr = DateUtil.addDay(serviceDateObj, -1, Calendar.DATE, DateUtil.DEFAULT_PATTERN);
@@ -388,21 +378,11 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 //		System.out.println("排除黑名单后总人数:" + staffIds.size());
 		
 		// ---在订单服务时间内请假的员工.
-		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
-		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
-		Date leaveDate = DateUtil.parse(serviceDateStr);
-		leaveSearchVo.setLeaveDate(leaveDate);
-		leaveSearchVo.setLeaveStatus("1");
 		
-		// 服务时间内 ，同时也在 假期内的 员工
-		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);
-
-		if (!leaveList.isEmpty()) {
-			for (OrgStaffLeave ol : leaveList) {
-				if (staffIds.contains(ol.getStaffId())) {
-					staffIds.remove(ol.getStaffId());
-				}
-			}
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
+		List<Long> LeaveStaffIds = orgStaffLeaveService.checkLeaveConflict(serviceDate, serviceHour);
+		for (Long leaveStaffId : LeaveStaffIds) {
+			if (staffIds.contains(leaveStaffId)) staffIds.remove(leaveStaffId);
 		}
 //		System.out.println("排除请假后总人数:" + staffIds.size());
 		if (staffIds.isEmpty()) return list;
@@ -744,6 +724,9 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		}
 		
 		// ---在订单服务时间内请假的员工.
+		List<Long> LeaveStaffIds = orgStaffLeaveService.checkLeaveConflict(serviceDate, serviceHour);
+		
+		
 		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
 		Date leaveDate = DateUtil.parse(serviceDateStr);
@@ -754,8 +737,8 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);
 
 		for (OrgStaffDispatchVo vo : list) {
-			for (OrgStaffLeave os : leaveList) {
-				if (vo.getStaffId().equals(os.getStaffId())) {
+			for (Long leaveStaffId : LeaveStaffIds) {
+				if (vo.getStaffId().equals(leaveStaffId)) {
 					vo.setDispathStaFlag(0);
 					vo.setDispathStaStr("不可派工");
 					if(vo.getReason()!=null){

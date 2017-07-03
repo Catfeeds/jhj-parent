@@ -32,4 +32,6 @@ public interface OrgStaffLeaveService {
 	PageInfo selectByListPage(LeaveSearchVo searchVo,int pageNo,int pageSize);
 	
 	List<OrgStaffLeave> selectBySearchVo(LeaveSearchVo searchVo);
+
+	List<Long> checkLeaveConflict(Long serviceDate, double serviceHour);
 }

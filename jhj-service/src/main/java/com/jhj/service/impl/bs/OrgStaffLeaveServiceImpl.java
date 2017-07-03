@@ -2,6 +2,7 @@ package com.jhj.service.impl.bs;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -207,5 +208,64 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 		List<OrgStaffLeave> list = leaveMapper.selectByListPage(searchVo);
 		PageInfo result = new PageInfo(list);
 		return result;
+	}
+	
+	/**
+	 * 过滤掉找出服务日期请假的人员，注意的是请假分为全天和上午下午。
+	 * 
+	 */
+	@Override
+	public List<Long> checkLeaveConflict(Long serviceDate, double serviceHour) {
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, DateUtil.DEFAULT_PATTERN);
+		
+		String startHourStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "H");
+		double startHour = Double.valueOf(startHourStr);
+		double endHour = startHour + serviceHour + 1.5;
+		
+		List<Double> serviceRange = new ArrayList<Double>();
+		
+		double stepHour = startHour;
+		while (stepHour <= endHour) {
+			serviceRange.add(stepHour);
+			stepHour = stepHour + 0.5;
+		}
+		
+		//先找出当天请假的员工
+		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		leaveSearchVo.setLeaveDate(leaveDate);
+		leaveSearchVo.setLeaveStatus("1");
+		
+		// 服务时间内 ，同时也在 假期内的 员工
+		List<OrgStaffLeave> leaveList = this.selectBySearchVo(leaveSearchVo);
+		if (leaveList.isEmpty()) return staffIds;
+		
+		for (OrgStaffLeave item : leaveList) {
+			int start = item.getStart();
+			int end = item.getEnd();
+			
+			double startX = Double.valueOf(start);
+			double endY = Double.valueOf(end);
+			
+			List<Double> leaveDateRange = new ArrayList<Double>();
+			stepHour = startX;
+			while (stepHour <= endY) {
+				leaveDateRange.add(stepHour);
+				stepHour = stepHour + 0.5;
+			}
+			
+			
+			for (double leaveItem : leaveDateRange) {
+				if (serviceRange.contains(leaveItem)) {
+					staffIds.add(item.getStaffId());
+					break;
+				}
+			}
+			
+		}
+		
+		return staffIds;
 	}
 }
