@@ -724,17 +724,8 @@ public class OrderDispatchAllocateServiceImpl implements OrderDispatchAllocateSe
 		}
 		
 		// ---在订单服务时间内请假的员工.
-		List<Long> LeaveStaffIds = orgStaffLeaveService.checkLeaveConflict(serviceDate, serviceHour);
-		
-		
-		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
 		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "yyyy-MM-dd"); 
-		Date leaveDate = DateUtil.parse(serviceDateStr);
-		leaveSearchVo.setLeaveDate(leaveDate);
-		leaveSearchVo.setLeaveStatus("1");
-		
-		// 服务时间内 ，同时也在 假期内的 员工
-		List<OrgStaffLeave> leaveList = orgStaffLeaveService.selectBySearchVo(leaveSearchVo);
+		List<Long> LeaveStaffIds = orgStaffLeaveService.checkLeaveConflict(serviceDate, serviceHour);
 
 		for (OrgStaffDispatchVo vo : list) {
 			for (Long leaveStaffId : LeaveStaffIds) {

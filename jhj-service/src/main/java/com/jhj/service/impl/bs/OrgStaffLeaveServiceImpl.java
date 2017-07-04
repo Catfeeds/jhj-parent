@@ -268,4 +268,37 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 		
 		return staffIds;
 	}
+	
+	/**
+	 * 检测某个小时点是否有请假人员
+	 * 
+	 */
+	@Override
+	public List<Long> checkLeaveExist(List<OrgStaffLeave> leaveList, String serviceHour) {
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		if (leaveList.isEmpty()) return staffIds;
+		
+		for (OrgStaffLeave item : leaveList) {
+			int start = item.getStart();
+			int end = item.getEnd();
+			
+			
+			List<String> leaveDateRange = new ArrayList<String>();
+			int stepHour = start;
+			while (stepHour <= end) {
+				String hourStr = String.valueOf(stepHour);
+				if (hourStr.length() == 1) hourStr = "0" + hourStr;
+				
+				leaveDateRange.add(hourStr + ":00");
+				leaveDateRange.add(hourStr + ":30");
+				stepHour = stepHour + 1;
+			}
+
+			if (leaveDateRange.contains(serviceHour)) {
+				staffIds.add(item.getStaffId());
+			}
+		}
+		return staffIds;
+	}
 }

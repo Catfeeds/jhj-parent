@@ -34,4 +34,6 @@ public interface OrgStaffLeaveService {
 	List<OrgStaffLeave> selectBySearchVo(LeaveSearchVo searchVo);
 
 	List<Long> checkLeaveConflict(Long serviceDate, double serviceHour);
+
+	List<Long> checkLeaveExist(List<OrgStaffLeave> leaveList, String serviceHour);
 }
