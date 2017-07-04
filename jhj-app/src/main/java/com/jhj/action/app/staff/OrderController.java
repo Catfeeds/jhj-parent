@@ -624,4 +624,63 @@ public class OrderController extends BaseController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "post_service_hour", method = RequestMethod.POST)
+	public AppResultData<Object> postServiceHour(HttpServletRequest request,
+			@RequestParam("staff_id") Long staffId,
+			@RequestParam("order_id") Long orderId,
+			@RequestParam("service_hour") double serviceHour
+
+			) {
+		AppResultData<Object> result = new AppResultData<Object>(
+				Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, "");
+		
+		Orders order = ordersService.selectByPrimaryKey(orderId);
+		if (order == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg(ConstantMsg.ORDER_NOT_EXIST_MG);
+			return result;
+		}
+		
+		if (!order.getOrderStatus().equals(Constants.ORDER_HOUR_STATUS_5)
+				) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("开始服务才能修改服务时长");
+			return result;
+		}
+		
+		double orderServiceHour = order.getServiceHour();
+		if (serviceHour < 0.5 || serviceHour > orderServiceHour) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("服务时长必须大于0.5小时和小于总时长"+ orderServiceHour);
+			return result;
+		}
+		
+		order.setServiceHour(serviceHour);
+		order.setUpdateTime(TimeStampUtil.getNowSecond());
+		ordersService.updateByPrimaryKeySelective(order);
+		
+		//派工时长也需要变化
+		OrderDispatchSearchVo searchVo = new OrderDispatchSearchVo();
+		searchVo.setOrderId(order.getId());
+		searchVo.setDispatchStatus((short) 1);
+		List<OrderDispatchs> disList = orderDispatchsService.selectBySearchVo(searchVo);
+		for (OrderDispatchs op : disList) {
+			op.setServiceHours(serviceHour);
+			op.setUpdateTime(TimeStampUtil.getNowSecond());
+			orderDispatchsService.updateByPrimaryKeySelective(op);
+		}
+		
+		OrgStaffs orgStaffs = orgStaffsService.selectByPrimaryKey(staffId);
+		//订单日志的情况
+		OrderLog orderLog = orderLogService.initOrderLog(order);
+		orderLog.setAction(Constants.ORDER_ACTION_CHANGE_SERVICE_HOUR);
+		orderLog.setUserId(staffId);
+		orderLog.setUserName(orgStaffs.getName());
+		orderLog.setUserType((short) 1);
+		orderLog.setRemarks("时长由" + orderServiceHour + "小时修改为"+ serviceHour + "小时");
+		orderLogService.insert(orderLog);
+		
+		return result;
+	}
 }

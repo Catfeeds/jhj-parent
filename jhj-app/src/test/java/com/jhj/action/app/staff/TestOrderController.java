@@ -103,6 +103,23 @@ public class TestOrderController extends JUnitActionBase{
 	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
     }
 	
+	@Test
+    public void postOrderServiceHour() throws Exception {
+
+		String url = "/app/staff/order/post_service_hour.json";
+
+     	MockHttpServletRequestBuilder postRequest = post(url);
+	    postRequest = postRequest.param("staff_id", "179");
+	    postRequest = postRequest.param("order_id", "17744");
+	    postRequest = postRequest.param("service_hour", "1");
+	    ResultActions resultActions = mockMvc.perform(postRequest);
+
+	    resultActions.andExpect(content().contentType(this.mediaType));
+	    resultActions.andExpect(status().isOk());
+
+	    System.out.println("RestultActions: " + resultActions.andReturn().getResponse().getContentAsString());
+    }
+	
 	public static byte[] imageToByteArray(String imgPath) {
 		BufferedInputStream in;
 		try {

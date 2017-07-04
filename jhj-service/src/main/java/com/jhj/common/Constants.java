@@ -447,6 +447,7 @@ public class Constants {
 	 public static String ORDER_ACTION_UPDATE_DISPATCHS_STAFF = "调整派工人员";
 	 public static String ORDER_ACTION_RATES = "订单评价";
 	 public static String PERIOD_ORDER_ACTION_PAY = "定制支付";
+	 public static String ORDER_ACTION_CHANGE_SERVICE_HOUR = "员工调整订单服务时长";
 	 
 	 /**----------------------------------操作日志 end----------------------------------------------*/
 	 
