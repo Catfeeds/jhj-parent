@@ -16,7 +16,11 @@ package com.jhj.vo.order.newDispatch;
  *
  */
 public class EventVo {
+
+	private String allDay;   //时间标识 allday = 全天  am = 上午  pm = 下午
 	
+	private String allDayStr;  // 时间标识描述 全天  上午  下午
+
 	private String dateDuration;
 	
 	private String eventName;
@@ -65,6 +69,22 @@ public class EventVo {
 
 	public void setOrderType(Short orderType) {
 		this.orderType = orderType;
+	}
+
+	public String getAllDayStr() {
+		return allDayStr;
+	}
+
+	public void setAllDayStr(String allDayStr) {
+		this.allDayStr = allDayStr;
+	}
+
+	public String getAllDay() {
+		return allDay;
+	}
+
+	public void setAllDay(String allDay) {
+		this.allDay = allDay;
 	}
 
 	

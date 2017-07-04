@@ -18,16 +18,18 @@ import com.jhj.common.ConstantOa;
 import com.jhj.common.Constants;
 import com.jhj.oa.auth.AuthPassport;
 import com.jhj.po.model.cooperate.CooperativeBusiness;
+import com.jhj.po.model.order.Orders;
 import com.jhj.po.model.period.PeriodOrder;
 import com.jhj.po.model.period.PeriodServiceType;
 import com.jhj.po.model.user.UserAddrs;
 import com.jhj.service.cooperate.CooperateBusinessService;
+import com.jhj.service.order.OrderQueryService;
 import com.jhj.service.period.PeriodOrderAddonsService;
 import com.jhj.service.period.PeriodOrderService;
 import com.jhj.service.period.PeriodServiceTypeService;
 import com.jhj.service.users.UserAddrsService;
 import com.jhj.vo.dict.CooperativeBusinessSearchVo;
-import com.jhj.vo.period.PeriodOrderAddonsVo;
+import com.jhj.vo.order.OrderSearchVo;
 import com.jhj.vo.period.PeriodOrderDetailVo;
 import com.jhj.vo.period.PeriodOrderSearchVo;
 import com.jhj.vo.period.PeriodOrderVo;
@@ -50,6 +52,9 @@ public class PeriodOrderController extends BaseController{
 	
 	@Autowired
 	private PeriodServiceTypeService periodServiceTypeService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 	
 	@AuthPassport
 	@RequestMapping(value = "/periodOrderList", method = RequestMethod.GET)
@@ -88,19 +93,13 @@ public class PeriodOrderController extends BaseController{
 		List<UserAddrs> userAddrsList = userAddresService.selectByUserId(periodOrder.getUserId().longValue());
 		model.addAttribute("userAddrsList", userAddrsList);
 		
+		OrderSearchVo searchVo = new OrderSearchVo();
+		searchVo.setPeriodOrderId(periodOrderId);
+		List<Orders> orderList = orderQueryService.selectBySearchVo(searchVo);
+		
+		model.addAttribute("orderList",orderList);
 		
 		return "period/periodOrderDetail";
-	}
-	
-	@AuthPassport
-	@RequestMapping(value="/updatePeriodOrder", method = RequestMethod.POST)
-	public String updatePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId){
-		
-		PeriodOrder periodOrder = periodOrderService.selectByPrimaryKey(periodOrderId);
-		
-		
-		
-		return "redirect:periodOrderList";
 	}
 	
 	@AuthPassport
@@ -121,15 +120,6 @@ public class PeriodOrderController extends BaseController{
 		
 		return "period/addPeriodOrder";
 	}
-	
-	@AuthPassport
-	@RequestMapping(value="/savePeriodOrder", method = RequestMethod.POST)
-	public String savePeriodOrder(@RequestParam("periodOrderId") Integer periodOrderId){
-		
-		
-		return "redirect:periodOrderList";
-	}
-	
 	
 
 

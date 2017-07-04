@@ -121,7 +121,8 @@ public class OrgStaffLeaveController extends BaseController {
 
 		return "bs/leaveList";
 	}
-
+	
+	@AuthPassport
 	@RequestMapping(value = "/leave_form", method = { RequestMethod.GET })
 	public String leavelForm(HttpServletRequest request, Model model, 
 			@RequestParam(value = "id") Long id, 
@@ -148,119 +149,4 @@ public class OrgStaffLeaveController extends BaseController {
 		model.addAttribute("errors", errors);
 		return "bs/leaveForm";
 	}
-	
-	@AuthPassport
-	@RequestMapping(value = "/leave_form", method = { RequestMethod.POST })
-	public String submitLeaveForm(Model model, HttpServletRequest request, @ModelAttribute("leaveModel") LeaveStaffVo leaveVo, BindingResult result,
-			@RequestParam("id") Long id) {
-
-		OrgStaffLeave leave = leaveService.initLeave();
-		
-		
-		String leaveStatus = leaveVo.getLeaveStatus();
-		
-		if (id > 0L) {
-			leave = leaveService.selectByPrimaryKey(id);
-			leaveVo.setOrgId(leave.getOrgId());
-			leaveVo.setParentId(leave.getParentId());
-		}
-		
-		BeanUtilsExp.copyPropertiesIgnoreNull(leaveVo, leave);
-		
-		String leaveDate = request.getParameter("leaveDate");
-		String leaveDateEnd = request.getParameter("leaveDateEnd");
-		
-		if (leaveStatus.equals("1")) {
-			//判断日期内是否有派工的情况，如果有则提示不可修改
-			Long staffId = leave.getStaffId();
-			Long startServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDate + " 08:00:00") / 1000;
-			
-			// 注意结束时间也要服务结束后 1:59分钟
-			Long endServiceTime = TimeStampUtil.getMillisOfDayFull(leaveDateEnd + " 22:00:00") / 1000;
-			
-			OrderDispatchSearchVo searchVo1 = new OrderDispatchSearchVo();
-			searchVo1.setStaffId(staffId);
-			searchVo1.setDispatchStatus((short) 1);
-			searchVo1.setStartServiceTime(startServiceTime);
-			searchVo1.setEndServiceTime(endServiceTime);
-			List<OrderDispatchs> disList = orderDispatchService.selectByMatchTime(searchVo1);
-			
-			List<Long> orderIds = new ArrayList<Long>();
-			Boolean hasDispatch = false;
-			for (OrderDispatchs item : disList) {
-				Long orderId = item.getOrderId();
-				Orders order = orderService.selectByPrimaryKey(orderId);
-				Short orderStatus = order.getOrderStatus();
-				if (orderStatus.equals(Constants.ORDER_STATUS_3) || 
-					orderStatus.equals(Constants.ORDER_STATUS_5)) {
-					hasDispatch = true;
-					break;
-				}
-			}
-
-			if (hasDispatch) {
-	        	return leavelForm(request, model, id, "请假时间段内有派工.");
-			}
-		
-		}
-		
-		leave.setLeaveDate(DateUtil.parse(leaveDate));
-		leave.setLeaveDateEnd(DateUtil.parse(leaveDateEnd));
-		long dublDate = TimeStampUtil.compareTimeStr(leave.getLeaveDate().getTime(),leave.getLeaveDateEnd().getTime());
-		long dayNum = dublDate/(1000 * 60 * 60 * 24)+1;
-		leave.setTotalDays(new Long(dayNum).intValue());
-
-		// 请假日期
-
-
-		Short leaveDuration = leaveVo.getLeaveDuration();
-
-		// 默认选择 8~12点
-		short start = 8;
-		short end = 12;
-
-		if (leaveDuration == (short) 1) {
-			// 选择的是 8~21点
-			end = 21;
-		}
-
-		if (leaveDuration == (short) 2) {
-//			 选择的是 12~21点
-			start = 12;
-			end = 21;
-		}
-
-		leave.setStart(start);
-		leave.setEnd(end);
-
-		AccountAuth auth = AuthHelper.getSessionAccountAuth(request);
-
-		// 操作人 登录 id
-		Long authId = auth.getId();
-		leave.setAdminId(authId);
-
-		Long orgId = leaveVo.getOrgId();
-		Orgs org = orgService.selectByPrimaryKey(orgId);
-
-		leave.setOrgId(org.getOrgId());
-
-		leave.setParentId(org.getParentId());
-
-		if (id == 0) {
-			LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
-			leaveSearchVo.setStaffId(leave.getStaffId());
-			leaveSearchVo.setLeaveStatus("1");
-			List<OrgStaffLeave> staffLeave = leaveService.selectBySearchVo(leaveSearchVo);
-			if(staffLeave.size()==0){
-				leaveService.insert(leave);
-			}
-			
-		} else {
-			leave.setLeaveStatus(leaveVo.getLeaveStatus());
-			leaveService.updateByPrimaryKeySelective(leave);
-		}
-		
-		return "redirect:leave_list";
-	}
-
 }

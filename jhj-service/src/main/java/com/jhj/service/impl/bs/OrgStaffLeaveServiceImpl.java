@@ -2,6 +2,7 @@ package com.jhj.service.impl.bs;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -207,5 +208,120 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 		List<OrgStaffLeave> list = leaveMapper.selectByListPage(searchVo);
 		PageInfo result = new PageInfo(list);
 		return result;
+	}
+	
+	/**
+	 * 过滤掉找出服务日期请假的人员，注意的是请假分为全天和上午下午。
+	 * 
+	 */
+	@Override
+	public List<Long> checkLeaveConflict(Long serviceDate, double serviceHour) {
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		String serviceDateStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, DateUtil.DEFAULT_PATTERN);
+		
+		String startHourStr = TimeStampUtil.timeStampToDateStr(serviceDate * 1000, "H");
+		double startHour = Double.valueOf(startHourStr);
+		double endHour = startHour + serviceHour + 1.5;
+		
+		List<Double> serviceRange = new ArrayList<Double>();
+		
+		double stepHour = startHour;
+		while (stepHour <= endHour) {
+			serviceRange.add(stepHour);
+			stepHour = stepHour + 0.5;
+		}
+		
+		//先找出当天请假的员工
+		LeaveSearchVo leaveSearchVo = new LeaveSearchVo();
+		Date leaveDate = DateUtil.parse(serviceDateStr);
+		leaveSearchVo.setLeaveDate(leaveDate);
+		leaveSearchVo.setLeaveStatus("1");
+		
+		// 服务时间内 ，同时也在 假期内的 员工
+		List<OrgStaffLeave> leaveList = this.selectBySearchVo(leaveSearchVo);
+		if (leaveList.isEmpty()) return staffIds;
+		
+		for (OrgStaffLeave item : leaveList) {
+			int start = item.getStart();
+			int end = item.getEnd();
+			
+			double startX = Double.valueOf(start);
+			double endY = Double.valueOf(end);
+			
+			List<Double> leaveDateRange = new ArrayList<Double>();
+			stepHour = startX;
+			while (stepHour <= endY) {
+				leaveDateRange.add(stepHour);
+				stepHour = stepHour + 0.5;
+			}
+			
+			
+			for (double leaveItem : leaveDateRange) {
+				if (serviceRange.contains(leaveItem)) {
+					staffIds.add(item.getStaffId());
+					break;
+				}
+			}
+			
+		}
+		
+		return staffIds;
+	}
+	
+	/**
+	 * 检测某个小时点是否有请假人员
+	 * 
+	 */
+	@Override
+	public List<Long> checkLeaveExist(List<OrgStaffLeave> leaveList, String itemServiceHour, double serviceHours) {
+		
+		List<Long> staffIds = new ArrayList<Long>();
+		if (leaveList.isEmpty()) return staffIds;
+		
+		List<String> serviceDateRange = new ArrayList<String>();
+		
+		
+		String today = DateUtil.getToday();
+		Long tmpServiceDate = TimeStampUtil.getMillisOfDayFull(today + " " + itemServiceHour + ":00") / 1000;
+		
+		double stepHourRange = 0;
+		while (stepHourRange <= serviceHours) {
+			tmpServiceDate = (long) (tmpServiceDate + stepHourRange * 60 * 60);
+			String tmpHourStr = TimeStampUtil.timeStampToDateStr(tmpServiceDate * 1000, "HH:mm");
+			serviceDateRange.add(tmpHourStr);
+			stepHourRange = stepHourRange + 0.5;
+		}
+		
+		
+		for (OrgStaffLeave item : leaveList) {
+			int start = item.getStart();
+			int end = item.getEnd();
+			
+			
+			List<String> leaveDateRange = new ArrayList<String>();
+			int stepHour = start;
+			while (stepHour <= end) {
+				String hourStr = String.valueOf(stepHour);
+				if (hourStr.length() == 1) hourStr = "0" + hourStr;
+				
+				leaveDateRange.add(hourStr + ":00");
+				leaveDateRange.add(hourStr + ":30");
+				stepHour = stepHour + 1;
+			}
+
+			for (String leaveDate : leaveDateRange) {
+				boolean isBreak = false;
+				for (String hourRnage : serviceDateRange) {
+					if (leaveDate.equals(hourRnage)) {
+						staffIds.add(item.getStaffId());
+						isBreak = true;
+						break;
+					}
+				}
+				if (isBreak) break;
+			}
+		}
+		return staffIds;
 	}
 }
