@@ -274,10 +274,25 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 	 * 
 	 */
 	@Override
-	public List<Long> checkLeaveExist(List<OrgStaffLeave> leaveList, String serviceHour) {
+	public List<Long> checkLeaveExist(List<OrgStaffLeave> leaveList, String itemServiceHour, double serviceHours) {
 		
 		List<Long> staffIds = new ArrayList<Long>();
 		if (leaveList.isEmpty()) return staffIds;
+		
+		List<String> serviceDateRange = new ArrayList<String>();
+		
+		
+		String today = DateUtil.getToday();
+		Long tmpServiceDate = TimeStampUtil.getMillisOfDayFull(today + " " + itemServiceHour + ":00") / 1000;
+		
+		double stepHourRange = 0;
+		while (stepHourRange <= serviceHours) {
+			tmpServiceDate = (long) (tmpServiceDate + stepHourRange * 60 * 60);
+			String tmpHourStr = TimeStampUtil.timeStampToDateStr(tmpServiceDate * 1000, "HH:mm");
+			serviceDateRange.add(tmpHourStr);
+			stepHourRange = stepHourRange + 0.5;
+		}
+		
 		
 		for (OrgStaffLeave item : leaveList) {
 			int start = item.getStart();
@@ -295,8 +310,16 @@ public class OrgStaffLeaveServiceImpl implements OrgStaffLeaveService {
 				stepHour = stepHour + 1;
 			}
 
-			if (leaveDateRange.contains(serviceHour)) {
-				staffIds.add(item.getStaffId());
+			for (String leaveDate : leaveDateRange) {
+				boolean isBreak = false;
+				for (String hourRnage : serviceDateRange) {
+					if (leaveDate.equals(hourRnage)) {
+						staffIds.add(item.getStaffId());
+						isBreak = true;
+						break;
+					}
+				}
+				if (isBreak) break;
 			}
 		}
 		return staffIds;

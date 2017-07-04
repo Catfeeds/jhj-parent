@@ -35,5 +35,5 @@ public interface OrgStaffLeaveService {
 
 	List<Long> checkLeaveConflict(Long serviceDate, double serviceHour);
 
-	List<Long> checkLeaveExist(List<OrgStaffLeave> leaveList, String serviceHour);
+	List<Long> checkLeaveExist(List<OrgStaffLeave> leaveList, String itemServiceHour, double ServiceHours);
 }

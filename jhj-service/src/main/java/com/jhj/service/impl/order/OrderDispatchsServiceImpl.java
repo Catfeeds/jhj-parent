@@ -894,7 +894,7 @@ public class OrderDispatchsServiceImpl implements OrderDispatchsService {
 			String itemServiceHourStr = item.get("service_hour");
 			System.out.println("itemServiceHourStr = " + itemServiceHourStr);
 			int itemTotal = total;
-			List<Long> leaveStaffIds = orgStaffLeaveService.checkLeaveExist(leaveList, itemServiceHourStr);
+			List<Long> leaveStaffIds = orgStaffLeaveService.checkLeaveExist(leaveList, itemServiceHourStr, serviceHours);
 			itemTotal = total - leaveStaffIds.size();
 			
 			List<Long> itemCanStaffIds = new ArrayList<Long>();
