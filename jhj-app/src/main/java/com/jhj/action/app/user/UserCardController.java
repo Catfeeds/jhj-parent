@@ -86,7 +86,7 @@ public class UserCardController extends BaseController {
 		orderCardsService.insert(record);
 		
 		//如果为debug模式，则直接付款成功
-		if (ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
+//		if (ConfigUtil.getInstance().getRb().getString("debug").equals("true")) {
 			record.setPayType(payType);
 			record.setOrderStatus(Constants.PAY_STATUS_1);
 			// 更新orders,orderPrices,Users,插入消费明细UserDetailPay
@@ -94,7 +94,7 @@ public class UserCardController extends BaseController {
 			
 			//赠送相应的优惠劵到对于的用户账户
 			orderCardsService.sendCoupons(userId, record.getId());
-		}
+//		}
 
 		result.setData(record);
 		
