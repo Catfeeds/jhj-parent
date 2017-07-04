@@ -93,22 +93,22 @@ fn();
 
 
 function leaveDateChange() {
-	var leaveDateStr = $("#leaveDate").val();
-	var leaveDateEndStr = $("#leaveDateEnd").val();
-	console.log(leaveDateStr + "---" + leaveDateEndStr);
+//	var leaveDateStr = $("#leaveDate").val();
+//	var leaveDateEndStr = $("#leaveDateEnd").val();
+//	console.log(leaveDateStr + "---" + leaveDateEndStr);
+//	
+//	var leaveDateObj = moment(leaveDateStr);
+//	var leaveDateEndObj = moment(leaveDateEndStr);
 	
-	var leaveDateObj = moment(leaveDateStr);
-	var leaveDateEndObj = moment(leaveDateEndStr);
-	
-	var d = leaveDateEndObj.diff(leaveDateObj, "days");
-	console.log("d == " + d);
-	
-	if (d == 0) {
-		$("#halfDay").removeAttr("disabled"); 
-	} else {
-		$("#halfDay").attr("disabled", "true");
-		$("#halfDay").val(0);
-	}
+//	var d = leaveDateEndObj.diff(leaveDateObj, "days");
+//	console.log("d == " + d);
+//	
+//	if (d == 0) {
+//		$("#halfDay").removeAttr("disabled"); 
+//	} else {
+//		$("#halfDay").attr("disabled", "true");
+//		$("#halfDay").val(0);
+//	}
 	
 }
 
