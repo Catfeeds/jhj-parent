@@ -186,5 +186,40 @@ public class StaffLeaveController extends BaseController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "do_leave_cancel", method = RequestMethod.POST)
+	public AppResultData<Object> doLeaveCancel(
+			HttpServletRequest request, 
+			@RequestParam("id") Long id,
+			@RequestParam("staff_id") Long staffId,
+			@RequestParam("leaveStatus") String leaveStatus
+			) throws ParseException {
+		AppResultData<Object> result = new AppResultData<Object>(Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, new String());
+		
+		
+		OrgStaffLeave leave = leaveService.selectByPrimaryKey(staffId);
+		
+		if (leave  == null) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("数据不存在.");
+			return result;
+		}
+		
+		Date endDate = leave.getLeaveDateEnd();
+		
+		Date today = DateUtil.getNowOfDate();
+		
+		if (today.after(endDate)) {
+			result.setStatus(Constants.ERROR_999);
+			result.setMsg("请假已经完成,不用取消.");
+			return result;
+		}
+		
+		leave.setLeaveStatus(leaveStatus);
+		leaveService.updateByPrimaryKeySelective(leave);
+		
+		
+		return result;
+	}
 
 }

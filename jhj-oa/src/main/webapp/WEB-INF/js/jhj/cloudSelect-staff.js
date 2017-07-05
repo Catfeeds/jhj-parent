@@ -1,26 +1,43 @@
 
+//根据门店获取员工
 //根据省份ID获取城市列表
+$("#parentId").on('change', function(){
+
+	if ($("#staffId").length <= 0 ) { 
+		return false;
+	}	
+	setStaffIdOption();
+});
+
+//根据云店获取员工
 $("#orgId").on('change', function(){
 
 	if ($("#staffId").length <= 0 ) { 
 		return false;
 	}	
+	setStaffIdOption();
+});
 
-	
-	$provinceId = $(this).val();
-	if(0 == $provinceId){
-		$optionList = '<option value="0">请选择服务人员</option>';
-		$("#staffId").html($optionList);
-		return;
+
+function setStaffIdOption() {
+	var parentId = $("#parentId").val();
+	if (parentId == null || parentId == "" ) parentId == 0;
+
+	var orgId = $("#orgId").val();
+	if (orgId == null || orgId == "") orgId == 0;
+	if ( parentId == 0 && orgId == 0) {
+		return false;
 	}
 	
-	//发送ajax请求根据省ID获取城市ID
+	var params = {};
+	params.parentId = parentId;
+	params.orgId = orgId;
 	$.ajax({
 		type: 'POST',
 		url: '/jhj-oa/interface-dict/select-staff-by-cloudOrg.json',
 		dataType: 'json',
 		cache: false,
-		data:{"orgId":$provinceId},
+		data:params,
 		success:function($result){
 			if(0 == $result.status){
 				var citySelectedId = 0;
@@ -47,4 +64,5 @@ $("#orgId").on('change', function(){
 			
 		}
 	});
-});
+	
+}

@@ -121,15 +121,22 @@ function leaveSave() {
 			params.leaveDate = $("#leaveDate").val();
 			params.leaveDateEnd = $("#leaveDateEnd").val();
 			params.halfDay = $("#halfDay").val();
-			params.leaveStatus = $("#leaveStatus").val();
+			
+			var leaveStatus = $("input:radio[name='leaveStatus']:checked").val();
+			
+			params.leaveStatus = leaveStatus;
 			params.adminId = $("#adminId").val();
 			params.remarks = $("#remarks").val();
+
+			var url = "/jhj-app/app/staff/do_leave.json";
 			
-			console.log(params);
-			
+			if (leaveStatus == "2") {
+				url = "/jhj-app/app/staff/do_leave_cancel.json"
+			}
+
 			$.ajax({
 				type : "post",
-				url : "/jhj-app/app/staff/do_leave.json",
+				url : url,
 				data : params,
 				dataType : "json",
 				async : false,
@@ -139,7 +146,7 @@ function leaveSave() {
 						alert(data.msg);
 						return false;
 					}
-					alert("请假添加成功！");
+					alert("操作成功！");
 					location.href = "leave_list";
 				}
 			});

@@ -36,11 +36,7 @@
 									<input type="hidden" id="adminId" name="adminId" value="${accountAuth.id}" />
 									<input type="hidden" id="logInParentOrgId" value="${logInParentOrgId }">
 									<div class="form-body">
-										<div class="form-group ">
-											<div class="col-md-5">
-												<font color="red">当前时间如果是 "假期中",则不能修改</font>
-											</div>
-										</div>
+										
 										<div class="form-group required">
 											<label class="col-md-2 control-label">选择门店*</label>
 											<div class="col-md-5">
@@ -72,6 +68,7 @@
 											<div class="col-md-5">
 												<c:if test="${leaveModel.staffId>0 }">
 													<input name="staffName" readonly="readonly" class="form-control" value="${leaveModel.staffName }" />
+													<form:hidden path="staffId" />
 												</c:if>
 												<c:if test="${leaveModel.staffId==0 }">
 													<select name="staffId" path="staffId" id="staffId" class="form-control">
@@ -122,10 +119,10 @@
 											<label class="col-md-2 control-label">请假状态*</label>
 											<div class="col-md-5">
 												<div class="input-group date">
-													<input type="radio" id="leaveStatus" name="leaveStatus" value="1" <c:if test='${leaveModel.leaveStatus==1 }'>checked</c:if> />
+													<input type="radio"  name="leaveStatus" value="1" <c:if test='${leaveModel.leaveStatus==1 }'>checked</c:if> />
 												
 													请假中
-													<input type="radio" id="leaveStatus" name="leaveStatus" value="2" <c:if test='${leaveModel.leaveStatus==2 }'>checked</c:if> />
+													<input type="radio"  name="leaveStatus" value="2" <c:if test='${leaveModel.leaveStatus==2 }'>checked</c:if> />
 													请假取消
 												</div>
 											</div>

@@ -145,17 +145,17 @@ public class DictInterface extends BaseController {
 		return result;
 	}
 	
-	
-	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "select-staff-by-cloudOrg.json", method = RequestMethod.POST)
 	public  AppResultData<Object> selectCloudStaffList(
-			@RequestParam(value = "orgId", required = true, defaultValue = "0") Long cloudOrgId) {
+			@RequestParam(value = "parentId", required = true, defaultValue = "0") Long parentId,
+			@RequestParam(value = "orgId", required = true, defaultValue = "0") Long orgId) {
 
 		AppResultData<Object> result = new AppResultData<Object>(
 		Constants.SUCCESS_0, ConstantMsg.SUCCESS_0_MSG, false);
 		
 		StaffSearchVo searchVo = new StaffSearchVo();
-		searchVo.setOrgId(cloudOrgId);
+		if (parentId > 0L) searchVo.setParentId(parentId);
+		if (orgId > 0L) searchVo.setOrgId(orgId);
 		searchVo.setStatus(1);
 		List<OrgStaffs> list = staffService.selectBySearchVo(searchVo);
 				
